@@ -7,5 +7,24 @@
     "tslint.json": "*",
     "nx.json": "*"
   },
-  "projects": {}
+  "projects": {
+    "deep-travel": {
+      "tags": []
+    },
+    "deep-travel-e2e": {
+      "tags": []
+    },
+    "shopping": {
+      "tags": []
+    },
+    "interfaces": {
+      "tags": []
+    },
+    "user": {
+      "tags": []
+    },
+    "payment": {
+      "tags": []
+    }
+  }
 }

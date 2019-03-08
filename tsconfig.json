@@ -14,7 +14,13 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@ygg/shopping": ["libs/shopping/src/index.ts"],
+      "@ygg/interfaces": ["libs/interfaces/src/index.ts"],
+      "@ygg/contact": ["libs/contact/src/index.ts"],
+      "@ygg/user": ["libs/user/src/index.ts"],
+      "@ygg/payment": ["libs/payment/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

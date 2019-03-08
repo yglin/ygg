@@ -1,0 +1,26 @@
+.ygg-cart .mat-table {
+  width: 100%;
+}
+
+.ygg-cart .mat-table .mat-row {
+  height: 75px;
+}
+
+.ygg-cart .thumbnail {
+  width: 64px;
+  height: 64px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.ygg-cart .thumbnail img {
+  width: 100%;
+  height: 100%;
+}
+
+.ygg-cart .quantity .mat-form-field {
+  width: 75px;
+  font-size: 20px;
+}
+
+

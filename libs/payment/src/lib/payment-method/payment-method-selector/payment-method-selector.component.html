@@ -1,0 +1,17 @@
+<div class="ygg-payment-method-selector">
+  <mat-radio-group [(ngModel)]="selected" fxLayout="column">
+    <mat-radio-button
+      *ngFor="let paymentMethod of paymentMethods"
+      [value]="paymentMethod.id"
+    >
+      <div>
+        <h4>{{ paymentMethod.name }}</h4>
+        <pre>{{
+            paymentMethod.active
+              ? paymentMethod.description
+              : "目前不開放此付款方式"
+          }}</pre>
+      </div>
+    </mat-radio-button>
+  </mat-radio-group>
+</div>

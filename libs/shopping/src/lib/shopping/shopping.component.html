@@ -1,0 +1,35 @@
+<div class='ygg-shopping'>
+  <mat-horizontal-stepper linear>
+    <mat-step [completed]='step1Completed'>
+      <ng-template matStepLabel>購物車</ng-template>
+      <div class='step-content'>
+        <ygg-cart></ygg-cart>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+        <button mat-raised-button matStepperNext (click)='confirmPurchases()' [disabled]='!step1Completed'>下一步</button>
+      </div>
+    </mat-step>
+    <mat-step [stepControl]='contactFormGroup'>
+      <ng-template matStepLabel>填寫聯絡資料</ng-template>
+      <div class='step-content'>
+        <form [formGroup]='contactFormGroup'>
+          <ygg-contact-form formControlName="contact"></ygg-contact-form>
+        </form>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+        <button mat-raised-button matStepperPrevious>上一步</button>
+        <button mat-raised-button matStepperNext (click)='confirmContact()' [disabled]='contactFormGroup.invalid'>下一步</button>
+      </div>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>選擇付款方式</ng-template>
+      <div class='step-content'>
+        <ygg-payment-method-selector [(ngModel)]="paymentMethodId"></ygg-payment-method-selector>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+        <button mat-raised-button matStepperPrevious>上一步</button>
+        <button mat-raised-button (click)="checkout()" [disabled]='!paymentMethodId'>結帳</button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>
