@@ -1,9 +1,12 @@
 import * as _ from 'lodash';
-import { Serializable } from '@ygg/interfaces'
-import { Product } from '../product.interface';
+import * as uuid from 'uuid';
+import * as moment from 'moment';
+import { DataItem, Product, Purchase as iPurchase } from '@ygg/interfaces'
 
 // @dynamic
-export class Purchase implements Serializable {
+export class Purchase implements DataItem, iPurchase {
+  id: string;
+  createAt: Date;
   product: Product;
   quantity: number;
 
@@ -13,6 +16,10 @@ export class Purchase implements Serializable {
   }
 
   constructor(product: Product, quantity: number = 1) {
+    _.defaults(this, {
+      id: uuid.v4(),
+      createAt: moment().toDate()
+    });
     this.product = product;
     this.quantity = quantity;
   }

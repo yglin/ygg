@@ -15,16 +15,25 @@
       "tags": []
     },
     "shopping": {
-      "tags": []
+      "tags": ["scope:shopping", "type:feature", "platform:desktop"]
     },
     "interfaces": {
-      "tags": []
+      "tags": ["scope:shared", "type:utility"]
     },
     "user": {
-      "tags": []
+      "tags": ["scope:shared", "type:feature", "platform:desktop"]
     },
     "payment": {
-      "tags": []
+      "tags": ["scope:shopping", "type:feature", "platform:desktop"]
+    },
+    "order": {
+      "tags": ["scope:shopping", "type:feature", "platform:desktop"]
+    },
+    "data-access": {
+      "tags": ["scope:shared", "type:data-access"]
+    },
+    "shared-form-controls": {
+      "tags": ["scope:shared", "type:ui", "platform:desktop"]
     }
   }
 }

@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgMaterialModule } from './ng-material.module';
 import { ContactFormComponent } from './contact/contact-form/contact-form.component';
+import { AuthenticateService } from './authenticate.service';
 
 @NgModule({
   imports: [

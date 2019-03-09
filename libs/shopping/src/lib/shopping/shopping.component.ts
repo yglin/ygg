@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { ShoppingService } from '../shopping.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ygg-shopping',
@@ -14,7 +15,8 @@ export class ShoppingComponent {
 
   constructor(
     protected shoppingService: ShoppingService,
-    protected formBuilder: FormBuilder
+    protected formBuilder: FormBuilder,
+    protected router: Router
   ) {
     this.step1Completed = false;
     this.shoppingService.purchasesChange.subscribe(purchases => {
@@ -53,5 +55,8 @@ export class ShoppingComponent {
 
   checkout() {
     this.shoppingService.backup();
+    this.shoppingService.checkout().then(order => {
+      this.router.navigate(['orders', order.id]);
+    });
   }
 }

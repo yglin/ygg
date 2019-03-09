@@ -11,6 +11,7 @@ import { CartComponent } from './cart/cart/cart.component';
 
 import { UserModule } from '@ygg/user';
 import { PaymentModule } from '@ygg/payment';
+import { OrderModule } from '@ygg/order';
 
 // export const shoppingRoutes: Route[] = [];
 
@@ -24,6 +25,7 @@ import { PaymentModule } from '@ygg/payment';
     FlexLayoutModule,
     ShoppingRoutingModule,
     UserModule,
+    OrderModule,
     PaymentModule
   ],
   exports: [ShoppingButtonComponent]

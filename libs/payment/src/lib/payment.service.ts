@@ -1,13 +1,38 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { PaymentMethod } from '@ygg/interfaces';
+import { Payment } from './payment';
+import { DataAccessService } from '@ygg/data-access'
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService {
+  collection = 'payments';
 
-  constructor() { }
+  constructor(
+    protected dataAccessService: DataAccessService
+  ) { }
+
+  get$(id: string): Observable<Payment> {
+    return this.dataAccessService.get$(this.collection, id).pipe(
+      map(data => new Payment().fromData(data))
+    );
+  }
+
+  upsert(payment: Payment): Promise<Payment> {
+    return this.dataAccessService.upsert(this.collection, payment).then(data => new Payment().fromData(data));
+  }
+
+  createPayment(methodId: string, amount: number, orderId: string, ownerId: string): Promise<Payment> {
+    const payment = new Payment();
+    payment.amount = amount;
+    payment.orderId = orderId;
+    payment.ownerId = ownerId;
+    payment.methodId = methodId;
+    return this.upsert(payment);
+  }
 
   // TODO: Should fetch from backend server configs
   getPaymentMethods(): Observable<PaymentMethod[]> {

@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 import { Injectable } from '@angular/core';
-import { Product } from './product.interface';
-import { Purchase } from './purchase/purchase';
 import { BehaviorSubject } from 'rxjs';
-import { Contact } from '@ygg/interfaces';
+import { Contact, Product } from '@ygg/interfaces';
+import { AuthenticateService } from '@ygg/user';
+import { Order, Purchase, OrderService } from '@ygg/order';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +13,11 @@ export class ShoppingService {
   purchasesChange: BehaviorSubject<Purchase[]>;
   contact: Contact;
   paymentMethodId: string;
-  currentUserId$: BehaviorSubject<string>;
 
-  constructor() {
+  constructor(
+    protected authenticateService: AuthenticateService,
+    protected orderService: OrderService
+  ) {
     this.restore();
 
     _.defaults(this, {
@@ -26,7 +28,6 @@ export class ShoppingService {
 
     this.purchasesChange = new BehaviorSubject<Purchase[]>(this.purchases);
     this.purchasesChange.subscribe(() => this.backup());
-    this.currentUserId$ = new BehaviorSubject<string>(null);
   }
 
   addPurchase(product: Product, quantity: number = 1): Promise<Purchase[]> {
@@ -105,4 +106,43 @@ export class ShoppingService {
     localStorage.removeItem('cart');
   }
 
+  getCurrentUserId(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.authenticateService.currentUser$.subscribe(user => {
+        // console.log(userId);
+        if (user) {
+          resolve(user.id);
+        } else {
+          reject(new Error('User not login yet'));
+        }
+      });
+    });
+  }
+
+  checkout(): Promise<Order> {
+    return this.getCurrentUserId()
+      .then(
+        ownerId => {
+          return this.orderService.create(
+            this.purchases,
+            this.contact,
+            this.paymentMethodId,
+            ownerId
+          );
+        },
+        error => {
+          alert('請先登入再結帳');
+          return Promise.reject(new Error(`User not login, forbid checkout`));
+        }
+      )
+      .then(order => {
+        alert('訂單已產生');
+        this.clear();
+        return Promise.resolve(order);
+      })
+      .catch(error => {
+        console.error(error);
+        return Promise.reject(error);
+      });
+  }
 }

@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
-import { Purchase } from '../../purchase/purchase';
+import { Purchase } from '@ygg/order';
 import { ShoppingService } from '../../shopping.service';
 
 @Component({
