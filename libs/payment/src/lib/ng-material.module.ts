@@ -5,7 +5,7 @@ import {
   // MatButtonModule,
   // MatInputModule,
   // MatFormFieldModule,
-  MatRadioModule,
+  MatRadioModule
   // MatIconModule,
   // MatTooltipModule,
   // MatBadgeModule,
@@ -20,7 +20,7 @@ import {
     BrowserAnimationsModule,
     // MatButtonModule,
     // MatInputModule,
-    MatRadioModule,
+    MatRadioModule
     // MatFormFieldModule,
     // MatIconModule,
     // MatTooltipModule,
@@ -31,4 +31,4 @@ import {
     // MatListModule
   ]
 })
-export class NgMaterialModule { }
+export class NgMaterialModule {}

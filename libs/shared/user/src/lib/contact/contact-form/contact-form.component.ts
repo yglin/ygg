@@ -67,9 +67,8 @@ export class ContactFormComponent implements ControlValueAccessor, Validator {
   emitChange: (contact: Contact) => any;
 
   constructor(
-    protected formBuilder: FormBuilder
-  ) // protected authService: AuthenticationService
-  {
+    protected formBuilder: FormBuilder // protected authService: AuthenticationService
+  ) {
     this.contactForm = this.formBuilder.group(
       {
         name: '',

@@ -155,24 +155,24 @@
       "schematics": {}
     },
     "interfaces": {
-      "root": "libs/interfaces",
-      "sourceRoot": "libs/interfaces/src",
+      "root": "libs/shared/interfaces",
+      "sourceRoot": "libs/shared/interfaces/src",
       "projectType": "library",
       "prefix": "ygg",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/interfaces/tsconfig.lib.json",
-            "project": "libs/interfaces/ng-package.json"
+            "tsConfig": "libs/shared/interfaces/tsconfig.lib.json",
+            "project": "libs/shared/interfaces/ng-package.json"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/interfaces/tsconfig.lib.json",
-              "libs/interfaces/tsconfig.spec.json"
+              "libs/shared/interfaces/tsconfig.lib.json",
+              "libs/shared/interfaces/tsconfig.spec.json"
             ],
             "exclude": ["**/node_modules/**"]
           }
@@ -180,32 +180,32 @@
         "test": {
           "builder": "@nrwl/builders:jest",
           "options": {
-            "jestConfig": "libs/interfaces/jest.config.js",
-            "tsConfig": "libs/interfaces/tsconfig.spec.json"
+            "jestConfig": "libs/shared/interfaces/jest.config.js",
+            "tsConfig": "libs/shared/interfaces/tsconfig.spec.json"
           }
         }
       },
       "schematics": {}
     },
     "user": {
-      "root": "libs/user",
-      "sourceRoot": "libs/user/src",
+      "root": "libs/shared/user",
+      "sourceRoot": "libs/shared/user/src",
       "projectType": "library",
       "prefix": "ygg",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/user/tsconfig.lib.json",
-            "project": "libs/user/ng-package.json"
+            "tsConfig": "libs/shared/user/tsconfig.lib.json",
+            "project": "libs/shared/user/ng-package.json"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/user/tsconfig.lib.json",
-              "libs/user/tsconfig.spec.json"
+              "libs/shared/user/tsconfig.lib.json",
+              "libs/shared/user/tsconfig.spec.json"
             ],
             "exclude": ["**/node_modules/**"]
           }
@@ -213,9 +213,9 @@
         "test": {
           "builder": "@nrwl/builders:jest",
           "options": {
-            "jestConfig": "libs/user/jest.config.js",
-            "tsConfig": "libs/user/tsconfig.spec.json",
-            "setupFile": "libs/user/src/test-setup.ts"
+            "jestConfig": "libs/shared/user/jest.config.js",
+            "tsConfig": "libs/shared/user/tsconfig.spec.json",
+            "setupFile": "libs/shared/user/src/test-setup.ts"
           }
         }
       },
@@ -290,24 +290,24 @@
       "schematics": {}
     },
     "data-access": {
-      "root": "libs/data-access",
-      "sourceRoot": "libs/data-access/src",
+      "root": "libs/shared/data-access",
+      "sourceRoot": "libs/shared/data-access/src",
       "projectType": "library",
       "prefix": "ygg",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/data-access/tsconfig.lib.json",
-            "project": "libs/data-access/ng-package.json"
+            "tsConfig": "libs/shared/data-access/tsconfig.lib.json",
+            "project": "libs/shared/data-access/ng-package.json"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/data-access/tsconfig.lib.json",
-              "libs/data-access/tsconfig.spec.json"
+              "libs/shared/data-access/tsconfig.lib.json",
+              "libs/shared/data-access/tsconfig.spec.json"
             ],
             "exclude": ["**/node_modules/**"]
           }
@@ -315,9 +315,9 @@
         "test": {
           "builder": "@nrwl/builders:jest",
           "options": {
-            "jestConfig": "libs/data-access/jest.config.js",
-            "tsConfig": "libs/data-access/tsconfig.spec.json",
-            "setupFile": "libs/data-access/src/test-setup.ts"
+            "jestConfig": "libs/shared/data-access/jest.config.js",
+            "tsConfig": "libs/shared/data-access/tsconfig.spec.json",
+            "setupFile": "libs/shared/data-access/src/test-setup.ts"
           }
         }
       },

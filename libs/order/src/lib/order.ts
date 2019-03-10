@@ -1,7 +1,12 @@
 import * as _ from 'lodash';
 import * as uuid from 'uuid';
 import * as moment from 'moment';
-import { DataItem, Order as iOrder, OrderState, Contact } from '@ygg/interfaces';
+import {
+  DataItem,
+  Order as iOrder,
+  OrderState,
+  Contact
+} from '@ygg/interfaces';
 import { Purchase } from './purchase/purchase';
 
 export class Order implements iOrder, DataItem {
@@ -13,7 +18,7 @@ export class Order implements iOrder, DataItem {
   amount: number;
   contact: Contact;
   purchases: Purchase[];
-  paymentIds: Set<string>;  
+  paymentIds: Set<string>;
 
   constructor() {
     _.defaults(this, {
@@ -30,7 +35,9 @@ export class Order implements iOrder, DataItem {
     _.extend(this, data);
 
     if (_.isArray(data.purchases)) {
-      this.purchases = data.purchases.map(purchase => new Purchase(purchase.product, purchase.quantity));
+      this.purchases = data.purchases.map(
+        purchase => new Purchase(purchase.product, purchase.quantity)
+      );
     }
 
     if (_.isArray(data.paymentIds)) {

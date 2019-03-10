@@ -14,20 +14,21 @@ export class CartComponent implements OnInit {
   purchasesDataSource: MatTableDataSource<Purchase>;
   displayedColumns: string[];
 
-  constructor(
-    protected shoppingService: ShoppingService
-  ) {
+  constructor(protected shoppingService: ShoppingService) {
     this.totalPrice = 0;
     this.displayedColumns = ['product', 'quantity', 'price', 'management'];
-    this.purchasesDataSource = new MatTableDataSource<Purchase>(this.shoppingService.purchases);
+    this.purchasesDataSource = new MatTableDataSource<Purchase>(
+      this.shoppingService.purchases
+    );
     shoppingService.purchasesChange.subscribe(purchases => {
       this.purchasesDataSource.data = purchases;
-      this.totalPrice = _.sum(purchases.map(purchase => purchase.product.price * purchase.quantity));
+      this.totalPrice = _.sum(
+        purchases.map(purchase => purchase.product.price * purchase.quantity)
+      );
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   removePurchase(index: number) {
     this.shoppingService.removePurchase(index);

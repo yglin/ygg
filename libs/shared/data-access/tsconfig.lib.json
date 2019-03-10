@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc/libs/data-access",
+    "outDir": "../../../dist/out-tsc/libs/data-access",
     "target": "es2015",
     "module": "es2015",
     "moduleResolution": "node",

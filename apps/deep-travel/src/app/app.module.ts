@@ -5,7 +5,9 @@ import { AppComponent } from './app.component';
 import { ShoppingModule } from '@ygg/shopping';
 import { TestShoppingComponent } from './shopping/test-shopping/test-shopping.component';
 import { AppRouteModule } from './app-route.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { environment } from 'apps/deep-travel/src/environments/environment';
+// import { AngularFireModule } from '@angular/fire';
 
 @NgModule({
   declarations: [AppComponent, TestShoppingComponent],
@@ -13,7 +15,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     ShoppingModule,
     AppRouteModule,
-    BrowserAnimationsModule
+    // BrowserAnimationsModule,
+    // AngularFireModule.initializeApp(environment.firebase)
   ],
   providers: [],
   bootstrap: [AppComponent]

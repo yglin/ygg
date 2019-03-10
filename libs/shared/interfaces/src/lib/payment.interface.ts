@@ -19,7 +19,7 @@ export interface PaymentLog {
 }
 
 export interface PaymentMethod {
-  id: string,
+  id: string;
   name: string;
   description: string;
   active: boolean;

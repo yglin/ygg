@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc/libs/interfaces",
+    "outDir": "../../../dist/out-tsc/libs/interfaces",
     "module": "commonjs",
     "types": ["jest", "node"]
   },

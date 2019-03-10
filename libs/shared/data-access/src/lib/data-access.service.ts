@@ -24,7 +24,7 @@ export class DataAccessService {
   }
 
   upsert(collection: string, item: DataItem): Promise<any> {
-    // TODO implement using firebase firestore 
+    // TODO implement using firebase firestore
     this.cache[item.id] = item;
     return Promise.resolve(item);
   }

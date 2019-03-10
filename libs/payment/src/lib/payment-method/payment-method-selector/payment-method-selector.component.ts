@@ -16,7 +16,8 @@ import { PaymentService } from '../../payment.service';
     }
   ]
 })
-export class PaymentMethodSelectorComponent implements OnInit, ControlValueAccessor {
+export class PaymentMethodSelectorComponent
+  implements OnInit, ControlValueAccessor {
   _selected: string;
   emitChange: (value: string) => {};
   paymentMethods: PaymentMethod[];
@@ -30,9 +31,7 @@ export class PaymentMethodSelectorComponent implements OnInit, ControlValueAcces
     return this._selected;
   }
 
-  constructor(
-    protected paymentService: PaymentService
-  ) { }
+  constructor(protected paymentService: PaymentService) {}
 
   ngOnInit() {
     this.paymentService.getPaymentMethods().subscribe(paymentMethods => {

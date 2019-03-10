@@ -28,10 +28,12 @@ export class Payment implements DataItem, iPayment {
       id: uuid.v4(),
       createAt: moment().toDate(),
       amount: 0,
-      dueDate: moment().add(1, 'week').toDate(),
+      dueDate: moment()
+        .add(1, 'week')
+        .toDate(),
       methodId: 'ecpay',
       logs: [],
-      isPaid: false,
+      isPaid: false
     });
   }
 

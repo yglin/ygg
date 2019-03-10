@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc/libs/interfaces",
+    "outDir": "../../../dist/out-tsc/libs/interfaces",
     "target": "es2015",
     "module": "es2015",
     "moduleResolution": "node",

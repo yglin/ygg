@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../dist/out-tsc/libs/data-access",
+    "outDir": "../../../dist/out-tsc/libs/data-access",
     "module": "commonjs",
     "types": ["jest", "node"]
   },

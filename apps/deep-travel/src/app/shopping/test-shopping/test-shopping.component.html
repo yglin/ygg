@@ -1,9 +1,9 @@
 <div style="text-align:center">
-  <h1>
-    Test shopping module
-  </h1>
-  <ygg-shopping-button tooltip='前往購物車'></ygg-shopping-button>
-  <div><pre>{{ testProduct | json }}</pre></div>
-  <button (click)='addTestProduct()'>加入購物車</button>
+  <h1>Test shopping module</h1>
+  <ygg-shopping-button tooltip="前往購物車"></ygg-shopping-button>
+  <div>
+    <pre>{{ testProduct | json }}</pre>
+  </div>
+  <button (click)="addTestProduct()">加入購物車</button>
 </div>
 <router-outlet></router-outlet>

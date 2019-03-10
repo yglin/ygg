@@ -12,12 +12,12 @@ export class OrderViewComponent implements OnInit {
   @Input() id: string;
   order: Order;
   paymentIds: string[];
-  
+
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
-    protected orderService: OrderService,
-  ) { }
+    protected orderService: OrderService
+  ) {}
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -36,5 +36,4 @@ export class OrderViewComponent implements OnInit {
       });
     }
   }
-
 }

@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as uuid from 'uuid';
 import * as moment from 'moment';
-import { DataItem, Product, Purchase as iPurchase } from '@ygg/interfaces'
+import { DataItem, Product, Purchase as iPurchase } from '@ygg/interfaces';
 
 // @dynamic
 export class Purchase implements DataItem, iPurchase {

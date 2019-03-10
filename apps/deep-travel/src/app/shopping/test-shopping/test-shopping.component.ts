@@ -8,21 +8,16 @@ import { ShoppingService } from '@ygg/shopping';
   styleUrls: ['./test-shopping.component.css']
 })
 export class TestShoppingComponent implements OnInit {
-
-  constructor(
-    protected shoppingService: ShoppingService
-  ) { }
+  constructor(protected shoppingService: ShoppingService) {}
 
   testProduct: Product = {
     name: '家昌哥豆花打屁自由行',
     price: 12345
   };
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   addTestProduct() {
     this.shoppingService.addPurchase(this.testProduct);
   }
-
 }

@@ -9,16 +9,16 @@
   },
   "projects": {
     "deep-travel": {
-      "tags": []
+      "tags": ["scope:shopping", "type:app", "platform:desktop"]
     },
     "deep-travel-e2e": {
-      "tags": []
+      "tags": ["scope:shopping", "type:e2e", "platform:desktop"]
     },
     "shopping": {
       "tags": ["scope:shopping", "type:feature", "platform:desktop"]
     },
     "interfaces": {
-      "tags": ["scope:shared", "type:utility"]
+      "tags": ["scope:shared", "type:util"]
     },
     "user": {
       "tags": ["scope:shared", "type:feature", "platform:desktop"]

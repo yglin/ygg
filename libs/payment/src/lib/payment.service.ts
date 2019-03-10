@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { PaymentMethod } from '@ygg/interfaces';
 import { Payment } from './payment';
-import { DataAccessService } from '@ygg/data-access'
+import { DataAccessService } from '@ygg/data-access';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -11,21 +11,26 @@ import { map } from 'rxjs/operators';
 export class PaymentService {
   collection = 'payments';
 
-  constructor(
-    protected dataAccessService: DataAccessService
-  ) { }
+  constructor(protected dataAccessService: DataAccessService) {}
 
   get$(id: string): Observable<Payment> {
-    return this.dataAccessService.get$(this.collection, id).pipe(
-      map(data => new Payment().fromData(data))
-    );
+    return this.dataAccessService
+      .get$(this.collection, id)
+      .pipe(map(data => new Payment().fromData(data)));
   }
 
   upsert(payment: Payment): Promise<Payment> {
-    return this.dataAccessService.upsert(this.collection, payment).then(data => new Payment().fromData(data));
+    return this.dataAccessService
+      .upsert(this.collection, payment)
+      .then(data => new Payment().fromData(data));
   }
 
-  createPayment(methodId: string, amount: number, orderId: string, ownerId: string): Promise<Payment> {
+  createPayment(
+    methodId: string,
+    amount: number,
+    orderId: string,
+    ownerId: string
+  ): Promise<Payment> {
     const payment = new Payment();
     payment.amount = amount;
     payment.orderId = orderId;
@@ -46,10 +51,10 @@ export class PaymentService {
       {
         id: 'under-table',
         name: '手動付款',
-        description: '請手動付款給我們的管理者，管理者確認收款之後會更新訂單狀態',
+        description:
+          '請手動付款給我們的管理者，管理者確認收款之後會更新訂單狀態',
         active: true
       }
     ]);
   }
-
 }

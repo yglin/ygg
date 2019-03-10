@@ -7,9 +7,7 @@ import { ShoppingComponent } from './shopping/shopping.component';
 const routes: Routes = [
   {
     path: 'shopping',
-    children: [
-      { path: '', pathMatch: 'full', component: ShoppingComponent },
-    ]
+    children: [{ path: '', pathMatch: 'full', component: ShoppingComponent }]
   }
 ];
 

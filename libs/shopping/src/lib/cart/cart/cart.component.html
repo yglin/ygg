@@ -1,13 +1,13 @@
-<div class='ygg-cart'>
-  <div class='purchases-table'>
+<div class="ygg-cart">
+  <div class="purchases-table">
     <table mat-table [dataSource]="purchasesDataSource">
       <ng-container matColumnDef="product">
-        <th mat-header-cell *matHeaderCellDef> 品項 </th>
-        <td mat-cell *matCellDef="let purchase" class='product-name'>
-          <a [href]='purchase.product.link ? purchase.product.link : "#"'>
+        <th mat-header-cell *matHeaderCellDef>品項</th>
+        <td mat-cell *matCellDef="let purchase" class="product-name">
+          <a [href]="purchase.product.link ? purchase.product.link : '#'">
             <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-              <div *ngIf="purchase.product.thumbnail" class='thumbnail'>
-                <img [src]="purchase.product.thumbnail" alt="">
+              <div *ngIf="purchase.product.thumbnail" class="thumbnail">
+                <img [src]="purchase.product.thumbnail" alt="" />
               </div>
               <div>
                 <h3>{{ purchase.product.name }}</h3>
@@ -15,30 +15,46 @@
             </div>
           </a>
         </td>
-        <td mat-footer-cell *matFooterCellDef> 總價 </td>
+        <td mat-footer-cell *matFooterCellDef>總價</td>
       </ng-container>
 
       <ng-container matColumnDef="quantity">
-        <th mat-header-cell *matHeaderCellDef> 訂購數量 </th>
-        <td mat-cell *matCellDef="let purchase; let idx = index;" class='quantity'>
+        <th mat-header-cell *matHeaderCellDef>訂購數量</th>
+        <td
+          mat-cell
+          *matCellDef="let purchase; let idx = index"
+          class="quantity"
+        >
           <mat-form-field>
-            <input type='number' matInput min=1 [ngModel]='purchase.quantity' (ngModelChange)='onChangeQuantity(idx, $event)'>
+            <input
+              type="number"
+              matInput
+              min="1"
+              [ngModel]="purchase.quantity"
+              (ngModelChange)="onChangeQuantity(idx, $event)"
+            />
           </mat-form-field>
         </td>
         <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
 
       <ng-container matColumnDef="price">
-        <th mat-header-cell *matHeaderCellDef> 價格 </th>
-        <td mat-cell *matCellDef="let purchase"> {{ purchase.product.price * purchase.quantity }} </td>
+        <th mat-header-cell *matHeaderCellDef>價格</th>
+        <td mat-cell *matCellDef="let purchase">
+          {{ purchase.product.price * purchase.quantity }}
+        </td>
         <td mat-footer-cell *matFooterCellDef>{{ totalPrice }}</td>
       </ng-container>
 
       <ng-container matColumnDef="management">
         <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let purchase; let idx = index;">
-          <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="10px">
-            <button type="button" mat-mini-fab (click)='removePurchase(idx)'>
+        <td mat-cell *matCellDef="let purchase; let idx = index">
+          <div
+            fxLayout="row"
+            fxLayoutAlign="space-around center"
+            fxLayoutGap="10px"
+          >
+            <button type="button" mat-mini-fab (click)="removePurchase(idx)">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
@@ -47,7 +63,7 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
     </table>
   </div>

@@ -31,4 +31,4 @@ import {
     MatListModule
   ]
 })
-export class NgMaterialModule { }
+export class NgMaterialModule {}

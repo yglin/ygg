@@ -10,14 +10,13 @@ export class ShoppingButtonComponent implements OnInit {
   @Input() tooltip: string;
   numPurchases: number;
 
-  constructor(
-    protected shoppingService: ShoppingService
-  ) {
+  constructor(protected shoppingService: ShoppingService) {
     this.tooltip = 'View Cart';
     this.numPurchases = 0;
-    this.shoppingService.purchasesChange.subscribe(purchases => this.numPurchases = purchases.length);
+    this.shoppingService.purchasesChange.subscribe(
+      purchases => (this.numPurchases = purchases.length)
+    );
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }
