@@ -1,0 +1,16 @@
+<div class='ygg-purchase-list'>
+  <mat-list>
+    <mat-list-item *ngFor="let purchase of purchases">
+      <a [href]='purchase.product.link ? purchase.product.link : "#"'>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+          <div *ngIf="purchase.product.thumbnail" class='thumbnail'>
+            <img [src]="purchase.product.thumbnail" alt="">
+          </div>
+          <div>
+            <h6>{{ purchase.product.name }} X {{ purchase.quantity }}</h6>
+          </div>
+        </div>
+      </a>
+    </mat-list-item>
+  </mat-list>
+</div>

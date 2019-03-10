@@ -1,4 +1,38 @@
-<p>order-view works!</p>
-<div *ngIf="order">
+<div class="ygg-order-view" *ngIf="order">
+  <h3>以下是您的訂單資訊</h3>
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+    <h5>訂單狀態：</h5>
+    <ygg-order-state [state]="order.state"></ygg-order-state>
+  </div>
+  <br />
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>訂購品項</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ygg-purchase-list [purchases]="order.purchases"></ygg-purchase-list>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <!--
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>聯絡資料</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ygg-contact-view [contact]='order.contact'></ygg-contact-view>
+      </mat-card-content>
+    </mat-card>
+  -->
+  <br />
+  <!--
+    <mat-card>
+      <mat-card-content>
+        <div *ngFor="let paymentId of order.paymentIds">
+          <ygg-payment [paymentId]='paymentId'></ygg-payment>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  -->
   <pre>{{ order | json }}</pre>
 </div>
