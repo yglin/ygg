@@ -120,40 +120,6 @@
         }
       }
     },
-    "shopping": {
-      "root": "libs/shopping",
-      "sourceRoot": "libs/shopping/src",
-      "projectType": "library",
-      "prefix": "ygg",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "libs/shopping/tsconfig.lib.json",
-            "project": "libs/shopping/ng-package.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/shopping/tsconfig.lib.json",
-              "libs/shopping/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "libs/shopping/jest.config.js",
-            "tsConfig": "libs/shopping/tsconfig.spec.json",
-            "setupFile": "libs/shopping/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {}
-    },
     "interfaces": {
       "root": "libs/shared/interfaces",
       "sourceRoot": "libs/shared/interfaces/src",
@@ -352,6 +318,33 @@
             "jestConfig": "libs/shared/form-controls/jest.config.js",
             "tsConfig": "libs/shared/form-controls/tsconfig.spec.json",
             "setupFile": "libs/shared/form-controls/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shopping-cart": {
+      "root": "libs/shopping/cart",
+      "sourceRoot": "libs/shopping/cart/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shopping/cart/tsconfig.lib.json",
+              "libs/shopping/cart/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/shopping/cart/jest.config.js",
+            "tsConfig": "libs/shopping/cart/tsconfig.spec.json",
+            "setupFile": "libs/shopping/cart/src/test-setup.ts"
           }
         }
       },

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '@ygg/interfaces';
-import { ShoppingService } from '@ygg/shopping';
+import { Product } from '@ygg/shared/interfaces';
+import { ShoppingService } from '@ygg/shopping/cart';
 
 @Component({
   selector: 'dpt-test-shopping',

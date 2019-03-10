@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DataItem } from '@ygg/interfaces';
+import { DataItem } from '@ygg/shared/interfaces';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 

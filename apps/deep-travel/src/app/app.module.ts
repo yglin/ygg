@@ -2,9 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { ShoppingModule } from '@ygg/shopping';
 import { TestShoppingComponent } from './shopping/test-shopping/test-shopping.component';
 import { AppRouteModule } from './app-route.module';
+import { ShoppingCartModule } from '@ygg/shopping/cart';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // import { environment } from 'apps/deep-travel/src/environments/environment';
 // import { AngularFireModule } from '@angular/fire';
@@ -13,8 +13,8 @@ import { AppRouteModule } from './app-route.module';
   declarations: [AppComponent, TestShoppingComponent],
   imports: [
     BrowserModule,
-    ShoppingModule,
     AppRouteModule,
+    ShoppingCartModule
     // BrowserAnimationsModule,
     // AngularFireModule.initializeApp(environment.firebase)
   ],

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { User, UserState } from '@ygg/interfaces';
+import { User, UserState } from '@ygg/shared/interfaces';
 
 @Injectable({
   providedIn: 'root'

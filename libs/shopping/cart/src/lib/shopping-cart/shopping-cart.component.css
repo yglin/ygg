@@ -1,0 +1,12 @@
+.ygg-shopping-cart {
+  width: 95vw;
+  height: 95vh;
+  padding: 20px;
+}
+
+.ygg-shopping-cart .step-content {
+  width: 90%;
+  margin: 0 auto;
+  height: 60vh;
+  overflow: auto;
+}
