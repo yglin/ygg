@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DataItem } from '@ygg/interfaces';
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,18 +13,21 @@ export class DataAccessService {
     this.cache = {};
   }
 
-  get$(collection: string, id: string): Observable<any> {
+  get$<T extends DataItem>(collection: string, id: string, constructor: { new(): T }): Observable<T> {
+    // TODO implement using firebase firestore
+    let dataFetching: Observable<any>;
     // XXX Fake data in cache
     if (id in this.cache) {
-      return of(this.cache[id]);
+      dataFetching = of(this.cache[id]);
+    } else {
+      dataFetching = of({
+        id: id
+      });
     }
-    // TODO implement using firebase firestore
-    return of({
-      id: id
-    });
+    return dataFetching.pipe(map(data => new constructor().fromData(data)));
   }
 
-  upsert(collection: string, item: DataItem): Promise<any> {
+  upsert<T extends DataItem>(collection: string, item: T, constructor: { new(): T }): Promise<T> {
     // TODO implement using firebase firestore
     this.cache[item.id] = item;
     return Promise.resolve(item);

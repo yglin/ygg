@@ -20,14 +20,12 @@ export class OrderService {
 
   get$(id: string): Observable<Order> {
     return this.dataAccessService
-      .get$(this.collection, id)
-      .pipe(map(data => new Order().fromData(data)));
+      .get$(this.collection, id, Order);
   }
 
   upsert(order: Order): Promise<Order> {
     return this.dataAccessService
-      .upsert(this.collection, order)
-      .then(data => new Order().fromData(data));
+      .upsert(this.collection, order, Order);
   }
 
   usePayment(order: Order, paymentMethodId: string): Promise<Order> {

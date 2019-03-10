@@ -15,14 +15,12 @@ export class PaymentService {
 
   get$(id: string): Observable<Payment> {
     return this.dataAccessService
-      .get$(this.collection, id)
-      .pipe(map(data => new Payment().fromData(data)));
+      .get$(this.collection, id, Payment);
   }
 
   upsert(payment: Payment): Promise<Payment> {
     return this.dataAccessService
-      .upsert(this.collection, payment)
-      .then(data => new Payment().fromData(data));
+      .upsert(this.collection, payment, Payment);
   }
 
   createPayment(
