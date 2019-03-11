@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgMaterialModule } from './ng-material.module';
 import { ContactFormComponent } from './contact/contact-form/contact-form.component';
-import { AuthenticateService } from './authenticate.service';
+import { ContactViewComponent } from './contact/contact-view/contact-view.component';
 
 @NgModule({
   imports: [
@@ -19,7 +19,7 @@ import { AuthenticateService } from './authenticate.service';
       /* {path: '', pathMatch: 'full', component: InsertYourComponentHere} */
     ])
   ],
-  declarations: [ContactFormComponent],
-  exports: [ContactFormComponent]
+  declarations: [ContactFormComponent, ContactViewComponent],
+  exports: [ContactFormComponent, ContactViewComponent]
 })
 export class UserModule {}
