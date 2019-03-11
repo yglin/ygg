@@ -1,0 +1,10 @@
+<div class='payment-under-table'>
+    <div *ngIf="!payment.isPaid">
+      <h6>請在{{ payment.dueDate | date: 'shortDate' }}之前付款，並通知本站官方管理者確認</h6>
+    </div>
+    <div *ngIf="payment.isPaid">
+      <h6>付款已於 {{ payment.paidDate | date: 'shortDate' }} 完成</h6>
+      <!-- <div>審核者：<app-user-thumbnail [userId]='payment.auditorId'></app-user-thumbnail></div> -->
+    </div>
+    <h6>付款金額：<span class='price'>{{ payment.amount }}</span></h6>
+  </div>

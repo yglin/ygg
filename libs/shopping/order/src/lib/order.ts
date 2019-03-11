@@ -40,6 +40,7 @@ export class Order implements iOrder, DataItem {
       );
     }
 
+    // console.log(data.paymentIds);
     if (_.isArray(data.paymentIds)) {
       this.paymentIds = new Set(data.paymentIds);
     }
@@ -48,7 +49,10 @@ export class Order implements iOrder, DataItem {
 
   toData(): any {
     try {
-      return JSON.parse(JSON.stringify(this));
+      const data = JSON.parse(JSON.stringify(this));
+      data.paymentIds = Array.from(this.paymentIds);
+      // console.log(data);
+      return data;
     } catch (error) {
       console.error(error);
       return _.toPlainObject(this);

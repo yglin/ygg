@@ -6,13 +6,11 @@
     >
       <div>
         <h4>{{ paymentMethod.name }}</h4>
-        <pre>
-          {{
+        <pre>{{
             paymentMethod.active
               ? paymentMethod.description
               : '目前不開放此付款方式'
-          }}</pre
-        >
+          }}</pre>
       </div>
     </mat-radio-button>
   </mat-radio-group>

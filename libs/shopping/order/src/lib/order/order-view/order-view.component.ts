@@ -31,7 +31,7 @@ export class OrderViewComponent implements OnInit {
       this.orderService.get$(this.id).subscribe(order => {
         if (order) {
           this.order = order;
-          this.paymentIds = Array.from(order.paymentIds.values());
+          this.paymentIds = Array.from(order.paymentIds);
         }
       });
     }

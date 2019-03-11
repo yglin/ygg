@@ -5,14 +5,14 @@ import {
   // MatButtonModule,
   // MatInputModule,
   // MatFormFieldModule,
-  MatRadioModule
+  MatRadioModule,
   // MatIconModule,
   // MatTooltipModule,
   // MatBadgeModule,
   // MatTableModule,
   // MatStepperModule,
   // MatCardModule,
-  // MatListModule
+  MatListModule
 } from '@angular/material';
 
 @NgModule({
@@ -20,7 +20,7 @@ import {
     BrowserAnimationsModule,
     // MatButtonModule,
     // MatInputModule,
-    MatRadioModule
+    MatRadioModule,
     // MatFormFieldModule,
     // MatIconModule,
     // MatTooltipModule,
@@ -28,7 +28,7 @@ import {
     // MatTableModule,
     // MatStepperModule,
     // MatCardModule,
-    // MatListModule
+    MatListModule
   ]
 })
 export class NgMaterialModule {}

@@ -1,0 +1,32 @@
+<div class="payment" *ngIf="payment">
+  <div fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="50px">
+    <div>
+      <h6>付款資訊</h6>
+      <div [ngSwitch]="payment.methodId">
+        <div *ngSwitchCase="'ecpay'">
+          <ygg-payment-ecpay [payment]="payment"></ygg-payment-ecpay>
+        </div>
+        <div *ngSwitchCase="'under-table'">
+          <ygg-payment-under-table
+            [payment]="payment"
+          ></ygg-payment-under-table>
+        </div>
+      </div>
+    </div>
+    <div class="payment-logs" *ngIf="payment.logs.length > 0">
+      <h6>付款紀錄</h6>
+      <mat-list>
+        <mat-list-item *ngFor="let log of payment.logs">
+          <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="30px">
+            <div>
+              <h6>{{ log.timestamp | date: "short" }}</h6>
+            </div>
+            <div>
+              <h6>{{ getTypeMessage(log.type) }}</h6>
+            </div>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </div>
+</div>

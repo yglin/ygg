@@ -7,6 +7,7 @@ import { NgMaterialModule } from './ng-material.module';
 import { PurchaseListComponent } from './purchase/purchase-list/purchase-list.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { UserModule } from '@ygg/shared/user';
+import { PaymentModule } from '@ygg/shopping/payment';
 
 @NgModule({
   declarations: [OrderViewComponent, OrderStateComponent, PurchaseListComponent],
@@ -15,6 +16,7 @@ import { UserModule } from '@ygg/shared/user';
     FlexLayoutModule,
     NgMaterialModule,
     UserModule,
+    PaymentModule,
     RouterModule.forChild([
       {
         path: 'orders',

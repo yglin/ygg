@@ -188,24 +188,24 @@
       "schematics": {}
     },
     "payment": {
-      "root": "libs/payment",
-      "sourceRoot": "libs/payment/src",
+      "root": "libs/shopping/payment",
+      "sourceRoot": "libs/shopping/payment/src",
       "projectType": "library",
       "prefix": "ygg",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/payment/tsconfig.lib.json",
-            "project": "libs/payment/ng-package.json"
+            "tsConfig": "libs/shopping/payment/tsconfig.lib.json",
+            "project": "libs/shopping/payment/ng-package.json"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/payment/tsconfig.lib.json",
-              "libs/payment/tsconfig.spec.json"
+              "libs/shopping/payment/tsconfig.lib.json",
+              "libs/shopping/payment/tsconfig.spec.json"
             ],
             "exclude": ["**/node_modules/**"]
           }
@@ -213,9 +213,9 @@
         "test": {
           "builder": "@nrwl/builders:jest",
           "options": {
-            "jestConfig": "libs/payment/jest.config.js",
-            "tsConfig": "libs/payment/tsconfig.spec.json",
-            "setupFile": "libs/payment/src/test-setup.ts"
+            "jestConfig": "libs/shopping/payment/jest.config.js",
+            "tsConfig": "libs/shopping/payment/tsconfig.spec.json",
+            "setupFile": "libs/shopping/payment/src/test-setup.ts"
           }
         }
       },

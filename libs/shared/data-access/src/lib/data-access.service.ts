@@ -29,7 +29,8 @@ export class DataAccessService {
 
   upsert<T extends DataItem>(collection: string, item: T, constructor: { new(): T }): Promise<T> {
     // TODO implement using firebase firestore
-    this.cache[item.id] = item;
-    return Promise.resolve(item);
+    const data = item.toData();
+    this.cache[item.id] = data;
+    return Promise.resolve(new constructor().fromData(data));
   }
 }
