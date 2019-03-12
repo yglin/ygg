@@ -80,7 +80,9 @@
               "apps/deep-travel/tsconfig.app.json",
               "apps/deep-travel/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -115,7 +117,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/deep-travel-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -140,7 +144,9 @@
               "libs/shared/interfaces/tsconfig.lib.json",
               "libs/shared/interfaces/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -173,7 +179,9 @@
               "libs/shared/user/tsconfig.lib.json",
               "libs/shared/user/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -207,7 +215,9 @@
               "libs/shopping/payment/tsconfig.lib.json",
               "libs/shopping/payment/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -241,7 +251,9 @@
               "libs/order/tsconfig.lib.json",
               "libs/order/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -275,7 +287,9 @@
               "libs/shared/data-access/tsconfig.lib.json",
               "libs/shared/data-access/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -309,7 +323,9 @@
               "libs/shared/form-controls/tsconfig.lib.json",
               "libs/shared/form-controls/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -336,7 +352,9 @@
               "libs/shopping/cart/tsconfig.lib.json",
               "libs/shopping/cart/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -349,6 +367,100 @@
         }
       },
       "schematics": {}
+    },
+    "shared-utils-ecpay": {
+      "root": "libs/shared/utils/ecpay",
+      "sourceRoot": "libs/shared/utils/ecpay/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "libs/shared/utils/ecpay/tsconfig.lib.json",
+            "project": "libs/shared/utils/ecpay/ng-package.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/utils/ecpay/tsconfig.lib.json",
+              "libs/shared/utils/ecpay/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/shared/utils/ecpay/jest.config.js",
+            "tsConfig": "libs/shared/utils/ecpay/tsconfig.spec.json"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "deep-travel-backend": {
+      "root": "apps/deep-travel-backend",
+      "sourceRoot": "apps/deep-travel-backend/src",
+      "projectType": "application",
+      "prefix": "deep-travel-backend",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/builders:node-build",
+          "options": {
+            "outputPath": "dist/apps/deep-travel-backend",
+            "main": "apps/deep-travel-backend/src/main.ts",
+            "tsConfig": "apps/deep-travel-backend/tsconfig.app.json",
+            "assets": [
+              "apps/deep-travel-backend/src/assets"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/deep-travel-backend/src/environments/environment.ts",
+                  "with": "apps/deep-travel-backend/src/environments/environment.prod.ts"
+                }
+              ],
+              "externalDependencies": "none"
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/builders:node-execute",
+          "options": {
+            "buildTarget": "deep-travel-backend:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/deep-travel-backend/tsconfig.app.json",
+              "apps/deep-travel-backend/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "apps/deep-travel-backend/jest.config.js",
+            "tsConfig": "apps/deep-travel-backend/tsconfig.spec.json"
+          }
+        }
+      }
     }
   },
   "cli": {

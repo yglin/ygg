@@ -9,34 +9,81 @@
   },
   "projects": {
     "deep-travel": {
-      "tags": ["scope:shopping", "type:app", "platform:desktop"]
+      "tags": [
+        "scope:shopping",
+        "type:app",
+        "platform:desktop"
+      ]
     },
     "deep-travel-e2e": {
-      "tags": ["scope:shopping", "type:e2e", "platform:desktop"]
+      "tags": [
+        "scope:shopping",
+        "type:e2e",
+        "platform:desktop"
+      ]
     },
     "shopping": {
-      "tags": ["scope:shopping", "type:feature", "platform:desktop"]
+      "tags": [
+        "scope:shopping",
+        "type:feature",
+        "platform:desktop"
+      ]
     },
     "interfaces": {
-      "tags": ["scope:shared", "type:util"]
+      "tags": [
+        "scope:shared",
+        "type:util"
+      ]
     },
     "user": {
-      "tags": ["scope:shared", "type:feature", "platform:desktop"]
+      "tags": [
+        "scope:shared",
+        "type:feature",
+        "platform:desktop"
+      ]
     },
     "payment": {
-      "tags": ["scope:shopping", "type:feature", "platform:desktop"]
+      "tags": [
+        "scope:shopping",
+        "type:feature",
+        "platform:desktop"
+      ]
     },
     "order": {
-      "tags": ["scope:shopping", "type:feature", "platform:desktop"]
+      "tags": [
+        "scope:shopping",
+        "type:feature",
+        "platform:desktop"
+      ]
     },
     "data-access": {
-      "tags": ["scope:shared", "type:data-access"]
+      "tags": [
+        "scope:shared",
+        "type:data-access"
+      ]
     },
     "shared-form-controls": {
-      "tags": ["scope:shared", "type:ui", "platform:desktop"]
+      "tags": [
+        "scope:shared",
+        "type:ui",
+        "platform:desktop"
+      ]
     },
     "shopping-cart": {
-      "tags": ["scope:shopping", "type:feature", "platform:desktop"]
+      "tags": [
+        "scope:shopping",
+        "type:feature",
+        "platform:desktop"
+      ]
+    },
+    "shared-utils-ecpay": {
+      "tags": [
+        "scope:shared",
+        "type:utils"
+      ]
+    },
+    "deep-travel-backend": {
+      "tags": []
     }
   }
 }

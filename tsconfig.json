@@ -21,7 +21,8 @@
       "@ygg/shared/form-controls": ["libs/shared/form-controls/src/index.ts"],
       "@ygg/shopping/payment": ["libs/shopping/payment/src/index.ts"],
       "@ygg/shopping/order": ["libs/shopping/order/src/index.ts"],
-      "@ygg/shopping/cart": ["libs/shopping/cart/src/index.ts"]
+      "@ygg/shopping/cart": ["libs/shopping/cart/src/index.ts"],
+      "@ygg/shared/utils/ecpay": ["libs/shared/utils/ecpay/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

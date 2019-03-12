@@ -1,4 +1,38 @@
-<div class='payment-ecpay'>
-  <pre>{{ payment | json }}</pre>
-  <!-- <yg-ecpay [order]='ecpayOrder' [config]='ecpayConfig' (submitted)='onSubmitted($event)'></yg-ecpay> -->
+<div class="payment-ecpay" *ngIf="ecpayOrder">
+  <table>
+    <tr>
+      <td class="name">訂單編號：</td>
+      <td class="value">{{ ecpayOrder.MerchantTradeNo }}</td>
+    </tr>
+    <tr>
+      <td class="name">購買項目：</td>
+      <td class="value">{{ ecpayOrder.ItemName }}</td>
+    </tr>
+    <tr>
+      <td class="name">描述：</td>
+      <td class="value">{{ ecpayOrder.TradeDesc }}</td>
+    </tr>
+    <tr>
+      <td class="name">總價：</td>
+      <td class="value">{{ ecpayOrder.TotalAmount }}</td>
+    </tr>
+  </table>
+
+  <br /><br />
+  <mat-checkbox [(ngModel)]="agree"
+    >我同意將以上訂單資料傳送給綠界支付 www.ecpay.com.tw</mat-checkbox
+  >
+  <br /><br />
+  <div
+    style="width: 100%;"
+    fxLayout="row"
+    fxLayoutAlign="end center"
+    fxLayoutGap="10px"
+  >
+    <div>
+      <button mat-raised-button (click)="submitToEcpay()" [disabled]="!agree">
+        前往綠界支付
+      </button>
+    </div>
+  </div>
 </div>
