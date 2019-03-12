@@ -84,6 +84,9 @@
     },
     "deep-travel-backend": {
       "tags": []
+    },
+    "firebase-functions": {
+      "tags": []
     }
   }
 }

@@ -1,0 +1,48 @@
+[debug] [2019-03-12T04:41:13.184Z] ----------------------------------------------------------------------
+[debug] [2019-03-12T04:41:13.188Z] Command:       /usr/local/bin/node /usr/local/bin/firebase functions:shell
+[debug] [2019-03-12T04:41:13.188Z] CLI Version:   6.5.0
+[debug] [2019-03-12T04:41:13.189Z] Platform:      darwin
+[debug] [2019-03-12T04:41:13.189Z] Node Version:  v8.12.0
+[debug] [2019-03-12T04:41:13.190Z] Time:          Tue Mar 12 2019 12:41:13 GMT+0800 (CST)
+[debug] [2019-03-12T04:41:13.190Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-03-12T04:41:13.205Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-03-12T04:41:13.206Z] > authorizing via signed-in user
+[debug] [2019-03-12T04:41:13.206Z] [iam] checking project localhost-146909 for permissions ["firebase.projects.get"]
+[debug] [2019-03-12T04:41:13.209Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/localhost-146909:testIamPermissions  
+
+[debug] [2019-03-12T04:41:14.261Z] <<< HTTP RESPONSE 200
+[debug] [2019-03-12T04:41:14.385Z] TypeError: Path must be a string. Received undefined
+    at assertPath (path.js:28:11)
+    at Object.join (path.js:1236:7)
+    at FunctionsEmulator.start (/usr/local/lib/node_modules/firebase-tools/lib/functionsEmulator.js:88:29)
+    at Command.module.exports [as _action] (/usr/local/lib/node_modules/firebase-tools/lib/functionsShellCommandAction.js:13:10)
+    at /usr/local/lib/node_modules/firebase-tools/lib/command.js:167:37
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2019-03-12T04:43:09.771Z] ----------------------------------------------------------------------
+[debug] [2019-03-12T04:43:09.775Z] Command:       /usr/local/bin/node /usr/local/bin/firebase functions:shell
+[debug] [2019-03-12T04:43:09.775Z] CLI Version:   6.5.0
+[debug] [2019-03-12T04:43:09.775Z] Platform:      darwin
+[debug] [2019-03-12T04:43:09.775Z] Node Version:  v8.12.0
+[debug] [2019-03-12T04:43:09.776Z] Time:          Tue Mar 12 2019 12:43:09 GMT+0800 (CST)
+[debug] [2019-03-12T04:43:09.776Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-03-12T04:43:09.792Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-03-12T04:43:09.793Z] > authorizing via signed-in user
+[debug] [2019-03-12T04:43:09.793Z] [iam] checking project localhost-146909 for permissions ["firebase.projects.get"]
+[debug] [2019-03-12T04:43:09.796Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/localhost-146909:testIamPermissions  
+
+[debug] [2019-03-12T04:43:10.799Z] <<< HTTP RESPONSE 200
+[debug] [2019-03-12T04:43:10.935Z] TypeError: Path must be a string. Received undefined
+    at assertPath (path.js:28:11)
+    at Object.join (path.js:1236:7)
+    at FunctionsEmulator.start (/usr/local/lib/node_modules/firebase-tools/lib/functionsEmulator.js:88:29)
+    at Command.module.exports [as _action] (/usr/local/lib/node_modules/firebase-tools/lib/functionsShellCommandAction.js:13:10)
+    at /usr/local/lib/node_modules/firebase-tools/lib/command.js:167:37
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7)
+[error] 
+[error] Error: An unexpected error has occurred.
