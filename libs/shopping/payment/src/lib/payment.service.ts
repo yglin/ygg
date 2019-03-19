@@ -1,40 +1,53 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { PaymentMethod } from '@ygg/shared/interfaces';
-import { Payment } from './payment';
+import { PaymentMethod, Purchase } from '@ygg/shared/interfaces';
+import { Payment } from '@ygg/shared/interfaces';
 import { DataAccessService } from '@ygg/shared/data-access';
-import { map } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService {
+  apiUrl =
+    'https://us-central1-localhost-146909.cloudfunctions.net/api/payments';
   collection = 'payments';
 
-  constructor(protected dataAccessService: DataAccessService) {}
+  constructor(
+    protected http: HttpClient,
+    protected dataAccessService: DataAccessService
+  ) {}
 
   get$(id: string): Observable<Payment> {
-    return this.dataAccessService
-      .get$(this.collection, id, Payment);
+    return this.dataAccessService.get$(this.collection, id, Payment);
   }
 
   upsert(payment: Payment): Promise<Payment> {
-    return this.dataAccessService
-      .upsert(this.collection, payment, Payment);
+    return this.dataAccessService.upsert(this.collection, payment, Payment);
   }
 
   createPayment(
     methodId: string,
+    purchases: Purchase[],
     amount: number,
     orderId: string,
     ownerId: string
   ): Promise<Payment> {
-    const payment = new Payment();
-    payment.amount = amount;
-    payment.orderId = orderId;
-    payment.ownerId = ownerId;
-    payment.methodId = methodId;
-    return this.upsert(payment);
+    const payment = new Payment().fromData({
+      methodId,
+      purchases,
+      amount,
+      orderId,
+      ownerId
+    });
+    return this.http
+      .post(this.apiUrl, payment.toData())
+      .pipe(first())
+      .toPromise()
+      .then(data => {
+        return new Payment().fromData(data);
+      });
   }
 
   // TODO: Should fetch from backend server configs

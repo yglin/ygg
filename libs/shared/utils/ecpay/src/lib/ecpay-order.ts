@@ -1,8 +1,12 @@
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { EcpayPaymentMethod, iEcpayOrder, iEcpayConfig } from './ecpay';
+import * as crypto from 'crypto-js';
+import { Payment } from '@ygg/shared/interfaces';
+import { EcpayPaymentMethod, EcpayOrderParams, EcpayConfig } from './ecpay';
 
-export class EcpayOrder implements iEcpayOrder {
+export class EcpayOrder implements EcpayOrderParams {
+  config: EcpayConfig;
+
   _MerchantID: string;
   set MerchantID(value: string) {
     if (value.length <= 10) {
@@ -32,7 +36,7 @@ export class EcpayOrder implements iEcpayOrder {
   MerchantTradeDate: string;
   PaymentType = 'aio';
   TotalAmount: number;
-  
+
   _TradeDesc: string;
   set TradeDesc(value: string) {
     if (value.length <= 200) {
@@ -89,15 +93,65 @@ export class EcpayOrder implements iEcpayOrder {
 
   EncryptType = 1;
 
-  constructor(data: any = {}) {
+  /** Store local payment id */
+  CustomField1: string;
+
+  errors: Error[] = [];
+
+  constructor(config: EcpayConfig, data: any = {}) {
     _.extend(this, data);
-    if (!this.MerchantTradeDate) {
-      this.MerchantTradeDate = moment().format('YYYY/MM/DD hh:mm:ss');
+
+    const configRequires = [
+      'MerchantID',
+      'MerchantName',
+      'MerchantID',
+      'ReturnURL',
+      'HashKey',
+      'HashIV'
+    ];
+    if (!config || !_.every(configRequires, key => !_.isEmpty(config[key]))) {
+      this.errors.push(new Error(`Invalid Ecpay config data`));
+    } else {
+      this.config = config;
+      _.defaults(this, {
+        MerchantID: config.MerchantID,
+        MerchantTradeNo: `${config.MerchantName}${
+          config.MerchantID
+        }${moment().unix()}`,
+        MerchantTradeDate: moment().format('YYYY/MM/DD hh:mm:ss'),
+        ReturnURL: config.ReturnURL
+      });
     }
   }
 
-  toParams(): any {
-    const params = _.pick(this, [
+  getErrors(): Error[] {
+    return this.errors;
+  }
+
+  fromPayment(payment: Payment): this {
+    const paymentRequires = ['id', 'amount', 'purchases'];
+    if (
+      !payment ||
+      !_.every(paymentRequires, key => payment[key])
+    ) {
+      const errorMessage = `Invalid payment data for Ecpay order,\nrequird data fields are ${paymentRequires}, your payment data is ${JSON.stringify(payment)}`;
+      this.errors.push(new Error(errorMessage));
+    } else {
+      this.TotalAmount = payment.amount;
+      this.TradeDesc = payment.description || _.join(
+        payment.purchases.map(purchase => `${purchase.product.name} X ${purchase.quantity}`),
+        '\n');
+      this.ItemName = _.join(
+        payment.purchases.map(purchase => purchase.product.name),
+        '#'
+      );
+      this.CustomField1 = payment.id;
+    }
+    return this;
+  }
+
+  toParams(): EcpayOrderParams {
+    const params: any = _.pick(this, [
       'MerchantID',
       'MerchantTradeNo',
       'MerchantTradeDate',
@@ -107,9 +161,46 @@ export class EcpayOrder implements iEcpayOrder {
       'ItemName',
       'ReturnURL',
       'ChoosePayment',
-      'CheckMacValue',
       'EncryptType',
+      'CustomField1'
     ]);
+    params.CheckMacValue = this.encodeCheckMac(params);
     return params;
+  }
+
+  convertToDotNetEncoding(text: string): string {
+    return text
+      .replace(/%2d/g, '-')
+      .replace(/%5f/g, '_')
+      .replace(/%2e/g, '.')
+      .replace(/%21/g, '!')
+      .replace(/%2a/g, '*')
+      .replace(/%28/g, '(')
+      .replace(/%29/g, ')')
+      .replace(/%20/g, '+');
+  }
+
+  encodeCheckMac(params: any): string {
+    const _params = _.omit(params, 'CheckMacValue');
+    let result = '';
+    const tokens = [`HashKey=${this.config.HashKey}`];
+    _.keys(_params)
+      .sort()
+      .forEach(key => {
+        tokens.push(`${key}=${_params[key]}`);
+      });
+    tokens.push(`HashIV=${this.config.HashIV}`);
+    // console.dir(tokens);
+    result = tokens.join('&');
+    result = encodeURIComponent(result);
+    result = this.convertToDotNetEncoding(result);
+    result = result.toLowerCase();
+    // console.log(result);
+    result = crypto
+      .SHA256(result)
+      .toString()
+      .toUpperCase();
+    // console.log(result);
+    return result;
   }
 }

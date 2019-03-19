@@ -22,13 +22,6 @@
         "platform:desktop"
       ]
     },
-    "shopping": {
-      "tags": [
-        "scope:shopping",
-        "type:feature",
-        "platform:desktop"
-      ]
-    },
     "interfaces": {
       "tags": [
         "scope:shared",
@@ -86,7 +79,10 @@
       "tags": []
     },
     "firebase-functions": {
-      "tags": []
+      "tags": [
+        "scope:backend",
+        "type:app"
+      ]
     }
   }
 }

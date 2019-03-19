@@ -232,24 +232,24 @@
       "schematics": {}
     },
     "order": {
-      "root": "libs/order",
-      "sourceRoot": "libs/order/src",
+      "root": "libs/shopping/order",
+      "sourceRoot": "libs/shopping/order/src",
       "projectType": "library",
       "prefix": "ygg",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "libs/order/tsconfig.lib.json",
-            "project": "libs/order/ng-package.json"
+            "tsConfig": "libs/shopping/order/tsconfig.lib.json",
+            "project": "libs/shopping/order/ng-package.json"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/order/tsconfig.lib.json",
-              "libs/order/tsconfig.spec.json"
+              "libs/shopping/order/tsconfig.lib.json",
+              "libs/shopping/order/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -259,9 +259,9 @@
         "test": {
           "builder": "@nrwl/builders:jest",
           "options": {
-            "jestConfig": "libs/order/jest.config.js",
-            "tsConfig": "libs/order/tsconfig.spec.json",
-            "setupFile": "libs/order/src/test-setup.ts"
+            "jestConfig": "libs/shopping/order/jest.config.js",
+            "tsConfig": "libs/shopping/order/tsconfig.spec.json",
+            "setupFile": "libs/shopping/order/src/test-setup.ts"
           }
         }
       },

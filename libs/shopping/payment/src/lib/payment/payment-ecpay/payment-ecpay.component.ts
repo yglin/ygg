@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Renderer2 } from '@angular/core';
-import { Payment } from '../../payment';
-import { EcpayOrder, EcpayService } from '@ygg/shared/utils/ecpay';
+import { Payment } from '@ygg/shared/interfaces';
+// import { EcpayService } from '@ygg/shared/utils/ecpay';
 
 @Component({
   selector: 'ygg-payment-ecpay',
@@ -9,34 +9,30 @@ import { EcpayOrder, EcpayService } from '@ygg/shared/utils/ecpay';
 })
 export class PaymentEcpayComponent implements OnInit {
   @Input() payment: Payment;
-  ecpayOrder: EcpayOrder;
+  orderParams: any;
+  interfaceUrl: string;
   agree = false;
 
   constructor(
     protected renderer: Renderer2,
-    protected ecpayService: EcpayService
   ) {}
 
   ngOnInit() {
-    if (this.payment) {
-      this.ecpayService.createEcpayOrder(this.payment).then(ecpayOrder => {
-        if (ecpayOrder) {
-          this.ecpayOrder = ecpayOrder;
-        }
-      });
+    if (this.payment && this.payment.redirectInfo) {
+      this.orderParams = this.payment.redirectInfo.data;
+      this.interfaceUrl = this.payment.redirectInfo.url;
     }
   }
 
   submitToEcpay() {
-    const orderParams = this.ecpayOrder.toParams();
     const form = this.renderer.createElement('form');
-    this.renderer.setAttribute(form, 'action', this.ecpayService.config.interfaceUrl);
+    this.renderer.setAttribute(form, 'action', this.interfaceUrl);
     this.renderer.setAttribute(form, 'method', 'POST');
     this.renderer.setAttribute(form, 'target', '_blank');
     this.renderer.setStyle(form, 'display', 'none');
-    for (const key in orderParams) {
-      if (orderParams.hasOwnProperty(key)) {
-        const value = orderParams[key];
+    for (const key in this.orderParams) {
+      if (this.orderParams.hasOwnProperty(key)) {
+        const value = this.orderParams[key];
         // const typeAttr = (typeof value === 'number') ? 'type="number"' : '';
         // const inputHtml = `<input name="${key}" ${typeAttr} val="${value}">`;
         const input = this.renderer.createElement('input');
@@ -51,7 +47,7 @@ export class PaymentEcpayComponent implements OnInit {
     this.renderer.appendChild(document.body, form);
     // console.dir(form.innerHTML);
     console.log('Submit below data to Ecpay');
-    console.dir(orderParams);
+    console.dir(this.orderParams);
     form.submit();
     this.renderer.removeChild(document.body, form);
   }

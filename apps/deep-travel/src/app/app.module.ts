@@ -8,11 +8,13 @@ import { ShoppingCartModule } from '@ygg/shopping/cart';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // import { environment } from 'apps/deep-travel/src/environments/environment';
 // import { AngularFireModule } from '@angular/fire';
+// import { DataAccessModule } from '@ygg/shared/data-access';
 
 @NgModule({
   declarations: [AppComponent, TestShoppingComponent],
   imports: [
     BrowserModule,
+    // DataAccessModule,
     AppRouteModule,
     ShoppingCartModule
     // BrowserAnimationsModule,

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { PaymentService } from '../payment.service';
-import { Payment } from '../payment';
+import { Payment } from '@ygg/shared/interfaces';
 
 @Component({
   selector: 'ygg-payment',

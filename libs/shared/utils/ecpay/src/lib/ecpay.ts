@@ -8,7 +8,7 @@ export enum EcpayPaymentMethod {
   ALL = 'ALL'
 }
 
-export interface iEcpayConfig {
+export interface EcpayConfig {
   MerchantName: string;
   MerchantID: string;
   ReturnURL: string;
@@ -17,7 +17,7 @@ export interface iEcpayConfig {
   interfaceUrl: string;
 }
 
-export interface iEcpayOrder {
+export interface EcpayOrderParams {
   MerchantID: string;
   MerchantTradeNo: string;
   StoreID?: string;
@@ -44,6 +44,4 @@ export interface iEcpayOrder {
   CustomField3?: string;
   CustomField4?: string;
   EncryptType: number;
-
-  toParams(): any;
 }

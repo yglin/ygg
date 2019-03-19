@@ -1,24 +1,39 @@
+import * as express from 'express';
 import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
+import * as cors from 'cors';
+
+// admin.initializeApp(functions.config().firebase);
+admin.initializeApp();
+// admin.firestore().settings({ timestampsInSnapshots: true });
+
+const corsHandler = cors({origin: true});
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
 //
-export const helloWorld = functions.https.onRequest((request, response) => {
-  response.send('Hello from Firebase!');
-});
-
-// import * as express from 'express';
-
-// const app = express();
-
-// app.get('/api', (req, res) => {
-//   res.send(`Welcome to firebase-functions!`);
+// export const helloWorld = functions.https.onRequest((request, response) => {
+//  response.send("Hello from Firebase!");
 // });
 
-// const port = process.env.port || 3333;
-// app.listen(port, (err) => {
-//   if (err) {
-//     console.error(err);
-//   }
-//   console.log(`Listening at http://localhost:${port}`);
+// ========================== Http Functions, hub with Express ===================
+import { router } from './app/api';
+import { httpErrorHandler } from './app/error/http-error';
+
+const app = express();
+app.disable('x-powered-by');
+app.use(corsHandler);
+
+// app.get("/test", (req: express.Request, res: express.Response) => {
+//   res.status(200).send('Using express with Firebase Functions works~!!!');
 // });
+
+app.use('', router);
+app.use(httpErrorHandler);
+
+exports.api = functions.https.onRequest(app);
+
+// ========================== Event Functions ===========================
+// export { sendEmailOnCreateEventUser } from './event/on-user-signup';
+// export { onPaymentPaid } from './event/payment/on-paid';
+

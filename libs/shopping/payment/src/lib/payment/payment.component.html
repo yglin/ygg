@@ -2,6 +2,32 @@
   <div fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="50px">
     <div>
       <h6>付款資訊</h6>
+      <table>
+        <tr>
+          <td class="name">購買項目：</td>
+          <td class="value">
+            <div *ngFor="let purchase of payment.purchases">
+              {{ purchase.product.name }} X {{ purchase.quantity }}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="name">描述：</td>
+          <td class="value">{{ payment.description }}</td>
+        </tr>
+        <tr>
+          <td class="name">總價：</td>
+          <td class="value">{{ payment.amount }}</td>
+        </tr>
+      </table>
+
+      <br />
+      <div *ngIf="payment.isPaid">
+        <h5>訂單已於{{ payment.paidDate | date: 'short' }}付款完成</h5>
+      </div>
+      <div *ngIf="!payment.isPaid">
+        <h5>請於{{ payment.dueDate | date: 'short' }}前完成付款</h5>
+      </div>
       <div [ngSwitch]="payment.methodId">
         <div *ngSwitchCase="'ecpay'">
           <ygg-payment-ecpay [payment]="payment"></ygg-payment-ecpay>
@@ -19,7 +45,7 @@
         <mat-list-item *ngFor="let log of payment.logs">
           <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="30px">
             <div>
-              <h6>{{ log.timestamp | date: "short" }}</h6>
+              <h6>{{ log.timestamp | date: 'short' }}</h6>
             </div>
             <div>
               <h6>{{ getTypeMessage(log.type) }}</h6>

@@ -1,5 +1,5 @@
-<div class="payment-ecpay" *ngIf="ecpayOrder">
-  <table>
+<div class="payment-ecpay" *ngIf="orderParams && interfaceUrl">
+  <!-- <table>
     <tr>
       <td class="name">訂單編號：</td>
       <td class="value">{{ ecpayOrder.MerchantTradeNo }}</td>
@@ -17,10 +17,9 @@
       <td class="value">{{ ecpayOrder.TotalAmount }}</td>
     </tr>
   </table>
-
-  <br /><br />
+ -->
   <mat-checkbox [(ngModel)]="agree"
-    >我同意將以上訂單資料傳送給綠界支付 www.ecpay.com.tw</mat-checkbox
+    >我同意將訂單資料傳送給綠界支付 www.ecpay.com.tw</mat-checkbox
   >
   <br /><br />
   <div

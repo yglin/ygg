@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Payment } from '../../payment';
+import { Payment } from '@ygg/shared/interfaces';
 
 @Component({
   selector: 'ygg-payment-under-table',
