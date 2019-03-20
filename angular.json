@@ -80,9 +80,7 @@
               "apps/deep-travel/tsconfig.app.json",
               "apps/deep-travel/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -117,9 +115,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/deep-travel-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -144,9 +140,7 @@
               "libs/shared/interfaces/tsconfig.lib.json",
               "libs/shared/interfaces/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -179,9 +173,7 @@
               "libs/shared/user/tsconfig.lib.json",
               "libs/shared/user/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -215,9 +207,7 @@
               "libs/shopping/payment/tsconfig.lib.json",
               "libs/shopping/payment/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -251,9 +241,7 @@
               "libs/shopping/order/tsconfig.lib.json",
               "libs/shopping/order/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -287,9 +275,7 @@
               "libs/shared/data-access/tsconfig.lib.json",
               "libs/shared/data-access/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -323,9 +309,7 @@
               "libs/shared/form-controls/tsconfig.lib.json",
               "libs/shared/form-controls/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -352,9 +336,7 @@
               "libs/shopping/cart/tsconfig.lib.json",
               "libs/shopping/cart/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -388,9 +370,7 @@
               "libs/shared/utils/ecpay/tsconfig.lib.json",
               "libs/shared/utils/ecpay/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -416,9 +396,7 @@
             "outputPath": "dist/apps/deep-travel-backend",
             "main": "apps/deep-travel-backend/src/main.ts",
             "tsConfig": "apps/deep-travel-backend/tsconfig.app.json",
-            "assets": [
-              "apps/deep-travel-backend/src/assets"
-            ]
+            "assets": ["apps/deep-travel-backend/src/assets"]
           },
           "configurations": {
             "production": {
@@ -448,9 +426,7 @@
               "apps/deep-travel-backend/tsconfig.app.json",
               "apps/deep-travel-backend/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -475,9 +451,7 @@
             "outputPath": "dist/apps/firebase-functions",
             "main": "apps/firebase-functions/src/main.ts",
             "tsConfig": "apps/firebase-functions/tsconfig.app.json",
-            "assets": [
-              "apps/firebase-functions/src/assets"
-            ]
+            "assets": ["apps/firebase-functions/src/assets"]
           },
           "configurations": {
             "production": {
@@ -507,9 +481,7 @@
               "apps/firebase-functions/tsconfig.app.json",
               "apps/firebase-functions/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -517,6 +489,120 @@
           "options": {
             "jestConfig": "apps/firebase-functions/jest.config.js",
             "tsConfig": "apps/firebase-functions/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "yggtest": {
+      "root": "apps/yggtest/",
+      "sourceRoot": "apps/yggtest/src",
+      "projectType": "application",
+      "prefix": "yggtest",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/yggtest",
+            "index": "apps/yggtest/src/index.html",
+            "main": "apps/yggtest/src/main.ts",
+            "polyfills": "apps/yggtest/src/polyfills.ts",
+            "tsConfig": "apps/yggtest/tsconfig.app.json",
+            "assets": [
+              "apps/yggtest/src/favicon.ico",
+              "apps/yggtest/src/assets"
+            ],
+            "styles": ["apps/yggtest/src/styles.css"],
+            "scripts": [],
+            "es5BrowserSupport": true
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/yggtest/src/environments/environment.ts",
+                  "with": "apps/yggtest/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "yggtest:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "yggtest:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "yggtest:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/yggtest/tsconfig.app.json",
+              "apps/yggtest/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "apps/yggtest/jest.config.js",
+            "tsConfig": "apps/yggtest/tsconfig.spec.json",
+            "setupFile": "apps/yggtest/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "yggtest-e2e": {
+      "root": "apps/yggtest-e2e",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/builders:cypress",
+          "options": {
+            "cypressConfig": "apps/yggtest-e2e/cypress.json",
+            "tsConfig": "apps/yggtest-e2e/tsconfig.e2e.json",
+            "devServerTarget": "yggtest:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "yggtest:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "apps/yggtest-e2e/tsconfig.e2e.json",
+            "exclude": ["**/node_modules/**"]
           }
         }
       }

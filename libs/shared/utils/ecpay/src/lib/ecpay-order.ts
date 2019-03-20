@@ -98,11 +98,46 @@ export class EcpayOrder implements EcpayOrderParams {
 
   errors: Error[] = [];
 
+  static convertToDotNetEncoding(text: string): string {
+    return text
+      .replace(/%2d/g, '-')
+      .replace(/%5f/g, '_')
+      .replace(/%2e/g, '.')
+      .replace(/%21/g, '!')
+      .replace(/%2a/g, '*')
+      .replace(/%28/g, '(')
+      .replace(/%29/g, ')')
+      .replace(/%20/g, '+');
+  }
+
+  static encodeCheckMac(params: any, hashKey: string, hashIV: string): string {
+    const _params = _.omit(params, 'CheckMacValue');
+    let result = '';
+    const tokens = [`HashKey=${hashKey}`];
+    _.keys(_params)
+      .sort()
+      .forEach(key => {
+        tokens.push(`${key}=${_params[key]}`);
+      });
+    tokens.push(`HashIV=${hashIV}`);
+    // console.dir(tokens);
+    result = tokens.join('&');
+    result = encodeURIComponent(result);
+    result = EcpayOrder.convertToDotNetEncoding(result);
+    result = result.toLowerCase();
+    // console.log(result);
+    result = crypto
+      .SHA256(result)
+      .toString()
+      .toUpperCase();
+    // console.log(result);
+    return result;
+  }
+
   constructor(config: EcpayConfig, data: any = {}) {
     _.extend(this, data);
 
     const configRequires = [
-      'MerchantID',
       'MerchantName',
       'MerchantID',
       'ReturnURL',
@@ -151,56 +186,34 @@ export class EcpayOrder implements EcpayOrderParams {
   }
 
   toParams(): EcpayOrderParams {
-    const params: any = _.pick(this, [
-      'MerchantID',
-      'MerchantTradeNo',
-      'MerchantTradeDate',
-      'PaymentType',
-      'TotalAmount',
-      'TradeDesc',
-      'ItemName',
-      'ReturnURL',
-      'ChoosePayment',
-      'EncryptType',
-      'CustomField1'
-    ]);
-    params.CheckMacValue = this.encodeCheckMac(params);
+    // const params: any = _.pick(this, [
+    //   'MerchantID',
+    //   'MerchantTradeNo',
+    //   'MerchantTradeDate',
+    //   'PaymentType',
+    //   'TotalAmount',
+    //   'TradeDesc',
+    //   'ItemName',
+    //   'ReturnURL',
+    //   'ChoosePayment',
+    //   'EncryptType',
+    //   'CustomField1'
+    // ]);
+    const params: any = {
+      MerchantID: '2000132',
+      TradeDesc: '促銷方案',
+      PaymentType: 'aio',
+      MerchantTradeDate: '2013/03/12 15:30:23',
+      MerchantTradeNo: 'ecpay20130312153023',
+      ReturnURL: 'https://www.ecpay.com.tw/receive.php',
+      ItemName: 'Apple iphone 7 手機殼',
+      TotalAmount: 1000,
+      ChoosePayment: 'ALL',
+      EncryptType: 1
+    };
+    params.CheckMacValue = EcpayOrder.encodeCheckMac(params, this.config.HashKey, this.config.HashIV);
+    // params.CheckMacValue = EcpayOrder.encodeCheckMac(params, '5294y06JbISpM5x9', 'v77hoKGq4kWxNNIS');
     return params;
   }
 
-  convertToDotNetEncoding(text: string): string {
-    return text
-      .replace(/%2d/g, '-')
-      .replace(/%5f/g, '_')
-      .replace(/%2e/g, '.')
-      .replace(/%21/g, '!')
-      .replace(/%2a/g, '*')
-      .replace(/%28/g, '(')
-      .replace(/%29/g, ')')
-      .replace(/%20/g, '+');
-  }
-
-  encodeCheckMac(params: any): string {
-    const _params = _.omit(params, 'CheckMacValue');
-    let result = '';
-    const tokens = [`HashKey=${this.config.HashKey}`];
-    _.keys(_params)
-      .sort()
-      .forEach(key => {
-        tokens.push(`${key}=${_params[key]}`);
-      });
-    tokens.push(`HashIV=${this.config.HashIV}`);
-    // console.dir(tokens);
-    result = tokens.join('&');
-    result = encodeURIComponent(result);
-    result = this.convertToDotNetEncoding(result);
-    result = result.toLowerCase();
-    // console.log(result);
-    result = crypto
-      .SHA256(result)
-      .toString()
-      .toUpperCase();
-    // console.log(result);
-    return result;
-  }
 }
