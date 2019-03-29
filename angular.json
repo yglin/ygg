@@ -350,61 +350,6 @@
       },
       "schematics": {}
     },
-    "deep-travel-backend": {
-      "root": "apps/deep-travel-backend",
-      "sourceRoot": "apps/deep-travel-backend/src",
-      "projectType": "application",
-      "prefix": "deep-travel-backend",
-      "schematics": {},
-      "architect": {
-        "build": {
-          "builder": "@nrwl/builders:node-build",
-          "options": {
-            "outputPath": "dist/apps/deep-travel-backend",
-            "main": "apps/deep-travel-backend/src/main.ts",
-            "tsConfig": "apps/deep-travel-backend/tsconfig.app.json",
-            "assets": ["apps/deep-travel-backend/src/assets"]
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/deep-travel-backend/src/environments/environment.ts",
-                  "with": "apps/deep-travel-backend/src/environments/environment.prod.ts"
-                }
-              ],
-              "externalDependencies": "none"
-            }
-          }
-        },
-        "serve": {
-          "builder": "@nrwl/builders:node-execute",
-          "options": {
-            "buildTarget": "deep-travel-backend:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/deep-travel-backend/tsconfig.app.json",
-              "apps/deep-travel-backend/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "apps/deep-travel-backend/jest.config.js",
-            "tsConfig": "apps/deep-travel-backend/tsconfig.spec.json"
-          }
-        }
-      }
-    },
     "firebase-functions": {
       "root": "apps/firebase-functions",
       "sourceRoot": "apps/firebase-functions/src",

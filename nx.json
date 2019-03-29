@@ -35,9 +35,6 @@
     "shopping-cart": {
       "tags": ["scope:shopping", "type:feature", "platform:desktop"]
     },
-    "deep-travel-backend": {
-      "tags": []
-    },
     "firebase-functions": {
       "tags": ["scope:backend", "type:app"]
     },
