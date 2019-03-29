@@ -30,7 +30,7 @@ export class OrderService {
 
   usePayment(order: Order, paymentMethodId: string): Promise<Order> {
     return this.paymentService
-      .createPayment(paymentMethodId, order.purchases, order.amount, order.ownerId, order.id)
+      .createPayment(paymentMethodId, order.purchases, order.amount, order.id, order.ownerId)
       .then(payment => {
         order.paymentIds.clear();
         order.paymentIds.add(payment.id);

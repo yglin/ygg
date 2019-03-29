@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnChanges, Input } from '@angular/core';
 import { OrderState } from '@ygg/shared/interfaces';
 
 @Component({
@@ -6,7 +6,7 @@ import { OrderState } from '@ygg/shared/interfaces';
   templateUrl: './order-state.component.html',
   styleUrls: ['./order-state.component.css']
 })
-export class OrderStateComponent implements OnInit {
+export class OrderStateComponent implements OnInit, OnChanges {
   @Input() state: OrderState;
   stateMessage = '';
 
@@ -14,6 +14,9 @@ export class OrderStateComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+
+  ngOnChanges() {
     switch (this.state) {
       case OrderState.NEW:
         this.stateMessage = '新訂單，等待確認';

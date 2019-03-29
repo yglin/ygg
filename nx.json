@@ -35,20 +35,14 @@
     "shopping-cart": {
       "tags": ["scope:shopping", "type:feature", "platform:desktop"]
     },
-    "shared-utils-ecpay": {
-      "tags": ["scope:shared", "type:utils"]
-    },
     "deep-travel-backend": {
       "tags": []
     },
     "firebase-functions": {
       "tags": ["scope:backend", "type:app"]
     },
-    "yggtest": {
-      "tags": []
-    },
-    "yggtest-e2e": {
-      "tags": []
+    "shared-ui-widgets": {
+      "tags": ["scope:shared", "type:ui", "platform:desktop"]
     }
   }
 }

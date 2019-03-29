@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { ShoppingService } from '../shopping.service';
+import { ProgressSpinnerService } from '@ygg/shared/ui-widgets';
 
 @Component({
   selector: 'ygg-shopping-cart',
@@ -16,7 +17,8 @@ export class ShoppingCartComponent {
   constructor(
     protected shoppingService: ShoppingService,
     protected formBuilder: FormBuilder,
-    protected router: Router
+    protected router: Router,
+    protected spinner: ProgressSpinnerService
   ) {
     this.step1Completed = false;
     this.shoppingService.purchasesChange.subscribe(purchases => {
@@ -53,10 +55,16 @@ export class ShoppingCartComponent {
     this.shoppingService.backup();
   }
 
-  checkout() {
-    this.shoppingService.backup();
-    this.shoppingService.checkout().then(order => {
+  async checkout() {
+    this.spinner.show();
+    try {
+      this.shoppingService.backup();
+      const order = await this.shoppingService.checkout();
       this.router.navigate(['orders', order.id]);
-    });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.spinner.hide();
+    }
   }
 }

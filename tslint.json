@@ -87,7 +87,11 @@
           },
           {
             "sourceTag": "scope:backend",
-            "onlyDependOnLibsWithTags": ["scope:shared"]
+            "onlyDependOnLibsWithTags": ["*"]
+          },
+          {
+            "sourceTag": "scope:test",
+            "onlyDependOnLibsWithTags": ["*"]
           }
         ]
       }

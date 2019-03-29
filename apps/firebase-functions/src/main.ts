@@ -34,6 +34,5 @@ app.use(httpErrorHandler);
 exports.api = functions.https.onRequest(app);
 
 // ========================== Event Functions ===========================
-// export { sendEmailOnCreateEventUser } from './event/on-user-signup';
-// export { onPaymentPaid } from './event/payment/on-paid';
+export * from './app/event';
 

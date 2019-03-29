@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, NgZone } from '@angular/core';
 import { Order } from '../../order';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from '../../order.service';
@@ -16,7 +16,8 @@ export class OrderViewComponent implements OnInit {
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
-    protected orderService: OrderService
+    protected orderService: OrderService,
+    protected zone: NgZone
   ) {}
 
   ngOnInit() {
@@ -29,10 +30,10 @@ export class OrderViewComponent implements OnInit {
     }
     if (this.id) {
       this.orderService.get$(this.id).subscribe(order => {
-        if (order) {
+        // this.zone.run(() => {
           this.order = order;
           this.paymentIds = Array.from(order.paymentIds);
-        }
+        // });
       });
     }
   }

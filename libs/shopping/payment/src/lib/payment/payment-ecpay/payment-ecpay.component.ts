@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Renderer2 } from '@angular/core';
 import { Payment } from '@ygg/shared/interfaces';
-// import { EcpayService } from '@ygg/shared/utils/ecpay';
 
 @Component({
   selector: 'ygg-payment-ecpay',

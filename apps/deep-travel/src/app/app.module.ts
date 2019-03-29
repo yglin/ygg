@@ -2,9 +2,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { TestShoppingComponent } from './shopping/test-shopping/test-shopping.component';
+import { TestShoppingComponent } from './test/shopping/test-shopping.component';
 import { AppRouteModule } from './app-route.module';
 import { ShoppingCartModule } from '@ygg/shopping/cart';
+import { SharedUiWidgetsModule } from '@ygg/shared/ui-widgets';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // import { environment } from 'apps/deep-travel/src/environments/environment';
 // import { AngularFireModule } from '@angular/fire';
@@ -16,7 +17,8 @@ import { ShoppingCartModule } from '@ygg/shopping/cart';
     BrowserModule,
     // DataAccessModule,
     AppRouteModule,
-    ShoppingCartModule
+    ShoppingCartModule,
+    SharedUiWidgetsModule
     // BrowserAnimationsModule,
     // AngularFireModule.initializeApp(environment.firebase)
   ],

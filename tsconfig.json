@@ -22,7 +22,10 @@
       "@ygg/shopping/payment": ["libs/shopping/payment/src/index.ts"],
       "@ygg/shopping/order": ["libs/shopping/order/src/index.ts"],
       "@ygg/shopping/cart": ["libs/shopping/cart/src/index.ts"],
-      "@ygg/shared/utils/ecpay": ["libs/shared/utils/ecpay/src/index.ts"]
+      "@ygg/shared/shopping/abstraction": [
+        "libs/shared/shopping/abstraction/src/index.ts"
+      ],
+      "@ygg/shared/ui-widgets": ["libs/shared/ui-widgets/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

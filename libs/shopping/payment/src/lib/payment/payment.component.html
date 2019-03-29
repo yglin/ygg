@@ -27,15 +27,15 @@
       </div>
       <div *ngIf="!payment.isPaid">
         <h5>請於{{ payment.dueDate | date: 'short' }}前完成付款</h5>
-      </div>
-      <div [ngSwitch]="payment.methodId">
-        <div *ngSwitchCase="'ecpay'">
-          <ygg-payment-ecpay [payment]="payment"></ygg-payment-ecpay>
-        </div>
-        <div *ngSwitchCase="'under-table'">
-          <ygg-payment-under-table
-            [payment]="payment"
-          ></ygg-payment-under-table>
+        <div [ngSwitch]="payment.methodId">
+          <div *ngSwitchCase="'ecpay'">
+            <ygg-payment-ecpay [payment]="payment"></ygg-payment-ecpay>
+          </div>
+          <div *ngSwitchCase="'under-table'">
+            <ygg-payment-under-table
+              [payment]="payment"
+            ></ygg-payment-under-table>
+          </div>
         </div>
       </div>
     </div>

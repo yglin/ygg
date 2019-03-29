@@ -1,0 +1,4 @@
+.ygg-transparent-background .mat-dialog-container {
+  background: rgba(1.0, 1.0, 1.0, 0.0);
+  box-shadow: none;
+}
