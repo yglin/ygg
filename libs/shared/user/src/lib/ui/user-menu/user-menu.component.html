@@ -1,0 +1,9 @@
+<div class='ygg-user-menu'>
+  <div class='menu-trigger' [matMenuTriggerFor]="userMenu"><ng-content></ng-content></div>
+  <mat-menu #userMenu="matMenu">
+    <div *ngFor="let menuItem of menuItems">
+      <button mat-menu-item [routerLink]='menuItem.link'><mat-icon>{{menuItem.icon}}</mat-icon>{{menuItem.label}}</button>
+      <button mat-menu-item (click)='logout()'><mat-icon>eject</mat-icon>登出</button>
+    </div>
+  </mat-menu>
+</div>

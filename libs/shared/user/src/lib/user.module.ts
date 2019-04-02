@@ -10,6 +10,7 @@ import { ContactViewComponent } from './contact/contact-view/contact-view.compon
 import { AccountWidgetComponent } from './ui/account-widget/account-widget.component';
 import { LoginDialogComponent } from './ui/login-dialog/login-dialog.component';
 import { UserThumbnailComponent } from './ui/user-thumbnail/user-thumbnail.component';
+import { UserMenuComponent } from './ui/user-menu/user-menu.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,7 @@ import { UserThumbnailComponent } from './ui/user-thumbnail/user-thumbnail.compo
       /* {path: '', pathMatch: 'full', component: InsertYourComponentHere} */
     ])
   ],
-  declarations: [ContactFormComponent, ContactViewComponent, AccountWidgetComponent, LoginDialogComponent, UserThumbnailComponent],
+  declarations: [ContactFormComponent, ContactViewComponent, AccountWidgetComponent, LoginDialogComponent, UserThumbnailComponent, UserMenuComponent],
   entryComponents: [
     LoginDialogComponent
   ],
