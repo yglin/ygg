@@ -431,6 +431,32 @@
         }
       },
       "schematics": {}
+    },
+    "shared-infrastructure-error": {
+      "root": "libs/shared/infrastructure/error",
+      "sourceRoot": "libs/shared/infrastructure/error/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/infrastructure/error/tsconfig.lib.json",
+              "libs/shared/infrastructure/error/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/shared/infrastructure/error/jest.config.js",
+            "tsConfig": "libs/shared/infrastructure/error/tsconfig.spec.json"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

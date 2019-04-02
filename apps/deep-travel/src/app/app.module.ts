@@ -1,22 +1,22 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppComponent } from './app.component';
-import { TestShoppingComponent } from './test/shopping/test-shopping.component';
 import { AppRouteModule } from './app-route.module';
+import { UserModule } from '@ygg/shared/user';
 import { ShoppingCartModule } from '@ygg/shopping/cart';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui-widgets';
-// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-// import { environment } from 'apps/deep-travel/src/environments/environment';
-// import { AngularFireModule } from '@angular/fire';
-// import { DataAccessModule } from '@ygg/shared/data-access';
+import { HeaderComponent } from './layout/header/header.component';
 
 @NgModule({
-  declarations: [AppComponent, TestShoppingComponent],
+  declarations: [AppComponent, HeaderComponent],
   imports: [
     BrowserModule,
+    FlexLayoutModule,
     // DataAccessModule,
     AppRouteModule,
+    UserModule,
     ShoppingCartModule,
     SharedUiWidgetsModule
     // BrowserAnimationsModule,

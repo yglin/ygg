@@ -25,7 +25,13 @@
       "@ygg/shared/shopping/abstraction": [
         "libs/shared/shopping/abstraction/src/index.ts"
       ],
-      "@ygg/shared/ui-widgets": ["libs/shared/ui-widgets/src/index.ts"]
+      "@ygg/shared/ui-widgets": ["libs/shared/ui-widgets/src/index.ts"],
+      "@ygg/shared/infrastructure/abstractions": [
+        "libs/shared/infrastructure/abstractions/src/index.ts"
+      ],
+      "@ygg/shared/infrastructure/error": [
+        "libs/shared/infrastructure/error/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

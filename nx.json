@@ -40,6 +40,9 @@
     },
     "shared-ui-widgets": {
       "tags": ["scope:shared", "type:ui", "platform:desktop"]
+    },
+    "shared-infrastructure-error": {
+      "tags": ["scope:shared", "type:infrastructure"]
     }
   }
 }
