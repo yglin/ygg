@@ -1,0 +1,40 @@
+<div class="mat-elevation-z8">
+  <table
+    mat-table
+    class="full-width-table"
+    [dataSource]="dataSource"
+    matSort
+    matSortActive="timestamp"
+    matSortDirection="desc"
+    matSortDisableClear
+    aria-label="Elements"
+  >
+    <ng-container matColumnDef="timestamp">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Time Stamp</th>
+      <td mat-cell *matCellDef="let log">
+        {{ log.timestamp | date: 'short' }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="level">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Level</th>
+      <td mat-cell *matCellDef="let log">{{ log.level }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="message">
+      <th mat-header-cell *matHeaderCellDef>Message</th>
+      <td mat-cell *matCellDef="let log">{{ log.message }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator
+    #paginator
+    [pageIndex]="0"
+    [pageSize]="10"
+    [pageSizeOptions]="[10, 25, 50, 100, 250]"
+  >
+  </mat-paginator>
+</div>

@@ -1,0 +1,28 @@
+<div class="ygg-logging">
+  <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px">
+    <div>
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="log your message..."
+          [(ngModel)]="message"
+        />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-select
+        placeholder="Select level"
+        [(ngModel)]="selectedLevel"
+        name="level"
+      >
+        <mat-option *ngFor="let level of levels" [value]="level.value">
+          {{ level.label }}
+        </mat-option>
+      </mat-select>
+    </div>
+    <div><button mat-raised-button (click)="logMessage()">Submit</button></div>
+  </div>
+  <br />
+  <h3>Your logging history ...</h3>
+  <ygg-log-list></ygg-log-list>
+</div>

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-// import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import {
   MatToolbarModule,
   MatButtonModule,
@@ -16,7 +16,10 @@ import {
   MatListModule,
   MatDialogModule,
   MatProgressSpinnerModule,
-  MatMenuModule
+  MatMenuModule,
+  MatPaginatorModule,
+  MatSortModule,
+  MatSelectModule
 } from '@angular/material';
 
 @NgModule({
@@ -36,7 +39,10 @@ import {
     MatListModule,
     MatDialogModule,
     MatProgressSpinnerModule,
-    MatMenuModule
+    MatMenuModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatSelectModule
   ]
 })
-export class NgMaterialModule {}
+export class SharedUiNgMaterialModule {}

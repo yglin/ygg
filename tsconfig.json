@@ -31,7 +31,11 @@
       ],
       "@ygg/shared/infrastructure/error": [
         "libs/shared/infrastructure/error/src/index.ts"
-      ]
+      ],
+      "@ygg/shared/infrastructure/log": [
+        "libs/shared/infrastructure/log/src/index.ts"
+      ],
+      "@ygg/shared/ui/ng-material": ["libs/shared/ui/ng-material/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -43,6 +43,15 @@
     },
     "shared-infrastructure-error": {
       "tags": ["scope:shared", "type:infrastructure"]
+    },
+    "shared-infrastructure-log": {
+      "tags": ["scope:shared", "type:infrastructure"]
+    },
+    "sandbox": {
+      "tags": ["scope:test", "type:app"]
+    },
+    "shared-ui-ng-material": {
+      "tags": ["scope:shared", "type:ui"]
     }
   }
 }

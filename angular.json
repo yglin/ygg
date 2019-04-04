@@ -457,6 +457,169 @@
         }
       },
       "schematics": {}
+    },
+    "shared-infrastructure-log": {
+      "root": "libs/shared/infrastructure/log",
+      "sourceRoot": "libs/shared/infrastructure/log/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/infrastructure/log/tsconfig.lib.json",
+              "libs/shared/infrastructure/log/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/shared/infrastructure/log/jest.config.js",
+            "tsConfig": "libs/shared/infrastructure/log/tsconfig.spec.json",
+            "setupFile": "libs/shared/infrastructure/log/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "sandbox": {
+      "root": "apps/sandbox/",
+      "sourceRoot": "apps/sandbox/src",
+      "projectType": "application",
+      "prefix": "ygg",
+      "schematics": {
+        "@nrwl/schematics:class": {
+          "skipTests": true
+        },
+        "@nrwl/schematics:component": {
+          "skipTests": true
+        },
+        "@nrwl/schematics:directive": {
+          "skipTests": true
+        },
+        "@nrwl/schematics:guard": {
+          "skipTests": true
+        },
+        "@nrwl/schematics:module": {
+          "skipTests": true
+        },
+        "@nrwl/schematics:pipe": {
+          "skipTests": true
+        },
+        "@nrwl/schematics:service": {
+          "skipTests": true
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/sandbox",
+            "index": "apps/sandbox/src/index.html",
+            "main": "apps/sandbox/src/main.ts",
+            "polyfills": "apps/sandbox/src/polyfills.ts",
+            "tsConfig": "apps/sandbox/tsconfig.app.json",
+            "assets": [
+              "apps/sandbox/src/favicon.ico",
+              "apps/sandbox/src/assets"
+            ],
+            "styles": ["apps/sandbox/src/styles.css"],
+            "scripts": [],
+            "es5BrowserSupport": true
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/sandbox/src/environments/environment.ts",
+                  "with": "apps/sandbox/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "sandbox:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "sandbox:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "sandbox:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/sandbox/tsconfig.app.json",
+              "apps/sandbox/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "apps/sandbox/jest.config.js",
+            "tsConfig": "apps/sandbox/tsconfig.spec.json",
+            "setupFile": "apps/sandbox/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "shared-ui-ng-material": {
+      "root": "libs/shared/ui/ng-material",
+      "sourceRoot": "libs/shared/ui/ng-material/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/ng-material/tsconfig.lib.json",
+              "libs/shared/ui/ng-material/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/ng-material/jest.config.js",
+            "tsConfig": "libs/shared/ui/ng-material/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/ng-material/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {
