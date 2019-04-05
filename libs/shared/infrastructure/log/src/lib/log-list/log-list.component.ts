@@ -3,6 +3,7 @@ import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { LogListDataSource, LogListItem } from './log-list-datasource';
 import { LogService } from '../log.service';
 import { DataSource } from '@angular/cdk/table';
+import { LogLevel, getLogLevelName } from '../log';
 
 @Component({
   selector: 'ygg-log-list',
@@ -26,5 +27,9 @@ export class LogListComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
     // console.log(this.sort);
     this.dataSource.sort = this.sort;
+  }
+
+  getLogLevelName(level: LogLevel): string {
+    return getLogLevelName(level);
   }
 }

@@ -9,6 +9,10 @@ export enum LogLevel {
   Trace
 }
 
+export function getLogLevelName(level: LogLevel): string {
+  return LogLevel[level];
+}
+
 export class Log {
   timestamp: Date;
   level: LogLevel;

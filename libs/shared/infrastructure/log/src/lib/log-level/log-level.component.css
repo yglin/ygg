@@ -1,0 +1,23 @@
+.ygg-log-level .Fatal {
+  color: darkred;
+}
+
+.ygg-log-level .Error {
+  color: orangered;
+}
+
+.ygg-log-level .Warning {
+  color: darkorange;
+}
+
+.ygg-log-level .Info {
+  color: black;
+}
+
+.ygg-log-level .Debug {
+  color: darkblue;
+}
+
+.ygg-log-level .Trace {
+  color: darkgray;
+}

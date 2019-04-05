@@ -27,15 +27,15 @@ export class LogService {
     }
 
     // Intercept console log methods
-    // const consoleMethodsMapping = {
-    //   log: this.info,
-    //   info: this.info,
-    //   error: this.error,
-    //   warn: this.warning,
-    //   debug: this.debug,
-    //   trace: this.trace
-    // };
-    // this.interceptConsole(consoleMethodsMapping);
+    const consoleMethodsMapping = {
+      log: this.info,
+      info: this.info,
+      error: this.error,
+      warn: this.warning,
+      debug: this.debug,
+      trace: this.trace
+    };
+    this.interceptConsole(consoleMethodsMapping);
   }
 
   log(message: any, level: LogLevel = LogLevel.Info) {
@@ -73,7 +73,7 @@ function interceptConsoleMethod(methodName: string, doSomething: Function) {
     ) {
       const originalMethod = window.console[methodName];
       window.console[methodName] = function() {
-        doSomething();
+        doSomething(arguments[0]);
         if (originalMethod.apply) {
           originalMethod.apply(originalMethod, [window.console, arguments]);
         } else {
