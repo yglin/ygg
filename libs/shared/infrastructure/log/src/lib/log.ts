@@ -1,4 +1,3 @@
-
 export enum LogLevel {
   Unknown = 0,
   Fatal,
@@ -40,4 +39,9 @@ export class LogFilter {
     return log.level <= this.threshold;
   }
 }
+
+export interface LogConfig {
+  threshold: LogLevel;
+}
+
 

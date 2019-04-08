@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-import { SharedInfrastructureLogModule } from '@ygg/shared/infrastructure/log';
+import { SharedInfrastructureLogModule, LogLevel } from '@ygg/shared/infrastructure/log';
 
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -17,7 +17,9 @@ import { LoggingComponent } from './logging/logging.component';
     FormsModule,
     FlexLayoutModule,
     SharedUiNgMaterialModule,
-    SharedInfrastructureLogModule,
+    SharedInfrastructureLogModule.forRoot({
+      threshold: LogLevel.Debug
+    }),
     RouterModule.forRoot(
       [
         { path: 'logging', component: LoggingComponent },

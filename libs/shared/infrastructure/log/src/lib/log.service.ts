@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
-import { LogLevel, Log, LogFilter } from './log';
+import { Injectable, Inject, InjectionToken } from '@angular/core';
+import { LogLevel, Log, LogFilter, LogConfig } from './log';
 import { BehaviorSubject } from 'rxjs';
+
+export const LogServiceConfigToken = new InjectionToken<LogConfig>("LogConfig");
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +13,10 @@ export class LogService {
   filter: LogFilter;
   [wrapperFnuctions: string]: any;
 
-  constructor() {
+  constructor(@Inject(LogServiceConfigToken) private config) {
     this.logs = [];
     this.logs$ = new BehaviorSubject(this.logs);
-    this.filter = new LogFilter(LogLevel.Debug);
+    this.filter = new LogFilter(this.config.threshold);
 
     // Build wrapper functions for each level
     // tslint:disable-next-line: forin
