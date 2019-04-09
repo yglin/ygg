@@ -13,12 +13,12 @@ export function getLogLevelName(level: LogLevel): string {
 }
 
 export class Log {
-  timestamp: Date;
+  createAt: Date;
   level: LogLevel;
   message: string;
 
   constructor(message: any, level: LogLevel = LogLevel.Info) {
-    this.timestamp = new Date();
+    this.createAt = new Date();
     this.level = level;
     if (typeof message === 'string') {
       this.message = message;

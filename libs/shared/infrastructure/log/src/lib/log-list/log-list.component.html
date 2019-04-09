@@ -4,15 +4,15 @@
     class="full-width-table"
     [dataSource]="dataSource"
     matSort
-    matSortActive="timestamp"
+    matSortActive="createAt"
     matSortDirection="desc"
     matSortDisableClear
     aria-label="Elements"
   >
-    <ng-container matColumnDef="timestamp">
+    <ng-container matColumnDef="createAt">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Time Stamp</th>
       <td mat-cell *matCellDef="let log">
-        {{ log.timestamp | date: 'short' }}
+        {{ log.createAt | date: 'short' }}
       </td>
     </ng-container>
 

@@ -125,8 +125,8 @@ export class LogListDataSource extends DataSource<LogListItem> {
     return data.sort((a, b) => {
       const isAsc = this.sort.direction === 'asc';
       switch (this.sort.active) {
-        case 'timestamp':
-          return compare(+a.timestamp, +b.timestamp, isAsc);
+        case 'createAt':
+          return compare(+a.createAt, +b.createAt, isAsc);
         case 'level':
           return compare(+a.level, +b.level, isAsc);
         default:
