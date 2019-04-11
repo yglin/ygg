@@ -11,6 +11,7 @@ export enum UserState {
 
 export class User implements DataItem {
   id: string;
+  isAnonymous: boolean;
   createAt: Date;
   name: string;
   account: string;
@@ -22,6 +23,7 @@ export class User implements DataItem {
 
 
   constructor() {
+    this.isAnonymous = false;
     this.createAt = new Date();
     this.state = UserState.New;
     this.providers = {};
@@ -47,6 +49,8 @@ export class User implements DataItem {
       this.id = userProfile.uid;
     }
 
+    this.isAnonymous = userProfile.isAnonymous === true;
+
     if (!this.account) {
       if (userProfile.email) {
         this.account = userProfile.email;
@@ -55,6 +59,8 @@ export class User implements DataItem {
     if (!this.name) {
       if (userProfile.displayName) {
         this.name = userProfile.displayName;
+      } else {
+        this.name = '＊＊＊';
       }
     }
     if (!this.phone) {
@@ -67,8 +73,11 @@ export class User implements DataItem {
         this.email = userProfile.email;
       }
     }
+
     if (userProfile.photoURL) {
       this.avatarUrl = new URL(userProfile.photoURL);
+    } else {
+      this.avatarUrl = new URL('https://upload.wikimedia.org/wikipedia/commons/7/73/Facebook_Haha_React.png');
     }
 
     let profile = userProfile;

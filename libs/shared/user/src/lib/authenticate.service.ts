@@ -1,39 +1,43 @@
-import { isEmpty } from 'lodash';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription, of, from, throwError } from 'rxjs';
-import { User } from './models/user';
+import {Injectable} from '@angular/core';
+import {AngularFireAuth} from '@angular/fire/auth';
 import * as firebase from 'firebase';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { UserService } from './user.service';
-import { map, switchMap, catchError } from 'rxjs/operators';
-import { UserError, UserErrorCode } from './error';
+import {isEmpty} from 'lodash';
+import {BehaviorSubject, from, Observable, of, Subscription, throwError} from 'rxjs';
+import {catchError, map, switchMap} from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+import {UserError, UserErrorCode} from './error';
+import {User} from './models/user';
+import {UserService} from './user.service';
+
+@Injectable({providedIn: 'root'})
 export class AuthenticateService {
   currentUser$: Observable<User>;
 
   constructor(
-    private userService: UserService,
-    private angularFireAuth: AngularFireAuth
-  ) {
-    this.currentUser$ = this.angularFireAuth.authState.pipe(
-      switchMap(firebaseUser => {
-        if (!firebaseUser) {
-          return of(null);
-        } else {
-          return this.findOrCreateUser$(firebaseUser);
-        }
-      })
-    );
+      private userService: UserService,
+      private angularFireAuth: AngularFireAuth) {
+    this.currentUser$ =
+        this.angularFireAuth.authState.pipe(switchMap(firebaseUser => {
+          if (!firebaseUser) {
+            return of(null);
+          } else {
+            return this.findOrCreateUser$(firebaseUser);
+          }
+        }));
+  }
+
+  async loginAnonymously() {
+    await this.angularFireAuth.auth.signInAnonymously().catch(
+        error => {
+          const userError = new UserError(UserErrorCode.LoginFailed, error.message, error);
+          throw userError;
+        });
   }
 
   async login(providerName: string) {
     try {
-      let provider:
-        | firebase.auth.GoogleAuthProvider
-        | firebase.auth.FacebookAuthProvider;
+      let provider:|firebase.auth.GoogleAuthProvider|
+          firebase.auth.FacebookAuthProvider;
       switch (providerName) {
         case 'google':
           provider = new firebase.auth.GoogleAuthProvider();
@@ -59,17 +63,16 @@ export class AuthenticateService {
 
   findOrCreateUser$(firebaseUser: firebase.User): Observable<User> {
     const userId = firebaseUser.uid;
-    return this.userService.get$(userId).pipe(
-      catchError(error => {
-        const userError: UserError = error;
-        if (userError.code === UserErrorCode.UserNotFound) {
-          const newUser = new User().connectProvider(firebaseUser.providerId, firebaseUser);
-          return this.userService.upsert(newUser);
-        } else {
-          return throwError(error);
-        }
-      })
-    );
+    return this.userService.get$(userId).pipe(catchError(error => {
+      const userError: UserError = error;
+      if (userError.code === UserErrorCode.UserNotFound) {
+        const newUser =
+            new User().connectProvider(firebaseUser.providerId, firebaseUser);
+        return this.userService.upsert(newUser);
+      } else {
+        return throwError(error);
+      }
+    }));
   }
 
   async logout() {
