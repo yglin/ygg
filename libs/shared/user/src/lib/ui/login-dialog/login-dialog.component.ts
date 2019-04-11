@@ -20,4 +20,8 @@ export class LoginDialogComponent implements OnInit {
   login(provider: string) {
     this.authenticateService.login(provider).then(() => this.dialogRef.close());
   }
+
+  loginAnonymously() {
+    this.authenticateService.loginAnonymously().then(() => this.dialogRef.close());
+  }
 }

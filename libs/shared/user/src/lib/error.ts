@@ -2,7 +2,8 @@ import { YGGError } from '@ygg/shared/infrastructure/error';
 
 export enum UserErrorCode {
   Unknown = 0,
-  UserNotFound
+  UserNotFound,
+  LoginFailed
 }
 
 export class UserError extends YGGError {
