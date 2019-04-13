@@ -466,6 +466,10 @@
     },
     "defaultCollection": "@nrwl/schematics"
   },
-  "schematics": {},
+  "schematics": {
+    "@nrwl/schematics:library": {
+      "framework": "angular"
+    }
+  },
   "defaultProject": "deep-travel"
 }

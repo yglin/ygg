@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticateService } from '../../authenticate.service';
-import { UserMenuItem, UserMenuService } from './user-menu.service';
+import { UserMenuItem } from './user-menu';
+import { UserMenuService } from './user-menu.service';
 
 @Component({
   selector: 'ygg-user-menu',

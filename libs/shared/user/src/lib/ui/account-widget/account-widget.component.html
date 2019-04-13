@@ -1,4 +1,4 @@
-<div class="ygg-account-widget">
+<div id='account-widget' class="ygg-account-widget">
   <div *ngIf="user">
     <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
       <ygg-user-menu>
@@ -18,5 +18,5 @@
       -->
     </div>
   </div>
-  <div *ngIf="!user"><button mat-button (click)="login()">登入</button></div>
+  <div *ngIf="!user"><button id='login' mat-button (click)="login()">登入</button></div>
 </div>

@@ -21,6 +21,14 @@ export class User implements DataItem {
   providers: any;
   state: UserState;
 
+  static newAnonymous(): User {
+    const anonymous = new User();
+    anonymous.id = 'anony-mummy-honey-spaghetti-your-moms-fatty';
+    anonymous.isAnonymous = true;
+    anonymous.name = '＊＊＊';
+    anonymous.avatarUrl = new URL('https://upload.wikimedia.org/wikipedia/commons/7/73/Facebook_Haha_React.png');
+    return anonymous;
+  }
 
   constructor() {
     this.isAnonymous = false;
@@ -59,8 +67,6 @@ export class User implements DataItem {
     if (!this.name) {
       if (userProfile.displayName) {
         this.name = userProfile.displayName;
-      } else {
-        this.name = '＊＊＊';
       }
     }
     if (!this.phone) {
@@ -76,8 +82,6 @@ export class User implements DataItem {
 
     if (userProfile.photoURL) {
       this.avatarUrl = new URL(userProfile.photoURL);
-    } else {
-      this.avatarUrl = new URL('https://upload.wikimedia.org/wikipedia/commons/7/73/Facebook_Haha_React.png');
     }
 
     let profile = userProfile;
