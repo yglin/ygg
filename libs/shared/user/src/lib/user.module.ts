@@ -11,8 +11,13 @@ import { AccountWidgetComponent } from './ui/account-widget/account-widget.compo
 import { LoginDialogComponent } from './ui/login-dialog/login-dialog.component';
 import { UserThumbnailComponent } from './ui/user-thumbnail/user-thumbnail.component';
 import { UserMenuComponent } from './ui/user-menu/user-menu.component';
-import { UserProfileComponent } from './user-profile/user-profile.component';
+import { UserProfileComponent } from './ui/user-profile/user-profile.component';
 import { UserRoutingModule } from './user-routing.module';
+import { UserProviderLinkComponent } from './ui/user-provider-link/user-provider-link.component';
+import { UserStateComponent } from './ui/user-state/user-state.component';
+import { UserEmailComponent } from './ui/user-email/user-email.component';
+import { UserPhoneComponent } from './ui/user-phone/user-phone.component';
+import { UserViewComponent } from './ui/user-view/user-view.component';
 
 @NgModule({
   imports: [
@@ -25,7 +30,7 @@ import { UserRoutingModule } from './user-routing.module';
 
     UserRoutingModule
   ],
-  declarations: [ContactFormComponent, ContactViewComponent, AccountWidgetComponent, LoginDialogComponent, UserThumbnailComponent, UserMenuComponent, UserProfileComponent],
+  declarations: [ContactFormComponent, ContactViewComponent, AccountWidgetComponent, LoginDialogComponent, UserThumbnailComponent, UserMenuComponent, UserProfileComponent, UserProviderLinkComponent, UserStateComponent, UserEmailComponent, UserPhoneComponent, UserViewComponent],
   entryComponents: [
     LoginDialogComponent
   ],

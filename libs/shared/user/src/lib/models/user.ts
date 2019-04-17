@@ -1,5 +1,5 @@
-import { extend } from 'lodash';
-import { DataItem } from '@ygg/shared/interfaces';
+import {DataItem} from '@ygg/shared/interfaces';
+import {extend, sample} from 'lodash';
 
 export enum UserState {
   Unknown = 0,
@@ -25,8 +25,17 @@ export class User implements DataItem {
     const anonymous = new User();
     anonymous.id = 'anony-mummy-honey-spaghetti-your-moms-fatty';
     anonymous.isAnonymous = true;
-    anonymous.name = '＊＊＊';
-    anonymous.avatarUrl = new URL('https://upload.wikimedia.org/wikipedia/commons/7/73/Facebook_Haha_React.png');
+    anonymous.name = sample(['馬＊久', '蔣＊虢', '李＊灰', '菜＊文', '陳＊匾']);
+    anonymous.email = 'taiwanNO1@ygmail.com';
+    anonymous.phone = '0999089457';
+    anonymous.avatarUrl = new URL(sample([
+      'https://upload.wikimedia.org/wikipedia/commons/7/73/Facebook_Haha_React.png',
+      'https://commons.wikimedia.org/wiki/File:Emoticon_Face_Smiley_GE.png',
+      'https://upload.wikimedia.org/wikipedia/en/thumb/3/34/AlthepalHappyface.svg/256px-AlthepalHappyface.svg.png',
+      'https://upload.wikimedia.org/wikipedia/commons/4/48/Govi.png',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Phantom_Open_Emoji_1f619.svg/64px-Phantom_Open_Emoji_1f619.svg.png',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Breathe-face-devil-grin.svg/128px-Breathe-face-devil-grin.svg.png'
+    ]));
     return anonymous;
   }
 
@@ -85,7 +94,8 @@ export class User implements DataItem {
     }
 
     let profile = userProfile;
-    if (userProfile.additionalUserInfo && userProfile.additionalUserInfo.profile) {
+    if (userProfile.additionalUserInfo &&
+        userProfile.additionalUserInfo.profile) {
       profile = userProfile.additionalUserInfo.profile;
     }
     this.providers[provider] = profile;
@@ -95,5 +105,4 @@ export class User implements DataItem {
     }
     return this;
   }
-
 }

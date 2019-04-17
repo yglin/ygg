@@ -1,7 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
-
 import { AppComponent } from './app.component';
 import { AppRouteModule } from './app-route.module';
 import { UserModule } from '@ygg/shared/user';
@@ -13,7 +11,6 @@ import { HeaderComponent } from './layout/header/header.component';
   declarations: [AppComponent, HeaderComponent],
   imports: [
     BrowserModule,
-    FlexLayoutModule,
     // DataAccessModule,
     AppRouteModule,
     UserModule,

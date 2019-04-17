@@ -20,7 +20,7 @@ export class UserMenuService {
           id: 'profile',
           icon: 'account_box',
           label: '個人資料',
-          link: `users/${user.id}`
+          link: 'users/me'
         });
       }
     });
