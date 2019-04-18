@@ -9,7 +9,7 @@ import { ShoppingRoutingModule } from './shopping-routing.module';
 import { CartComponent } from './cart/cart.component';
 // import { RouterModule, Route } from '@angular/router';
 
-import { UserModule } from '@ygg/shared/user';
+import { SharedUserModule } from '@ygg/shared/user';
 import { PaymentModule } from '@ygg/shopping/payment';
 import { OrderModule } from '@ygg/shopping/order';
 
@@ -23,7 +23,7 @@ import { OrderModule } from '@ygg/shopping/order';
     ReactiveFormsModule,
     NgMaterialModule,
     FlexLayoutModule,
-    UserModule,
+    SharedUserModule,
     OrderModule,
     PaymentModule,
     ShoppingRoutingModule

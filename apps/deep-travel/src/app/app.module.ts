@@ -1,21 +1,26 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout'
+import { MatToolbarModule, MatIconModule, MatButtonModule } from '@angular/material';
+
+import { UserFrontEndFeatureModule } from "@ygg/apps/user/frontend";
+
 import { AppComponent } from './app.component';
-import { AppRouteModule } from './app-route.module';
-import { UserModule } from '@ygg/shared/user';
-import { ShoppingCartModule } from '@ygg/shopping/cart';
-import { SharedUiWidgetsModule } from '@ygg/shared/ui-widgets';
 import { HeaderComponent } from './layout/header/header.component';
+import { routes } from './routes';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
   imports: [
     BrowserModule,
+    FlexLayoutModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    UserFrontEndFeatureModule,
+    RouterModule.forRoot(routes)
     // DataAccessModule,
-    AppRouteModule,
-    UserModule,
-    ShoppingCartModule,
-    SharedUiWidgetsModule
     // BrowserAnimationsModule,
     // AngularFireModule.initializeApp(environment.firebase)
   ],
