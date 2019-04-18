@@ -153,7 +153,7 @@
       },
       "schematics": {}
     },
-    "user": {
+    "shared-user": {
       "root": "libs/shared/user",
       "sourceRoot": "libs/shared/user/src",
       "projectType": "library",
@@ -458,75 +458,26 @@
       },
       "schematics": {}
     },
-    "shared-infrastructure-log": {
-      "root": "libs/shared/infrastructure/log",
-      "sourceRoot": "libs/shared/infrastructure/log/src",
-      "projectType": "library",
-      "prefix": "ygg",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/shared/infrastructure/log/tsconfig.lib.json",
-              "libs/shared/infrastructure/log/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "libs/shared/infrastructure/log/jest.config.js",
-            "tsConfig": "libs/shared/infrastructure/log/tsconfig.spec.json",
-            "setupFile": "libs/shared/infrastructure/log/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {}
-    },
-    "sandbox": {
-      "root": "apps/sandbox/",
-      "sourceRoot": "apps/sandbox/src",
+    "user-frontend": {
+      "root": "apps/user/frontend/",
+      "sourceRoot": "apps/user/frontend/src",
       "projectType": "application",
       "prefix": "ygg",
-      "schematics": {
-        "@nrwl/schematics:class": {
-          "skipTests": true
-        },
-        "@nrwl/schematics:component": {
-          "skipTests": true
-        },
-        "@nrwl/schematics:directive": {
-          "skipTests": true
-        },
-        "@nrwl/schematics:guard": {
-          "skipTests": true
-        },
-        "@nrwl/schematics:module": {
-          "skipTests": true
-        },
-        "@nrwl/schematics:pipe": {
-          "skipTests": true
-        },
-        "@nrwl/schematics:service": {
-          "skipTests": true
-        }
-      },
+      "schematics": {},
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/sandbox",
-            "index": "apps/sandbox/src/index.html",
-            "main": "apps/sandbox/src/main.ts",
-            "polyfills": "apps/sandbox/src/polyfills.ts",
-            "tsConfig": "apps/sandbox/tsconfig.app.json",
+            "outputPath": "dist/apps/user/frontend",
+            "index": "apps/user/frontend/src/index.html",
+            "main": "apps/user/frontend/src/main.ts",
+            "polyfills": "apps/user/frontend/src/polyfills.ts",
+            "tsConfig": "apps/user/frontend/tsconfig.app.json",
             "assets": [
-              "apps/sandbox/src/favicon.ico",
-              "apps/sandbox/src/assets"
+              "apps/user/frontend/src/favicon.ico",
+              "apps/user/frontend/src/assets"
             ],
-            "styles": ["apps/sandbox/src/styles.css"],
+            "styles": ["apps/user/frontend/src/styles.css"],
             "scripts": [],
             "es5BrowserSupport": true
           },
@@ -534,8 +485,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "apps/sandbox/src/environments/environment.ts",
-                  "with": "apps/sandbox/src/environments/environment.prod.ts"
+                  "replace": "apps/user/frontend/src/environments/environment.ts",
+                  "with": "apps/user/frontend/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -560,26 +511,26 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "sandbox:build"
+            "browserTarget": "user-frontend:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "sandbox:build:production"
+              "browserTarget": "user-frontend:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "sandbox:build"
+            "browserTarget": "user-frontend:build"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "apps/sandbox/tsconfig.app.json",
-              "apps/sandbox/tsconfig.spec.json"
+              "apps/user/frontend/tsconfig.app.json",
+              "apps/user/frontend/tsconfig.spec.json"
             ],
             "exclude": ["**/node_modules/**"]
           }
@@ -587,39 +538,39 @@
         "test": {
           "builder": "@nrwl/builders:jest",
           "options": {
-            "jestConfig": "apps/sandbox/jest.config.js",
-            "tsConfig": "apps/sandbox/tsconfig.spec.json",
-            "setupFile": "apps/sandbox/src/test-setup.ts"
+            "jestConfig": "apps/user/frontend/jest.config.js",
+            "tsConfig": "apps/user/frontend/tsconfig.spec.json",
+            "setupFile": "apps/user/frontend/src/test-setup.ts"
           }
         }
       }
     },
-    "shared-ui-ng-material": {
-      "root": "libs/shared/ui/ng-material",
-      "sourceRoot": "libs/shared/ui/ng-material/src",
-      "projectType": "library",
-      "prefix": "ygg",
+    "user-frontend-e2e": {
+      "root": "apps/user/frontend-e2e",
+      "projectType": "application",
+      "prefix": "",
       "architect": {
+        "e2e": {
+          "builder": "@nrwl/builders:cypress",
+          "options": {
+            "cypressConfig": "apps/user/frontend-e2e/cypress.json",
+            "tsConfig": "apps/user/frontend-e2e/tsconfig.e2e.json",
+            "devServerTarget": "user-frontend:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "user-frontend:serve:production"
+            }
+          }
+        },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "libs/shared/ui/ng-material/tsconfig.lib.json",
-              "libs/shared/ui/ng-material/tsconfig.spec.json"
-            ],
+            "tsConfig": "apps/user/frontend-e2e/tsconfig.e2e.json",
             "exclude": ["**/node_modules/**"]
           }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "libs/shared/ui/ng-material/jest.config.js",
-            "tsConfig": "libs/shared/ui/ng-material/tsconfig.spec.json",
-            "setupFile": "libs/shared/ui/ng-material/src/test-setup.ts"
-          }
         }
-      },
-      "schematics": {}
+      }
     }
   },
   "cli": {
@@ -629,6 +580,10 @@
     },
     "defaultCollection": "@nrwl/schematics"
   },
-  "schematics": {},
+  "schematics": {
+    "@nrwl/schematics:library": {
+      "framework": "angular"
+    }
+  },
   "defaultProject": "deep-travel"
 }

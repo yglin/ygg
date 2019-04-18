@@ -7,7 +7,7 @@ import {
 import { DataItem } from '@ygg/shared/interfaces';
 import { Observable, of, combineLatest, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DataAccessModule } from './data-access.module';
+// import { DataAccessModule } from './data-access.module';
 import { Query } from './query';
 import { DataAccessError, DataAccessErrorCode } from './error';
 
@@ -16,7 +16,7 @@ type FireQueryRef =
   | firebase.firestore.Query;
 
 @Injectable({
-  providedIn: DataAccessModule
+  providedIn: 'root'
 })
 export class DataAccessService {
   collections: { [name: string]: AngularFirestoreCollection };

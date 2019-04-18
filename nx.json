@@ -17,7 +17,7 @@
     "interfaces": {
       "tags": ["scope:shared", "type:util"]
     },
-    "user": {
+    "shared-user": {
       "tags": ["scope:shared", "type:feature", "platform:desktop"]
     },
     "payment": {
@@ -44,14 +44,11 @@
     "shared-infrastructure-error": {
       "tags": ["scope:shared", "type:infrastructure"]
     },
-    "shared-infrastructure-log": {
-      "tags": ["scope:shared", "type:infrastructure"]
+    "user-frontend": {
+      "tags": ["scope:user", "type:app", "platform:desktop"]
     },
-    "sandbox": {
-      "tags": ["scope:test", "type:app"]
-    },
-    "shared-ui-ng-material": {
-      "tags": ["scope:shared", "type:ui"]
+    "user-frontend-e2e": {
+      "tags": []
     }
   }
 }

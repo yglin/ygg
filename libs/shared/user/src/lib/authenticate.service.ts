@@ -11,27 +11,23 @@ import {UserService} from './user.service';
 
 @Injectable({providedIn: 'root'})
 export class AuthenticateService {
-  currentUser$: Observable<User>;
+  currentUser$: BehaviorSubject<User>;
 
   constructor(
       private userService: UserService,
       private angularFireAuth: AngularFireAuth) {
-    this.currentUser$ =
+        this.currentUser$ = new BehaviorSubject(null);
         this.angularFireAuth.authState.pipe(switchMap(firebaseUser => {
           if (!firebaseUser) {
             return of(null);
           } else {
             return this.findOrCreateUser$(firebaseUser);
           }
-        }));
+        })).subscribe(this.currentUser$);
   }
 
   async loginAnonymously() {
-    await this.angularFireAuth.auth.signInAnonymously().catch(
-        error => {
-          const userError = new UserError(UserErrorCode.LoginFailed, error.message, error);
-          throw userError;
-        });
+    this.currentUser$.next(this.userService.anonymousUser);
   }
 
   async login(providerName: string) {
@@ -76,6 +72,10 @@ export class AuthenticateService {
   }
 
   async logout() {
-    this.angularFireAuth.auth.signOut();
+    this.angularFireAuth.auth.signOut().then(()=> {
+      if (this.currentUser$.value) {
+        this.currentUser$.next(null);
+      }
+    });
   }
 }
