@@ -1,4 +1,4 @@
-import {DataItem} from '@ygg/shared/interfaces';
+import {DataItem} from '@ygg/shared/data-access';
 import {extend, sample} from 'lodash';
 
 export enum UserState {

@@ -1,10 +1,11 @@
 import * as _ from 'lodash';
 import * as uuid from 'uuid';
 import * as moment from 'moment';
-import { DataItem, Product, Purchase as iPurchase } from '@ygg/shared/interfaces';
+import { DataItem } from '@ygg/shared/data-access';
+import { Product } from './product';
 
 // @dynamic
-export class Purchase implements DataItem, iPurchase {
+export class Purchase implements DataItem {
   id: string;
   createAt: Date;
   product: Product;

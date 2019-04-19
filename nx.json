@@ -14,9 +14,6 @@
     "deep-travel-e2e": {
       "tags": ["scope:shopping", "type:e2e", "platform:desktop"]
     },
-    "interfaces": {
-      "tags": ["scope:shared", "type:util"]
-    },
     "shared-user": {
       "tags": ["scope:shared", "type:feature", "platform:desktop"]
     },

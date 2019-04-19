@@ -1,15 +1,21 @@
 import * as _ from 'lodash';
 import * as uuid from 'uuid';
 import * as moment from 'moment';
-import {
-  DataItem,
-  Order as iOrder,
-  OrderState,
-  Contact
-} from '@ygg/shared/interfaces';
+import { DataItem } from '@ygg/shared/data-access';
+import { Contact } from '@ygg/shared/user';
 import { Purchase } from './purchase/purchase';
 
-export class Order implements iOrder, DataItem {
+export enum OrderState {
+  UNKNOWN = 0,
+  NEW,
+  CONFIRMED,
+  PAID,
+  COMPLETED,
+  CANCELED,
+  REFUNDING,
+  REFUNDED
+}
+export class Order implements DataItem {
   id: string;
   createAt: Date;
   ownerId: string;

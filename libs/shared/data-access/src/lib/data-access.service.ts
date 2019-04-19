@@ -4,8 +4,8 @@ import {
   AngularFirestore,
   AngularFirestoreCollection
 } from '@angular/fire/firestore';
-import { DataItem } from '@ygg/shared/interfaces';
-import { Observable, of, combineLatest, throwError } from 'rxjs';
+import { DataItem } from './data-item';
+import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 // import { DataAccessModule } from './data-access.module';
 import { Query } from './query';

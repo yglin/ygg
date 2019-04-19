@@ -120,39 +120,6 @@
         }
       }
     },
-    "interfaces": {
-      "root": "libs/shared/interfaces",
-      "sourceRoot": "libs/shared/interfaces/src",
-      "projectType": "library",
-      "prefix": "ygg",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "libs/shared/interfaces/tsconfig.lib.json",
-            "project": "libs/shared/interfaces/ng-package.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/shared/interfaces/tsconfig.lib.json",
-              "libs/shared/interfaces/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "libs/shared/interfaces/jest.config.js",
-            "tsConfig": "libs/shared/interfaces/tsconfig.spec.json"
-          }
-        }
-      },
-      "schematics": {}
-    },
     "shared-user": {
       "root": "libs/shared/user",
       "sourceRoot": "libs/shared/user/src",
