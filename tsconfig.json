@@ -16,6 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@ygg/apps/user/frontend": ["apps/user/frontend/src/index.ts"],
+      "@ygg/e2e/user/frontend": ["apps/user/frontend-e2e/src/index.ts"],
+      "@ygg/apps/resource/frontend": ["apps/resource/frontend/src/index.ts"],
       "@ygg/shared/user": ["libs/shared/user/src/index.ts"],
       "@ygg/shared/data-access": ["libs/shared/data-access/src/index.ts"],
       "@ygg/shared/form-controls": ["libs/shared/form-controls/src/index.ts"],

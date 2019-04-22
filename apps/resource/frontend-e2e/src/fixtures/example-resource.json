@@ -1,0 +1,28 @@
+{
+  "name": "講幹話",
+  "description": "共體時艱，愛台灣，估計500億產值，平均薪資4萬，人民的心聲我都聽到了，智慧加值前瞻ＡＩ大數據ＡＲ地方創生，貨出得去，人進得來，媽祖託夢，林北發大財",
+  "album": {
+    "photos": [
+      "https://pbs.twimg.com/media/DCWjhyPUMAERhs2.jpg",
+      "https://cdn2.ettoday.net/images/3242/3242536.jpg",
+      "https://www.twgreatdaily.com/imgs/image/168/16831787.jpg",
+      "https://img.88gag.com/201801/6iSBAfuS.png",
+      "https://www.hahatai.com/sites/default/files/u1135/20729319_1797454336938213_5469472303048013124_n.jpg",
+      "https://i.imgur.com/PrR9ixY.jpg"
+    ],
+    "cover": "https://pbs.twimg.com/media/DCWjhyPUMAERhs2.jpg"
+  },
+  "contact": {
+    "name": "YGGY",
+    "email": "yggy@ygmail.com",
+    "phone": "0999089487",
+    "lineID": "yggy"
+  },
+  "location": {
+    "country": "台灣",
+    "county": "南投縣",
+    "city": "南投市",
+    "district": "中興新村",
+    "address": "文獻路2號"
+  }
+}

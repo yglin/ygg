@@ -46,6 +46,12 @@
     },
     "user-frontend-e2e": {
       "tags": []
+    },
+    "resource-frontend": {
+      "tags": ["scope:resource", "type:app", "platform:desktop"]
+    },
+    "resource-frontend-e2e": {
+      "tags": []
     }
   }
 }
