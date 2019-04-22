@@ -1,0 +1,9 @@
+<div class="ygg-schedule-form">
+  <form [formGroup]="formGroup">
+    <h3>預計日期範圍</h3>
+    <ygg-date-range-picker formControlName='dateRange'></ygg-date-range-picker>
+  </form>
+  <div class='debug'>
+    <pre>{{ formGroup.value | json }}</pre>
+  </div>
+</div>

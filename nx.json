@@ -35,9 +35,6 @@
     "firebase-functions": {
       "tags": ["scope:backend", "type:app"]
     },
-    "shared-ui-widgets": {
-      "tags": ["scope:shared", "type:ui", "platform:desktop"]
-    },
     "shared-infrastructure-error": {
       "tags": ["scope:shared", "type:infrastructure"]
     },
@@ -52,6 +49,15 @@
     },
     "resource-frontend-e2e": {
       "tags": []
+    },
+    "scheduler": {
+      "tags": ["scope:scheduler", "type:app", "platform:mobile"]
+    },
+    "scheduler-e2e": {
+      "tags": []
+    },
+    "shared-ui-widgets": {
+      "tags": ["scope:shared", "type:ui", "platform:desktop"]
     }
   }
 }

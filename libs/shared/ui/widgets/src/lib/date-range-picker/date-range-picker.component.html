@@ -1,0 +1,15 @@
+<div class="ygg-date-range-picker">
+  <mat-form-field>
+    <input
+      name="date-range"
+      matInput
+      placeholder="開始 — 結束"
+      type="text"
+      ngxDaterangepickerMd
+      startKey="start"
+      endKey="end"
+      [ngModel]="dateRange"
+      (ngModelChange)="onChange($event)"
+    />
+  </mat-form-field>
+</div>

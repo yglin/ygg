@@ -1,0 +1,21 @@
+<div class="ygg-scheduler">
+  <mat-horizontal-stepper>
+    <mat-step label="日期、人數...">
+      <div class='stepper-content'>
+      <ygg-schedule-form></ygg-schedule-form>
+    </div>
+    </mat-step>
+    <mat-step label="選擇體驗">
+      <ygg-resource-selector></ygg-resource-selector>
+    </mat-step>
+    <mat-step label="自動排程">
+      <ygg-scheduler-auto></ygg-scheduler-auto>
+    </mat-step>
+    <mat-step label="行程調整">
+      <ygg-scheduler-manual></ygg-scheduler-manual>
+    </mat-step>
+    <mat-step label="行程預覽">
+      <ygg-schedule-view></ygg-schedule-view>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>

@@ -1,0 +1,9 @@
+module.exports = {
+  name: 'scheduler',
+  preset: '../../jest.config.js',
+  coverageDirectory: '../../coverage/apps/scheduler/',
+  snapshotSerializers: [
+    'jest-preset-angular/AngularSnapshotSerializer.js',
+    'jest-preset-angular/HTMLCommentSerializer.js'
+  ]
+};
