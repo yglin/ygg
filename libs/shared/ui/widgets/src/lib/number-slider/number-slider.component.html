@@ -1,0 +1,28 @@
+<div class="ygg-number-slider">
+  <mat-label>
+    <span>{{ label }}</span>
+  </mat-label>
+  <!-- <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="15px"> -->
+  <div class='slider' fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2px">
+    <div class="indicator">{{ min }}</div>
+    <mat-slider
+      thumbLabel
+      tickInterval="auto"
+      [min]="min"
+      [max]="max"
+      [step]="step"
+      [(value)]="value"
+    ></mat-slider>
+    <div class="indicator">{{ max }}</div>
+  </div>
+  <div class="number-input">
+    <mat-form-field *ngIf="!zeroIsNoLimit || value != 0">
+      <input matInput type="number" [(ngModel)]="value" />
+      <span matPrefix *ngIf="icon"
+        ><mat-icon>{{ icon }}</mat-icon></span
+      >
+    </mat-form-field>
+    <h6 *ngIf="zeroIsNoLimit && value == 0">無上限</h6>
+  </div>
+  <!-- </div> -->
+</div>

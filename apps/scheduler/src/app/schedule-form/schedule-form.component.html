@@ -2,6 +2,11 @@
   <form [formGroup]="formGroup">
     <h3>預計日期範圍</h3>
     <ygg-date-range-picker formControlName='dateRange'></ygg-date-range-picker>
+    <mat-divider>
+    </mat-divider>
+    <br>
+    <h3>預計人數</h3>
+    <ygg-number-slider formControlName='numParticipants' icon='person'></ygg-number-slider>
   </form>
   <div class='debug'>
     <pre>{{ formGroup.value | json }}</pre>

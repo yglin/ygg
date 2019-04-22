@@ -9,12 +9,14 @@ import {DateRangePickerComponent} from './date-range-picker/date-range-picker.co
 import {IMaybeALinkDirective} from './i-maybe-a-link/i-maybe-a-link.directive';
 import {PageTitleComponent} from './page-title/page-title.component';
 import {ProgressSpinnerComponent} from './progress-spinner/progress-spinner.component';
+import { NumberSliderComponent } from './number-slider/number-slider.component';
 
 
 @NgModule({
   declarations: [
     ProgressSpinnerComponent, PageTitleComponent, IMaybeALinkDirective,
-    DateRangePickerComponent
+    DateRangePickerComponent,
+    NumberSliderComponent
   ],
   imports: [
     CommonModule,
@@ -27,7 +29,7 @@ import {ProgressSpinnerComponent} from './progress-spinner/progress-spinner.comp
   ],
   exports: [
     SharedUiNgMaterialModule, FlexLayoutModule, PageTitleComponent,
-    IMaybeALinkDirective, DateRangePickerComponent
+    IMaybeALinkDirective, DateRangePickerComponent, NumberSliderComponent
   ],
   entryComponents: [ProgressSpinnerComponent]
 })

@@ -15,7 +15,8 @@ export class ScheduleFormComponent implements OnInit {
       dateRange: {
         start: moment().add(1, 'month').toDate(),
         end: moment().add(1, 'month').add(1, 'week').toDate()
-      }
+      },
+      numParticipants: 10
     });
   }
 
