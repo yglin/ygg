@@ -1,9 +1,12 @@
 <div class="ygg-scheduler">
-  <mat-horizontal-stepper>
-    <mat-step label="日期、人數...">
-      <div class='stepper-content'>
-      <ygg-schedule-form></ygg-schedule-form>
-    </div>
+  <mat-horizontal-stepper linear>
+    <mat-step label="日期、人數..." [stepControl]="scheduleFormGroup">
+      <div class="stepper-content">
+        <ygg-schedule-form [formGroup]="scheduleFormGroup"></ygg-schedule-form>
+      </div>
+      <div class="stepper-action" fxLayout='row' fxLayoutAlign='end center'>
+        <button mat-raised-button matStepperNext [disabled]='scheduleFormGroup.invalid'>下一步</button>
+      </div>
     </mat-step>
     <mat-step label="選擇體驗">
       <ygg-resource-selector></ygg-resource-selector>

@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import * as moment from 'moment';
+import { ScheduleFormService } from './schedule-form.service';
 
 @Component({
   selector: 'ygg-schedule-form',
@@ -8,17 +9,19 @@ import * as moment from 'moment';
   styleUrls: ['./schedule-form.component.css']
 })
 export class ScheduleFormComponent implements OnInit {
-  formGroup: FormGroup;
+  @Input() formGroup: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
-    this.formGroup = this.formBuilder.group({
-      dateRange: {
-        start: moment().add(1, 'month').toDate(),
-        end: moment().add(1, 'month').add(1, 'week').toDate()
-      },
-      numParticipants: 10
-    });
+  constructor(private scheudleFormService: ScheduleFormService) {
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (!this.formGroup) {
+      this.formGroup = this.scheudleFormService.createFormGroup();
+    }
+  }
+
+  isError(controlName: string, errorName: string): boolean {
+    const control = this.formGroup.get(controlName);
+    return control.touched && control.hasError(errorName);
+  }
 }

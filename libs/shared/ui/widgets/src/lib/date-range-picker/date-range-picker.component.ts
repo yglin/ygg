@@ -1,15 +1,13 @@
+import {Component, forwardRef} from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as moment from 'moment';
-import { Component, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 interface DateRangeDate {
-  start: Date,
-  end: Date
+  start: Date, end: Date
 }
 
 interface DateRangeMoment {
-  start: moment.Moment,
-  end: moment.Moment
+  start: moment.Moment, end: moment.Moment
 }
 
 @Component({
@@ -27,25 +25,25 @@ interface DateRangeMoment {
 export class DateRangePickerComponent implements ControlValueAccessor {
   dateRange: DateRangeMoment;
   emitChange: (value: DateRangeDate) => {};
+  emitTouched: () => {};
 
   onChange(value: DateRangeMoment) {
+    this.dateRange = value;
+    let outValue = null;
     if (value && value.start && value.end) {
-      this.dateRange = value;
-      this.emitChange({
+      outValue = {
         start: this.dateRange.start.toDate(),
         end: this.dateRange.end.toDate(),
-      });
+      };
     }
+    this.emitChange(outValue);
   }
 
-  constructor() { }
+  constructor() {}
 
   writeValue(value: DateRangeDate) {
     if (value && value.start && value.end) {
-      this.dateRange = {
-        start: moment(value.start),
-        end: moment(value.end)
-      };
+      this.dateRange = {start: moment(value.start), end: moment(value.end)};
     }
   }
 
@@ -53,5 +51,13 @@ export class DateRangePickerComponent implements ControlValueAccessor {
     this.emitChange = fn;
   }
 
-  registerOnTouched(fn) {}
+  registerOnTouched(fn) {
+    this.emitTouched = fn;
+  }
+
+  onBlur() {
+    if (this.emitTouched) {
+      this.emitTouched();
+    }
+  }
 }

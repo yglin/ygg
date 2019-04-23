@@ -2,6 +2,7 @@
   <form [formGroup]="formGroup">
     <h3>預計日期範圍</h3>
     <ygg-date-range-picker formControlName='dateRange'></ygg-date-range-picker>
+    <mat-error *ngIf="isError('dateRange', 'required')">請填日期範圍</mat-error>
     <mat-divider>
     </mat-divider>
     <br>

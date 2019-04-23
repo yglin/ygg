@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { ScheduleFormService } from '../schedule-form/schedule-form.service';
 
 @Component({
   selector: 'ygg-scheduler',
@@ -6,8 +8,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./scheduler.component.css']
 })
 export class SchedulerComponent implements OnInit {
+  scheduleFormGroup: FormGroup;
 
-  constructor() { }
+  constructor(
+    private scheduleFormService: ScheduleFormService
+  ) {
+    this.scheduleFormGroup = this.scheduleFormService.createFormGroup();
+  }
 
   ngOnInit() {
   }
