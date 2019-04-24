@@ -10,20 +10,23 @@ import { ScheduleFormService } from '../schedule-form/schedule-form.service';
 })
 export class SchedulerComponent implements OnInit {
   scheduleFormGroup: FormGroup;
-  selectedResources: Resource[];
+  selectedResourceIds: Set<string>;
 
   constructor(
     private scheduleFormService: ScheduleFormService
   ) {
     this.scheduleFormGroup = this.scheduleFormService.createFormGroup();
-    this.selectedResources = [];
+    this.selectedResourceIds = new Set([]);
   }
 
   ngOnInit() {
   }
 
-  onSelectResource(resourceIds: string[]) {
-    console.log('Selected resources: ');
-    console.log(resourceIds);
+  hasResourceSelected(): boolean {
+    return this.selectedResourceIds && this.selectedResourceIds.size > 0;
+  }
+
+  onSelectResources(resourceIds: Set<string>) {
+    this.selectedResourceIds = resourceIds;
   }
 }
