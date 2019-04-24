@@ -30,7 +30,7 @@ export class User implements DataItem {
     anonymous.phone = '0999089457';
     anonymous.avatarUrl = new URL(sample([
       'https://upload.wikimedia.org/wikipedia/commons/7/73/Facebook_Haha_React.png',
-      'https://commons.wikimedia.org/wiki/File:Emoticon_Face_Smiley_GE.png',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Chicken_icon_05.svg/816px-Chicken_icon_05.svg.png',
       'https://upload.wikimedia.org/wikipedia/en/thumb/3/34/AlthepalHappyface.svg/256px-AlthepalHappyface.svg.png',
       'https://upload.wikimedia.org/wikipedia/commons/4/48/Govi.png',
       'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Phantom_Open_Emoji_1f619.svg/64px-Phantom_Open_Emoji_1f619.svg.png',
