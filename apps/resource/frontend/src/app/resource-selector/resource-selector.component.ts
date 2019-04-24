@@ -13,7 +13,7 @@ export class ResourceSelectorComponent implements OnInit {
   @Input() selectedIds: Set<string>;
   @Input() multi: boolean;
   @Output() selectChange: EventEmitter<Set<string>>;
-  displayResourceIds: string[];
+  unselectedIds: string[];
 
   constructor(private resourceService: ResourceService) {
     this.selectChange = new EventEmitter<Set<string>>();
@@ -21,8 +21,7 @@ export class ResourceSelectorComponent implements OnInit {
     .subscribe(([resources, selectedIdsSet]) => {
       const resourceIds = resources.map(r => r.id);
       const selectedIds = Array.from(selectedIdsSet as Set<string>);
-      const unselectedIds = difference(resourceIds, selectedIds);
-      this.displayResourceIds = [...selectedIds, ...unselectedIds];
+      this.unselectedIds = difference(resourceIds, selectedIds);
     });
   }
 
