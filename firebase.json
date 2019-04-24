@@ -5,5 +5,19 @@
       "npm run build firebase-functions"
     ],
     "source": "/"
+  },
+  "hosting": {
+    "public": "dist/apps/deep-travel",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   }
 }
