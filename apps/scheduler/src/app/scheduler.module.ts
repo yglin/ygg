@@ -12,6 +12,9 @@ import { SchedulerAutoComponent } from './scheduler-auto/scheduler-auto.componen
 import { SchedulerManualComponent } from './scheduler-manual/scheduler-manual.component';
 import { ResourceFrontendFeatureModule } from '@ygg/apps/resource/frontend';
 
+import { RouterModule } from '@angular/router';
+import { routes } from './routes';
+
 @NgModule({
   declarations: [SchedulerComponent, ScheduleFormComponent, ScheduleViewComponent, SchedulerAutoComponent, SchedulerManualComponent],
   imports: [
@@ -24,3 +27,11 @@ import { ResourceFrontendFeatureModule } from '@ygg/apps/resource/frontend';
   ]
 })
 export class SchedulerModule { }
+
+@NgModule({
+  imports: [
+    SchedulerModule,
+    RouterModule.forChild(routes)
+  ]
+})
+export class SchedulerFeatureModule { }

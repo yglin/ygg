@@ -5,6 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout'
 import { SharedUiNgMaterialModule } from "@ygg/shared/ui/ng-material";
 
 import { UserFrontEndFeatureModule } from "@ygg/apps/user/frontend";
+import { SchedulerFeatureModule } from '@ygg/apps/scheudler';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './layout/header/header.component';
@@ -17,6 +18,7 @@ import { routes } from './routes';
     FlexLayoutModule,
     SharedUiNgMaterialModule,
     UserFrontEndFeatureModule,
+    SchedulerFeatureModule,
     RouterModule.forRoot(routes)
     // DataAccessModule,
     // BrowserAnimationsModule,

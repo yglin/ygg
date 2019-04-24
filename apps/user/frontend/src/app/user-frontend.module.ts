@@ -4,7 +4,7 @@ import {NgModule} from '@angular/core';
 // import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router';
 // import { RouterModule } from '@angular/router';
-import {SharedUiWidgetsModule} from '@ygg/shared/ui-widgets';
+import {SharedUiWidgetsModule} from '@ygg/shared/ui/widgets';
 import {SharedUserModule} from '@ygg/shared/user';
 
 import {AccountWidgetComponent} from './components/account-widget/account-widget.component';
