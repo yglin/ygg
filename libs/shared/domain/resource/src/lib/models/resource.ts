@@ -1,10 +1,13 @@
-import { extend } from 'lodash';
+import { extend, isArray } from 'lodash';
 import * as uuid from "uuid";
 import { DataItem } from '@ygg/shared/data-access';
+import { Album } from './album';
 
 export class Resource implements DataItem {
   id: string;
+  name: string;
   color: string;
+  album: Album;
 
   constructor() {
     this.id = uuid.v4();
@@ -13,6 +16,16 @@ export class Resource implements DataItem {
 
   fromData(data: any = {}): this {
     extend(this, data);
+    
+    this.album = new Album();
+    if (data.album) {
+      this.album.fromData(data.album);
+    } 
+    // Back compatibility
+    this.album.fromData({
+      cover: data.coverPhoto,
+      photos: data.photos
+    });
     return this;
   }
 

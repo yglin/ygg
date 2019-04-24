@@ -2,28 +2,24 @@ import { range, find } from 'lodash';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Resource } from './models';
+import { DataAccessService } from '@ygg/shared/data-access';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ResourceService {
-  // XXX: Remove, this is fake;
-  resources: Resource[];
+  collection = 'resources';
 
-  constructor() { }
+  constructor(
+    private dataAccessService: DataAccessService
+  ) { }
 
   list$(): Observable<Resource[]> {
-    // TODO: implement
-    if (!this.resources) {
-      this.resources = range(20).map(() => this.forgeOne());
-    }
-    return of(this.resources);
+    return this.dataAccessService.list$(this.collection, Resource);
   }
 
   get$(id: string): Observable<Resource> {
-    // TODO: implement
-    const resource = find(this.resources, r => r.id === id);
-    return of(resource);
+    return this.dataAccessService.get$(this.collection, id, Resource);
   }
 
   forgeOne(): Resource {
