@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout'
-import { MatToolbarModule, MatIconModule, MatButtonModule } from '@angular/material';
+import { SharedUiNgMaterialModule } from "@ygg/shared/ui/ng-material";
 
 import { UserFrontEndFeatureModule } from "@ygg/apps/user/frontend";
 
@@ -15,9 +15,7 @@ import { routes } from './routes';
   imports: [
     BrowserModule,
     FlexLayoutModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
+    SharedUiNgMaterialModule,
     UserFrontEndFeatureModule,
     RouterModule.forRoot(routes)
     // DataAccessModule,

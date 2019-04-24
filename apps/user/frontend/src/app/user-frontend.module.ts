@@ -7,7 +7,6 @@ import {RouterModule} from '@angular/router';
 import {SharedUiWidgetsModule} from '@ygg/shared/ui-widgets';
 import {SharedUserModule} from '@ygg/shared/user';
 
-import {AppComponent} from './app.component';
 import {AccountWidgetComponent} from './components/account-widget/account-widget.component';
 import {LoginDialogComponent} from './components/login-dialog/login-dialog.component';
 import {UserEmailComponent} from './components/user-email/user-email.component';
