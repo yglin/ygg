@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ResourceSelectorComponent } from './resource-selector.component';
+import { ResourceThumbnailComponent } from './resource-thumbnail.component';
 
-describe('ResourceSelectorComponent', () => {
-  let component: ResourceSelectorComponent;
-  let fixture: ComponentFixture<ResourceSelectorComponent>;
+describe('ResourceThumbnailComponent', () => {
+  let component: ResourceThumbnailComponent;
+  let fixture: ComponentFixture<ResourceThumbnailComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ResourceSelectorComponent ]
+      declarations: [ ResourceThumbnailComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ResourceSelectorComponent);
+    fixture = TestBed.createComponent(ResourceThumbnailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

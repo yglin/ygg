@@ -48,6 +48,7 @@
     "@ngrx/router-store": "7.2.0",
     "@ngrx/store": "7.2.0",
     "@nrwl/nx": "^7.8.0",
+    "@types/uuid": "^3.4.4",
     "angular-fire-schematics": "^1.0.0",
     "core-js": "^2.5.4",
     "cors": "^2.8.5",
@@ -62,6 +63,7 @@
     "moment": "^2.24.0",
     "ngx-daterangepicker-material": "^2.1.0",
     "rxjs": "6.4.0",
+    "uuid": "^3.3.2",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {

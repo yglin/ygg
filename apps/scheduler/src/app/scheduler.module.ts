@@ -10,16 +10,17 @@ import { ScheduleFormComponent } from './schedule-form/schedule-form.component';
 import { ScheduleViewComponent } from './schedule-view/schedule-view.component';
 import { SchedulerAutoComponent } from './scheduler-auto/scheduler-auto.component';
 import { SchedulerManualComponent } from './scheduler-manual/scheduler-manual.component';
-import { ResourceSelectorComponent } from './resource-selector/resource-selector.component';
+import { ResourceFrontendFeatureModule } from '@ygg/apps/resource/frontend';
 
 @NgModule({
-  declarations: [SchedulerComponent, ScheduleFormComponent, ScheduleViewComponent, SchedulerAutoComponent, SchedulerManualComponent, ResourceSelectorComponent],
+  declarations: [SchedulerComponent, ScheduleFormComponent, ScheduleViewComponent, SchedulerAutoComponent, SchedulerManualComponent],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     SharedUiNgMaterialModule,
-    SharedUiWidgetsModule
+    SharedUiWidgetsModule,
+    ResourceFrontendFeatureModule
   ]
 })
 export class SchedulerModule { }

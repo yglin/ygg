@@ -37,7 +37,10 @@
         "libs/shared/infrastructure/log/src/index.ts"
       ],
       "@ygg/shared/ui/ng-material": ["libs/shared/ui/ng-material/src/index.ts"],
-      "@ygg/shared/ui/widgets": ["libs/shared/ui/widgets/src/index.ts"]
+      "@ygg/shared/ui/widgets": ["libs/shared/ui/widgets/src/index.ts"],
+      "@ygg/shared/domain/resource": [
+        "libs/shared/domain/resource/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

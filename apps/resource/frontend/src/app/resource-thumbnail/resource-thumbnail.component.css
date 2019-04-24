@@ -1,0 +1,11 @@
+.ygg-resource-thumbnail {
+  width: 350px;
+  height: 50px;
+  border-radius: 10px;
+  box-shadow: 3px 3px 6px #333333;
+  padding: 5px;
+}
+
+.selected .ygg-resource-thumbnail {
+  border: 3px solid blue;
+}

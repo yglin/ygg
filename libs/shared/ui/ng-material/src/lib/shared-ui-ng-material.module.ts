@@ -20,7 +20,8 @@ import {
   MatPaginatorModule,
   MatSortModule,
   MatSelectModule,
-  MatSliderModule
+  MatSliderModule,
+  MatDividerModule
 } from '@angular/material';
 
 @NgModule({
@@ -44,7 +45,8 @@ import {
     MatPaginatorModule,
     MatSortModule,
     MatSelectModule,
-    MatSliderModule
+    MatSliderModule,
+    MatDividerModule
   ]
 })
 export class SharedUiNgMaterialModule {}

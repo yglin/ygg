@@ -9,7 +9,13 @@
       </div>
     </mat-step>
     <mat-step label="選擇體驗">
-      <ygg-resource-selector></ygg-resource-selector>
+      <div class="stepper-content">
+        <ygg-resource-list (select)='onSelectResource($event)'></ygg-resource-list>
+        </div>
+        <div class="stepper-action" fxLayout='row' fxLayoutAlign='space-between center'>
+          <button mat-raised-button matStepperPrevious >上一步</button>
+          <button mat-raised-button matStepperNext [disabled]='selectedResources.length <= 0'>下一步</button>
+        </div>  
     </mat-step>
     <mat-step label="自動排程">
       <ygg-scheduler-auto></ygg-scheduler-auto>

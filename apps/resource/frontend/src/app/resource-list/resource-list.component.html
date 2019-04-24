@@ -1,0 +1,23 @@
+<div class="ygg-resource-list">
+  <div
+    class="selection-list"
+    fxLayout="row wrap"
+    fxLayoutAlign="start center"
+    fxLayoutGap="30px"
+  >
+    <div class="flex-row-wrap-item" *ngFor="let id of selectIds">
+      <ygg-resource-thumbnail [id]='id'></ygg-resource-thumbnail>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <br />
+  <div class="item-list">
+    <div
+      *ngFor="let resource of resources"
+      (click)="onClick(resource.id)"
+      [ngClass]="{ selected: isSelected(resource.id) }"
+    >
+      <ygg-resource-thumbnail [id]="resource.id"></ygg-resource-thumbnail>
+    </div>
+  </div>
+</div>

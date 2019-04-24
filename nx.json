@@ -58,6 +58,9 @@
     },
     "shared-ui-widgets": {
       "tags": ["scope:shared", "type:ui", "platform:desktop"]
+    },
+    "shared-domain-resource": {
+      "tags": ["scope:shared", "type:domain"]
     }
   }
 }

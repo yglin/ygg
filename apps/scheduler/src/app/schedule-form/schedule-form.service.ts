@@ -7,9 +7,13 @@ export class ScheduleFormService {
   constructor(private formBuilder: FormBuilder) {}
 
   createFormGroup(): FormGroup {
+    const dateRangeStart = moment().add(1, 'month').startOf('month');
     return this.formBuilder.group({
       dateRange: [
-        null,
+        {
+          start: dateRangeStart.toDate(),
+          end: dateRangeStart.add(1, 'week').toDate()
+        },
         Validators.required
       ],
       numParticipants: [10, Validators.required]
