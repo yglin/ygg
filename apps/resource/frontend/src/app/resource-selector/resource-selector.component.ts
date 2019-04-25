@@ -1,8 +1,13 @@
-import { difference } from 'lodash';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Resource, ResourceService } from '@ygg/shared/domain/resource';
-import { MatSelectionListChange } from '@angular/material';
-import { BehaviorSubject, merge, combineLatest } from 'rxjs';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {MatSelectionListChange} from '@angular/material';
+import {Resource, ResourceService} from '@ygg/shared/domain/resource';
+import {difference, filter} from 'lodash';
+import {BehaviorSubject, combineLatest, merge} from 'rxjs';
+import {debounceTime} from 'rxjs/operators';
+
+interface FilterOptions {
+  keyword: string;
+}
 
 @Component({
   selector: 'ygg-resource-selector',
@@ -14,15 +19,21 @@ export class ResourceSelectorComponent implements OnInit {
   @Input() multi: boolean;
   @Output() selectChange: EventEmitter<Set<string>>;
   unselectedIds: string[];
+  filterChange$: BehaviorSubject<FilterOptions>;
 
   constructor(private resourceService: ResourceService) {
     this.selectChange = new EventEmitter<Set<string>>();
-    combineLatest(this.resourceService.list$(), this.selectChange)
-    .subscribe(([resources, selectedIdsSet]) => {
-      const resourceIds = resources.map(r => r.id);
-      const selectedIds = Array.from(selectedIdsSet as Set<string>);
-      this.unselectedIds = difference(resourceIds, selectedIds);
-    });
+    this.filterChange$ = new BehaviorSubject({keyword: ''});
+    combineLatest(
+        this.resourceService.list$(), this.selectChange,
+        this.filterChange$.pipe(debounceTime(500)))
+        .subscribe(([resources, selectedIdsSet, filterOptions]) => {
+          // const resourceIds = resources.map(r => r.id);
+          const selectedIds = Array.from(selectedIdsSet as Set<string>);
+          const filteredResources = this.filter(resources, filterOptions);
+          this.unselectedIds =
+              difference(filteredResources.map(r => r.id), selectedIds);
+        });
   }
 
   ngOnInit() {
@@ -48,5 +59,28 @@ export class ResourceSelectorComponent implements OnInit {
       this.selectedIds.add(targetId);
     }
     this.selectChange.emit(this.selectedIds);
+  }
+
+  filter(resources: Resource[], filterOptions: FilterOptions): Resource[] {
+    let results = resources;
+
+    if (!filterOptions) {
+      return results;
+    }
+
+    if (filterOptions.keyword) {
+      results = filter(resources, r => {
+        return r.name && r.name.includes(filterOptions.keyword);
+      });
+    }
+
+    return results;
+  }
+
+  onSearch(event: any) {
+    const keyword = event.target.value;
+    this.filterChange$.next({
+      keyword
+    });
   }
 }

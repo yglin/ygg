@@ -12,6 +12,10 @@
   <mat-divider>
   </mat-divider>
   <br>
+  <mat-form-field>
+    <input matInput placeholder="搜尋" (keyup)='onSearch($event)'>
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
   <mat-selection-list (selectionChange)="onSelect($event)">
       <mat-list-option
         *ngFor="let id of unselectedIds"
