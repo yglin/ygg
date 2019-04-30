@@ -10,3 +10,7 @@ body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
+
+h1, h2, h3, h4, h5, h6, p, pre, div {
+  font-family: 'Noto Sans TC', sans-serif;
+}
