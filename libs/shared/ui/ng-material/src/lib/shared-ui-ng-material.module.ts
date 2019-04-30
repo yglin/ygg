@@ -21,7 +21,8 @@ import {
   MatSortModule,
   MatSelectModule,
   MatSliderModule,
-  MatDividerModule
+  MatDividerModule,
+  MatTabsModule
 } from '@angular/material';
 
 @NgModule({
@@ -46,7 +47,8 @@ import {
     MatSortModule,
     MatSelectModule,
     MatSliderModule,
-    MatDividerModule
+    MatDividerModule,
+    MatTabsModule
   ]
 })
 export class SharedUiNgMaterialModule {}

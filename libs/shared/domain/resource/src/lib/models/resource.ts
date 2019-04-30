@@ -6,8 +6,10 @@ import { Album } from './album';
 export class Resource implements DataItem {
   id: string;
   name: string;
+  description: string;
   color: string;
   album: Album;
+  timeLength: number;
 
   constructor() {
     this.id = uuid.v4();

@@ -41,6 +41,9 @@
       "@ygg/shared/ui/widgets": ["libs/shared/ui/widgets/src/index.ts"],
       "@ygg/shared/domain/resource": [
         "libs/shared/domain/resource/src/index.ts"
+      ],
+      "@ygg/shared/domain/schedule": [
+        "libs/shared/domain/schedule/src/index.ts"
       ]
     }
   },

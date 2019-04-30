@@ -17,12 +17,12 @@ interface FilterOptions {
 export class ResourceSelectorComponent implements OnInit {
   @Input() selectedIds: Set<string>;
   @Input() multi: boolean;
-  @Output() selectChange: EventEmitter<Set<string>>;
+  @Output() selectChange: EventEmitter<string[]>;
   unselectedIds: string[];
   filterChange$: BehaviorSubject<FilterOptions>;
 
   constructor(private resourceService: ResourceService) {
-    this.selectChange = new EventEmitter<Set<string>>();
+    this.selectChange = new EventEmitter<string[]>();
     this.filterChange$ = new BehaviorSubject({keyword: ''});
     combineLatest(
         this.resourceService.list$(), this.selectChange,
@@ -41,7 +41,7 @@ export class ResourceSelectorComponent implements OnInit {
     if (!this.selectedIds) {
       this.selectedIds = new Set([]);
     }
-    this.selectChange.emit(this.selectedIds);
+    this.selectChange.emit(Array.from(this.selectedIds));
   }
 
   isSelected(id: string): boolean {
@@ -58,7 +58,7 @@ export class ResourceSelectorComponent implements OnInit {
       }
       this.selectedIds.add(targetId);
     }
-    this.selectChange.emit(this.selectedIds);
+    this.selectChange.emit(Array.from(this.selectedIds));
   }
 
   filter(resources: Resource[], filterOptions: FilterOptions): Resource[] {

@@ -1,0 +1,13 @@
+<div class='ygg-event-thumbnail' *ngIf="event" [style.backgroundColor]='event.color'>
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px" class='inner-panel'>
+    <div>
+      <div class='icon'>
+        <img [src]="event.album.cover">
+      </div>
+    </div>
+    <div>
+      <h6 class='name'>{{ event.name }}</h6>
+      <ygg-time-range [start]='event.start' [end]='event.end'></ygg-time-range>
+    </div>
+  </div>
+</div>

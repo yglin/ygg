@@ -1,6 +1,6 @@
 import { range, find } from 'lodash';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { Resource } from './models';
 import { DataAccessService } from '@ygg/shared/data-access';
 
@@ -20,6 +20,11 @@ export class ResourceService {
 
   get$(id: string): Observable<Resource> {
     return this.dataAccessService.get$(this.collection, id, Resource);
+  }
+
+  getByIds$(ids: string[]): Observable<Resource[]> {
+    const arrayGet$: Observable<Resource>[] = ids.map(id => this.get$(id));
+    return combineLatest(arrayGet$);
   }
 
   forgeOne(): Resource {

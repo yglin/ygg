@@ -1,7 +1,6 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import * as moment from 'moment';
-import { ScheduleFormService } from './schedule-form.service';
+import { ScheduleFormService } from '@ygg/shared/domain/schedule';
 
 @Component({
   selector: 'ygg-schedule-form',

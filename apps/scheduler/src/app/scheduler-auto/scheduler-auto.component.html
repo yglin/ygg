@@ -1,3 +1,28 @@
-<p>
-  scheduler-auto works!
-</p>
+<div class="ygg-scheduler-auto">
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+    <div>
+      <button
+        mat-fab
+        (click)="onClickAutoSchedule()"
+        [disabled]="!canAutoSchedule"
+        matTooltip="系統自動產生最佳化行程"
+      >
+        <mat-icon>sort</mat-icon>
+      </button>
+    </div>
+  </div>
+  <mat-tab-group>
+    <mat-tab
+      *ngFor="let schedule of resultSchedules; let idx = index"
+      [label]="'推薦行程' + (idx + 1)"
+    >
+      <ygg-event-list [events]="schedule.events"></ygg-event-list>
+    </mat-tab>
+  </mat-tab-group>
+  <!--
+    <div *ngFor="let schedule of resultSchedules; let isLast = last">
+      <ygg-event-list [events]="schedule.events"></ygg-event-list>
+      <div *ngIf="!isLast"><br /><mat-divider> </mat-divider><br /></div>
+    </div>
+  -->
+</div>

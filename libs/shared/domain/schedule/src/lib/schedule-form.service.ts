@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import * as moment from 'moment';
+import { ScheduleForm } from './models';
 
 @Injectable({providedIn: 'root'})
 export class ScheduleFormService {
@@ -8,7 +9,7 @@ export class ScheduleFormService {
 
   createFormGroup(): FormGroup {
     const dateRangeStart = moment().add(1, 'month').startOf('month');
-    return this.formBuilder.group({
+    const formGroup = this.formBuilder.group({
       dateRange: [
         {
           start: dateRangeStart.toDate(),
@@ -18,5 +19,6 @@ export class ScheduleFormService {
       ],
       numParticipants: [10, Validators.required]
     });
+    return formGroup;
   }
 }

@@ -799,6 +799,33 @@
         }
       },
       "schematics": {}
+    },
+    "shared-domain-schedule": {
+      "root": "libs/shared/domain/schedule",
+      "sourceRoot": "libs/shared/domain/schedule/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/domain/schedule/tsconfig.lib.json",
+              "libs/shared/domain/schedule/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/shared/domain/schedule/jest.config.js",
+            "tsConfig": "libs/shared/domain/schedule/tsconfig.spec.json",
+            "setupFile": "libs/shared/domain/schedule/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

@@ -77,6 +77,10 @@
             "onlyDependOnLibsWithTags": ["scope:shopping", "scope:shared"]
           },
           {
+            "sourceTag": "scope:schedule",
+            "onlyDependOnLibsWithTags": ["scope:schedule", "scope:shared"]
+          },
+          {
             "sourceTag": "type:util",
             "onlyDependOnLibsWithTags": ["type:util"]
           },

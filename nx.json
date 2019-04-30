@@ -51,7 +51,7 @@
       "tags": []
     },
     "scheduler": {
-      "tags": ["scope:scheduler", "type:app", "platform:mobile"]
+      "tags": ["scope:schedule", "type:app", "platform:mobile"]
     },
     "scheduler-e2e": {
       "tags": []
@@ -61,6 +61,9 @@
     },
     "shared-domain-resource": {
       "tags": ["scope:shared", "type:domain"]
+    },
+    "shared-domain-schedule": {
+      "tags": ["scope:schedule", "type:domain"]
     }
   }
 }

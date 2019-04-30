@@ -14,9 +14,11 @@ import { ResourceFrontendFeatureModule } from '@ygg/apps/resource/frontend';
 
 import { RouterModule } from '@angular/router';
 import { routes } from './routes';
+import { EventListComponent } from './event-list/event-list.component';
+import { EventThumbnailComponent } from './event-thumbnail/event-thumbnail.component';
 
 @NgModule({
-  declarations: [SchedulerComponent, ScheduleFormComponent, ScheduleViewComponent, SchedulerAutoComponent, SchedulerManualComponent],
+  declarations: [SchedulerComponent, ScheduleFormComponent, ScheduleViewComponent, SchedulerAutoComponent, SchedulerManualComponent, EventListComponent, EventThumbnailComponent],
   imports: [
     CommonModule,
     FormsModule,

@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ProgressSpinnerComponent } from './progress-spinner.component';
-import { SharedUiWidgetsModule } from '../shared-ui-widgets.module';
 
 @Injectable({
-  providedIn: SharedUiWidgetsModule
+  providedIn: 'root'
 })
 export class ProgressSpinnerService {
   dialogRef: MatDialogRef<ProgressSpinnerComponent>;
