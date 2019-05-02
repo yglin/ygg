@@ -18,7 +18,7 @@ export class SchedulerComponent implements OnInit {
   selectedResourceIds$: BehaviorSubject<string[]>;
   hasResourceSelected: boolean;
 
-  schedule: Schedule;
+  scheduleSelect$: BehaviorSubject<Schedule>;
 
   constructor(
     private scheduleFormService: ScheduleFormService,
@@ -36,10 +36,15 @@ export class SchedulerComponent implements OnInit {
     this.hasResourceSelected = false;
     this.selectedResourceIds$.subscribe(resourceIds => this.hasResourceSelected = !isEmpty(resourceIds));
 
-    this.schedule = this.scheduleService.create();
+    this.scheduleSelect$ = new BehaviorSubject<Schedule>(null);
   }
 
   ngOnInit() {
+  }
+
+  onSelectAutoScheudle(schedule: Schedule) {
+    console.log(schedule);
+    this.scheduleSelect$.next(schedule);
   }
 
   onSelectResources(resourceIds: string[]) {

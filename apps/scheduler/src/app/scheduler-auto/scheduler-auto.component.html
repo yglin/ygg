@@ -14,7 +14,7 @@
       </button>
     </div>
   </div>
-  <mat-tab-group>
+  <mat-tab-group (selectedTabChange)='onTabChange($event)'>
     <mat-tab
       *ngFor="let schedule of resultSchedules; let idx = index"
       [label]="'推薦行程' + (idx + 1)"

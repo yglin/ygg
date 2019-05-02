@@ -1,3 +1,5 @@
-<p>
-  scheduler-manual works!
-</p>
+<div class="ygg-scheduler-manual">
+  <div *ngIf="schedule">
+    <ygg-event-list [events]="schedule.events"></ygg-event-list>
+  </div>
+</div>

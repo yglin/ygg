@@ -18,13 +18,13 @@
         </div>  
     </mat-step>
     <mat-step label="自動排程">
-      <ygg-scheduler-auto [scheduleForm$]='scheduleForm$' [resourceIds$]='selectedResourceIds$'></ygg-scheduler-auto>
+      <ygg-scheduler-auto [scheduleForm$]='scheduleForm$' [resourceIds$]='selectedResourceIds$' (selectSchedule)='onSelectAutoScheudle($event)'></ygg-scheduler-auto>
     </mat-step>
     <mat-step label="行程調整">
-      <ygg-scheduler-manual></ygg-scheduler-manual>
+      <ygg-scheduler-manual [schedule$]='scheduleSelect$'></ygg-scheduler-manual>
     </mat-step>
     <mat-step label="行程預覽">
-      <ygg-schedule-view [id]='schedule.id'></ygg-schedule-view>
+      <!-- <ygg-schedule-view [id]='schedule.id'></ygg-schedule-view> -->
     </mat-step>
   </mat-horizontal-stepper>
 </div>
