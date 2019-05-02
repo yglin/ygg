@@ -1,6 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 /* @import "~@angular/material/prebuilt-themes/indigo-pink.css"; */
-@import '../../../libs/shared/ui-widgets/src/lib/shared-ui-widgets.module.css';
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "../../../libs/shared/ui/widgets/src/shared-ui-widgets.module.css";
+@import "../../../libs/shared/ui/themes/src/theme-01.css";
 
 html,
 body {
@@ -9,8 +11,4 @@ body {
 body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
-}
-
-h1, h2, h3, h4, h5, h6, p, pre, div {
-  font-family: 'Noto Sans TC', sans-serif;
 }

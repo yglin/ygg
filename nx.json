@@ -64,6 +64,12 @@
     },
     "shared-domain-schedule": {
       "tags": ["scope:schedule", "type:domain"]
+    },
+    "themes": {
+      "tags": ["scope:shared", "type:ui"]
+    },
+    "shared-ui-themes": {
+      "tags": ["scope:shared", "type:ui"]
     }
   }
 }

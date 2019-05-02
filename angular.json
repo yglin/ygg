@@ -23,7 +23,6 @@
               "apps/deep-travel/src/assets"
             ],
             "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "apps/deep-travel/src/styles.css"
             ],
             "scripts": [],
@@ -822,6 +821,33 @@
             "jestConfig": "libs/shared/domain/schedule/jest.config.js",
             "tsConfig": "libs/shared/domain/schedule/tsconfig.spec.json",
             "setupFile": "libs/shared/domain/schedule/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shared-ui-themes": {
+      "root": "libs/shared/ui/themes",
+      "sourceRoot": "libs/shared/ui/themes/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/themes/tsconfig.lib.json",
+              "libs/shared/ui/themes/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/themes/jest.config.js",
+            "tsConfig": "libs/shared/ui/themes/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/themes/src/test-setup.ts"
           }
         }
       },
