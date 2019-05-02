@@ -44,7 +44,9 @@
       ],
       "@ygg/shared/domain/schedule": [
         "libs/shared/domain/schedule/src/index.ts"
-      ]
+      ],
+      "@ygg/themes": ["libs/themes/src/index.ts"],
+      "@ygg/shared/ui/themes": ["libs/shared/ui/themes/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
