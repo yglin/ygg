@@ -1,7 +1,7 @@
+import {flatten, isArray, uniqBy, isEmpty} from 'lodash';
 import {Injectable} from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
-import {flatten, isArray, uniqBy} from 'lodash';
-import {combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 import {DataItem} from './data-item';
@@ -66,6 +66,17 @@ export class DataAccessService {
                 {collection, id});
           }
         }));
+  }
+
+  getByIds$<T extends DataItem>(collection: string, ids: string[], constructor: {
+    new(): T
+  }): Observable<T[]> {
+    if (isEmpty(ids)) {
+      return of([]);
+    } else {
+      const arrayGet$: Observable<T>[] = ids.map(id => this.get$(collection, id, constructor));
+      return combineLatest(arrayGet$);
+    }
   }
 
   find$<T extends DataItem>(collection: string, query: Query, constructor: {

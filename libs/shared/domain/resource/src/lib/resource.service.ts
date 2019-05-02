@@ -1,18 +1,15 @@
-import { range, find } from 'lodash';
-import { Injectable } from '@angular/core';
-import { Observable, combineLatest } from 'rxjs';
-import { Resource } from './models';
-import { DataAccessService } from '@ygg/shared/data-access';
+import {Injectable} from '@angular/core';
+import {DataAccessService} from '@ygg/shared/data-access';
+import {find, isEmpty, range} from 'lodash';
+import {combineLatest, Observable, of} from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+import {Resource} from './models';
+
+@Injectable({providedIn: 'root'})
 export class ResourceService {
   collection = 'resources';
 
-  constructor(
-    private dataAccessService: DataAccessService
-  ) { }
+  constructor(private dataAccessService: DataAccessService) {}
 
   list$(): Observable<Resource[]> {
     return this.dataAccessService.list$(this.collection, Resource);
@@ -23,8 +20,7 @@ export class ResourceService {
   }
 
   getByIds$(ids: string[]): Observable<Resource[]> {
-    const arrayGet$: Observable<Resource>[] = ids.map(id => this.get$(id));
-    return combineLatest(arrayGet$);
+    return this.dataAccessService.getByIds$(this.collection, ids, Resource);
   }
 
   forgeOne(): Resource {

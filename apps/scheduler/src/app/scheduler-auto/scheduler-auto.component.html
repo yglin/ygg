@@ -1,5 +1,8 @@
 <div class="ygg-scheduler-auto">
   <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+    <div *ngIf="!hasResourcesSelected">
+      <p class='hint'>請先選擇體驗</p>
+    </div>
     <div>
       <button
         mat-fab

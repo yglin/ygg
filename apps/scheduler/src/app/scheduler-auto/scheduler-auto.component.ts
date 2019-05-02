@@ -1,10 +1,10 @@
-import {Component, Input, OnInit, OnDestroy} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Resource, ResourceService} from '@ygg/shared/domain/resource';
 import {Schedule, ScheduleForm, ScheduleService} from '@ygg/shared/domain/schedule';
 import {ProgressSpinnerService} from '@ygg/shared/ui/widgets';
 import {isArray, isEmpty} from 'lodash';
 import {BehaviorSubject, from, merge, Observable, Subject, Subscription} from 'rxjs';
-import {debounceTime, switchMap, finalize} from 'rxjs/operators';
+import {debounceTime, finalize, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'ygg-scheduler-auto',
@@ -16,6 +16,7 @@ export class SchedulerAutoComponent implements OnInit, OnDestroy {
   scheduleForm: ScheduleForm;
   @Input() resourceIds$: Observable<string[]>;
   resources: Resource[];
+  hasResourcesSelected: boolean;
   canAutoSchedule: boolean;
   autoSchedule$: Subject<boolean>;
   subscription: Subscription;
@@ -27,6 +28,7 @@ export class SchedulerAutoComponent implements OnInit, OnDestroy {
       private progressSpinnerService: ProgressSpinnerService) {
     this.resultSchedules = [];
     this.resources = [];
+    this.hasResourcesSelected = false;
     this.canAutoSchedule = false;
     this.autoSchedule$ = new Subject();
     // this.autoSchedule$.pipe(
@@ -41,25 +43,31 @@ export class SchedulerAutoComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.scheduleForm$ && this.resourceIds$) {
-      this.subscription = merge(
-          this.scheduleForm$,
-          this.resourceIds$.pipe(switchMap(
-              resourceIds => this.resourceService.getByIds$(resourceIds))),
-          this.autoSchedule$.pipe(debounceTime(500)))
-          .subscribe(value => {
-            if (value === true) {
-              this.startAutoScheudle();
-            } else {
-              if (ScheduleForm.isScheduleForm(value)) {
-                this.scheduleForm = value;
-              } else if (isArray(value) && !isEmpty(value)) {
-                this.resources = value;
-              }
-              this.resultSchedules = [];
-              this.canAutoSchedule =
-                  this.scheduleForm && !isEmpty(this.resources);
-            }
-          })
+      this.subscription =
+          merge(
+              this.scheduleForm$,
+              this.resourceIds$.pipe(switchMap(
+                  resourceIds => this.resourceService.getByIds$(resourceIds))),
+              this.autoSchedule$.pipe(debounceTime(500)))
+              .subscribe(value => {
+                if (value === true) {
+                  this.startAutoScheudle();
+                } else {
+                  if (ScheduleForm.isScheduleForm(value)) {
+                    this.scheduleForm = value;
+                  } else if (isArray(value)){
+                    this.resources = value;
+                  }
+                  console.log('value is ...');
+                  console.log(value);
+                  console.log('this.resources are ...');
+                  console.log(this.resources);
+                  this.resultSchedules = [];
+                  this.canAutoSchedule =
+                      this.scheduleForm && !isEmpty(this.resources);
+                  this.hasResourcesSelected = !isEmpty(this.resources);
+                }
+              })
     }
   }
 
@@ -73,14 +81,14 @@ export class SchedulerAutoComponent implements OnInit, OnDestroy {
     this.progressSpinnerService.show();
     this.canAutoSchedule = false;
     this.resultSchedules = [];
-    this.scheduleService.autoSchedule(this.resources, this.scheduleForm).pipe(
-      finalize(() => {
-        this.progressSpinnerService.hide();
-        this.canAutoSchedule = true;
-      })
-    ).subscribe(schedule => {
-      this.resultSchedules.push(schedule);
-    });
+    this.scheduleService.autoSchedule(this.resources, this.scheduleForm)
+        .pipe(finalize(() => {
+          this.progressSpinnerService.hide();
+          this.canAutoSchedule = true;
+        }))
+        .subscribe(schedule => {
+          this.resultSchedules.push(schedule);
+        });
   }
 
   onClickAutoSchedule() {
