@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
+import { SharedInfrastructureUtilityTypesModule } from '@ygg/shared/infrastructure/utility-types';
 
 import { SchedulerComponent } from './scheduler/scheduler.component';
 import { ScheduleFormComponent } from './schedule-form/schedule-form.component';
@@ -24,6 +25,7 @@ import { EventThumbnailComponent } from './event-thumbnail/event-thumbnail.compo
     FormsModule,
     ReactiveFormsModule,
     SharedUiNgMaterialModule,
+    SharedInfrastructureUtilityTypesModule,
     SharedUiWidgetsModule,
     ResourceFrontendFeatureModule
   ]

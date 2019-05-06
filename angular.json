@@ -22,9 +22,7 @@
               "apps/deep-travel/src/favicon.ico",
               "apps/deep-travel/src/assets"
             ],
-            "styles": [
-              "apps/deep-travel/src/styles.css"
-            ],
+            "styles": ["apps/deep-travel/src/styles.css"],
             "scripts": [],
             "es5BrowserSupport": true
           },
@@ -848,6 +846,33 @@
             "jestConfig": "libs/shared/ui/themes/jest.config.js",
             "tsConfig": "libs/shared/ui/themes/tsconfig.spec.json",
             "setupFile": "libs/shared/ui/themes/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shared-infrastructure-utility-types": {
+      "root": "libs/shared/infrastructure/utility-types",
+      "sourceRoot": "libs/shared/infrastructure/utility-types/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/infrastructure/utility-types/tsconfig.lib.json",
+              "libs/shared/infrastructure/utility-types/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/shared/infrastructure/utility-types/jest.config.js",
+            "tsConfig": "libs/shared/infrastructure/utility-types/tsconfig.spec.json",
+            "setupFile": "libs/shared/infrastructure/utility-types/src/test-setup.ts"
           }
         }
       },

@@ -15,5 +15,12 @@ export class YGGError extends Error {
   isError(code: number) {
     return this.code === code;
   }
+}
 
+export enum BadValueErrorCode {
+  Unknown = 0,
+  BadArgument
+}
+export class BadValueError extends YGGError {
+  code: BadValueErrorCode;
 }

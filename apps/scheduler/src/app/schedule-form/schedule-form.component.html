@@ -6,8 +6,11 @@
     <mat-divider>
     </mat-divider>
     <br>
-    <h3>預計人數</h3>
+    <h3>預計參加人數</h3>
     <ygg-number-slider formControlName='numParticipants' icon='person'></ygg-number-slider>
+    <br>
+    <h3>預算總和</h3>
+    <ygg-number-range-control formControlName='totalBudget' [globalMax]='100000'></ygg-number-range-control>
   </form>
   <div class='debug'>
     <pre>{{ formGroup.value | json }}</pre>

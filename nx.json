@@ -70,6 +70,9 @@
     },
     "shared-ui-themes": {
       "tags": ["scope:shared", "type:ui"]
+    },
+    "shared-infrastructure-utility-types": {
+      "tags": ["scope:shared", "type:utils"]
     }
   }
 }
