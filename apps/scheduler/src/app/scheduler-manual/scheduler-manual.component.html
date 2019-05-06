@@ -1,5 +1,10 @@
 <div class="ygg-scheduler-manual">
   <div *ngIf="schedule">
-    <ygg-event-list [events]="schedule.events"></ygg-event-list>
+      <!-- <ygg-event-list [events]="schedule.events"></ygg-event-list> -->
+    <div class='drop-container' cdkDropList (cdkDropListDropped)='onDropEvent($event)'>
+      <div class='drag-item' *ngFor="let event of schedule.events" cdkDrag>
+        <ygg-event-thumbnail [id]='event.id'></ygg-event-thumbnail>
+      </div>
+    </div>
   </div>
 </div>

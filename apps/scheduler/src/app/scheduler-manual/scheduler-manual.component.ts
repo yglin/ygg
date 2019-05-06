@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { Schedule } from '@ygg/shared/domain/schedule';
+import { Schedule, EventService, ScheduleService } from '@ygg/shared/domain/schedule';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'ygg-scheduler-manual',
@@ -12,7 +13,9 @@ export class SchedulerManualComponent implements OnInit, OnDestroy {
   schedule: Schedule;
   subscription: Subscription;
 
-  constructor() { }
+  constructor(
+    private scheduleService: ScheduleService
+  ) { }
 
   ngOnInit() {
     if (this.schedule$) {
@@ -29,4 +32,12 @@ export class SchedulerManualComponent implements OnInit, OnDestroy {
     }
   }
 
+  onDropEvent(dragDrop: CdkDragDrop<any>) {
+    // console.log(`Switch events ${dragDrop.previousIndex} and ${dragDrop.currentIndex}`);
+    const indexA = dragDrop.previousIndex;
+    const indexB = dragDrop.currentIndex;
+    // Swap their positions in events array;
+    moveItemInArray(this.schedule.events, indexA, indexB);
+    this.scheduleService.rearrangeKeepOrder(this.schedule);
+  }
 }

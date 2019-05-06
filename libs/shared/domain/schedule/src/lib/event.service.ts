@@ -41,4 +41,18 @@ export class EventService {
       return this.dataAccessService.get$(this.collection, id, Event);
     }
   }
+
+  /**
+   * Swap 2 events' start times, but keep their original time span length.
+   * This function modifies both input events
+   */
+  swapEventsTime(eventA: Event, eventB: Event) {
+    const timeLengthA = moment(eventA.end).diff(eventA.start, 'minute');
+    const startA = new Date(eventA.start.getTime());
+    eventA.start = new Date(eventB.start.getTime());
+    eventA.end = moment(eventA.start).add(timeLengthA, 'minute').toDate();
+    const timeLengthB = moment(eventB.end).diff(eventB.start, 'minute');
+    eventB.start = new Date(startA.getTime());
+    eventB.end = moment(eventB.start).add(timeLengthB, 'minute').toDate();
+  }
 }

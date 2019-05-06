@@ -37,6 +37,25 @@ export class ScheduleService {
     return of(schedule);
   }
 
+  rearrangeKeepOrder(schedule: Schedule) {
+    let scheduleStart = moment().add(999, 'year');
+    for (const event of schedule.events) {
+      const eventStart = moment(event.start);
+      if (scheduleStart.isAfter(eventStart)) {
+        scheduleStart = eventStart;
+      }
+    }
+    
+    const timeProbe = moment(scheduleStart);
+    for (const event of schedule.events) {
+      const originalTimeLength = moment(event.end).diff(moment(event.start), 'minute');
+      event.start = moment(timeProbe).toDate();
+      timeProbe.add(originalTimeLength, 'minute');
+      event.end = moment(timeProbe).toDate();
+      timeProbe.add(1, 'hour');
+    }
+  }
+
   autoSchedule(resources: Resource[], form: ScheduleForm):
       Observable<Schedule> {
     // TODO implement in real
