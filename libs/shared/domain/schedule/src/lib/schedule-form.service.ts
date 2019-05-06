@@ -19,7 +19,8 @@ export class ScheduleFormService {
         Validators.required
       ],
       numParticipants: [10, Validators.required],
-      totalBudget: new NumberRange()
+      totalBudget: new NumberRange(),
+      singleBudget: new NumberRange()
     });
     return formGroup;
   }

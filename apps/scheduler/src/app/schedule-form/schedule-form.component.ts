@@ -9,6 +9,7 @@ import { ScheduleFormService } from '@ygg/shared/domain/schedule';
 })
 export class ScheduleFormComponent implements OnInit {
   @Input() formGroup: FormGroup;
+  budgetType = 'total';
 
   constructor(private scheudleFormService: ScheduleFormService) {
   }

@@ -1,16 +1,44 @@
 <div class="ygg-schedule-form">
   <form [formGroup]="formGroup">
     <ygg-title-divider>預計日期範圍</ygg-title-divider>
-    <ygg-date-range-picker formControlName='dateRange'></ygg-date-range-picker>
+    <ygg-date-range-picker formControlName="dateRange"></ygg-date-range-picker>
     <mat-error *ngIf="isError('dateRange', 'required')">請填日期範圍</mat-error>
-    <br>
+    <br />
     <ygg-title-divider>預計參加人數</ygg-title-divider>
-    <ygg-number-slider formControlName='numParticipants' icon='person'></ygg-number-slider>
-    <br>
-    <ygg-title-divider>預算總和</ygg-title-divider>
-    <ygg-number-range-control formControlName='totalBudget' [globalMax]='100000'></ygg-number-range-control>
+    <ygg-number-slider
+      formControlName="numParticipants"
+      icon="person"
+    ></ygg-number-slider>
+    <br />
+    <ygg-title-divider>預算</ygg-title-divider>
+    <div>
+      <mat-radio-group
+        [(ngModel)]="budgetType"
+        [ngModelOptions]="{ standalone: true }"
+      >
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+          <mat-radio-button [value]="'total'">總和</mat-radio-button>
+          <mat-radio-button [value]="'single'">單人</mat-radio-button>
+        </div>
+      </mat-radio-group>
+      <br />
+      <div>
+        <div *ngIf="budgetType === 'total'">
+          <ygg-number-range-control
+            formControlName="totalBudget"
+            [globalMax]="100000"
+          ></ygg-number-range-control>
+        </div>
+        <div *ngIf="budgetType === 'single'">
+          <ygg-number-range-control
+            formControlName="singleBudget"
+            [globalMax]="10000"
+          ></ygg-number-range-control>
+        </div>
+      </div>
+    </div>
   </form>
-  <div class='debug'>
+  <div class="debug">
     <pre>{{ formGroup.value | json }}</pre>
   </div>
 </div>
