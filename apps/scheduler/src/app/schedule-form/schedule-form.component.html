@@ -1,15 +1,13 @@
 <div class="ygg-schedule-form">
   <form [formGroup]="formGroup">
-    <h3>預計日期範圍</h3>
+    <ygg-title-divider>預計日期範圍</ygg-title-divider>
     <ygg-date-range-picker formControlName='dateRange'></ygg-date-range-picker>
     <mat-error *ngIf="isError('dateRange', 'required')">請填日期範圍</mat-error>
-    <mat-divider>
-    </mat-divider>
     <br>
-    <h3>預計參加人數</h3>
+    <ygg-title-divider>預計參加人數</ygg-title-divider>
     <ygg-number-slider formControlName='numParticipants' icon='person'></ygg-number-slider>
     <br>
-    <h3>預算總和</h3>
+    <ygg-title-divider>預算總和</ygg-title-divider>
     <ygg-number-range-control formControlName='totalBudget' [globalMax]='100000'></ygg-number-range-control>
   </form>
   <div class='debug'>

@@ -11,6 +11,7 @@ import {PageTitleComponent} from './page-title/page-title.component';
 import {ProgressSpinnerComponent} from './progress-spinner/progress-spinner.component';
 import { NumberSliderComponent } from './number-slider/number-slider.component';
 import { TimeRangeComponent } from './time-range/time-range.component';
+import { TitleDividerComponent } from './title-divider/title-divider.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { TimeRangeComponent } from './time-range/time-range.component';
     ProgressSpinnerComponent, PageTitleComponent, IMaybeALinkDirective,
     DateRangePickerComponent,
     NumberSliderComponent,
-    TimeRangeComponent
+    TimeRangeComponent,
+    TitleDividerComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +33,7 @@ import { TimeRangeComponent } from './time-range/time-range.component';
   ],
   exports: [
     SharedUiNgMaterialModule, FlexLayoutModule, PageTitleComponent,
-    IMaybeALinkDirective, DateRangePickerComponent, NumberSliderComponent, TimeRangeComponent
+    IMaybeALinkDirective, DateRangePickerComponent, NumberSliderComponent, TimeRangeComponent, TitleDividerComponent
   ],
   entryComponents: [ProgressSpinnerComponent]
 })
