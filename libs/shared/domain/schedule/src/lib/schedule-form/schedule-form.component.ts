@@ -1,6 +1,7 @@
-import {Component, OnInit, Input} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import { ScheduleFormService } from './schedule-form.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormGroup} from '@angular/forms';
+
+import {ScheduleFormService} from './schedule-form.service';
 
 @Component({
   selector: 'ygg-schedule-form',
@@ -11,8 +12,7 @@ export class ScheduleFormComponent implements OnInit {
   @Input() formGroup: FormGroup;
   budgetType = 'total';
 
-  constructor(private scheudleFormService: ScheduleFormService) {
-  }
+  constructor(private scheudleFormService: ScheduleFormService) {}
 
   ngOnInit() {
     if (!this.formGroup) {
