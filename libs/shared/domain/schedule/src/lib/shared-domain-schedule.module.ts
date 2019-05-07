@@ -1,7 +1,22 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {SharedInfrastructureUtilityTypesModule} from '@ygg/shared/infrastructure/utility-types';
+import {SharedUiNgMaterialModule} from '@ygg/shared/ui/ng-material';
+import {SharedUiWidgetsModule} from '@ygg/shared/ui/widgets';
+
+import {ScheduleFormComponent} from './schedule-form';
+
 
 @NgModule({
-  imports: [CommonModule]
+  declarations: [ScheduleFormComponent],
+  imports: [
+    CommonModule, FormsModule, ReactiveFormsModule, FlexLayoutModule,
+    SharedUiNgMaterialModule, SharedUiWidgetsModule,
+    SharedInfrastructureUtilityTypesModule
+  ],
+  exports: [ScheduleFormComponent]
 })
-export class SharedDomainScheduleModule {}
+export class SharedDomainScheduleModule {
+}

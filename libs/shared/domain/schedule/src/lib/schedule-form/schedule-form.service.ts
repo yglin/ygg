@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import * as moment from 'moment';
-import { ScheduleForm } from './models';
 import { NumberRange } from '@ygg/shared/infrastructure/utility-types';
 
 @Injectable({providedIn: 'root'})

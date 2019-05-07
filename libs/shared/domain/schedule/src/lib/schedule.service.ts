@@ -7,7 +7,8 @@ import {interval, Observable, of} from 'rxjs';
 import {map, take} from 'rxjs/operators';
 
 import {EventService} from './event.service';
-import {Schedule, ScheduleForm} from './models';
+import {Schedule} from './models';
+import {ScheduleForm} from './schedule-form';
 import {Event} from './models/event';
 
 @Injectable({providedIn: 'root'})

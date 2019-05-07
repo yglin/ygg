@@ -51,8 +51,6 @@ export class NumberRangeControlComponent implements ControlValueAccessor {
         this.numberRange.max = numberRange.max;
       }
       this.numberRange.max = Math.min(this.numberRange.max, this.globalMax);
-      console.log(numberRange);
-      console.log(this.numberRange);
     }
   }
 
