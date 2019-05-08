@@ -1,21 +1,25 @@
 <div class="ygg-schedule-form">
   <form [formGroup]="formGroup">
     <ygg-title-divider>預計日期範圍</ygg-title-divider>
-    <div class='form-control'>
-    <ygg-date-range-picker formControlName="dateRange"></ygg-date-range-picker>
-    <mat-error *ngIf="isError('dateRange', 'required')">請填日期範圍</mat-error>
-  </div>
+    <div class="form-control">
+      <ygg-date-range-picker
+        formControlName="dateRange"
+      ></ygg-date-range-picker>
+      <mat-error *ngIf="isError('dateRange', 'required')"
+        >請填日期範圍</mat-error
+      >
+    </div>
     <br />
     <ygg-title-divider>預計參加人數</ygg-title-divider>
-    <div class='form-control'>
-        <ygg-number-slider
-      formControlName="numParticipants"
-      icon="person"
-    ></ygg-number-slider>
+    <div class="form-control">
+      <ygg-number-slider
+        formControlName="numParticipants"
+        icon="person"
+      ></ygg-number-slider>
     </div>
     <br />
     <ygg-title-divider>預算</ygg-title-divider>
-    <div class='form-control'>
+    <div class="form-control">
       <mat-radio-group
         [(ngModel)]="budgetType"
         [ngModelOptions]="{ standalone: true }"
@@ -31,25 +35,32 @@
           <ygg-number-range-control
             formControlName="totalBudget"
             [globalMax]="100000"
+            icon='monetization_on'
           ></ygg-number-range-control>
         </div>
         <div *ngIf="budgetType === 'single'">
           <ygg-number-range-control
             formControlName="singleBudget"
             [globalMax]="10000"
+            icon='monetization_on'
           ></ygg-number-range-control>
         </div>
       </div>
     </div>
     <br />
     <ygg-title-divider>公司行號或團體名稱</ygg-title-divider>
-    <div class='form-control'>
-      <mat-form-field style='width:100%;'>
-        <input matInput placeholder="公司行號或團體名稱" formControlName='groupName'>
+    <div class="form-control">
+      <mat-form-field style="width:100%;">
+        <input
+          matInput
+          placeholder="公司行號或團體名稱"
+          formControlName="groupName"
+        />
+        <span matPrefix><mat-icon>group</mat-icon></span>
       </mat-form-field>
     </div>
     <ygg-title-divider>聯絡人</ygg-title-divider>
-    <div formArrayName="contacts" class='form-control'>
+    <div formArrayName="contacts" class="form-control">
       <div
         *ngFor="
           let contactControl of contactsFormArray.controls;

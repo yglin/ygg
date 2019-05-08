@@ -3,6 +3,7 @@
     <div class='min' fxFlexAlign='end'>
       <mat-form-field>
         <input matInput placeholder='下限' type="number" [(ngModel)]='min'>
+        <span matPrefix *ngIf='icon'><mat-icon>{{icon}}</mat-icon></span>
       </mat-form-field>
     </div>
     <div fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="5px">
@@ -20,6 +21,7 @@
     <div class='max'>
       <mat-form-field>
         <input matInput placeholder='上限' type="number" [(ngModel)]='max'>
+        <span matPrefix *ngIf='icon'><mat-icon>{{icon}}</mat-icon></span>
       </mat-form-field>
     </div>
   </div>

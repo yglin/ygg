@@ -19,6 +19,7 @@ export class NumberRangeControlComponent implements ControlValueAccessor {
   @Input() globalMin = 0;
   @Input() globalMax = 54088;
   @Input() globalStep = 100;
+  @Input() icon;
   emitChange: (numberRange: NumberRange) => any;
 
   constructor() { }

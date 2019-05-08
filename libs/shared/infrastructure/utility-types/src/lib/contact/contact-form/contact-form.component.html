@@ -4,6 +4,7 @@
       <mat-form-field>
         <mat-label>姓名</mat-label>
         <input matInput formControlName="name" required />
+        <span matPrefix><mat-icon>person</mat-icon></span>
         <mat-error *ngIf="contactForm.get('name').hasError('required')"
           >請填入姓名</mat-error
         >
@@ -18,6 +19,7 @@
             formControlName="phone"
             [errorStateMatcher]="leastRequireErrorMatcher"
           />
+          <span matPrefix><mat-icon>phone</mat-icon></span>
           <!--
             <mat-error *ngIf="contactForm.get('phone').invalid">{{ getErrorMessage('phone') }}</mat-error>
           -->
@@ -37,6 +39,7 @@
             [errorStateMatcher]="leastRequireErrorMatcher"
             email
           />
+          <span matPrefix><mat-icon>email</mat-icon></span>
           <!--
             <mat-error *ngIf="contactForm.get('email').invalid">{{ getErrorMessage('email') }}</mat-error>
           -->
@@ -53,6 +56,9 @@
       <mat-form-field>
         <mat-label>LINE ID</mat-label>
         <input matInput formControlName="lineID" />
+        <span matPrefix>
+          <img src="https://img.icons8.com/ios/50/000000/line-me-filled.png" />
+        </span>
         <!--
           <mat-error *ngIf="contactForm.get('lineID').invalid">{{ getErrorMessage('lineID') }}</mat-error>
         -->
