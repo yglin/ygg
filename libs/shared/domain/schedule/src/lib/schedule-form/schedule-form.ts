@@ -1,10 +1,8 @@
-import {extend} from 'lodash';
-import * as Moment from 'moment';
-import {DateRange, extendMoment} from 'moment-range';
-const moment = extendMoment(Moment);
+import {extend, defaults} from 'lodash';
+import * as uuid from 'uuid';
 import {DataItem} from '@ygg/shared/data-access';
 // import {BadValueError, BadValueErrorCode} from '@ygg/shared/infrastructure/error';
-import { NumberRange } from '@ygg/shared/infrastructure/utility-types';
+import { NumberRange, DateRange } from '@ygg/shared/infrastructure/utility-types';
 
 export class ScheduleForm implements DataItem {
   id: string;
@@ -22,10 +20,20 @@ export class ScheduleForm implements DataItem {
     }
   }
 
+  constructor(data: any = {}) {
+    this.fromData(data);
+    defaults(this, {
+      id: uuid.v4(),
+      dateRange: new DateRange(),
+      numParticipants: 10
+    });
+  }
+
   fromData(data: any = {}): this {
     extend(this, data);
-    if (data.dateRange && data.dateRange.start && data.dateRange.end) {
-      this.dateRange = moment.range(data.dateRange.start, data.dateRange.end);
+
+    if (data.dateRange) {
+      this.dateRange = new DateRange(data.dateRange);
     }
     if (data.totalBudget) {
       this.totalBudget = new NumberRange(data.totalBudget);

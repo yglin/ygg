@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {DateRange, NumberRange} from '@ygg/shared/infrastructure/utility-types';
 import * as moment from 'moment';
-import { NumberRange } from '@ygg/shared/infrastructure/utility-types';
 
 @Injectable({providedIn: 'root'})
 export class ScheduleFormService {
@@ -10,13 +10,7 @@ export class ScheduleFormService {
   createFormGroup(): FormGroup {
     const dateRangeStart = moment().add(1, 'month').startOf('month');
     const formGroup = this.formBuilder.group({
-      dateRange: [
-        {
-          start: dateRangeStart.toDate(),
-          end: dateRangeStart.add(1, 'week').toDate()
-        },
-        Validators.required
-      ],
+      dateRange: [new DateRange(), Validators.required],
       numParticipants: [10, Validators.required],
       totalBudget: new NumberRange(),
       singleBudget: new NumberRange()
