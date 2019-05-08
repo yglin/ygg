@@ -30,7 +30,23 @@ describe('ScheduleFormComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should be invalid initially', () => {
+    expect(component.formGroup.valid).toBeFalsy();
   });
+
+  it('should require dateRange', () => {
+    const dateRangeControl = component.formGroup.get('dateRange');
+    expect(dateRangeControl.getError('required')).toBeTruthy();    
+  });
+
+  // it('should require numParticipants', () => {
+  //   const numParticipantsControl = component.formGroup.get('numParticipants');
+  //   expect(numParticipantsControl.getError('required')).toBeTruthy();
+  // });
+  
+  // it('should require at least one contact', () => {
+  //   const contactsControlsArray = component.formGroup.get('contacts');
+  //   expect(contactsControlsArray.getError('required')).toBeTruthy();
+  // });
+  
 });

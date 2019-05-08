@@ -23,9 +23,7 @@ export class ScheduleForm implements DataItem {
   constructor(data: any = {}) {
     this.fromData(data);
     defaults(this, {
-      id: uuid.v4(),
-      dateRange: new DateRange(),
-      numParticipants: 10
+      id: uuid.v4()
     });
   }
 

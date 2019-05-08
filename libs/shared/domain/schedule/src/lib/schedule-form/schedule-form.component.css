@@ -1,3 +1,7 @@
 .ygg-schedule-form .date-range.mat-form-field {
   width: 250px;
 }
+
+.ygg-schedule-form .mat-card {
+  margin: 30px 30px;
+}
