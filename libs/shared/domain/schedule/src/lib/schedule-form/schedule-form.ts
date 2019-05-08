@@ -12,6 +12,7 @@ export class ScheduleForm implements DataItem {
   singleBudget: NumberRange;
   groupName: string;
   contacts: Contact[];
+  transpotation: string;
   resourceIds: string[];
 
   static isScheduleForm(value: any): value is ScheduleForm {

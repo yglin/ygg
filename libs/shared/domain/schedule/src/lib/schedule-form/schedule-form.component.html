@@ -35,14 +35,14 @@
           <ygg-number-range-control
             formControlName="totalBudget"
             [globalMax]="100000"
-            icon='monetization_on'
+            icon="monetization_on"
           ></ygg-number-range-control>
         </div>
         <div *ngIf="budgetType === 'single'">
           <ygg-number-range-control
             formControlName="singleBudget"
             [globalMax]="10000"
-            icon='monetization_on'
+            icon="monetization_on"
           ></ygg-number-range-control>
         </div>
       </div>
@@ -90,6 +90,23 @@
           <mat-icon>add</mat-icon>
         </button>
       </div>
+    </div>
+    <ygg-title-divider>交通工具</ygg-title-divider>
+    <div class="form-control">
+      <mat-radio-group formControlName="transpotation">
+        <div
+          fxLayout="row"
+          fxLayoutAlign="space-around center"
+          fxLayoutGap="20px"
+        >
+          <mat-radio-button [value]="'bus'">遊覽車</mat-radio-button>
+          <mat-radio-button [value]="'car'">自行開車</mat-radio-button>
+        </div>
+      </mat-radio-group>
+      <br />
+      <mat-form-field style="width:100%;">
+        <input matInput placeholder="其他" formControlName="transpotation" />
+      </mat-form-field>
     </div>
   </form>
   <div class="debug">
