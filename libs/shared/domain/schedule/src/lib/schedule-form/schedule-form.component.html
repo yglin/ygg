@@ -1,17 +1,21 @@
 <div class="ygg-schedule-form">
   <form [formGroup]="formGroup">
     <ygg-title-divider>預計日期範圍</ygg-title-divider>
+    <div class='form-control'>
     <ygg-date-range-picker formControlName="dateRange"></ygg-date-range-picker>
     <mat-error *ngIf="isError('dateRange', 'required')">請填日期範圍</mat-error>
+  </div>
     <br />
     <ygg-title-divider>預計參加人數</ygg-title-divider>
-    <ygg-number-slider
+    <div class='form-control'>
+        <ygg-number-slider
       formControlName="numParticipants"
       icon="person"
     ></ygg-number-slider>
+    </div>
     <br />
     <ygg-title-divider>預算</ygg-title-divider>
-    <div>
+    <div class='form-control'>
       <mat-radio-group
         [(ngModel)]="budgetType"
         [ngModelOptions]="{ standalone: true }"
@@ -35,6 +39,45 @@
             [globalMax]="10000"
           ></ygg-number-range-control>
         </div>
+      </div>
+    </div>
+    <br />
+    <ygg-title-divider>公司行號或團體名稱</ygg-title-divider>
+    <div class='form-control'>
+      <mat-form-field style='width:100%;'>
+        <input matInput placeholder="公司行號或團體名稱" formControlName='groupName'>
+      </mat-form-field>
+    </div>
+    <ygg-title-divider>聯絡人</ygg-title-divider>
+    <div formArrayName="contacts" class='form-control'>
+      <div
+        *ngFor="
+          let contactControl of contactsFormArray.controls;
+          let idx = index
+        "
+      >
+        <div
+          fxLayout="row"
+          fxLayoutAlign="space-between end"
+          fxLayoutGap="20px"
+        >
+          <h4>聯絡人{{ idx + 1 }}</h4>
+          <button
+            mat-mini-fab
+            (click)="deleteContact(idx)"
+            matTooltip="刪除聯絡人"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        <ygg-contact-form [formControlName]="idx"></ygg-contact-form>
+        <mat-divider> </mat-divider>
+      </div>
+      <br />
+      <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
+        <button mat-mini-fab (click)="addContact()" matTooltip="增加一位聯絡人">
+          <mat-icon>add</mat-icon>
+        </button>
       </div>
     </div>
   </form>

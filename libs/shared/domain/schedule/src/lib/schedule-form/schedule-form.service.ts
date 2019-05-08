@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 // import {DateRange, NumberRange} from '@ygg/shared/infrastructure/utility-types';
 // import * as moment from 'moment';
 import { ScheduleForm } from './schedule-form';
@@ -20,7 +20,11 @@ export class ScheduleFormService {
       dateRange: [null, Validators.required],
       numParticipants: [null, Validators.required],
       totalBudget: new NumberRange(),
-      singleBudget: new NumberRange()
+      singleBudget: new NumberRange(),
+      groupName: '',
+      contacts: this.formBuilder.array([
+        new FormControl()
+      ])
     });
     return formGroup;
   }

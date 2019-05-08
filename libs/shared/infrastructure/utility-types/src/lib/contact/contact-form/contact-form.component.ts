@@ -13,7 +13,7 @@ import {
   ControlValueAccessor,
   Validator
 } from '@angular/forms';
-import { Contact } from '@ygg/shared/interfaces';
+import { Contact } from '../contact';
 
 class LeastRequireErrorMatcher implements ErrorStateMatcher {
   fields: string[];

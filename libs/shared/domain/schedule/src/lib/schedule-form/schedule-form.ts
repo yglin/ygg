@@ -2,7 +2,7 @@ import {extend, defaults} from 'lodash';
 import * as uuid from 'uuid';
 import {DataItem} from '@ygg/shared/data-access';
 // import {BadValueError, BadValueErrorCode} from '@ygg/shared/infrastructure/error';
-import { NumberRange, DateRange } from '@ygg/shared/infrastructure/utility-types';
+import { NumberRange, DateRange, Contact } from '@ygg/shared/infrastructure/utility-types';
 
 export class ScheduleForm implements DataItem {
   id: string;
@@ -10,6 +10,8 @@ export class ScheduleForm implements DataItem {
   numParticipants: number;
   totalBudget: NumberRange;
   singleBudget: NumberRange;
+  groupName: string;
+  contacts: Contact[];
   resourceIds: string[];
 
   static isScheduleForm(value: any): value is ScheduleForm {

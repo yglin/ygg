@@ -5,6 +5,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SharedUiNgMaterialModule} from '@ygg/shared/ui/ng-material';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
 
+import {ContactComponent, ContactFormComponent} from './contact';
 import {DateRangeComponent, DateRangePickerComponent} from './date-range';
 import {NumberRangeComponent, NumberRangeControlComponent} from './number-range';
 
@@ -17,11 +18,11 @@ import {NumberRangeComponent, NumberRangeControlComponent} from './number-range'
   ],
   declarations: [
     NumberRangeComponent, NumberRangeControlComponent, DateRangeComponent,
-    DateRangePickerComponent
+    DateRangePickerComponent, ContactComponent, ContactFormComponent
   ],
   exports: [
     NumberRangeComponent, NumberRangeControlComponent, DateRangeComponent,
-    DateRangePickerComponent
+    DateRangePickerComponent, ContactComponent, ContactFormComponent
   ]
 })
 export class SharedInfrastructureUtilityTypesModule {

@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {FormGroup, FormArray, FormControl} from '@angular/forms';
 
 import {ScheduleFormService} from './schedule-form.service';
 
@@ -11,6 +11,18 @@ import {ScheduleFormService} from './schedule-form.service';
 export class ScheduleFormComponent implements OnInit {
   @Input() formGroup: FormGroup;
   budgetType = 'total';
+
+  get contactsFormArray() {
+    return this.formGroup.get('contacts') as FormArray;
+  }
+
+  addContact() {
+    this.contactsFormArray.push(new FormControl());
+  }
+
+  deleteContact(index: number) {
+    this.contactsFormArray.removeAt(index);
+  }
 
   constructor(private scheudleFormService: ScheduleFormService) {}
 
