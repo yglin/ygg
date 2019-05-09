@@ -42,4 +42,8 @@ export class ScheduleFormComponent implements OnInit {
   onSelectResources(resourceIds: string[]) {
     // this.selectedResourceIds$.next(resourceIds);
   }
+
+  onSubmit() {
+    confirm('確定已填寫完畢，要送出需求嗎？');
+  }
 }

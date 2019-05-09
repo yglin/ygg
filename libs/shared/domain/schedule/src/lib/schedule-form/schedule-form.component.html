@@ -1,5 +1,8 @@
 <div class="ygg-schedule-form">
   <form [formGroup]="formGroup">
+    <div class='actions-bar' fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px">
+      <div><button mat-fab matTooltip="送出" (click)='onSubmit()'><mat-icon>assignment_turned_in</mat-icon></button></div>
+    </div>
     <mat-tab-group>
       <mat-tab label="填寫需求">
         <mat-accordion>

@@ -3,6 +3,17 @@
   width: 100%;
 }
 
+.ygg-schedule-form form {
+  position: relative;
+  padding-top: 30px;
+}
+
+.ygg-schedule-form .actions-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 .ygg-schedule-form .mat-tab-body-content {
   padding: 30px 10px;
 }
