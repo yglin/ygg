@@ -1,4 +1,4 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, Input, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ICON_REGISTRY_PROVIDER } from '@angular/material';
 
@@ -14,13 +14,14 @@ import { ICON_REGISTRY_PROVIDER } from '@angular/material';
     }
   ]
 })
-export class NumberSliderComponent implements ControlValueAccessor {
+export class NumberSliderComponent implements OnInit, ControlValueAccessor {
   @Input() label = '';
   @Input() icon;
   @Input() min = 0;
   @Input() max = 100;
   @Input() step = 1;
   @Input() zeroIsNoLimit: boolean;
+  iconType: string;
 
   _value = 0;
   emitChange: (value: number) => any;
@@ -40,6 +41,17 @@ export class NumberSliderComponent implements ControlValueAccessor {
 
   constructor() {
     this.zeroIsNoLimit = this.zeroIsNoLimit === undefined ? false : true;
+  }
+
+  ngOnInit() {
+    if (this.icon) {
+      try {
+        const url = new URL(this.icon);
+        this.iconType = 'url';
+      } catch (error) {
+        this.iconType = 'font';
+      }
+    }
   }
 
   writeValue(value: number) {

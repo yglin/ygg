@@ -8,6 +8,8 @@ export class ScheduleForm implements DataItem {
   id: string;
   dateRange: DateRange;
   numParticipants: number;
+  numElders: number;
+  numKids: number;
   totalBudget: NumberRange;
   singleBudget: NumberRange;
   groupName: string;

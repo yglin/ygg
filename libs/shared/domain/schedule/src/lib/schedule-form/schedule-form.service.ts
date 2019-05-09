@@ -19,6 +19,8 @@ export class ScheduleFormService {
     const formGroup = this.formBuilder.group({
       dateRange: [null, Validators.required],
       numParticipants: [null, Validators.required],
+      numElders: 0,
+      numKids: 0,
       totalBudget: new NumberRange(),
       singleBudget: new NumberRange(),
       groupName: '',
