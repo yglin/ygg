@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import {Resource} from '@ygg/shared/domain/resource';
-import { ResourceService } from '@ygg/shared/domain/resource'
+import {Resource} from '../models';
+import { ResourceService } from '../resource.service'
 
 @Component({
   selector: 'ygg-resource-list',

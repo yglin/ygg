@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatSelectionListChange} from '@angular/material';
-import {Resource, ResourceService} from '@ygg/shared/domain/resource';
+import {Resource} from '../models';
+import {ResourceService} from '../resource.service';
 import {difference, filter} from 'lodash';
 import {BehaviorSubject, combineLatest, merge} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';

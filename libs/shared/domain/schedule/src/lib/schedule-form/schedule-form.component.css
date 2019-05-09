@@ -1,5 +1,10 @@
 .ygg-schedule-form {
   margin: 30px 20px;
+  width: 100%;
+}
+
+.ygg-schedule-form .mat-tab-body-content {
+  padding: 30px 10px;
 }
 
 .ygg-schedule-form .date-range.mat-form-field {

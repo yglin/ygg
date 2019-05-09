@@ -6,12 +6,12 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { SharedInfrastructureUtilityTypesModule } from '@ygg/shared/infrastructure/utility-types';
 import { SharedDomainScheduleModule } from '@ygg/shared/domain/schedule';
+import { SharedDomainResourceModule } from '@ygg/shared/domain/resource';
 
 import { SchedulerComponent } from './scheduler/scheduler.component';
 import { ScheduleViewComponent } from './schedule-view/schedule-view.component';
 import { SchedulerAutoComponent } from './scheduler-auto/scheduler-auto.component';
 import { SchedulerManualComponent } from './scheduler-manual/scheduler-manual.component';
-import { ResourceFrontendFeatureModule } from '@ygg/apps/resource/frontend';
 
 import { RouterModule } from '@angular/router';
 import { routes } from './routes';
@@ -27,7 +27,7 @@ import { EventThumbnailComponent } from './event-thumbnail/event-thumbnail.compo
     SharedUiNgMaterialModule,
     SharedInfrastructureUtilityTypesModule,
     SharedUiWidgetsModule,
-    ResourceFrontendFeatureModule,
+    SharedDomainResourceModule,
     SharedDomainScheduleModule
   ]
 })

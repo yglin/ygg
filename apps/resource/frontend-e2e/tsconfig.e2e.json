@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "sourceMap": false,
-    "outDir": "../../../dist/out-tsc/apps/resource/frontend-e2e/src",
-    "resolveJsonModule": true
-  },
-  "include": ["src/**/*.ts"]
-}

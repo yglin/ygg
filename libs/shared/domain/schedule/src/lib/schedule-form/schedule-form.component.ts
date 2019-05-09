@@ -38,4 +38,8 @@ export class ScheduleFormComponent implements OnInit {
     const control = this.formGroup.get(controlName);
     return control.touched && control.hasError(errorName);
   }
+
+  onSelectResources(resourceIds: string[]) {
+    // this.selectedResourceIds$.next(resourceIds);
+  }
 }

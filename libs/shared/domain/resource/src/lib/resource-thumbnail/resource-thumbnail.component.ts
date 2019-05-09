@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Resource, ResourceService } from '@ygg/shared/domain/resource';
+import {Resource} from '../models';
+import {ResourceService} from '../resource.service';
 
 @Component({
   selector: 'ygg-resource-thumbnail',

@@ -28,7 +28,8 @@ export class ScheduleFormService {
         new FormControl()
       ]),
       transpotation: '',
-      transpotationHelp: ''
+      transpotationHelp: '',
+      accommodationHelp: ''
     });
     return formGroup;
   }
