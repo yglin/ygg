@@ -1,28 +1,29 @@
 <div class="ygg-resource-selector">
-  <mat-selection-list (selectionChange)="onSelect($event)">
-    <mat-list-option
-      *ngFor="let id of selectedIds"
-      [value]="id"
-      [selected]="isSelected(id)"
-    >
-      <ygg-resource-thumbnail [id]="id"></ygg-resource-thumbnail>
-    </mat-list-option>
-  </mat-selection-list>
-  <br>
-  <mat-divider>
-  </mat-divider>
-  <br>
-  <mat-form-field>
-    <input matInput placeholder="搜尋" (keyup)='onSearch($event)'>
-    <mat-icon matSuffix>search</mat-icon>
-  </mat-form-field>
-  <mat-selection-list (selectionChange)="onSelect($event)">
+  <div [hidden]='selectedIds.size <= 0'>
+    <mat-selection-list (selectionChange)="onSelect($event)">
       <mat-list-option
-        *ngFor="let id of unselectedIds"
+        *ngFor="let id of selectedIds"
         [value]="id"
         [selected]="isSelected(id)"
       >
         <ygg-resource-thumbnail [id]="id"></ygg-resource-thumbnail>
       </mat-list-option>
     </mat-selection-list>
+    <br />
+    <mat-divider> </mat-divider>
   </div>
+  <br />
+  <mat-form-field>
+    <input matInput placeholder="搜尋" (keyup)="onSearch($event)" />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+  <mat-selection-list (selectionChange)="onSelect($event)">
+    <mat-list-option
+      *ngFor="let id of unselectedIds"
+      [value]="id"
+      [selected]="isSelected(id)"
+    >
+      <ygg-resource-thumbnail [id]="id"></ygg-resource-thumbnail>
+    </mat-list-option>
+  </mat-selection-list>
+</div>
