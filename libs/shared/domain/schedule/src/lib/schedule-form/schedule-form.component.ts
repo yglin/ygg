@@ -11,6 +11,7 @@ import {ScheduleFormService} from './schedule-form.service';
 export class ScheduleFormComponent implements OnInit {
   @Input() formGroup: FormGroup;
   budgetType = 'total';
+  needTranspotationHelp = false;
 
   get contactsFormArray() {
     return this.formGroup.get('contacts') as FormArray;

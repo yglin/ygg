@@ -68,9 +68,9 @@
       </mat-expansion-panel>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <ygg-title-divider>公司行號或團體名稱</ygg-title-divider>
+          <ygg-title-divider>聯絡資料</ygg-title-divider>
         </mat-expansion-panel-header>
-        <div class="form-control">
+        <div>
           <mat-form-field style="width:100%;">
             <input
               matInput
@@ -80,11 +80,6 @@
             <span matPrefix><mat-icon>group</mat-icon></span>
           </mat-form-field>
         </div>
-      </mat-expansion-panel>
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <ygg-title-divider>聯絡人</ygg-title-divider>
-        </mat-expansion-panel-header>
         <div formArrayName="contacts" class="form-control">
           <div
             *ngFor="
@@ -126,24 +121,49 @@
           <ygg-title-divider>交通工具</ygg-title-divider>
         </mat-expansion-panel-header>
         <div class="form-control">
-          <mat-radio-group formControlName="transpotation">
-            <div
-              fxLayout="row"
-              fxLayoutAlign="space-around center"
-              fxLayoutGap="20px"
+          <div>
+            <mat-checkbox
+              [(ngModel)]="needTranspotationHelp"
+              [ngModelOptions]="{ standalone: true }"
+              >請幫我安排交通</mat-checkbox
             >
-              <mat-radio-button [value]="'bus'">遊覽車</mat-radio-button>
-              <mat-radio-button [value]="'car'">自行開車</mat-radio-button>
-            </div>
-          </mat-radio-group>
+          </div>
           <br />
-          <mat-form-field style="width:100%;">
-            <input
-              matInput
-              placeholder="其他"
-              formControlName="transpotation"
-            />
-          </mat-form-field>
+          <br />
+          <br />
+          <div *ngIf="needTranspotationHelp" class="needTranspotationHelp">
+            <mat-form-field>
+              <textarea
+                matInput
+                placeholder="請詳述交通的需求，以便我們的工作人員幫忙安排"
+                formControlName="transpotationHelp"
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="2"
+                cdkAutosizeMaxRows="10"
+              ></textarea>
+            </mat-form-field>
+          </div>
+          <div *ngIf="!needTranspotationHelp">
+            <mat-radio-group formControlName="transpotation">
+              <div
+                fxLayout="row"
+                fxLayoutAlign="space-around center"
+                fxLayoutGap="20px"
+              >
+                <mat-radio-button [value]="'bus'">遊覽車</mat-radio-button>
+                <mat-radio-button [value]="'car'">自行開車</mat-radio-button>
+              </div>
+            </mat-radio-group>
+            <br />
+            <mat-form-field style="width:100%;">
+              <input
+                matInput
+                placeholder="其他"
+                formControlName="transpotation"
+              />
+            </mat-form-field>
+          </div>
         </div>
       </mat-expansion-panel>
     </mat-accordion>

@@ -1,7 +1,15 @@
+.ygg-schedule-form {
+  margin: 30px 20px;
+}
+
 .ygg-schedule-form .date-range.mat-form-field {
   width: 250px;
 }
 
 .ygg-schedule-form .form-control {
   margin: 50px 30px;
+}
+
+.ygg-schedule-form .needTranspotationHelp .mat-form-field{
+  width: 100%;
 }

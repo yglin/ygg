@@ -25,7 +25,8 @@ export class ScheduleFormService {
       contacts: this.formBuilder.array([
         new FormControl()
       ]),
-      transpotation: ''
+      transpotation: '',
+      transpotationHelp: ''
     });
     return formGroup;
   }

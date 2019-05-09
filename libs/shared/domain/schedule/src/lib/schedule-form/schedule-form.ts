@@ -13,6 +13,7 @@ export class ScheduleForm implements DataItem {
   groupName: string;
   contacts: Contact[];
   transpotation: string;
+  transpotationHelp: string;
   resourceIds: string[];
 
   static isScheduleForm(value: any): value is ScheduleForm {
