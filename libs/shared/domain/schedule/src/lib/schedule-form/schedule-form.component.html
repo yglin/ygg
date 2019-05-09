@@ -180,13 +180,34 @@
               ></ygg-number-slider>
             </div>
             <div>
-                <ygg-number-slider
-                  label="孩童人數"
-                  formControlName="numKids"
-                  icon="child_care"
-                ></ygg-number-slider>
-              </div>
+              <ygg-number-slider
+                label="孩童人數"
+                formControlName="numKids"
+                icon="child_care"
+              ></ygg-number-slider>
             </div>
+          </div>
+          <br /><br />
+          <div class='needAccommodationHelp'>
+            <mat-checkbox
+              [(ngModel)]="needAccommodationHelp"
+              [ngModelOptions]="{ standalone: true }"
+              >請幫我安排住宿</mat-checkbox
+            >
+            <br />
+            <mat-form-field>
+              <textarea
+                matInput
+                [disabled]="!needAccommodationHelp"
+                placeholder="請詳述住宿需求，以便我們的工作人員幫忙安排"
+                formControlName="accommodationHelp"
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="2"
+                cdkAutosizeMaxRows="10"
+              ></textarea>
+            </mat-form-field>
+          </div>
         </div>
       </mat-expansion-panel>
     </mat-accordion>

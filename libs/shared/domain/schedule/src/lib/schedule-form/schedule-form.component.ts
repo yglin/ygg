@@ -12,6 +12,7 @@ export class ScheduleFormComponent implements OnInit {
   @Input() formGroup: FormGroup;
   budgetType = 'total';
   needTranspotationHelp = false;
+  needAccommodationHelp = false;
 
   get contactsFormArray() {
     return this.formGroup.get('contacts') as FormArray;

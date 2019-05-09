@@ -10,6 +10,7 @@
   margin: 50px 30px;
 }
 
-.ygg-schedule-form .needTranspotationHelp .mat-form-field{
+.ygg-schedule-form .needTranspotationHelp .mat-form-field,
+.ygg-schedule-form .needAccommodationHelp .mat-form-field {
   width: 100%;
 }
