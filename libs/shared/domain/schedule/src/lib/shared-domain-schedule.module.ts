@@ -8,16 +8,17 @@ import {SharedUiNgMaterialModule} from '@ygg/shared/ui/ng-material';
 import {SharedUiWidgetsModule} from '@ygg/shared/ui/widgets';
 
 import {ScheduleFormComponent} from './schedule-form';
+import {ScheduleFormViewComponent} from './schedule-form/schedule-form-view/schedule-form-view.component';
 
 
 @NgModule({
-  declarations: [ScheduleFormComponent],
+  declarations: [ScheduleFormComponent, ScheduleFormViewComponent],
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule, FlexLayoutModule,
     SharedUiNgMaterialModule, SharedUiWidgetsModule,
     SharedInfrastructureUtilityTypesModule, SharedDomainResourceModule
   ],
-  exports: [ScheduleFormComponent]
+  exports: [ScheduleFormComponent, ScheduleFormViewComponent]
 })
 export class SharedDomainScheduleModule {
 }

@@ -1,7 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, Output, OnInit, EventEmitter} from '@angular/core';
 import {FormGroup, FormArray, FormControl} from '@angular/forms';
 
 import {ScheduleFormService} from './schedule-form.service';
+import { ScheduleForm } from './schedule-form';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'ygg-schedule-form',
@@ -9,10 +11,16 @@ import {ScheduleFormService} from './schedule-form.service';
   styleUrls: ['./schedule-form.component.css']
 })
 export class ScheduleFormComponent implements OnInit {
+  @Input() id: string;
   @Input() formGroup: FormGroup;
+  @Output() onSubmit: EventEmitter<ScheduleForm>;
   budgetType = 'total';
   needTranspotationHelp = false;
   needAccommodationHelp = false;
+
+  constructor(private scheudleFormService: ScheduleFormService) {
+    this.onSubmit = new EventEmitter();
+  }
 
   get contactsFormArray() {
     return this.formGroup.get('contacts') as FormArray;
@@ -26,11 +34,16 @@ export class ScheduleFormComponent implements OnInit {
     this.contactsFormArray.removeAt(index);
   }
 
-  constructor(private scheudleFormService: ScheduleFormService) {}
-
   ngOnInit() {
     if (!this.formGroup) {
       this.formGroup = this.scheudleFormService.createFormGroup();
+    }
+    if (this.id) {
+      this.scheudleFormService.get$(this.id).pipe(
+        first()
+      ).subscribe(scheudleForm => {
+        this.formGroup.patchValue(scheudleForm);
+      });
     }
   }
 
@@ -43,7 +56,16 @@ export class ScheduleFormComponent implements OnInit {
     // this.selectedResourceIds$.next(resourceIds);
   }
 
-  onSubmit() {
-    confirm('確定已填寫完畢，要送出需求嗎？');
+  submit() {
+    if(confirm('確定已填寫完畢，要送出需求嗎？')) {
+      const scheduleForm = new ScheduleForm(this.formGroup.value);
+      if (this.id) {
+        scheduleForm.id = this.id;
+      }
+      this.scheudleFormService.upsert(scheduleForm).then(() => {
+        alert('已成功更新／新增需求資料');
+        this.onSubmit.emit(scheduleForm);
+      });
+    };
   }
 }

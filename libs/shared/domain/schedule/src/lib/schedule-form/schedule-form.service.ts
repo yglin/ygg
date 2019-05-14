@@ -1,13 +1,20 @@
 import {Injectable} from '@angular/core';
-import {FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
-// import {DateRange, NumberRange} from '@ygg/shared/infrastructure/utility-types';
-// import * as moment from 'moment';
-import { ScheduleForm } from './schedule-form';
-import { NumberRange } from '@ygg/shared/infrastructure/utility-types';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {DataAccessService} from '@ygg/shared/data-access';
+import {NumberRange} from '@ygg/shared/infrastructure/utility-types';
+
+// import {DateRange, NumberRange} from
+// '@ygg/shared/infrastructure/utility-types'; import * as moment from 'moment';
+import {ScheduleForm} from './schedule-form';
+import { Observable } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class ScheduleFormService {
-  constructor(private formBuilder: FormBuilder) {}
+  collection = 'schedule-forms';
+
+  constructor(
+      private formBuilder: FormBuilder,
+      private dataAccessService: DataAccessService) {}
 
   defaultForm(): ScheduleForm {
     const form = new ScheduleForm();
@@ -24,13 +31,19 @@ export class ScheduleFormService {
       totalBudget: new NumberRange(),
       singleBudget: new NumberRange(),
       groupName: '',
-      contacts: this.formBuilder.array([
-        new FormControl()
-      ]),
+      contacts: this.formBuilder.array([new FormControl()]),
       transpotation: '',
       transpotationHelp: '',
       accommodationHelp: ''
     });
     return formGroup;
+  }
+
+  get$(id: string): Observable<ScheduleForm> {
+    return this.dataAccessService.get$(this.collection, id, ScheduleForm);
+  }
+
+  async upsert(scheduleForm: ScheduleForm) {
+    return await this.dataAccessService.upsert(this.collection, scheduleForm, ScheduleForm);
   }
 }
