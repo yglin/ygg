@@ -5,7 +5,7 @@
 
 .ygg-schedule-form form {
   position: relative;
-  padding-top: 30px;
+  padding-top: 75px;
 }
 
 .ygg-schedule-form .actions-bar {
@@ -27,6 +27,7 @@
 }
 
 .ygg-schedule-form .needTranspotationHelp .mat-form-field,
-.ygg-schedule-form .needAccommodationHelp .mat-form-field {
+.ygg-schedule-form .needAccommodationHelp .mat-form-field,
+.ygg-schedule-form .likesDescription .mat-form-field {
   width: 100%;
 }

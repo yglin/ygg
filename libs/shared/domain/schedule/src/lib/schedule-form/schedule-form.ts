@@ -16,7 +16,10 @@ export class ScheduleForm implements DataItem {
   contacts: Contact[];
   transpotation: string;
   transpotationHelp: string;
-  resourceIds: string[];
+  accommodationHelp: string;
+  likes: string[];
+  likesDescription: string;
+
 
   static isScheduleForm(value: any): value is ScheduleForm {
     if (value && value.dateRange && value.numParticipants) {

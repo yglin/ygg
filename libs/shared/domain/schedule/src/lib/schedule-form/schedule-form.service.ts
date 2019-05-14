@@ -34,7 +34,8 @@ export class ScheduleFormService {
       contacts: this.formBuilder.array([new FormControl()]),
       transpotation: '',
       transpotationHelp: '',
-      accommodationHelp: ''
+      accommodationHelp: '',
+      likesDescription: ''
     });
     return formGroup;
   }
