@@ -16,6 +16,7 @@ import { ICON_REGISTRY_PROVIDER } from '@angular/material';
 })
 export class NumberSliderComponent implements OnInit, ControlValueAccessor {
   @Input() label = '';
+  @Input() required: boolean;
   @Input() icon;
   @Input() min = 0;
   @Input() max = 100;
@@ -44,6 +45,7 @@ export class NumberSliderComponent implements OnInit, ControlValueAccessor {
   }
 
   ngOnInit() {
+    this.required = this.required === undefined ? false : true;
     if (this.icon) {
       try {
         const url = new URL(this.icon);

@@ -1,30 +1,40 @@
 <div class="ygg-number-slider">
-  <mat-label>
-    <span>{{ label }}</span>
-  </mat-label>
-  <!-- <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="15px"> -->
-  <div class='slider' fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2px">
-    <div class="indicator">{{ min }}</div>
-    <mat-slider
-      thumbLabel
-      tickInterval="auto"
-      [min]="min"
-      [max]="max"
-      [step]="step"
-      [(value)]="value"
-    ></mat-slider>
-    <div class="indicator">{{ max }}</div>
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="15px">
+    <div class="number-input">
+      <mat-form-field *ngIf="!zeroIsNoLimit || value != 0">
+        <mat-label>
+          <span>{{ label }}</span>
+        </mat-label>
+        <input
+          matInput
+          type="number"
+          [(ngModel)]="value"
+          [required]="required"
+        />
+        <span matPrefix *ngIf="icon"
+          ><mat-icon *ngIf="iconType === 'font'">{{ icon }}</mat-icon>
+          <img *ngIf="iconType === 'url'" [src]="icon" />
+        </span>
+        <mat-error *ngIf="value <= 0">請填入{{ label }}</mat-error>
+      </mat-form-field>
+      <h6 *ngIf="zeroIsNoLimit && value == 0">無上限</h6>
+    </div>
+    <div
+      class="slider"
+      fxLayout="row"
+      fxLayoutAlign="start center"
+      fxLayoutGap="2px"
+    >
+      <div class="indicator">{{ min }}</div>
+      <mat-slider
+        thumbLabel
+        tickInterval="auto"
+        [min]="min"
+        [max]="max"
+        [step]="step"
+        [(value)]="value"
+      ></mat-slider>
+      <div class="indicator">{{ max }}</div>
+    </div>
   </div>
-  <div class="number-input">
-    <mat-form-field *ngIf="!zeroIsNoLimit || value != 0">
-      <input matInput type="number" [(ngModel)]="value" />
-      <span matPrefix *ngIf="icon"
-        ><mat-icon *ngIf='iconType === "font"'>{{ icon }}</mat-icon>
-        <img *ngIf='iconType === "url"' [src]='icon'>
-        </span
-      >
-    </mat-form-field>
-    <h6 *ngIf="zeroIsNoLimit && value == 0">無上限</h6>
-  </div>
-  <!-- </div> -->
 </div>

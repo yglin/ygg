@@ -45,10 +45,28 @@
           >
         </mat-expansion-panel-header>
         <div class="form-control">
-          <ygg-number-slider
-            formControlName="numParticipants"
-            icon="person"
-          ></ygg-number-slider>
+          <div>
+            <ygg-number-slider
+              label="總人數"
+              formControlName="numParticipants"
+              icon="person"
+              required
+            ></ygg-number-slider>
+          </div>
+          <div>
+            <ygg-number-slider
+              label="65歲以上人數"
+              formControlName="numElders"
+              icon="https://img.icons8.com/ios/50/000000/elderly-person.png"
+            ></ygg-number-slider>
+          </div>
+          <div>
+            <ygg-number-slider
+              label="孩童人數"
+              formControlName="numKids"
+              icon="child_care"
+            ></ygg-number-slider>
+          </div>
         </div>
       </mat-expansion-panel>
       <mat-expansion-panel>
@@ -86,7 +104,10 @@
       </mat-expansion-panel>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <ygg-title-divider>聯絡資料</ygg-title-divider>
+          <ygg-title-divider
+            [style.color]="formGroup.get('contacts').invalid ? 'red' : ''"
+            >聯絡資料＊</ygg-title-divider
+          >
         </mat-expansion-panel-header>
         <div>
           <mat-form-field style="width:100%;">
@@ -189,7 +210,11 @@
           <ygg-title-divider> 體驗需求 </ygg-title-divider>
         </mat-expansion-panel-header>
         <div class="form-control">
-          <ygg-tags-input formControlName='likes' label='喜歡的體驗類型' [tagsSource$]='likesSource$'></ygg-tags-input>
+          <ygg-tags-input
+            formControlName="likes"
+            label="喜歡的體驗類型"
+            [tagsSource$]="likesSource$"
+          ></ygg-tags-input>
           <br />
           <div class="likesDescription">
             <mat-form-field>
@@ -211,23 +236,6 @@
           <ygg-title-divider>其它需求</ygg-title-divider>
         </mat-expansion-panel-header>
         <div class="form-control">
-          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="50px">
-            <div>
-              <ygg-number-slider
-                label="65歲以上人數"
-                formControlName="numElders"
-                icon="https://img.icons8.com/ios/50/000000/elderly-person.png"
-              ></ygg-number-slider>
-            </div>
-            <div>
-              <ygg-number-slider
-                label="孩童人數"
-                formControlName="numKids"
-                icon="child_care"
-              ></ygg-number-slider>
-            </div>
-          </div>
-          <br /><br />
           <div class="needAccommodationHelp">
             <mat-checkbox
               [(ngModel)]="needAccommodationHelp"
