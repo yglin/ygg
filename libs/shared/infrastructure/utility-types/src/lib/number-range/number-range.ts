@@ -6,7 +6,7 @@ export class NumberRange {
   _max: number;
 
   static isNumberRange(value: any): value is NumberRange {
-    if (value && value.min && value.max && value.min < value.max) {
+    if (value && value.min >= 0 && value.max >= 0 && value.min <= value.max) {
       return true;
     } else {
       return false;

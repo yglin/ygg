@@ -8,6 +8,10 @@
   padding-top: 75px;
 }
 
+.ygg-schedule-form .hint {
+  color: blue;
+}
+
 .ygg-schedule-form .actions-bar {
   position: absolute;
   top: 0;

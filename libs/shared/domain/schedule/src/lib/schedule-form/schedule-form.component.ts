@@ -1,29 +1,32 @@
-import {Component, Input, Output, OnInit, EventEmitter} from '@angular/core';
-import {FormGroup, FormArray, FormControl} from '@angular/forms';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {FormArray, FormControl, FormGroup} from '@angular/forms';
+import {NumberRange, Tags} from '@ygg/shared/infrastructure/utility-types';
+import {combineLatest, Observable, Subscription} from 'rxjs';
+import {first} from 'rxjs/operators';
 
+import {ScheduleForm} from './schedule-form';
 import {ScheduleFormService} from './schedule-form.service';
-import { ScheduleForm } from './schedule-form';
-import { first } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { Tags } from '@ygg/shared/infrastructure/utility-types';
 
 @Component({
   selector: 'ygg-schedule-form',
   templateUrl: './schedule-form.component.html',
   styleUrls: ['./schedule-form.component.css']
 })
-export class ScheduleFormComponent implements OnInit {
+export class ScheduleFormComponent implements OnInit, OnDestroy {
   @Input() id: string;
   @Input() formGroup: FormGroup;
   @Output() onSubmit: EventEmitter<ScheduleForm>;
   likesSource$: Observable<Tags>;
   budgetType = 'total';
+  budgetHintMessage = '';
   needTranspotationHelp = false;
   needAccommodationHelp = false;
+  subscriptions: Subscription[];
 
   constructor(private scheudleFormService: ScheduleFormService) {
     this.onSubmit = new EventEmitter();
     this.likesSource$ = this.scheudleFormService.listLikes$();
+    this.subscriptions = [];
   }
 
   get contactsFormArray() {
@@ -43,11 +46,43 @@ export class ScheduleFormComponent implements OnInit {
       this.formGroup = this.scheudleFormService.createFormGroup();
     }
     if (this.id) {
-      this.scheudleFormService.get$(this.id).pipe(
-        first()
-      ).subscribe(scheudleForm => {
-        this.formGroup.patchValue(scheudleForm);
-      });
+      this.scheudleFormService.get$(this.id).pipe(first()).subscribe(
+          scheudleForm => {
+            this.formGroup.patchValue(scheudleForm);
+          });
+    }
+    // Show budget hint message
+    const formControlNumParticipants = this.formGroup.get('numParticipants');
+    const formControlTotalBudget = this.formGroup.get('totalBudget');
+    let subsc =
+        combineLatest([
+          (formControlNumParticipants.valueChanges as Observable<number>),
+          (formControlTotalBudget.valueChanges as Observable<NumberRange>)
+        ]).subscribe(([numParticipants, totalBudget]) => {
+          // console.log(totalBudget);
+          if (numParticipants > 0 && NumberRange.isNumberRange(totalBudget)) {
+            const singleMax = Math.ceil(totalBudget.max / numParticipants);
+            this.budgetHintMessage = `您正在調總預算，單人預算上限應調整為${singleMax}`;
+          }
+        });
+    this.subscriptions.push(subsc);
+    const formControlSingleBudget = this.formGroup.get('singleBudget');
+    subsc =
+        combineLatest([
+          (formControlNumParticipants.valueChanges as Observable<number>),
+          (formControlSingleBudget.valueChanges as Observable<NumberRange>)
+        ]).subscribe(([numParticipants, singleBudget]) => {
+          if (numParticipants > 0 && NumberRange.isNumberRange(singleBudget)) {
+            const totalMax = Math.ceil(singleBudget.max * numParticipants);
+            this.budgetHintMessage = `您正在調單人預算，總預算上限應調整為${totalMax}`;
+          }
+        });
+    this.subscriptions.push(subsc);
+  }
+
+  ngOnDestroy() {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
     }
   }
 
@@ -61,7 +96,7 @@ export class ScheduleFormComponent implements OnInit {
   }
 
   submit() {
-    if(confirm('確定已填寫完畢，要送出需求嗎？')) {
+    if (confirm('確定已填寫完畢，要送出需求嗎？')) {
       const scheduleForm = new ScheduleForm(this.formGroup.value);
       if (this.id) {
         scheduleForm.id = this.id;
