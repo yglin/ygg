@@ -24,7 +24,9 @@ import {
   MatSliderModule,
   MatDividerModule,
   MatTabsModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatChipsModule,
+  MatAutocompleteModule
 } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -54,6 +56,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatDividerModule,
     MatTabsModule,
     MatExpansionModule,
+    MatChipsModule,
+    MatAutocompleteModule,
     DragDropModule
   ]
 })

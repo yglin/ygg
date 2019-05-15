@@ -189,6 +189,7 @@
           <ygg-title-divider> 體驗需求 </ygg-title-divider>
         </mat-expansion-panel-header>
         <div class="form-control">
+          <ygg-tags-input formControlName='likes' label='喜歡的體驗類型' [tagsSource$]='likesSource$'></ygg-tags-input>
           <br />
           <div class="likesDescription">
             <mat-form-field>

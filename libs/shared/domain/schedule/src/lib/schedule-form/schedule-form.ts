@@ -2,7 +2,7 @@ import {extend, defaults} from 'lodash';
 import * as uuid from 'uuid';
 import {DataItem} from '@ygg/shared/data-access';
 // import {BadValueError, BadValueErrorCode} from '@ygg/shared/infrastructure/error';
-import { NumberRange, DateRange, Contact } from '@ygg/shared/infrastructure/utility-types';
+import { NumberRange, DateRange, Contact, Tags } from '@ygg/shared/infrastructure/utility-types';
 
 export class ScheduleForm implements DataItem {
   id: string;
@@ -17,7 +17,7 @@ export class ScheduleForm implements DataItem {
   transpotation: string;
   transpotationHelp: string;
   accommodationHelp: string;
-  likes: string[];
+  likes: Tags;
   likesDescription: string;
 
 
@@ -45,6 +45,11 @@ export class ScheduleForm implements DataItem {
     if (data.totalBudget) {
       this.totalBudget = new NumberRange(data.totalBudget);
     }
+
+    if (data.likes) {
+      this.likes = new Tags().fromJSON(data.likes);
+    }
+
     return this;
   }
 

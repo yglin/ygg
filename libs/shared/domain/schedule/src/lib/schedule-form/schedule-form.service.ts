@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {DataAccessService} from '@ygg/shared/data-access';
-import {NumberRange} from '@ygg/shared/infrastructure/utility-types';
+import {NumberRange, Tags} from '@ygg/shared/infrastructure/utility-types';
 
 // import {DateRange, NumberRange} from
 // '@ygg/shared/infrastructure/utility-types'; import * as moment from 'moment';
 import {ScheduleForm} from './schedule-form';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class ScheduleFormService {
@@ -35,6 +35,7 @@ export class ScheduleFormService {
       transpotation: '',
       transpotationHelp: '',
       accommodationHelp: '',
+      likes: new Tags([]),
       likesDescription: ''
     });
     return formGroup;
@@ -46,5 +47,17 @@ export class ScheduleFormService {
 
   async upsert(scheduleForm: ScheduleForm) {
     return await this.dataAccessService.upsert(this.collection, scheduleForm, ScheduleForm);
+  }
+
+  listLikes$(): Observable<Tags> {
+    // TODO: Fetch from database
+    const likes = new Tags([
+      '手作DIY',
+      '協力車',
+      '咖啡',
+      '押花',
+      '生態導覽'
+    ]);
+    return of(likes);
   }
 }

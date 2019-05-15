@@ -4,6 +4,8 @@ import {FormGroup, FormArray, FormControl} from '@angular/forms';
 import {ScheduleFormService} from './schedule-form.service';
 import { ScheduleForm } from './schedule-form';
 import { first } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { Tags } from '@ygg/shared/infrastructure/utility-types';
 
 @Component({
   selector: 'ygg-schedule-form',
@@ -14,12 +16,14 @@ export class ScheduleFormComponent implements OnInit {
   @Input() id: string;
   @Input() formGroup: FormGroup;
   @Output() onSubmit: EventEmitter<ScheduleForm>;
+  likesSource$: Observable<Tags>;
   budgetType = 'total';
   needTranspotationHelp = false;
   needAccommodationHelp = false;
 
   constructor(private scheudleFormService: ScheduleFormService) {
     this.onSubmit = new EventEmitter();
+    this.likesSource$ = this.scheudleFormService.listLikes$();
   }
 
   get contactsFormArray() {

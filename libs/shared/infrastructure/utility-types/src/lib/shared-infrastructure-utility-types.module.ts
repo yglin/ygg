@@ -8,6 +8,8 @@ import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
 import {ContactComponent, ContactFormComponent} from './contact';
 import {DateRangeComponent, DateRangePickerComponent} from './date-range';
 import {NumberRangeComponent, NumberRangeControlComponent} from './number-range';
+import { TagsComponent } from './tags/tags.component';
+import { TagsInputComponent } from './tags/tags-input/tags-input.component';
 
 @NgModule({
   imports: [
@@ -18,11 +20,11 @@ import {NumberRangeComponent, NumberRangeControlComponent} from './number-range'
   ],
   declarations: [
     NumberRangeComponent, NumberRangeControlComponent, DateRangeComponent,
-    DateRangePickerComponent, ContactComponent, ContactFormComponent
+    DateRangePickerComponent, ContactComponent, ContactFormComponent, TagsComponent, TagsInputComponent
   ],
   exports: [
     NumberRangeComponent, NumberRangeControlComponent, DateRangeComponent,
-    DateRangePickerComponent, ContactComponent, ContactFormComponent
+    DateRangePickerComponent, ContactComponent, ContactFormComponent, TagsComponent, TagsInputComponent
   ]
 })
 export class SharedInfrastructureUtilityTypesModule {

@@ -1,0 +1,34 @@
+<div class="ygg-tags-input">
+  <mat-form-field>
+    <mat-chip-list #chipList>
+      <mat-chip
+        *ngFor="let tag of tags"
+        removable
+        (removed)="remove(tag)"
+      >
+        {{ tag }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input
+        [placeholder]="label"
+        #tagInput
+        [formControl]="inputControl"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="add($event)"
+      />
+    </mat-chip-list>
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      (optionSelected)="addSelected($event)"
+    >
+      <mat-option
+        *ngFor="let tag of tagsSource"
+        [value]="tag"
+      >
+        {{ tag }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
