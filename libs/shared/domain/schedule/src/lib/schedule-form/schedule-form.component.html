@@ -81,7 +81,7 @@
             <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
               <mat-radio-button [value]="'total'">總和</mat-radio-button>
               <mat-radio-button [value]="'single'">單人</mat-radio-button>
-              <h3 class='hint'>{{ budgetHintMessage }}</h3>
+              <h3 class="hint">{{ budgetHintMessage }}</h3>
             </div>
           </mat-radio-group>
           <br />
@@ -127,21 +127,21 @@
               let idx = index
             "
           >
-            <div
-              fxLayout="row"
-              fxLayoutAlign="space-between end"
-              fxLayoutGap="20px"
-            >
-              <h4>聯絡人{{ idx + 1 }}</h4>
-              <button
-                mat-mini-fab
-                (click)="deleteContact(idx)"
-                matTooltip="刪除聯絡人"
-              >
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
-            <ygg-contact-form [formControlName]="idx"></ygg-contact-form>
+            <ygg-action-barred>
+              <div yggActionBarredActions>
+                <button
+                  mat-mini-fab
+                  (click)="deleteContact(idx)"
+                  matTooltip="刪除聯絡人"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+              <mat-card yggActionBarredContent>
+                <h4>聯絡人{{ idx + 1 }}</h4>
+                <ygg-contact-form [formControlName]="idx"></ygg-contact-form>
+              </mat-card>
+            </ygg-action-barred>
             <mat-divider> </mat-divider>
           </div>
           <br />

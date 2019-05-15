@@ -1,0 +1,10 @@
+.ygg-action-barred {
+  position: relative;
+  padding-right: 50px;
+}
+
+.ygg-action-barred .actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+}

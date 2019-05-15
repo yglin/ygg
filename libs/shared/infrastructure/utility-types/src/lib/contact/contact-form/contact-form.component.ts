@@ -1,4 +1,4 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
 import { debounceTime } from 'rxjs/operators';
 import { ErrorStateMatcher } from '@angular/material';
 import {
@@ -14,6 +14,8 @@ import {
   Validator
 } from '@angular/forms';
 import { Contact } from '../contact';
+import { User, AuthenticateService } from '@ygg/shared/user';
+import { Observable, Subscription } from 'rxjs';
 
 class LeastRequireErrorMatcher implements ErrorStateMatcher {
   fields: string[];
@@ -61,13 +63,16 @@ class LeastRequireErrorMatcher implements ErrorStateMatcher {
     }
   ]
 })
-export class ContactFormComponent implements ControlValueAccessor, Validator {
+export class ContactFormComponent implements OnDestroy, ControlValueAccessor, Validator {
   contactForm: FormGroup;
   leastRequireErrorMatcher = new LeastRequireErrorMatcher(['email', 'phone']);
   emitChange: (contact: Contact) => any;
+  currentUser: User;
+  subscription: Subscription;
 
   constructor(
-    protected formBuilder: FormBuilder // protected authService: AuthenticationService
+    private formBuilder: FormBuilder,
+    private authService: AuthenticateService
   ) {
     this.contactForm = this.formBuilder.group(
       {
@@ -80,6 +85,21 @@ export class ContactFormComponent implements ControlValueAccessor, Validator {
         validator: this.requireEmailOrPhoneValidator
       }
     );
+
+    this.subscription = this.authService.currentUser$.subscribe(user => this.currentUser = user);
+  }
+
+  fillWithMe() {
+    if (this.currentUser) {
+      this.contactForm.get('name').setValue(this.currentUser.name);
+      this.contactForm.get('phone').setValue(this.currentUser.phone);
+      this.contactForm.get('email').setValue(this.currentUser.email);
+      // this.contactForm.get('lineID').setValue(this.currentUser.lineID);
+    }
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   writeValue(contact: Contact) {
