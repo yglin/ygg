@@ -1,4 +1,4 @@
 import { Entity } from './entity';
-import { Serializable } from './serializable';
+import { SerializableJSON } from './serializable';
 
-export interface DataItem extends Entity, Serializable {}
+export interface DataItem extends Entity, SerializableJSON {}

@@ -1,5 +1,5 @@
 import { extend, isEmpty } from 'lodash';
-import { DataItem } from '@ygg/shared/data-access';
+import { DataItem, toJSONDeep } from '@ygg/shared/data-access';
 import { Event } from './event';
 import * as uuid from 'uuid';
 
@@ -13,18 +13,15 @@ export class Schedule implements DataItem {
     this.events = [];
   }
 
-  fromData(data: any = {}): this {
+  fromJSON(data: any = {}): this {
     extend(this, data);
     if (!isEmpty(data.events)) {
-      this.events = data.events.map(e => new Event().fromData(e));
+      this.events = data.events.map(e => new Event().fromJSON(e));
     }
     return this;
   }
 
-  toData(): any {
-    const data = JSON.parse(JSON.stringify(this));
-    if (!isEmpty(this.events)) {
-      data.events = this.events.map(e => e.toData());
-    }
+  toJSON(): any {
+    return toJSONDeep(this);
   }
 }

@@ -1,6 +1,6 @@
 import {extend, defaults} from 'lodash';
 import * as uuid from 'uuid';
-import {DataItem} from '@ygg/shared/data-access';
+import {DataItem, toJSONDeep} from '@ygg/shared/data-access';
 // import {BadValueError, BadValueErrorCode} from '@ygg/shared/infrastructure/error';
 import { NumberRange, DateRange, Contact, Tags } from '@ygg/shared/infrastructure/utility-types';
 
@@ -29,21 +29,20 @@ export class ScheduleForm implements DataItem {
     }
   }
 
-  constructor(data: any = {}) {
-    this.fromData(data);
+  constructor() {
     defaults(this, {
       id: uuid.v4()
     });
   }
 
-  fromData(data: any = {}): this {
+  fromJSON(data: any = {}): this {
     extend(this, data);
 
     if (data.dateRange) {
-      this.dateRange = new DateRange(data.dateRange);
+      this.dateRange = new DateRange().fromJSON(data.dateRange);
     }
     if (data.totalBudget) {
-      this.totalBudget = new NumberRange(data.totalBudget);
+      this.totalBudget = new NumberRange().fromJSON(data.totalBudget);
     }
 
     if (data.likes) {
@@ -53,7 +52,7 @@ export class ScheduleForm implements DataItem {
     return this;
   }
 
-  toData(): any {
-    return JSON.parse(JSON.stringify(this));
+  toJSON(): any {
+    return toJSONDeep(this);
   }
 }

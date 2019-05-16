@@ -28,7 +28,7 @@ export class DateRangePickerComponent implements ControlValueAccessor {
     this.dateRange = value;
     let outValue = null;
     if (value && value.start && value.end) {
-      outValue = new DateRange([
+      outValue = new DateRange().fromJSON([
         this.dateRange.start.toISOString(),
         this.dateRange.end.toISOString(),
       ]);

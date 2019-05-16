@@ -1,7 +1,7 @@
 import { extend } from 'lodash';
 import * as moment from 'moment';
 import * as uuid from 'uuid';
-import { DataItem } from '@ygg/shared/data-access';
+import { DataItem, toJSONDeep } from '@ygg/shared/data-access';
 import { Album } from '@ygg/shared/domain/resource';
 
 export class Event implements DataItem {
@@ -18,7 +18,7 @@ export class Event implements DataItem {
     this.id = uuid.v4();
   }
 
-  fromData(data: any = {}): this {
+  fromJSON(data: any = {}): this {
     extend(this, data);
     if (typeof data.start === 'string') {
       this.start = new Date(data.start);
@@ -33,7 +33,7 @@ export class Event implements DataItem {
     return this;
   }
 
-  toData(): any {
-    return JSON.parse(JSON.stringify(this));
+  toJSON(): any {
+    return toJSONDeep(this);
   }
 }

@@ -1,6 +1,6 @@
-import { extend, isArray } from 'lodash';
+import { extend, toPlainObject } from 'lodash';
 import * as uuid from "uuid";
-import { DataItem } from '@ygg/shared/data-access';
+import { DataItem, toJSONDeep } from '@ygg/shared/data-access';
 import { Album } from './album';
 
 export class Resource implements DataItem {
@@ -16,23 +16,23 @@ export class Resource implements DataItem {
     this.color = getRandomColor();
   }
 
-  fromData(data: any = {}): this {
+  fromJSON(data: any = {}): this {
     extend(this, data);
     
     this.album = new Album();
     if (data.album) {
-      this.album.fromData(data.album);
+      this.album.fromJSON(data.album);
     } 
     // Back compatibility
-    this.album.fromData({
+    this.album.fromJSON({
       cover: data.coverPhoto,
       photos: data.photos
     });
     return this;
   }
 
-  toData(): any {
-    return JSON.parse(JSON.stringify(this));
+  toJSON(): any {
+    return toJSONDeep(this);
   }
 }
 

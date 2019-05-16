@@ -1,7 +1,8 @@
 import {isArray} from 'lodash';
 import * as moment from 'moment';
+import { SerializableJSON } from '@ygg/shared/data-access';
 
-export class DateRange {
+export class DateRange implements SerializableJSON {
   private _start: Date;
   private _end: Date;
 
@@ -19,7 +20,12 @@ export class DateRange {
     return this._end;
   }
 
-  constructor(data?: DateRange|Array<string>) {
+  constructor() {
+    this._start = new Date();
+    this._end = new Date();
+  }
+
+  fromJSON(data: any): this {
     let start: Date;
     let end: Date;
     if (isArray(data) && data.length >= 2) {
@@ -39,6 +45,7 @@ export class DateRange {
       this._start = start;
       this._end = end;
     }
+    return this;
   }
 
   toJSON(): any {

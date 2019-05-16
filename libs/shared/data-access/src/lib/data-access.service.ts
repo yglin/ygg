@@ -45,7 +45,7 @@ export class DataAccessService {
     return this.firestore.collection(collection)
         .valueChanges()
         .pipe(map(items => {
-          return items.map(item => new constructor().fromData(item));
+          return items.map(item => new constructor().fromJSON(item));
         }));
   }
 
@@ -58,7 +58,7 @@ export class DataAccessService {
         .pipe(map(action => {
           const snapshot = action.payload;
           if (snapshot.exists) {
-            return new constructor().fromData(snapshot.data());
+            return new constructor().fromJSON(snapshot.data());
           } else {
             throw new DataAccessError(
                 DataAccessErrorCode.DataNotFound,
@@ -86,7 +86,7 @@ export class DataAccessService {
         .collection(collection, ref => this.transformQueries(ref, [query]))
         .valueChanges()
         .pipe(map(items => {
-          return items.map(item => new constructor().fromData(item));
+          return items.map(item => new constructor().fromJSON(item));
         }));
   }
 
@@ -105,7 +105,7 @@ export class DataAccessService {
   }): Promise<T> {
     return this.getCollection(collection)
         .doc(item.id)
-        .set(item.toData())
+        .set(item.toJSON())
         .then(() => item);
   }
 }

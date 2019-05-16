@@ -28,7 +28,7 @@ export class SchedulerComponent implements OnInit {
     this.scheduleFormGroup = this.scheduleFormService.createFormGroup();
     this.scheduleForm$ = new BehaviorSubject(this.scheduleForm);
     this.scheduleFormGroup.valueChanges.subscribe(values => {
-      this.scheduleForm.fromData(values);
+      this.scheduleForm.fromJSON(values);
       this.scheduleForm$.next(this.scheduleForm);
     });
 

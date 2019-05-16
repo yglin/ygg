@@ -97,7 +97,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
 
   submit() {
     if (confirm('確定已填寫完畢，要送出需求嗎？')) {
-      const scheduleForm = new ScheduleForm(this.formGroup.value);
+      const scheduleForm = new ScheduleForm().fromJSON(this.formGroup.value);
       if (this.id) {
         scheduleForm.id = this.id;
       }

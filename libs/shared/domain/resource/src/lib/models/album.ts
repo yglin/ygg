@@ -1,11 +1,11 @@
 import { extend, isString, isArray, isEmpty } from 'lodash';
-import { Serializable } from '@ygg/shared/data-access';
+import { SerializableJSON } from '@ygg/shared/data-access';
 
-export class Album implements Serializable {
+export class Album implements SerializableJSON {
   cover: URL;
   photos: URL[];
 
-  fromData(data: any = {}): this {
+  fromJSON(data: any = {}): this {
     if (isString(data.cover) && data.cover) {
       this.cover = stringToURL(data.cover);
     }
@@ -21,8 +21,11 @@ export class Album implements Serializable {
     return this;
   }
 
-  toData(): any {
-    return JSON.parse(JSON.stringify(this));
+  toJSON(): any {
+    return {
+      cover: this.cover.toString(),
+      photos: this.photos.map(photo => photo.toString())
+    };
   }
 
 }

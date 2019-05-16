@@ -1,7 +1,8 @@
 import { isArray, defaults } from "lodash";
+import { SerializableJSON } from '@ygg/shared/data-access';
 // import { NUMBER_FORMAT_REGEXP } from "@angular/common/src/i18n/format_number";
 
-export class NumberRange {
+export class NumberRange implements SerializableJSON {
   _min: number;
   _max: number;
 
@@ -13,16 +14,9 @@ export class NumberRange {
     }
   }
 
-  constructor(data?: any) {
-    if (isArray(data) && data.length >= 2) {
-      this.min = data[0];
-      this.max = data[1];
-    }
-
-    defaults(this, {
-      min: 0,
-      max: Number.MAX_SAFE_INTEGER
-    });
+  constructor() {
+    this._min = 0;
+    this._max = 0;
   }
 
   set min(_min: number) {
@@ -45,6 +39,14 @@ export class NumberRange {
 
   get max(): number {
     return this._max;
+  }
+
+  fromJSON(data: any): this {
+    if (isArray(data) && data.length >= 2) {
+      this.min = data[0];
+      this.max = data[1];
+    }
+    return this;
   }
 
   toJSON(): Array<Number> {

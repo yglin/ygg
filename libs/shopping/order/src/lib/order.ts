@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as uuid from 'uuid';
 import * as moment from 'moment';
-import { DataItem } from '@ygg/shared/data-access';
+import { DataItem, toJSONDeep } from '@ygg/shared/data-access';
 import { Contact } from '@ygg/shared/user';
 import { Purchase } from './purchase/purchase';
 
@@ -37,7 +37,7 @@ export class Order implements DataItem {
     });
   }
 
-  fromData(data: any = {}): this {
+  fromJSON(data: any = {}): this {
     _.extend(this, data);
 
     if (_.isArray(data.purchases)) {
@@ -53,9 +53,9 @@ export class Order implements DataItem {
     return this;
   }
 
-  toData(): any {
+  toJSON(): any {
     try {
-      const data = JSON.parse(JSON.stringify(this));
+      const data = toJSONDeep(this);
       data.paymentIds = Array.from(this.paymentIds);
       // console.log(data);
       return data;

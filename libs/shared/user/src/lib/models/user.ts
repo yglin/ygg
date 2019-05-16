@@ -1,4 +1,4 @@
-import {DataItem} from '@ygg/shared/data-access';
+import {DataItem, toJSONDeep} from '@ygg/shared/data-access';
 import {extend, sample} from 'lodash';
 
 export enum UserState {
@@ -46,19 +46,23 @@ export class User implements DataItem {
     this.providers = {};
   }
 
-  toData(): any {
-    return JSON.parse(JSON.stringify(this));
-  }
-
-  fromData(data: any): this {
+  fromJSON(data: any): this {
     extend(this, data);
     if (data.createAt) {
       this.createAt = new Date(data.createAt);
     }
     if (typeof data.avatarUrl === 'string') {
-      this.avatarUrl = new URL(data.avatarUrl);
+      try {
+        this.avatarUrl = new URL(data.avatarUrl);
+      } catch (error) {
+        console.error(error);        
+      }
     }
     return this;
+  }
+
+  toJSON(): any {
+    return toJSONDeep(this);
   }
 
   connectProvider(provider: string, userProfile: any = {}): this {

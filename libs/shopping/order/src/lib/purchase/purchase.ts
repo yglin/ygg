@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as uuid from 'uuid';
 import * as moment from 'moment';
-import { DataItem } from '@ygg/shared/data-access';
+import { DataItem, toJSONDeep } from '@ygg/shared/data-access';
 import { Product } from './product';
 
 // @dynamic
@@ -25,12 +25,12 @@ export class Purchase implements DataItem {
     this.quantity = quantity;
   }
 
-  fromData(data: any = {}): this {
+  fromJSON(data: any = {}): this {
     _.extend(this, data);
     return this;
   }
 
-  toData(): any {
-    return JSON.parse(JSON.stringify(this));
+  toJSON(): any {
+    return toJSONDeep(this);
   }
 }
