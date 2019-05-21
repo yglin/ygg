@@ -11,6 +11,7 @@ import {DateRangeComponent, DateRangePickerComponent} from './date-range';
 import {NumberRangeComponent, NumberRangeControlComponent} from './number-range';
 import { TagsComponent } from './tags/tags.component';
 import { TagsInputComponent } from './tags/tags-input/tags-input.component';
+import { DateRangePickerDialogComponent } from './date-range/date-range-picker/date-range-picker-dialog/date-range-picker-dialog.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,10 @@ import { TagsInputComponent } from './tags/tags-input/tags-input.component';
   ],
   declarations: [
     NumberRangeComponent, NumberRangeControlComponent, DateRangeComponent,
-    DateRangePickerComponent, ContactComponent, ContactFormComponent, TagsComponent, TagsInputComponent
+    DateRangePickerComponent, ContactComponent, ContactFormComponent, TagsComponent, TagsInputComponent, DateRangePickerDialogComponent
+  ],
+  entryComponents: [
+    DateRangePickerDialogComponent
   ],
   exports: [
     NumberRangeComponent, NumberRangeControlComponent, DateRangeComponent,

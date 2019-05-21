@@ -2,10 +2,8 @@ import {Component, forwardRef} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as moment from 'moment';
 import { DateRange } from '../date-range';
-
-interface DateRangeMoment {
-  start: moment.Moment, end: moment.Moment
-}
+import { MatDialog } from '@angular/material';
+import { DateRangePickerDialogComponent, DateRangePickerDialogData } from './date-range-picker-dialog/date-range-picker-dialog.component';
 
 @Component({
   selector: 'ygg-date-range-picker',
@@ -20,29 +18,30 @@ interface DateRangeMoment {
   ]
 })
 export class DateRangePickerComponent implements ControlValueAccessor {
-  dateRange: DateRangeMoment;
+  _dateRange: DateRange;
   emitChange: (value: DateRange) => {};
   emitTouched: () => {};
 
-  onChange(value: DateRangeMoment) {
-    this.dateRange = value;
-    let outValue = null;
-    if (value && value.start && value.end) {
-      outValue = new DateRange().fromJSON([
-        this.dateRange.start.toISOString(),
-        this.dateRange.end.toISOString(),
-      ]);
-    }
-    this.emitChange(outValue);
+  constructor(
+    private dialog: MatDialog
+  ) {}
+
+  get dateRange(): DateRange {
+    return this._dateRange;
   }
 
-  constructor() {}
+  set dateRange(value: DateRange) {
+    if (DateRange.isDateRange(value)) {
+      this._dateRange = value;
+      this.emitChange(this._dateRange);
+    }
+  }
 
   writeValue(value: DateRange) {
-    console.log(value);
+    // console.log(value);
     if (DateRange.isDateRange(value)) {
-      this.dateRange = {start: moment(value.start), end: moment(value.end)};
-      console.log(this.dateRange);
+      this._dateRange = value;
+      // console.log(this.dateRange);
     }
   }
 
@@ -52,6 +51,19 @@ export class DateRangePickerComponent implements ControlValueAccessor {
 
   registerOnTouched(fn) {
     this.emitTouched = fn;
+  }
+
+  openPicker() {
+    const dialogData: DateRangePickerDialogData = {
+      dateRange: this.dateRange
+    };
+    const dialogRef = this.dialog.open(DateRangePickerDialogComponent, {
+      data: dialogData
+    });
+    const subscription = dialogRef.afterClosed().subscribe(dateRange => {
+      this.dateRange = dateRange;
+      subscription.unsubscribe();
+    });
   }
 
   onBlur() {

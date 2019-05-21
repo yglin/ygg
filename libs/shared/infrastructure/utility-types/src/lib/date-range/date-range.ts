@@ -1,6 +1,10 @@
+import {SerializableJSON} from '@ygg/shared/data-access';
 import {isArray} from 'lodash';
 import * as moment from 'moment';
-import { SerializableJSON } from '@ygg/shared/data-access';
+
+export interface DateRangeMoment {
+  start: moment.Moment, end: moment.Moment
+}
 
 export class DateRange implements SerializableJSON {
   private _start: Date;
@@ -50,5 +54,19 @@ export class DateRange implements SerializableJSON {
 
   toJSON(): any {
     return [this._start.toISOString(), this._end.toISOString()]
+  }
+
+  fromMoment(dateRangeMoment: DateRangeMoment): this {
+    return this.fromJSON([
+      dateRangeMoment.start.toDate(),
+      dateRangeMoment.end.toDate(),
+    ]);
+  }
+
+  toMoment(): DateRangeMoment {
+    return {
+      start: moment(this.start),
+      end: moment(this.end)
+    };
   }
 }
