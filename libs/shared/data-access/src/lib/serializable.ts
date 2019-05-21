@@ -11,7 +11,7 @@ export interface SerializableJSON {
 }
 
 function isSerializableJSON(obj: any = {}): obj is SerializableJSON {
-  return (typeof obj.fromJSON === 'function') && (typeof obj.toJSON === 'function');
+  return (obj && typeof obj.fromJSON === 'function') && (typeof obj.toJSON === 'function');
 }
 
 export function toJSONDeep(obj: any = {}): any {

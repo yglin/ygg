@@ -1,7 +1,7 @@
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {AfterViewInit, Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl} from '@angular/forms';
-import {MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent} from '@angular/material';
+import {MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocompleteTrigger} from '@angular/material';
 import {combineLatest, fromEvent, Observable, of, Subscription} from 'rxjs';
 import {debounceTime, startWith} from 'rxjs/operators';
 
@@ -26,13 +26,16 @@ export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit,
   private _tags: Tags;
   separatorKeysCodes: number[] = [ENTER, COMMA];
   subscriptions: Subscription[];
+  isAutoCompleteShown: boolean;
 
   @ViewChild('tagInput') tagInput: ElementRef;
+  @ViewChild('tagInput', { read: MatAutocompleteTrigger }) matAutocompleteTrigger: MatAutocompleteTrigger;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   constructor() {
     this.inputControl = new FormControl();
     this.subscriptions = [];
+    this.isAutoCompleteShown = false;
   }
 
   get tags(): string[] {
@@ -111,5 +114,14 @@ export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit,
   addSelected(event: MatAutocompleteSelectedEvent): void {
     this._tags.add(event.option.viewValue);
     this.notifyValueChange();
+  }
+
+  toggleAutoComplete(event: MouseEvent) {
+    event.stopPropagation();
+    if (this.matAutocomplete.isOpen) {
+      this.matAutocompleteTrigger.closePanel();
+    } else {
+      this.matAutocompleteTrigger.openPanel();
+    }
   }
 }

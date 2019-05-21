@@ -1,3 +1,4 @@
+import {extend} from 'lodash';
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {NumberRange, Tags} from '@ygg/shared/infrastructure/utility-types';
@@ -13,8 +14,8 @@ import {ScheduleFormService} from './schedule-form.service';
   styleUrls: ['./schedule-form.component.css']
 })
 export class ScheduleFormComponent implements OnInit, OnDestroy {
-  @Input() id: string;
   @Input() formGroup: FormGroup;
+  @Input() scheduleForm: ScheduleForm;
   @Output() onSubmit: EventEmitter<ScheduleForm>;
   likesSource$: Observable<Tags>;
   budgetType = 'total';
@@ -45,16 +46,22 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     if (!this.formGroup) {
       this.formGroup = this.scheudleFormService.createFormGroup();
     }
-    if (this.id) {
-      this.scheudleFormService.get$(this.id).pipe(first()).subscribe(
-          scheudleForm => {
-            this.formGroup.patchValue(scheudleForm);
-          });
+    if (this.scheduleForm) {
+      this.formGroup.patchValue(this.scheduleForm);
+    } else {
+      this.scheduleForm = new ScheduleForm();
     }
+    let subsc: Subscription;
+    // Sync data between scheduleForm and formGroup
+    subsc = this.formGroup.valueChanges.subscribe(formGroupValue => {
+      extend(this.scheduleForm, formGroupValue);
+    });
+    this.subscriptions.push(subsc);
+
     // Show budget hint message
     const formControlNumParticipants = this.formGroup.get('numParticipants');
     const formControlTotalBudget = this.formGroup.get('totalBudget');
-    let subsc =
+    subsc =
         combineLatest([
           (formControlNumParticipants.valueChanges as Observable<number>),
           (formControlTotalBudget.valueChanges as Observable<NumberRange>)
@@ -97,13 +104,9 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
 
   submit() {
     if (confirm('確定已填寫完畢，要送出需求嗎？')) {
-      const scheduleForm = new ScheduleForm().fromJSON(this.formGroup.value);
-      if (this.id) {
-        scheduleForm.id = this.id;
-      }
-      this.scheudleFormService.upsert(scheduleForm).then(() => {
+      this.scheudleFormService.upsert(this.scheduleForm).then(() => {
         alert('已成功更新／新增需求資料');
-        this.onSubmit.emit(scheduleForm);
+        this.onSubmit.emit(this.scheduleForm);
       });
     };
   }

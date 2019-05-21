@@ -5,3 +5,7 @@
 .ygg-tags-input .mat-form-field {
   width: 100%;
 }
+
+.ygg-tags-input .toggle-button {
+  cursor: pointer;
+}

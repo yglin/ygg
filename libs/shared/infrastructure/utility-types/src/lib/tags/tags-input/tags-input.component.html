@@ -30,5 +30,6 @@
         {{ tag }}
       </mat-option>
     </mat-autocomplete>
+    <mat-icon class='toggle-button' matSuffix (click)='toggleAutoComplete($event)'>{{ auto.isOpen ? "arrow_drop_up" : "arrow_drop_down" }}</mat-icon>
   </mat-form-field>
 </div>
