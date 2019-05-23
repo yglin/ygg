@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material';
+import { YggDialogContentComponent } from '@ygg/shared/ui/widgets';
 
 export interface DialogSampleContentComponentData {
   message: string;
@@ -10,7 +11,7 @@ export interface DialogSampleContentComponentData {
   templateUrl: './sample-content.component.html',
   styleUrls: ['./sample-content.component.css']
 })
-export class DialogSampleContentComponent implements OnInit { 
+export class DialogSampleContentComponent implements OnInit, YggDialogContentComponent { 
   dialogData: any;
   message: string;
 

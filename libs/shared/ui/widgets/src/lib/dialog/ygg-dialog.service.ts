@@ -3,6 +3,10 @@ import { ComponentType } from '@angular/cdk/portal';
 import {MatDialog} from '@angular/material';
 import { YggDialogComponent, YggDialogComponentData } from './ygg-dialog.component';
 
+export interface YggDialogContentComponent {
+  dialogData: any;
+}
+
 @Injectable({providedIn: 'root'})
 export class YggDialogService {
   constructor(private dialog: MatDialog) {}
