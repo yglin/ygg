@@ -67,6 +67,12 @@
     },
     "shared-infrastructure-utility-types": {
       "tags": ["scope:shared", "type:utils"]
+    },
+    "sandbox": {
+      "tags": []
+    },
+    "sandbox-e2e": {
+      "tags": []
     }
   }
 }

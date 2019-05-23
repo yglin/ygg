@@ -1,0 +1,8 @@
+<div>
+  <h2>Your favorite food is {{ message }}</h2>
+  <br><br>
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+    <button mat-raised-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button [mat-dialog-close]='"You really like to eat " + message'>OK</button>
+  </div>
+</div>

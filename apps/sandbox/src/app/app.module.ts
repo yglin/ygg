@@ -1,40 +1,28 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {BrowserModule} from '@angular/platform-browser';
+import {RouterModule} from '@angular/router';
+import {SharedUiNgMaterialModule} from '@ygg/shared/ui/ng-material';
 
-import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-import { SharedInfrastructureLogModule, LogLevel } from '@ygg/shared/infrastructure/log';
-
-import { AppComponent } from './app.component';
-import { RouterModule } from '@angular/router';
-import { LoggingComponent } from './logging/logging.component';
+import {AppComponent} from './app.component';
+import {DialogsComponent} from './dialogs/dialogs.component';
+import {DialogSampleContentComponent} from './dialogs/sample-content/sample-content.component';
+import {routes} from './routes';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 @NgModule({
-  declarations: [AppComponent, LoggingComponent],
+  declarations: [AppComponent, DialogsComponent, DialogSampleContentComponent],
   imports: [
-    BrowserModule,
-    FormsModule,
-    FlexLayoutModule,
-    SharedUiNgMaterialModule,
-    SharedInfrastructureLogModule.forRoot({
-      threshold: LogLevel.Debug
-    }),
-    RouterModule.forRoot(
-      [
-        { path: 'logging', component: LoggingComponent },
-        {
-          path: '',
-          pathMatch: 'full',
-          redirectTo: 'logging'
-        }
-      ],
-      {
-        initialNavigation: 'enabled'
-      }
-    )
+    CommonModule, FormsModule, ReactiveFormsModule, FlexLayoutModule,
+    SharedUiNgMaterialModule, BrowserModule, RouterModule.forRoot(routes), BrowserAnimationsModule,
+    SharedUiWidgetsModule
   ],
+  entryComponents: [DialogSampleContentComponent],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+}
