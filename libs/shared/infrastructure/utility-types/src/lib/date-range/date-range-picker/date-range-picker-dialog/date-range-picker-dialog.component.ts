@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {MatDialogRef} from '@angular/material';
+import { YggDialogContentComponent } from '@ygg/shared/ui/widgets';
 import * as moment from 'moment';
 import {DaterangepickerComponent} from 'ngx-daterangepicker-material';
 
@@ -14,13 +15,13 @@ export interface DateRangePickerDialogData {
   templateUrl: './date-range-picker-dialog.component.html',
   styleUrls: ['./date-range-picker-dialog.component.css']
 })
-export class DateRangePickerDialogComponent implements OnInit, AfterViewInit {
+export class DateRangePickerDialogComponent implements OnInit, AfterViewInit, YggDialogContentComponent {
   dateRange: DateRangeMoment;
+  dialogData: any;
   @ViewChild(DaterangepickerComponent) datePicker: DaterangepickerComponent;
 
-  constructor(
-      private dialogRef: MatDialogRef<DateRangePickerDialogComponent>,
-      @Inject(MAT_DIALOG_DATA) private dialogData: DateRangePickerDialogData) {}
+  constructor(private dialogRef: MatDialogRef<DateRangePickerDialogComponent>) {
+  }
 
   ngOnInit() {
     if (this.dialogData && this.dialogData.dateRange) {

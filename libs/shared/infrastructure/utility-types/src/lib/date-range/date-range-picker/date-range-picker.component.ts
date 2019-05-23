@@ -2,7 +2,7 @@ import {Component, forwardRef} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as moment from 'moment';
 import { DateRange } from '../date-range';
-import { MatDialog } from '@angular/material';
+import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { DateRangePickerDialogComponent, DateRangePickerDialogData } from './date-range-picker-dialog/date-range-picker-dialog.component';
 
 @Component({
@@ -23,7 +23,7 @@ export class DateRangePickerComponent implements ControlValueAccessor {
   emitTouched: () => {};
 
   constructor(
-    private dialog: MatDialog
+    private yggDialog: YggDialogService
   ) {}
 
   get dateRange(): DateRange {
@@ -57,7 +57,8 @@ export class DateRangePickerComponent implements ControlValueAccessor {
     const dialogData: DateRangePickerDialogData = {
       dateRange: this.dateRange
     };
-    const dialogRef = this.dialog.open(DateRangePickerDialogComponent, {
+    const dialogRef = this.yggDialog.open(DateRangePickerDialogComponent, {
+      title: '請選擇日期',
       data: dialogData
     });
     const subscription = dialogRef.afterClosed().subscribe(dateRange => {
