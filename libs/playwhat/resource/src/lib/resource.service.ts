@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {DataAccessService} from '@ygg/shared/data-access';
+import {DataAccessService} from '@ygg/shared/infra/data-access';
 import {find, isEmpty, range} from 'lodash';
 import {combineLatest, Observable, of} from 'rxjs';
 

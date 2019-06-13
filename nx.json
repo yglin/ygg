@@ -23,19 +23,13 @@
     "order": {
       "tags": ["scope:shopping", "type:feature", "platform:desktop"]
     },
-    "data-access": {
-      "tags": ["scope:shared", "type:data-access"]
-    },
-    "shared-form-controls": {
-      "tags": ["scope:shared", "type:ui", "platform:desktop"]
-    },
     "shopping-cart": {
       "tags": ["scope:shopping", "type:feature", "platform:desktop"]
     },
     "firebase-functions": {
       "tags": ["scope:backend", "type:app"]
     },
-    "shared-infrastructure-error": {
+    "shared-infra-error": {
       "tags": ["scope:shared", "type:infrastructure"]
     },
     "user-frontend": {
@@ -53,20 +47,8 @@
     "shared-ui-widgets": {
       "tags": ["scope:shared", "type:ui", "platform:desktop"]
     },
-    "shared-domain-resource": {
-      "tags": ["scope:shared", "type:domain"]
-    },
-    "shared-domain-schedule": {
-      "tags": ["scope:schedule", "type:domain"]
-    },
-    "themes": {
-      "tags": ["scope:shared", "type:ui"]
-    },
     "shared-ui-themes": {
       "tags": ["scope:shared", "type:ui"]
-    },
-    "shared-infrastructure-utility-types": {
-      "tags": ["scope:shared", "type:utils"]
     },
     "sandbox": {
       "tags": []
@@ -85,6 +67,12 @@
     },
     "playwhat-resource": {
       "tags": ["scope:playwhat", "type:feature", "platform:mobile"]
+    },
+    "shared-infra-data-access": {
+      "tags": ["scope:shared", "type:data-access"]
+    },
+    "shared-types": {
+      "tags": ["scope:shared", "type:utils"]
     }
   }
 }

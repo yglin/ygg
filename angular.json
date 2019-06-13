@@ -192,74 +192,6 @@
       },
       "schematics": {}
     },
-    "data-access": {
-      "root": "libs/shared/data-access",
-      "sourceRoot": "libs/shared/data-access/src",
-      "projectType": "library",
-      "prefix": "ygg",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "libs/shared/data-access/tsconfig.lib.json",
-            "project": "libs/shared/data-access/ng-package.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/shared/data-access/tsconfig.lib.json",
-              "libs/shared/data-access/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "libs/shared/data-access/jest.config.js",
-            "tsConfig": "libs/shared/data-access/tsconfig.spec.json",
-            "setupFile": "libs/shared/data-access/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {}
-    },
-    "shared-form-controls": {
-      "root": "libs/shared/form-controls",
-      "sourceRoot": "libs/shared/form-controls/src",
-      "projectType": "library",
-      "prefix": "ygg",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "libs/shared/form-controls/tsconfig.lib.json",
-            "project": "libs/shared/form-controls/ng-package.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/shared/form-controls/tsconfig.lib.json",
-              "libs/shared/form-controls/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "libs/shared/form-controls/jest.config.js",
-            "tsConfig": "libs/shared/form-controls/tsconfig.spec.json",
-            "setupFile": "libs/shared/form-controls/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {}
-    },
     "shopping-cart": {
       "root": "libs/shopping/cart",
       "sourceRoot": "libs/shopping/cart/src",
@@ -342,9 +274,9 @@
         }
       }
     },
-    "shared-infrastructure-error": {
-      "root": "libs/shared/infrastructure/error",
-      "sourceRoot": "libs/shared/infrastructure/error/src",
+    "shared-infra-error": {
+      "root": "libs/shared/infra/error",
+      "sourceRoot": "libs/shared/infra/error/src",
       "projectType": "library",
       "prefix": "ygg",
       "architect": {
@@ -352,8 +284,8 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/shared/infrastructure/error/tsconfig.lib.json",
-              "libs/shared/infrastructure/error/tsconfig.spec.json"
+              "libs/shared/infra/error/tsconfig.lib.json",
+              "libs/shared/infra/error/tsconfig.spec.json"
             ],
             "exclude": ["**/node_modules/**"]
           }
@@ -361,8 +293,8 @@
         "test": {
           "builder": "@nrwl/builders:jest",
           "options": {
-            "jestConfig": "libs/shared/infrastructure/error/jest.config.js",
-            "tsConfig": "libs/shared/infrastructure/error/tsconfig.spec.json"
+            "jestConfig": "libs/shared/infra/error/jest.config.js",
+            "tsConfig": "libs/shared/infra/error/tsconfig.spec.json"
           }
         }
       },
@@ -626,60 +558,6 @@
       },
       "schematics": {}
     },
-    "shared-domain-resource": {
-      "root": "libs/shared/domain/resource",
-      "sourceRoot": "libs/shared/domain/resource/src",
-      "projectType": "library",
-      "prefix": "ygg",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/shared/domain/resource/tsconfig.lib.json",
-              "libs/shared/domain/resource/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "libs/shared/domain/resource/jest.config.js",
-            "tsConfig": "libs/shared/domain/resource/tsconfig.spec.json",
-            "setupFile": "libs/shared/domain/resource/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {}
-    },
-    "shared-domain-schedule": {
-      "root": "libs/shared/domain/schedule",
-      "sourceRoot": "libs/shared/domain/schedule/src",
-      "projectType": "library",
-      "prefix": "ygg",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/shared/domain/schedule/tsconfig.lib.json",
-              "libs/shared/domain/schedule/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "libs/shared/domain/schedule/jest.config.js",
-            "tsConfig": "libs/shared/domain/schedule/tsconfig.spec.json",
-            "setupFile": "libs/shared/domain/schedule/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {}
-    },
     "shared-ui-themes": {
       "root": "libs/shared/ui/themes",
       "sourceRoot": "libs/shared/ui/themes/src",
@@ -702,33 +580,6 @@
             "jestConfig": "libs/shared/ui/themes/jest.config.js",
             "tsConfig": "libs/shared/ui/themes/tsconfig.spec.json",
             "setupFile": "libs/shared/ui/themes/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {}
-    },
-    "shared-infrastructure-utility-types": {
-      "root": "libs/shared/infrastructure/utility-types",
-      "sourceRoot": "libs/shared/infrastructure/utility-types/src",
-      "projectType": "library",
-      "prefix": "ygg",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/shared/infrastructure/utility-types/tsconfig.lib.json",
-              "libs/shared/infrastructure/utility-types/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "libs/shared/infrastructure/utility-types/jest.config.js",
-            "tsConfig": "libs/shared/infrastructure/utility-types/tsconfig.spec.json",
-            "setupFile": "libs/shared/infrastructure/utility-types/src/test-setup.ts"
           }
         }
       },
@@ -1018,6 +869,60 @@
             "jestConfig": "libs/playwhat/resource/jest.config.js",
             "tsConfig": "libs/playwhat/resource/tsconfig.spec.json",
             "setupFile": "libs/playwhat/resource/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shared-infra-data-access": {
+      "root": "libs/shared/infra/data-access",
+      "sourceRoot": "libs/shared/infra/data-access/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/infra/data-access/tsconfig.lib.json",
+              "libs/shared/infra/data-access/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/shared/infra/data-access/jest.config.js",
+            "tsConfig": "libs/shared/infra/data-access/tsconfig.spec.json",
+            "setupFile": "libs/shared/infra/data-access/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shared-types": {
+      "root": "libs/shared/types",
+      "sourceRoot": "libs/shared/types/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/types/tsconfig.lib.json",
+              "libs/shared/types/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/shared/types/jest.config.js",
+            "tsConfig": "libs/shared/types/tsconfig.spec.json",
+            "setupFile": "libs/shared/types/src/test-setup.ts"
           }
         }
       },

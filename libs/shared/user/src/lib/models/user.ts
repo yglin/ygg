@@ -1,4 +1,4 @@
-import {DataItem, toJSONDeep} from '@ygg/shared/data-access';
+import {DataItem, toJSONDeep} from '@ygg/shared/infra/data-access';
 import {extend, sample} from 'lodash';
 
 export enum UserState {

@@ -3,7 +3,7 @@ import {NgModule} from '@angular/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import {SharedInfrastructureUtilityTypesModule} from '@ygg/shared/infrastructure/utility-types';
+import {SharedTypesModule} from '@ygg/shared/types';
 import {SharedUiNgMaterialModule} from '@ygg/shared/ui/ng-material';
 import {SharedUiWidgetsModule} from '@ygg/shared/ui/widgets';
 import {PlaywhatResourceModule} from '@ygg/playwhat/resource';
@@ -17,7 +17,7 @@ import {ScheduleFormViewComponent} from './schedule-form/schedule-form-view/sche
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule, FlexLayoutModule,
     SharedUiNgMaterialModule, SharedUiWidgetsModule,
-    SharedInfrastructureUtilityTypesModule, PlaywhatResourceModule
+    SharedTypesModule, PlaywhatResourceModule
   ],
   exports: [ScheduleFormComponent, ScheduleFormViewComponent]
 })

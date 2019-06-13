@@ -1,8 +1,8 @@
 import {extend, defaults} from 'lodash';
 import * as uuid from 'uuid';
 import {DataItem, toJSONDeep} from '@ygg/shared/data-access';
-// import {BadValueError, BadValueErrorCode} from '@ygg/shared/infrastructure/error';
-import { NumberRange, DateRange, Contact, Tags } from '@ygg/shared/infrastructure/utility-types';
+// import {BadValueError, BadValueErrorCode} from '@ygg/shared/infra/error';
+import { NumberRange, DateRange, Contact, Tags } from '@ygg/shared/infra/utility-types';
 
 export class ScheduleForm implements DataItem {
   id: string;

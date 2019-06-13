@@ -19,32 +19,20 @@
       "@ygg/e2e/user/frontend": ["apps/user/frontend-e2e/src/index.ts"],
       "@ygg/apps/scheudler": ["apps/scheduler/src/index.ts"],
       "@ygg/shared/user": ["libs/shared/user/src/index.ts"],
-      "@ygg/shared/data-access": ["libs/shared/data-access/src/index.ts"],
-      "@ygg/shared/form-controls": ["libs/shared/form-controls/src/index.ts"],
       "@ygg/shopping/payment": ["libs/shopping/payment/src/index.ts"],
       "@ygg/shopping/order": ["libs/shopping/order/src/index.ts"],
       "@ygg/shopping/cart": ["libs/shopping/cart/src/index.ts"],
-      "@ygg/shared/shopping/abstraction": [
-        "libs/shared/shopping/abstraction/src/index.ts"
-      ],
-      "@ygg/shared/infrastructure/abstractions": [
-        "libs/shared/infrastructure/abstractions/src/index.ts"
-      ],
-      "@ygg/shared/infrastructure/error": [
-        "libs/shared/infrastructure/error/src/index.ts"
-      ],
-      "@ygg/shared/infrastructure/log": [
-        "libs/shared/infrastructure/log/src/index.ts"
-      ],
+      "@ygg/shared/infra/error": ["libs/shared/infra/error/src/index.ts"],
+      "@ygg/shared/infra/log": ["libs/shared/infra/log/src/index.ts"],
       "@ygg/shared/ui/ng-material": ["libs/shared/ui/ng-material/src/index.ts"],
       "@ygg/shared/ui/widgets": ["libs/shared/ui/widgets/src/index.ts"],
-      "@ygg/themes": ["libs/themes/src/index.ts"],
       "@ygg/shared/ui/themes": ["libs/shared/ui/themes/src/index.ts"],
-      "@ygg/shared/infrastructure/utility-types": [
-        "libs/shared/infrastructure/utility-types/src/index.ts"
-      ],
       "@ygg/playwhat/scheduler": ["libs/playwhat/scheduler/src/index.ts"],
-      "@ygg/playwhat/resource": ["libs/playwhat/resource/src/index.ts"]
+      "@ygg/playwhat/resource": ["libs/playwhat/resource/src/index.ts"],
+      "@ygg/shared/infra/data-access": [
+        "libs/shared/infra/data-access/src/index.ts"
+      ],
+      "@ygg/shared/types": ["libs/shared/types/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

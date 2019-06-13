@@ -5,7 +5,7 @@ import {ScheduleFormComponent} from './schedule-form.component';
 import {ScheduleFormService} from './schedule-form.service';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
-import { SharedInfrastructureUtilityTypesModule } from '@ygg/shared/infrastructure/utility-types';
+import { SharedInfraUtilityTypesModule } from '@ygg/shared/infra/utility-types';
 
 describe('ScheduleFormComponent', () => {
   let component: ScheduleFormComponent;
@@ -15,7 +15,7 @@ describe('ScheduleFormComponent', () => {
     TestBed
         .configureTestingModule({
           declarations: [ScheduleFormComponent],
-          imports: [FormsModule, ReactiveFormsModule, SharedUiWidgetsModule, SharedInfrastructureUtilityTypesModule],
+          imports: [FormsModule, ReactiveFormsModule, SharedUiWidgetsModule, SharedInfraUtilityTypesModule],
           providers: [
             ScheduleFormService
           ],

@@ -1,7 +1,7 @@
 import {extend} from 'lodash';
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
-import {NumberRange, Tags} from '@ygg/shared/infrastructure/utility-types';
+import {NumberRange, Tags} from '@ygg/shared/types';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {first} from 'rxjs/operators';
 

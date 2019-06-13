@@ -1,5 +1,5 @@
 import { extend, isString, isArray, isEmpty } from 'lodash';
-import { SerializableJSON } from '@ygg/shared/data-access';
+import { SerializableJSON } from '@ygg/shared/infra/data-access';
 
 export class Album implements SerializableJSON {
   cover: URL;

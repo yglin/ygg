@@ -1,6 +1,6 @@
 import { extend, toPlainObject } from 'lodash';
 import * as uuid from "uuid";
-import { DataItem, toJSONDeep } from '@ygg/shared/data-access';
+import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { Album } from './album';
 
 export class Resource implements DataItem {

@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {DataAccessService} from '@ygg/shared/data-access';
-import {NumberRange, Tags} from '@ygg/shared/infrastructure/utility-types';
+import {NumberRange, Tags} from '@ygg/shared/infra/utility-types';
 
 // import {DateRange, NumberRange} from
-// '@ygg/shared/infrastructure/utility-types'; import * as moment from 'moment';
+// '@ygg/shared/infra/utility-types'; import * as moment from 'moment';
 import {ScheduleForm} from './schedule-form';
 import { Observable, of } from 'rxjs';
 

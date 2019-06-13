@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
-import { DataAccessModule } from '@ygg/shared/data-access';
+import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from "@ygg/shared/ui/widgets";
 
@@ -43,7 +43,7 @@ import { UserViewComponent } from './components/user-view/user-view.component';
     RouterModule,
     FlexLayoutModule,
     AngularFireAuthModule,
-    DataAccessModule,
+    SharedInfraDataAccessModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule
   ],

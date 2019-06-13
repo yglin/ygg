@@ -4,7 +4,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {SharedDomainResourceModule} from '@ygg/shared/domain/resource';
 import {SharedDomainScheduleModule} from '@ygg/shared/domain/schedule';
-import {SharedInfrastructureUtilityTypesModule} from '@ygg/shared/infrastructure/utility-types';
+import {SharedInfraUtilityTypesModule} from '@ygg/shared/infra/utility-types';
 import {SharedUiNgMaterialModule} from '@ygg/shared/ui/ng-material';
 import {SharedUiWidgetsModule} from '@ygg/shared/ui/widgets';
 
@@ -27,7 +27,7 @@ import {SchedulerComponent} from './scheduler/scheduler.component';
   ],
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule, SharedUiNgMaterialModule,
-    SharedInfrastructureUtilityTypesModule, SharedUiWidgetsModule,
+    SharedInfraUtilityTypesModule, SharedUiWidgetsModule,
     SharedDomainResourceModule, SharedDomainScheduleModule
   ]
 })

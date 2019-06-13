@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {DataAccessService, Query} from '@ygg/shared/data-access';
-import {DataAccessError, DataAccessErrorCode} from '@ygg/shared/data-access';
+import {DataAccessService, Query} from '@ygg/shared/infra/data-access';
+import {DataAccessError, DataAccessErrorCode} from '@ygg/shared/infra/data-access';
 import {Observable, of, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
