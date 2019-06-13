@@ -22,9 +22,7 @@
               "apps/deep-travel/src/favicon.ico",
               "apps/deep-travel/src/assets"
             ],
-            "styles": [
-              "apps/deep-travel/src/styles.css"
-            ],
+            "styles": ["apps/deep-travel/src/styles.css"],
             "scripts": [],
             "es5BrowserSupport": true
           },
@@ -79,9 +77,7 @@
               "apps/deep-travel/tsconfig.app.json",
               "apps/deep-travel/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -90,35 +86,6 @@
             "jestConfig": "apps/deep-travel/jest.config.js",
             "tsConfig": "apps/deep-travel/tsconfig.spec.json",
             "setupFile": "apps/deep-travel/src/test-setup.ts"
-          }
-        }
-      }
-    },
-    "deep-travel-e2e": {
-      "root": "apps/deep-travel-e2e",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/builders:cypress",
-          "options": {
-            "cypressConfig": "apps/deep-travel-e2e/cypress.json",
-            "tsConfig": "apps/deep-travel-e2e/tsconfig.e2e.json",
-            "devServerTarget": "deep-travel:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "deep-travel:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "apps/deep-travel-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }
@@ -143,9 +110,7 @@
               "libs/shared/user/tsconfig.lib.json",
               "libs/shared/user/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -179,9 +144,7 @@
               "libs/shopping/payment/tsconfig.lib.json",
               "libs/shopping/payment/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -215,9 +178,7 @@
               "libs/shopping/order/tsconfig.lib.json",
               "libs/shopping/order/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -251,9 +212,7 @@
               "libs/shared/data-access/tsconfig.lib.json",
               "libs/shared/data-access/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -287,9 +246,7 @@
               "libs/shared/form-controls/tsconfig.lib.json",
               "libs/shared/form-controls/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -316,9 +273,7 @@
               "libs/shopping/cart/tsconfig.lib.json",
               "libs/shopping/cart/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -345,9 +300,7 @@
             "outputPath": "dist/apps/firebase-functions",
             "main": "apps/firebase-functions/src/main.ts",
             "tsConfig": "apps/firebase-functions/tsconfig.app.json",
-            "assets": [
-              "apps/firebase-functions/src/assets"
-            ]
+            "assets": ["apps/firebase-functions/src/assets"]
           },
           "configurations": {
             "production": {
@@ -377,9 +330,7 @@
               "apps/firebase-functions/tsconfig.app.json",
               "apps/firebase-functions/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -404,9 +355,7 @@
               "libs/shared/infrastructure/error/tsconfig.lib.json",
               "libs/shared/infrastructure/error/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -438,9 +387,7 @@
               "apps/user/frontend/src/favicon.ico",
               "apps/user/frontend/src/assets"
             ],
-            "styles": [
-              "apps/user/frontend/src/styles.css"
-            ],
+            "styles": ["apps/user/frontend/src/styles.css"],
             "scripts": [],
             "es5BrowserSupport": true
           },
@@ -495,9 +442,7 @@
               "apps/user/frontend/tsconfig.app.json",
               "apps/user/frontend/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -532,9 +477,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/user/frontend-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -616,9 +559,7 @@
               "apps/scheduler/tsconfig.app.json",
               "apps/scheduler/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -653,9 +594,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/scheduler-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -673,9 +612,7 @@
               "libs/shared/ui/widgets/tsconfig.lib.json",
               "libs/shared/ui/widgets/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -702,9 +639,7 @@
               "libs/shared/domain/resource/tsconfig.lib.json",
               "libs/shared/domain/resource/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -731,9 +666,7 @@
               "libs/shared/domain/schedule/tsconfig.lib.json",
               "libs/shared/domain/schedule/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -760,9 +693,7 @@
               "libs/shared/ui/themes/tsconfig.lib.json",
               "libs/shared/ui/themes/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -789,9 +720,7 @@
               "libs/shared/infrastructure/utility-types/tsconfig.lib.json",
               "libs/shared/infrastructure/utility-types/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -883,9 +812,7 @@
               "apps/sandbox/tsconfig.app.json",
               "apps/sandbox/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -920,12 +847,181 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/sandbox-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
+    },
+    "playwhat": {
+      "root": "apps/playwhat/",
+      "sourceRoot": "apps/playwhat/src",
+      "projectType": "application",
+      "prefix": "pw",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/playwhat",
+            "index": "apps/playwhat/src/index.html",
+            "main": "apps/playwhat/src/main.ts",
+            "polyfills": "apps/playwhat/src/polyfills.ts",
+            "tsConfig": "apps/playwhat/tsconfig.app.json",
+            "assets": [
+              "apps/playwhat/src/favicon.ico",
+              "apps/playwhat/src/assets"
+            ],
+            "styles": [
+              "apps/playwhat/src/custom-theme.scss",
+              "apps/playwhat/src/styles.css"
+            ],
+            "scripts": [],
+            "es5BrowserSupport": true
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/playwhat/src/environments/environment.ts",
+                  "with": "apps/playwhat/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "playwhat:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "playwhat:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "playwhat:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/playwhat/tsconfig.app.json",
+              "apps/playwhat/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "apps/playwhat/jest.config.js",
+            "tsConfig": "apps/playwhat/tsconfig.spec.json",
+            "setupFile": "apps/playwhat/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "playwhat-e2e": {
+      "root": "apps/playwhat-e2e",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/builders:cypress",
+          "options": {
+            "cypressConfig": "apps/playwhat-e2e/cypress.json",
+            "tsConfig": "apps/playwhat-e2e/tsconfig.e2e.json",
+            "devServerTarget": "playwhat:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "playwhat:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "apps/playwhat-e2e/tsconfig.e2e.json",
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "playwhat-scheduler": {
+      "root": "libs/playwhat/scheduler",
+      "sourceRoot": "libs/playwhat/scheduler/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/playwhat/scheduler/tsconfig.lib.json",
+              "libs/playwhat/scheduler/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/playwhat/scheduler/jest.config.js",
+            "tsConfig": "libs/playwhat/scheduler/tsconfig.spec.json",
+            "setupFile": "libs/playwhat/scheduler/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "playwhat-resource": {
+      "root": "libs/playwhat/resource",
+      "sourceRoot": "libs/playwhat/resource/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/playwhat/resource/tsconfig.lib.json",
+              "libs/playwhat/resource/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/playwhat/resource/jest.config.js",
+            "tsConfig": "libs/playwhat/resource/tsconfig.spec.json",
+            "setupFile": "libs/playwhat/resource/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {
@@ -940,5 +1036,5 @@
       "framework": "angular"
     }
   },
-  "defaultProject": "deep-travel"
+  "defaultProject": "playwhat"
 }

@@ -73,6 +73,18 @@
     },
     "sandbox-e2e": {
       "tags": []
+    },
+    "playwhat": {
+      "tags": []
+    },
+    "playwhat-e2e": {
+      "tags": []
+    },
+    "playwhat-scheduler": {
+      "tags": ["scope:playwhat", "type:feature", "platform:mobile"]
+    },
+    "playwhat-resource": {
+      "tags": ["scope:playwhat", "type:feature", "platform:mobile"]
     }
   }
 }

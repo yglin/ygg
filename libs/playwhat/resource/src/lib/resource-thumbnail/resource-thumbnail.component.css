@@ -1,0 +1,20 @@
+.ygg-resource-thumbnail {
+  width: 350px;
+  height: 70px;
+  border-radius: 10px;
+  box-shadow: 3px 3px 6px #333333;
+  padding: 10px;
+  margin: 10px auto;
+}
+
+.ygg-resource-thumbnail .inner-panel {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+}
+
+.ygg-resource-thumbnail .icon img {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+}

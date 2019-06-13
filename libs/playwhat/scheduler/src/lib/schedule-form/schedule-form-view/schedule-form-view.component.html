@@ -1,0 +1,82 @@
+<div class="ygg-schedule-form-view" *ngIf="scheduleForm">
+  <table>
+    <tr class="date-range">
+      <td>預定日期</td>
+      <td>
+        <ygg-date-range [dateRange]="scheduleForm.dateRange"></ygg-date-range>
+      </td>
+    </tr>
+    <tr class="number-participants">
+      <td>預定人數</td>
+      <td>
+        <div>總人數：{{ scheduleForm.numParticipants }}</div>
+        <div *ngIf="scheduleForm.numElders">
+          65歲以上人數：{{ scheduleForm.numElders }}
+        </div>
+        <div *ngIf="scheduleForm.numKids">
+          孩童人數：{{ scheduleForm.numKids }}
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="budget"
+      *ngIf="scheduleForm.singleBudget || scheduleForm.totalBudget"
+    >
+      <td>預算</td>
+      <td>
+        <div *ngIf="scheduleForm.totalBudget">
+          總預算：<ygg-number-range
+            [range]="scheduleForm.totalBudget"
+            unit="NTD"
+          ></ygg-number-range>
+        </div>
+        <div *ngIf="scheduleForm.singleBudget">
+          單人預算：<ygg-number-range
+            [range]="scheduleForm.singleBudget"
+            unit="NTD"
+          ></ygg-number-range>
+        </div>
+      </td>
+    </tr>
+    <tr class="contacts">
+      <td>聯絡資料</td>
+      <td>
+        <h3 *ngIf="scheduleForm.groupName">團體名稱：{{ scheduleForm.groupName }}</h3>
+        <div *ngFor="let contact of scheduleForm.contacts" class="contact">
+          <mat-card> <ygg-contact [contact]="contact"></ygg-contact> </mat-card>
+        </div>
+      </td>
+    </tr>
+    <tr class="transpotation" *ngIf="scheduleForm.transpotation || scheduleForm.transpotationHelp">
+      <td>交通方式</td>
+      <td>
+        <div *ngIf="scheduleForm.transpotation">
+          {{ scheduleForm.transpotation }}
+        </div>
+        <div *ngIf="scheduleForm.transpotationHelp">
+          <h5>我需要幫忙安排...</h5>
+          <pre>{{ scheduleForm.transpotationHelp }}</pre>
+        </div>
+      </td>
+    </tr>
+    <tr class='likes' *ngIf="scheduleForm.likes || scheduleForm.likesDescription">
+      <td>體驗需求</td>
+      <td>
+        <div *ngIf="scheduleForm.likes">
+          <ygg-tags [tags]='scheduleForm.likes'></ygg-tags>
+        </div>
+        <div *ngIf="scheduleForm.likesDescription">
+          <h5>對於體驗行程的需求...</h5>
+          <pre>{{ scheduleForm.likesDescription }}</pre>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div>
+    <pre>
+    {{ scheduleForm | json }}
+  </pre
+    >
+  </div>
+</div>

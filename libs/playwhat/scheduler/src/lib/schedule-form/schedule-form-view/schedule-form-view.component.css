@@ -1,0 +1,16 @@
+.ygg-schedule-form-view {
+  padding: 30px 10px;
+}
+
+.ygg-schedule-form-view table {
+  width: 100%;
+}
+
+.ygg-schedule-form-view table, .ygg-schedule-form-view th, .ygg-schedule-form-view td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.ygg-schedule-form-view th, .ygg-schedule-form-view td {
+  padding: 20px 10px;
+}

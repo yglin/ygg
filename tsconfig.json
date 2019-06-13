@@ -38,17 +38,13 @@
       ],
       "@ygg/shared/ui/ng-material": ["libs/shared/ui/ng-material/src/index.ts"],
       "@ygg/shared/ui/widgets": ["libs/shared/ui/widgets/src/index.ts"],
-      "@ygg/shared/domain/resource": [
-        "libs/shared/domain/resource/src/index.ts"
-      ],
-      "@ygg/shared/domain/schedule": [
-        "libs/shared/domain/schedule/src/index.ts"
-      ],
       "@ygg/themes": ["libs/themes/src/index.ts"],
       "@ygg/shared/ui/themes": ["libs/shared/ui/themes/src/index.ts"],
       "@ygg/shared/infrastructure/utility-types": [
         "libs/shared/infrastructure/utility-types/src/index.ts"
-      ]
+      ],
+      "@ygg/playwhat/scheduler": ["libs/playwhat/scheduler/src/index.ts"],
+      "@ygg/playwhat/resource": ["libs/playwhat/resource/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
