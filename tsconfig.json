@@ -15,9 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@ygg/apps/user/frontend": ["apps/user/frontend/src/index.ts"],
-      "@ygg/e2e/user/frontend": ["apps/user/frontend-e2e/src/index.ts"],
-      "@ygg/apps/scheudler": ["apps/scheduler/src/index.ts"],
       "@ygg/shared/user": ["libs/shared/user/src/index.ts"],
       "@ygg/shopping/payment": ["libs/shopping/payment/src/index.ts"],
       "@ygg/shopping/order": ["libs/shopping/order/src/index.ts"],

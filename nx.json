@@ -8,12 +8,6 @@
     "nx.json": "*"
   },
   "projects": {
-    "deep-travel": {
-      "tags": ["scope:shopping", "type:app", "platform:desktop"]
-    },
-    "deep-travel-e2e": {
-      "tags": ["scope:shopping", "type:e2e", "platform:desktop"]
-    },
     "shared-user": {
       "tags": ["scope:shared", "type:feature", "platform:desktop"]
     },
@@ -31,18 +25,6 @@
     },
     "shared-infra-error": {
       "tags": ["scope:shared", "type:infrastructure"]
-    },
-    "user-frontend": {
-      "tags": ["scope:user", "type:app", "platform:desktop"]
-    },
-    "user-frontend-e2e": {
-      "tags": []
-    },
-    "scheduler": {
-      "tags": ["scope:schedule", "type:app", "platform:mobile"]
-    },
-    "scheduler-e2e": {
-      "tags": []
     },
     "shared-ui-widgets": {
       "tags": ["scope:shared", "type:ui", "platform:desktop"]
