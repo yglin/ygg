@@ -39,7 +39,7 @@
       "tags": []
     },
     "playwhat": {
-      "tags": []
+      "tags": ["scope:playwhat", "type:app", "platform:mobile"]
     },
     "playwhat-e2e": {
       "tags": []

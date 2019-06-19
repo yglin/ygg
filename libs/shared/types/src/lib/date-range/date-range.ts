@@ -1,5 +1,5 @@
 import {SerializableJSON} from '@ygg/shared/infra/data-access';
-import {isArray} from 'lodash';
+import {isArray, random} from 'lodash';
 import * as moment from 'moment';
 
 export interface DateRangeMoment {
@@ -14,6 +14,12 @@ export class DateRange implements SerializableJSON {
     return (
         value && value.start && value.start instanceof Date && value.end &&
         value.end instanceof Date);
+  }
+
+  static forge(): DateRange {
+    const start = moment().add(random(6), 'month');
+    const end = moment(start).add(random(30), 'day');
+    return new DateRange().fromMoment({start, end});
   }
 
   get start(): Date {
@@ -52,9 +58,7 @@ export class DateRange implements SerializableJSON {
     return this;
   }
 
-  toJSON(): any {
-    return [this._start.toISOString(), this._end.toISOString()]
-  }
+  toJSON(): any{return [this._start.toISOString(), this._end.toISOString()]}
 
   fromMoment(dateRangeMoment: DateRangeMoment): this {
     return this.fromJSON([
@@ -64,9 +68,6 @@ export class DateRange implements SerializableJSON {
   }
 
   toMoment(): DateRangeMoment {
-    return {
-      start: moment(this.start),
-      end: moment(this.end)
-    };
+    return {start: moment(this.start), end: moment(this.end)};
   }
 }

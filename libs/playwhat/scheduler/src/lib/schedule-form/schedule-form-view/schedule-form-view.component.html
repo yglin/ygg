@@ -1,20 +1,25 @@
 <div class="ygg-schedule-form-view" *ngIf="scheduleForm">
   <table>
-    <tr class="date-range">
+    <tr class="date-range" id="dateRange">
       <td>預定日期</td>
       <td>
-        <ygg-date-range [dateRange]="scheduleForm.dateRange"></ygg-date-range>
+        <ygg-date-range
+          class="value"
+          [dateRange]="scheduleForm.dateRange"
+        ></ygg-date-range>
       </td>
     </tr>
-    <tr class="number-participants">
+    <tr class="numberPeople">
       <td>預定人數</td>
       <td>
-        <div>總人數：{{ scheduleForm.numParticipants }}</div>
-        <div *ngIf="scheduleForm.numElders">
-          65歲以上人數：{{ scheduleForm.numElders }}
+        <div id="numParticipants">
+          總人數：<span class="value">{{ scheduleForm.numParticipants }}</span>
         </div>
-        <div *ngIf="scheduleForm.numKids">
-          孩童人數：{{ scheduleForm.numKids }}
+        <div *ngIf="scheduleForm.numElders" id="numElders">
+          65歲以上人數：<span class="value">{{ scheduleForm.numElders }}</span>
+        </div>
+        <div *ngIf="scheduleForm.numKids" id="numKids">
+          孩童人數：<span class="value">{{ scheduleForm.numKids }}</span>
         </div>
       </td>
     </tr>
@@ -24,8 +29,9 @@
     >
       <td>預算</td>
       <td>
-        <div *ngIf="scheduleForm.totalBudget">
+        <div *ngIf="scheduleForm.totalBudget" id="totalBudget">
           總預算：<ygg-number-range
+            class="value"
             [range]="scheduleForm.totalBudget"
             unit="NTD"
           ></ygg-number-range>
@@ -41,33 +47,53 @@
     <tr class="contacts">
       <td>聯絡資料</td>
       <td>
-        <h3 *ngIf="scheduleForm.groupName">團體名稱：{{ scheduleForm.groupName }}</h3>
-        <div *ngFor="let contact of scheduleForm.contacts" class="contact">
-          <mat-card> <ygg-contact [contact]="contact"></ygg-contact> </mat-card>
+        <h3 *ngIf="scheduleForm.groupName" id="groupName">
+          團體名稱：<span class="value">{{ scheduleForm.groupName }}</span>
+        </h3>
+        <div id="contacts">
+          <div *ngFor="let contact of scheduleForm.contacts" class="value">
+            <mat-card>
+              <ygg-contact [contact]="contact"></ygg-contact>
+            </mat-card>
+          </div>
         </div>
       </td>
     </tr>
-    <tr class="transpotation" *ngIf="scheduleForm.transpotation || scheduleForm.transpotationHelp">
+    <tr
+      class="transpotation"
+      *ngIf="scheduleForm.transpotation || scheduleForm.transpotationHelp"
+    >
       <td>交通方式</td>
       <td>
-        <div *ngIf="scheduleForm.transpotation">
-          {{ scheduleForm.transpotation }}
+        <div *ngIf="scheduleForm.transpotation" id="transpotation">
+          <span class="value">{{ scheduleForm.transpotation }}</span>
         </div>
-        <div *ngIf="scheduleForm.transpotationHelp">
+        <div *ngIf="scheduleForm.transpotationHelp" id="transpotationHelp">
           <h5>我需要幫忙安排...</h5>
-          <pre>{{ scheduleForm.transpotationHelp }}</pre>
+          <pre class="value">{{ scheduleForm.transpotationHelp }}</pre>
         </div>
       </td>
     </tr>
-    <tr class='likes' *ngIf="scheduleForm.likes || scheduleForm.likesDescription">
+    <tr class="accommodationHelp" *ngIf="scheduleForm.accommodationHelp">
+      <td>住宿需求</td>
+      <td>
+        <div *ngIf="scheduleForm.accommodationHelp" id="accommodationHelp">
+          <pre class="value">{{ scheduleForm.accommodationHelp }}</pre>
+        </div>
+      </td>
+    </tr>
+    <tr
+      class="likes"
+      *ngIf="scheduleForm.likes || scheduleForm.likesDescription"
+    >
       <td>體驗需求</td>
       <td>
-        <div *ngIf="scheduleForm.likes">
-          <ygg-tags [tags]='scheduleForm.likes'></ygg-tags>
+        <div *ngIf="scheduleForm.likes" id="likes">
+          <ygg-tags [tags]="scheduleForm.likes"></ygg-tags>
         </div>
-        <div *ngIf="scheduleForm.likesDescription">
+        <div *ngIf="scheduleForm.likesDescription" id="likesDescription">
           <h5>對於體驗行程的需求...</h5>
-          <pre>{{ scheduleForm.likesDescription }}</pre>
+          <pre class="value">{{ scheduleForm.likesDescription }}</pre>
         </div>
       </td>
     </tr>

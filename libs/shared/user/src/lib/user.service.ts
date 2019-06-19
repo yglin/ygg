@@ -13,7 +13,7 @@ export class UserService {
   anonymousUser: User;
 
   constructor(private dataAccessService: DataAccessService) {
-    this.anonymousUser = User.newAnonymous();
+    this.anonymousUser = User.forge();
   }
 
   get$(id: string): Observable<User> {

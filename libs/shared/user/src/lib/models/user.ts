@@ -21,7 +21,7 @@ export class User implements DataItem {
   providers: any;
   state: UserState;
 
-  static newAnonymous(): User {
+  static forge(): User {
     const anonymous = new User();
     anonymous.id = 'anony-mummy-honey-spaghetti-your-moms-fatty';
     anonymous.isAnonymous = true;

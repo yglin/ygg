@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {DataAccessService} from '@ygg/shared/infra/data-access';
-import {NumberRange, Tags} from '@ygg/shared/types';
+import {Tags} from '@ygg/shared/types';
 
 // import {DateRange, NumberRange} from
 // '@ygg/shared/infra/utility-types'; import * as moment from 'moment';
@@ -13,33 +12,13 @@ export class ScheduleFormService {
   collection = 'schedule-forms';
 
   constructor(
-      private formBuilder: FormBuilder,
       private dataAccessService: DataAccessService) {}
 
-  defaultForm(): ScheduleForm {
-    const form = new ScheduleForm();
-    // TODO: Auto-complete some values
-    return form;
-  }
-
-  createFormGroup(): FormGroup {
-    const formGroup = this.formBuilder.group({
-      dateRange: [null, Validators.required],
-      numParticipants: [null, Validators.required],
-      numElders: 0,
-      numKids: 0,
-      totalBudget: null,
-      singleBudget: null,
-      groupName: '',
-      contacts: this.formBuilder.array([new FormControl()]),
-      transpotation: '',
-      transpotationHelp: '',
-      accommodationHelp: '',
-      likes: new Tags([]),
-      likesDescription: ''
-    });
-    return formGroup;
-  }
+  // defaultForm(): ScheduleForm {
+  //   const form = new ScheduleForm();
+  //   // TODO: Auto-complete some values
+  //   return form;
+  // }
 
   get$(id: string): Observable<ScheduleForm> {
     return this.dataAccessService.get$(this.collection, id, ScheduleForm);

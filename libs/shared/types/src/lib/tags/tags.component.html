@@ -1,5 +1,5 @@
 <div class='ygg-tags' *ngIf="tags">
   <mat-chip-list>
-    <mat-chip *ngFor="let tag of tags.values">{{ tag }}</mat-chip>
+    <mat-chip *ngFor="let tag of tags.values" class='value'>{{ tag }}</mat-chip>
   </mat-chip-list>
 </div>
