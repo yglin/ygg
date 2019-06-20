@@ -44,48 +44,10 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.authService.currentUser$.subscribe(user => {
       if (user) {
         this.currentUser = user;
+      } else {
+        this.currentUser = null;
       }
     }));
-  }
-
-  addContactFromCurrentUser() {
-    if (this.currentUser) {
-      const contacts = this.contactsFormArray.value;
-      contacts.push(new Contact().fromUser(this.currentUser));
-      this.contactsFormArray.push(new FormControl());
-      this.contactsFormArray.setValue(contacts);
-    }
-  }
-
-  get contactsFormArray() {
-    return this.formGroup.get('contacts') as FormArray;
-  }
-
-  addContactControl() {
-    this.contactsFormArray.push(new FormControl());
-  }
-
-  deleteContact(index: number) {
-    this.contactsFormArray.removeAt(index);
-  }
-
-  createFormGroup(): FormGroup {
-    const formGroup = this.formBuilder.group({
-      dateRange: [null, Validators.required],
-      numParticipants: [null, Validators.required],
-      numElders: 0,
-      numKids: 0,
-      totalBudget: null,
-      singleBudget: null,
-      groupName: '',
-      contacts: this.formBuilder.array([new FormControl()]),
-      transpotation: '',
-      transpotationHelp: '',
-      accommodationHelp: '',
-      likes: new Tags([]),
-      likesDescription: ''
-    });
-    return formGroup;
   }
 
   ngOnInit() {
@@ -94,6 +56,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     }
     if (this.scheduleForm) {
       this.formGroup.patchValue(this.scheduleForm);
+      this.setContacts(this.scheduleForm.contacts);
     } else {
       this.scheduleForm = new ScheduleForm();
     }
@@ -135,6 +98,65 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
     }
+  }
+
+  setContacts(contacts: Contact[] = []) {
+    while (this.contactsFormArray.length > 0) {
+      this.contactsFormArray.removeAt(this.contactsFormArray.length - 1);
+    }
+    for (const contact of contacts) {
+      if (Contact.isContact(contact)) {
+        this.addContactControl(contact);
+      }
+    }
+  }
+
+  substituteContactWithCurrentUser(index: number) {
+    if (this.currentUser && index < this.contactsFormArray.length) {
+      const contactControl = this.contactsFormArray.at(index);
+      contactControl.setValue(new Contact().fromUser(this.currentUser));
+    }
+  }
+
+  // addContactFromCurrentUser() {
+  //   if (this.currentUser) {
+  //     this.addContactControl(new Contact().fromUser(this.currentUser));
+  //   }
+  // }
+
+  get contactsFormArray() {
+    return this.formGroup.get('contacts') as FormArray;
+  }
+
+  addContactControl(contact?: Contact) {
+    const contactControl = new FormControl();
+    if (contact) {
+      contactControl.setValue(contact);
+    }
+    this.contactsFormArray.push(contactControl);
+  }
+
+  deleteContact(index: number) {
+    this.contactsFormArray.removeAt(index);
+  }
+
+  createFormGroup(): FormGroup {
+    const formGroup = this.formBuilder.group({
+      dateRange: [null, Validators.required],
+      numParticipants: [null, Validators.required],
+      numElders: 0,
+      numKids: 0,
+      totalBudget: null,
+      singleBudget: null,
+      groupName: '',
+      contacts: this.formBuilder.array([new FormControl()]),
+      transpotation: '',
+      transpotationHelp: '',
+      accommodationHelp: '',
+      likes: new Tags([]),
+      likesDescription: ''
+    });
+    return formGroup;
   }
 
   isError(controlName: string, errorName: string): boolean {

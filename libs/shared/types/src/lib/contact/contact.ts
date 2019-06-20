@@ -14,6 +14,10 @@ export class Contact {
   email: string;
   lineID?: string;
 
+  static isContact(value: any): value is Contact {
+    return value && value.name && value.phone && value.email;
+  }
+
   static forge(): Contact {
     const forged = new Contact();
     forged.name = sample(['馬＊久', '蔣＊虢', '李＊灰', '菜＊文', '陳＊匾']);

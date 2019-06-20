@@ -14,8 +14,6 @@ import {
   Validator
 } from '@angular/forms';
 import { Contact } from '../contact';
-import { User, AuthenticateService } from '@ygg/shared/user';
-import { Observable, Subscription } from 'rxjs';
 
 class LeastRequireErrorMatcher implements ErrorStateMatcher {
   fields: string[];
@@ -67,12 +65,10 @@ export class ContactFormComponent implements OnDestroy, ControlValueAccessor, Va
   contactForm: FormGroup;
   leastRequireErrorMatcher = new LeastRequireErrorMatcher(['email', 'phone']);
   emitChange: (contact: Contact) => any;
-  currentUser: User;
-  subscription: Subscription;
+  // subscriptions: Subscription[];
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthenticateService
   ) {
     this.contactForm = this.formBuilder.group(
       {
@@ -85,21 +81,9 @@ export class ContactFormComponent implements OnDestroy, ControlValueAccessor, Va
         validator: this.requireEmailOrPhoneValidator
       }
     );
-
-    this.subscription = this.authService.currentUser$.subscribe(user => this.currentUser = user);
-  }
-
-  fillWithMe() {
-    if (this.currentUser) {
-      this.contactForm.get('name').setValue(this.currentUser.name);
-      this.contactForm.get('phone').setValue(this.currentUser.phone);
-      this.contactForm.get('email').setValue(this.currentUser.email);
-      // this.contactForm.get('lineID').setValue(this.currentUser.lineID);
-    }
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 
   writeValue(contact: Contact) {
