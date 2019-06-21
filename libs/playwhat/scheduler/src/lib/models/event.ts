@@ -1,8 +1,8 @@
 import { extend } from 'lodash';
 import * as moment from 'moment';
 import * as uuid from 'uuid';
-import { DataItem, toJSONDeep } from '@ygg/shared/data-access';
-import { Album } from '@ygg/shared/domain/resource';
+import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { Album } from '@ygg/playwhat/resource';
 
 export class Event implements DataItem {
   id: string;

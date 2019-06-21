@@ -1,5 +1,5 @@
 import { extend, isEmpty } from 'lodash';
-import { DataItem, toJSONDeep } from '@ygg/shared/data-access';
+import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { Event } from './event';
 import * as uuid from 'uuid';
 

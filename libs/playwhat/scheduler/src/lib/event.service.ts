@@ -1,9 +1,9 @@
 import * as moment from 'moment';
 import { Injectable } from '@angular/core';
-import { Resource } from '@ygg/shared/domain/resource';
+import { Resource } from '@ygg/playwhat/resource';
 import { Event } from './models/event';
 import { Observable, of } from 'rxjs';
-import { CacheService, DataAccessService } from '@ygg/shared/data-access';
+import { CacheService, DataAccessService } from '@ygg/shared/infra/data-access';
 
 @Injectable({
   providedIn: 'root'

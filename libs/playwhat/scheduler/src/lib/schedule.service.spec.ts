@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { ScheduleService } from './schedule.service';
 import { Schedule, Event } from './models';
 import { of } from 'rxjs';
-import { DataAccessService, CacheService } from '@ygg/shared/data-access';
+import { DataAccessService, CacheService } from '@ygg/shared/infra/data-access';
 import { EventService } from './event.service';
 
 class MockDataAccessService {

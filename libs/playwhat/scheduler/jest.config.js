@@ -6,5 +6,5 @@ module.exports = {
     'jest-preset-angular/AngularSnapshotSerializer.js',
     'jest-preset-angular/HTMLCommentSerializer.js'
   ],
-  testMatch: ['**/schedule-form/schedule-form.component.spec.ts']
+  // testMatch: ['**/schedule-form/schedule-form.component.spec.ts']
 };

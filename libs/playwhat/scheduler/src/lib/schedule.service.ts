@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {CacheService, DataAccessService} from '@ygg/shared/data-access';
-import {Resource} from '@ygg/shared/domain/resource';
+import {CacheService, DataAccessService} from '@ygg/shared/infra/data-access';
+import {Resource} from '@ygg/playwhat/resource';
 import {shuffle} from 'lodash';
 import * as moment from 'moment';
 import {interval, Observable, of} from 'rxjs';
