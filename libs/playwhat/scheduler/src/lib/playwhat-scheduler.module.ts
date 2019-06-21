@@ -1,23 +1,29 @@
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import {SharedTypesModule} from '@ygg/shared/types';
-import {SharedUiNgMaterialModule} from '@ygg/shared/ui/ng-material';
-import {SharedUiWidgetsModule} from '@ygg/shared/ui/widgets';
-import {PlaywhatResourceModule} from '@ygg/playwhat/resource';
+import { SharedTypesModule } from '@ygg/shared/types';
+import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
+import { PlaywhatResourceModule } from '@ygg/playwhat/resource';
 
-import {ScheduleFormComponent} from './schedule-form';
-import {ScheduleFormViewComponent} from './schedule-form/schedule-form-view/schedule-form-view.component';
-
+import { ScheduleFormComponent } from './schedule-form';
+import { ScheduleFormViewComponent } from './schedule-form/schedule-form-view/schedule-form-view.component';
+import { SharedUserModule } from '@ygg/shared/user';
 
 @NgModule({
   declarations: [ScheduleFormComponent, ScheduleFormViewComponent],
   imports: [
-    CommonModule, FormsModule, ReactiveFormsModule, FlexLayoutModule,
-    SharedUiNgMaterialModule, SharedUiWidgetsModule,
-    SharedTypesModule, PlaywhatResourceModule
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    FlexLayoutModule,
+    SharedUiNgMaterialModule,
+    SharedUiWidgetsModule,
+    SharedTypesModule,
+    SharedUserModule,
+    PlaywhatResourceModule
   ],
   exports: [ScheduleFormComponent, ScheduleFormViewComponent]
 })

@@ -36,6 +36,13 @@ export class MockScheduleFormService {
   listLikes$() {
     return of(Tags.forge());
   }
+  listAgentUsers$() {
+    const forgedUsers: User[] = [];
+    while (forgedUsers.length < 5) {
+      forgedUsers.push(User.forge());
+    }
+    return of(forgedUsers);
+  }
 }
 
 describe('ScheduleFormComponent', () => {
@@ -115,10 +122,16 @@ describe('ScheduleFormComponent', () => {
       'transpotationHelp',
       'accommodationHelp',
       'likes',
-      'likesDescription'
+      'likesDescription',
+      'agentId'
     ];
     for (const controlName of formControlNames) {
-      formGroup.get(controlName).setValue(testScheduleForm[controlName]);
+      try {
+        formGroup.get(controlName).setValue(testScheduleForm[controlName]);
+      } catch (error) {
+        error.message = (error.message || '') + `, controlName = ${controlName}`;
+        throw error;
+      }
     }
     component.setContacts(testScheduleForm.contacts);
     

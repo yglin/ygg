@@ -60,6 +60,6 @@ import { UserViewComponent } from './components/user-view/user-view.component';
     UserViewComponent
   ],
   entryComponents: [LoginDialogComponent],
-  exports: [AccountWidgetComponent]
+  exports: [AccountWidgetComponent, UserThumbnailComponent]
 })
 export class SharedUserModule {}

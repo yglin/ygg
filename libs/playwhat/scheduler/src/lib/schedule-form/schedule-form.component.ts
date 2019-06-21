@@ -1,4 +1,4 @@
-import { extend } from 'lodash';
+import { extend, isEmpty } from 'lodash';
 import {
   Component,
   EventEmitter,
@@ -32,6 +32,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
   needAccommodationHelp = false;
   subscriptions: Subscription[];
   currentUser: User;
+  agentUsers: User[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -48,6 +49,14 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
         this.currentUser = null;
       }
     }));
+    this.agentUsers = [];
+    this.scheduleFormService.listAgentUsers$().subscribe(agentUsers => {
+      if (!isEmpty(agentUsers)) {
+        this.agentUsers = agentUsers;
+      } else {
+        this.agentUsers = [];
+      }
+    });
   }
 
   ngOnInit() {
@@ -154,7 +163,8 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
       transpotationHelp: '',
       accommodationHelp: '',
       likes: new Tags([]),
-      likesDescription: ''
+      likesDescription: '',
+      agentId: ''
     });
     return formGroup;
   }

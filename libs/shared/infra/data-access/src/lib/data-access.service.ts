@@ -16,6 +16,9 @@ type FireQueryRef =
 export class DataAccessService {
   collections: {[name: string]: AngularFirestoreCollection};
 
+  // TO BE DEPRECATED: For back compatibilty
+  getByIds$ = this.listByIds$;
+
   constructor(protected firestore: AngularFirestore) {
     this.collections = {};
   }
@@ -68,7 +71,7 @@ export class DataAccessService {
         }));
   }
 
-  getByIds$<T extends DataItem>(collection: string, ids: string[], constructor: {
+  listByIds$<T extends DataItem>(collection: string, ids: string[], constructor: {
     new(): T
   }): Observable<T[]> {
     if (isEmpty(ids)) {

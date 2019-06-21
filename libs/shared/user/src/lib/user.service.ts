@@ -1,3 +1,4 @@
+import { size } from "lodash";
 import {Injectable} from '@angular/core';
 import {DataAccessService, Query} from '@ygg/shared/infra/data-access';
 import {DataAccessError, DataAccessErrorCode} from '@ygg/shared/infra/data-access';
@@ -10,15 +11,20 @@ import {User} from './models/user';
 @Injectable({providedIn: 'root'})
 export class UserService {
   collection = 'users';
-  anonymousUser: User;
+  anonymousUsers: {[id: string]: User};
 
   constructor(private dataAccessService: DataAccessService) {
-    this.anonymousUser = User.forge();
+    // Create 10 anonymous users
+    this.anonymousUsers = {};
+    while (size(this.anonymousUsers) < 10) {
+      const newAnonymous = User.forge();
+      this.anonymousUsers[newAnonymous.id] = newAnonymous;
+    }
   }
 
   get$(id: string): Observable<User> {
-    if (id === this.anonymousUser.id) {
-      return of(this.anonymousUser);
+    if (id in this.anonymousUsers) {
+      return of(this.anonymousUsers[id]);
     } else {
       return this.dataAccessService.get$(this.collection, id, User)
           .pipe(catchError(error => {
@@ -31,6 +37,10 @@ export class UserService {
             }
           }));
     }
+  }
+
+  listByIds$(ids: string[]): Observable<User[]> {
+    return this.dataAccessService.listByIds$(this.collection, ids, User);
   }
 
   findWithIdOrEmail$(id: string, email: string): Observable<User[]> {

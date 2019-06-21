@@ -6,16 +6,29 @@
       fxLayoutAlign="end start"
       fxLayoutGap="10px"
     >
-      <div>
-        <button
-          type="button"
-          mat-fab
-          matTooltip="送出"
-          (click)="submit()"
-          [disabled]="formGroup.invalid"
-        >
-          <mat-icon>save</mat-icon>
-        </button>
+      <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
+        <div *ngIf="agentUsers?.length > 0">
+          <mat-form-field>
+            <mat-label>選擇接單窗口</mat-label>
+            <mat-select formControlName='agentId'>
+              <mat-option value=''>請幫我指定</mat-option>
+              <mat-option *ngFor="let user of agentUsers" [value]='user.id'>
+                <ygg-user-thumbnail [id]='user.id'></ygg-user-thumbnail>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <button
+            type="button"
+            mat-fab
+            matTooltip="送出"
+            (click)="submit()"
+            [disabled]="formGroup.invalid"
+          >
+            <mat-icon>save</mat-icon>
+          </button>
+        </div>
       </div>
     </div>
     <mat-tab-group>

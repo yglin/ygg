@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/auth';
 import * as firebase from 'firebase';
-import {isEmpty} from 'lodash';
+import {sample} from 'lodash';
 import {BehaviorSubject, from, Observable, of, Subscription, throwError} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 
@@ -27,7 +27,7 @@ export class AuthenticateService {
   }
 
   async loginAnonymously() {
-    this.currentUser$.next(this.userService.anonymousUser);
+    this.currentUser$.next(sample(this.userService.anonymousUsers));
   }
 
   async login(providerName: string) {

@@ -3,6 +3,7 @@ import * as uuid from 'uuid';
 import {DataItem, toJSONDeep} from '@ygg/shared/infra/data-access';
 // import {BadValueError, BadValueErrorCode} from '@ygg/shared/infra/error';
 import { NumberRange, DateRange, Contact, Tags } from '@ygg/shared/types';
+import { User } from '@ygg/shared/user';
 
 export class ScheduleForm implements DataItem {
   id: string;
@@ -19,7 +20,7 @@ export class ScheduleForm implements DataItem {
   accommodationHelp: string;
   likes: Tags;
   likesDescription: string;
-
+  agentId: string;
 
   static isScheduleForm(value: any): value is ScheduleForm {
     if (value && value.dateRange && value.numParticipants) {
@@ -48,6 +49,7 @@ export class ScheduleForm implements DataItem {
     forged.accommodationHelp = '請幫我安排住宿，房間乾淨就好，最好是有養駝鳥的民宿';
     forged.likes = Tags.forge();
     forged.likesDescription = '希望有年輕漂亮的導遊，沒有的話鴕鳥也可以';
+    forged.agentId = User.forge().id;
     return forged;
   }
 
