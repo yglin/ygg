@@ -406,7 +406,8 @@
             ],
             "styles": [
               "apps/playwhat/src/custom-theme.scss",
-              "apps/playwhat/src/styles.css"
+              "apps/playwhat/src/styles.css",
+              "libs/shared/ui/widgets/src/shared-ui-widgets.module.css"
             ],
             "scripts": [],
             "es5BrowserSupport": true
