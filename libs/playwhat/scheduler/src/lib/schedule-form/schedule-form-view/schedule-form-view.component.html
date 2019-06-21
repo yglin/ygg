@@ -84,7 +84,7 @@
     </tr>
     <tr
       class="likes"
-      *ngIf="scheduleForm.likes || scheduleForm.likesDescription"
+      *ngIf="scheduleForm.hasLikes()"
     >
       <td>體驗需求</td>
       <td>

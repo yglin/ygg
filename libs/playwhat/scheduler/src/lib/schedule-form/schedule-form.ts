@@ -59,6 +59,10 @@ export class ScheduleForm implements DataItem {
     });
   }
 
+  hasLikes(): boolean {
+    return (this.likes && this.likes.length > 0) || !!(this.likesDescription);
+  }
+
   fromJSON(data: any = {}): this {
     extend(this, data);
 

@@ -13,5 +13,4 @@ export class ScheduleFormViewComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }
