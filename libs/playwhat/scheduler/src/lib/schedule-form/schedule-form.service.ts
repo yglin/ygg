@@ -43,8 +43,4 @@ export class ScheduleFormService {
     return of(likes);
   }
 
-  listAgentUsers$(): Observable<User[]> {
-    // TODO: Query from real database
-    return of(values(this.userService.anonymousUsers));
-  }
 }

@@ -15,6 +15,7 @@ import { first } from 'rxjs/operators';
 import { ScheduleForm } from './schedule-form';
 import { ScheduleFormService } from './schedule-form.service';
 import { User, AuthenticateService } from '@ygg/shared/user';
+import { SchedulerAdminService } from '../scheduler-admin.service';
 
 @Component({
   selector: 'ygg-schedule-form',
@@ -36,6 +37,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
+    private schedulerAdminService: SchedulerAdminService,
     private scheduleFormService: ScheduleFormService,
     private authService: AuthenticateService
   ) {
@@ -50,7 +52,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
       }
     }));
     this.agentUsers = [];
-    this.scheduleFormService.listAgentUsers$().subscribe(agentUsers => {
+    this.schedulerAdminService.listAgentUsers$().subscribe(agentUsers => {
       if (!isEmpty(agentUsers)) {
         this.agentUsers = agentUsers;
       } else {

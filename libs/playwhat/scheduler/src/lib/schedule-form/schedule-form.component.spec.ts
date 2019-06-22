@@ -13,12 +13,13 @@ import { of, Observable, Subject, BehaviorSubject } from 'rxjs';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { ScheduleFormViewComponent } from './schedule-form-view/schedule-form-view.component';
 import { User, AuthenticateService } from '@ygg/shared/user';
+import { SchedulerAdminService } from '../scheduler-admin.service';
 
 let testScheduleForm: ScheduleForm;
 let loginUser: User;
 
 @Injectable()
-export class MockAuthenticateService {
+class MockAuthenticateService {
   currentUser$ = new BehaviorSubject<User>(null);
   login() {
     this.currentUser$.next(loginUser);
@@ -26,7 +27,18 @@ export class MockAuthenticateService {
 }
 
 @Injectable()
-export class MockScheduleFormService {
+class MockSchedulerAdminService {
+  listAgentUsers$() {
+    const forgedUsers: User[] = [];
+    while (forgedUsers.length < 5) {
+      forgedUsers.push(User.forge());
+    }
+    return of(forgedUsers);
+  }
+}
+
+@Injectable()
+class MockScheduleFormService {
   get$() {
     return of(testScheduleForm);
   }
@@ -35,13 +47,6 @@ export class MockScheduleFormService {
   }
   listLikes$() {
     return of(Tags.forge());
-  }
-  listAgentUsers$() {
-    const forgedUsers: User[] = [];
-    while (forgedUsers.length < 5) {
-      forgedUsers.push(User.forge());
-    }
-    return of(forgedUsers);
   }
 }
 
@@ -66,6 +71,7 @@ describe('ScheduleFormComponent', () => {
       ],
       providers: [
         { provide: ScheduleFormService, useClass: MockScheduleFormService },
+        { provide: SchedulerAdminService, useClass: MockSchedulerAdminService },
         { provide: AuthenticateService, useClass: MockAuthenticateService }
       ],
       schemas: [NO_ERRORS_SCHEMA]
