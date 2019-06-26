@@ -15,9 +15,10 @@ import { routes } from './routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SchedulerNewComponent } from './pages/scheduler/new/scheduler-new.component';
 import { SchedulerFormViewComponent } from './pages/scheduler/form/scheduler-form-view/scheduler-form-view.component';
+import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard.component';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, HomeComponent, SchedulerNewComponent, SchedulerFormViewComponent],
+  declarations: [AppComponent, HeaderComponent, HomeComponent, SchedulerNewComponent, SchedulerFormViewComponent, AdminDashboardComponent],
   imports: [
     BrowserModule,
     SharedUiNgMaterialModule,

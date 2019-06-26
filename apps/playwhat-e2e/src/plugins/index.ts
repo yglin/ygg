@@ -1,3 +1,5 @@
+const cypressFirebasePlugin = require('cypress-firebase').plugin;
+
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
 //
@@ -14,4 +16,5 @@
 module.exports = (on: Cypress.Actions, config: Cypress.ConfigOptions) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
+  return cypressFirebasePlugin(config);
 };

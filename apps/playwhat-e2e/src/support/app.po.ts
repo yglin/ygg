@@ -1,1 +1,10 @@
-export const getGreeting = () => cy.get('h1');
+
+export function loginAdmin() {
+  // @ts-ignore
+  cy.login();
+};
+
+export function logout() {
+  // @ts-ignore
+  cy.logout();
+}

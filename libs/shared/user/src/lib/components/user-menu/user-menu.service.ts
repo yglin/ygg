@@ -30,4 +30,11 @@ export class UserMenuService {
     this.menuItems[menuItem.id] = menuItem;
     this.menuItems$.next(values(this.menuItems));
   }
+
+  removeItem(menuItemId: string) {
+    if (menuItemId in this.menuItems) {
+      delete this.menuItems[menuItemId];
+      this.menuItems$.next(values(this.menuItems));
+    }
+  }
 }

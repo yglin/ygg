@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { SchedulerNewComponent } from './pages/scheduler/new/scheduler-new.component';
 import { SchedulerFormViewComponent } from './pages/scheduler/form/scheduler-form-view/scheduler-form-view.component';
+import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -16,5 +17,8 @@ export const routes: Routes = [
       }
     ]
   },
+  { path: 'admin', children: [
+    { path: '', pathMatch: 'full', component: AdminDashboardComponent }
+  ]},
   { path: '', pathMatch: 'full', redirectTo: 'home' }
 ];
