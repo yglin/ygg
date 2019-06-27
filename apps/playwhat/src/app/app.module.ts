@@ -7,6 +7,7 @@ import { SharedUserModule } from "@ygg/shared/user";
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets'
 
 import { PlaywhatSchedulerModule } from '@ygg/playwhat/scheduler';
+import { PlaywhatAdminModule } from "@ygg/playwhat/admin";
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './layout/header/header.component';
@@ -26,7 +27,8 @@ import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-das
     SharedUiWidgetsModule,
     RouterModule.forRoot(routes),
     BrowserAnimationsModule,
-    PlaywhatSchedulerModule
+    PlaywhatSchedulerModule,
+    PlaywhatAdminModule
   ],
   providers: [],
   bootstrap: [AppComponent]

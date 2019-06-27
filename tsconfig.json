@@ -29,7 +29,8 @@
       "@ygg/shared/infra/data-access": [
         "libs/shared/infra/data-access/src/index.ts"
       ],
-      "@ygg/shared/types": ["libs/shared/types/src/index.ts"]
+      "@ygg/shared/types": ["libs/shared/types/src/index.ts"],
+      "@ygg/playwhat/admin": ["libs/playwhat/admin/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

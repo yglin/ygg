@@ -1,0 +1,22 @@
+<div>
+  <mat-grid-list cols="2" rowHeight="2:1" gutterSize="10">
+    <mat-grid-tile *ngFor="let item of menuItems">
+      <div [id]="item.id" class="item">
+        <a [routerLink]="item.link"
+          ><div
+            fxLayout="column"
+            fxLayoutAlign="start center"
+            fxLayoutGap="5px"
+          >
+            <div class='icon'>
+              <mat-icon>{{ item.icon }}</mat-icon>
+            </div>
+            <div>
+              <h4>{{ item.label }}</h4>
+            </div>
+          </div>
+        </a>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>

@@ -69,6 +69,7 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "jest-preset-angular": "^7.1.1",
     "@angular-devkit/build-angular": "^0.13.8",
     "@angular-devkit/build-ng-packagr": "~0.13.0",
     "@angular/cli": "7.3.1",
@@ -91,7 +92,6 @@
     "dotenv": "6.2.0",
     "jasmine-marbles": "^0.5.0",
     "jest": "^24.8.0",
-    "jest-preset-angular": "^7.1.1",
     "ng-packagr": "^4.2.0",
     "ngrx-store-freeze": "0.2.4",
     "prettier": "1.15.2",

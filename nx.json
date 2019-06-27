@@ -55,6 +55,9 @@
     },
     "shared-types": {
       "tags": ["scope:shared", "type:utils"]
+    },
+    "playwhat-admin": {
+      "tags": ["scope:admin", "type:feature", "platform:mobile"]
     }
   }
 }

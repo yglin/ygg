@@ -610,6 +610,33 @@
         }
       },
       "schematics": {}
+    },
+    "playwhat-admin": {
+      "root": "libs/playwhat/admin",
+      "sourceRoot": "libs/playwhat/admin/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/playwhat/admin/tsconfig.lib.json",
+              "libs/playwhat/admin/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/playwhat/admin/jest.config.js",
+            "tsConfig": "libs/playwhat/admin/tsconfig.spec.json",
+            "setupFile": "libs/playwhat/admin/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {
