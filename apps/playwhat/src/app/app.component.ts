@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AuthenticateService, AuthorizeService, UserMenuService, UserMenuItem } from '@ygg/shared/user';
+import { Router } from '@angular/router';
+import { AuthenticateService, AuthorizeService, UserMenuService, UserMenuItem, User } from '@ygg/shared/user';
 import { Subscription, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -15,16 +16,19 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private authenticateService: AuthenticateService,
     private authorizeService: AuthorizeService,
-    private userMenuService: UserMenuService
+    private userMenuService: UserMenuService,
+    private router: Router
   ) {}
 
   ngOnInit() {
-    // Check user admin
     const subscription = this.authenticateService.currentUser$.pipe(
       switchMap(currentUser => {
-        if (currentUser) {
+        if (User.isUser(currentUser)) {
+          // Check user admin
           return this.authorizeService.isAdmin(currentUser.id);
         } else {
+          // User logout, redirect to home page
+          this.router.navigate(['home']);
           return of(false);
         }
       })

@@ -21,6 +21,10 @@ export class User implements DataItem {
   providers: any;
   state: UserState;
 
+  static isUser(value: any): value is User {
+    return !!(value && value.id);
+  }
+
 // tslint:disable-next-line: member-ordering
   static forgedCount = 0;
   static forge(): User {
