@@ -17,13 +17,13 @@ export class AdminMenuService {
       id: 'admin-staff',
       label: '角色人員',
       icon: 'supervised_user_circle',
-      link: 'admin/staff'
+      link: 'staff'
     });
     this.addItem({
       id: 'admin-system',
       label: '系統設定',
       icon: 'settings',
-      link: 'admin/settings'
+      link: 'settings'
     });
   }
 

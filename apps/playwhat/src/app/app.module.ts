@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-import { SharedUserModule } from "@ygg/shared/user";
-import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets'
+import { SharedUserModule } from '@ygg/shared/user';
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 import { PlaywhatSchedulerModule } from '@ygg/playwhat/scheduler';
-import { PlaywhatAdminModule } from "@ygg/playwhat/admin";
+import { PlaywhatAdminModule } from '@ygg/playwhat/admin';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './layout/header/header.component';
@@ -16,10 +16,15 @@ import { routes } from './routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SchedulerNewComponent } from './pages/scheduler/new/scheduler-new.component';
 import { SchedulerFormViewComponent } from './pages/scheduler/form/scheduler-form-view/scheduler-form-view.component';
-import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard.component';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, HomeComponent, SchedulerNewComponent, SchedulerFormViewComponent, AdminDashboardComponent],
+  declarations: [
+    AppComponent,
+    HeaderComponent,
+    HomeComponent,
+    SchedulerNewComponent,
+    SchedulerFormViewComponent
+  ],
   imports: [
     BrowserModule,
     SharedUiNgMaterialModule,
