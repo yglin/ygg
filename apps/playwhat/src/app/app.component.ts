@@ -1,6 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthenticateService, AuthorizeService, UserMenuService, UserMenuItem, User } from '@ygg/shared/user';
+import {
+  AuthenticateService,
+  AuthorizeService,
+  UserMenuService,
+  UserMenuItem,
+  User
+} from '@ygg/shared/user';
 import { Subscription, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -11,6 +17,7 @@ import { switchMap } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'playwhat';
+  loggedIn = false;
   subscriptions: Subscription[] = [];
 
   constructor(
@@ -21,30 +28,36 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    const subscription = this.authenticateService.currentUser$.pipe(
-      switchMap(currentUser => {
-        if (User.isUser(currentUser)) {
-          // Check user admin
-          return this.authorizeService.isAdmin(currentUser.id);
+    const subscription = this.authenticateService.currentUser$
+      .pipe(
+        switchMap(currentUser => {
+          if (User.isUser(currentUser)) {
+            this.loggedIn = true;
+            // Check user admin
+            return this.authorizeService.isAdmin(currentUser.id);
+          } else {
+            if (this.loggedIn) {
+              this.loggedIn = false;
+              // User logout, redirect to home page
+              this.router.navigate(['home']);
+            }
+            return of(false);
+          }
+        })
+      )
+      .subscribe(isAdmin => {
+        const adminMenuItem: UserMenuItem = {
+          id: 'admin',
+          icon: 'business',
+          label: '站務管理',
+          link: 'admin'
+        };
+        if (isAdmin) {
+          this.userMenuService.addItem(adminMenuItem);
         } else {
-          // User logout, redirect to home page
-          this.router.navigate(['home']);
-          return of(false);
+          this.userMenuService.removeItem(adminMenuItem.id);
         }
-      })
-    ).subscribe(isAdmin => {
-      const adminMenuItem: UserMenuItem = {
-        id: 'admin',
-        icon: 'business',
-        label: '站務管理',
-        link: 'admin'
-      };
-      if (isAdmin) {
-        this.userMenuService.addItem(adminMenuItem);
-      } else {
-        this.userMenuService.removeItem(adminMenuItem.id);
-      }
-    });
+      });
     // Register user-menu-item admin
 
     this.subscriptions.push(subscription);

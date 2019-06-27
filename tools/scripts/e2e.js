@@ -22,7 +22,7 @@ async function main() {
   await run('npx', ['cypress-firebase', 'createTestEnvFile'], {
     cwd: `${rootDir}/apps/${project}`
   });
-  await run('ng', ['e2e', project]);
+  await run('ng', ['e2e'].concat(args));
 }
 
 main();
