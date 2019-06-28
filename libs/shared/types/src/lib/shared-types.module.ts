@@ -12,6 +12,8 @@ import {NumberRangeComponent, NumberRangeControlComponent} from './number-range'
 import { TagsComponent } from './tags/tags.component';
 import { TagsInputComponent } from './tags/tags-input/tags-input.component';
 import { DateRangePickerDialogComponent } from './date-range/date-range-picker/date-range-picker-dialog/date-range-picker-dialog.component';
+import { AlbumComponent } from './album/album.component';
+import { ImageComponent } from './image/image.component';
 
 @NgModule({
   imports: [
@@ -23,14 +25,14 @@ import { DateRangePickerDialogComponent } from './date-range/date-range-picker/d
   ],
   declarations: [
     NumberRangeComponent, NumberRangeControlComponent, DateRangeComponent,
-    DateRangePickerComponent, ContactComponent, ContactFormComponent, TagsComponent, TagsInputComponent, DateRangePickerDialogComponent
+    DateRangePickerComponent, ContactComponent, ContactFormComponent, TagsComponent, TagsInputComponent, DateRangePickerDialogComponent, AlbumComponent, ImageComponent
   ],
   entryComponents: [
     DateRangePickerDialogComponent
   ],
   exports: [
     NumberRangeComponent, NumberRangeControlComponent, DateRangeComponent,
-    DateRangePickerComponent, ContactComponent, ContactFormComponent, TagsComponent, TagsInputComponent
+    DateRangePickerComponent, ContactComponent, ContactFormComponent, TagsComponent, TagsInputComponent, AlbumComponent, ImageComponent
   ]
 })
 export class SharedTypesModule {}

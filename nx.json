@@ -58,6 +58,9 @@
     },
     "playwhat-admin": {
       "tags": ["scope:admin", "type:feature", "platform:mobile"]
+    },
+    "shared-ui-navigation": {
+      "tags": ["scope:shared", "type:ui", "platform:mobile"]
     }
   }
 }

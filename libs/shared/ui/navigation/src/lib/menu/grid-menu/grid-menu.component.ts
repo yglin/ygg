@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { GridMenuItem } from './grid-menu';
+import { MenuItem } from '../menu';
 
 @Component({
   selector: 'ygg-grid-menu',
@@ -7,7 +7,7 @@ import { GridMenuItem } from './grid-menu';
   styleUrls: ['./grid-menu.component.css']
 })
 export class GridMenuComponent implements OnInit {
-  @Input() menuItems: GridMenuItem[];
+  @Input() menuItems: MenuItem[];
 
   constructor() {
     this.menuItems = [];

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AdminMenuService } from '../../admin-menu.service';
-import { GridMenuItem } from '@ygg/shared/ui/widgets';
+import { MenuItem } from '@ygg/shared/ui/navigation';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit, OnDestroy {
-  menuItems: GridMenuItem[];
+  menuItems: MenuItem[];
   subscriptions: Subscription[];
 
   constructor(private adminMenuService: AdminMenuService) {

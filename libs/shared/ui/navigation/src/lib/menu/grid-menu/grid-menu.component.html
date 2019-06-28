@@ -1,7 +1,7 @@
 <div>
   <mat-grid-list cols="2" rowHeight="2:1" gutterSize="10">
     <mat-grid-tile *ngFor="let item of menuItems">
-      <div [id]="item.id" class="item">
+      <div [id]="item.id" class="item" [matTooltip]="item.tooltip">
         <a [routerLink]="item.link"
           ><div
             fxLayout="column"
@@ -9,7 +9,7 @@
             fxLayoutGap="5px"
           >
             <div class='icon'>
-              <mat-icon>{{ item.icon }}</mat-icon>
+              <ygg-image [image]='item.icon'></ygg-image>
             </div>
             <div>
               <h4>{{ item.label }}</h4>

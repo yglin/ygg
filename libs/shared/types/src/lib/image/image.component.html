@@ -1,0 +1,16 @@
+<div *ngIf="image">
+  <div [ngSwitch]="image.type">
+    <div *ngSwitchCase="imageType.Asset" class='asset'>
+      <img [src]="image.src">
+    </div>
+    <div *ngSwitchCase="imageType.External" class='external'>
+      <img [src]="image.src">
+    </div>
+    <div *ngSwitchCase="imageType.FontIcon" class='font-icon'>
+      <mat-icon>{{image.src}}</mat-icon>
+    </div>
+    <div *ngSwitchDefault>
+      <img [src]="image.src">
+    </div>
+  </div>
+</div>

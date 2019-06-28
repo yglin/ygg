@@ -16,7 +16,6 @@ import { PageTitleComponent } from './page-title/page-title.component';
 import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.component';
 import { TimeRangeComponent } from './time-range/time-range.component';
 import { TitleDividerComponent } from './title-divider/title-divider.component';
-import { GridMenuComponent } from './grid-menu/grid-menu.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +28,6 @@ import { GridMenuComponent } from './grid-menu/grid-menu.component';
     ActionBarredComponent,
     YggDialogComponent,
     YggDialogContentHostDirective,
-    GridMenuComponent
   ],
   imports: [
     CommonModule,
@@ -47,8 +45,7 @@ import { GridMenuComponent } from './grid-menu/grid-menu.component';
     NumberSliderComponent,
     TimeRangeComponent,
     TitleDividerComponent,
-    ActionBarredComponent,
-    GridMenuComponent
+    ActionBarredComponent
   ],
   entryComponents: [ProgressSpinnerComponent, YggDialogComponent]
 })
