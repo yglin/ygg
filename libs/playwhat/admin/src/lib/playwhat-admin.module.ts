@@ -4,9 +4,7 @@ import { RouterModule } from '@angular/router';
 
 import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
 
-import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { routes } from './routes';
-import { AdminStaffComponent } from './components/admin-staff/admin-staff.component';
 
 @NgModule({
   imports: [
@@ -15,7 +13,7 @@ import { AdminStaffComponent } from './components/admin-staff/admin-staff.compon
     SharedUiNavigationModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [AdminDashboardComponent, AdminStaffComponent],
-  exports: [AdminDashboardComponent, AdminStaffComponent]
+  declarations: [],
+  exports: []
 })
 export class PlaywhatAdminModule {}

@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc/libs/playwhat/admin",
     "target": "es2015",
-    "module": "es2015",
+    "module": "esNext",
     "moduleResolution": "node",
     "declaration": true,
     "sourceMap": true,

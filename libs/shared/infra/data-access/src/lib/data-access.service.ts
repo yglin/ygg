@@ -155,6 +155,10 @@ export class DataAccessService {
       .then(() => item);
   }
 
+  async setDataObject<T>(path: string, data: T) {
+    return this.fireRealDB.object<T>(path).set(data);
+  }
+
   getDataObject$<T>(path: string): Observable<T> {
     return this.fireRealDB.object<T>(path).valueChanges();
   }

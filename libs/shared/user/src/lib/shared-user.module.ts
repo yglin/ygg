@@ -19,6 +19,7 @@ import { UserProviderLinkComponent } from './components/user-provider-link/user-
 import { UserStateComponent } from './components/user-state/user-state.component';
 import { UserThumbnailComponent } from './components/user-thumbnail/user-thumbnail.component';
 import { UserViewComponent } from './components/user-view/user-view.component';
+import { UserSelectorComponent } from './components/user-selector/user-selector.component';
 
 // import { SharedUiWidgetsModule } from '@ygg/shared/ui-widgets';
 // import { ContactFormComponent } from './contact/contact-form/contact-form.component';
@@ -57,9 +58,10 @@ import { UserViewComponent } from './components/user-view/user-view.component';
     UserStateComponent,
     UserEmailComponent,
     UserPhoneComponent,
-    UserViewComponent
+    UserViewComponent,
+    UserSelectorComponent
   ],
   entryComponents: [LoginDialogComponent],
-  exports: [AccountWidgetComponent, UserThumbnailComponent]
+  exports: [AccountWidgetComponent, UserThumbnailComponent, UserSelectorComponent]
 })
 export class SharedUserModule {}

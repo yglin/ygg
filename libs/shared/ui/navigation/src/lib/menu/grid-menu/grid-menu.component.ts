@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MenuItem } from '../menu';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'ygg-grid-menu',
@@ -9,8 +10,15 @@ import { MenuItem } from '../menu';
 export class GridMenuComponent implements OnInit {
   @Input() menuItems: MenuItem[];
 
-  constructor() {
+  constructor(
+    public route: ActivatedRoute
+  ) {
     this.menuItems = [];
+    const routeData = route.snapshot.data;
+    if (routeData && routeData.menuItems) {
+      // console.log(routeData);
+      this.menuItems = routeData.menuItems;
+    }
   }
 
   ngOnInit() {

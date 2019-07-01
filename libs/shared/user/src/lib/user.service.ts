@@ -22,6 +22,10 @@ export class UserService {
     }
   }
 
+  listAll$(): Observable<User[]> {
+    return this.dataAccessService.list$(this.collection, User);
+  }
+
   get$(id: string): Observable<User> {
     if (id in this.anonymousUsers) {
       return of(this.anonymousUsers[id]);

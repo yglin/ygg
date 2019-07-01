@@ -12,15 +12,15 @@ describe('Test admin links', () => {
     logout();
   });
 
-  it('should show admin dashboard as entry page', () => {
+  it('should be able to follow path admin -> scheduler -> staff -> agent to agents setting', () => {
     cy.url().should('match', /.*\/admin$/);
-    cy.get('#admin-dashboard').should('be.visible');
-  });
-
-  it('should be able to follow path admin -> staff -> agent to agents setting', () => {
-    cy.get('#admin-dashboard #admin-staff').click();
-    cy.get('#admin-staff #admin-staff-agent').click();
-    cy.get('#admin-staff-agent #user-selector').should('be.visible');
+    cy.get('#scheduler').click();
+    cy.url().should('match', /.*\/admin\/scheduler$/);
+    cy.get('#staff').click();
+    cy.url().should('match', /.*\/admin\/scheduler\/staff$/);
+    cy.get('#agent').click();
+    cy.url().should('match', /.*\/admin\/scheduler\/staff\/agent$/);
+    cy.get('#user-selector').should('be.visible');
   });
   
 });

@@ -13,7 +13,7 @@ import { of, Observable, Subject, BehaviorSubject } from 'rxjs';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { ScheduleFormViewComponent } from './schedule-form-view/schedule-form-view.component';
 import { User, AuthenticateService } from '@ygg/shared/user';
-import { SchedulerAdminService } from '../scheduler-admin.service';
+import { SchedulerAdminService } from '../admin/scheduler-admin.service';
 
 let testScheduleForm: ScheduleForm;
 let loginUser: User;

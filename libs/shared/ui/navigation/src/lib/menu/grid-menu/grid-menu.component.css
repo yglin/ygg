@@ -1,7 +1,13 @@
-.item .icon {
-  width: 104px;
-  height: 104px;
+.item {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 30px;
 }
+
+/* .item .icon {
+  width: 96px;
+  height: 96px;
+} */
 
 .item a {
   text-decoration: none;

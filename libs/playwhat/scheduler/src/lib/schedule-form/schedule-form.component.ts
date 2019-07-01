@@ -15,7 +15,7 @@ import { first } from 'rxjs/operators';
 import { ScheduleForm } from './schedule-form';
 import { ScheduleFormService } from './schedule-form.service';
 import { User, AuthenticateService } from '@ygg/shared/user';
-import { SchedulerAdminService } from '../scheduler-admin.service';
+import { SchedulerAdminService } from '../admin/scheduler-admin.service';
 
 @Component({
   selector: 'ygg-schedule-form',

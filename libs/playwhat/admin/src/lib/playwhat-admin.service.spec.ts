@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AdminMenuService } from './admin-menu.service';
+import { PlaywhatAdminService } from './playwhat-admin.service';
 
-describe('AdminMenuService', () => {
+describe('PlaywhatAdminService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: AdminMenuService = TestBed.get(AdminMenuService);
+    const service: PlaywhatAdminService = TestBed.get(PlaywhatAdminService);
     expect(service).toBeTruthy();
   });
 });
