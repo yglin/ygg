@@ -13,10 +13,12 @@ export class AdminAgentComponent implements OnInit, OnDestroy {
   agentIds: string[] = [];
   subscriptions: Subscription[] = [];
 
-  constructor(private schedulerAdminService: SchedulerAdminService) {
+  constructor(
+    private schedulerAdminService: SchedulerAdminService
+    ) {
     this.agentIds = [];
     this.subscriptions.push(
-      this.schedulerAdminService.listAgentIds$().subscribe(agentIds => {
+      this.schedulerAdminService.getData$<string[]>('agent').subscribe(agentIds => {
         this.agentIds = agentIds;
       })
     );
@@ -30,11 +32,12 @@ export class AdminAgentComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSubmit(selection: string[]) {
+  async onSubmit(selection: string[]) {
     if (!isEmpty(selection) && confirm(`確定要修改${this.title}？`)) {
-      this.schedulerAdminService.updateAgents(selection).then(() => {
-        alert(`${this.title} 修改完成`);
-      });
+      await this.schedulerAdminService.setData('agent', selection);
+      alert(`${this.title} 修改完成`);
+    } else {
+      return Promise.reject();
     }
   }
 }

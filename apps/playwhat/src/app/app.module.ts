@@ -8,6 +8,7 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 import { PlaywhatSchedulerModule } from '@ygg/playwhat/scheduler';
 import { PlaywhatAdminModule } from '@ygg/playwhat/admin';
+import { PlaywhatSchedulerAdminModule } from "@ygg/playwhat/scheduler";
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './layout/header/header.component';
@@ -16,6 +17,7 @@ import { routes } from './routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SchedulerNewComponent } from './pages/scheduler/new/scheduler-new.component';
 import { SchedulerFormViewComponent } from './pages/scheduler/form/scheduler-form-view/scheduler-form-view.component';
+import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
 
 @NgModule({
   declarations: [
@@ -30,10 +32,12 @@ import { SchedulerFormViewComponent } from './pages/scheduler/form/scheduler-for
     SharedUiNgMaterialModule,
     SharedUserModule,
     SharedUiWidgetsModule,
+    SharedUiNavigationModule,
     RouterModule.forRoot(routes),
     BrowserAnimationsModule,
     PlaywhatSchedulerModule,
-    PlaywhatAdminModule
+    PlaywhatSchedulerAdminModule,
+    PlaywhatAdminModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

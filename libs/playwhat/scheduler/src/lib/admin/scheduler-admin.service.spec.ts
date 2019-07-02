@@ -2,53 +2,95 @@ import { TestBed } from '@angular/core/testing';
 
 import { SchedulerAdminService } from './scheduler-admin.service';
 import { User, UserService } from '@ygg/shared/user';
-import { DataAccessService } from '@ygg/shared/infra/data-access';
-import { Observable, of } from 'rxjs';
+import { Observable, of, noop, BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { PlaywhatAdminService } from '@ygg/playwhat/admin';
 
 describe('SchedulerAdminService', () => {
-  let agentUsers: User[];
+  const fakePath = 'kick/your/ass';
+  const stubData = {
+    height: 175,
+    heightWhenLaid: 30
+  };
 
   @Injectable()
-  class MockDataAccessService {
-    getDataObject$(path: string): Observable<any> {
-      return of({});
+  class MockPlaywhatAdminService {
+    async setData(path: string, data: any) {
+      return Promise.resolve();
+    }
+    getData$(path: string): Observable<any> {
+      return of(stubData);
     }
   }
 
-  @Injectable()
-  class MockUserService {
-    listByIds$(ids: string): Observable<User[]> {
-      return of(agentUsers);
-    }
-  }
+  // @Injectable()
+  // class MockUserService {
+  //   listByIds$(ids: string): Observable<User[]> {
+  //     return of([]);
+  //   }
+  // }
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         SchedulerAdminService,
-        { provide: DataAccessService, useClass: MockDataAccessService },
-        { provide: UserService, useClass: MockUserService }
+        { provide: PlaywhatAdminService, useClass: MockPlaywhatAdminService }
+        // { provide: UserService, useClass: MockUserService }
       ]
     });
-    agentUsers = [];
-    while (agentUsers.length < 5) {
-      agentUsers.push(User.forge());
-    }
   });
 
-  it('should be able to get agent users from admin data', () => {
-    const schedulerAdminService: SchedulerAdminService = TestBed.get(SchedulerAdminService);
-    const mockDataAccessService: MockDataAccessService = TestBed.get(
-      DataAccessService
+  it('should be able to get stub data with path from menu, from PlaywhatAdminService', done => {
+    const schedulerAdminService: SchedulerAdminService = TestBed.get(
+      SchedulerAdminService
     );
-    const mockUserService: MockUserService = TestBed.get(UserService);
-    jest.spyOn(mockDataAccessService, 'getDataObject$');
-    jest.spyOn(mockUserService, 'listByIds$');
-    schedulerAdminService.listAgentUsers$().subscribe(results => {
-      expect(mockDataAccessService.getDataObject$).toHaveBeenCalled();
-      expect(mockUserService.listByIds$).toHaveBeenCalled();
-      expect(results).toBe(agentUsers);
+    const mockPlaywhatAdminService: MockPlaywhatAdminService = TestBed.get(
+      PlaywhatAdminService
+    );
+    // const mockUserService: MockUserService = TestBed.get(UserService);
+    jest
+      .spyOn(schedulerAdminService.menu, 'getPath')
+      .mockImplementation(() => fakePath);
+    jest
+      .spyOn(mockPlaywhatAdminService, 'getData$')
+      .mockImplementation(() => of(stubData));
+    schedulerAdminService.getData$('yygg').subscribe(results => {
+      expect(schedulerAdminService.menu.getPath).toHaveBeenCalledWith('yygg');
+      expect(mockPlaywhatAdminService.getData$).toHaveBeenCalledWith(fakePath);
+      expect(results).toBe(stubData);
+      done();
     });
+  });
+
+  it('should emit updated data after setData', done => {
+    const schedulerAdminService: SchedulerAdminService = TestBed.get(
+      SchedulerAdminService
+    );
+    const mockPlaywhatAdminService: MockPlaywhatAdminService = TestBed.get(
+      PlaywhatAdminService
+    );
+
+    // Let's mock the behavior of data source
+    const fakeDataEmitter = new BehaviorSubject<any>(null);
+    jest.spyOn(mockPlaywhatAdminService, 'getData$').mockImplementation(() => fakeDataEmitter);
+    jest.spyOn(mockPlaywhatAdminService, 'setData').mockImplementation((path, data) => {
+      fakeDataEmitter.next(data);
+      fakeDataEmitter.complete();
+      return Promise.resolve();
+    });
+    // With above mocking, the mocked data source will...
+    // 1. Emit first value, which is null
+    // 2. When mockPlaywhatAdminService.setData() is called, emit input data directly, then complete itself immediately
+
+    let lastResult: any;
+    schedulerAdminService
+      .getData$('yygg')
+      .subscribe(result => (lastResult = result), noop, () => {
+        // When data source complete, we expect last result is exactly what setData() passed in.
+        expect(lastResult).toBe(stubData);
+        done();
+      });
+    // Call the setData() function with stubData, that should do it.
+    schedulerAdminService.setData('yygg', stubData);
   });
 });

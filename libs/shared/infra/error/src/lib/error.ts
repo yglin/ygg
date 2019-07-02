@@ -19,7 +19,8 @@ export class YGGError extends Error {
 
 export enum BadValueErrorCode {
   Unknown = 0,
-  BadArgument
+  BadArgument,
+  BadIdentify
 }
 export class BadValueError extends YGGError {
   code: BadValueErrorCode;

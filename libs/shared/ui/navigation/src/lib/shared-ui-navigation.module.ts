@@ -15,6 +15,7 @@ import { SharedTypesModule } from '@ygg/shared/types';
     SharedUiNgMaterialModule,
     SharedTypesModule
   ],
+  entryComponents: [GridMenuComponent],
   exports: [GridMenuComponent]
 })
 export class SharedUiNavigationModule {}

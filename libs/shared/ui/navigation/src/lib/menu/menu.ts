@@ -69,6 +69,10 @@ export class MenuTree {
     parentItem.children[item.id] = item;
   }
 
+  addMenu(menu: MenuTree, parentId?: string) {
+    this.addItem(menu.root, parentId);
+  }
+
   removeItem(item: MenuItem, parentId?: string) {
     let parentItem: MenuItem;
     if (parentId) {

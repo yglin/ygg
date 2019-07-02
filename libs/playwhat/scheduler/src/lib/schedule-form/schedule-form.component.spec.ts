@@ -12,11 +12,12 @@ import { ScheduleForm } from './schedule-form';
 import { of, Observable, Subject, BehaviorSubject } from 'rxjs';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { ScheduleFormViewComponent } from './schedule-form-view/schedule-form-view.component';
-import { User, AuthenticateService } from '@ygg/shared/user';
+import { User, AuthenticateService, UserService } from '@ygg/shared/user';
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
 
 let testScheduleForm: ScheduleForm;
 let loginUser: User;
+let forgedUsers: User[];
 
 @Injectable()
 class MockAuthenticateService {
@@ -28,11 +29,14 @@ class MockAuthenticateService {
 
 @Injectable()
 class MockSchedulerAdminService {
-  listAgentUsers$() {
-    const forgedUsers: User[] = [];
-    while (forgedUsers.length < 5) {
-      forgedUsers.push(User.forge());
-    }
+  getData$() {
+    return of(forgedUsers.map(user => user.id));
+  }
+}
+
+@Injectable()
+class MockUserService {
+  listByIds$() {
     return of(forgedUsers);
   }
 }
@@ -57,6 +61,10 @@ describe('ScheduleFormComponent', () => {
   beforeAll(() => {
     testScheduleForm = ScheduleForm.forge();
     loginUser = User.forge();
+    forgedUsers = [];
+    while(forgedUsers.length < 10) {
+      forgedUsers.push(User.forge());
+    }
   });
 
   beforeEach(async(() => {
@@ -72,7 +80,8 @@ describe('ScheduleFormComponent', () => {
       providers: [
         { provide: ScheduleFormService, useClass: MockScheduleFormService },
         { provide: SchedulerAdminService, useClass: MockSchedulerAdminService },
-        { provide: AuthenticateService, useClass: MockAuthenticateService }
+        { provide: AuthenticateService, useClass: MockAuthenticateService },
+        { provide: UserService, useClass: MockUserService }
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();

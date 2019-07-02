@@ -10,11 +10,11 @@ import {
 import { FormArray, FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NumberRange, Tags, Contact } from '@ygg/shared/types';
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { first, switchMap } from 'rxjs/operators';
 
 import { ScheduleForm } from './schedule-form';
 import { ScheduleFormService } from './schedule-form.service';
-import { User, AuthenticateService } from '@ygg/shared/user';
+import { User, AuthenticateService, UserService } from '@ygg/shared/user';
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
 
 @Component({
@@ -39,7 +39,8 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private schedulerAdminService: SchedulerAdminService,
     private scheduleFormService: ScheduleFormService,
-    private authService: AuthenticateService
+    private authService: AuthenticateService,
+    private userService: UserService
   ) {
     this.onSubmit = new EventEmitter();
     this.likesSource$ = this.scheduleFormService.listLikes$();
@@ -52,7 +53,11 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
       }
     }));
     this.agentUsers = [];
-    this.schedulerAdminService.listAgentUsers$().subscribe(agentUsers => {
+    this.schedulerAdminService.getData$<string[]>('agent').pipe(
+      switchMap(agentIds => {
+        return this.userService.listByIds$(agentIds);
+      })
+    ).subscribe(agentUsers => {
       if (!isEmpty(agentUsers)) {
         this.agentUsers = agentUsers;
       } else {

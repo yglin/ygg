@@ -1,43 +1,44 @@
 import { Injectable } from '@angular/core';
 import { isEmpty } from 'lodash';
 import { Observable, of } from 'rxjs';
-import { DataAccessService } from '@ygg/shared/infra/data-access';
 import { UserService, User } from '@ygg/shared/user';
 import { switchMap } from 'rxjs/operators';
-import { adminMenu } from './menu';
+// import { adminMenu } from './menu';
+import { MenuTree } from '@ygg/shared/ui/navigation';
+import { PlaywhatAdminService } from '@ygg/playwhat/admin';
+import { Image } from '@ygg/shared/types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SchedulerAdminService {
+  menu: MenuTree;
 
   constructor(
-    private dataAccessService: DataAccessService,
-    private userService: UserService,
-  ) { }
+    private playwhatAdminService: PlaywhatAdminService
+  ) {
+    this.menu = new MenuTree({
+      id: 'scheduler',
+      icon: new Image('/assets/images/admin/accounting.png'),
+      label: '遊程相關',
+      tooltip: '遊程規劃相關設定',
+      link: 'scheduler'
+    });    
+  }
 
-  async updateAgents(agentIds: string[]) {
+  async setData<T>(id: string, data: T) {
     try {
-      await this.dataAccessService.setDataObject(adminMenu.getPath('agent'), agentIds);
+      await this.playwhatAdminService.setData<T>(this.menu.getPath(id), data);
     } catch (error) {
       console.error(error);
+      return Promise.reject(error);
     }
   }
 
-  listAgentIds$(): Observable<string[]> {
-    console.log(adminMenu.getPath('agent'));
-    return this.dataAccessService.getDataObject$(adminMenu.getPath('agent'));
+  getData$<T>(id: string): Observable<T> {
+    // console.log(this.menu.getPath('agent'));
+    const path = this.menu.getPath(id);
+    return this.playwhatAdminService.getData$<T>(path);
   }
 
-  listAgentUsers$(): Observable<User[]> {
-    return this.listAgentIds$().pipe(
-      switchMap((agentIds: string[]) => {
-        if (isEmpty(agentIds)) {
-          return of([]);
-        } else {
-          return this.userService.listByIds$(agentIds);
-        }
-      })
-    );
-  }
 }
