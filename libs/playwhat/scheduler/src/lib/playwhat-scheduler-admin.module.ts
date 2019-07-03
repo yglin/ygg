@@ -5,11 +5,13 @@ import { SchedulerAdminService } from './admin/scheduler-admin.service';
 import { MenuTree } from '@ygg/shared/ui/navigation';
 import { Image } from '@ygg/shared/types';
 import { AdminAgentComponent } from './admin/admin-agent/admin-agent.component';
+import { SharedUserModule } from '@ygg/shared/user';
 
 @NgModule({
-  declarations: [],
+  declarations: [AdminAgentComponent],
   imports: [
-    CommonModule
+    CommonModule,
+    SharedUserModule
   ],
   entryComponents: [
     AdminAgentComponent

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -10,13 +10,18 @@ import { PlaywhatResourceModule } from '@ygg/playwhat/resource';
 
 import { ScheduleFormComponent } from './schedule-form';
 import { ScheduleFormViewComponent } from './schedule-form/schedule-form-view/schedule-form-view.component';
-import { SharedUserModule } from '@ygg/shared/user';
-import { AdminAgentComponent } from "./admin/admin-agent/admin-agent.component";
+import { SharedUserModule, UserMenuService } from '@ygg/shared/user';
+import { SchedulerNewComponent } from './scheduler-new/scheduler-new.component';
+import { PlaywhatSchedulerRoutingModule } from './playwhat-scheduler-routing.module';
+import { SchedulerDashboardComponent } from './scheduler-dashboard/scheduler-dashboard.component';
+import { ScheduleFormListComponent } from './schedule-form/schedule-form-list/schedule-form-list.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [ScheduleFormComponent, ScheduleFormViewComponent, AdminAgentComponent],
+  declarations: [SchedulerNewComponent, ScheduleFormComponent, ScheduleFormViewComponent, SchedulerDashboardComponent, ScheduleFormListComponent],
   imports: [
     CommonModule,
+    RouterModule,
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
@@ -24,8 +29,23 @@ import { AdminAgentComponent } from "./admin/admin-agent/admin-agent.component";
     SharedUiWidgetsModule,
     SharedTypesModule,
     SharedUserModule,
-    PlaywhatResourceModule
+    PlaywhatResourceModule,
+    PlaywhatSchedulerRoutingModule
   ],
-  exports: [ScheduleFormComponent, ScheduleFormViewComponent]
+  // exports: [ScheduleFormComponent, ScheduleFormViewComponent],
+  providers: [
+    { provide: APP_INITIALIZER, useFactory: configUserMenu, deps: [UserMenuService], multi: true }
+  ]
 })
 export class PlaywhatSchedulerModule {}
+
+function configUserMenu(userMenuService: UserMenuService) {
+  return () => {
+    userMenuService.addItem({
+      id: 'scheduler',
+      label: '我的遊程',
+      link: 'scheduler/my',
+      icon: 'directions_bike'
+    });
+  };
+}

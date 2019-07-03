@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ScheduleForm } from 'libs/playwhat/scheduler/src/lib/schedule-form';
+import { ScheduleForm } from '../schedule-form/schedule-form';
 import { Router } from '@angular/router';
 
 @Component({

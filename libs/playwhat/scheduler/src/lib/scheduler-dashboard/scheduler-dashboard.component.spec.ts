@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SchedulerFormViewComponent } from './scheduler-form-view.component';
+import { SchedulerDashboardComponent } from './scheduler-dashboard.component';
 
-describe('SchedulerFormViewComponent', () => {
-  let component: SchedulerFormViewComponent;
-  let fixture: ComponentFixture<SchedulerFormViewComponent>;
+describe('SchedulerDashboardComponent', () => {
+  let component: SchedulerDashboardComponent;
+  let fixture: ComponentFixture<SchedulerDashboardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SchedulerFormViewComponent ]
+      declarations: [ SchedulerDashboardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SchedulerFormViewComponent);
+    fixture = TestBed.createComponent(SchedulerDashboardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

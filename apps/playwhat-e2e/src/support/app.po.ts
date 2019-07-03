@@ -1,4 +1,9 @@
 
+export function login() {
+  // @ts-ignore
+  cy.login();
+}
+
 export function loginAdmin() {
   // @ts-ignore
   cy.login();
@@ -7,6 +12,13 @@ export function loginAdmin() {
 export function logout() {
   // @ts-ignore
   cy.logout();
+}
+
+export function hitUserMenu(menuButtonId?: string) {
+  cy.get('#account-widget .menu-trigger').click();
+  if (menuButtonId) {
+    cy.get(`#user-menu button#${menuButtonId}`).click();    
+  }
 }
 
 export function gotoAdminDashboard() {

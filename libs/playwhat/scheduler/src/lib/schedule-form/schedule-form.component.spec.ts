@@ -1,6 +1,6 @@
-import { last } from "lodash";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Injectable } from '@angular/core';
+import { MockComponent } from "ng-mocks";
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedTypesModule, DateRange, Contact, Tags } from '@ygg/shared/types';
@@ -69,7 +69,7 @@ describe('ScheduleFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ScheduleFormComponent, ScheduleFormViewComponent],
+      declarations: [ScheduleFormComponent, MockComponent(ScheduleFormViewComponent)],
       imports: [
         FormsModule,
         ReactiveFormsModule,

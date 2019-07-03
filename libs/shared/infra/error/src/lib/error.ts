@@ -17,11 +17,18 @@ export class YGGError extends Error {
   }
 }
 
-export enum BadValueErrorCode {
+export enum ErrorCode {
   Unknown = 0,
+  BadFunctionArgument,
+  InvalidUrlPath
+}
+
+export enum BadValueErrorCode {
+  Unknown = 54088,
   BadArgument,
   BadIdentify
 }
 export class BadValueError extends YGGError {
   code: BadValueErrorCode;
 }
+

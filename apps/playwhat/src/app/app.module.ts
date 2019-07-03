@@ -15,8 +15,8 @@ import { HeaderComponent } from './layout/header/header.component';
 import { HomeComponent } from './pages/home/home.component';
 import { routes } from './routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SchedulerNewComponent } from './pages/scheduler/new/scheduler-new.component';
-import { SchedulerFormViewComponent } from './pages/scheduler/form/scheduler-form-view/scheduler-form-view.component';
+// import { SchedulerNewComponent } from './pages/scheduler/new/scheduler-new.component';
+// import { SchedulerFormViewComponent } from './pages/scheduler/form/scheduler-form-view/scheduler-form-view.component';
 import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
 
 @NgModule({
@@ -24,8 +24,8 @@ import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
     AppComponent,
     HeaderComponent,
     HomeComponent,
-    SchedulerNewComponent,
-    SchedulerFormViewComponent
+    // SchedulerNewComponent,
+    // SchedulerFormViewComponent
   ],
   imports: [
     BrowserModule,
