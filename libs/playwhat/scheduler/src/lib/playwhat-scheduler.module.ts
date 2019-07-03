@@ -16,9 +16,10 @@ import { PlaywhatSchedulerRoutingModule } from './playwhat-scheduler-routing.mod
 import { SchedulerDashboardComponent } from './scheduler-dashboard/scheduler-dashboard.component';
 import { ScheduleFormListComponent } from './schedule-form/schedule-form-list/schedule-form-list.component';
 import { RouterModule } from '@angular/router';
+import { ScheduleFormThumbnailComponent } from './schedule-form/schedule-form-thumbnail/schedule-form-thumbnail.component';
 
 @NgModule({
-  declarations: [SchedulerNewComponent, ScheduleFormComponent, ScheduleFormViewComponent, SchedulerDashboardComponent, ScheduleFormListComponent],
+  declarations: [SchedulerNewComponent, ScheduleFormComponent, ScheduleFormViewComponent, SchedulerDashboardComponent, ScheduleFormListComponent, ScheduleFormThumbnailComponent],
   imports: [
     CommonModule,
     RouterModule,

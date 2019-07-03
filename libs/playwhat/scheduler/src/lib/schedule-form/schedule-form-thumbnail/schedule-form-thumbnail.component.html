@@ -1,0 +1,17 @@
+<div
+  id="schedule-form-thumbnail"
+  class="schedule-form-thumbnail"
+  *ngIf="scheduleForm"
+  fxLayout="row"
+  fxLayoutAlign="space-around center"
+  fxLayoutGap="10px"
+  (click)='onClick()'
+>
+  <div>
+    <ygg-date-range [dateRange]="scheduleForm.dateRange"></ygg-date-range>
+  </div>
+  <div>
+    <span><mat-icon>people</mat-icon></span>
+    <span>{{ scheduleForm.numParticipants }}</span>
+  </div>
+</div>

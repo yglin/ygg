@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SchedulerDashboardComponent } from './scheduler-dashboard.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SchedulerDashboardComponent', () => {
   let component: SchedulerDashboardComponent;
@@ -8,9 +9,11 @@ describe('SchedulerDashboardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SchedulerDashboardComponent ]
-    })
-    .compileComponents();
+      declarations: [SchedulerDashboardComponent],
+      imports: [
+        RouterTestingModule.withRoutes([{ path: 'forms', redirectTo: 'home' }])
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,3 +1,8 @@
 <div id="schedule-forms-list">
-  <h3>{{ title }}</h3>
+  <ygg-page-title>{{ title }}</ygg-page-title>
+  <div *ngIf="ids" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="10px">
+    <div *ngFor="let id of ids">
+      <ygg-schedule-form-thumbnail [id]="id"></ygg-schedule-form-thumbnail>
+    </div>
+  </div>
 </div>

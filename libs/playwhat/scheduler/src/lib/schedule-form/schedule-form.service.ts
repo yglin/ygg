@@ -1,4 +1,4 @@
-import { values } from 'lodash';
+// import { values } from 'lodash';
 import { Injectable } from '@angular/core';
 import { DataAccessService } from '@ygg/shared/infra/data-access';
 import { Tags } from '@ygg/shared/types';
@@ -7,8 +7,9 @@ import { Tags } from '@ygg/shared/types';
 // '@ygg/shared/infra/utility-types'; import * as moment from 'moment';
 import { ScheduleForm } from './schedule-form';
 import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { UserService, User } from '@ygg/shared/user';
+// import { switchMap } from 'rxjs/operators';
+// import { UserService, User } from './schedule-form-list/node_modules/@ygg/shared/user';
+import { Query } from '@ygg/shared/infra/data-access';
 
 @Injectable({ providedIn: 'root' })
 export class ScheduleFormService {
@@ -16,7 +17,7 @@ export class ScheduleFormService {
 
   constructor(
     private dataAccessService: DataAccessService,
-    private userService: UserService
+    // private userService: UserService
   ) {}
 
   // defaultForm(): ScheduleForm {
@@ -27,6 +28,10 @@ export class ScheduleFormService {
 
   get$(id: string): Observable<ScheduleForm> {
     return this.dataAccessService.get$(this.collection, id, ScheduleForm);
+  }
+
+  find$(query: Query): Observable<ScheduleForm[]> {
+    return this.dataAccessService.find$(this.collection, query, ScheduleForm);
   }
 
   async upsert(scheduleForm: ScheduleForm) {

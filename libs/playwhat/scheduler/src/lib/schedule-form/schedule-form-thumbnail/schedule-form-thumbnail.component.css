@@ -1,0 +1,10 @@
+.schedule-form-thumbnail {
+  width: 380px;
+  height: 67px;
+  margin: 30px 20px;
+  cursor: pointer;
+}
+
+.schedule-form-thumbnail:hover {
+  background-color: lightgray;
+}

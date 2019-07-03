@@ -16,7 +16,10 @@ const loadChildrenRoutes: Routes = [
   },
   { path: 'my', children: [
     { path: '', pathMatch: 'full', component: SchedulerDashboardComponent },
-    { path: 'forms', component: ScheduleFormListComponent }
+    { path: 'forms', children: [
+      { path: '', pathMatch: 'full', component: ScheduleFormListComponent },
+      { path: ':id', component: ScheduleFormViewComponent }
+    ] }
   ]}
 ];
 
