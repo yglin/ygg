@@ -40,7 +40,7 @@ import { ScheduleFormThumbnailComponent } from './schedule-form/schedule-form-th
 })
 export class PlaywhatSchedulerModule {}
 
-function configUserMenu(userMenuService: UserMenuService) {
+export function configUserMenu(userMenuService: UserMenuService) {
   return () => {
     userMenuService.addItem({
       id: 'scheduler',

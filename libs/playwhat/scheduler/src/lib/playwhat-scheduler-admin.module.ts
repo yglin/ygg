@@ -22,7 +22,7 @@ import { SharedUserModule } from '@ygg/shared/user';
 })
 export class PlaywhatSchedulerAdminModule { }
 
-function configMenuTree(schedulerAdminService: SchedulerAdminService, playwhatAdminService: PlaywhatAdminService): Function {
+export function configMenuTree(schedulerAdminService: SchedulerAdminService, playwhatAdminService: PlaywhatAdminService): Function {
   return () => {
     // console.log('Init module SchedulerAdminRoutingModule');
     schedulerAdminService.menu.addItem({

@@ -24,7 +24,7 @@ import { PlaywhatAdminService } from './playwhat-admin.service';
 })
 export class PlaywhatAdminModule {}
 
-function configRouting(injector: Injector, playwhatAdminService: PlaywhatAdminService): Function {
+export function configRouting(injector: Injector, playwhatAdminService: PlaywhatAdminService): Function {
     return () => {
     // console.log('Init module PlaywhatAdminModule');
     const router = injector.get(Router);
