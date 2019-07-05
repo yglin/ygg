@@ -24,9 +24,9 @@ export function hitUserMenu(menuButtonId?: string) {
 export function gotoAdminDashboard() {
   cy.visit('/');
   loginAdmin();
-  // Wait for initial auto login,
-  // this is definitely an ugly workaround right now, but what the heck.
-  cy.wait(3000);
+  // // Wait for initial auto login,
+  // // this is definitely an ugly workaround right now, but what the heck.
+  // cy.wait(3000);
   cy.get('#account-widget .menu-trigger').click();
   cy.get('#user-menu button#admin').click();
 }

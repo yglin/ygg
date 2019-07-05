@@ -3,6 +3,7 @@ import { User } from '../../models/user';
 import { AuthenticateService } from '../../authenticate.service';
 import { MatDialog } from '@angular/material';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
+import { AuthenticateUiService } from '../../authenticate-ui.service';
 
 @Component({
   selector: 'ygg-account-widget',
@@ -14,7 +15,7 @@ export class AccountWidgetComponent implements OnInit {
 
   constructor(
     private authenticateService: AuthenticateService,
-    private dialog: MatDialog
+    private authenticateUiService: AuthenticateUiService
   ) {}
 
   ngOnInit() {
@@ -22,7 +23,7 @@ export class AccountWidgetComponent implements OnInit {
   }
 
   login() {
-    this.dialog.open(LoginDialogComponent);
+    this.authenticateUiService.openLoginDialog();
   }
 
   logout() {
