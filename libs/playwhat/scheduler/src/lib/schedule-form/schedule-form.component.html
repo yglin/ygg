@@ -285,17 +285,15 @@
               <ygg-title-divider>其它需求</ygg-title-divider>
             </mat-expansion-panel-header>
             <div class="form-control">
-              <div class="needAccommodationHelp">
-                <mat-checkbox
-                  [(ngModel)]="needAccommodationHelp"
-                  [ngModelOptions]="{ standalone: true }"
+              <div id="needAccommodationHelp" class="needAccommodationHelp">
+                <mat-checkbox (change)='onChangeNeedAccommodationHelp($event)'
                   >請幫我安排住宿</mat-checkbox
                 >
                 <br />
                 <mat-form-field>
                   <textarea
+                    name="accommodationHelp"
                     matInput
-                    [disabled]="!needAccommodationHelp"
                     placeholder="請詳述住宿需求，以便我們的工作人員幫忙安排"
                     formControlName="accommodationHelp"
                     cdkTextareaAutosize

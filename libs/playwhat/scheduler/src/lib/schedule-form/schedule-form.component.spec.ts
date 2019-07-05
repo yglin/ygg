@@ -1,5 +1,5 @@
 import { pick } from "lodash";
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, DebugElement } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { MockComponent } from "ng-mocks";
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
@@ -15,6 +15,7 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { ScheduleFormViewComponent } from './schedule-form-view/schedule-form-view.component';
 import { User, AuthenticateService, AuthenticateUiService, UserService } from '@ygg/shared/user';
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
+import { By } from '@angular/platform-browser';
 
 let testScheduleForm: ScheduleForm;
 let loginUser: User;
@@ -67,6 +68,7 @@ class MockScheduleFormService {
 describe('ScheduleFormComponent', () => {
   let component: ScheduleFormComponent;
   let fixture: ComponentFixture<ScheduleFormComponent>;
+  let debugElement: DebugElement;
 
   beforeAll(() => {
     testScheduleForm = ScheduleForm.forge();
@@ -101,6 +103,7 @@ describe('ScheduleFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ScheduleFormComponent);
     component = fixture.componentInstance;
+    debugElement = fixture.debugElement;
     fixture.detectChanges();
   });
 
@@ -124,6 +127,14 @@ describe('ScheduleFormComponent', () => {
     numParticipantsControl.setValue(87);
     contactsControl.setValue([Contact.forge()]);
     expect(component.formGroup.valid).toBe(true);
+  });
+
+  it('control "accommodationHelp" is initially disabled, a checkbox can enable it', () => {
+    const controlAccommodationHelp = debugElement.query(By.css('#needAccommodationHelp [name=accommodationHelp]')).nativeElement;
+    const checkboxAccommodationHelp = debugElement.query(By.css('#needAccommodationHelp [type="checkbox"]')).nativeElement;
+    expect(controlAccommodationHelp.disabled).toBeTruthy();
+    checkboxAccommodationHelp.click();
+    expect(controlAccommodationHelp.disabled).toBeFalsy();
   });
 
   it('copy contact from current login', () => {
@@ -158,9 +169,13 @@ describe('ScheduleFormComponent', () => {
       'likesDescription',
       'agentId'
     ];
+
     for (const controlName of formControlNames) {
       try {
-        formGroup.get(controlName).setValue(testScheduleForm[controlName]);
+        const control = formGroup.get(controlName);
+        // Enable in-case it's disabled
+        control.enable();
+        control.setValue(testScheduleForm[controlName]);
       } catch (error) {
         error.message = (error.message || '') + `, controlName = ${controlName}`;
         throw error;

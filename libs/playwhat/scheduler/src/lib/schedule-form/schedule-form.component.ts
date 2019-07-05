@@ -27,6 +27,7 @@ import {
   AuthenticateUiService
 } from '@ygg/shared/user';
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
+import { MatCheckboxChange } from '@angular/material';
 
 @Component({
   selector: 'ygg-schedule-form',
@@ -133,6 +134,15 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  onChangeNeedAccommodationHelp(event: MatCheckboxChange) {
+    const controlAccommodationHelp = this.formGroup.get('accommodationHelp');
+    if (event.checked) {
+      controlAccommodationHelp.enable();
+    } else {
+      controlAccommodationHelp.disable();
+    }
+  }
+
   setContacts(contacts: Contact[] = []) {
     while (this.contactsFormArray.length > 0) {
       this.contactsFormArray.removeAt(this.contactsFormArray.length - 1);
@@ -185,7 +195,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
       contacts: this.formBuilder.array([new FormControl()]),
       transpotation: '',
       transpotationHelp: '',
-      accommodationHelp: '',
+      accommodationHelp: new FormControl({ value: '', disabled: true }),
       likes: new Tags([]),
       likesDescription: '',
       agentId: ''
@@ -222,10 +232,10 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
       } else {
         this.currentUser = await this.askForLogin();
         if (this.currentUser) {
-          this.scheduleForm.creatorId = this.currentUser.id;          
+          this.scheduleForm.creatorId = this.currentUser.id;
         }
       }
-      await this.scheduleFormService.upsert(this.scheduleForm)
+      await this.scheduleFormService.upsert(this.scheduleForm);
       alert('已成功更新／新增需求資料');
       this.onSubmit.emit(this.scheduleForm);
     }
