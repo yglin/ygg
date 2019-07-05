@@ -22,7 +22,7 @@ export class PlaywhatAdminService {
       icon: new Image(),
       tooltip: '管理一些ㄨＡ伯Ａ設定',
       routeConfig: {
-        canActivateChild: [LoggedInGuard, AdminGuard]
+        canActivateChild: [AdminGuard]
       }
     });
   }
