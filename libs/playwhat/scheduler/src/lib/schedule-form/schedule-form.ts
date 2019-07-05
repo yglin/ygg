@@ -21,6 +21,7 @@ export class ScheduleForm implements DataItem {
   likes: Tags;
   likesDescription: string;
   agentId: string;
+  creatorId: string;
 
   static isScheduleForm(value: any): value is ScheduleForm {
     if (value && value.dateRange && value.numParticipants) {

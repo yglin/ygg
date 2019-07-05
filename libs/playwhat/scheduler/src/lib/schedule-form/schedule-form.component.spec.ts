@@ -1,3 +1,4 @@
+import { pick } from "lodash";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { MockComponent } from "ng-mocks";
@@ -12,7 +13,7 @@ import { ScheduleForm } from './schedule-form';
 import { of, Observable, Subject, BehaviorSubject } from 'rxjs';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { ScheduleFormViewComponent } from './schedule-form-view/schedule-form-view.component';
-import { User, AuthenticateService, UserService } from '@ygg/shared/user';
+import { User, AuthenticateService, AuthenticateUiService, UserService } from '@ygg/shared/user';
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
 
 let testScheduleForm: ScheduleForm;
@@ -25,6 +26,15 @@ class MockAuthenticateService {
   login() {
     this.currentUser$.next(loginUser);
   }
+
+  logout() {
+    this.currentUser$.next(null);
+  }
+}
+
+@Injectable()
+class MockAuthenticateUiService {
+  openLoginDialog() {}
 }
 
 @Injectable()
@@ -81,6 +91,7 @@ describe('ScheduleFormComponent', () => {
         { provide: ScheduleFormService, useClass: MockScheduleFormService },
         { provide: SchedulerAdminService, useClass: MockSchedulerAdminService },
         { provide: AuthenticateService, useClass: MockAuthenticateService },
+        { provide: AuthenticateUiService, useClass: MockAuthenticateUiService },
         { provide: UserService, useClass: MockUserService }
       ],
       schemas: [NO_ERRORS_SCHEMA]
@@ -91,7 +102,14 @@ describe('ScheduleFormComponent', () => {
     fixture = TestBed.createComponent(ScheduleFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });  
+  });
+
+  // Mock window interaction dialogs.
+  beforeEach(function() {
+    jest.spyOn(window, 'confirm').mockImplementation(() => true);
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+  });
+  
 
   it('should be invalid initially, require dateRange, numParticipants, and at least one contact', () => {
     expect(component.formGroup.valid).toBe(false);
@@ -121,7 +139,7 @@ describe('ScheduleFormComponent', () => {
     expect(new Contact().fromUser(loginUser)).toEqual(contact);
   });
   
-  it('should submit correct data from user input', () => {
+  it('should submit correct data from user input', done => {
     const formGroup = component.formGroup;
 
     const formControlNames = [
@@ -150,13 +168,56 @@ describe('ScheduleFormComponent', () => {
     }
     component.setContacts(testScheduleForm.contacts);
     
-    jest.spyOn(window, 'confirm').mockImplementation(() => true);
-    jest.spyOn(window, 'alert').mockImplementation(() => {});
     component.onSubmit.subscribe((result: ScheduleForm) => {
-      expect(window.confirm).toHaveBeenCalled();
-      expect(window.alert).toHaveBeenCalled();
-      expect(result.toJSON()).toEqual(testScheduleForm.toJSON());
+      // Only check data consistence of properties in formControlNames
+      expect(pick(result.toJSON(), formControlNames)).toEqual(pick(testScheduleForm.toJSON(), formControlNames));
+      done();
     });
     component.submit();
   });
+
+  it('If logged in, ScheudleForm.creatorId should be current user\'s', done => {
+    const mockAuthenticateService: MockAuthenticateService = TestBed.get(AuthenticateService);
+    mockAuthenticateService.login();
+    component.onSubmit.subscribe((result: ScheduleForm) => {
+      expect(result.creatorId).toBe(loginUser.id);
+      done();
+    });
+    component.submit();
+  });
+
+  it('If not logged in, ScheudleForm.creatorId should be undefined', done => {
+    const mockAuthenticateUiService: MockAuthenticateUiService = TestBed.get(AuthenticateUiService);
+    const mockAuthenticateService: MockAuthenticateService = TestBed.get(AuthenticateService);
+    mockAuthenticateService.logout();
+    jest.spyOn(mockAuthenticateUiService, 'openLoginDialog').mockImplementation(() => {
+      // Do nothing, user skip login;
+      return Promise.resolve();
+    });
+    component.onSubmit.subscribe((result: ScheduleForm) => {
+      expect(result.creatorId).toBeUndefined();
+      done();
+    });
+    component.submit();
+  });
+
+  it('If not logged in, when submit, ask user to log in to get ScheduleForm.creatorId', done => {
+    const mockAuthenticateUiService: MockAuthenticateUiService = TestBed.get(AuthenticateUiService);
+    const mockAuthenticateService: MockAuthenticateService = TestBed.get(AuthenticateService);
+    mockAuthenticateService.logout();
+
+    jest.spyOn(mockAuthenticateUiService, 'openLoginDialog').mockImplementation(() => {
+      // Just mock login;
+      mockAuthenticateService.currentUser$.next(loginUser);
+      return Promise.resolve(loginUser);
+    });
+    component.onSubmit.subscribe((result: ScheduleForm) => {
+      expect(window.confirm).toHaveBeenCalled();
+      expect(mockAuthenticateUiService.openLoginDialog).toHaveBeenCalled();
+      expect(result.creatorId).toBe(loginUser.id);
+      done();
+    });
+    component.submit();
+  });
+  
 });

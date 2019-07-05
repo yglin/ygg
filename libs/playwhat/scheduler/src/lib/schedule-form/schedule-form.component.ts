@@ -7,14 +7,25 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { FormArray, FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormControl,
+  FormGroup,
+  FormBuilder,
+  Validators
+} from '@angular/forms';
 import { NumberRange, Tags, Contact } from '@ygg/shared/types';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
 
 import { ScheduleForm } from './schedule-form';
 import { ScheduleFormService } from './schedule-form.service';
-import { User, AuthenticateService, UserService } from '@ygg/shared/user';
+import {
+  User,
+  AuthenticateService,
+  UserService,
+  AuthenticateUiService
+} from '@ygg/shared/user';
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
 
 @Component({
@@ -40,30 +51,36 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     private schedulerAdminService: SchedulerAdminService,
     private scheduleFormService: ScheduleFormService,
     private authService: AuthenticateService,
+    private authUiService: AuthenticateUiService,
     private userService: UserService
   ) {
     this.onSubmit = new EventEmitter();
     this.likesSource$ = this.scheduleFormService.listLikes$();
     this.subscriptions = [];
-    this.subscriptions.push(this.authService.currentUser$.subscribe(user => {
-      if (user) {
-        this.currentUser = user;
-      } else {
-        this.currentUser = null;
-      }
-    }));
-    this.agentUsers = [];
-    this.schedulerAdminService.getData$<string[]>('agent').pipe(
-      switchMap(agentIds => {
-        return this.userService.listByIds$(agentIds);
+    this.subscriptions.push(
+      this.authService.currentUser$.subscribe(user => {
+        if (user) {
+          this.currentUser = user;
+        } else {
+          this.currentUser = null;
+        }
       })
-    ).subscribe(agentUsers => {
-      if (!isEmpty(agentUsers)) {
-        this.agentUsers = agentUsers;
-      } else {
-        this.agentUsers = [];
-      }
-    });
+    );
+    this.agentUsers = [];
+    this.schedulerAdminService
+      .getData$<string[]>('agent')
+      .pipe(
+        switchMap(agentIds => {
+          return this.userService.listByIds$(agentIds);
+        })
+      )
+      .subscribe(agentUsers => {
+        if (!isEmpty(agentUsers)) {
+          this.agentUsers = agentUsers;
+        } else {
+          this.agentUsers = [];
+        }
+      });
   }
 
   ngOnInit() {
@@ -185,12 +202,32 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     // this.selectedResourceIds$.next(resourceIds);
   }
 
-  submit() {
+  async askForLogin(): Promise<User> {
+    const messageAskLogin = `您尚未登入，是否要登入帳戶以方便您日後能追蹤此表單的狀態？`;
+    if (confirm(messageAskLogin)) {
+      try {
+        return await this.authUiService.openLoginDialog();
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    } else {
+      return Promise.resolve(null);
+    }
+  }
+
+  async submit() {
     if (confirm('確定已填寫完畢，要送出需求嗎？')) {
-      this.scheduleFormService.upsert(this.scheduleForm).then(() => {
-        alert('已成功更新／新增需求資料');
-        this.onSubmit.emit(this.scheduleForm);
-      });
+      if (this.currentUser) {
+        this.scheduleForm.creatorId = this.currentUser.id;
+      } else {
+        this.currentUser = await this.askForLogin();
+        if (this.currentUser) {
+          this.scheduleForm.creatorId = this.currentUser.id;          
+        }
+      }
+      await this.scheduleFormService.upsert(this.scheduleForm)
+      alert('已成功更新／新增需求資料');
+      this.onSubmit.emit(this.scheduleForm);
     }
   }
 }
