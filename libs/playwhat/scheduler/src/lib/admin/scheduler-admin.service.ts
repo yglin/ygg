@@ -12,18 +12,20 @@ import { Image } from '@ygg/shared/types';
   providedIn: 'root'
 })
 export class SchedulerAdminService {
-  menu: MenuTree;
+  private _menu: MenuTree;
+  set menu(value: MenuTree) {
+    if (value) {
+      this._menu = value;
+    }
+  }
+  get menu(): MenuTree {
+    return this._menu;
+  }
 
   constructor(
     private playwhatAdminService: PlaywhatAdminService
   ) {
-    this.menu = new MenuTree({
-      id: 'scheduler',
-      icon: new Image('/assets/images/admin/accounting.png'),
-      label: '遊程相關',
-      tooltip: '遊程規劃相關設定',
-      link: 'scheduler'
-    });    
+    this._menu = new MenuTree();
   }
 
   async setData<T>(id: string, data: T) {

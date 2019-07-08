@@ -6,7 +6,7 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUserModule } from '@ygg/shared/user';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
-import { PlaywhatSchedulerModule } from '@ygg/playwhat/scheduler';
+import { PlaywhatSchedulerFrontendModule } from '@ygg/playwhat/scheduler';
 import { PlaywhatAdminModule } from '@ygg/playwhat/admin';
 import { PlaywhatSchedulerAdminModule } from "@ygg/playwhat/scheduler";
 
@@ -35,7 +35,7 @@ import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
     SharedUiNavigationModule,
     RouterModule.forRoot(routes),
     BrowserAnimationsModule,
-    PlaywhatSchedulerModule,
+    PlaywhatSchedulerFrontendModule,
     PlaywhatSchedulerAdminModule,
     PlaywhatAdminModule,
   ],

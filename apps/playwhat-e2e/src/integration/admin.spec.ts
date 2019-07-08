@@ -23,6 +23,15 @@ describe('Test admin links', () => {
     cy.get('#user-selector').should('be.visible');
   });
   
+  it('should be able to follow path admin -> scheduler -> forms to schedule-forms list table', () => {
+    cy.url().should('match', /.*\/admin$/);
+    cy.get('#scheduler').click();
+    cy.url().should('match', /.*\/admin\/scheduler$/);
+    cy.get('#forms').click();
+    cy.url().should('match', /.*\/admin\/scheduler\/forms$/);
+    cy.get('#schedule-forms-table').should('be.visible');
+  });
+  
 });
 
 // describe('Admin securities', () => {
