@@ -1,4 +1,4 @@
-// import { values } from 'lodash';
+import { filter } from 'lodash';
 import { Injectable } from '@angular/core';
 import { DataAccessService } from '@ygg/shared/infra/data-access';
 import { Tags } from '@ygg/shared/types';
@@ -10,14 +10,14 @@ import { Observable, of } from 'rxjs';
 // import { switchMap } from 'rxjs/operators';
 // import { UserService, User } from './schedule-form-list/node_modules/@ygg/shared/user';
 import { Query } from '@ygg/shared/infra/data-access';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ScheduleFormService {
   collection = 'schedule-forms';
 
   constructor(
-    private dataAccessService: DataAccessService,
-    // private userService: UserService
+    private dataAccessService: DataAccessService // private userService: UserService
   ) {}
 
   // defaultForm(): ScheduleForm {
@@ -26,12 +26,20 @@ export class ScheduleFormService {
   //   return form;
   // }
 
+  validate(scheduleForm: ScheduleForm): boolean {
+    return ScheduleForm.isScheduleForm(scheduleForm);
+  }
+
   get$(id: string): Observable<ScheduleForm> {
     return this.dataAccessService.get$(this.collection, id, ScheduleForm);
   }
 
-  find$(query: Query): Observable<ScheduleForm[]> {
-    return this.dataAccessService.find$(this.collection, query, ScheduleForm);
+  find$(queries: Query | Query[]): Observable<ScheduleForm[]> {
+    return this.dataAccessService
+      .find$(this.collection, queries, ScheduleForm)
+      .pipe(
+        map(scheduleForms => filter(scheduleForms, form => this.validate(form)))
+      );
   }
 
   async upsert(scheduleForm: ScheduleForm) {
@@ -47,5 +55,4 @@ export class ScheduleFormService {
     const likes = new Tags(['手作DIY', '協力車', '咖啡', '押花', '生態導覽']);
     return of(likes);
   }
-
 }

@@ -70,4 +70,8 @@ export class DateRange implements SerializableJSON {
   toMoment(): DateRangeMoment {
     return {start: moment(this.start), end: moment(this.end)};
   }
+
+  format(): string {
+    return `${moment(this.start).format('YYYY/MM/DD')} — ${moment(this.end).format('YYYY/MM/DD')}`;
+  }
 }

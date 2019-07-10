@@ -1,4 +1,4 @@
-import { flatten, isArray, uniqBy, isEmpty } from 'lodash';
+import { flatten, isArray, toArray, uniqBy, isEmpty } from 'lodash';
 import { Injectable } from '@angular/core';
 import {
   AngularFirestore,
@@ -112,13 +112,19 @@ export class DataAccessService {
 
   find$<T extends DataItem>(
     collection: string,
-    query: Query,
+    query: Query | Query[],
     constructor: {
       new (): T;
     }
   ): Observable<T[]> {
+    let queries: Query[];
+    if (isArray(query)) {
+      queries = query;
+    } else {
+      queries = [query];
+    }
     return this.firestore
-      .collection(collection, ref => this.transformQueries(ref, [query]))
+      .collection(collection, ref => this.transformQueries(ref, queries))
       .valueChanges()
       .pipe(
         map(items => {

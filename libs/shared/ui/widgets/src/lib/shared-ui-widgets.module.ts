@@ -16,6 +16,7 @@ import { PageTitleComponent } from './page-title/page-title.component';
 import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.component';
 import { TimeRangeComponent } from './time-range/time-range.component';
 import { TitleDividerComponent } from './title-divider/title-divider.component';
+import { ReactiveTextInputComponent } from './reactive-text-input/reactive-text-input.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { TitleDividerComponent } from './title-divider/title-divider.component';
     ActionBarredComponent,
     YggDialogComponent,
     YggDialogContentHostDirective,
+    ReactiveTextInputComponent,
   ],
   imports: [
     CommonModule,
@@ -45,7 +47,8 @@ import { TitleDividerComponent } from './title-divider/title-divider.component';
     NumberSliderComponent,
     TimeRangeComponent,
     TitleDividerComponent,
-    ActionBarredComponent
+    ActionBarredComponent,
+    ReactiveTextInputComponent
   ],
   entryComponents: [ProgressSpinnerComponent, YggDialogComponent]
 })

@@ -16,10 +16,10 @@ import { SchedulerDashboardComponent } from './scheduler-dashboard/scheduler-das
 import { ScheduleFormListComponent } from './schedule-form/schedule-form-list/schedule-form-list.component';
 import { RouterModule } from '@angular/router';
 import { ScheduleFormThumbnailComponent } from './schedule-form/schedule-form-thumbnail/schedule-form-thumbnail.component';
-import { ScheduleFormsTableComponent } from './schedule-form/schedule-forms-table/schedule-forms-table.component';
+import { ScheduleFormTableComponent } from './schedule-form/schedule-form-table/schedule-form-table.component';
 
 @NgModule({
-  declarations: [SchedulerNewComponent, ScheduleFormComponent, ScheduleFormViewComponent, SchedulerDashboardComponent, ScheduleFormListComponent, ScheduleFormThumbnailComponent, ScheduleFormsTableComponent],
+  declarations: [SchedulerNewComponent, ScheduleFormComponent, ScheduleFormViewComponent, SchedulerDashboardComponent, ScheduleFormListComponent, ScheduleFormThumbnailComponent, ScheduleFormTableComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -32,7 +32,7 @@ import { ScheduleFormsTableComponent } from './schedule-form/schedule-forms-tabl
     SharedUserModule,
     PlaywhatResourceModule,
   ],
-  exports: [SchedulerNewComponent, ScheduleFormComponent, ScheduleFormViewComponent, SchedulerDashboardComponent, ScheduleFormListComponent, ScheduleFormThumbnailComponent, ScheduleFormsTableComponent],
+  exports: [SchedulerNewComponent, ScheduleFormComponent, ScheduleFormViewComponent, SchedulerDashboardComponent, ScheduleFormListComponent, ScheduleFormThumbnailComponent, ScheduleFormTableComponent],
 })
 export class PlaywhatSchedulerModule {}
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import {
   AuthenticateService,
   AuthorizeService,
@@ -8,7 +8,7 @@ import {
   User
 } from '@ygg/shared/user';
 import { Subscription, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'pw-root',
@@ -19,16 +19,18 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'playwhat';
   loggedIn = false;
   subscriptions: Subscription[] = [];
+  pageClass = 'pw-page';
 
   constructor(
     private authenticateService: AuthenticateService,
     private authorizeService: AuthorizeService,
     private userMenuService: UserMenuService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    const subscription = this.authenticateService.currentUser$
+    let subscription = this.authenticateService.currentUser$
       .pipe(
         switchMap(currentUser => {
           if (User.isUser(currentUser)) {
@@ -59,7 +61,18 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       });
     // Register user-menu-item admin
+    this.subscriptions.push(subscription);
 
+    subscription = this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      // console.log(event.url);
+      if (/^\/?admin(\/.+)*$/.test(event.url)) {
+        this.pageClass = 'pw-page-admin';
+      } else {
+        this.pageClass = 'pw-page';
+      }
+    });
     this.subscriptions.push(subscription);
   }
 

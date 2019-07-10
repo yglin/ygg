@@ -1,5 +1,11 @@
 .pw-page {
-    width: 50vw;
-    min-width: 480px;
-    margin-top: 50px;
-  }
+  width: 50vw;
+  min-width: 480px;
+  margin-top: 50px;
+}
+
+.pw-page-admin {
+  width: 80vw;
+  min-width: 640px;
+  margin-top: 50px;
+}

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ScheduleFormsTableComponent } from './schedule-forms-table.component';
+import { ReactiveTextInputComponent } from './reactive-text-input.component';
 
-describe('ScheduleFormsTableComponent', () => {
-  let component: ScheduleFormsTableComponent;
-  let fixture: ComponentFixture<ScheduleFormsTableComponent>;
+describe('ReactiveTextInputComponent', () => {
+  let component: ReactiveTextInputComponent;
+  let fixture: ComponentFixture<ReactiveTextInputComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ScheduleFormsTableComponent ]
+      declarations: [ ReactiveTextInputComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ScheduleFormsTableComponent);
+    fixture = TestBed.createComponent(ReactiveTextInputComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

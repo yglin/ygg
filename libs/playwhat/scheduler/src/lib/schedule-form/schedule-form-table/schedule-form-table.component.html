@@ -1,0 +1,74 @@
+<div>
+  <div class="search-box">
+    <ygg-reactive-text-input
+      (change)="onChangeSearchText($event)"
+      placeholder="搜尋"
+    ></ygg-reactive-text-input>
+  </div>
+  <br />
+  <div class="mat-elevation-z8" id="schedule-forms-table">
+    <table
+      mat-table
+      class="full-width-table"
+      [dataSource]="dataSource"
+      matSort
+      matSortActive="dateRange"
+      matSortDirection="desc"
+      aria-label="Elements"
+    >
+      <ng-container matColumnDef="dateRange">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>預定日期範圍</th>
+        <td mat-cell *matCellDef="let scheduleForm" class="dateRange">
+          <ygg-date-range
+            class="value"
+            [dateRange]="scheduleForm.dateRange"
+          ></ygg-date-range>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="numParticipants">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>預定人數</th>
+        <td mat-cell *matCellDef="let scheduleForm" class="numParticipants">
+          <span class="value">{{ scheduleForm.numParticipants }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="contacts">
+        <th mat-header-cell *matHeaderCellDef>聯絡人</th>
+        <td mat-cell *matCellDef="let scheduleForm" class="contacts">
+          <ygg-contact
+            class="value"
+            [contact]="scheduleForm.contacts[0]"
+          ></ygg-contact>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="agent">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>接單負責人</th>
+        <td mat-cell *matCellDef="let scheduleForm" class="agent">
+          <ygg-user-thumbnail
+            class="value"
+            [id]="scheduleForm.agentId"
+          ></ygg-user-thumbnail>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        class="data-row"
+        [attr.data-id]="row.id"
+      ></tr>
+    </table>
+
+    <mat-paginator
+      #paginator
+      [length]="dataSource.data.length"
+      [pageIndex]="0"
+      [pageSize]="10"
+      [pageSizeOptions]="[10, 25, 50, 100]"
+    >
+    </mat-paginator>
+  </div>
+</div>
