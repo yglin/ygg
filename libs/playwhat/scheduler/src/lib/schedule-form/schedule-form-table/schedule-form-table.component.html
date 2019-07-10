@@ -59,6 +59,7 @@
         *matRowDef="let row; columns: displayedColumns"
         class="data-row"
         [attr.data-id]="row.id"
+        (click)='gotoView(row.id)'
       ></tr>
     </table>
 

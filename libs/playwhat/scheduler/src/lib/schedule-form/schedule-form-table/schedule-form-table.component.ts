@@ -12,6 +12,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { ScheduleForm } from '../schedule-form';
 import { Query } from '@ygg/shared/infra/data-access';
 import { ScheduleFormService } from '../schedule-form.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ygg-schedule-form-table',
@@ -32,7 +33,11 @@ export class ScheduleFormTableComponent
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['dateRange', 'numParticipants', 'contacts', 'agent'];
 
-  constructor(private scheduleFormService: ScheduleFormService) {}
+  constructor(
+    private scheduleFormService: ScheduleFormService,
+    private router: Router,
+    // private route: ActivatedRoute
+  ) {}
   ngOnInit() {
     this.queries = this.queries || [];
     this.subscriptions.push(
@@ -55,5 +60,9 @@ export class ScheduleFormTableComponent
 
   onChangeSearchText(searchText: string) {
     this.dataSource.filter = searchText.trim().toLowerCase();
+  }
+
+  gotoView(id: string) {
+    this.router.navigate(['scheduler', 'forms', id]);
   }
 }
