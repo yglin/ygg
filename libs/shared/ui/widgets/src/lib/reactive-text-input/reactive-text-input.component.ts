@@ -20,7 +20,7 @@ import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operato
 export class ReactiveTextInputComponent implements AfterViewInit, OnDestroy {
   @Input() debounceTime = 1000;
   @Input() placeholder = '';
-  @Output() change: EventEmitter<string> = new EventEmitter();
+  @Output() changed: EventEmitter<string> = new EventEmitter();
   @ViewChild('input') input: ElementRef;
   subscription: Subscription;
 
@@ -33,12 +33,12 @@ export class ReactiveTextInputComponent implements AfterViewInit, OnDestroy {
         'keyup'
       )
         .pipe(
-          map(event => (<HTMLInputElement>event.target).value),
+          map(event => ((<HTMLInputElement>event.target).value || '').toString()),
           startWith(''),
           debounceTime(this.debounceTime),
           distinctUntilChanged()
         )
-        .subscribe(this.change);
+        .subscribe(text => this.changed.emit(text));
     }
   }
 

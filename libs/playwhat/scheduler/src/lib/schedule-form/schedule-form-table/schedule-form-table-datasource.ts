@@ -72,6 +72,8 @@ export class ScheduleFormTableDataSource extends DataSource<ScheduleForm> {
 
   set filter(value: string) {
     this._filter = value;
+    // When filter changed, move back to the first page.
+    this.paginator.firstPage();
     this.updateEvent$.next(null);
   }
 

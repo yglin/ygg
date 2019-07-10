@@ -59,6 +59,8 @@ export class ScheduleFormTableComponent
   }
 
   onChangeSearchText(searchText: string) {
+    searchText = searchText || '';
+    // console.dir(searchText);
     this.dataSource.filter = searchText.trim().toLowerCase();
   }
 

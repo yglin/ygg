@@ -1,7 +1,7 @@
 <div>
   <div class="search-box">
     <ygg-reactive-text-input
-      (change)="onChangeSearchText($event)"
+      (changed)="onChangeSearchText($event)"
       placeholder="搜尋"
     ></ygg-reactive-text-input>
   </div>
@@ -40,6 +40,18 @@
             class="value"
             [contact]="scheduleForm.contacts[0]"
           ></ygg-contact>
+          <div *ngIf="scheduleForm.contacts.length > 1">
+            <mat-divider> </mat-divider>
+            <div>
+              其他聯絡人：<span
+                *ngFor="
+                  let contact of (scheduleForm.contacts | slice: 1);
+                  let isLast = last
+                "
+                >{{ contact.name }}<span *ngIf="!isLast">，</span></span
+              >
+            </div>
+          </div>
         </td>
       </ng-container>
 
@@ -59,7 +71,7 @@
         *matRowDef="let row; columns: displayedColumns"
         class="data-row"
         [attr.data-id]="row.id"
-        (click)='gotoView(row.id)'
+        (click)="gotoView(row.id)"
       ></tr>
     </table>
 
