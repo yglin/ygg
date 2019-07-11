@@ -18,6 +18,7 @@ import { SharedTypesModule } from '@ygg/shared/types';
 import { SharedUserModule } from '@ygg/shared/user';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ScheduleFormTableComponent', () => {
   @Injectable()
@@ -52,7 +53,10 @@ describe('ScheduleFormTableComponent', () => {
         SharedUiNgMaterialModule,
         SharedUiWidgetsModule,
         SharedTypesModule,
-        SharedUserModule
+        SharedUserModule,
+        RouterTestingModule.withRoutes([
+          { path: '**', redirectTo: ''}
+        ])
       ],
       providers: [
         { provide: ScheduleFormService, useClass: MockScheduleFormService }
