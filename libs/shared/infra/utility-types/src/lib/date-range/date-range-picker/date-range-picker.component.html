@@ -1,0 +1,25 @@
+<div class="ygg-date-range-picker">
+  <button mat-raised-button (click)="openPicker()">
+    <mat-icon>date_range</mat-icon>
+    <span *ngIf="dateRange"
+      >{{ dateRange.start | date: 'shortDate' }}&nbsp;&mdash;&nbsp;{{
+        dateRange.end | date: 'shortDate'
+      }}</span
+    >
+    <span *ngIf="!dateRange">開始 — 結束</span>
+  </button>
+  <!--
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="開始 — 結束"
+        type="text"
+        autocomplete="off"
+        [value]="dateRangeText"
+        (blur)="onBlur()"
+        (click)='openPicker()'
+      />
+      <span matPrefix></span>
+    </mat-form-field>
+  -->
+</div>

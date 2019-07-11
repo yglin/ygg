@@ -1,0 +1,23 @@
+<div>
+  <div
+    fxLayout="row wrap"
+    fxLayoutAlign="space-around center"
+    fxLayoutGap="50px"
+  >
+    <div
+      *ngFor="let item of menuItems"
+      class="item"
+      [id]="item.id"
+      [matTooltip]="item.tooltip"
+    >
+      <a [routerLink]="item.link"
+        ><div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="5px">
+          <div class="icon"><ygg-image [image]="item.icon"></ygg-image></div>
+          <div>
+            <h4>{{ item.label }}</h4>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>

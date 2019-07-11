@@ -1,1 +1,0 @@
-export { UserFrontEndFeatureModule } from './app/user-frontend.module';

@@ -1,0 +1,15 @@
+.full-width-table {
+  width: 100%;
+}
+
+.search-box {
+  max-width: 640px;
+}
+
+.data-row {
+  cursor: pointer;
+}
+
+.data-row:hover {
+  background-color: bisque;
+}

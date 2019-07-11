@@ -71,30 +71,6 @@
           {
             "sourceTag": "scope:shared",
             "onlyDependOnLibsWithTags": ["scope:shared"]
-          },
-          {
-            "sourceTag": "scope:shopping",
-            "onlyDependOnLibsWithTags": ["scope:shopping", "scope:shared"]
-          },
-          {
-            "sourceTag": "scope:schedule",
-            "onlyDependOnLibsWithTags": ["scope:schedule", "scope:shared"]
-          },
-          {
-            "sourceTag": "type:util",
-            "onlyDependOnLibsWithTags": ["type:util"]
-          },
-          {
-            "sourceTag": "type:ui",
-            "onlyDependOnLibsWithTags": ["type:ui", "type:util"]
-          },
-          {
-            "sourceTag": "scope:backend",
-            "onlyDependOnLibsWithTags": ["*"]
-          },
-          {
-            "sourceTag": "scope:test",
-            "onlyDependOnLibsWithTags": ["*"]
           }
         ]
       }

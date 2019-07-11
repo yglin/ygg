@@ -1,1 +1,0 @@
-export { SchedulerFeatureModule } from './app/scheduler.module';

@@ -1,4 +1,4 @@
-import { YGGError } from '@ygg/shared/infrastructure/error';
+import { YGGError } from '@ygg/shared/infra/error';
 
 export enum UserErrorCode {
   Unknown = 0,

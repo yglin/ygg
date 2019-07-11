@@ -3,126 +3,6 @@
   "version": 1,
   "newProjectRoot": "",
   "projects": {
-    "deep-travel": {
-      "root": "apps/deep-travel/",
-      "sourceRoot": "apps/deep-travel/src",
-      "projectType": "application",
-      "prefix": "dpt",
-      "schematics": {},
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/deep-travel",
-            "index": "apps/deep-travel/src/index.html",
-            "main": "apps/deep-travel/src/main.ts",
-            "polyfills": "apps/deep-travel/src/polyfills.ts",
-            "tsConfig": "apps/deep-travel/tsconfig.app.json",
-            "assets": [
-              "apps/deep-travel/src/favicon.ico",
-              "apps/deep-travel/src/assets"
-            ],
-            "styles": [
-              "apps/deep-travel/src/styles.css"
-            ],
-            "scripts": [],
-            "es5BrowserSupport": true
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/deep-travel/src/environments/environment.ts",
-                  "with": "apps/deep-travel/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "deep-travel:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "deep-travel:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "deep-travel:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/deep-travel/tsconfig.app.json",
-              "apps/deep-travel/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "apps/deep-travel/jest.config.js",
-            "tsConfig": "apps/deep-travel/tsconfig.spec.json",
-            "setupFile": "apps/deep-travel/src/test-setup.ts"
-          }
-        }
-      }
-    },
-    "deep-travel-e2e": {
-      "root": "apps/deep-travel-e2e",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/builders:cypress",
-          "options": {
-            "cypressConfig": "apps/deep-travel-e2e/cypress.json",
-            "tsConfig": "apps/deep-travel-e2e/tsconfig.e2e.json",
-            "devServerTarget": "deep-travel:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "deep-travel:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "apps/deep-travel-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
     "shared-user": {
       "root": "libs/shared/user",
       "sourceRoot": "libs/shared/user/src",
@@ -143,9 +23,7 @@
               "libs/shared/user/tsconfig.lib.json",
               "libs/shared/user/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -179,9 +57,7 @@
               "libs/shopping/payment/tsconfig.lib.json",
               "libs/shopping/payment/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -215,9 +91,7 @@
               "libs/shopping/order/tsconfig.lib.json",
               "libs/shopping/order/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -226,78 +100,6 @@
             "jestConfig": "libs/shopping/order/jest.config.js",
             "tsConfig": "libs/shopping/order/tsconfig.spec.json",
             "setupFile": "libs/shopping/order/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {}
-    },
-    "data-access": {
-      "root": "libs/shared/data-access",
-      "sourceRoot": "libs/shared/data-access/src",
-      "projectType": "library",
-      "prefix": "ygg",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "libs/shared/data-access/tsconfig.lib.json",
-            "project": "libs/shared/data-access/ng-package.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/shared/data-access/tsconfig.lib.json",
-              "libs/shared/data-access/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "libs/shared/data-access/jest.config.js",
-            "tsConfig": "libs/shared/data-access/tsconfig.spec.json",
-            "setupFile": "libs/shared/data-access/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {}
-    },
-    "shared-form-controls": {
-      "root": "libs/shared/form-controls",
-      "sourceRoot": "libs/shared/form-controls/src",
-      "projectType": "library",
-      "prefix": "ygg",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "libs/shared/form-controls/tsconfig.lib.json",
-            "project": "libs/shared/form-controls/ng-package.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/shared/form-controls/tsconfig.lib.json",
-              "libs/shared/form-controls/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "libs/shared/form-controls/jest.config.js",
-            "tsConfig": "libs/shared/form-controls/tsconfig.spec.json",
-            "setupFile": "libs/shared/form-controls/src/test-setup.ts"
           }
         }
       },
@@ -316,9 +118,7 @@
               "libs/shopping/cart/tsconfig.lib.json",
               "libs/shopping/cart/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -345,9 +145,7 @@
             "outputPath": "dist/apps/firebase-functions",
             "main": "apps/firebase-functions/src/main.ts",
             "tsConfig": "apps/firebase-functions/tsconfig.app.json",
-            "assets": [
-              "apps/firebase-functions/src/assets"
-            ]
+            "assets": ["apps/firebase-functions/src/assets"]
           },
           "configurations": {
             "production": {
@@ -377,9 +175,7 @@
               "apps/firebase-functions/tsconfig.app.json",
               "apps/firebase-functions/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -391,9 +187,9 @@
         }
       }
     },
-    "shared-infrastructure-error": {
-      "root": "libs/shared/infrastructure/error",
-      "sourceRoot": "libs/shared/infrastructure/error/src",
+    "shared-infra-error": {
+      "root": "libs/shared/infra/error",
+      "sourceRoot": "libs/shared/infra/error/src",
       "projectType": "library",
       "prefix": "ygg",
       "architect": {
@@ -401,264 +197,21 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "libs/shared/infrastructure/error/tsconfig.lib.json",
-              "libs/shared/infrastructure/error/tsconfig.spec.json"
+              "libs/shared/infra/error/tsconfig.lib.json",
+              "libs/shared/infra/error/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
           "builder": "@nrwl/builders:jest",
           "options": {
-            "jestConfig": "libs/shared/infrastructure/error/jest.config.js",
-            "tsConfig": "libs/shared/infrastructure/error/tsconfig.spec.json"
+            "jestConfig": "libs/shared/infra/error/jest.config.js",
+            "tsConfig": "libs/shared/infra/error/tsconfig.spec.json"
           }
         }
       },
       "schematics": {}
-    },
-    "user-frontend": {
-      "root": "apps/user/frontend/",
-      "sourceRoot": "apps/user/frontend/src",
-      "projectType": "application",
-      "prefix": "ygg",
-      "schematics": {},
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/user/frontend",
-            "index": "apps/user/frontend/src/index.html",
-            "main": "apps/user/frontend/src/main.ts",
-            "polyfills": "apps/user/frontend/src/polyfills.ts",
-            "tsConfig": "apps/user/frontend/tsconfig.app.json",
-            "assets": [
-              "apps/user/frontend/src/favicon.ico",
-              "apps/user/frontend/src/assets"
-            ],
-            "styles": [
-              "apps/user/frontend/src/styles.css"
-            ],
-            "scripts": [],
-            "es5BrowserSupport": true
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/user/frontend/src/environments/environment.ts",
-                  "with": "apps/user/frontend/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "user-frontend:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "user-frontend:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "user-frontend:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/user/frontend/tsconfig.app.json",
-              "apps/user/frontend/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "apps/user/frontend/jest.config.js",
-            "tsConfig": "apps/user/frontend/tsconfig.spec.json",
-            "setupFile": "apps/user/frontend/src/test-setup.ts"
-          }
-        }
-      }
-    },
-    "user-frontend-e2e": {
-      "root": "apps/user/frontend-e2e",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/builders:cypress",
-          "options": {
-            "cypressConfig": "apps/user/frontend-e2e/cypress.json",
-            "tsConfig": "apps/user/frontend-e2e/tsconfig.e2e.json",
-            "devServerTarget": "user-frontend:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "user-frontend:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "apps/user/frontend-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "scheduler": {
-      "root": "apps/scheduler/",
-      "sourceRoot": "apps/scheduler/src",
-      "projectType": "application",
-      "prefix": "ygg",
-      "schematics": {},
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/scheduler",
-            "index": "apps/scheduler/src/index.html",
-            "main": "apps/scheduler/src/main.ts",
-            "polyfills": "apps/scheduler/src/polyfills.ts",
-            "tsConfig": "apps/scheduler/tsconfig.app.json",
-            "assets": [
-              "apps/scheduler/src/favicon.ico",
-              "apps/scheduler/src/assets"
-            ],
-            "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "apps/scheduler/src/styles.css"
-            ],
-            "scripts": [],
-            "es5BrowserSupport": true
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "apps/scheduler/src/environments/environment.ts",
-                  "with": "apps/scheduler/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "scheduler:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "scheduler:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "scheduler:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/scheduler/tsconfig.app.json",
-              "apps/scheduler/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "apps/scheduler/jest.config.js",
-            "tsConfig": "apps/scheduler/tsconfig.spec.json",
-            "setupFile": "apps/scheduler/src/test-setup.ts"
-          }
-        }
-      }
-    },
-    "scheduler-e2e": {
-      "root": "apps/scheduler-e2e",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/builders:cypress",
-          "options": {
-            "cypressConfig": "apps/scheduler-e2e/cypress.json",
-            "tsConfig": "apps/scheduler-e2e/tsconfig.e2e.json",
-            "devServerTarget": "scheduler:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "scheduler:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "apps/scheduler-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
     },
     "shared-ui-widgets": {
       "root": "libs/shared/ui/widgets",
@@ -673,9 +226,7 @@
               "libs/shared/ui/widgets/tsconfig.lib.json",
               "libs/shared/ui/widgets/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -684,64 +235,6 @@
             "jestConfig": "libs/shared/ui/widgets/jest.config.js",
             "tsConfig": "libs/shared/ui/widgets/tsconfig.spec.json",
             "setupFile": "libs/shared/ui/widgets/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {}
-    },
-    "shared-domain-resource": {
-      "root": "libs/shared/domain/resource",
-      "sourceRoot": "libs/shared/domain/resource/src",
-      "projectType": "library",
-      "prefix": "ygg",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/shared/domain/resource/tsconfig.lib.json",
-              "libs/shared/domain/resource/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "libs/shared/domain/resource/jest.config.js",
-            "tsConfig": "libs/shared/domain/resource/tsconfig.spec.json",
-            "setupFile": "libs/shared/domain/resource/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {}
-    },
-    "shared-domain-schedule": {
-      "root": "libs/shared/domain/schedule",
-      "sourceRoot": "libs/shared/domain/schedule/src",
-      "projectType": "library",
-      "prefix": "ygg",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/shared/domain/schedule/tsconfig.lib.json",
-              "libs/shared/domain/schedule/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "libs/shared/domain/schedule/jest.config.js",
-            "tsConfig": "libs/shared/domain/schedule/tsconfig.spec.json",
-            "setupFile": "libs/shared/domain/schedule/src/test-setup.ts"
           }
         }
       },
@@ -760,9 +253,7 @@
               "libs/shared/ui/themes/tsconfig.lib.json",
               "libs/shared/ui/themes/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -771,35 +262,6 @@
             "jestConfig": "libs/shared/ui/themes/jest.config.js",
             "tsConfig": "libs/shared/ui/themes/tsconfig.spec.json",
             "setupFile": "libs/shared/ui/themes/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {}
-    },
-    "shared-infrastructure-utility-types": {
-      "root": "libs/shared/infrastructure/utility-types",
-      "sourceRoot": "libs/shared/infrastructure/utility-types/src",
-      "projectType": "library",
-      "prefix": "ygg",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/shared/infrastructure/utility-types/tsconfig.lib.json",
-              "libs/shared/infrastructure/utility-types/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/builders:jest",
-          "options": {
-            "jestConfig": "libs/shared/infrastructure/utility-types/jest.config.js",
-            "tsConfig": "libs/shared/infrastructure/utility-types/tsconfig.spec.json",
-            "setupFile": "libs/shared/infrastructure/utility-types/src/test-setup.ts"
           }
         }
       },
@@ -883,9 +345,7 @@
               "apps/sandbox/tsconfig.app.json",
               "apps/sandbox/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -920,12 +380,290 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/sandbox-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
+    },
+    "playwhat": {
+      "root": "apps/playwhat/",
+      "sourceRoot": "apps/playwhat/src",
+      "projectType": "application",
+      "prefix": "pw",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/playwhat",
+            "index": "apps/playwhat/src/index.html",
+            "main": "apps/playwhat/src/main.ts",
+            "polyfills": "apps/playwhat/src/polyfills.ts",
+            "tsConfig": "apps/playwhat/tsconfig.app.json",
+            "assets": [
+              "apps/playwhat/src/favicon.ico",
+              "apps/playwhat/src/assets"
+            ],
+            "styles": [
+              "apps/playwhat/src/custom-theme.scss",
+              "apps/playwhat/src/styles.css",
+              "libs/shared/ui/widgets/src/shared-ui-widgets.module.css"
+            ],
+            "scripts": [],
+            "es5BrowserSupport": true
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/playwhat/src/environments/environment.ts",
+                  "with": "apps/playwhat/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "playwhat:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "playwhat:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "playwhat:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/playwhat/tsconfig.app.json",
+              "apps/playwhat/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "apps/playwhat/jest.config.js",
+            "tsConfig": "apps/playwhat/tsconfig.spec.json",
+            "setupFile": "apps/playwhat/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "playwhat-e2e": {
+      "root": "apps/playwhat-e2e",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/builders:cypress",
+          "options": {
+            "cypressConfig": "apps/playwhat-e2e/cypress.json",
+            "tsConfig": "apps/playwhat-e2e/tsconfig.e2e.json",
+            "devServerTarget": "playwhat:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "playwhat:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "apps/playwhat-e2e/tsconfig.e2e.json",
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "playwhat-scheduler": {
+      "root": "libs/playwhat/scheduler",
+      "sourceRoot": "libs/playwhat/scheduler/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/playwhat/scheduler/tsconfig.lib.json",
+              "libs/playwhat/scheduler/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/playwhat/scheduler/jest.config.js",
+            "tsConfig": "libs/playwhat/scheduler/tsconfig.spec.json",
+            "setupFile": "libs/playwhat/scheduler/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "playwhat-resource": {
+      "root": "libs/playwhat/resource",
+      "sourceRoot": "libs/playwhat/resource/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/playwhat/resource/tsconfig.lib.json",
+              "libs/playwhat/resource/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/playwhat/resource/jest.config.js",
+            "tsConfig": "libs/playwhat/resource/tsconfig.spec.json",
+            "setupFile": "libs/playwhat/resource/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shared-infra-data-access": {
+      "root": "libs/shared/infra/data-access",
+      "sourceRoot": "libs/shared/infra/data-access/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/infra/data-access/tsconfig.lib.json",
+              "libs/shared/infra/data-access/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/shared/infra/data-access/jest.config.js",
+            "tsConfig": "libs/shared/infra/data-access/tsconfig.spec.json",
+            "setupFile": "libs/shared/infra/data-access/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shared-types": {
+      "root": "libs/shared/types",
+      "sourceRoot": "libs/shared/types/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/types/tsconfig.lib.json",
+              "libs/shared/types/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/shared/types/jest.config.js",
+            "tsConfig": "libs/shared/types/tsconfig.spec.json",
+            "setupFile": "libs/shared/types/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "playwhat-admin": {
+      "root": "libs/playwhat/admin",
+      "sourceRoot": "libs/playwhat/admin/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/playwhat/admin/tsconfig.lib.json",
+              "libs/playwhat/admin/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/playwhat/admin/jest.config.js",
+            "tsConfig": "libs/playwhat/admin/tsconfig.spec.json",
+            "setupFile": "libs/playwhat/admin/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shared-ui-navigation": {
+      "root": "libs/shared/ui/navigation",
+      "sourceRoot": "libs/shared/ui/navigation/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/navigation/tsconfig.lib.json",
+              "libs/shared/ui/navigation/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/navigation/jest.config.js",
+            "tsConfig": "libs/shared/ui/navigation/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/navigation/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {
@@ -940,5 +678,5 @@
       "framework": "angular"
     }
   },
-  "defaultProject": "deep-travel"
+  "defaultProject": "playwhat"
 }

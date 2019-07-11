@@ -1,0 +1,19 @@
+<div id="user-selector" class="user-selector">
+  <ygg-action-barred>
+    <div yggActionBarredActions>
+      <button mat-fab (click)='onSubmit()'><mat-icon>save</mat-icon></button>
+    </div>
+    <div yggActionBarredContent fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
+      <mat-selection-list (selectionChange)="onChangeSelection($event)">
+        <mat-list-option
+          *ngFor="let id of orderBySelected(ids)"
+          [value]="id"
+          [id]="id"
+          [selected]="isSelected(id)"
+        >
+          <ygg-user-thumbnail [id]="id"></ygg-user-thumbnail>
+        </mat-list-option>
+      </mat-selection-list>
+    </div>
+  </ygg-action-barred>
+</div>

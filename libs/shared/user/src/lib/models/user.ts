@@ -1,4 +1,4 @@
-import {DataItem, toJSONDeep} from '@ygg/shared/data-access';
+import {DataItem, toJSONDeep} from '@ygg/shared/infra/data-access';
 import {extend, sample} from 'lodash';
 
 export enum UserState {
@@ -21,14 +21,20 @@ export class User implements DataItem {
   providers: any;
   state: UserState;
 
-  static newAnonymous(): User {
-    const anonymous = new User();
-    anonymous.id = 'anony-mummy-honey-spaghetti-your-moms-fatty';
-    anonymous.isAnonymous = true;
-    anonymous.name = sample(['馬＊久', '蔣＊虢', '李＊灰', '菜＊文', '陳＊匾']);
-    anonymous.email = 'taiwanNO1@ygmail.com';
-    anonymous.phone = '0999089457';
-    anonymous.avatarUrl = new URL(sample([
+  static isUser(value: any): value is User {
+    return !!(value && value.id);
+  }
+
+// tslint:disable-next-line: member-ordering
+  static forgedCount = 0;
+  static forge(): User {
+    const forged = new User();
+    forged.id = `anony-mummy-honey-spaghetti-your-moms-fatty-${User.forgedCount++}`;
+    forged.isAnonymous = true;
+    forged.name = sample(['馬＊久', '蔣＊虢', '李＊灰', '菜＊文', '陳＊匾']);
+    forged.email = 'taiwanNO1@ygmail.com';
+    forged.phone = '0999089457';
+    forged.avatarUrl = new URL(sample([
       'https://upload.wikimedia.org/wikipedia/commons/7/73/Facebook_Haha_React.png',
       'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Chicken_icon_05.svg/816px-Chicken_icon_05.svg.png',
       'https://upload.wikimedia.org/wikipedia/en/thumb/3/34/AlthepalHappyface.svg/256px-AlthepalHappyface.svg.png',
@@ -36,7 +42,7 @@ export class User implements DataItem {
       'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Phantom_Open_Emoji_1f619.svg/64px-Phantom_Open_Emoji_1f619.svg.png',
       'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Breathe-face-devil-grin.svg/128px-Breathe-face-devil-grin.svg.png'
     ]));
-    return anonymous;
+    return forged;
   }
 
   constructor() {
