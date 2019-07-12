@@ -664,6 +664,33 @@
         }
       },
       "schematics": {}
+    },
+    "playwhat-play": {
+      "root": "libs/playwhat/play",
+      "sourceRoot": "libs/playwhat/play/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/playwhat/play/tsconfig.lib.json",
+              "libs/playwhat/play/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/builders:jest",
+          "options": {
+            "jestConfig": "libs/playwhat/play/jest.config.js",
+            "tsConfig": "libs/playwhat/play/tsconfig.spec.json",
+            "setupFile": "libs/playwhat/play/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

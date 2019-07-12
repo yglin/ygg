@@ -1,0 +1,9 @@
+<div>
+  <ygg-tags-group-switch
+    [tagsLeft]="unselectedTags"
+    titleLeft="未選擇的標籤"
+    [tagsRight]="selectedTags"
+    titleRight="已選擇的標籤"
+    (submit)="onTagsGroupSwitchSubmit($event)"
+  ></ygg-tags-group-switch>
+</div>

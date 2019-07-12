@@ -61,6 +61,9 @@
     },
     "shared-ui-navigation": {
       "tags": ["scope:shared", "type:ui", "platform:mobile"]
+    },
+    "playwhat-play": {
+      "tags": ["scope:playwhat", "type:feature", "platform:mobile"]
     }
   }
 }

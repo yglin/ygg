@@ -9,6 +9,7 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { PlaywhatSchedulerFrontendModule } from '@ygg/playwhat/scheduler';
 import { PlaywhatAdminModule } from '@ygg/playwhat/admin';
 import { PlaywhatSchedulerAdminModule } from "@ygg/playwhat/scheduler";
+import { PlaywhatPlayAdminModule } from "@ygg/playwhat/play";
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './layout/header/header.component';
@@ -37,6 +38,7 @@ import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
     BrowserAnimationsModule,
     PlaywhatSchedulerFrontendModule,
     PlaywhatSchedulerAdminModule,
+    PlaywhatPlayAdminModule,
     PlaywhatAdminModule,
   ],
   providers: [],

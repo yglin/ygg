@@ -12,7 +12,7 @@ describe('Test admin links', () => {
     logout();
   });
 
-  it('should be able to follow path admin -> scheduler -> staff -> agent to agents setting', () => {
+  it('should be able to follow path admin/scheduler/staff/agent to agents setting', () => {
     cy.url().should('match', /.*\/admin$/);
     cy.get('#scheduler').click();
     cy.url().should('match', /.*\/admin\/scheduler$/);
@@ -23,7 +23,7 @@ describe('Test admin links', () => {
     cy.get('#user-selector').should('be.visible');
   });
   
-  it('should be able to follow path admin -> scheduler -> forms to schedule-forms list table', () => {
+  it('should be able to follow path admin/scheduler/forms to schedule-forms list table', () => {
     cy.url().should('match', /.*\/admin$/);
     cy.get('#scheduler').click();
     cy.url().should('match', /.*\/admin\/scheduler$/);
@@ -31,7 +31,16 @@ describe('Test admin links', () => {
     cy.url().should('match', /.*\/admin\/scheduler\/forms$/);
     cy.get('#schedule-forms-table').should('be.visible');
   });
-  
+
+  it('should follow path admin/resource/tags to settings for resource tags', () => {
+    cy.url().should('match', /.*\/admin$/);
+    cy.get('#resource').click();
+    cy.url().should('match', /.*\/admin\/resource$/);
+    cy.get('#tags').click();
+    cy.url().should('match', /.*\/admin\/resource\/tags$/);
+    cy.get('#resource-tags-list').should('be.visible');
+    cy.get('#resource-tags-creator').should('be.visible');
+  });  
 });
 
 // describe('Admin securities', () => {
