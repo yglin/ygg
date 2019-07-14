@@ -1,5 +1,5 @@
 .group-pane {
-  width: 25vw;
+  width: 40%;
   min-width: 150px;
 }
 
@@ -9,6 +9,9 @@
 
 .item {
   cursor: pointer;
+  border-radius: 5px;
+  margin: 20px 10px;
+  padding: 10px 5px;
 }
 
 .item.selected {

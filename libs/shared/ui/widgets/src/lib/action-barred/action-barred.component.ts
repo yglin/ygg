@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'ygg-action-barred',
@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./action-barred.component.css']
 })
 export class ActionBarredComponent implements OnInit {
+  @Input() layout:string = 'col';
 
   constructor() { }
 

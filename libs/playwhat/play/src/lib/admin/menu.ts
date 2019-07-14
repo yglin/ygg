@@ -1,6 +1,6 @@
 import { Image } from '@ygg/shared/types';
 import { MenuTree } from '@ygg/shared/ui/navigation';
-import { AdminPlayTagsComponent } from './admin-play-tags/admin-resource-tags.component';
+import { AdminPlayTagsComponent } from './admin-play-tags/admin-play-tags.component';
 
 export const adminMenu: MenuTree = new MenuTree({
   id: 'play',

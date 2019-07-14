@@ -1,14 +1,15 @@
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PlayAdminService } from './admin/Play-admin.service';
+import { PlayAdminService } from './admin/play-admin.service';
 import { PlaywhatAdminService } from '@ygg/playwhat/admin';
 import { adminMenu } from './admin';
 import { AdminPlayTagsComponent } from './admin/admin-play-tags/admin-play-tags.component';
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 @NgModule({
   declarations: [AdminPlayTagsComponent],
   entryComponents: [AdminPlayTagsComponent],
-  imports: [CommonModule],
+  imports: [CommonModule, SharedUiWidgetsModule],
   providers: [
     {
       provide: APP_INITIALIZER,

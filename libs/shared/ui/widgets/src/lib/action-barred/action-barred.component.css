@@ -1,9 +1,22 @@
 .ygg-action-barred {
   position: relative;
-  padding-right: 50px;
 }
 
-.ygg-action-barred .actions {
+.layout-row {
+  padding-right: 70px;
+}
+
+.layout-row .actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.layout-col {
+  padding-top: 70px;
+}
+
+.layout-col .actions {
   position: absolute;
   top: 0;
   right: 0;

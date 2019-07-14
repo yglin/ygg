@@ -1,4 +1,4 @@
-<div class="ygg-action-barred">
+<div class="ygg-action-barred" [ngClass]="{'layout-row': layout == 'row', 'layout-col': layout == 'col'}">
   <div class="actions">
     <ng-content select="[yggActionBarredActions]"></ng-content>
   </div>

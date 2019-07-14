@@ -1,9 +1,10 @@
-import { xor } from 'lodash';
+import { xor, isEmpty } from 'lodash';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, combineLatest } from 'rxjs';
-import { Tags } from '@ygg/shared/types';
 import { PlayTagService } from '../../tag/play-tag.service';
 import { PlayAdminService } from '../play-admin.service';
+import { PlayTag } from '../../tag/play-tag';
+
 
 @Component({
   selector: 'ygg-admin-play-tags',
@@ -11,9 +12,11 @@ import { PlayAdminService } from '../play-admin.service';
   styleUrls: ['./admin-play-tags.component.css']
 })
 export class AdminPlayTagsComponent implements OnInit, OnDestroy {
-  selected: Tags;
-  unselected: Tags;
+  selected: PlayTag[];
+  unselected: PlayTag[];
   subscriptions: Subscription[] = [];
+  // newTagName: string;
+
   constructor(
     private playTagService: PlayTagService,
     private playAdminService: PlayAdminService
@@ -22,11 +25,12 @@ export class AdminPlayTagsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscriptions.push(
       combineLatest(
-        this.playTagService.listAllTagNames$(),
-        this.playAdminService.getTags$()
+        this.playTagService.list$(),
+        this.playAdminService.getPlayTags$()
       ).subscribe(([tagsAll, tagsSelected]) => {
         this.selected = tagsSelected;
-        this.unselected = new Tags(xor(tagsAll.values, tagsSelected.values));
+        const selectedIds = this.selected.map(tag => tag.id);
+        this.unselected = tagsAll.filter(tag => selectedIds.indexOf(tag.id) < 0);
       })
     );
   }
@@ -37,11 +41,25 @@ export class AdminPlayTagsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onTagsGroupSwitchSubmit([unselected, selected]) {
-    this.submit(new Tags(selected));
+  onItemsGroupSwitcherSubmit(payload) {
+    if (payload.right && !isEmpty(payload)) {
+      this.submit(payload.right);
+    }
   }
 
-  async submit(selected: Tags) {
-    await this.playAdminService.setTags(selected);
+  async submit(selected: PlayTag[]) {
+    if (confirm('確定要修改體驗標籤的設定嗎？')) {
+      await this.playAdminService.setPlayTags(selected);
+      alert('修改完成');
+    }
+  }
+
+  async addNewTag(newTagName) {
+    if (newTagName) {
+      const newTag = new PlayTag().fromJSON({
+        name: newTagName
+      });
+      await this.playTagService.upsert(newTag);
+    }
   }
 }

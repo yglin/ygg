@@ -1,9 +1,14 @@
 <div>
-  <ygg-tags-group-switch
-    [tagsLeft]="unselectedTags"
+  <ygg-items-group-switcher
+    [itemsLeft]="unselected"
     titleLeft="未選擇的標籤"
-    [tagsRight]="selectedTags"
-    titleRight="已選擇的標籤"
-    (submit)="onTagsGroupSwitchSubmit($event)"
-  ></ygg-tags-group-switch>
+    [itemsRight]="selected"
+    titleRight="已選擇的標籤（將出現在使用者的選單中）"
+    (submit)="onItemsGroupSwitcherSubmit($event)"
+  ></ygg-items-group-switcher>
+  <br>
+  <mat-form-field class="add-new-tag">
+    <input matInput id='new-tag-name' placeholder="新增類型標籤" #newTagInput>
+    <button mat-mini-fab matSuffix id='add-new-tag' [disabled]='!(newTagInput.value)' (click)='addNewTag(newTagInput.value)'><mat-icon>add</mat-icon></button>
+  </mat-form-field>
 </div>

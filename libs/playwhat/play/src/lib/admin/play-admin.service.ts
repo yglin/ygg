@@ -7,6 +7,9 @@ import { switchMap, map } from 'rxjs/operators';
 import { MenuTree } from '@ygg/shared/ui/navigation';
 import { PlaywhatAdminService } from '@ygg/playwhat/admin';
 import { Image, Tags } from '@ygg/shared/types';
+import { PlayTag } from '../tag/play-tag';
+import { PlayTagService } from '../tag/play-tag.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +26,8 @@ export class PlayAdminService {
   }
 
   constructor(
-    private playwhatAdminService: PlaywhatAdminService
+    private playwhatAdminService: PlaywhatAdminService,
+    private playTagService: PlayTagService
   ) {
     this._menu = new MenuTree();
   }
@@ -43,12 +47,15 @@ export class PlayAdminService {
     return this.playwhatAdminService.getData$<T>(path);
   }
 
-  getTags$(): Observable<Tags> {
-    return this.getData$<string[]>('tags').pipe(map(tagNames => new Tags(tagNames)));
+  // Get id of tags
+  getPlayTags$(): Observable<PlayTag[]> {
+    return this.getData$<string[]>('tags').pipe(
+      switchMap(ids => this.playTagService.listByIds$(ids))
+    );
   }
 
-  async setTags(tags: Tags) {
-    await this.setData<string[]>('tags', tags.values);
+  // Set tags by id
+  async setPlayTags(playTags: PlayTag[]) {
+    await this.setData<string[]>('tags', playTags.map(tag => tag.id));
   }
-
 }
