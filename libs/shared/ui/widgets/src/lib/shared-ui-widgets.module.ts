@@ -17,6 +17,7 @@ import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.co
 import { TimeRangeComponent } from './time-range/time-range.component';
 import { TitleDividerComponent } from './title-divider/title-divider.component';
 import { ReactiveTextInputComponent } from './reactive-text-input/reactive-text-input.component';
+import { ItemsGroupSwitcherComponent } from './items-group-switcher/items-group-switcher.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { ReactiveTextInputComponent } from './reactive-text-input/reactive-text-
     YggDialogComponent,
     YggDialogContentHostDirective,
     ReactiveTextInputComponent,
+    ItemsGroupSwitcherComponent,
   ],
   imports: [
     CommonModule,
@@ -48,7 +50,8 @@ import { ReactiveTextInputComponent } from './reactive-text-input/reactive-text-
     TimeRangeComponent,
     TitleDividerComponent,
     ActionBarredComponent,
-    ReactiveTextInputComponent
+    ReactiveTextInputComponent,
+    ItemsGroupSwitcherComponent
   ],
   entryComponents: [ProgressSpinnerComponent, YggDialogComponent]
 })

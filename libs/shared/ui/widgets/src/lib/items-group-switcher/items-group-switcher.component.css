@@ -1,0 +1,17 @@
+.group-pane {
+  width: 25vw;
+  min-width: 150px;
+}
+
+.switch-buttons {
+  min-width: 50px;
+}
+
+.item {
+  cursor: pointer;
+}
+
+.item.selected {
+  background-color: darkblue;
+  color: white;
+}
