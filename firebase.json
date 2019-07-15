@@ -7,7 +7,7 @@
     "source": "/"
   },
   "hosting": {
-    "public": "dist/apps/deep-travel",
+    "public": "dist/apps/playwhat",
     "ignore": [
       "firebase.json",
       "**/.*",
