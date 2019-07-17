@@ -1,10 +1,11 @@
 import { pick } from "lodash";
-import { NO_ERRORS_SCHEMA, DebugElement } from '@angular/core';
+import 'hammerjs';
+import { NO_ERRORS_SCHEMA, DebugElement, forwardRef, Component } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { MockComponent } from "ng-mocks";
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedTypesModule, DateRange, Contact, Tags } from '@ygg/shared/types';
+import { FormsModule, ReactiveFormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { SharedTypesModule, DateRange, Contact } from '@ygg/shared/types';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 import { ScheduleFormComponent } from './schedule-form.component';
@@ -16,6 +17,7 @@ import { ScheduleFormViewComponent } from './schedule-form-view/schedule-form-vi
 import { User, AuthenticateService, AuthenticateUiService, UserService } from '@ygg/shared/user';
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
 import { By } from '@angular/platform-browser';
+import { PlaywhatPlayModule } from '@ygg/playwhat/play';
 
 let testScheduleForm: ScheduleForm;
 let loginUser: User;
@@ -60,9 +62,25 @@ class MockScheduleFormService {
   upsert() {
     return Promise.resolve(testScheduleForm);
   }
-  listLikes$() {
-    return of(Tags.forge());
-  }
+}
+
+@Component({
+  selector: 'ygg-play-tags-input',
+  template: '',
+  styles: [''],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => MockPlayTagsInputComponent),
+      multi: true
+    }
+  ]
+})
+export class MockPlayTagsInputComponent implements ControlValueAccessor {
+  writeValue() {}
+  registerOnChange() {}
+  registerOnTouched() {}
+  upsertTags() {}
 }
 
 describe('ScheduleFormComponent', () => {
@@ -81,7 +99,7 @@ describe('ScheduleFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ScheduleFormComponent, MockComponent(ScheduleFormViewComponent)],
+      declarations: [ScheduleFormComponent, MockComponent(ScheduleFormViewComponent), MockPlayTagsInputComponent],
       imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -165,7 +183,7 @@ describe('ScheduleFormComponent', () => {
       'transpotation',
       'transpotationHelp',
       'accommodationHelp',
-      'likes',
+      'likeTags',
       'likesDescription',
       'agentId'
     ];
@@ -189,6 +207,14 @@ describe('ScheduleFormComponent', () => {
       done();
     });
     component.submit();
+  });
+
+  it('when submit, should also call PlayTagsInput.upsertTags() to upsert likeTags', async done => {
+    const mockPlayTagsInputComponent = debugElement.query(By.directive(MockPlayTagsInputComponent)).componentInstance;
+    jest.spyOn(mockPlayTagsInputComponent, 'upsertTags').mockImplementation(() => Promise.resolve());
+    await component.submit();
+    expect(mockPlayTagsInputComponent.upsertTags).toHaveBeenCalled();
+    done();
   });
 
   it('If logged in, ScheudleForm.creatorId should be current user\'s', done => {

@@ -1,4 +1,4 @@
-import { sampleSize, xor, range, find } from 'lodash';
+import { sampleSize, uniqBy, xor, range, find } from 'lodash';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 // import { Tags } from '@ygg/shared/types';
 import { MockComponent } from "ng-mocks";
@@ -20,8 +20,9 @@ describe('AdminPlayTagsComponent', () => {
   let component: AdminPlayTagsComponent;
   let fixture: ComponentFixture<AdminPlayTagsComponent>;
   let debugElement: DebugElement;
-  const tagsAll: PlayTag[] = range(20).map(() => PlayTag.forge());
+  const tagsAll: PlayTag[] = uniqBy(range(20).map(() => PlayTag.forge()), 'name');
   const tagsSelected: PlayTag[] = sampleSize(tagsAll, 5);
+  const tagsUnselected: PlayTag[] = xor(tagsAll, tagsSelected);
   const newTagName = uuid();
 
   @Injectable()
@@ -77,7 +78,7 @@ describe('AdminPlayTagsComponent', () => {
     expect(mockPlayTagService.list$).toHaveBeenCalled();
     expect(mockPlayAdminService.getPlayTags$).toHaveBeenCalled();
     expect(component.selected).toEqual(tagsSelected);
-    expect(component.unselected).toEqual(xor(tagsAll, tagsSelected));
+    expect(component.unselected).toEqual(tagsUnselected);
   });
 
   it('should be able to add new PlayTag to unselected', async done => {

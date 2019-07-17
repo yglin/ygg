@@ -1,7 +1,6 @@
 import { filter } from 'lodash';
 import { Injectable } from '@angular/core';
 import { DataAccessService } from '@ygg/shared/infra/data-access';
-import { Tags } from '@ygg/shared/types';
 
 // import {DateRange, NumberRange} from
 // '@ygg/shared/infra/utility-types'; import * as moment from 'moment';
@@ -17,7 +16,7 @@ export class ScheduleFormService {
   collection = 'schedule-forms';
 
   constructor(
-    private dataAccessService: DataAccessService // private userService: UserService
+    private dataAccessService: DataAccessService,
   ) {}
 
   // defaultForm(): ScheduleForm {
@@ -48,11 +47,5 @@ export class ScheduleFormService {
       scheduleForm,
       ScheduleForm
     );
-  }
-
-  listLikes$(): Observable<Tags> {
-    // TODO: Fetch from real database
-    const likes = new Tags(['手作DIY', '協力車', '咖啡', '押花', '生態導覽']);
-    return of(likes);
   }
 }

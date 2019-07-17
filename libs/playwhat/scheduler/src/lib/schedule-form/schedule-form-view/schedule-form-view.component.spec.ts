@@ -131,8 +131,8 @@ describe('ScheduleFormViewComponent', () => {
       testScheduleForm.accommodationHelp
     );
 
-    expect(countPluralField(debugElement, 'likes')).toEqual(
-      testScheduleForm.likes.length
+    expect(countPluralField(debugElement, 'likeTags')).toEqual(
+      testScheduleForm.likeTags.length
     );
 
     expect(getValueText(debugElement, 'likesDescription')).toEqual(

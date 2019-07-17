@@ -1,55 +1,28 @@
 import { extend, sample } from "lodash";
 import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { Tag } from '@ygg/shared/types';
 import { v4 as uuid } from "uuid";
 
-export class PlayTag implements DataItem {
+export class PlayTag extends Tag implements DataItem {
   id: string;
-  name: string;
 
   static forge(): PlayTag {
-    const newOne = new PlayTag();
-    newOne.name = sample([
-      'HAVE',
-      'YOU',
-      'EVER',
-      'SEE',
-      'THE',
-      'RAIN',
-      'YYGG',
-      'BIRD',
-      'BIRB',
-      'BORB',
-      'ORB',
-      '口',
-      '食道',
-      '胃',
-      '十二指腸',
-      '小腸',
-      '大腸',
-      '盲腸',
-      '直腸',
-      '肛門',
-      'Cockatiel',
-      'Cockatoo',
-      'Eclectus',
-      'Conure',
-      'Parakeet',
-      'Budgie',
-      'Macaw'
-    ]);
-    return newOne;
+    return new PlayTag(Tag.forge().name);
   }
 
-  constructor() {
-    this.id = uuid();
+  constructor(name?: string) {
+    super(name);
+    this.id = this.name;
   }
 
   fromJSON(data: any): this {
     extend(this, data);
+    this.id = this.name;
     return this;
   }
 
   toJSON(): any {
+    this.id = this.name;
     return toJSONDeep(this);
   }
 }

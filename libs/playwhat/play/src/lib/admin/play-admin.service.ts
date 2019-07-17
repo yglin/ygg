@@ -6,7 +6,6 @@ import { switchMap, map } from 'rxjs/operators';
 // import { adminMenu } from './menu';
 import { MenuTree } from '@ygg/shared/ui/navigation';
 import { PlaywhatAdminService } from '@ygg/playwhat/admin';
-import { Image, Tags } from '@ygg/shared/types';
 import { PlayTag } from '../tag/play-tag';
 import { PlayTagService } from '../tag/play-tag.service';
 

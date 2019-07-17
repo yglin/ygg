@@ -56,10 +56,7 @@ export class AdminPlayTagsComponent implements OnInit, OnDestroy {
 
   async addNewTag(newTagName) {
     if (newTagName) {
-      const newTag = new PlayTag().fromJSON({
-        name: newTagName
-      });
-      await this.playTagService.upsert(newTag);
+      await this.playTagService.upsert(new PlayTag(newTagName));
     }
   }
 }

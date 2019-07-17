@@ -1,59 +1,84 @@
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {AfterViewInit, Component, ElementRef, forwardRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl} from '@angular/forms';
-import {MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocompleteTrigger} from '@angular/material';
-import {combineLatest, fromEvent, Observable, of, Subscription} from 'rxjs';
-import {debounceTime, startWith} from 'rxjs/operators';
+import { isEmpty, find, remove } from 'lodash';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  forwardRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  Output,
+  EventEmitter
+} from '@angular/core';
+import { FormControl } from '@angular/forms';
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent,
+  MatAutocompleteTrigger,
+  MatChipInputEvent,
+  MatChipEvent
+} from '@angular/material';
+import { combineLatest, fromEvent, Observable, of, Subscription } from 'rxjs';
+import {
+  debounceTime,
+  startWith,
+  distinctUntilChanged,
+  tap,
+  map,
+  filter
+} from 'rxjs/operators';
 
-import {Tags} from '../tags';
+import { Tag } from '../tags';
 
 @Component({
   selector: 'ygg-tags-input',
   templateUrl: './tags-input.component.html',
-  styleUrls: ['./tags-input.component.css'],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => TagsInputComponent),
-    multi: true
-  }]
+  styleUrls: ['./tags-input.component.css']
 })
-export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit,
-                                           ControlValueAccessor {
+export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() label: string;
-  @Input() tagsSource$: Observable<Tags>;
-  tagsSource: string[];
-  inputControl: FormControl;
-  private _tags: Tags;
+  @Input() tagsSource$: Observable<Tag[]>;
+  @Input() tags: Tag[] = [];
+  @Output() changed: EventEmitter<Tag[]> = new EventEmitter();
+  tagsForAutoComplete: Tag[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
   subscriptions: Subscription[];
-  isAutoCompleteShown: boolean;
+
+  _isDisplayAutocompleteSelector: boolean = false;
+  set isDisplayAutocompleteSelector(value: boolean) {
+    this._isDisplayAutocompleteSelector = !!value;
+    if (this.matAutocompleteTrigger) {
+      if (this._isDisplayAutocompleteSelector) {
+        this.matAutocompleteTrigger.openPanel();
+      } else {
+        this.matAutocompleteTrigger.closePanel();
+      }
+    }
+  }
+  get isDisplayAutocompleteSelector(): boolean {
+    return this._isDisplayAutocompleteSelector;
+  }
+
+  minCountOfLettersForAutoComplete = 2;
 
   @ViewChild('tagInput') tagInput: ElementRef;
-  @ViewChild('tagInput', { read: MatAutocompleteTrigger }) matAutocompleteTrigger: MatAutocompleteTrigger;
+  @ViewChild('tagInput', { read: MatAutocompleteTrigger })
+  matAutocompleteTrigger: MatAutocompleteTrigger;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
   constructor() {
-    this.inputControl = new FormControl();
     this.subscriptions = [];
-    this.isAutoCompleteShown = false;
   }
-
-  get tags(): string[] {
-    return this._tags.values;
-  }
-
-  onChange: (tags: Tags) => {};
-  onTouched: () => {};
 
   notifyValueChange(): void {
-    if (this.onChange) {
-      this.onChange(this._tags);
-    }
+    this.changed.emit(this.tags);
   }
 
   ngOnInit(): void {
     if (!this.tagsSource$) {
-      this.tagsSource$ = of(new Tags([]));
+      this.tagsSource$ = of([]);
     }
   }
 
@@ -64,64 +89,71 @@ export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit,
   }
 
   ngAfterViewInit() {
-    const combined = combineLatest([
+    const inputKeyword$: Observable<string> = fromEvent<KeyboardEvent>(
+      this.tagInput.nativeElement,
+      'keyup'
+    ).pipe(
+      map(keyboardEvent => (<HTMLInputElement>keyboardEvent.target).value),
+      startWith(''),
+      debounceTime(500),
+      distinctUntilChanged()
+    );
+
+    const subscription = combineLatest([
       this.tagsSource$,
-      fromEvent<KeyboardEvent>(this.tagInput.nativeElement, 'keyup')
-          .pipe(startWith(null), debounceTime(500))
-    ]);
-    const subscription = combined.subscribe(([tags,]) => {
-      const inputValue = this.inputControl.value;
-      if (inputValue) {
-        this.tagsSource = tags.values.filter(value => {
-          return value.includes(inputValue);
-        });
+      inputKeyword$
+    ]).subscribe(([tagsSource, inputKeyword]) => {
+      // console.log(tagsSource);
+      // console.log(inputKeyword);
+
+      // Things changed, close autocomplete panel in advance
+      this.isDisplayAutocompleteSelector = false;
+      if (
+        inputKeyword &&
+        inputKeyword.length >= this.minCountOfLettersForAutoComplete
+      ) {
+        this.tagsForAutoComplete = tagsSource.filter(tag =>
+          tag.name.includes(inputKeyword)
+        );
+        if (this.tagsForAutoComplete.length > 0) {
+          // Open autocomplete panel, only when input over 2 letters and matched
+          this.isDisplayAutocompleteSelector = true;
+        }
       } else {
-        this.tagsSource = tags.values;
+        this.tagsForAutoComplete = tagsSource;
       }
     });
     this.subscriptions.push(subscription);
   }
 
-  writeValue(value: Tags): void {
-    this._tags = value;
-  }
-
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    this.onTouched = fn;
-  }
-
-  setDisabledState(isDisabled: boolean): void {}
-
-  add(event: MatChipInputEvent) {
-    const value = (this.inputControl.value || '').trim();
-    if (value) {
-      this._tags.add(value);
+  addTag(name: string) {
+    name = (name || '').trim();
+    if (name && !find(this.tags, tag => tag.name === name)) {
+      this.tags.push(new Tag(name));
       this.notifyValueChange();
     }
-    // Reset the input value
-    this.inputControl.setValue(null);
   }
 
-  remove(tag: string) {
-    this._tags.delete(tag);
+  removeTag(name: string) {
+    remove(this.tags, tag => tag.name === name);
     this.notifyValueChange();
+  }
+
+  addChip(event: MatChipInputEvent) {
+    this.addTag(event.value);
+  }
+
+  removeChip(event: MatChipEvent) {
+    this.removeTag((event.chip.value as Tag).name);
   }
 
   addSelected(event: MatAutocompleteSelectedEvent): void {
-    this._tags.add(event.option.viewValue);
-    this.notifyValueChange();
+    const name = (event.option.value as Tag).name;
+    this.addTag(name);
   }
 
   toggleAutoComplete(event: MouseEvent) {
     event.stopPropagation();
-    if (this.matAutocomplete.isOpen) {
-      this.matAutocompleteTrigger.closePanel();
-    } else {
-      this.matAutocompleteTrigger.openPanel();
-    }
+    this.isDisplayAutocompleteSelector = !(this.isDisplayAutocompleteSelector);
   }
 }

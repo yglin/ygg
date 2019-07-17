@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedTypesModule } from '@ygg/shared/types';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
-import { PlaywhatResourceModule } from '@ygg/playwhat/resource';
+import { PlaywhatPlayModule } from '@ygg/playwhat/play';
 
 import { ScheduleFormComponent } from './schedule-form';
 import { ScheduleFormViewComponent } from './schedule-form/schedule-form-view/schedule-form-view.component';
@@ -30,7 +30,7 @@ import { ScheduleFormTableComponent } from './schedule-form/schedule-form-table/
     SharedUiWidgetsModule,
     SharedTypesModule,
     SharedUserModule,
-    PlaywhatResourceModule,
+    PlaywhatPlayModule,
   ],
   exports: [SchedulerNewComponent, ScheduleFormComponent, ScheduleFormViewComponent, SchedulerDashboardComponent, ScheduleFormListComponent, ScheduleFormThumbnailComponent, ScheduleFormTableComponent],
 })

@@ -24,7 +24,13 @@ export function toJSONDeep(obj: any = {}): any {
       } else if (isSerializableJSON(property)) {
         data[key] = property.toJSON();
       } else {
-        data[key] = JSON.parse(JSON.stringify(property));
+        try {
+          data[key] = JSON.parse(JSON.stringify(property));
+        } catch (error) {
+          console.error(error);
+          console.error(`JSON.parse error on parsing data["${key}"], the data set as:`);
+          console.error(data);   
+        }
       }
     }
   }

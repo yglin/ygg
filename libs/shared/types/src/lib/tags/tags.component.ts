@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Tags } from './tags';
+import { Tag } from './tags';
 
 @Component({
   selector: 'ygg-tags',
@@ -7,7 +7,7 @@ import { Tags } from './tags';
   styleUrls: ['./tags.component.css']
 })
 export class TagsComponent implements OnInit {
-  @Input() tags: Tags;
+  @Input() tags: Tag[];
 
   constructor() { }
 

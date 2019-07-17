@@ -5,7 +5,8 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  ViewChild
 } from '@angular/core';
 import {
   FormArray,
@@ -14,7 +15,7 @@ import {
   FormBuilder,
   Validators
 } from '@angular/forms';
-import { NumberRange, Tags, Contact } from '@ygg/shared/types';
+import { NumberRange, Contact } from '@ygg/shared/types';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
 
@@ -28,6 +29,7 @@ import {
 } from '@ygg/shared/user';
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
 import { MatCheckboxChange } from '@angular/material';
+import { PlayTagsInputComponent } from '@ygg/playwhat/play';
 
 @Component({
   selector: 'ygg-schedule-form',
@@ -38,7 +40,8 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
   @Input() formGroup: FormGroup;
   @Input() scheduleForm: ScheduleForm;
   @Output() onSubmit: EventEmitter<ScheduleForm>;
-  likesSource$: Observable<Tags>;
+  @ViewChild('playTagsInput') playTagsInput: PlayTagsInputComponent;
+
   budgetType = 'total';
   budgetHintMessage = '';
   needTranspotationHelp = false;
@@ -56,7 +59,6 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     private userService: UserService
   ) {
     this.onSubmit = new EventEmitter();
-    this.likesSource$ = this.scheduleFormService.listLikes$();
     this.subscriptions = [];
     this.subscriptions.push(
       this.authService.currentUser$.subscribe(user => {
@@ -196,7 +198,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
       transpotation: '',
       transpotationHelp: '',
       accommodationHelp: new FormControl({ value: '', disabled: true }),
-      likes: new Tags([]),
+      likeTags: [],
       likesDescription: '',
       agentId: ''
     });
@@ -235,6 +237,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
           this.scheduleForm.creatorId = this.currentUser.id;
         }
       }
+      await this.playTagsInput.upsertTags();
       await this.scheduleFormService.upsert(this.scheduleForm);
       alert('已成功更新／新增需求資料');
       this.onSubmit.emit(this.scheduleForm);
