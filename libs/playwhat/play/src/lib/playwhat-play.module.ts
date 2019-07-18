@@ -1,14 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Route } from '@angular/router';
 import { PlayTagsInputComponent } from './tag/play-tags-input/play-tags-input.component';
 import { SharedTypesModule } from '@ygg/shared/types';
-
-export const playwhatPlayRoutes: Route[] = [];
+import { PlayFormComponent } from './play/play-form/play-form.component';
+import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 
 @NgModule({
-  imports: [CommonModule, RouterModule, SharedTypesModule],
-  declarations: [PlayTagsInputComponent],
-  exports: [PlayTagsInputComponent]
+  imports: [CommonModule, SharedTypesModule, SharedUiNgMaterialModule],
+  declarations: [PlayTagsInputComponent, PlayFormComponent],
+  exports: [PlayTagsInputComponent, PlayFormComponent]
 })
 export class PlaywhatPlayModule {}
