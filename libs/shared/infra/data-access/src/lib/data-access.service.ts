@@ -6,8 +6,8 @@ import {
 } from '@angular/fire/firestore';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-
+import { map, catchError } from 'rxjs/operators';
+import { LogService } from "@ygg/shared/infra/log";
 import { DataItem } from './data-item';
 import { DataAccessError, DataAccessErrorCode } from './error';
 // import { DataAccessModule } from './data-access.module';
@@ -26,7 +26,8 @@ export class DataAccessService {
 
   constructor(
     private firestore: AngularFirestore,
-    private fireRealDB: AngularFireDatabase
+    private fireRealDB: AngularFireDatabase,
+    private logService: LogService
   ) {
     this.collections = {};
   }
@@ -104,9 +105,13 @@ export class DataAccessService {
       return of([]);
     } else {
       const arrayGet$: Observable<T>[] = ids.map(id =>
-        this.get$(collection, id, constructor)
+        this.get$(collection, id, constructor).pipe(catchError(error => {
+          console.error(error);
+          this.logService.error(error);
+          return of(null);
+        }))
       );
-      return combineLatest(arrayGet$);
+      return combineLatest(arrayGet$).pipe(map(items => items.filter(item => item !== null)));
     }
   }
 

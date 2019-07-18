@@ -19,7 +19,7 @@ import { LogService, LogServiceConfigToken } from './log.service';
 })
 export class SharedInfraLogModule {
   
-  static forRoot(config: LogConfig): ModuleWithProviders {
+  static forRoot(config?: LogConfig): ModuleWithProviders {
     if (!config) {
       config = {
         threshold: LogLevel.Warning

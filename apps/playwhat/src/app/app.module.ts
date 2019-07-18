@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
+import { SharedInfraLogModule } from "@ygg/shared/infra/log";
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUserModule } from '@ygg/shared/user';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
@@ -30,6 +31,7 @@ import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
   ],
   imports: [
     BrowserModule,
+    SharedInfraLogModule.forRoot(),
     SharedUiNgMaterialModule,
     SharedUserModule,
     SharedUiWidgetsModule,
