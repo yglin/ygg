@@ -1,4 +1,4 @@
-import { Injectable, Inject, InjectionToken } from '@angular/core';
+import { Injectable, Inject, InjectionToken, Optional } from '@angular/core';
 import { LogLevel, Log, LogFilter, LogConfig } from './log';
 import { BehaviorSubject } from 'rxjs';
 
@@ -13,7 +13,12 @@ export class LogService {
   filter: LogFilter;
   [wrapperFnuctions: string]: any;
 
-  constructor(@Inject(LogServiceConfigToken) private config) {
+  constructor(@Optional() @Inject(LogServiceConfigToken) private config) {
+    if (!this.config) {
+      this.config = {
+        threshold: LogLevel.Warning
+      };
+    }
     this.logs = [];
     this.logs$ = new BehaviorSubject(this.logs);
     this.filter = new LogFilter(this.config.threshold);

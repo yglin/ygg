@@ -18,13 +18,7 @@ import { LogService, LogServiceConfigToken } from './log.service';
   exports: [LogListComponent]
 })
 export class SharedInfraLogModule {
-  
-  static forRoot(config?: LogConfig): ModuleWithProviders {
-    if (!config) {
-      config = {
-        threshold: LogLevel.Warning
-      };
-    }
+  public static forRoot(config?: LogConfig): ModuleWithProviders {
     return {
       ngModule: SharedInfraLogModule,
       providers: [
