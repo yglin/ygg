@@ -29,8 +29,9 @@ export class PlayTagService {
   }
 
   /**
-   * Only upsert those tags which are not in database
-   * @param tags - Array of PlayTag
+   * Upsert a bunch of play tags.
+   * Only upsert those tags which are not in database, unique by name.
+   * @param tags - Array of PlayTags to be upserted
    */
   async upsertList(tags: PlayTag[]): Promise<PlayTag[]> {
     const tagsInStock: PlayTag[] = await this.list$().pipe(take(1)).toPromise();

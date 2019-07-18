@@ -12,17 +12,15 @@ export class PlayTag extends Tag implements DataItem {
 
   constructor(name?: string) {
     super(name);
-    this.id = this.name;
+    this.id = uuid();
   }
 
   fromJSON(data: any): this {
     extend(this, data);
-    this.id = this.name;
     return this;
   }
 
   toJSON(): any {
-    this.id = this.name;
     return toJSONDeep(this);
   }
 }
