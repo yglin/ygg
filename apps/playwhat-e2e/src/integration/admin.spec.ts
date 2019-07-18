@@ -32,14 +32,15 @@ describe('Test admin links', () => {
     cy.get('#schedule-forms-table').should('be.visible');
   });
 
-  it('should follow path admin/resource/tags to settings for resource tags', () => {
+  it('should follow path admin/play/tags to settings for play tags', () => {
     cy.url().should('match', /.*\/admin$/);
-    cy.get('#resource').click();
-    cy.url().should('match', /.*\/admin\/resource$/);
+    cy.get('#play').click();
+    cy.url().should('match', /.*\/admin\/play$/);
     cy.get('#tags').click();
-    cy.url().should('match', /.*\/admin\/resource\/tags$/);
-    cy.get('#resource-tags-list').should('be.visible');
-    cy.get('#resource-tags-creator').should('be.visible');
+    cy.url().should('match', /.*\/admin\/play\/tags$/);
+    cy.get('#admin-play-tags').should('be.visible');
+    // Should provide input to add new tag
+    cy.get('#add-new-play-tag input').should('be.visible');
   });  
 });
 
