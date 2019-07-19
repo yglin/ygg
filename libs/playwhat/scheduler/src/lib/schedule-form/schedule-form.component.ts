@@ -28,7 +28,7 @@ import {
   AuthenticateUiService
 } from '@ygg/shared/user';
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
-import { MatCheckboxChange } from '@angular/material';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { PlayTagsInputComponent } from '@ygg/playwhat/play';
 
 @Component({

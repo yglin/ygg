@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MatDialogRef} from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { YggDialogContentComponent } from '@ygg/shared/ui/widgets';
 import * as moment from 'moment';
 import {DaterangepickerComponent} from 'ngx-daterangepicker-material';

@@ -1,6 +1,6 @@
 import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
 import { debounceTime } from 'rxjs/operators';
-import { ErrorStateMatcher } from '@angular/material';
+import { ErrorStateMatcher } from '@angular/material/core';
 import {
   FormControl,
   FormGroupDirective,

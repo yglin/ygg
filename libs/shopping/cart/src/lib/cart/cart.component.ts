@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 import { Purchase } from '@ygg/shopping/order';
 import { ShoppingService } from '../shopping.service';
 

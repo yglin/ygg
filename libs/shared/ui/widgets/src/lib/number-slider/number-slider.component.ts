@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { ICON_REGISTRY_PROVIDER } from '@angular/material';
+import { ICON_REGISTRY_PROVIDER } from '@angular/material/icon';
 
 @Component({
   selector: 'ygg-number-slider',

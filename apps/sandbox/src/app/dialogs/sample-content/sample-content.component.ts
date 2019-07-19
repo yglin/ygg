@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { YggDialogContentComponent } from '@ygg/shared/ui/widgets';
 
 export interface DialogSampleContentComponentData {

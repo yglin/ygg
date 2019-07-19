@@ -13,13 +13,8 @@ import {
   EventEmitter
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {
-  MatAutocomplete,
-  MatAutocompleteSelectedEvent,
-  MatAutocompleteTrigger,
-  MatChipInputEvent,
-  MatChipEvent
-} from '@angular/material';
+import { MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { MatChipInputEvent, MatChipEvent } from '@angular/material/chips';
 import { combineLatest, fromEvent, Observable, of, Subscription } from 'rxjs';
 import {
   debounceTime,

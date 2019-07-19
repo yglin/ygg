@@ -6,7 +6,8 @@ import {
   Input,
   AfterViewInit
 } from '@angular/core';
-import { MatPaginator, MatSort } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { ScheduleFormTableDataSource } from './schedule-form-table-datasource';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ScheduleForm } from '../schedule-form';

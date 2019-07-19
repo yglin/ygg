@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthenticateService } from '../../authenticate.service';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { skip } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { User } from '../../models/user';

@@ -3,10 +3,10 @@ import { MockModule } from "ng-mocks";
 import { LoginDialogComponent } from './login-dialog.component';
 import { AuthenticateService } from '../../authenticate.service';
 import { Injectable } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { User } from '../../models/user';
-import { MatButtonModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
 
 describe('LoginDialogComponent', () => {
   let component: LoginDialogComponent;

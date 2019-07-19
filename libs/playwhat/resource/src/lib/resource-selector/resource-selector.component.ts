@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MatSelectionListChange} from '@angular/material';
+import { MatSelectionListChange } from '@angular/material/list';
 import {Resource} from '../models';
 import {ResourceService} from '../resource.service';
 import {difference, filter} from 'lodash';

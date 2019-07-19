@@ -7,7 +7,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ScheduleFormService } from '../schedule-form.service';
 import { of } from 'rxjs';
 import { DateRangeComponent } from '@ygg/shared/types';
-import { MatIcon } from '@angular/material';
+import { MatIcon } from '@angular/material/icon';
 
 describe('ScheduleFormThumbnailComponent', () => {
   let component: ScheduleFormThumbnailComponent;

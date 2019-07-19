@@ -1,6 +1,6 @@
 import {ComponentType} from '@angular/cdk/portal';
 import {AfterViewInit, Component, ComponentFactoryResolver, Directive, Inject, OnInit, TemplateRef, ViewChild, ViewContainerRef, Type} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export interface YggDialogComponentData {
   contentComponent: Type<any>;

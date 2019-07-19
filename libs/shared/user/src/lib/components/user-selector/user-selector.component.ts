@@ -1,6 +1,6 @@
 import { isEmpty, sortBy } from 'lodash';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { MatSelectionListChange } from '@angular/material';
+import { MatSelectionListChange } from '@angular/material/list';
 import { UserService } from '../../user.service';
 import { Subscription } from 'rxjs';
 
