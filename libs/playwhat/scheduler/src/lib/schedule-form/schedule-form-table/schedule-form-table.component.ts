@@ -22,8 +22,8 @@ import { Router } from '@angular/router';
 })
 export class ScheduleFormTableComponent
   implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
   @Input() queries: Query[];
   source: BehaviorSubject<ScheduleForm[]> = new BehaviorSubject([]);
   dataSource: ScheduleFormTableDataSource = new ScheduleFormTableDataSource(

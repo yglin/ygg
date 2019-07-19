@@ -22,7 +22,7 @@ export class YggDialogContentHostDirective {
 })
 export class YggDialogComponent implements OnInit {
   title: string;
-  @ViewChild(YggDialogContentHostDirective) contentHost: YggDialogContentHostDirective;
+  @ViewChild(YggDialogContentHostDirective, { static: false }) contentHost: YggDialogContentHostDirective;
 
   constructor(
       @Inject(MAT_DIALOG_DATA) private dialogData: YggDialogComponentData,

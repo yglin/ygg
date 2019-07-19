@@ -40,7 +40,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
   @Input() formGroup: FormGroup;
   @Input() scheduleForm: ScheduleForm;
   @Output() onSubmit: EventEmitter<ScheduleForm>;
-  @ViewChild('playTagsInput') playTagsInput: PlayTagsInputComponent;
+  @ViewChild('playTagsInput', { static: false }) playTagsInput: PlayTagsInputComponent;
 
   budgetType = 'total';
   budgetHintMessage = '';

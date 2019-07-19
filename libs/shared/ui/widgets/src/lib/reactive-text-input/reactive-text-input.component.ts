@@ -21,7 +21,7 @@ export class ReactiveTextInputComponent implements AfterViewInit, OnDestroy {
   @Input() debounceTime = 1000;
   @Input() placeholder = '';
   @Output() changed: EventEmitter<string> = new EventEmitter();
-  @ViewChild('input') input: ElementRef;
+  @ViewChild('input', { static: false }) input: ElementRef;
   subscription: Subscription;
 
   constructor() {}

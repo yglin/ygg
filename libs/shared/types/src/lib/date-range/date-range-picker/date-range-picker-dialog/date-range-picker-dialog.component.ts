@@ -18,7 +18,7 @@ export interface DateRangePickerDialogData {
 export class DateRangePickerDialogComponent implements OnInit, AfterViewInit, YggDialogContentComponent {
   dateRange: DateRangeMoment;
   dialogData: any;
-  @ViewChild(DaterangepickerComponent) datePicker: DaterangepickerComponent;
+  @ViewChild(DaterangepickerComponent, { static: false }) datePicker: DaterangepickerComponent;
 
   constructor(private dialogRef: MatDialogRef<DateRangePickerDialogComponent>) {
   }

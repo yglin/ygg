@@ -13,8 +13,8 @@ import { LogLevel, getLogLevelName } from '../log';
   styleUrls: ['./log-list.component.css']
 })
 export class LogListComponent implements AfterViewInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
   dataSource: LogListDataSource | any;
 
   constructor(private logService: LogService) {
