@@ -33,7 +33,8 @@
       "@ygg/playwhat/admin": ["libs/playwhat/admin/src/index.ts"],
       "@ygg/shared/ui/navigation": ["libs/shared/ui/navigation/src/index.ts"],
       "@ygg/playwhat/play": ["libs/playwhat/play/src/index.ts"]
-    }
+    },
+    "rootDir": "."
   },
   "exclude": ["node_modules", "tmp"]
 }

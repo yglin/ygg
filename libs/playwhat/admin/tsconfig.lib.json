@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc/libs/playwhat/admin",
+    "outDir": "../../../dist/out-tsc",
     "target": "es2015",
     "module": "esNext",
     "moduleResolution": "node",
