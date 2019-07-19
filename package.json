@@ -52,6 +52,7 @@
     "@ngrx/router-store": "8.1.0",
     "@ngrx/store": "8.1.0",
     "@nrwl/angular": "8.2.0",
+    "@schematics/angular": "^8.1.2",
     "@types/uuid": "^3.4.5",
     "angular-fire-schematics": "^1.0.0",
     "core-js": "^3.1.4",
