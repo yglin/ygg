@@ -59,7 +59,7 @@ export class TagsInputComponent implements OnInit, OnDestroy, AfterViewInit {
   minCountOfLettersForAutoComplete = 2;
 
   @ViewChild('tagInput', { static: false }) tagInput: ElementRef;
-  @ViewChild('tagInput', { read: MatAutocompleteTrigger }, { static: false })
+  @ViewChild('tagInput', { read: MatAutocompleteTrigger, static: false })
   matAutocompleteTrigger: MatAutocompleteTrigger;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
 

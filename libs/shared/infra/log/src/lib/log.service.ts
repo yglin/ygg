@@ -79,13 +79,13 @@ function interceptConsoleMethod(methodName: string, doSomething: Function) {
       typeof window.console[methodName] === 'function'
     ) {
       const originalMethod = window.console[methodName];
-      window.console[methodName] = function() {
-        doSomething(arguments[0]);
+      window.console[methodName] = (...args: any[]) => {
+        doSomething(args[0]);
         if (originalMethod.apply) {
-          originalMethod.apply(originalMethod, [window.console, arguments]);
+          originalMethod.apply(window, args);
         } else {
           // For IE
-          const message = Array.prototype.slice.apply(arguments).join(' ');
+          const message = Array.prototype.slice.apply(args).join(' ');
           originalMethod(message);
         }
       };
