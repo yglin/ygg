@@ -14,6 +14,6 @@ var cypressFirebasePlugin = require('cypress-firebase').plugin;
 module.exports = function(on, config) {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
-  return cypressFirebasePlugin(config);
   on('file:preprocessor', preprocessTypescript(config));
+  return cypressFirebasePlugin(config);
 };
