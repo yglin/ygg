@@ -27,7 +27,7 @@ import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/firestore';
-// import { attachCustomCommands } from 'cypress-firebase';
+import { attachCustomCommands } from './firebase';
 
 const fbConfig = {
   apiKey: "AIzaSyA0q0wCPnyx--wXaukOp6wPBRBj2L0pSAU",
@@ -39,35 +39,74 @@ const fbConfig = {
 };
 
 firebase.initializeApp(fbConfig);
+attachCustomCommands({ Cypress, cy, firebase });
 
-// attachCustomCommands({ Cypress, cy, firebase });
+// Cypress.Commands.add('login', () => {
+//   if (!Cypress.env('FIREBASE_AUTH_JWT')) {
+//     cy.log('FIREBASE_AUTH_JWT must be set to cypress environment in order to login');
+//   } else if (firebase.auth().currentUser) {
+//     cy.log('Authed user already exists, login complete.');
+//   } else {
+//     return new Promise((resolve, reject) => {
+//       firebase.auth().onAuthStateChanged(auth => {
+//         if (auth) {
+//           resolve(auth);
+//         }
+//       });
+//       firebase.auth().signInWithCustomToken(Cypress.env('FIREBASE_AUTH_JWT')).catch(reject);
+//     });
+//   }
+// });
 
-Cypress.Commands.add('login', () => {
-  if (!Cypress.env('FIREBASE_AUTH_JWT')) {
-    cy.log('FIREBASE_AUTH_JWT must be set to cypress environment in order to login');
-  } else if (firebase.auth().currentUser) {
-    cy.log('Authed user already exists, login complete.');
-  } else {
-    return new Promise((resolve, reject) => {
-      firebase.auth().onAuthStateChanged(auth => {
-        if (auth) {
-          resolve(auth);
-        }
-      });
-      firebase.auth().signInWithCustomToken(Cypress.env('FIREBASE_AUTH_JWT')).catch(reject);
-    });
-  }
-});
+// Cypress.Commands.add('logout', () => {
+//   return new Promise((resolve, reject) => {
+//     firebase.auth().onAuthStateChanged(auth => {
+//       if (!auth) {
+//         resolve();
+//       }
+//     });
+//     firebase.auth().signOut().catch(reject);
+//   });
+// });
 
-Cypress.Commands.add('logout', () => {
-  return new Promise((resolve, reject) => {
-    firebase.auth().onAuthStateChanged(auth => {
-      if (!auth) {
-        resolve();
-      }
-    });
-    firebase.auth().signOut().catch(reject);
-  });
-});
+// Cypress.Commands.add('callFirestore', (action, actionPath, data, opts = {}) => {
+//   const dataToWrite = (0, _isObject2.default)(data) ? _objectSpread({}, data) : data;
 
+//   if ((0, _isObject2.default)(data) && opts.withMeta) {
+//     if (!dataToWrite.createdBy) {
+//       dataToWrite.createdBy = Cypress.env('TEST_UID');
+//     }
+
+//     if (!dataToWrite.createdAt) {
+//       dataToWrite.createdAt = new Date().toISOString();
+//     }
+//   }
+
+//   const firestoreCommand = (0, _buildFirestoreCommand.default)(Cypress, action, actionPath, dataToWrite, opts);
+//   cy.log(`Calling Firestore command:\n${firestoreCommand}`);
+//   cy.exec(firestoreCommand, {
+//     timeout: 100000
+//   }).then(out => {
+//     const {
+//       stdout,
+//       stderr
+//     } = out || {};
+
+//     if (stderr) {
+//       cy.log(`Error in Firestore Command:\n${stderr}`);
+//       return Promise.reject(stderr);
+//     }
+
+//     if (action === 'get' && typeof stdout === 'string') {
+//       try {
+//         return JSON.parse(stdout);
+//       } catch (err) {
+//         cy.log('Error parsing data from callFirestore response', out);
+//         return Promise.reject(err);
+//       }
+//     }
+
+//     return stdout;
+//   });
+// });
 

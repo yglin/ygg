@@ -1,8 +1,17 @@
 <div>
-  <form action="" id="play-form">
-    <mat-tab-group>
-      <mat-tab label="填寫資料"></mat-tab>
-      <mat-tab label="預先檢視"></mat-tab>
-    </mat-tab-group>
+  <form id="play-form" [formGroup]='formGroup'>
+    <ygg-action-barred>
+      <div yggActionBarredActions>
+        <button id='submit' mat-fab type="button" (click)="onSubmit()"><mat-icon>save</mat-icon></button>
+      </div>
+      <mat-tab-group yggActionBarredContent>
+        <mat-tab label="填寫資料">
+          <mat-form-field>
+            <input id='name' matInput placeholder="名稱" formControlName="name" />
+          </mat-form-field>
+        </mat-tab>
+        <mat-tab label="預先檢視"></mat-tab>
+      </mat-tab-group>
+    </ygg-action-barred>
   </form>
 </div>
