@@ -1,14 +1,45 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { RouterTestingModule } from "@angular/router/testing";
 import { PlayFormComponent } from './play-form.component';
+import { DebugElement, Injectable } from '@angular/core';
+import { isDisabled, typeIn } from "@ygg/shared/infra/test-utils";
+import { Play } from '../play';
+import { hasValidator } from "@ygg/shared/types";
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PlayService } from '../play.service';
+import { LogService } from '@ygg/shared/infra/log';
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
+import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
+import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 
 describe('PlayFormComponent', () => {
+  @Injectable()
+  class MockLogService {}
+
+  @Injectable()
+  class MockPlayService {}
+
   let component: PlayFormComponent;
   let fixture: ComponentFixture<PlayFormComponent>;
+  let debugElement: DebugElement;
+
+  const playFormModel = Play.getFormModel();
+  const testPlay = Play.forge();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PlayFormComponent ]
+      declarations: [ PlayFormComponent ],
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        RouterTestingModule.withRoutes([]),
+        SharedUiWidgetsModule,
+        SharedUiNgMaterialModule
+      ],
+      providers: [
+        { provide: PlayService, useClass: MockPlayService },
+        { provide: LogService, useClass: MockLogService }
+      ]
     })
     .compileComponents();
   }));
@@ -16,10 +47,26 @@ describe('PlayFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PlayFormComponent);
     component = fixture.componentInstance;
+    debugElement = fixture.debugElement;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('Initially invalid and submit button disabled', () => {
+    expect(component.formGroup.invalid).toBe(true);
+    expect(isDisabled(debugElement, 'button#submit')).toBe(true);
   });
+
+  it('After all required fields filled, form should turn valid and enable submit button', () => {
+    for (const name in playFormModel.controls) {
+      if (playFormModel.controls.hasOwnProperty(name)) {
+        const controlModel = playFormModel.controls[name];
+        if (hasValidator(controlModel, 'required')) {
+          typeIn(debugElement, `input[formControlName="${name}"]`, testPlay[name]);
+        }
+      }
+    }
+    expect(component.formGroup.invalid).toBe(false);
+    expect(isDisabled(debugElement, 'button#submit')).toBe(false);
+  });
+  
 });

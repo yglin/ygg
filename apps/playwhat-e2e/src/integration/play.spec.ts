@@ -48,11 +48,16 @@ describe('plays', () => {
   // });
 
   function fillInPlay(play: Play, options: any = {}) {
-    const textFields = ['name'];
-    const formSelector = 'form#play-form';
-    for (const fieldName of textFields) {
-      const inputSelector = `input#${fieldName}`;
-      cy.get(`${formSelector} ${inputSelector}`).type(play.name);
+    const formGroup = Play.getFormModel();
+    const formSelector = `form#${formGroup.name}`;
+    for (const name in formGroup.controls) {
+      if (formGroup.controls.hasOwnProperty(name)) {
+        const controlModel = formGroup.controls[name];
+        if (controlModel.type === 'string') {
+          const inputSelector = `input#${controlModel.name}`;
+          cy.get(`${formSelector} ${inputSelector}`).type(play[controlModel.name]);
+        }
+      }
     }
 
     if (options.submit) {

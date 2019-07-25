@@ -570,7 +570,10 @@
               "libs/shared/infra/data-access/tsconfig.lib.json",
               "libs/shared/infra/data-access/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/infra/data-access/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/infra/data-access/**"
+            ]
           }
         },
         "test": {
@@ -691,6 +694,34 @@
         }
       },
       "schematics": {}
+    },
+    "shared-infra-test-utils": {
+      "root": "libs/shared/infra/test-utils",
+      "sourceRoot": "libs/shared/infra/test-utils/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/infra/test-utils/tsconfig.lib.json",
+              "libs/shared/infra/test-utils/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/infra/test-utils/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/infra/test-utils/jest.config.js",
+            "tsConfig": "libs/shared/infra/test-utils/tsconfig.spec.json"
+          }
+        }
+      }
     }
   },
   "cli": {

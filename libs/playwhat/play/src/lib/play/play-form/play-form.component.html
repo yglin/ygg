@@ -1,17 +1,27 @@
 <div>
-  <form id="play-form" [formGroup]='formGroup'>
-    <ygg-action-barred>
-      <div yggActionBarredActions>
-        <button id='submit' mat-fab type="button" (click)="onSubmit()"><mat-icon>save</mat-icon></button>
-      </div>
-      <mat-tab-group yggActionBarredContent>
-        <mat-tab label="填寫資料">
-          <mat-form-field>
-            <input id='name' matInput placeholder="名稱" formControlName="name" />
-          </mat-form-field>
-        </mat-tab>
-        <mat-tab label="預先檢視"></mat-tab>
-      </mat-tab-group>
-    </ygg-action-barred>
-  </form>
+  <ygg-action-barred>
+    <div yggActionBarredActions>
+      <button
+        id="submit"
+        [disabled]="formGroup.invalid"
+        mat-fab
+        type="button"
+        (click)="onSubmit()"
+      >
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+    <mat-tab-group yggActionBarredContent>
+      <mat-tab label="填寫資料">
+        <form [formGroup]="formGroup">
+          <ygg-form-control
+            *ngFor="let controlModel of controlModels"
+            [formGroup]="formGroup"
+            [model]="controlModel"
+          ></ygg-form-control>
+        </form>
+      </mat-tab>
+      <mat-tab label="預先檢視"></mat-tab>
+    </mat-tab-group>
+  </ygg-action-barred>
 </div>
