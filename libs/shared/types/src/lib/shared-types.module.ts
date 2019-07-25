@@ -5,6 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
+import { DynamicFormsCoreModule } from "@ng-dynamic-forms/core";
+import { DynamicFormsMaterialUIModule } from "@ng-dynamic-forms/ui-material";
 
 import { ContactComponent, ContactFormComponent } from './contact';
 import { DateRangeComponent, DateRangePickerComponent } from './date-range';
@@ -17,6 +19,7 @@ import { TagsInputComponent } from './tags/tags-input/tags-input.component';
 import { DateRangePickerDialogComponent } from './date-range/date-range-picker/date-range-picker-dialog/date-range-picker-dialog.component';
 import { AlbumComponent } from './album/album.component';
 import { ImageComponent } from './image/image.component';
+import { FormControlComponent } from './form/form-control/form-control.component';
 
 @NgModule({
   imports: [
@@ -29,6 +32,8 @@ import { ImageComponent } from './image/image.component';
       cancelLabel: '取消',
       format: 'YYYY/MM/DD'
     }),
+    DynamicFormsCoreModule,
+    DynamicFormsMaterialUIModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule
   ],
@@ -43,7 +48,8 @@ import { ImageComponent } from './image/image.component';
     TagsInputComponent,
     DateRangePickerDialogComponent,
     AlbumComponent,
-    ImageComponent
+    ImageComponent,
+    FormControlComponent,
   ],
   entryComponents: [DateRangePickerDialogComponent],
   exports: [
@@ -56,7 +62,8 @@ import { ImageComponent } from './image/image.component';
     TagsComponent,
     TagsInputComponent,
     AlbumComponent,
-    ImageComponent
+    ImageComponent,
+    FormControlComponent,
   ]
 })
 export class SharedTypesModule {}
