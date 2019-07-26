@@ -9,4 +9,5 @@ export function isDisabled(debugElement: DebugElement, selector: string): boolea
 export function typeIn(debugElement: DebugElement, selector: string, text: string) {
   const nativeElement: HTMLInputElement = debugElement.query(By.css(selector)).nativeElement;
   nativeElement.value = text;
+  nativeElement.dispatchEvent(new Event('input'));
 }
