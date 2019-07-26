@@ -11,6 +11,7 @@ import { LogService } from '@ygg/shared/infra/log';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
+import { SharedTypesModule } from '@ygg/shared/types';
 
 describe('PlayFormComponent', () => {
   @Injectable()
@@ -26,6 +27,19 @@ describe('PlayFormComponent', () => {
   const playFormModel = Play.getFormModel();
   const testPlay = Play.forge();
 
+  beforeAll(function() {
+    window.matchMedia = jest.fn().mockImplementation(query => {
+      return {
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+      };
+    });
+  });
+  
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ PlayFormComponent ],
@@ -34,7 +48,8 @@ describe('PlayFormComponent', () => {
         ReactiveFormsModule,
         RouterTestingModule.withRoutes([]),
         SharedUiWidgetsModule,
-        SharedUiNgMaterialModule
+        SharedUiNgMaterialModule,
+        SharedTypesModule
       ],
       providers: [
         { provide: PlayService, useClass: MockPlayService },
@@ -56,17 +71,22 @@ describe('PlayFormComponent', () => {
     expect(isDisabled(debugElement, 'button#submit')).toBe(true);
   });
 
-  it('After all required fields filled, form should turn valid and enable submit button', () => {
+  it('After all required fields filled, form should turn valid and enable submit button', async done => {
     for (const name in playFormModel.controls) {
       if (playFormModel.controls.hasOwnProperty(name)) {
         const controlModel = playFormModel.controls[name];
         if (hasValidator(controlModel, 'required')) {
-          typeIn(debugElement, `input[formControlName="${name}"]`, testPlay[name]);
+          // component.formGroup.get(name).setValue(testPlay[name]);
+          typeIn(debugElement, `#${name} input`, testPlay[name]);
+          // console.log(`Set value "${testPlay[name]}" to ${name}`);
         }
       }
     }
-    expect(component.formGroup.invalid).toBe(false);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(component.formGroup.valid).toBe(true);
     expect(isDisabled(debugElement, 'button#submit')).toBe(false);
+    done();
   });
   
 });
