@@ -1,7 +1,11 @@
 import { extend, sample } from 'lodash';
 import { v4 as uuid } from 'uuid';
 import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
-import { FormGroupModel, FormControlModel } from '@ygg/shared/types';
+import {
+  FormGroupModel,
+  FormControlModel,
+  FormControlType
+} from '@ygg/shared/types';
 
 export class Play implements DataItem {
   id: string;
@@ -58,35 +62,33 @@ export class Play implements DataItem {
   }
 
   static getFormModel(): FormGroupModel {
-    const controls: { [key: string]: FormControlModel } = {};
-    const formMeta = { name: 'play-form', controls };
-
-    const stringFields = [
-      { name: 'name', label: '名稱' },
-      { name: 'introduction', label: '簡介' }
-    ];
-    for (const field of stringFields) {
-      controls[field.name] = {
-        name: field.name,
-        type: 'string',
-        label: field.label,
-        validators: []
-      };
-    }
-
-    const requiredFields = ['name', 'introduction'];
-    for (const key in controls) {
-      if (controls.hasOwnProperty(key)) {
-        const controlModel = controls[key];
-        if (requiredFields.indexOf(key) >= 0) {
-          controlModel.validators.push({
-            type: 'required'
-          });
-        }
+    const controls: { [key: string]: FormControlModel } = {
+      name: {
+        name: 'name',
+        type: FormControlType.text,
+        label: '名稱',
+        validators: [
+          {
+            type: 'required',
+            errorMessage: '請填入名稱'
+          }
+        ]
+      },
+      introduction: {
+        name: 'introduction',
+        type: FormControlType.textarea,
+        label: '簡介',
+        validators: [
+          {
+            type: 'required',
+            errorMessage: '請填入簡介'
+          }
+        ]
       }
-    }
+    };
 
-    return formMeta;
+    const formModel = { name: 'play-form', controls };
+    return formModel;
   }
 
   constructor() {

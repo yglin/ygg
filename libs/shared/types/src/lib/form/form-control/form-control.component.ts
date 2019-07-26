@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormControlModel } from '../form';
-import { FormGroup } from '@angular/forms';
-import { DynamicInputModel, DynamicInputModelConfig } from '@ng-dynamic-forms/core';
+import { FormControlModel, FormControlType } from '../form';
+import { FormGroup, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'ygg-form-control',
@@ -11,29 +10,22 @@ import { DynamicInputModel, DynamicInputModelConfig } from '@ng-dynamic-forms/co
 export class FormControlComponent implements OnInit {
   @Input() formGroup: FormGroup;
   @Input() model: FormControlModel;
-  dynamicInputModel: DynamicInputModel;
+  formControl: AbstractControl;
+  formControlTypes = FormControlType;
 
   constructor() { }
 
   ngOnInit() {
-    this.dynamicInputModel = this.toDynamicInputModel(this.model);
+    this.formControl = this.formGroup.get(this.model.name);
   }
 
-  toDynamicInputModel(controlModel: FormControlModel): DynamicInputModel {
-    const config: DynamicInputModelConfig = {
-      id: controlModel.name,
-      label: controlModel.label,
-      validators: {},
-      errorMessages: {}
-    };
-    for (const validator of controlModel.validators) {
-      if (validator.type === 'required') {
-        config.validators['required'] = null;
-        config.errorMessages['required'] = `請填入${controlModel.label}`;
+  getErrorMessage(errorName): string {
+    for (const validator of this.model.validators) {
+      if (validator.type === errorName) {
+        return validator.errorMessage;
       }
     }
-
-    return new DynamicInputModel(config);
+    return '';
   }
 
 }

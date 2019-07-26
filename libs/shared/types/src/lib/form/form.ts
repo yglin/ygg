@@ -1,12 +1,18 @@
 import { isEmpty } from "lodash";
 import { ValidatorModel } from './validator';
 
+export enum FormControlType {
+  text = 'text',
+  textarea = 'textarea'
+}
+
 export interface FormControlModel {
   name: string;
-  type: string;
+  type: FormControlType;
   label: string;
   default?: any;
   validators?: ValidatorModel[];
+  options?: any;
 }
 
 export interface FormGroupModel {
