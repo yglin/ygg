@@ -24,6 +24,9 @@
         }}</mat-error>
       </mat-form-field>
     </div>
+    <div *ngSwitchCase="formControlTypes.album">
+      <ygg-album-control [label]='model.label' [formControlName]='model.name'></ygg-album-control>
+    </div>
     <div *ngSwitchDefault></div>
   </div>
 </div>

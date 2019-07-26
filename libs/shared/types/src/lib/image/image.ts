@@ -1,4 +1,5 @@
-import { SerializableJSON } from "@ygg/shared/infra/data-access";
+import { sample } from 'lodash';
+import { SerializableJSON } from '@ygg/shared/infra/data-access';
 
 export enum ImageType {
   Unknown = 0,
@@ -22,12 +23,24 @@ export class Image implements SerializableJSON {
   private _src: string;
   type: ImageType;
 
+  static forge(): Image {
+    const src = sample([
+      'https://i.imgflip.com/295f2w.jpg',
+      'https://i.kym-cdn.com/photos/images/newsfeed/000/960/433/624.jpg',
+      'https://memeguy.com/photos/images/this-birb-321394.jpg',
+      'https://i.redd.it/f99b8okdhtqz.jpg',
+      'https://pics.me.me/when-u-walk-in-ur-birds-room-without-knocking-mating-6728111.png',
+      'https://i.pinimg.com/originals/8d/17/f4/8d17f4e6cacd537fceaf710a78dca094.jpg'
+    ]);
+    return new Image(src);
+  }
+
   static isImage(value: any): value is Image {
     return !!(value && value.src);
   }
 
-  static isValieImageExt(url: string): boolean{
-    const urlTokens = url.split(".");
+  static isValieImageExt(url: string): boolean {
+    const urlTokens = url.split('.');
     const urlExt = urlTokens[urlTokens.length - 1].toUpperCase();
     if (urlExt === 'JPG' || urlExt === 'PNG' || urlExt === 'GIF') {
       return true;
@@ -52,7 +65,10 @@ export class Image implements SerializableJSON {
       byteString = unescape(dataURI.split(',')[1]);
     }
     // separate out the mime component
-    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    const mimeString = dataURI
+      .split(',')[0]
+      .split(':')[1]
+      .split(';')[0];
 
     // write the bytes of the string to a typed array
     const ia = new Uint8Array(byteString.length);
@@ -71,10 +87,10 @@ export class Image implements SerializableJSON {
       if (isValidURL(value)) {
         // A valid url, image source from external site
         this.type = ImageType.External;
-      } else if (/^\/assets\//.test(value)){
+      } else if (/^\/assets\//.test(value)) {
         // A relative path, starts with /assets
         this.type = ImageType.Asset;
-      } else if (!(/\/+/.test(value))) {
+      } else if (!/\/+/.test(value)) {
         // Contains no slash "/", could be font icon
         this.type = ImageType.FontIcon;
       } else {
@@ -87,7 +103,7 @@ export class Image implements SerializableJSON {
   get isDefault(): boolean {
     return this._src === Image.DEFAULT_IMAGE_SRC;
   }
-  
+
   constructor(src?: string) {
     if (src) {
       this.src = src;
@@ -113,6 +129,8 @@ export class Image implements SerializableJSON {
     if (data) {
       if (data.src) {
         this.src = data.src;
+      } else if (typeof data === 'string') {
+        this.src = data;
       }
     }
     return this;
@@ -123,5 +141,4 @@ export class Image implements SerializableJSON {
       src: this.src
     };
   }
-
 }

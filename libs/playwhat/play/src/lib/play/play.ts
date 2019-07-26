@@ -6,11 +6,13 @@ import {
   FormControlModel,
   FormControlType
 } from '@ygg/shared/types';
+import { Album } from '@ygg/shared/types';
 
 export class Play implements DataItem {
   id: string;
   name: string;
   introduction: string;
+  album: Album;
 
   static forge(): Play {
     const newOne = new Play();
@@ -58,6 +60,7 @@ export class Play implements DataItem {
     其日牛馬嘶，新婦入青廬。奄奄黃昏後，寂寂人定初。我命絕今日，魂去屍長留！攬裙脫絲履，舉身赴清池。
     府吏聞此事，心知長別離。徘徊庭樹下，自掛東南枝。
     兩家求合葬，合葬華山傍。東西植松柏，左右種梧桐。枝枝相覆蓋，葉葉相交通。中有雙飛鳥，自名爲鴛鴦。仰頭相向鳴，夜夜達五更。行人駐足聽，寡婦起彷徨。多謝後世人，戒之慎勿忘。`;
+    newOne.album = Album.forge();
     return newOne;
   }
 
@@ -84,6 +87,12 @@ export class Play implements DataItem {
             errorMessage: '請填入簡介'
           }
         ]
+      },
+      album: {
+        name: 'album',
+        type: FormControlType.album,
+        label: '相簿',
+        default: new Album()
       }
     };
 
@@ -97,6 +106,9 @@ export class Play implements DataItem {
 
   fromJSON(data: any): this {
     extend(this, data);
+    if (data.album) {
+      this.album = new Album().fromJSON(data.album);
+    }
     return this;
   }
 
