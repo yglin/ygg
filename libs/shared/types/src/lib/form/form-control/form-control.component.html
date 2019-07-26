@@ -1,6 +1,29 @@
-<div *ngIf="formGroup && model" [formGroup]='formGroup' [id]='model.name'>
-  <dynamic-material-form-control
-    [group]="formGroup"
-    [model]="dynamicInputModel"
-  ></dynamic-material-form-control>
+<div *ngIf="formGroup && model" [formGroup]="formGroup" [id]="model.name">
+  <div [ngSwitch]="model.type">
+    <div *ngSwitchCase="formControlTypes.text">
+      <mat-form-field>
+        <input
+          matInput
+          [placeholder]="model.label"
+          [formControlName]="model.name"
+        />
+        <mat-error *ngFor="let error of formControl.errors | keyvalue">{{
+          getErrorMessage(error.key)
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+    <div *ngSwitchCase="formControlTypes.textarea">
+      <mat-form-field>
+        <textarea
+          matInput
+          [placeholder]="model.label"
+          [formControlName]="model.name"
+        ></textarea>
+        <mat-error *ngFor="let error of formControl.errors | keyvalue">{{
+          getErrorMessage(error.key)
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+    <div *ngSwitchDefault></div>
+  </div>
 </div>

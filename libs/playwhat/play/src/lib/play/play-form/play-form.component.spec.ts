@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from "@angular/router/testing";
+import { RouterTestingModule } from '@angular/router/testing';
 import { PlayFormComponent } from './play-form.component';
 import { DebugElement, Injectable } from '@angular/core';
-import { isDisabled, typeIn } from "@ygg/shared/infra/test-utils";
+import { isDisabled, setInputValue } from '@ygg/shared/infra/test-utils';
 import { Play } from '../play';
-import { hasValidator } from "@ygg/shared/types";
+import { hasValidator, FormControlType } from '@ygg/shared/types';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlayService } from '../play.service';
 import { LogService } from '@ygg/shared/infra/log';
@@ -34,15 +34,14 @@ describe('PlayFormComponent', () => {
         media: query,
         onchange: null,
         addListener: jest.fn(),
-        removeListener: jest.fn(),
+        removeListener: jest.fn()
       };
     });
   });
-  
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PlayFormComponent ],
+      declarations: [PlayFormComponent],
       imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -55,8 +54,7 @@ describe('PlayFormComponent', () => {
         { provide: PlayService, useClass: MockPlayService },
         { provide: LogService, useClass: MockLogService }
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -77,7 +75,7 @@ describe('PlayFormComponent', () => {
         const controlModel = playFormModel.controls[name];
         if (hasValidator(controlModel, 'required')) {
           // component.formGroup.get(name).setValue(testPlay[name]);
-          typeIn(debugElement, `#${name} input`, testPlay[name]);
+          setInputValue(debugElement, controlModel.type, name, testPlay[name]);
           // console.log(`Set value "${testPlay[name]}" to ${name}`);
         }
       }
@@ -88,5 +86,4 @@ describe('PlayFormComponent', () => {
     expect(isDisabled(debugElement, 'button#submit')).toBe(false);
     done();
   });
-  
 });
