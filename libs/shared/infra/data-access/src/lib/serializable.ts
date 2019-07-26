@@ -1,4 +1,4 @@
-import { has } from 'lodash';
+import { isArray } from 'lodash';
 
 export interface Serializable {
   fromData: (data: any) => this;
@@ -21,6 +21,8 @@ export function toJSONDeep(obj: any = {}): any {
       const property = obj[key];
       if (typeof property === 'function') {
         continue;
+      } else if (isArray(property)) {
+
       } else if (isSerializableJSON(property)) {
         data[key] = property.toJSON();
       } else {

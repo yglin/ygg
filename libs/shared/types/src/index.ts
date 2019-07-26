@@ -5,3 +5,4 @@ export * from './lib/contact';
 export * from './lib/tags';
 export * from './lib/image';
 export * from './lib/form';
+export * from './lib/album';

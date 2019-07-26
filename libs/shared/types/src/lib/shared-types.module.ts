@@ -20,6 +20,7 @@ import { DateRangePickerDialogComponent } from './date-range/date-range-picker/d
 import { AlbumComponent } from './album/album.component';
 import { ImageComponent } from './image/image.component';
 import { FormControlComponent } from './form/form-control/form-control.component';
+import { AlbumControlComponent } from './album/album-control/album-control.component';
 
 @NgModule({
   imports: [
@@ -50,6 +51,7 @@ import { FormControlComponent } from './form/form-control/form-control.component
     AlbumComponent,
     ImageComponent,
     FormControlComponent,
+    AlbumControlComponent,
   ],
   entryComponents: [DateRangePickerDialogComponent],
   exports: [
@@ -64,6 +66,7 @@ import { FormControlComponent } from './form/form-control/form-control.component
     AlbumComponent,
     ImageComponent,
     FormControlComponent,
+    AlbumControlComponent,
   ]
 })
 export class SharedTypesModule {}
