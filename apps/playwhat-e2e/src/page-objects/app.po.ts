@@ -2,6 +2,7 @@
 export function login() {
   // @ts-ignore
   cy.login();
+  cy.get('.account-widget .user-account').should('be.visible');
 }
 
 export function loginAdmin() {

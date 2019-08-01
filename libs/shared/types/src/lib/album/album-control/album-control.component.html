@@ -1,29 +1,44 @@
-<div class='album-control'>
-    <div fxLayout="row wrap" fxLayoutGap="10px" class='photo'>
-      <div fxFlex="300px" class='photo-main'>
-        <img [src]='album.coverPhoto.src || "/assets/images/default-resource-photo.png"'>
+<div class="album-control">
+  <div class="control-label" *ngIf="label">
+    <h4>
+      <span>{{ label }}</span>
+    </h4>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="30px">
+    <div>
+      <div class="cover mat-elevation-z12">
+        <img [src]="album.cover.src" />
       </div>
-      <div fxFlex="600px" fxFlexFill>
-        <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px" class='photo-list'>
-          <div *ngFor="let photo of album.photos" class='photo-thumbnail' (click)='setMainPhoto(photo)'>
-            <ygg-image-thumbnail [image]='photo' (onClick)='onClickPhoto($event)' (onDelete)='onDeletePhoto($event)'></ygg-image-thumbnail>
+    </div>
+    <div>
+      <div
+        fxLayout="row wrap"
+        fxLayoutAlign="start center"
+        fxLayoutGap="10px"
+        class="photo-list"
+      >
+        <div
+          *ngFor="let photo of album.photos; let idx = index"
+          class="photo mat-elevation-z6"
+          (click)="setCover(idx)"
+          [id]="'photo-' + idx"
+        >
+          <img [src]="photo.src" />
+          <div class="delete-button">
+            <button
+              mat-mini-fab
+              (click)="deletePhoto(idx); $event.stopPropagation()"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
         </div>
-        <mat-card>
-          <div fxFlexFill fxLayout="row wrap" fxLayoutAlign="start end" fxLayoutGap="10px">
-            <div>
-              <button type="button" mat-raised-button (click)='openImageUploader()'>上傳圖片</button>
-            </div>
-            <div class='image-url' fxFlexFill>
-              <mat-form-field>
-                <input matInput placeholder="貼上圖片網址" [ngModelOptions]="{standalone: true}" [(ngModel)]="imageUrl">
-                <button type="button" [disabled]='!imageUrl' mat-mini-fab matSuffix (click)='addImageByUrl()'>
-                  <mat-icon>add</mat-icon>
-                </button>
-              </mat-form-field>
-            </div>
+        <div class="photo mat-elevation-z6">
+          <div id='add-photos' class="add-button-container" (click)="addPhoto()">
+            <button mat-fab><mat-icon>add</mat-icon></button>
           </div>
-        </mat-card>
+        </div>
       </div>
     </div>
   </div>
+</div>

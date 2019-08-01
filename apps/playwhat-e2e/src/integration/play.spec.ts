@@ -1,9 +1,13 @@
-import { login, logout } from '../support/app.po';
+// import { sample } from "lodash";
+// import { SerializableJSON } from '@ygg/shared/infra/data-access';
+import { login } from '../page-objects/app.po';
+import {
+  PlayFormPageObject,
+  PlayViewPageObject
+} from '../page-objects/play.po';
 import { Play } from '@ygg/playwhat/play';
 
-describe('plays', () => {
-  const testPlay = Play.forge();
-
+describe('Play form, new and update play', () => {
   beforeEach(function() {
     cy.visit('/');
     login();
@@ -13,21 +17,22 @@ describe('plays', () => {
   //   cy.get('a#add-my-play').should('have.text', '新增我的體驗');
   //   cy.get('a#add-my-play').click();
   //   cy.url().should('match', /.*\/plays\/new$/);
-  //   cy.get('form#play-form').should('be.visible');
+  //   playFormPage.expectForm();
   // });
 
   it('should create new Play and check data consistency', () => {
-    cy.visit('/plays/new');
-    fillInPlay(testPlay, { submit: true });
+    const testPlay = Play.forge();
+    const playFormPage = new PlayFormPageObject();
+    const playViewPage = new PlayViewPageObject();
+    cy.get('a#add-my-play').click();
+    playFormPage.expectVisible();
+    playFormPage.fillIn(testPlay);
+    playFormPage.submit();
+    playViewPage.expectVisible();
+    playViewPage.checkData(testPlay);
     // should redirect to play-view
-    cy.location()
-    .should((loc) => {
-      expect(loc.pathname).not.match(/plays\/new/);
-      expect(loc.pathname).match(/\/plays\/([^/]+)$/);
-    })
-    .then((loc) => {
-      cy.get('#play-view').should('be.visible');
-      checkDataInPlayView(testPlay);
+    cy.location().then(loc => {
+      // Clean out test data in Database
       const matched = loc.pathname.match(/\/plays\/(.+)/);
       const newPlayId = matched[1];
       cy.log(`Created play id = ${newPlayId}`);
@@ -47,35 +52,73 @@ describe('plays', () => {
   //   checkOwnerInPlayView(testUID);
   // });
 
-  function fillInPlay(play: Play, options: any = {}) {
-    const formGroup = Play.getFormModel();
-    const formSelector = `form#${formGroup.name}`;
-    for (const name in formGroup.controls) {
-      if (formGroup.controls.hasOwnProperty(name)) {
-        const controlModel = formGroup.controls[name];
-        if (controlModel.type === 'string') {
-          const inputSelector = `input#${controlModel.name}`;
-          cy.get(`${formSelector} ${inputSelector}`).type(play[controlModel.name]);
-        }
-      }
-    }
+  // function fillInPlay(play: Play, options: any = {}) {
+  //   const formModel = Play.getFormModel();
+  //   const formSelector = `form#${formModel.name}`;
+  //   for (const name in formModel.controls) {
+  //     if (formModel.controls.hasOwnProperty(name)) {
+  //       const controlModel = formModel.controls[name];
+  //       let inputSelector = '';
+  //       switch (controlModel.type) {
+  //         case FormControlType.text:
+  //           inputSelector = `#${controlModel.name} input`;
+  //           cy.get(`${formSelector} ${inputSelector}`).type(
+  //             play[controlModel.name]
+  //           );
+  //           break;
+  //         case FormControlType.textarea:
+  //           inputSelector = `#${controlModel.name} textarea`;
+  //           cy.get(`${formSelector} ${inputSelector}`).type(
+  //             play[controlModel.name]
+  //           );
+  //           break;
+  //         case FormControlType.album:
+  //           inputSelector = `#${controlModel.name} ygg-album-control`;
+  //           fillInAlbum(inputSelector, play.album);
+  //           break;
+  //         default:
+  //           cy.log(
+  //             `Can not find fillIn method for control type = ${controlModel.type}`
+  //           );
+  //           break;
+  //       }
+  //     }
+  //   }
 
-    if (options.submit) {
-      cy.get(`${formSelector} button#submit`).click();
-    }
-  }
+  //   if (options.submit) {
+  //     cy.get(`${formSelector} button#submit`).click();
+  //   }
+  // }
 
-  function checkDataInPlayView(play: Play) {
-    const textFields = ['name'];
-    const containerSelector = '#play-view';
-    for (const fieldName of textFields) {
-      const value = play[fieldName];
-      cy.get(`${containerSelector} #${fieldName} .value`).contains(value);
-    }
-  }
+  // function checkDataInPlayView(play: Play) {
+  //   const formModel = Play.getFormModel();
+  //   const viewSelector = '#play-view';
+  //   for (const name in formModel.controls) {
+  //     if (formModel.controls.hasOwnProperty(name)) {
+  //       const controlModel = formModel.controls[name];
+  //       const value = play[controlModel.name];
+  //       switch (controlModel.type) {
+  //         case FormControlType.text:
+  //         case FormControlType.textarea:
+  //           cy.get(`${viewSelector} #${controlModel.name} .value`).contains(
+  //             value
+  //           );
+  //           break;
+  //         case FormControlType.album:
+  //           const containerSelector = `${viewSelector} #${controlModel.name} ygg-album`;
+  //           checkAlbumData(containerSelector, play.album);
+  //           break;
+  //         default:
+  //           cy.log(
+  //             `Can not find fillIn method for control type = ${controlModel.type}`
+  //           );
+  //           break;
+  //       }
+  //     }
+  //   }
+  // }
 
   function deletePlayInDB(playId: string) {
-    // TODO delete play document in database
     // @ts-ignore
     cy.callFirestore('delete', `plays/${playId}`);
   }

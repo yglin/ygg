@@ -1,3 +1,26 @@
-<p>
-  album works!
-</p>
+<div class='album-view' *ngIf="album">
+  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="30px">
+    <div>
+      <div class="cover mat-elevation-z12">
+        <img [src]="album.cover.src" />
+      </div>
+    </div>
+    <div>
+      <div
+        fxLayout="row wrap"
+        fxLayoutAlign="start center"
+        fxLayoutGap="10px"
+        class="photo-list"
+      >
+        <div
+          *ngFor="let photo of album.photos; let idx = index"
+          class="photo mat-elevation-z6"
+          [id]="'photo-' + idx"
+          (click)='showOnCover(idx)'
+        >
+          <img [src]="photo.src" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
