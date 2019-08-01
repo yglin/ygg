@@ -1,4 +1,4 @@
-import { isArray, range, random } from "lodash";
+import { isArray, range, random, sample } from "lodash";
 import { Image } from "../image/image";
 import { toJSONDeep, SerializableJSON } from '@ygg/shared/infra/data-access';
 
@@ -8,8 +8,8 @@ export class Album implements SerializableJSON {
 
   static forge(): Album {
     const forged = new Album();
-    forged.cover = Image.forge();
     forged.photos = range(random(5,10)).map(() => Image.forge());
+    forged.cover = sample(forged.photos);
     return forged;
   }
 

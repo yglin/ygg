@@ -1,0 +1,7 @@
+.url-input .mat-form-field {
+  width: 100%;
+}
+
+.url-input .mat-form-field button {
+  margin-bottom: 10px;
+}

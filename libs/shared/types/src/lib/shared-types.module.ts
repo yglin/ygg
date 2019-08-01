@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from "@angular/common/http";
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
@@ -7,7 +8,7 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 import { DynamicFormsCoreModule } from "@ng-dynamic-forms/core";
 import { DynamicFormsMaterialUIModule } from "@ng-dynamic-forms/ui-material";
-
+import { ImageUploadModule } from "angular2-image-upload";
 import { ContactComponent, ContactFormComponent } from './contact';
 import { DateRangeComponent, DateRangePickerComponent } from './date-range';
 import {
@@ -21,6 +22,8 @@ import { AlbumComponent } from './album/album.component';
 import { ImageComponent } from './image/image.component';
 import { FormControlComponent } from './form/form-control/form-control.component';
 import { AlbumControlComponent } from './album/album-control/album-control.component';
+import { ImageUploaderComponent } from './image/image-uploader/image-uploader.component';
+import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
 
 @NgModule({
   imports: [
@@ -33,10 +36,13 @@ import { AlbumControlComponent } from './album/album-control/album-control.compo
       cancelLabel: '取消',
       format: 'YYYY/MM/DD'
     }),
+    HttpClientModule,
+    ImageUploadModule.forRoot(),
+    SharedInfraDataAccessModule,
     DynamicFormsCoreModule,
     DynamicFormsMaterialUIModule,
     SharedUiNgMaterialModule,
-    SharedUiWidgetsModule
+    SharedUiWidgetsModule,
   ],
   declarations: [
     NumberRangeComponent,
@@ -52,8 +58,9 @@ import { AlbumControlComponent } from './album/album-control/album-control.compo
     ImageComponent,
     FormControlComponent,
     AlbumControlComponent,
+    ImageUploaderComponent,
   ],
-  entryComponents: [DateRangePickerDialogComponent],
+  entryComponents: [DateRangePickerDialogComponent, ImageUploaderComponent],
   exports: [
     NumberRangeComponent,
     NumberRangeControlComponent,
@@ -67,6 +74,7 @@ import { AlbumControlComponent } from './album/album-control/album-control.compo
     ImageComponent,
     FormControlComponent,
     AlbumControlComponent,
+    ImageUploaderComponent,
   ]
 })
 export class SharedTypesModule {}

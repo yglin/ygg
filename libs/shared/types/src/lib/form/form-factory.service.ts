@@ -14,9 +14,7 @@ import {
   providedIn: 'root'
 })
 export class FormFactoryService {
-  constructor(
-    private formBuilder: FormBuilder
-  ) {}
+  constructor(private formBuilder: FormBuilder) {}
 
   buildGroup(formModel: FormGroupModel): FormGroup {
     const controlConfigs: { [key: string]: any } = {};
@@ -34,9 +32,11 @@ export class FormFactoryService {
     let config: any = {};
     // set validators
     const validators: ValidatorFn[] = [];
-    for (const validator of controlModel.validators) {
-      if (validator.type === 'required') {
-        validators.push(Validators.required);
+    if (!isEmpty(controlModel.validators)) {
+      for (const validator of controlModel.validators) {
+        if (validator.type === 'required') {
+          validators.push(Validators.required);
+        }
       }
     }
     const defaultValue = controlModel.default || null;

@@ -1,6 +1,6 @@
-import { loginAdmin, logout } from '../support/app.po';
+import { loginAdmin, logout } from '../page-objects/app.po';
 
-import { gotoAdminDashboard } from "../support/app.po";
+import { gotoAdminDashboard } from "../page-objects/app.po";
 
 describe('Test admin links', () => {
   
