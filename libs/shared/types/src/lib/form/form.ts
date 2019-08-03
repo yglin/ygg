@@ -4,7 +4,8 @@ import { ValidatorModel } from './validator';
 export enum FormControlType {
   text = 'text',
   textarea = 'textarea',
-  album = 'album'
+  album = 'album',
+  businessHours = 'businessHours'
 }
 
 export interface FormControlModel {

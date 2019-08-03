@@ -1,14 +1,19 @@
 import { Play } from '@ygg/playwhat/play';
 import { FormControlType } from '@ygg/shared/types';
 import { AlbumControlPageObject, AlbumViewPageObject } from './album.po';
+import { BusinessHoursControlPageObject, BusinessHoursViewPageObject } from "./business-hours.po";
 
 export class PlayFormPageObject {
   selector: string;
   albumControl: AlbumControlPageObject;
+  businessHoursControl: BusinessHoursControlPageObject;
 
   constructor(parentSelector: string = '') {
     this.selector = `${parentSelector} form#play-form`.trim();
     this.albumControl = new AlbumControlPageObject(this.selector);
+    this.businessHoursControl = new BusinessHoursControlPageObject(
+      this.selector
+    );
   }
 
   expectVisible() {
@@ -37,6 +42,9 @@ export class PlayFormPageObject {
           case FormControlType.album:
             this.albumControl.fillIn(play.album);
             break;
+          case FormControlType.businessHours:
+            this.businessHoursControl.fillIn(play.businessHours);
+            break;
           default:
             cy.log(
               `Can not find fillIn method for control type = ${controlModel.type}`
@@ -55,10 +63,12 @@ export class PlayFormPageObject {
 export class PlayViewPageObject {
   selector: string;
   albumView: AlbumViewPageObject;
+  businessHoursView: BusinessHoursViewPageObject;
 
   constructor(parentSelector: string = '') {
     this.selector = `${parentSelector} .play-view`.trim();
     this.albumView = new AlbumViewPageObject(this.selector);
+    this.businessHoursView = new BusinessHoursViewPageObject(this.selector);
   }
 
   expectVisible() {
@@ -83,7 +93,10 @@ export class PlayViewPageObject {
             );
             break;
           case FormControlType.album:
-            this.albumView.checkData(play.album);
+            this.albumView.checkData(play[name]);
+            break;
+          case FormControlType.businessHours:
+            this.businessHoursView.checkData(play[name]);
             break;
           default:
             cy.log(
