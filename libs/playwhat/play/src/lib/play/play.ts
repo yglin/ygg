@@ -6,13 +6,14 @@ import {
   FormControlModel,
   FormControlType
 } from '@ygg/shared/types';
-import { Album } from '@ygg/shared/types';
+import { Album, BusinessHours } from '@ygg/shared/types';
 
 export class Play implements DataItem {
   id: string;
   name: string;
   introduction: string;
   album: Album;
+  businessHours: BusinessHours;
 
   static forge(): Play {
     const newOne = new Play();
@@ -34,6 +35,7 @@ export class Play implements DataItem {
       '我覺得，當心靈發展到了某個階段的時候，我們將不再為了滿足食慾而殘殺動物。'
     ]);
     newOne.album = Album.forge();
+    newOne.businessHours = BusinessHours.forge();
     return newOne;
   }
 
@@ -65,9 +67,13 @@ export class Play implements DataItem {
         name: 'album',
         type: FormControlType.album,
         label: '相簿',
-        // /// XXX For debug
-        // default: Album.forge()
         default: new Album()
+      },
+      businessHours: {
+        name: 'businessHours',
+        type: FormControlType.businessHours,
+        label: '服務時段',
+        default: new BusinessHours()
       }
     };
 
@@ -83,6 +89,9 @@ export class Play implements DataItem {
     extend(this, data);
     if (data.album) {
       this.album = new Album().fromJSON(data.album);
+    }
+    if (data.businessHours) {
+      this.businessHours = new BusinessHours().fromJSON(data.businessHours);
     }
     return this;
   }

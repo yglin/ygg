@@ -24,6 +24,8 @@ import { FormControlComponent } from './form/form-control/form-control.component
 import { AlbumControlComponent } from './album/album-control/album-control.component';
 import { ImageUploaderComponent } from './image/image-uploader/image-uploader.component';
 import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
+import { BusinessHoursControlComponent } from './business-hours/business-hours-control/business-hours-control.component';
+import { BusinessHoursViewComponent } from './business-hours/business-hours-view/business-hours-view.component';
 
 @NgModule({
   imports: [
@@ -59,6 +61,8 @@ import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
     FormControlComponent,
     AlbumControlComponent,
     ImageUploaderComponent,
+    BusinessHoursControlComponent,
+    BusinessHoursViewComponent,
   ],
   entryComponents: [DateRangePickerDialogComponent, ImageUploaderComponent],
   exports: [
@@ -75,6 +79,8 @@ import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
     FormControlComponent,
     AlbumControlComponent,
     ImageUploaderComponent,
+    BusinessHoursControlComponent,
+    BusinessHoursViewComponent,
   ]
 })
 export class SharedTypesModule {}
