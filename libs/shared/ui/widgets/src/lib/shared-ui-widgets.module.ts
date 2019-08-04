@@ -18,6 +18,7 @@ import { TimeRangeComponent } from './time-range/time-range.component';
 import { TitleDividerComponent } from './title-divider/title-divider.component';
 import { ReactiveTextInputComponent } from './reactive-text-input/reactive-text-input.component';
 import { ItemsGroupSwitcherComponent } from './items-group-switcher/items-group-switcher.component';
+import { TimeInputComponent } from './time-input/time-input.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { ItemsGroupSwitcherComponent } from './items-group-switcher/items-group-
     YggDialogContentHostDirective,
     ReactiveTextInputComponent,
     ItemsGroupSwitcherComponent,
+    TimeInputComponent,
   ],
   imports: [
     CommonModule,
@@ -51,7 +53,8 @@ import { ItemsGroupSwitcherComponent } from './items-group-switcher/items-group-
     TitleDividerComponent,
     ActionBarredComponent,
     ReactiveTextInputComponent,
-    ItemsGroupSwitcherComponent
+    ItemsGroupSwitcherComponent,
+    TimeInputComponent
   ],
   entryComponents: [ProgressSpinnerComponent, YggDialogComponent]
 })
