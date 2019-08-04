@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+// import * as moment from 'moment';
 import { BusinessHours } from './business-hours';
 import { OpenHour } from "./open-hour";
 
@@ -6,10 +6,11 @@ describe('Class BusinessHours', () => {
   let testBusinessHours: BusinessHours;
 
   beforeEach(() => {
-    testBusinessHours = BusinessHours.forge();
+    testBusinessHours = new BusinessHours();
   });
 
   it('can clear all open-hours', () => {
+    testBusinessHours = BusinessHours.forge();
     testBusinessHours.clear();
     const openHours: OpenHour[] = testBusinessHours.getOpenHours();
     expect(openHours.length).toBe(0);
@@ -44,15 +45,13 @@ describe('Class BusinessHours', () => {
     ]; // 2nd and 3rd open-hour overlap their time-ranges
     testBusinessHours.clear();
     for (const openHour of testOpenHours) {
+      console.log(`Add open-hour ${openHour.format()}`);
       testBusinessHours.addOpenHour(openHour);
     }
 
     const openHours: OpenHour[] = testBusinessHours.getOpenHours();
     expect(openHours.length).toBe(4); // 2 merged, so 5 -> 4,
-    const secondStart = moment(openHours[1].timeRange.start);
-    const secondEnd = moment(openHours[1].timeRange.end);
-    expect(moment(secondStart).format('HH:mm')).toEqual('03:00');
-    expect(moment(secondEnd).format('HH:mm')).toEqual('13:30');
+    expect(openHours[1].format()).toEqual('3 03:00 - 13:30');
   });
 
   it('can subtract open-hours', () => {

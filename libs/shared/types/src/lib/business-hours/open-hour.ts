@@ -55,6 +55,12 @@ export class OpenHour implements SerializableJSON {
     }
   }
 
+  format(dayToken: string = 'ddd', startTokens: string = 'HH:mm', endTokens?: string) {
+    // TODO: meaningful week day name
+    const dayName = this.weekDay.toString();
+    return `${dayName} ${this.timeRange.format(startTokens, endTokens)}`;
+  }
+
   fromJSON(data: any): this {
     if (data) {
       if (data.weekDay) {
