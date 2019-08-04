@@ -1,4 +1,4 @@
-import { isArray, random } from 'lodash';
+import { isArray, isEmpty, random } from 'lodash';
 import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { OpenHour } from './open-hour';
 import { WeekDay } from '@angular/common';
@@ -29,9 +29,31 @@ export class BusinessHours implements SerializableJSON {
   }
 
   addOpenHour(newOpenHour: OpenHour) {
-    this.openHours.push(newOpenHour);
-    this.sort();
-    this.merge();
+    if (isEmpty(this.openHours)) {
+      this.openHours.push(newOpenHour);
+    } else {
+      let mergedOpenHour: OpenHour = newOpenHour;
+      let insertAtIndex: number = 0;
+      let mergedCount: number = 0;
+      for (let index = 0; index < this.openHours.length; index++) {
+        const openHour = this.openHours[index];
+        const merged = mergedOpenHour.merge(openHour);
+        if (
+          mergedOpenHour.weekDay > openHour.weekDay ||
+          (mergedOpenHour.weekDay === openHour.weekDay &&
+            mergedOpenHour.timeRange.start >= openHour.timeRange.start)
+        ) {
+          insertAtIndex += 1;
+        }
+        if (merged) {
+          // console.log(`Merge happen: ${mergedOpenHour.format()} + ${openHour.format()} = ${merged.format()}`);
+          mergedOpenHour = merged;
+          mergedCount += 1;
+          insertAtIndex -= 1;
+        }
+      }
+      this.openHours.splice(insertAtIndex, mergedCount, mergedOpenHour);
+    }
   }
 
   sort() {
@@ -44,23 +66,23 @@ export class BusinessHours implements SerializableJSON {
     });
   }
 
-  merge() {
-    const result: OpenHour[] = [];
-    let lastMerged: OpenHour = this.openHours[0];
-    for (let index = 1; index < this.openHours.length; index++) {
-      const openHour = this.openHours[index];
-      const thisMerged = lastMerged.merge(openHour);
-      if (!thisMerged) {
-        result.push(lastMerged);
-        lastMerged = openHour;
-      } else {
-        lastMerged = thisMerged;
-      }
-    }
-    result.push(lastMerged);
-    this.openHours.length = 0;
-    this.openHours.push(...result);
-  }
+  // merge() {
+  //   const result: OpenHour[] = [];
+  //   let lastMerged: OpenHour = this.openHours[0];
+  //   for (let index = 1; index < this.openHours.length; index++) {
+  //     const openHour = this.openHours[index];
+  //     const thisMerged = lastMerged.merge(openHour);
+  //     if (!thisMerged) {
+  //       result.push(lastMerged);
+  //       lastMerged = openHour;
+  //     } else {
+  //       lastMerged = thisMerged;
+  //     }
+  //   }
+  //   result.push(lastMerged);
+  //   this.openHours.length = 0;
+  //   this.openHours.push(...result);
+  // }
 
   subtractOpenHour(substOpenHour: OpenHour) {
     const result: OpenHour[] = [];
@@ -69,7 +91,7 @@ export class BusinessHours implements SerializableJSON {
       result.push(...subtracted);
     }
     this.openHours.length = 0;
-    this.openHours.push(...result);    
+    this.openHours.push(...result);
   }
 
   getOpenHours(): OpenHour[] {
@@ -88,7 +110,9 @@ export class BusinessHours implements SerializableJSON {
 
   fromJSON(data: any): this {
     if (data && isArray(data.openHours)) {
-      this.openHours = data.openHours.map(openHour => new OpenHour().fromJSON(openHour));
+      this.openHours = data.openHours.map(openHour =>
+        new OpenHour().fromJSON(openHour)
+      );
     }
     return this;
   }

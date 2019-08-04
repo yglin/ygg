@@ -86,20 +86,20 @@ export class TimeRange implements SerializableJSON {
   }
 
   subtract(that: TimeRange): TimeRange[] {
-    // const thisMomentRange = moment.range(this.start, this.end);
-    // const thatMomentRange = moment.range(that.start, that.end);
-    // const subtracted = thisMomentRange.subtract(thatMomentRange);
-    // return subtracted
-    //   .filter(momentRange => !!momentRange)
-    //   .map(
-    //     momentRange =>
-    //       new TimeRange(momentRange.start.toDate(), momentRange.end.toDate())
-    //   );
-    return [];
+    const thisMomentRange = moment.range(this.start, this.end);
+    const thatMomentRange = moment.range(that.start, that.end);
+    const subtracted = thisMomentRange.subtract(thatMomentRange);
+    return subtracted
+      .filter(momentRange => !!momentRange)
+      .map(
+        momentRange =>
+          new TimeRange(momentRange.start.toDate(), momentRange.end.toDate())
+      );
   }
 
-  format(startTokenString: string, endTokenString: string): string {
+  format(startTokenString: string = 'HH:mm', endTokenString?: string): string {
     const formattedStart = moment(this.start).format(startTokenString);
+    endTokenString = endTokenString || startTokenString;
     const formattedEnd = moment(this.end).format(endTokenString);
     return `${formattedStart} - ${formattedEnd}`;
   }
