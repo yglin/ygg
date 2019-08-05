@@ -14,12 +14,12 @@ import { IMaybeALinkDirective } from './i-maybe-a-link/i-maybe-a-link.directive'
 import { NumberSliderComponent } from './number-slider/number-slider.component';
 import { PageTitleComponent } from './page-title/page-title.component';
 import { ProgressSpinnerComponent } from './progress-spinner/progress-spinner.component';
-import { TimeRangeComponent } from './time-range/time-range.component';
 import { TitleDividerComponent } from './title-divider/title-divider.component';
 import { ReactiveTextInputComponent } from './reactive-text-input/reactive-text-input.component';
 import { ItemsGroupSwitcherComponent } from './items-group-switcher/items-group-switcher.component';
 import { TimeInputComponent } from './time-input/time-input.component';
 import { AmazingTimePickerModule } from "amazing-time-picker";
+import { WeekDayPipePipe } from './week-day/week-day-pipe.pipe';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,6 @@ import { AmazingTimePickerModule } from "amazing-time-picker";
     PageTitleComponent,
     IMaybeALinkDirective,
     NumberSliderComponent,
-    TimeRangeComponent,
     TitleDividerComponent,
     ActionBarredComponent,
     YggDialogComponent,
@@ -35,6 +34,7 @@ import { AmazingTimePickerModule } from "amazing-time-picker";
     ReactiveTextInputComponent,
     ItemsGroupSwitcherComponent,
     TimeInputComponent,
+    WeekDayPipePipe,
   ],
   imports: [
     CommonModule,
@@ -51,12 +51,12 @@ import { AmazingTimePickerModule } from "amazing-time-picker";
     PageTitleComponent,
     IMaybeALinkDirective,
     NumberSliderComponent,
-    TimeRangeComponent,
     TitleDividerComponent,
     ActionBarredComponent,
     ReactiveTextInputComponent,
     ItemsGroupSwitcherComponent,
-    TimeInputComponent
+    TimeInputComponent,
+    WeekDayPipePipe
   ],
   entryComponents: [ProgressSpinnerComponent, YggDialogComponent]
 })

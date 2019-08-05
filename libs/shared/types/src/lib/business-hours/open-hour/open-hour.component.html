@@ -1,0 +1,18 @@
+<div
+  fxLayout="row"
+  fxLayoutAlign="start center"
+  fxLayoutGap="20px"
+  *ngIf="openHour"
+>
+  <div>
+    <h4>{{ openHour.weekDay | yggWeekDayPipe }}</h4>
+  </div>
+  <div>
+    <div class="time-range" *ngIf="openHour.timeRange as timeRange">
+      <mat-icon>access_time</mat-icon>
+      <span>{{ timeRange.start | date: 'a h:mm' }}</span>
+      &mdash;
+      <span>{{ timeRange.end | date: 'a h:mm' }}</span>
+    </div>
+  </div>
+</div>

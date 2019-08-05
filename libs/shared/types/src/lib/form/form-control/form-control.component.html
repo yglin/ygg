@@ -25,7 +25,16 @@
       </mat-form-field>
     </div>
     <div *ngSwitchCase="formControlTypes.album">
-      <ygg-album-control [label]='model.label' [formControlName]='model.name'></ygg-album-control>
+      <ygg-album-control
+        [label]="model.label"
+        [formControlName]="model.name"
+      ></ygg-album-control>
+    </div>
+    <div *ngSwitchCase="formControlTypes.businessHours">
+      <ygg-business-hours-control
+        [label]="model.label"
+        [formControlName]="model.name"
+      ></ygg-business-hours-control>
     </div>
     <div *ngSwitchDefault></div>
   </div>

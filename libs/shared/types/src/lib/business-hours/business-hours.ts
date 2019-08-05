@@ -56,6 +56,10 @@ export class BusinessHours implements SerializableJSON {
     }
   }
 
+  removeOpenHourByIndex(index: number) {
+    this.openHours.splice(index, 1);
+  }
+
   sort() {
     this.openHours.sort((oh1, oh2) => {
       if (oh1.weekDay === oh2.weekDay) {

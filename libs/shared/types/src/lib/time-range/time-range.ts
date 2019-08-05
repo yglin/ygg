@@ -54,6 +54,8 @@ export class TimeRange implements SerializableJSON {
         this._start = new Date(start);
       } else {
         this._start = new Date();
+        this._start.setHours(0);
+        this._start.setMinutes(0);
       }
       if (typeof end === 'string') {
         this._end = moment(end, 'HH:mm').toDate();
@@ -61,6 +63,8 @@ export class TimeRange implements SerializableJSON {
         this._end = new Date(end);
       } else {
         this._end = new Date();
+        this._end.setHours(0);
+        this._end.setMinutes(0);
       }
     }
     this.justifyOrder();

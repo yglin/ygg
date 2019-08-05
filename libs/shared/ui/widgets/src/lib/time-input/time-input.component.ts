@@ -73,6 +73,8 @@ export class TimeInputComponent implements ControlValueAccessor, OnDestroy {
   writeValue(value: Date) {
     if (value) {
       this._time = value;
+      this.inputHourControl.setValue(this.time.getHours());
+      this.inputMinuteControl.setValue(this.time.getMinutes());
     }
   }
 
@@ -99,6 +101,8 @@ export class TimeInputComponent implements ControlValueAccessor, OnDestroy {
     amazingTimePicker.afterClose().subscribe(timeToken => {
       if (timeToken) {
         this.time = moment(timeToken, 'HH:mm').toDate();
+        this.inputHourControl.setValue(this.time.getHours());
+        this.inputMinuteControl.setValue(this.time.getMinutes());
       }
     });
   }

@@ -1,0 +1,6 @@
+<div class="time-range" *ngIf="timeRange">
+  <mat-icon>access_time</mat-icon>
+  <span>{{ timeRange.start | date:'M/d a h:mm'}}</span>
+  &mdash;
+  <span>{{ timeRange.end | date:'M/d a h:mm'}}</span>
+</div>
