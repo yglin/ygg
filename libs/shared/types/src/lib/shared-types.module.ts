@@ -26,6 +26,7 @@ import { ImageUploaderComponent } from './image/image-uploader/image-uploader.co
 import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
 import { BusinessHoursControlComponent } from './business-hours/business-hours-control/business-hours-control.component';
 import { BusinessHoursViewComponent } from './business-hours/business-hours-view/business-hours-view.component';
+import { TimeRangeControlComponent } from './time-range/time-range-control/time-range-control.component';
 
 @NgModule({
   imports: [
@@ -63,6 +64,7 @@ import { BusinessHoursViewComponent } from './business-hours/business-hours-view
     ImageUploaderComponent,
     BusinessHoursControlComponent,
     BusinessHoursViewComponent,
+    TimeRangeControlComponent,
   ],
   entryComponents: [DateRangePickerDialogComponent, ImageUploaderComponent],
   exports: [
@@ -81,6 +83,7 @@ import { BusinessHoursViewComponent } from './business-hours/business-hours-view
     ImageUploaderComponent,
     BusinessHoursControlComponent,
     BusinessHoursViewComponent,
+    TimeRangeControlComponent,
   ]
 })
 export class SharedTypesModule {}

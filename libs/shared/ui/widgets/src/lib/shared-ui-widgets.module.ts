@@ -19,6 +19,7 @@ import { TitleDividerComponent } from './title-divider/title-divider.component';
 import { ReactiveTextInputComponent } from './reactive-text-input/reactive-text-input.component';
 import { ItemsGroupSwitcherComponent } from './items-group-switcher/items-group-switcher.component';
 import { TimeInputComponent } from './time-input/time-input.component';
+import { AmazingTimePickerModule } from "amazing-time-picker";
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { TimeInputComponent } from './time-input/time-input.component';
     FormsModule,
     ReactiveFormsModule,
     SharedUiNgMaterialModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    AmazingTimePickerModule
   ],
   exports: [
     SharedUiNgMaterialModule,
