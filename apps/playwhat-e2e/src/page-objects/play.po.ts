@@ -1,19 +1,20 @@
 import { Play } from '@ygg/playwhat/play';
 import { FormControlType } from '@ygg/shared/types';
 import { AlbumControlPageObject, AlbumViewPageObject } from './album.po';
-import { BusinessHoursControlPageObject, BusinessHoursViewPageObject } from "./business-hours.po";
+import {
+  BusinessHoursControlPageObject,
+  BusinessHoursViewPageObject
+} from './business-hours.po';
+import { PageObject } from './page-object.po';
 
-export class PlayFormPageObject {
-  selector: string;
-  albumControl: AlbumControlPageObject;
-  businessHoursControl: BusinessHoursControlPageObject;
+export class PlayFormPageObject extends PageObject {
+  selector = '.play-form';
+  selectors = {
+    buttonSubmit: 'button#submit'
+  };
 
   constructor(parentSelector: string = '') {
-    this.selector = `${parentSelector} form#play-form`.trim();
-    this.albumControl = new AlbumControlPageObject(this.selector);
-    this.businessHoursControl = new BusinessHoursControlPageObject(
-      this.selector
-    );
+    super(parentSelector);
   }
 
   expectVisible() {
@@ -40,10 +41,16 @@ export class PlayFormPageObject {
             );
             break;
           case FormControlType.album:
-            this.albumControl.fillIn(play.album);
+            const albumControl = new AlbumControlPageObject(
+              `${this.getSelector()} #form-control-${name}`
+            );
+            albumControl.fillIn(play.album);
             break;
           case FormControlType.businessHours:
-            this.businessHoursControl.fillIn(play.businessHours);
+            const businessHoursControl = new BusinessHoursControlPageObject(
+              `${this.getSelector()} #form-control-${name}`
+            );
+            businessHoursControl.fillIn(play.businessHours);
             break;
           default:
             cy.log(
@@ -56,7 +63,7 @@ export class PlayFormPageObject {
   }
 
   submit() {
-    cy.get(`${this.selector} button#submit`).click();
+    cy.get(this.getSelector('buttonSubmit')).click();
   }
 }
 
@@ -96,7 +103,7 @@ export class PlayViewPageObject {
             this.albumView.checkData(play[name]);
             break;
           case FormControlType.businessHours:
-            this.businessHoursView.checkData(play[name]);
+            this.businessHoursView.expect(play[name]);
             break;
           default:
             cy.log(

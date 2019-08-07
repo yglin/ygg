@@ -26,9 +26,10 @@ import { ImageUploaderComponent } from './image/image-uploader/image-uploader.co
 import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
 import { BusinessHoursControlComponent } from './business-hours/business-hours-control/business-hours-control.component';
 import { BusinessHoursViewComponent } from './business-hours/business-hours-view/business-hours-view.component';
-import { TimeRangeControlComponent } from './time-range/time-range-control/time-range-control.component';
+import { DayTimeRangeControlComponent, DayTimeRangeComponent } from './day-time-range';
 import { OpenHourComponent } from './business-hours/open-hour/open-hour.component';
-import { TimeRangeComponent } from './time-range/time-range.component';
+import { WeekDayPipePipe } from './week-day/week-day-pipe.pipe';
+import { DayTimeControlComponent } from './day-time/day-time-control/day-time-control.component';
 
 @NgModule({
   imports: [
@@ -66,9 +67,11 @@ import { TimeRangeComponent } from './time-range/time-range.component';
     ImageUploaderComponent,
     BusinessHoursControlComponent,
     BusinessHoursViewComponent,
-    TimeRangeControlComponent,
+    DayTimeRangeControlComponent,
     OpenHourComponent,
-    TimeRangeComponent,
+    DayTimeRangeComponent,
+    WeekDayPipePipe,
+    DayTimeControlComponent
   ],
   entryComponents: [DateRangePickerDialogComponent, ImageUploaderComponent],
   exports: [
@@ -87,9 +90,10 @@ import { TimeRangeComponent } from './time-range/time-range.component';
     ImageUploaderComponent,
     BusinessHoursControlComponent,
     BusinessHoursViewComponent,
-    TimeRangeControlComponent,
+    DayTimeRangeControlComponent,
     OpenHourComponent,
-    TimeRangeComponent,
+    DayTimeRangeComponent,
+    DayTimeControlComponent,
   ]
 })
 export class SharedTypesModule {}

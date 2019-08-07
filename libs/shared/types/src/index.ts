@@ -8,3 +8,4 @@ export * from './lib/form';
 export * from './lib/album';
 export * from './lib/business-hours';
 export * from './lib/time-range';
+export * from './lib/week-day';

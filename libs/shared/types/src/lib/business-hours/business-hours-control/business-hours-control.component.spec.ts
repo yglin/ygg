@@ -12,7 +12,7 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { By } from '@angular/platform-browser';
 import { BusinessHours } from '../business-hours';
 import { take } from 'rxjs/operators';
-import { OpenHour } from '../open-hour';
+import { OpenHour } from '../open-hour/open-hour';
 import { TimeRange } from '../../time-range';
 // import { BusinessHoursControlPageObject } from './business-hours-control.po';
 import { TimeRangeControlComponent } from '../../time-range/time-range-control/time-range-control.component';
@@ -21,6 +21,7 @@ import { TimeRangeControlComponent } from '../../time-range/time-range-control/t
 // import { AmazingTimePickerService } from 'amazing-time-picker';
 import { MockComponent } from "ng-mocks";
 import { OpenHourComponent } from '../open-hour/open-hour.component';
+import { ActionBarredComponent } from 'libs/shared/ui/widgets/src/lib/action-barred/action-barred.component';
 
 // class BusinessHoursControlPageObjectJest extends BusinessHoursControlPageObject {
 //   debugElement: DebugElement;
@@ -120,6 +121,7 @@ describe('BusinessHoursControlComponent as Reactive Form Controller(ControlValue
       declarations: [
         MockComponent(TimeRangeControlComponent),
         MockComponent(OpenHourComponent),
+        MockComponent(ActionBarredComponent),
         BusinessHoursControlComponent,
         MockFormComponent
       ],
@@ -215,6 +217,18 @@ describe('BusinessHoursControlComponent as Reactive Form Controller(ControlValue
     for (const openHour of openHours) {
       expect(openHour.timeRange.format()).toEqual(testTimeRange.format());
     }
+    done();
+  });
+
+  it('should clear time-input value after adding open-hour', async done => {
+    component.clearAll();
+    const testOpenHour = OpenHour.forge();
+    component.formGroupOpenHour.patchValue(testOpenHour);
+    component.addOpenHour();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const timeRange: TimeRange = component.formGroupOpenHour.get('timeRange').value;
+    expect(timeRange.format()).toEqual('00:00 - 00:00');
     done();
   });
 

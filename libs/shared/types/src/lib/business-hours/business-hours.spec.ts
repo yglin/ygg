@@ -1,6 +1,6 @@
 // import * as moment from 'moment';
 import { BusinessHours } from './business-hours';
-import { OpenHour } from "./open-hour";
+import { OpenHour } from "./open-hour/open-hour";
 
 describe('Class BusinessHours', () => {
   let testBusinessHours: BusinessHours;
@@ -45,7 +45,7 @@ describe('Class BusinessHours', () => {
     ]; // 2nd and 3rd open-hour overlap their time-ranges
     testBusinessHours.clear();
     for (const openHour of testOpenHours) {
-      console.log(`Add open-hour ${openHour.format()}`);
+      // console.log(`Add open-hour ${openHour.format()}`);
       testBusinessHours.addOpenHour(openHour);
     }
 

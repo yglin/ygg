@@ -6,5 +6,5 @@ module.exports = {
     'jest-preset-angular/AngularSnapshotSerializer.js',
     'jest-preset-angular/HTMLCommentSerializer.js'
   ],
-  testMatch: ['**/business-hours-control/*.spec.ts']
+  testMatch: ['**/day-time-range/**/*.spec.ts']
 };

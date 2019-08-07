@@ -10,24 +10,31 @@
     fxLayoutGap="10px"
     [formGroup]="formGroupOpenHour"
   >
-    <div class="week-day-select" fxFlex="150px">
-      <mat-select placeholder="選擇星期幾..." formControlName="weekDay">
-        <mat-option
-          *ngFor="let weekDay of weekDayOptions"
-          [value]="weekDay.value"
-        >
-          {{ weekDay.name }}
-        </mat-option>
-        <mat-option [value]="7">整週/每天</mat-option>
-      </mat-select>
+    <div fxFlex="150px" id="week-day-select">
+      <div class="week-day-select">
+        <mat-select placeholder="選擇星期幾..." formControlName="weekDay" id='select'>
+          <mat-option class='week-day-option'
+            *ngFor="let weekDayName of weekDayNames; let idx = index"
+            [value]="idx" [attr.weekDay]="idx"
+          >
+            {{ weekDayName }}
+          </mat-option>
+          <mat-option [value]="7">整週/每天</mat-option>
+        </mat-select>
+      </div>
     </div>
-    <div>
+    <div id="time-range-control">
       <ygg-time-range-control
         formControlName="timeRange"
       ></ygg-time-range-control>
     </div>
     <div>
-      <button mat-mini-fab (click)="addOpenHour()" matTooltip="加入服務時段">
+      <button
+        id="add-open-hour"
+        mat-mini-fab
+        (click)="addOpenHour()"
+        matTooltip="加入服務時段"
+      >
         <mat-icon>timer</mat-icon>
       </button>
     </div>
@@ -49,21 +56,34 @@
     <div [hidden]="openHours.length > 0">
       <h4>尚未指定任何服務時段</h4>
     </div>
-    <div
-      *ngFor="let openHour of openHours; let idx = index"
-      class="open-hour-item mat-elevation-z6"
-      fxLayout="row"
-      fxLayoutAlign="space-between center"
-      fxLayoutGap="20px"
-    >
-      <div>
-        <ygg-open-hour [openHour]="openHour"></ygg-open-hour>
-      </div>
-      <div>
-        <button mat-mini-fab (click)="deleteOpenHour(idx)">
-          <mat-icon>delete</mat-icon>
+    <ygg-action-barred layout="row" [hidden]="openHours.length <= 0">
+      <div yggActionBarredActions>
+        <button
+          id="clear-all"
+          mat-fab
+          (click)="clearAll()"
+          matTooltip="清除全部時段"
+        >
+          <mat-icon>delete_sweep</mat-icon>
         </button>
       </div>
-    </div>
+      <div
+        yggActionBarredContent
+        *ngFor="let openHour of openHours; let idx = index"
+        class="open-hour-item mat-elevation-z6"
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+        fxLayoutGap="20px"
+      >
+        <div>
+          <ygg-open-hour [openHour]="openHour"></ygg-open-hour>
+        </div>
+        <div>
+          <button mat-mini-fab (click)="deleteOpenHour(idx)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </ygg-action-barred>
   </div>
 </div>

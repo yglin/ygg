@@ -1,0 +1,14 @@
+<div class="day-time-range-control" [formGroup]="formGroup">
+  <h5 *ngIf="label" class="control-label">
+    <span>{{ label }}</span>
+  </h5>
+  <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="10px">
+    <div>
+      <ygg-day-time-control formControlName="start" id="start"></ygg-day-time-control>
+    </div>
+    <div>&mdash;</div>
+    <div>
+      <ygg-day-time-control formControlName="end" id="end"></ygg-day-time-control>
+    </div>
+  </div>
+</div>

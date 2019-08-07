@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, forwardRef } from '@angular/core';
 import { BusinessHours } from '../business-hours';
-import { OpenHour } from '../open-hour';
-import { WeekDayOptions } from '../week-day';
+import { OpenHour } from '../open-hour/open-hour';
+import { WeekDayNames } from '../../week-day';
 import {
-  FormControl,
+  // FormControl,
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
   FormGroup,
@@ -41,7 +41,7 @@ export class BusinessHoursControlComponent implements ControlValueAccessor {
 
   formGroupOpenHour: FormGroup;
 
-  weekDayOptions = WeekDayOptions;
+  weekDayNames = WeekDayNames;
 
   constructor(private formBuilder: FormBuilder) {
     this.formGroupOpenHour = this.formBuilder.group({
@@ -63,8 +63,10 @@ export class BusinessHoursControlComponent implements ControlValueAccessor {
   registerOnTouched() {}
 
   clearAll() {
-    this._businessHours.clear();
-    this.emitChange(this._businessHours);
+    if (confirm('清除所有服務時段？')) {
+      this._businessHours.clear();
+      this.emitChange(this._businessHours);
+    }
   }
 
   addOpenHour() {
@@ -79,6 +81,7 @@ export class BusinessHoursControlComponent implements ControlValueAccessor {
       const openHour = new OpenHour(weekDay, timeRange);
       this._businessHours.addOpenHour(openHour);
     }
+    this.formGroupOpenHour.patchValue(new OpenHour());
     this.emitChange(this._businessHours);
   }
 

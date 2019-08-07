@@ -19,8 +19,6 @@ import { ReactiveTextInputComponent } from './reactive-text-input/reactive-text-
 import { ItemsGroupSwitcherComponent } from './items-group-switcher/items-group-switcher.component';
 import { TimeInputComponent } from './time-input/time-input.component';
 import { AmazingTimePickerModule } from "amazing-time-picker";
-import { WeekDayPipePipe } from './week-day/week-day-pipe.pipe';
-
 @NgModule({
   declarations: [
     ProgressSpinnerComponent,
@@ -34,7 +32,6 @@ import { WeekDayPipePipe } from './week-day/week-day-pipe.pipe';
     ReactiveTextInputComponent,
     ItemsGroupSwitcherComponent,
     TimeInputComponent,
-    WeekDayPipePipe,
   ],
   imports: [
     CommonModule,
@@ -56,7 +53,6 @@ import { WeekDayPipePipe } from './week-day/week-day-pipe.pipe';
     ReactiveTextInputComponent,
     ItemsGroupSwitcherComponent,
     TimeInputComponent,
-    WeekDayPipePipe
   ],
   entryComponents: [ProgressSpinnerComponent, YggDialogComponent]
 })

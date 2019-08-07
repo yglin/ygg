@@ -1,4 +1,4 @@
-import { OpenHour } from '../open-hour';
+import { OpenHour } from '../open-hour/open-hour';
 
 export abstract class BusinessHoursControlPageObject {
   selectors = {

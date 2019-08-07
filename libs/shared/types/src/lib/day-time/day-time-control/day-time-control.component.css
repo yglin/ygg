@@ -1,0 +1,9 @@
+.form-group {
+  border-bottom: solid;
+}
+
+.form-group input {
+  border: none;
+  font-size: 20px;
+  text-align: right;
+}

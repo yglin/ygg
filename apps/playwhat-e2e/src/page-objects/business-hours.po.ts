@@ -1,62 +1,100 @@
 import * as moment from 'moment';
-import { BusinessHours, TimeRange } from '@ygg/shared/types';
+import { PageObject } from "./page-object.po";
+import { BusinessHours, TimeRange, OpenHour, WeekDayNames } from '@ygg/shared/types';
 
-export class BusinessHoursControlPageObject {
-  selector: string;
-  dropdownDaySelector: string;
-  inputStartTimeSelector: string;
-  inputEndTimeSelector: string;
-  buttonAddOpenHourSelector: string;
-  buttonClearAllSelector: string;
+class WeekDaySelectPageObject extends PageObject {
+  selector = '.week-day-select';
+  selectors = {
+    weekDaySelect: '#select'
+  };
 
-  constructor(parentSelector: string = '') {
-    this.selector = `${parentSelector} .business-hours-control`.trim();
-    this.dropdownDaySelector = `${this.selector} #day-selector select`;
-    this.inputStartTimeSelector = `${this.selector} #start-time input`;
-    this.inputEndTimeSelector = `${this.selector} #end-time input`;
-    this.buttonAddOpenHourSelector = `${this.selector} button#add-open-hour`;
-    this.buttonClearAllSelector = `${this.selector} button#clear-all`;
+  select(weekDay: number) {
+    cy.get(this.getSelector('weekDaySelect')).click();
+    cy.get(`.week-day-option[weekDay=${weekDay}]`).click();
+  };
+}
+
+class TimeInputPageObject extends PageObject {
+  selector = '.time-input';
+  selectors = {
+    hourInput: 'input#hour',
+    minuteInput: 'input#minute'
   }
 
-  fillIn(businessHours: BusinessHours) {
-    cy.get(this.buttonClearAllSelector).click();
-    for (let day = 0; day < 7; day++) {
-      const openHours = businessHours.getOpenHoursByWeekday(day);
-      for (const openHour of openHours) {
-        this.addOpenHour(day, openHour);
-      }
-    }
-  }
-
-  addOpenHour(day: number, openHour: TimeRange) {
-    cy.get(this.dropdownDaySelector).select(day.toString());
-    cy.get(this.inputStartTimeSelector).type(moment(openHour.start).format('HH:mm'));
-    cy.get(this.inputEndTimeSelector).type(moment(openHour.end).format('HH:mm'));
-    cy.get(this.buttonAddOpenHourSelector).click();
+  fillIn(time: Date) {
+    cy.get(this.getSelector('hourInput')).click().type(time.getHours().toString());
+    cy.get(this.getSelector('minuteInput')).click().type(time.getMinutes().toString());
   }
 }
 
-export class BusinessHoursViewPageObject {
-  selector: string;
-  openHoursListSelector: string;
+class TimeRangeControlPageObject extends PageObject {
+  selector = '.time-range-control';
+  selectors = {
+    start: '#start',
+    end: '#end'
+  };
 
-  constructor(parentSelector: string = '') {
-    this.selector = `${parentSelector} .business-hours-view`.trim();
-    this.openHoursListSelector = `${this.selector} .open-hours-list`;
+  fillIn(timeRange: TimeRange) {
+    const startInput = new TimeInputPageObject(this.getSelector('start'));
+    const endInput = new TimeInputPageObject(this.getSelector('end'));
+    startInput.fillIn(timeRange.start);
+    endInput.fillIn(timeRange.end);
+  }
+}
+
+export class BusinessHoursControlPageObject extends PageObject {
+  selector = '.business-hours-control';
+  selectors = {
+    weekDaySelect: '#week-day-select',
+    timeRangeInput: '#time-range-control',
+    buttonAddOpenHour: 'button#add-open-hour',
+    buttonClearAll: 'button#clear-all'
   }
 
-  checkData(businessHours: BusinessHours) {
-    const openHoursWeekly = businessHours.getOpenHoursWeekly();
-    let weekDaySelector = '';
-    for (const day in openHoursWeekly) {
-      if (openHoursWeekly.hasOwnProperty(day)) {
-        weekDaySelector = `${this.openHoursListSelector} [weekDay="${day}"]`;
-        cy.get(weekDaySelector).should('be.visible');
-        const openHours = openHoursWeekly[day];
-        for (const openHour of openHours) {
-          cy.get(`${weekDaySelector} .open-hour`).contains(openHour.format('HH:mm', 'HH:mm'));
-        }
-      }
+  fillIn(businessHours: BusinessHours) {
+    for (const openHour of businessHours.getOpenHours()) {
+      cy.log(`Add open-hour ${openHour.format('ddd', 'YYYY/MM/DD A h:mm')}`);
+      this.addOpenHour(openHour);
+    }
+  }
+
+  addOpenHour(openHour: OpenHour) {
+    const weekDaySelect = new WeekDaySelectPageObject(this.getSelector('weekDaySelect'));
+    const timeRangeInput = new TimeRangeControlPageObject(this.getSelector('timeRangeInput'));
+    weekDaySelect.select(openHour.weekDay);
+    timeRangeInput.fillIn(openHour.timeRange);
+    cy.get(this.getSelector('buttonAddOpenHour')).click();
+  }
+}
+
+class OpenHourPageObject extends PageObject {
+  selector = '.open-hour';
+  selectors = {
+    weekDay: '#week-day .value',
+    start: '#start.value',
+    end: '#end.value'
+  };
+
+  expect(openHour: OpenHour) {
+    cy.log(`Expect open-hour ${openHour.format('ddd', 'YYYY/MM/DD A h:mm')} in Element ${this.getSelector()}`);
+    cy.get(this.getSelector('weekDay')).contains(WeekDayNames[openHour.weekDay]);
+    cy.get(this.getSelector('start')).contains(moment(openHour.timeRange.start).format('A h:mm'));
+    cy.get(this.getSelector('end')).contains(moment(openHour.timeRange.end).format('A h:mm'));
+  }
+}
+
+export class BusinessHoursViewPageObject extends PageObject {
+  selector = '.business-hours';
+  selectors = {
+    openHourList: '.open-hour-list'
+  };
+
+  expect(businessHours: BusinessHours) {
+    const openHours = businessHours.getOpenHours();
+    for (let index = 0; index < openHours.length; index++) {
+      const openHour = openHours[index];
+      const openHourPageObject = new OpenHourPageObject(`${this.getSelector('openHourList')} #open-hour-${index}`);
+      openHourPageObject.expect(openHour);
     }
   }
 }

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { BusinessHours } from '../business-hours';
 
 @Component({
   selector: 'ygg-business-hours-view',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./business-hours-view.component.css']
 })
 export class BusinessHoursViewComponent implements OnInit {
+  @Input() businessHours: BusinessHours;
 
   constructor() { }
 

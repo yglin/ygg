@@ -1,6 +1,6 @@
 import { isArray, isEmpty, random } from 'lodash';
 import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
-import { OpenHour } from './open-hour';
+import { OpenHour } from './open-hour/open-hour';
 import { WeekDay } from '@angular/common';
 import { TimeRange } from '../time-range';
 
@@ -13,9 +13,11 @@ export class BusinessHours implements SerializableJSON {
 
   static forge(): BusinessHours {
     const newOne = new BusinessHours();
-    const countOpenHours = random(7, 15);
-    while (newOne.openHours.length < countOpenHours) {
+    const countOpenHours = random(5, 10);
+    let count = 0;
+    while (count < countOpenHours) {
       newOne.addOpenHour(OpenHour.forge());
+      count++;
     }
     return newOne;
   }

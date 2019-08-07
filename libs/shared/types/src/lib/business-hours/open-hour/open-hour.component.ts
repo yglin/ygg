@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { OpenHour } from '../open-hour';
+import { OpenHour } from './open-hour';
 
 @Component({
   selector: 'ygg-open-hour',

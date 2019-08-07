@@ -3,6 +3,10 @@
   padding: 30px 10px;
 }
 
+.open-hours-list {
+  width: 500px;
+}
+
 .open-hour-item {
   width: 430px;
   margin: 20px 10px;

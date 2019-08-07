@@ -1,14 +1,15 @@
 import { random } from 'lodash';
-import { TimeRange } from '../time-range';
+import { TimeRange } from '../../time-range';
 import { WeekDay } from '@angular/common';
 import { SerializableJSON } from '@ygg/shared/infra/data-access';
+import { WeekDayNames } from '../../week-day';
 
 export class OpenHour implements SerializableJSON {
   weekDay: WeekDay;
   timeRange: TimeRange;
 
   static forge(): OpenHour {
-    return new OpenHour(random(0, 7), TimeRange.forge());
+    return new OpenHour(random(0, 6), TimeRange.forge());
   }
 
   static isOpenHour(value: any): value is OpenHour {
@@ -56,8 +57,8 @@ export class OpenHour implements SerializableJSON {
   }
 
   format(dayToken: string = 'ddd', startTokens: string = 'HH:mm', endTokens?: string) {
-    // TODO: meaningful week day name
-    const dayName = this.weekDay.toString();
+    // TODO: dayName may follow rule of dayToken
+    const dayName = WeekDayNames[this.weekDay];
     return `${dayName} ${this.timeRange.format(startTokens, endTokens)}`;
   }
 
