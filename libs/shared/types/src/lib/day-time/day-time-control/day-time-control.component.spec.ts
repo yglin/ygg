@@ -166,8 +166,8 @@ describe('DayTimeControlComponent as Reactive Form Controller(ControlValueAccess
     fixture.detectChanges();
     const result: DayTime = formComponent.formGroup.get('myDayTime').value;
     expect(mockAmazingTimePickerService.open).toHaveBeenCalled();
-    expect(result.format()).toEqual(
-      testTime.format()
+    expect(result.toJSON()).toEqual(
+      testTime.toJSON()
     );
     done();
   });

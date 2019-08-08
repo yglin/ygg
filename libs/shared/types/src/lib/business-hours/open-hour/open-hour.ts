@@ -1,15 +1,14 @@
 import { random } from 'lodash';
-import { TimeRange } from '../../time-range';
-import { WeekDay } from '@angular/common';
 import { SerializableJSON } from '@ygg/shared/infra/data-access';
-import { WeekDayNames } from '../../week-day';
+import { WeekDay, WeekDayNames } from '../../week-day';
+import { DayTimeRange } from '../../day-time-range';
 
 export class OpenHour implements SerializableJSON {
   weekDay: WeekDay;
-  timeRange: TimeRange;
+  dayTimeRange: DayTimeRange;
 
   static forge(): OpenHour {
-    return new OpenHour(random(0, 6), TimeRange.forge());
+    return new OpenHour(random(0, 6), DayTimeRange.forge());
   }
 
   static isOpenHour(value: any): value is OpenHour {
@@ -17,21 +16,32 @@ export class OpenHour implements SerializableJSON {
       value &&
       value.weekDay >= 0 &&
       value.weekDay < 7 &&
-      TimeRange.isTimeRange(value.timeRange)
+      DayTimeRange.isDayTimeRange(value.dayTimeRange)
     );
   }
 
-  constructor(day?: WeekDay, ...args: any[]) {
-    this.weekDay = 0;
-    if (typeof day !== 'undefined' && day >= 0) {
-      this.weekDay = day;
-    }
-    if (args.length === 1 && TimeRange.isTimeRange(args[0])) {
-      this.timeRange = new TimeRange(args[0]);
-    } else if (args.length === 2) {
-      this.timeRange = new TimeRange(args[0], args[1]);
+  constructor(...args: any[]) {
+    if (args.length >= 1 && OpenHour.isOpenHour(args[0])) {
+      this.weekDay = args[0].weekDay;
+      this.dayTimeRange = new DayTimeRange(args[0].dayTimeRange);
+    } else if (args.length >= 2 && typeof args[0] === 'number') {
+      this.weekDay = args[0];
+      if (args.length === 2 && DayTimeRange.isDayTimeRange(args[1])) {
+        this.dayTimeRange = new DayTimeRange(args[1]);
+      } else if (args.length >= 3) {
+        this.dayTimeRange = new DayTimeRange(args[1], args[2]);
+      }
     } else {
-      this.timeRange = new TimeRange();
+      this.weekDay = 0;
+      this.dayTimeRange = new DayTimeRange();
+    }
+  }
+
+  isAfter(that: OpenHour): boolean {
+    if (this.weekDay !== that.weekDay) {
+      return this.weekDay > that.weekDay;
+    } else {
+      return this.dayTimeRange.isAfter(that.dayTimeRange);
     }
   }
 
@@ -39,9 +49,9 @@ export class OpenHour implements SerializableJSON {
     if (openHour.weekDay !== this.weekDay) {
       return null;
     }
-    const mergedTimeRange = this.timeRange.merge(openHour.timeRange, { adjacent: true });
-    if (mergedTimeRange) {
-      return new OpenHour(this.weekDay, mergedTimeRange);
+    const mergedDayTimeRange = this.dayTimeRange.merge(openHour.dayTimeRange, { adjacent: true });
+    if (mergedDayTimeRange) {
+      return new OpenHour(this.weekDay, mergedDayTimeRange);
     } else {
       return null;
     }
@@ -51,15 +61,15 @@ export class OpenHour implements SerializableJSON {
     if (this.weekDay !== that.weekDay) {
       return [this];
     } else {
-      const subtTimeRanges: TimeRange[] = this.timeRange.subtract(that.timeRange);
-      return subtTimeRanges.map(timeRange => new OpenHour(this.weekDay, timeRange));
+      const subtDayTimeRanges: DayTimeRange[] = this.dayTimeRange.subtract(that.dayTimeRange);
+      return subtDayTimeRanges.map(dayTimeRange => new OpenHour(this.weekDay, dayTimeRange));
     }
   }
 
   format(dayToken: string = 'ddd', startTokens: string = 'HH:mm', endTokens?: string) {
     // TODO: dayName may follow rule of dayToken
     const dayName = WeekDayNames[this.weekDay];
-    return `${dayName} ${this.timeRange.format(startTokens, endTokens)}`;
+    return `${dayName} ${this.dayTimeRange.format(startTokens, endTokens)}`;
   }
 
   fromJSON(data: any): this {
@@ -67,8 +77,8 @@ export class OpenHour implements SerializableJSON {
       if (data.weekDay) {
         this.weekDay = data.weekDay;
       }
-      if (data.timeRange) {
-        this.timeRange = new TimeRange().fromJSON(data.timeRange);
+      if (data.dayTimeRange) {
+        this.dayTimeRange.fromJSON(data.dayTimeRange);
       }
     }
     return this;
@@ -77,7 +87,7 @@ export class OpenHour implements SerializableJSON {
   toJSON(): any {
     return {
       weekDay: this.weekDay,
-      timeRange: this.timeRange.toJSON()
+      dayTimeRange: this.dayTimeRange.toJSON()
     };
   }
 }

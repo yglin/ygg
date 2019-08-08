@@ -13,9 +13,9 @@ import { By } from '@angular/platform-browser';
 import { BusinessHours } from '../business-hours';
 import { take } from 'rxjs/operators';
 import { OpenHour } from '../open-hour/open-hour';
-import { TimeRange } from '../../time-range';
+import { DayTimeRange } from '../../day-time-range';
 // import { BusinessHoursControlPageObject } from './business-hours-control.po';
-import { TimeRangeControlComponent } from '../../time-range/time-range-control/time-range-control.component';
+import { DayTimeRangeControlComponent } from '../../day-time-range/day-time-range-control/day-time-range-control.component';
 // import { TimeInputComponent } from 'libs/shared/ui/widgets/src/lib/time-input/time-input.component';
 // import { of } from 'rxjs';
 // import { AmazingTimePickerService } from 'amazing-time-picker';
@@ -63,8 +63,8 @@ import { ActionBarredComponent } from 'libs/shared/ui/widgets/src/lib/action-bar
 //       By.css(this.getSelector('buttonAdd'))
 //     ).nativeElement;
 //     selectWeekDay.value = openHour.weekDay;
-//     inputStart.value = openHour.timeRange.start;
-//     inputEnd.value = openHour.timeRange.end;
+//     inputStart.value = openHour.dayTimeRange.start;
+//     inputEnd.value = openHour.dayTimeRange.end;
 //     buttonAdd.click();
 //   }
 
@@ -119,7 +119,7 @@ describe('BusinessHoursControlComponent as Reactive Form Controller(ControlValue
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, SharedUiNgMaterialModule],
       declarations: [
-        MockComponent(TimeRangeControlComponent),
+        MockComponent(DayTimeRangeControlComponent),
         MockComponent(OpenHourComponent),
         MockComponent(ActionBarredComponent),
         BusinessHoursControlComponent,
@@ -190,7 +190,7 @@ describe('BusinessHoursControlComponent as Reactive Form Controller(ControlValue
   it('can add open-hours', async done => {
     component.clearAll();
     const testOpenHour = OpenHour.forge();
-    component.formGroupOpenHour.patchValue(testOpenHour);
+    component.formGroupOpenHour.setValue(testOpenHour);
     component.addOpenHour();
     await fixture.whenStable();
     fixture.detectChanges();
@@ -202,10 +202,29 @@ describe('BusinessHoursControlComponent as Reactive Form Controller(ControlValue
     done();
   });
 
+  it('should auto merge when add intersected open-hours', async done => {
+    const openHour1 = new OpenHour(2, '10:30', '14:20');
+    component.formGroupOpenHour.setValue(openHour1);
+    component.addOpenHour();
+    const openHour2 = new OpenHour(2, '12:00', '14:20');
+    component.formGroupOpenHour.setValue(openHour2);
+    component.addOpenHour();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const businessHours: BusinessHours = formComponent.formGroup.get(
+      'businessHours'
+    ).value;
+    const openHours = businessHours.getOpenHours();
+    const expectOpenHour = new OpenHour(2, '10:30', '14:20');
+    expect(openHours).toHaveLength(1);
+    expect(openHours[0].toJSON()).toEqual(expectOpenHour.toJSON());
+    done();
+  });
+
   it('can add open-hours for all 7 week days at once', async done => {
-    const testTimeRange = TimeRange.forge();
+    const testDayTimeRange = DayTimeRange.forge();
     component.formGroupOpenHour.get('weekDay').setValue(7);
-    component.formGroupOpenHour.get('timeRange').setValue(testTimeRange);
+    component.formGroupOpenHour.get('dayTimeRange').setValue(testDayTimeRange);
     component.addOpenHour();
     await fixture.whenStable();
     fixture.detectChanges();
@@ -215,7 +234,7 @@ describe('BusinessHoursControlComponent as Reactive Form Controller(ControlValue
     const openHours = businessHours.getOpenHours();
     expect(openHours).toHaveLength(7);
     for (const openHour of openHours) {
-      expect(openHour.timeRange.format()).toEqual(testTimeRange.format());
+      expect(openHour.dayTimeRange.format()).toEqual(testDayTimeRange.format());
     }
     done();
   });
@@ -223,22 +242,23 @@ describe('BusinessHoursControlComponent as Reactive Form Controller(ControlValue
   it('should clear time-input value after adding open-hour', async done => {
     component.clearAll();
     const testOpenHour = OpenHour.forge();
-    component.formGroupOpenHour.patchValue(testOpenHour);
+    component.formGroupOpenHour.setValue(testOpenHour);
     component.addOpenHour();
     await fixture.whenStable();
     fixture.detectChanges();
-    const timeRange: TimeRange = component.formGroupOpenHour.get('timeRange').value;
-    expect(timeRange.format()).toEqual('00:00 - 00:00');
+    const dayTimeRange: DayTimeRange = component.formGroupOpenHour.get('dayTimeRange').value;
+    const expectDayTimeRange = new DayTimeRange('00:00', '00:00');
+    expect(dayTimeRange.toJSON()).toEqual(expectDayTimeRange.toJSON());
     done();
   });
 
   it('can delete an open-hour by index', async done => {
     component.clearAll();
     const openHour1 = new OpenHour(0, '10:30', '12:20');
-    component.formGroupOpenHour.patchValue(openHour1);
+    component.formGroupOpenHour.setValue(openHour1);
     component.addOpenHour();
     const openHour2 = new OpenHour(1, '10:30', '12:20');
-    component.formGroupOpenHour.patchValue(openHour2);
+    component.formGroupOpenHour.setValue(openHour2);
     component.addOpenHour();
     component.deleteOpenHour(0);
     await fixture.whenStable();
@@ -255,10 +275,10 @@ describe('BusinessHoursControlComponent as Reactive Form Controller(ControlValue
   it('can subtract from exist open-hours', async done => {
     component.clearAll();
     const openHour1 = new OpenHour(3, '10:30', '18:30');
-    component.formGroupOpenHour.patchValue(openHour1);
+    component.formGroupOpenHour.setValue(openHour1);
     component.addOpenHour();
     const openHour2 = new OpenHour(3, '12:30', '14:00');
-    component.formGroupOpenHour.patchValue(openHour2);
+    component.formGroupOpenHour.setValue(openHour2);
     component.subtractOpenHour();
     await fixture.whenStable();
     fixture.detectChanges();
@@ -267,8 +287,12 @@ describe('BusinessHoursControlComponent as Reactive Form Controller(ControlValue
     ).value;
     const openHours = businessHours.getOpenHours();
     expect(openHours).toHaveLength(2);
-    expect(openHours[0].timeRange.format()).toEqual('10:30 - 12:30');
-    expect(openHours[1].timeRange.format()).toEqual('14:00 - 18:30');
+    const expectOpenHours = [
+      new OpenHour(3, '10:30', '12:30'),
+      new OpenHour(3, '14:00', '18:30')
+    ];
+    expect(openHours[0].toJSON()).toEqual(expectOpenHours[0].toJSON());
+    expect(openHours[1].toJSON()).toEqual(expectOpenHours[1].toJSON());
     done();
   });
 

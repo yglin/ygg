@@ -33,14 +33,20 @@ export class DayTimeRange implements SerializableJSON {
     return tr1.start.isAfter(tr2.start) ? 1 : -1;
   }
 
-  constructor(arg1?: string | DayTime | DayTimeRange | Moment.Moment, arg2?: string | DayTime | Moment.Moment) {
-    if (DayTimeRange.isDayTimeRange(arg1)) {
-      this._start = new DayTime(arg1.start);
-      this._end = new DayTime(arg1.end);
-    } else {
-      this._start = new DayTime(arg1);
-      this._end = new DayTime(arg2);
+  constructor(...args: any[]) {
+    let start: DayTime = new DayTime();
+    let end: DayTime = new DayTime();
+    if (args.length >= 1) {
+      if (DayTimeRange.isDayTimeRange(args[0])) {
+        start = args[0].start;
+        end = args[0].end;
+      } else if (args.length >= 2) {
+        start = new DayTime(args[0]);
+        end = new DayTime(args[1]);
+      }
     }
+    this._start = start;
+    this._end = end;
     this.justifyOrder();
   }
 
@@ -49,6 +55,14 @@ export class DayTimeRange implements SerializableJSON {
       const tmp = this._start;
       this._start = this._end;
       this._end = tmp;
+    }
+  }
+
+  isAfter(that: DayTimeRange): boolean {
+    if (this.start.isSame(that.start)) {
+      return this.end.isAfter(that.end);
+    } else {
+      return this.start.isAfter(that.start);
     }
   }
 

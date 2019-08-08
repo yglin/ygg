@@ -7,5 +7,6 @@ export * from './lib/image';
 export * from './lib/form';
 export * from './lib/album';
 export * from './lib/business-hours';
-export * from './lib/time-range';
+export * from './lib/day-time';
+export * from './lib/day-time-range';
 export * from './lib/week-day';

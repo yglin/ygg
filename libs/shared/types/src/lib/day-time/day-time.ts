@@ -27,25 +27,35 @@ export class DayTime implements SerializableJSON {
     return new DayTime(random(0, 23), random(0, 59));
   }
 
-  constructor(arg1: string | number | DayTime | moment.Moment, arg2?: number) {
+  constructor(...args: any[]) {
     let hour: number;
     let minute: number;
-    if (moment.isMoment(arg1)) {
-      hour = arg1.hour();
-      minute = arg1.minute();
-    } else if (DayTime.isDayTime(arg1)) {
-      hour = arg1.hour;
-      minute = arg1.minute;
-    } else if (typeof arg1 === 'string') {
-      const mt = moment(arg1, 'HH:mm');
-      hour = mt.hour();
-      minute = mt.minute();
+    if (args.length >= 1) {
+      if (DayTime.isDayTime(args[0])) {
+        hour = args[0].hour;
+        minute = args[0].minute;
+      } else if (typeof args[0] === 'string') {
+        const mnt = moment(args[0], 'HH:mm');
+        hour = mnt.hour();
+        minute = mnt.minute();
+      } else if (moment.isMoment(args[0])) {
+        const mnt = args[0];
+        hour = mnt.hour();
+        minute = mnt.minute();
+      } else if (args.length >= 2) {
+        hour = args[0];
+        minute = args[1];
+      }
     } else {
-      hour = arg1;
-      minute = arg2;
+      hour = 0;
+      minute = 0;
     }
     this._hour = clamp(hour, 0, 23);
     this._minute = clamp(minute, 0, 59);
+  }
+
+  isSame(that: DayTime): boolean {
+    return this.hour * 60 + this.minute - (that.hour * 60 + that.minute) === 0;
   }
 
   isAfter(that: DayTime): boolean {

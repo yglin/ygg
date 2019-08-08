@@ -90,10 +90,14 @@ export class DayTimeControlComponent
     });
     amazingTimePicker.afterClose().subscribe(timeToken => {
       if (timeToken) {
-        const mt = moment(timeToken, 'HH:mm');
-        // console.log(mt.format('HH:mm'));
-        this.dayTime = new DayTime(mt.hour(), mt.minute());
-        this.formGroup.setValue(this.dayTime, { emitEvent: false });
+        this.dayTime = new DayTime(timeToken);
+        this.formGroup.setValue(
+          {
+            hour: this.dayTime.hour,
+            minute: this.dayTime.minute
+          },
+          { emitEvent: false }
+        );
       }
     });
   }

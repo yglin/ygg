@@ -9,11 +9,8 @@
     <h4 class='value'>{{ openHour.weekDay | yggWeekDayPipe }}</h4>
   </div>
   <div>
-    <div class="time-range" *ngIf="openHour.timeRange as timeRange">
-      <mat-icon>access_time</mat-icon>
-      <span id='start' class='value'>{{ timeRange.start | date: 'a h:mm' }}</span>
-      &mdash;
-      <span id='end' class='value'>{{ timeRange.end | date: 'a h:mm' }}</span>
+    <div class="day-time-range" *ngIf="openHour.dayTimeRange as dayTimeRange">
+      <ygg-day-time-range [dayTimeRange]="dayTimeRange"></ygg-day-time-range>
     </div>
   </div>
 </div>

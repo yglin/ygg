@@ -10,7 +10,7 @@ import {
   FormBuilder
 } from '@angular/forms';
 import { noop, range } from 'lodash';
-import { TimeRange } from '../../time-range';
+import { DayTimeRange } from '../../day-time-range';
 
 @Component({
   selector: 'ygg-business-hours-control',
@@ -46,7 +46,7 @@ export class BusinessHoursControlComponent implements ControlValueAccessor {
   constructor(private formBuilder: FormBuilder) {
     this.formGroupOpenHour = this.formBuilder.group({
       weekDay: 7,
-      timeRange: new TimeRange()
+      dayTimeRange: new DayTimeRange()
     });
   }
 
@@ -71,17 +71,18 @@ export class BusinessHoursControlComponent implements ControlValueAccessor {
 
   addOpenHour() {
     const weekDay = this.formGroupOpenHour.get('weekDay').value;
-    const timeRange = this.formGroupOpenHour.get('timeRange').value;
+    const dayDayTimeRange = this.formGroupOpenHour.get('dayTimeRange').value;
     if (weekDay === 7) {
       for (const day of range(7)) {
-        const openHour = new OpenHour(day, timeRange);
+        const openHour = new OpenHour(day, dayDayTimeRange);
         this._businessHours.addOpenHour(openHour);
       }
     } else {
-      const openHour = new OpenHour(weekDay, timeRange);
+      const openHour = new OpenHour(weekDay, dayDayTimeRange);
       this._businessHours.addOpenHour(openHour);
     }
-    this.formGroupOpenHour.patchValue(new OpenHour());
+    this.formGroupOpenHour.setValue(new OpenHour());
+    // console.log(`dayTimeRange reset to ${this.formGroupOpenHour.get('dayTimeRange').value.toJSON()}`);
     this.emitChange(this._businessHours);
   }
 
@@ -92,8 +93,8 @@ export class BusinessHoursControlComponent implements ControlValueAccessor {
 
   subtractOpenHour() {
     const weekDay = this.formGroupOpenHour.get('weekDay').value;
-    const timeRange = this.formGroupOpenHour.get('timeRange').value;
-    const openHour = new OpenHour(weekDay, timeRange);
+    const dayDayTimeRange = this.formGroupOpenHour.get('dayTimeRange').value;
+    const openHour = new OpenHour(weekDay, dayDayTimeRange);
     this._businessHours.subtractOpenHour(openHour);
   }
 }

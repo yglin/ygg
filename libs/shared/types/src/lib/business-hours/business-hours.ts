@@ -1,8 +1,7 @@
 import { isArray, isEmpty, random } from 'lodash';
 import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { OpenHour } from './open-hour/open-hour';
-import { WeekDay } from '@angular/common';
-import { TimeRange } from '../time-range';
+import { WeekDay } from '../week-day';
 
 export class BusinessHours implements SerializableJSON {
   private openHours: OpenHour[];
@@ -40,11 +39,7 @@ export class BusinessHours implements SerializableJSON {
       for (let index = 0; index < this.openHours.length; index++) {
         const openHour = this.openHours[index];
         const merged = mergedOpenHour.merge(openHour);
-        if (
-          mergedOpenHour.weekDay > openHour.weekDay ||
-          (mergedOpenHour.weekDay === openHour.weekDay &&
-            mergedOpenHour.timeRange.start >= openHour.timeRange.start)
-        ) {
+        if (mergedOpenHour.isAfter(openHour)) {
           insertAtIndex += 1;
         }
         if (merged) {
@@ -63,13 +58,7 @@ export class BusinessHours implements SerializableJSON {
   }
 
   sort() {
-    this.openHours.sort((oh1, oh2) => {
-      if (oh1.weekDay === oh2.weekDay) {
-        return TimeRange.compare(oh1.timeRange, oh2.timeRange);
-      } else {
-        return oh1.weekDay - oh2.weekDay;
-      }
-    });
+    this.openHours.sort((oh1, oh2) => oh1.isAfter(oh2) ? 1 : -1);
   }
 
   // merge() {

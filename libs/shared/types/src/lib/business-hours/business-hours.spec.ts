@@ -51,7 +51,8 @@ describe('Class BusinessHours', () => {
 
     const openHours: OpenHour[] = testBusinessHours.getOpenHours();
     expect(openHours.length).toBe(4); // 2 merged, so 5 -> 4,
-    expect(openHours[1].format()).toEqual('3 03:00 - 13:30');
+    const expectOpenHour = new OpenHour(3, '03:00', '13:30');
+    expect(openHours[1].toJSON()).toEqual(expectOpenHour.toJSON());
   });
 
   it('can subtract open-hours', () => {
@@ -70,7 +71,11 @@ describe('Class BusinessHours', () => {
 
     const openHours: OpenHour[] = testBusinessHours.getOpenHours();
     expect(openHours.length).toBe(5);// last open-hour splitted into 2
-    expect(openHours[3].timeRange.format('HH:mm', 'HH:mm')).toEqual('06:00 - 12:00');
-    expect(openHours[4].timeRange.format('HH:mm', 'HH:mm')).toEqual('13:30 - 18:30');
+    const expectOpenHours = [
+      new OpenHour(6, '06:00', '12:00'),
+      new OpenHour(6, '13:30', '18:30')
+    ];
+    expect(openHours[3].toJSON()).toEqual(expectOpenHours[0].toJSON());
+    expect(openHours[4].toJSON()).toEqual(expectOpenHours[1].toJSON());
   });
 });
