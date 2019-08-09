@@ -1,4 +1,4 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import { Component, Input, forwardRef, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NumberRange } from '../number-range';
 
@@ -14,12 +14,13 @@ import { NumberRange } from '../number-range';
     }
   ]
 })
-export class NumberRangeControlComponent implements ControlValueAccessor {
+export class NumberRangeControlComponent implements ControlValueAccessor, OnInit {
   numberRange = new NumberRange();
   @Input() globalMin = 0;
   @Input() globalMax = 54088;
   @Input() globalStep = 100;
   @Input() icon;
+  @Input() layout;
   emitChange: (numberRange: NumberRange) => any;
 
   constructor() { }
@@ -61,5 +62,10 @@ export class NumberRangeControlComponent implements ControlValueAccessor {
 
   registerOnTouched(fn) { }
 
+  ngOnInit() {
+    if (!this.layout) {
+      this.layout = (window.innerWidth > 420) ? 'row' : 'column';
+    }
+  }
 
 }
