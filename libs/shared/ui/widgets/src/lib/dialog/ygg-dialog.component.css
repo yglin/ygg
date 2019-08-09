@@ -1,0 +1,10 @@
+/* .ygg-dialog {
+  max-width: 80vw;
+  max-height: 75vh;
+} */
+
+.content {
+  max-width: 80vw;
+  max-height: 60vh;
+  overflow: auto;
+}
