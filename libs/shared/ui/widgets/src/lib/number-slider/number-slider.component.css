@@ -1,10 +1,8 @@
 .ygg-number-slider {
-  width: 360px;
-  margin: 30px 20px;
   font-size: 150%;
 }
 
-.ygg-number-slider .slider {
+/* .ygg-number-slider .slider {
   width: 100%
 }
 
@@ -14,17 +12,23 @@
 
 .ygg-number-slider .mat-form-field {
   width: 100%;
-}
+} */
 
 .ygg-number-slider .indicator {
   font-style: italic;
   /* font-size: 14px; */
+  padding: 2px 2px;
   color: rgb(92, 12, 36);
 }
 
-.ygg-number-slider .number-input {
-  min-height: 75px;
+.number-input {
+  min-height: 100px;
 }
+
+.number-input .mat-form-field {
+  width: 100%;
+}
+
 
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button {  

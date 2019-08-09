@@ -22,6 +22,7 @@ export class NumberSliderComponent implements OnInit, ControlValueAccessor {
   @Input() max = 100;
   @Input() step = 1;
   @Input() zeroIsNoLimit: boolean;
+  @Input() vertical = false;
   iconType: string;
 
   _value = 0;
