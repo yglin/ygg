@@ -27,7 +27,6 @@ describe('Play form, new and update play', () => {
     cy.get('a#add-my-play').click();
     playFormPage.expectVisible();
     playFormPage.fillIn(testPlay);
-    cy.get('.business-hours-control').pause();
     playFormPage.submit();
     playViewPage.expectVisible();
     playViewPage.checkData(testPlay);

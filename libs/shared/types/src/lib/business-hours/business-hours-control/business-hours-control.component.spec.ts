@@ -203,11 +203,25 @@ describe('BusinessHoursControlComponent as Reactive Form Controller(ControlValue
   });
 
   it('should auto merge when add intersected open-hours', async done => {
-    const openHour1 = new OpenHour(2, '10:30', '14:20');
-    component.formGroupOpenHour.setValue(openHour1);
+    component.formGroupOpenHour.setValue(new OpenHour(0, '11:00', '16:30'));
     component.addOpenHour();
-    const openHour2 = new OpenHour(2, '12:00', '14:20');
-    component.formGroupOpenHour.setValue(openHour2);
+    component.formGroupOpenHour.setValue(new OpenHour(1, '11:00', '16:30'));
+    component.addOpenHour();
+    component.formGroupOpenHour.setValue(new OpenHour(1, '06:00', '12:30'));
+    component.addOpenHour();
+    component.formGroupOpenHour.setValue(new OpenHour(5, '11:00', '16:30'));
+    component.addOpenHour();
+    component.formGroupOpenHour.setValue(new OpenHour(6, '11:44', '12:11'));
+    component.addOpenHour();
+    component.formGroupOpenHour.setValue(new OpenHour(0, '09:00', '12:30'));
+    component.addOpenHour();
+    component.formGroupOpenHour.setValue(new OpenHour(2, '15:00', '18:30'));
+    component.addOpenHour();
+    component.formGroupOpenHour.setValue(new OpenHour(5, '20:00', '22:30'));
+    component.addOpenHour();
+    component.formGroupOpenHour.setValue(new OpenHour(4, '08:00', '12:30'));
+    component.addOpenHour();
+    component.formGroupOpenHour.setValue(new OpenHour(5, '08:00', '18:30'));
     component.addOpenHour();
     await fixture.whenStable();
     fixture.detectChanges();
@@ -215,9 +229,14 @@ describe('BusinessHoursControlComponent as Reactive Form Controller(ControlValue
       'businessHours'
     ).value;
     const openHours = businessHours.getOpenHours();
-    const expectOpenHour = new OpenHour(2, '10:30', '14:20');
-    expect(openHours).toHaveLength(1);
-    expect(openHours[0].toJSON()).toEqual(expectOpenHour.toJSON());
+    expect(openHours).toHaveLength(7);
+    expect(openHours[0].toJSON()).toEqual(new OpenHour(0, '09:00', '16:30').toJSON());
+    expect(openHours[1].toJSON()).toEqual(new OpenHour(1, '06:00', '16:30').toJSON());
+    expect(openHours[2].toJSON()).toEqual(new OpenHour(2, '15:00', '18:30').toJSON());
+    expect(openHours[3].toJSON()).toEqual(new OpenHour(4, '08:00', '12:30').toJSON());
+    expect(openHours[4].toJSON()).toEqual(new OpenHour(5, '08:00', '18:30').toJSON());
+    expect(openHours[5].toJSON()).toEqual(new OpenHour(5, '20:00', '22:30').toJSON());
+    expect(openHours[6].toJSON()).toEqual(new OpenHour(6, '11:44', '12:11').toJSON());
     done();
   });
 
@@ -239,18 +258,18 @@ describe('BusinessHoursControlComponent as Reactive Form Controller(ControlValue
     done();
   });
 
-  it('should clear time-input value after adding open-hour', async done => {
-    component.clearAll();
-    const testOpenHour = OpenHour.forge();
-    component.formGroupOpenHour.setValue(testOpenHour);
-    component.addOpenHour();
-    await fixture.whenStable();
-    fixture.detectChanges();
-    const dayTimeRange: DayTimeRange = component.formGroupOpenHour.get('dayTimeRange').value;
-    const expectDayTimeRange = new DayTimeRange('00:00', '00:00');
-    expect(dayTimeRange.toJSON()).toEqual(expectDayTimeRange.toJSON());
-    done();
-  });
+  // it('should clear time-input value after adding open-hour', async done => {
+  //   component.clearAll();
+  //   const testOpenHour = OpenHour.forge();
+  //   component.formGroupOpenHour.setValue(testOpenHour);
+  //   component.addOpenHour();
+  //   await fixture.whenStable();
+  //   fixture.detectChanges();
+  //   const dayTimeRange: DayTimeRange = component.formGroupOpenHour.get('dayTimeRange').value;
+  //   const expectDayTimeRange = new DayTimeRange('00:00', '00:00');
+  //   expect(dayTimeRange.toJSON()).toEqual(expectDayTimeRange.toJSON());
+  //   done();
+  // });
 
   it('can delete an open-hour by index', async done => {
     component.clearAll();

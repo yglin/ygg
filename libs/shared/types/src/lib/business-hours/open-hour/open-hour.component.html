@@ -5,12 +5,12 @@
   *ngIf="openHour"
   class='open-hour'
 >
-  <div id='week-day'>
-    <h4 class='value'>{{ openHour.weekDay | yggWeekDayPipe }}</h4>
+  <div>
+    <h4 class='week-day'>{{ openHour.weekDay | yggWeekDayPipe }}</h4>
   </div>
   <div>
-    <div class="day-time-range" *ngIf="openHour.dayTimeRange as dayTimeRange">
-      <ygg-day-time-range [dayTimeRange]="dayTimeRange"></ygg-day-time-range>
+    <div class="day-time-range" *ngIf="openHour.dayTimeRange">
+      <ygg-day-time-range [dayTimeRange]="openHour.dayTimeRange"></ygg-day-time-range>
     </div>
   </div>
 </div>

@@ -98,14 +98,17 @@ export class DayTimeRange implements SerializableJSON {
 
   fromJSON(data: any): this {
     if (data && data.start && data.end) {
-      this._start.fromJSON(data.start);
-      this._end.fromJSON(data.end);
+      this._start = new DayTime().fromJSON(data.start);
+      this._end = new DayTime().fromJSON(data.end);
       this.justifyOrder();
     }
     return this;
   }
 
   toJSON(): any {
-    return toJSONDeep(this);
+    return {
+      start: this.start.toJSON(),
+      end: this.end.toJSON()
+    };
   }
 }

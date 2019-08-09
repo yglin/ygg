@@ -4,7 +4,7 @@ import { OpenHour } from './open-hour/open-hour';
 import { WeekDay } from '../week-day';
 
 export class BusinessHours implements SerializableJSON {
-  private openHours: OpenHour[];
+  private openHours: OpenHour[] = [];
 
   static isBusinessHours(value: any): value is BusinessHours {
     return !!(value && isArray(value.openHours));
@@ -18,12 +18,16 @@ export class BusinessHours implements SerializableJSON {
       newOne.addOpenHour(OpenHour.forge());
       count++;
     }
+    // newOne.addOpenHour(new OpenHour(0, '11:00', '16:30'));
+    // newOne.addOpenHour(new OpenHour(1, '11:00', '16:30'));
+    // newOne.addOpenHour(new OpenHour(4, '11:00', '16:30'));
+    // newOne.addOpenHour(new OpenHour(5, '11:00', '16:30'));
+    // newOne.addOpenHour(new OpenHour(6, '11:00', '16:30'));
+    // newOne.addOpenHour(new OpenHour(0, '09:00', '12:30'));
     return newOne;
   }
 
-  constructor() {
-    this.openHours = [];
-  }
+  constructor() {}
 
   clear() {
     this.openHours.length = 0;
@@ -33,23 +37,28 @@ export class BusinessHours implements SerializableJSON {
     if (isEmpty(this.openHours)) {
       this.openHours.push(newOpenHour);
     } else {
-      let mergedOpenHour: OpenHour = newOpenHour;
-      let insertAtIndex: number = 0;
-      let mergedCount: number = 0;
+      let mergedOpenHour: OpenHour;
+      let mergedHappenIndex = -1;
+      let insertAtIndex = 0;
+      let mergedCount = 0;
       for (let index = 0; index < this.openHours.length; index++) {
         const openHour = this.openHours[index];
-        const merged = mergedOpenHour.merge(openHour);
-        if (mergedOpenHour.isAfter(openHour)) {
+        if (newOpenHour.isAfter(openHour)) {
           insertAtIndex += 1;
         }
-        if (merged) {
+        mergedOpenHour = newOpenHour.merge(openHour);
+        if (mergedOpenHour) {
           // console.log(`Merge happen: ${mergedOpenHour.format()} + ${openHour.format()} = ${merged.format()}`);
-          mergedOpenHour = merged;
+          newOpenHour = mergedOpenHour;
           mergedCount += 1;
-          insertAtIndex -= 1;
+          if (mergedHappenIndex < 0) {
+            mergedHappenIndex = index;
+          }
         }
       }
-      this.openHours.splice(insertAtIndex, mergedCount, mergedOpenHour);
+      insertAtIndex = (mergedHappenIndex >= 0) ? mergedHappenIndex : insertAtIndex;
+      // console.log(`insertAtIndex = ${insertAtIndex}, mergedCount = ${mergedCount}, merged = ${mergedOpenHour.format()}`);
+      this.openHours.splice(insertAtIndex, mergedCount, newOpenHour);
     }
   }
 

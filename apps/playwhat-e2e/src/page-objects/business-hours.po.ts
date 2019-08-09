@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 import { PageObject } from "./page-object.po";
-import { BusinessHours, TimeRange, OpenHour, WeekDayNames } from '@ygg/shared/types';
+import { BusinessHours, DayTimeRange, OpenHour, WeekDayNames, DayTime } from '@ygg/shared/types';
 
 class WeekDaySelectPageObject extends PageObject {
   selector = '.week-day-select';
@@ -14,31 +14,31 @@ class WeekDaySelectPageObject extends PageObject {
   };
 }
 
-class TimeInputPageObject extends PageObject {
-  selector = '.time-input';
+class DayTimeControlPageObject extends PageObject {
+  selector = '.day-time-control';
   selectors = {
     hourInput: 'input#hour',
     minuteInput: 'input#minute'
   }
 
-  fillIn(time: Date) {
-    cy.get(this.getSelector('hourInput')).click().type(time.getHours().toString());
-    cy.get(this.getSelector('minuteInput')).click().type(time.getMinutes().toString());
+  fillIn(dayTime: DayTime) {
+    cy.get(this.getSelector('hourInput')).click().type(dayTime.hour.toString());
+    cy.get(this.getSelector('minuteInput')).click().type(dayTime.minute.toString());
   }
 }
 
-class TimeRangeControlPageObject extends PageObject {
-  selector = '.time-range-control';
+class DayTimeRangeControlPageObject extends PageObject {
+  selector = '.day-time-range-control';
   selectors = {
     start: '#start',
     end: '#end'
   };
 
-  fillIn(timeRange: TimeRange) {
-    const startInput = new TimeInputPageObject(this.getSelector('start'));
-    const endInput = new TimeInputPageObject(this.getSelector('end'));
-    startInput.fillIn(timeRange.start);
-    endInput.fillIn(timeRange.end);
+  fillIn(dayTimeRange: DayTimeRange) {
+    const startInput = new DayTimeControlPageObject(this.getSelector('start'));
+    const endInput = new DayTimeControlPageObject(this.getSelector('end'));
+    startInput.fillIn(dayTimeRange.start);
+    endInput.fillIn(dayTimeRange.end);
   }
 }
 
@@ -46,23 +46,24 @@ export class BusinessHoursControlPageObject extends PageObject {
   selector = '.business-hours-control';
   selectors = {
     weekDaySelect: '#week-day-select',
-    timeRangeInput: '#time-range-control',
+    dayTimeRangeInput: '#day-time-range-control',
     buttonAddOpenHour: 'button#add-open-hour',
     buttonClearAll: 'button#clear-all'
   }
 
   fillIn(businessHours: BusinessHours) {
     for (const openHour of businessHours.getOpenHours()) {
-      cy.log(`Add open-hour ${openHour.format('ddd', 'YYYY/MM/DD A h:mm')}`);
+      cy.log(`Add open-hour ${openHour.format()}`);
       this.addOpenHour(openHour);
     }
   }
 
   addOpenHour(openHour: OpenHour) {
+    cy.wait(1000);
     const weekDaySelect = new WeekDaySelectPageObject(this.getSelector('weekDaySelect'));
-    const timeRangeInput = new TimeRangeControlPageObject(this.getSelector('timeRangeInput'));
+    const dayTimeRangeInput = new DayTimeRangeControlPageObject(this.getSelector('dayTimeRangeInput'));
     weekDaySelect.select(openHour.weekDay);
-    timeRangeInput.fillIn(openHour.timeRange);
+    dayTimeRangeInput.fillIn(openHour.dayTimeRange);
     cy.get(this.getSelector('buttonAddOpenHour')).click();
   }
 }
@@ -70,16 +71,16 @@ export class BusinessHoursControlPageObject extends PageObject {
 class OpenHourPageObject extends PageObject {
   selector = '.open-hour';
   selectors = {
-    weekDay: '#week-day .value',
-    start: '#start.value',
-    end: '#end.value'
+    weekDay: '.week-day',
+    start: '.start',
+    end: '.end'
   };
 
   expect(openHour: OpenHour) {
-    cy.log(`Expect open-hour ${openHour.format('ddd', 'YYYY/MM/DD A h:mm')} in Element ${this.getSelector()}`);
+    cy.log(`Expect open-hour ${openHour.format()} in Element ${this.getSelector()}`);
     cy.get(this.getSelector('weekDay')).contains(WeekDayNames[openHour.weekDay]);
-    cy.get(this.getSelector('start')).contains(moment(openHour.timeRange.start).format('A h:mm'));
-    cy.get(this.getSelector('end')).contains(moment(openHour.timeRange.end).format('A h:mm'));
+    cy.get(this.getSelector('start')).contains(openHour.dayTimeRange.start.format('A h:mm'));
+    cy.get(this.getSelector('end')).contains(openHour.dayTimeRange.end.format('A h:mm'));
   }
 }
 

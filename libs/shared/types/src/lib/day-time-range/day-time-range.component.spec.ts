@@ -32,8 +32,8 @@ describe('DayTimeRangeComponent', () => {
     fixture.detectChanges();
     const startElement = fixture.debugElement.query(By.css(startSelector)).nativeElement;
     const endElement = fixture.debugElement.query(By.css(endSelector)).nativeElement;
-    expect(startElement.textContent).toEqual(testTimeRange.start.format('A HH:mm'));
-    expect(endElement.textContent).toEqual(testTimeRange.end.format('A HH:mm'));
+    expect(startElement.textContent).toEqual(testTimeRange.start.format('A h:mm'));
+    expect(endElement.textContent).toEqual(testTimeRange.end.format('A h:mm'));
     done();
   });
 });

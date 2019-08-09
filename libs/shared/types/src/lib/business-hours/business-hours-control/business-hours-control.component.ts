@@ -71,17 +71,19 @@ export class BusinessHoursControlComponent implements ControlValueAccessor {
 
   addOpenHour() {
     const weekDay = this.formGroupOpenHour.get('weekDay').value;
-    const dayDayTimeRange = this.formGroupOpenHour.get('dayTimeRange').value;
+    const dayTimeRange = this.formGroupOpenHour.get('dayTimeRange').value;
     if (weekDay === 7) {
       for (const day of range(7)) {
-        const openHour = new OpenHour(day, dayDayTimeRange);
+        const openHour = new OpenHour(day, dayTimeRange);
         this._businessHours.addOpenHour(openHour);
       }
     } else {
-      const openHour = new OpenHour(weekDay, dayDayTimeRange);
+      const openHour = new OpenHour(weekDay, dayTimeRange);
       this._businessHours.addOpenHour(openHour);
     }
-    this.formGroupOpenHour.setValue(new OpenHour());
+    // this.formGroupOpenHour.patchValue({
+    //   dayTimeRange: new DayTimeRange()
+    // });
     // console.log(`dayTimeRange reset to ${this.formGroupOpenHour.get('dayTimeRange').value.toJSON()}`);
     this.emitChange(this._businessHours);
   }
@@ -93,8 +95,8 @@ export class BusinessHoursControlComponent implements ControlValueAccessor {
 
   subtractOpenHour() {
     const weekDay = this.formGroupOpenHour.get('weekDay').value;
-    const dayDayTimeRange = this.formGroupOpenHour.get('dayTimeRange').value;
-    const openHour = new OpenHour(weekDay, dayDayTimeRange);
+    const dayTimeRange = this.formGroupOpenHour.get('dayTimeRange').value;
+    const openHour = new OpenHour(weekDay, dayTimeRange);
     this._businessHours.subtractOpenHour(openHour);
   }
 }

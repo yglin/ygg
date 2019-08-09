@@ -45,6 +45,7 @@ export class Play implements DataItem {
         name: 'name',
         type: FormControlType.text,
         label: '名稱',
+        default: 'GGYY', // XXX For debug
         validators: [
           {
             type: 'required',
@@ -56,6 +57,7 @@ export class Play implements DataItem {
         name: 'introduction',
         type: FormControlType.textarea,
         label: '簡介',
+        default: 'GGYY love', // XXX For debug
         validators: [
           {
             type: 'required',
