@@ -64,6 +64,9 @@
     },
     "playwhat-play": {
       "tags": ["scope:playwhat", "type:feature", "platform:mobile"]
+    },
+    "shared-infra-device-adapter": {
+      "tags": ["scope:shared", "type:utils"]
     }
   }
 }

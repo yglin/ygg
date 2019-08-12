@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 // import { RouterModule } from '@angular/router';
 // import { SchedulerAdminRoutingModule } from "@ygg/playwhat/scheduler";
 
-import { routes } from './routes';
+// import { routes } from './routes';
 import { MenuTree } from '@ygg/shared/ui/navigation';
 import { Image } from "@ygg/shared/types";
 import { LoggedInGuard, AdminGuard } from '@ygg/shared/user';

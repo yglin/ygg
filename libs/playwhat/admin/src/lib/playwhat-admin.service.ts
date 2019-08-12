@@ -4,6 +4,7 @@ import { Image } from '@ygg/shared/types';
 import { LoggedInGuard, AdminGuard } from '@ygg/shared/user';
 import { Observable } from 'rxjs';
 import { DataAccessService } from '@ygg/shared/infra/data-access';
+import { BetterLargeScreenGuard } from "@ygg/shared/infra/device-adapter";
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class PlaywhatAdminService {
       icon: new Image(),
       tooltip: '管理一些ㄨＡ伯Ａ設定',
       routeConfig: {
-        canActivateChild: [AdminGuard]
+        canActivateChild: [AdminGuard, BetterLargeScreenGuard]
       }
     });
   }

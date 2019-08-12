@@ -32,7 +32,10 @@
       "@ygg/shared/types": ["libs/shared/types/src/index.ts"],
       "@ygg/playwhat/admin": ["libs/playwhat/admin/src/index.ts"],
       "@ygg/shared/ui/navigation": ["libs/shared/ui/navigation/src/index.ts"],
-      "@ygg/playwhat/play": ["libs/playwhat/play/src/index.ts"]
+      "@ygg/playwhat/play": ["libs/playwhat/play/src/index.ts"],
+      "@ygg/shared/infra/device-adapter": [
+        "libs/shared/infra/device-adapter/src/index.ts"
+      ]
     },
     "rootDir": "."
   },
