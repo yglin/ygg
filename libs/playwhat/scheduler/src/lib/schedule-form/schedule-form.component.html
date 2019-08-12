@@ -1,34 +1,27 @@
 <div class="ygg-schedule-form">
   <form [formGroup]="formGroup" id="schedule-form">
-    <div
-      class="actions-bar"
-      fxLayout="row"
-      fxLayoutAlign="end start"
-      fxLayoutGap="10px"
-    >
-      <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
-        <div *ngIf="agentUsers?.length > 0">
-          <mat-form-field>
-            <mat-label>選擇接單窗口</mat-label>
-            <mat-select formControlName='agentId'>
-              <mat-option value=''>請幫我指定</mat-option>
-              <mat-option *ngFor="let user of agentUsers" [value]='user.id'>
-                <ygg-user-thumbnail [id]='user.id'></ygg-user-thumbnail>
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div>
-          <button
-            type="button"
-            mat-fab
-            matTooltip="送出"
-            (click)="submit()"
-            [disabled]="formGroup.invalid"
-          >
-            <mat-icon>save</mat-icon>
-          </button>
-        </div>
+    <div fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px">
+      <div *ngIf="agentUsers?.length > 0">
+        <mat-form-field>
+          <mat-label>選擇接單窗口</mat-label>
+          <mat-select formControlName="agentId">
+            <mat-option value="">請幫我指定</mat-option>
+            <mat-option *ngFor="let user of agentUsers" [value]="user.id">
+              <ygg-user-thumbnail [id]="user.id"></ygg-user-thumbnail>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <button
+          type="button"
+          mat-fab
+          matTooltip="送出"
+          (click)="submit()"
+          [disabled]="formGroup.invalid"
+        >
+          <mat-icon>save</mat-icon>
+        </button>
       </div>
     </div>
     <mat-tab-group>
@@ -59,8 +52,8 @@
                 >預計參加人數＊</ygg-title-divider
               >
             </mat-expansion-panel-header>
-            <div class="form-control">
-              <div>
+            <div fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="30px">
+              <div class="form-control">
                 <ygg-number-slider
                   label="總人數"
                   formControlName="numParticipants"
@@ -68,14 +61,14 @@
                   required
                 ></ygg-number-slider>
               </div>
-              <div>
+              <div class="form-control">
                 <ygg-number-slider
                   label="65歲以上人數"
                   formControlName="numElders"
                   icon="https://img.icons8.com/ios/50/000000/elderly-person.png"
                 ></ygg-number-slider>
               </div>
-              <div>
+              <div class="form-control">
                 <ygg-number-slider
                   label="孩童人數"
                   formControlName="numKids"
@@ -140,20 +133,8 @@
               </mat-form-field>
             </div>
             <div formArrayName="contacts" class="form-control">
-              <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
-                <div>
-                  <button
-                    mat-mini-fab
-                    (click)="addContactControl()"
-                    matTooltip="增加一位聯絡人"
-                  >
-                    <mat-icon>add</mat-icon>
-                  </button>
-                </div>
-              </div>
-              <br />
               <div
-                fxLayout="column-reverse"
+                fxLayout="column"
                 fxLayoutAlign="start center"
                 fxLayoutGap="20px"
               >
@@ -162,8 +143,9 @@
                     let contactControl of contactsFormArray.controls;
                     let idx = index
                   "
+                  class='contact-control'
                 >
-                  <ygg-action-barred layout='row'>
+                  <ygg-action-barred layout="row">
                     <div yggActionBarredActions>
                       <div
                         fxLayout="column"
@@ -190,17 +172,29 @@
                         </div>
                       </div>
                     </div>
-                    <mat-card yggActionBarredContent>
+                    <div yggActionBarredContent>
                       <h4>聯絡人{{ idx + 1 }}</h4>
                       <ygg-contact-form
                         [formControlName]="idx"
                       ></ygg-contact-form>
-                    </mat-card>
+                    </div>
                   </ygg-action-barred>
                   <mat-divider> </mat-divider>
                 </div>
               </div>
-            </div>
+              <br>
+              <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
+                <div>
+                  <button
+                    mat-mini-fab
+                    (click)="addContactControl()"
+                    matTooltip="增加一位聯絡人"
+                  >
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </div>
+              </div>  
+          </div>
           </mat-expansion-panel>
           <mat-expansion-panel>
             <mat-expansion-panel-header>
@@ -259,7 +253,11 @@
               <ygg-title-divider> 體驗需求 </ygg-title-divider>
             </mat-expansion-panel-header>
             <div class="form-control">
-              <ygg-play-tags-input #playTagsInput formControlName='likeTags' label="喜歡的體驗類型"></ygg-play-tags-input>
+              <ygg-play-tags-input
+                #playTagsInput
+                formControlName="likeTags"
+                label="喜歡的體驗類型"
+              ></ygg-play-tags-input>
               <!-- <ygg-tags-input
                 formControlName="likes"
                 label="喜歡的體驗類型"
@@ -287,7 +285,7 @@
             </mat-expansion-panel-header>
             <div class="form-control">
               <div id="needAccommodationHelp" class="needAccommodationHelp">
-                <mat-checkbox (change)='onChangeNeedAccommodationHelp($event)'
+                <mat-checkbox (change)="onChangeNeedAccommodationHelp($event)"
                   >請幫我安排住宿</mat-checkbox
                 >
                 <br />

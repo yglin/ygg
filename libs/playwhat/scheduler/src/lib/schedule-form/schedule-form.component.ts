@@ -200,7 +200,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
       accommodationHelp: new FormControl({ value: '', disabled: true }),
       likeTags: [],
       likesDescription: '',
-      agentId: ''
+      agentId: null
     });
     return formGroup;
   }

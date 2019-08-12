@@ -1,6 +1,10 @@
+.app-root {
+  width: 100vw;
+  min-width: 320px;
+  margin-top: 50px;
+}
+
 .pw-page {
-  width: 50vw;
-  min-width: 480px;
   margin-top: 50px;
 }
 
