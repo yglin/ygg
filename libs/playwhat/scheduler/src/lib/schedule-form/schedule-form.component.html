@@ -141,7 +141,7 @@
                 <div
                   *ngFor="
                     let contactControl of contactsFormArray.controls;
-                    let idx = index
+                    let idx = index;
                   "
                   class='contact-control'
                 >
@@ -152,7 +152,8 @@
                         fxLayoutAlign="center center"
                         fxLayoutGap="10px"
                       >
-                        <div>
+                        <div [hidden]='contactsFormArray.controls.length <= 1'
+                        >
                           <button
                             mat-mini-fab
                             (click)="deleteContact(idx)"
