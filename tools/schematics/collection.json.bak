@@ -1,0 +1,13 @@
+{
+  "$schema": "../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "name": "ygg-schematics",
+  "version": "0.0.1",
+  "extends": ["@nrwl/schematics"],
+  "schematics": {
+    "control-value-accessor": {
+      "factory": "../../dist/out-tsc/tools/schematics/control-value-accessor",
+      "schema": "./control-value-accessor/schema.json",
+      "description": "Generate custom control component, which implements ControlValueAccessor"
+    }
+  }
+}
