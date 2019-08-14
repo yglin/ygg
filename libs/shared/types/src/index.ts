@@ -10,3 +10,5 @@ export * from './lib/business-hours';
 export * from './lib/day-time';
 export * from './lib/day-time-range';
 export * from './lib/week-day';
+export * from './lib/location';
+export * from './lib/address';
