@@ -36,6 +36,18 @@
         [formControlName]="model.name"
       ></ygg-business-hours-control>
     </div>
+    <div *ngSwitchCase="formControlTypes.address">
+      <ygg-address-control
+        [label]="model.label"
+        [formControlName]="model.name"
+      ></ygg-address-control>
+    </div>
+    <!-- <div *ngSwitchCase="formControlTypes.location">
+      <ygg-location-control
+        [label]="model.label"
+        [formControlName]="model.name"
+      ></ygg-location-control>
+    </div> -->
     <div *ngSwitchDefault></div>
   </div>
 </div>

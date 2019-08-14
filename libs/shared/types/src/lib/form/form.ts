@@ -5,7 +5,9 @@ export enum FormControlType {
   text = 'text',
   textarea = 'textarea',
   album = 'album',
-  businessHours = 'businessHours'
+  businessHours = 'businessHours',
+  address = 'address',
+  location = 'location'
 }
 
 export interface FormControlModel {

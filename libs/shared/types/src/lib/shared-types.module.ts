@@ -30,6 +30,12 @@ import { DayTimeRangeControlComponent, DayTimeRangeComponent } from './day-time-
 import { OpenHourComponent } from './business-hours/open-hour/open-hour.component';
 import { WeekDayPipePipe } from './week-day/week-day-pipe.pipe';
 import { DayTimeControlComponent } from './day-time/day-time-control/day-time-control.component';
+import { LocationControlComponent } from './location/location-control/location-control.component';
+import { LocationViewComponent } from './location/location-view/location-view.component';
+import { AddressControlComponent } from './address/address-control/address-control.component';
+import { AddressViewComponent } from './address/address-view/address-view.component';
+import { GeoPointControlComponent } from './geo-point/geo-point-control/geo-point-control.component';
+import { GeoPointViewComponent } from './geo-point/geo-point-view/geo-point-view.component';
 
 @NgModule({
   imports: [
@@ -71,7 +77,13 @@ import { DayTimeControlComponent } from './day-time/day-time-control/day-time-co
     OpenHourComponent,
     DayTimeRangeComponent,
     WeekDayPipePipe,
-    DayTimeControlComponent
+    DayTimeControlComponent,
+    LocationControlComponent,
+    LocationViewComponent,
+    AddressControlComponent,
+    AddressViewComponent,
+    GeoPointControlComponent,
+    GeoPointViewComponent
   ],
   entryComponents: [DateRangePickerDialogComponent, ImageUploaderComponent],
   exports: [
@@ -94,6 +106,12 @@ import { DayTimeControlComponent } from './day-time/day-time-control/day-time-co
     OpenHourComponent,
     DayTimeRangeComponent,
     DayTimeControlComponent,
+    LocationControlComponent,
+    LocationViewComponent,
+    AddressControlComponent,
+    AddressViewComponent,
+    GeoPointControlComponent,
+    GeoPointViewComponent,
   ]
 })
 export class SharedTypesModule {}

@@ -6,7 +6,7 @@ import {
   FormControlModel,
   FormControlType
 } from '@ygg/shared/types';
-import { Album, BusinessHours } from '@ygg/shared/types';
+import { Album, BusinessHours, Address } from '@ygg/shared/types';
 
 export class Play implements DataItem {
   id: string;
@@ -76,6 +76,12 @@ export class Play implements DataItem {
         type: FormControlType.businessHours,
         label: '服務時段',
         default: new BusinessHours()
+      },
+      address: {
+        name: 'address',
+        type: FormControlType.address,
+        label: '地址',
+        default: new Address()
       }
     };
 
