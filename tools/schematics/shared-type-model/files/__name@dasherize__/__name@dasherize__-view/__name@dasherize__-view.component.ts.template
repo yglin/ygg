@@ -1,0 +1,17 @@
+import { Component, OnInit, Input } from '@angular/core';
+import { <%= classify(name)%> } from '../<%= dasherize(name)%>';
+
+@Component({
+  selector: 'ygg-<%= dasherize(name)%>-view',
+  templateUrl: './<%= dasherize(name)%>-view.component.html',
+  styleUrls: ['./<%= dasherize(name)%>-view.component.css']
+})
+export class <%= classify(name)%>ViewComponent implements OnInit {
+  @Input() <%= camelize(name)%>: <%= classify(name)%>;
+  
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+}

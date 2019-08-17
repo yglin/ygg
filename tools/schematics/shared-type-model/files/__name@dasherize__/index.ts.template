@@ -1,0 +1,3 @@
+export * from './<%= dasherize(name)%>';
+export * from './<%= dasherize(name)%>-control/<%= dasherize(name)%>-control.component';
+export * from './<%= dasherize(name)%>-view/<%= dasherize(name)%>-view.component';

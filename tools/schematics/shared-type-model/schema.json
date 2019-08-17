@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "id": "shared-type-model",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Library name",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    },
+    "project": {
+      "type": "string",
+      "description": "The name of the project.",
+      "default": "shared-types"
+    },
+    "path": {
+      "type": "string",
+      "format": "path",
+      "description": "The path at which to create the component file, relative to the current workspace. Default is a folder with the same name as the component in the project root.",
+      "visible": false
+    },
+    "style": {
+      "description": "The file extension or preprocessor to use for style files.",
+      "type": "string",
+      "default": "css",
+      "enum": [
+        "css",
+        "scss",
+        "sass",
+        "less",
+        "styl"
+      ],
+      "x-user-analytics": 5
+    },
+    "skipTests": {
+      "type": "boolean",
+      "description": "When true, does not create \"spec.ts\" test files for the new control component.",
+      "default": false,
+      "x-user-analytics": 12
+    },
+    "selector": {
+      "type": "string",
+      "format": "html-selector",
+      "description": "The HTML selector to use for this control component."
+    },
+    "skipSelector": {
+      "type": "boolean",
+      "default": false,
+      "description": "Specifies if the control component should have a selector or not."
+    },
+    "inlineStyle": {
+      "description": "When true, includes styles inline in the component.ts file. Only CSS styles can be included inline. By default, an external styles file is created and referenced in the component.ts file.",
+      "type": "boolean",
+      "default": false,
+      "alias": "s",
+      "x-user-analytics": 9
+    },
+    "inlineTemplate": {
+      "description": "When true, includes template inline in the component.ts file. By default, an external template file is created and referenced in the component.ts file.",
+      "type": "boolean",
+      "default": false,
+      "alias": "t",
+      "x-user-analytics": 10
+    },
+    "viewEncapsulation": {
+      "description": "The view encapsulation strategy to use in the new control component.",
+      "enum": ["Emulated", "Native", "None", "ShadowDom"],
+      "type": "string",
+      "alias": "v",
+      "x-user-analytics": 11
+    },
+    "changeDetection": {
+      "description": "The change detection strategy to use in the new control component.",
+      "enum": ["Default", "OnPush"],
+      "type": "string",
+      "default": "Default",
+      "alias": "c"
+    },
+    "module":  {
+      "type": "string",
+      "description": "The declaring NgModule.",
+      "default": "/libs/shared/types/src/lib/shared-types.module.ts",
+      "alias": "m"
+    },
+    "export": {
+      "type": "boolean",
+      "default": true,
+      "description": "When true, the declaring NgModule exports this control component.",
+      "x-user-analytics": 19
+    },
+    "entryComponent": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true, the new control component is the entry component of the declaring NgModule."
+    },
+    "lintFix": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true, applies lint fixes after generating the control component.",
+      "x-user-analytics": 15
+    }
+  },
+  "required": ["name"]
+}

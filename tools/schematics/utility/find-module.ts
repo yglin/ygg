@@ -60,7 +60,7 @@ export function findModuleFromOptions(host: Tree, options: ModuleOptions): Path 
       candidateSet.add(dir);
     }
 
-    const candidatesDirs = Array.from(candidateSet).sort((a, b) => b.length - a.length);
+    const candidatesDirs = [...candidateSet].sort((a, b) => b.length - a.length);
     for (const c of candidatesDirs) {
       const candidateFiles = [
         '',

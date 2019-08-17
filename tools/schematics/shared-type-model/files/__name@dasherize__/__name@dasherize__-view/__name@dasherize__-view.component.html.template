@@ -1,0 +1,4 @@
+<div class="<%= dasherize(name)%>-view" *ngIf="<%= camelize(name)%>">
+  <p><%= dasherize(name) %> works!</p>
+  <pre class="<%= dasherize(name) %>">{{ <%= camelize(name)%> | json }}</pre>
+</div>

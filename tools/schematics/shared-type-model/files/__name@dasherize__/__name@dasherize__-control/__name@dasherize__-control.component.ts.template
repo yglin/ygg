@@ -1,0 +1,64 @@
+import { Component, OnDestroy, forwardRef, Input, OnInit<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Subscription, noop } from 'rxjs';
+import { <%= classify(name) %> } from '../<%= name %>'; // !! Correct import path
+
+@Component({<% if(!skipSelector) {%>
+  selector: '<%= selector %>-control',<%}%><% if(inlineTemplate) { %>
+  template: `
+    <p>
+      <%= dasherize(name) %> works!
+    </p>
+  `,<% } else { %>
+  templateUrl: './<%= dasherize(name) %>-control.component.html',<% } if(inlineStyle) { %>
+  styles: []<% } else { %>
+  styleUrls: ['./<%= dasherize(name) %>-control.component.<%= style %>']<% } %>,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => <%= classify(name) %>ControlComponent),
+      multi: true
+    }
+  ]<% if(!!viewEncapsulation) { %>,
+  encapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } if (changeDetection !== 'Default') { %>,
+  changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %>
+})
+export class <%= classify(name) %>ControlComponent implements OnInit, OnDestroy, ControlValueAccessor {
+  @Input() label: string;
+  private _<%= camelize(name)%>: <%= classify(name)%> = new <%= classify(name)%>();
+  set <%= camelize(name)%>(value: <%= classify(name)%>) {
+    if (value) {
+      this._<%= camelize(name)%> = value;
+      this.emitChange(this._<%= camelize(name)%>);
+    }
+  }
+  get <%= camelize(name)%>(): <%= classify(name)%> {
+    return this._<%= camelize(name)%>;
+  }
+  emitChange: (value: <%= classify(name)%>) => any = noop;
+
+  subscriptions: Subscription[] = [];
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+  ngOnDestroy() {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
+
+  writeValue(value: <%= classify(name)%>) {
+    if (<%= classify(name)%>.is<%= classify(name)%>(value)) {
+      this._<%= camelize(name)%> = value;
+    }
+  }
+
+  registerOnChange(fn) {
+    this.emitChange = fn;
+  }
+
+  registerOnTouched() {}
+}

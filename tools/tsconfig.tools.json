@@ -5,7 +5,9 @@
     "rootDir": ".",
     "module": "commonjs",
     "target": "es5",
-    "types": ["node"]
+    "types": ["node"],
+    "downlevelIteration": true
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts"],
+  "exclude": ["**/*spec.ts"]
 }

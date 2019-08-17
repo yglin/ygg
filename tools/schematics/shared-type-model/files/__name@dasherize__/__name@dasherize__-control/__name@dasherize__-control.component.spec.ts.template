@@ -1,0 +1,117 @@
+import 'hammerjs';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { <%= classify(name)%>ControlComponent } from './<%= dasherize(name)%>-control.component';
+import { Component, DebugElement } from '@angular/core';
+import {
+  FormGroup,
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
+import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
+import { By } from '@angular/platform-browser';
+import { <%= classify(name)%> } from '../<%= dasherize(name)%>';
+
+class <%= classify(name)%>ControlComponentPageObject {
+  selector = '.<%= dasherize(name)%>-control'
+  selectors = {
+    label: 'label'
+  };
+
+  getSelector(name?: string): string {
+    if (name && name in this.selectors) {
+      return `${this.selector} ${this.selectors[name]}`;
+    } else {
+      return `${this.selector}`;
+    }
+  }
+}
+
+describe('<%= classify(name)%>ControlComponent as Reactive Form Controller(ControlValueAccessor)', () => {
+  @Component({
+    selector: 'ygg-welcome-to-my-form',
+    template:
+      '<form [formGroup]="formGroup"><ygg-<%= dasherize(name)%>-control formControlName="<%= camelize(name)%>" [label]="label"></ygg-<%= dasherize(name)%>-control></form>',
+    styles: ['']
+  })
+  class MockFormComponent {
+    formGroup: FormGroup;
+    label: string;
+    constructor(private formBuilder: FormBuilder) {
+      this.formGroup = this.formBuilder.group({
+        <%= camelize(name)%>: null
+      });
+    }
+  }
+
+  let formComponent: MockFormComponent;
+  let component: <%= classify(name)%>ControlComponent;
+  let debugElement: DebugElement;
+  let fixture: ComponentFixture<MockFormComponent>;
+
+  const pageObject = new <%= classify(name)%>ControlComponentPageObject();
+  let rawInput: HTMLInputElement;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule, SharedUiNgMaterialModule],
+      declarations: [
+        MockFormComponent, <%= classify(name)%>ControlComponent
+      ]
+    }).compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(MockFormComponent);
+    debugElement = fixture.debugElement;
+    formComponent = fixture.componentInstance;
+    component = debugElement.query(By.directive(<%= classify(name)%>ControlComponent))
+      .componentInstance;
+    rawInput = debugElement.query(By.css(pageObject.getSelector('rawInput'))).nativeElement;
+    jest.spyOn(window, 'confirm').mockImplementation(() => true);
+    fixture.detectChanges();
+  });
+
+  it('should show @Input() label', async done => {
+    formComponent.label = 'BaBaYGG';
+    await fixture.whenStable();
+    fixture.detectChanges();
+    // TODO: Add test for your custom label's visibility
+    const labelElement: HTMLElement = debugElement.query(By.css(pageObject.getSelector('label'))).nativeElement;
+    expect(labelElement.textContent).toEqual(formComponent.label);
+    done();
+  });
+
+  it('should read value from parent form', async done => {
+    const test<%= classify(name)%> = <%= classify(name)%>.forge();
+    formComponent.formGroup.get('<%= camelize(name)%>').setValue(test<%= classify(name)%>);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(component.<%= camelize(name)%>.toJSON()).toEqual(test<%= classify(name)%>.toJSON());
+    done();
+  });
+
+  it('should output changed value to parent form', async done => {
+    const test<%= classify(name)%> = <%= classify(name)%>.forge();
+    component.<%= camelize(name)%> = test<%= classify(name)%>;
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const <%= camelize(name)%>: <%= classify(name)%> = formComponent.formGroup.get(
+      '<%= camelize(name)%>'
+    ).value;
+    expect(<%= camelize(name)%>.toJSON()).toEqual(test<%= classify(name)%>.toJSON());
+    done();
+  });
+
+  it('can do some operation and sync changed value to parent form', async done => {
+    const test<%= classify(name)%> = <%= classify(name)%>.forge();
+    component.<%= camelize(name)%> = test<%= classify(name)%>;
+    // TODO: Do some operation here
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const result: <%= classify(name)%> = formComponent.formGroup.get('<%= camelize(name)%>').value;
+    expect(result.toJSON()).toEqual(test<%= classify(name)%>.toJSON());
+    done();
+  });
+  
+});

@@ -1,0 +1,26 @@
+import { SerializableJSON } from '@ygg/shared/infra/data-access';
+
+export class <%= classify(name)%> implements SerializableJSON {
+
+  static is<%= classify(name)%>(value: any): value is <%= classify(name)%> {
+    // TODO: Implement type guard for your model
+    return !!(value);
+  }
+
+  static forge(): <%= classify(name)%> {
+    // TODO: Implement to forge fake data for testing and development
+    return new <%= classify(name)%>();
+  }
+
+  constructor() {}
+
+  fromJSON(data: any = {}): this {
+    // TODO: Implement read input data from a JSON-like object
+    return this;
+  }
+
+  toJSON(): any {
+    // TODO: Implement write output data as a JSON-like object
+    return {};
+  }
+}

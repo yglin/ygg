@@ -1,0 +1,4 @@
+<div class="<%= dasherize(name)%>-control">
+  <label for="<%= camelize(name)%>">{{ label }}</label>
+  <input name="<%= camelize(name)%>" placeholder="Replace with your custom control here">
+</div>
