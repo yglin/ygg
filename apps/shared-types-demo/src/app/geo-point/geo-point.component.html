@@ -1,0 +1,12 @@
+<div>
+  <div [formGroup]='formGroup' fxLayout="row wrap" fxLayoutAlign="space-around start" fxLayoutGap="30px">
+    <div class="control">
+      <ygg-geo-point-control formControlName="geoPoint"></ygg-geo-point-control>
+    </div>
+    <div class="view">
+      <mat-card>
+        <ygg-geo-point-view [geoPoint]="formGroup.get('geoPoint').value"></ygg-geo-point-view>
+      </mat-card>
+    </div>
+  </div>
+</div>

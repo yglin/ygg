@@ -23,7 +23,10 @@
               "libs/shared/user/tsconfig.lib.json",
               "libs/shared/user/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/user/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/user/**"
+            ]
           }
         },
         "test": {
@@ -57,7 +60,10 @@
               "libs/shopping/payment/tsconfig.lib.json",
               "libs/shopping/payment/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/payment/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/payment/**"
+            ]
           }
         },
         "test": {
@@ -91,7 +97,10 @@
               "libs/shopping/order/tsconfig.lib.json",
               "libs/shopping/order/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/order/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/order/**"
+            ]
           }
         },
         "test": {
@@ -118,7 +127,10 @@
               "libs/shopping/cart/tsconfig.lib.json",
               "libs/shopping/cart/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/cart/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/cart/**"
+            ]
           }
         },
         "test": {
@@ -145,7 +157,9 @@
             "outputPath": "dist/apps/firebase-functions",
             "main": "apps/firebase-functions/src/main.ts",
             "tsConfig": "apps/firebase-functions/tsconfig.app.json",
-            "assets": ["apps/firebase-functions/src/assets"]
+            "assets": [
+              "apps/firebase-functions/src/assets"
+            ]
           },
           "configurations": {
             "production": {
@@ -175,7 +189,10 @@
               "apps/firebase-functions/tsconfig.app.json",
               "apps/firebase-functions/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/firebase-functions/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/firebase-functions/**"
+            ]
           }
         },
         "test": {
@@ -200,7 +217,10 @@
               "libs/shared/infra/error/tsconfig.lib.json",
               "libs/shared/infra/error/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/infra/error/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/infra/error/**"
+            ]
           }
         },
         "test": {
@@ -226,7 +246,10 @@
               "libs/shared/ui/widgets/tsconfig.lib.json",
               "libs/shared/ui/widgets/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/ui/widgets/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/widgets/**"
+            ]
           }
         },
         "test": {
@@ -253,7 +276,10 @@
               "libs/shared/ui/themes/tsconfig.lib.json",
               "libs/shared/ui/themes/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/ui/themes/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/themes/**"
+            ]
           }
         },
         "test": {
@@ -345,7 +371,10 @@
               "apps/sandbox/tsconfig.app.json",
               "apps/sandbox/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/sandbox/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/sandbox/**"
+            ]
           }
         },
         "test": {
@@ -380,7 +409,10 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/sandbox-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**", "!apps/sandbox-e2e/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/sandbox-e2e/**"
+            ]
           }
         }
       }
@@ -463,7 +495,10 @@
               "apps/playwhat/tsconfig.app.json",
               "apps/playwhat/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/playwhat/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/playwhat/**"
+            ]
           }
         },
         "test": {
@@ -498,7 +533,10 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/playwhat-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**", "!apps/playwhat-e2e/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/playwhat-e2e/**"
+            ]
           }
         }
       }
@@ -516,7 +554,10 @@
               "libs/playwhat/scheduler/tsconfig.lib.json",
               "libs/playwhat/scheduler/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/scheduler/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/scheduler/**"
+            ]
           }
         },
         "test": {
@@ -543,7 +584,10 @@
               "libs/playwhat/resource/tsconfig.lib.json",
               "libs/playwhat/resource/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/resource/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/resource/**"
+            ]
           }
         },
         "test": {
@@ -600,7 +644,10 @@
               "libs/shared/types/tsconfig.lib.json",
               "libs/shared/types/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/types/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/types/**"
+            ]
           }
         },
         "test": {
@@ -627,7 +674,10 @@
               "libs/playwhat/admin/tsconfig.lib.json",
               "libs/playwhat/admin/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/admin/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/admin/**"
+            ]
           }
         },
         "test": {
@@ -654,7 +704,10 @@
               "libs/shared/ui/navigation/tsconfig.lib.json",
               "libs/shared/ui/navigation/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/ui/navigation/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/navigation/**"
+            ]
           }
         },
         "test": {
@@ -681,7 +734,10 @@
               "libs/playwhat/play/tsconfig.lib.json",
               "libs/playwhat/play/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/play/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/play/**"
+            ]
           }
         },
         "test": {
@@ -724,6 +780,129 @@
         }
       },
       "schematics": {}
+    },
+    "shared-types-demo": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "apps/shared-types-demo",
+      "sourceRoot": "apps/shared-types-demo/src",
+      "prefix": "ygg",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/shared-types-demo",
+            "index": "apps/shared-types-demo/src/index.html",
+            "main": "apps/shared-types-demo/src/main.ts",
+            "polyfills": "apps/shared-types-demo/src/polyfills.ts",
+            "tsConfig": "apps/shared-types-demo/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "apps/shared-types-demo/src/favicon.ico",
+              "apps/shared-types-demo/src/assets"
+            ],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "apps/shared-types-demo/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/shared-types-demo/src/environments/environment.ts",
+                  "with": "apps/shared-types-demo/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "shared-types-demo:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "shared-types-demo:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "shared-types-demo:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/shared-types-demo/tsconfig.app.json",
+              "apps/shared-types-demo/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/shared-types-demo/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/shared-types-demo/jest.config.js",
+            "tsConfig": "apps/shared-types-demo/tsconfig.spec.json",
+            "setupFile": "apps/shared-types-demo/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "shared-types-demo-e2e": {
+      "root": "apps/shared-types-demo-e2e",
+      "sourceRoot": "apps/shared-types-demo-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/shared-types-demo-e2e/cypress.json",
+            "tsConfig": "apps/shared-types-demo-e2e/tsconfig.e2e.json",
+            "devServerTarget": "shared-types-demo:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "shared-types-demo:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "apps/shared-types-demo-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/shared-types-demo-e2e/**"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {
@@ -736,6 +915,13 @@
   "schematics": {
     "@nrwl/schematics:library": {
       "framework": "angular"
+    },
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
     }
   },
   "defaultProject": "playwhat"

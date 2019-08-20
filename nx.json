@@ -67,6 +67,12 @@
     },
     "shared-infra-device-adapter": {
       "tags": ["scope:shared", "type:utils"]
+    },
+    "shared-types-demo-e2e": {
+      "tags": []
+    },
+    "shared-types-demo": {
+      "tags": ["scope:demo", "type:app"]
     }
   }
 }
