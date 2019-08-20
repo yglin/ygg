@@ -42,6 +42,12 @@
         [formControlName]="model.name"
       ></ygg-address-control>
     </div>
+    <div *ngSwitchCase="formControlTypes.geoPoint">
+      <ygg-geo-point-control
+        [label]="model.label"
+        [formControlName]="model.name"
+      ></ygg-geo-point-control>
+    </div>
     <!-- <div *ngSwitchCase="formControlTypes.location">
       <ygg-location-control
         [label]="model.label"

@@ -4,9 +4,11 @@ import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
 import {
   FormGroupModel,
   FormControlModel,
-  FormControlType
+  FormControlType,
+  Location
 } from '@ygg/shared/types';
 import { Album, BusinessHours, Address } from '@ygg/shared/types';
+import { GeoPoint } from 'libs/shared/types/src/lib/geo-point';
 
 export class Play implements DataItem {
   id: string;
@@ -14,6 +16,7 @@ export class Play implements DataItem {
   introduction: string;
   album: Album;
   businessHours: BusinessHours;
+  location: Location;
 
   static forge(): Play {
     const newOne = new Play();
@@ -36,6 +39,7 @@ export class Play implements DataItem {
     ]);
     newOne.album = Album.forge();
     newOne.businessHours = BusinessHours.forge();
+    newOne.location = Location.forge();
     return newOne;
   }
 
@@ -77,11 +81,11 @@ export class Play implements DataItem {
         label: '服務時段',
         default: new BusinessHours()
       },
-      address: {
-        name: 'address',
-        type: FormControlType.address,
-        label: '地址',
-        default: new Address()
+      location: {
+        name: 'location',
+        type: FormControlType.location,
+        label: '地點',
+        default: new Location()
       }
     };
 

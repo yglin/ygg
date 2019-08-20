@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { GeoPoint } from '../geo-point';
 
 @Component({
   selector: 'ygg-geo-point-view',
@@ -6,10 +7,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./geo-point-view.component.css']
 })
 export class GeoPointViewComponent implements OnInit {
+  @Input() geoPoint: GeoPoint;
+  zoom = 12;
+  isMapReady = false;
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onMapReady() {
+    this.isMapReady = true;
   }
 
 }

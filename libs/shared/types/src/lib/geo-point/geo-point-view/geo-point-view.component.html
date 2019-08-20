@@ -1,1 +1,19 @@
-<p>geo-point-view works!</p>
+<div class="geo-point-view" *ngIf="geoPoint">
+  <h5 class="coordinates">{{ geoPoint.latitude }}, {{ geoPoint.longitude }}</h5>
+  <div class="google-map" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+    <div [hidden]="isMapReady">
+      <mat-spinner></mat-spinner>
+    </div>
+    <div [hidden]="!isMapReady"><agm-map
+    (mapReady)="onMapReady()"
+    [latitude]="geoPoint.latitude"
+    [longitude]="geoPoint.longitude"
+    [zoom]="zoom"
+    >
+    <agm-marker
+    [latitude]="geoPoint.latitude"
+    [longitude]="geoPoint.longitude"
+    ></agm-marker
+    ></agm-map></div>
+  </div>
+</div>

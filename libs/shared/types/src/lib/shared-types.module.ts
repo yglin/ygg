@@ -30,12 +30,12 @@ import { DayTimeRangeControlComponent, DayTimeRangeComponent } from './day-time-
 import { OpenHourComponent } from './business-hours/open-hour/open-hour.component';
 import { WeekDayPipePipe } from './week-day/week-day-pipe.pipe';
 import { DayTimeControlComponent } from './day-time/day-time-control/day-time-control.component';
-import { LocationControlComponent } from './location/location-control/location-control.component';
-import { LocationViewComponent } from './location/location-view/location-view.component';
+// import { LocationControlComponent } from './location/location-control/location-control.component';
+// import { LocationViewComponent } from './location/location-view/location-view.component';
 import { AddressControlComponent } from './address/address-control/address-control.component';
 import { AddressViewComponent } from './address/address-view/address-view.component';
-import { GeoPointControlComponent } from './geo-point/geo-point-control/geo-point-control.component';
-import { GeoPointViewComponent } from './geo-point/geo-point-view/geo-point-view.component';
+import { GeoPointControlComponent, GeoPointViewComponent } from './geo-point';
+import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
   imports: [
@@ -55,6 +55,10 @@ import { GeoPointViewComponent } from './geo-point/geo-point-view/geo-point-view
     DynamicFormsMaterialUIModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyBxqFHIHMhy8UdOPpCHrzB-Ktjngsa_UjI',
+      language: 'zh-TW'
+    })
   ],
   declarations: [
     NumberRangeComponent,
@@ -78,12 +82,12 @@ import { GeoPointViewComponent } from './geo-point/geo-point-view/geo-point-view
     DayTimeRangeComponent,
     WeekDayPipePipe,
     DayTimeControlComponent,
-    LocationControlComponent,
-    LocationViewComponent,
+    // LocationControlComponent,
+    // LocationViewComponent,
     AddressControlComponent,
     AddressViewComponent,
     GeoPointControlComponent,
-    GeoPointViewComponent
+    GeoPointViewComponent,
   ],
   entryComponents: [DateRangePickerDialogComponent, ImageUploaderComponent],
   exports: [
@@ -106,8 +110,8 @@ import { GeoPointViewComponent } from './geo-point/geo-point-view/geo-point-view
     OpenHourComponent,
     DayTimeRangeComponent,
     DayTimeControlComponent,
-    LocationControlComponent,
-    LocationViewComponent,
+    // LocationControlComponent,
+    // LocationViewComponent,
     AddressControlComponent,
     AddressViewComponent,
     GeoPointControlComponent,

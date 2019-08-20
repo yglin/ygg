@@ -7,6 +7,7 @@ export enum FormControlType {
   album = 'album',
   businessHours = 'businessHours',
   address = 'address',
+  geoPoint = 'geoPoint',
   location = 'location'
 }
 
