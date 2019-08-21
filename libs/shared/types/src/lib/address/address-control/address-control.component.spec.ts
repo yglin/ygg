@@ -11,14 +11,8 @@ import {
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { By } from '@angular/platform-browser';
 import { Address } from '../address';
-import { PageObject } from '@ygg/shared/infra/test-utils';
-
-export class AddressControlComponentPageObject extends PageObject {
-  selector = '.address-control'
-  selectors = {
-    rawInput: 'input#raw'
-  };
-}
+import { AddressControlComponentPageObject } from "./address-control.component.po";
+import { AngularJestTester } from '@ygg/shared/infra/test-utils';
 
 describe('AddressControlComponent as Reactive Form Controller(ControlValueAccessor)', () => {
   @Component({
@@ -41,9 +35,7 @@ describe('AddressControlComponent as Reactive Form Controller(ControlValueAccess
   let component: AddressControlComponent;
   let debugElement: DebugElement;
   let fixture: ComponentFixture<MockFormComponent>;
-
-  const pageObject = new AddressControlComponentPageObject();
-  let rawInput: HTMLInputElement;
+  let pageObject: AddressControlComponentPageObject;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -60,8 +52,11 @@ describe('AddressControlComponent as Reactive Form Controller(ControlValueAccess
     formComponent = fixture.componentInstance;
     component = debugElement.query(By.directive(AddressControlComponent))
       .componentInstance;
-    rawInput = debugElement.query(By.css(pageObject.getSelector('rawInput'))).nativeElement;
     jest.spyOn(window, 'confirm').mockImplementation(() => true);
+
+    const tester = new AngularJestTester({ debugElement });
+    pageObject = new AddressControlComponentPageObject(tester, '');
+
     fixture.detectChanges();
   });
 
@@ -69,8 +64,7 @@ describe('AddressControlComponent as Reactive Form Controller(ControlValueAccess
     formComponent.addressLabel = 'BaBaYGG';
     await fixture.whenStable();
     fixture.detectChanges();
-    const rawInputElement = debugElement.query(By.css(pageObject.getSelector('rawInput')));
-    expect(rawInputElement.attributes['placeholder']).toEqual(formComponent.addressLabel);
+    expect(pageObject.getLabel()).toEqual(formComponent.addressLabel);
     done();
   });
 
@@ -79,38 +73,19 @@ describe('AddressControlComponent as Reactive Form Controller(ControlValueAccess
     formComponent.formGroup.get('address').setValue(testAddress);
     await fixture.whenStable();
     fixture.detectChanges();
-    expect(component.address.toJSON()).toEqual(testAddress.toJSON());
+    expect(component.address.getFullAddress()).toEqual(testAddress.getFullAddress());
     done();
   });
 
   it('should output changed value to parent form', async done => {
     const testAddress = Address.forge();
-    component.address = testAddress;
+    pageObject.setValue(testAddress);
     await fixture.whenStable();
     fixture.detectChanges();
     const address: Address = formComponent.formGroup.get(
       'address'
     ).value;
-    expect(address.toJSON()).toEqual(testAddress.toJSON());
+    expect(address.getFullAddress()).toEqual(testAddress.getFullAddress());
     done();
   });
-
-  // Postpone this feature, can live without it
-  // it('can select county and district', async done => {
-  //   const result: Address = formComponent.formGroup.get('address').value;
-  //   expect(result).toEqual(something);
-  //   done();
-  // });
-
-  it('can input raw address', async done => {
-    const testAddress = Address.forge();
-    rawInput.value = testAddress.getFullAddress();
-    rawInput.dispatchEvent(new Event('input'));
-    await fixture.whenStable();
-    fixture.detectChanges();
-    const result: Address = formComponent.formGroup.get('address').value;
-    expect(result.getFullAddress()).toEqual(testAddress.getFullAddress());
-    done();
-  });
-  
 });

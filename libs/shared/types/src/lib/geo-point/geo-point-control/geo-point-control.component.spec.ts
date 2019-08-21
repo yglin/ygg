@@ -11,22 +11,8 @@ import {
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { By } from '@angular/platform-browser';
 import { GeoPoint } from '../geo-point';
-import { PageObject, ControlPageObject, inputMethodsCollection, InputMethodOptions } from '@ygg/shared/infra/test-utils';
-
-export class GeoPointControlComponentPageObject extends ControlPageObject<GeoPoint> {
-  selector = '.geo-point-control';
-  selectors = {
-    label: '.label',
-    inputLatitude: 'input#latitude',
-    inputLongitude: 'input#longitude'
-  };
-
-  setInput(value: GeoPoint, options: any) {
-    const inputMethodNumber = this.inputMethods['number'];
-    inputMethodNumber(this.getSelector('inputLatitude'), value.latitude, options);
-    inputMethodNumber(this.getSelector('inputLongitude'), value.longitude, options);
-  }
-}
+import { GeoPointControlComponentPageObject } from "./geo-point-control.component.po";
+import { AngularJestTester } from '@ygg/shared/infra/test-utils';
 
 @Component({
   selector: 'agm-map',
@@ -70,11 +56,7 @@ describe('GeoPointControlComponent as Reactive Form Controller(ControlValueAcces
   let component: GeoPointControlComponent;
   let debugElement: DebugElement;
   let fixture: ComponentFixture<MockFormComponent>;
-
-  const pageObject = new GeoPointControlComponentPageObject('', inputMethodsCollection);
-  let inputMethodsOptions: InputMethodOptions;
-
-  let rawInput: HTMLInputElement;
+  let pageObject: GeoPointControlComponentPageObject;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -94,12 +76,10 @@ describe('GeoPointControlComponent as Reactive Form Controller(ControlValueAcces
     formComponent = fixture.componentInstance;
     component = debugElement.query(By.directive(GeoPointControlComponent))
       .componentInstance;
-    rawInput = debugElement.query(By.css(pageObject.getSelector('rawInput')))
-      .nativeElement;
     jest.spyOn(window, 'confirm').mockImplementation(() => true);
-    inputMethodsOptions = {
-      debugElement
-    };
+
+    const tester = new AngularJestTester({ debugElement });
+    pageObject = new GeoPointControlComponentPageObject(tester, '');
 
     fixture.detectChanges();
   });
@@ -108,11 +88,7 @@ describe('GeoPointControlComponent as Reactive Form Controller(ControlValueAcces
     formComponent.label = 'BaBaYGG';
     await fixture.whenStable();
     fixture.detectChanges();
-    // TODO: Add test for your custom label's visibility
-    const labelElement: HTMLElement = debugElement.query(
-      By.css(pageObject.getSelector('label'))
-    ).nativeElement;
-    expect(labelElement.textContent).toEqual(formComponent.label);
+    expect(pageObject.getTextContent('label')).toEqual(formComponent.label);
     done();
   });
 
@@ -127,7 +103,7 @@ describe('GeoPointControlComponent as Reactive Form Controller(ControlValueAcces
 
   it('should output changed value to parent form', async done => {
     const testGeoPoint = GeoPoint.forge();
-    component.geoPoint = testGeoPoint;
+    pageObject.setValue(testGeoPoint);
     await fixture.whenStable();
     fixture.detectChanges();
     const geoPoint: GeoPoint = formComponent.formGroup.get('geoPoint').value;
@@ -137,30 +113,11 @@ describe('GeoPointControlComponent as Reactive Form Controller(ControlValueAcces
 
   it('can directly input latitude and longitude', async done => {
     const testGeoPoint = GeoPoint.forge();
-    pageObject.setInput(testGeoPoint, inputMethodsOptions);
+    pageObject.setValue(testGeoPoint);
     await fixture.whenStable();
     fixture.detectChanges();
     const result: GeoPoint = formComponent.formGroup.get('geoPoint').value;
     expect(result.toJSON()).toEqual(testGeoPoint.toJSON());
     done();
   });
-
-  // it('can directly input latitude and longitude', async done => {
-  //   const testGeoPoint = GeoPoint.forge();
-  //   const inputLatitude: HTMLInputElement = debugElement.query(
-  //     By.css(pageObject.getSelector('inputLatitude'))
-  //   ).nativeElement;
-  //   const inputLongitude: HTMLInputElement = debugElement.query(
-  //     By.css(pageObject.getSelector('inputLongitude'))
-  //   ).nativeElement;
-  //   inputLatitude.value = testGeoPoint.latitude.toString();
-  //   inputLatitude.dispatchEvent(new Event('input'));
-  //   inputLongitude.value = testGeoPoint.longitude.toString();
-  //   inputLongitude.dispatchEvent(new Event('input'));
-  //   await fixture.whenStable();
-  //   fixture.detectChanges();
-  //   const result: GeoPoint = formComponent.formGroup.get('geoPoint').value;
-  //   expect(result.toJSON()).toEqual(testGeoPoint.toJSON());
-  //   done();
-  // });
 });

@@ -4,21 +4,8 @@ import { GeoPoint } from '../geo-point';
 import { DebugElement, Component, Input } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-
-class GeoPointViewComponentPageObject {
-  selector = '.geo-point-view'
-  selectors = {
-    coordinates: '.coordinates'
-  };
-
-  getSelector(name?: string): string {
-    if (name && name in this.selectors) {
-      return `${this.selector} ${this.selectors[name]}`;
-    } else {
-      return `${this.selector}`;
-    }
-  }
-}
+import { AngularJestTester } from "@ygg/shared/infra/test-utils";
+import { GeoPointViewComponentPageObject } from './geo-point-view.component.po';
 
 @Component({
   selector: 'agm-map',
@@ -46,7 +33,7 @@ describe('GeoPointViewComponent', () => {
   let component: GeoPointViewComponent;
   let fixture: ComponentFixture<GeoPointViewComponent>;
   let debugElement: DebugElement;
-  const pageObject = new GeoPointViewComponentPageObject();
+  let pageObject: GeoPointViewComponentPageObject;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -60,6 +47,10 @@ describe('GeoPointViewComponent', () => {
     fixture = TestBed.createComponent(GeoPointViewComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
+
+    const tester = new AngularJestTester({ debugElement });
+    pageObject = new GeoPointViewComponentPageObject(tester, '');
+
     fixture.detectChanges();
   });
 
@@ -68,8 +59,7 @@ describe('GeoPointViewComponent', () => {
     component.geoPoint = testGeoPoint;
     await fixture.whenStable();
     fixture.detectChanges();
-    const coordinatesElement: HTMLElement = debugElement.query(By.css(pageObject.getSelector('coordinates'))).nativeElement;
-    expect(coordinatesElement.innerHTML).toContain(`${testGeoPoint.latitude}, ${testGeoPoint.longitude}`);
+    expect(pageObject.getTextContent('coordinates')).toEqual(`${testGeoPoint.latitude}, ${testGeoPoint.longitude}`);
     done();
   });
 });

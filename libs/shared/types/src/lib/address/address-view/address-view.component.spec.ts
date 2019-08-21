@@ -3,25 +3,14 @@ import { AddressViewComponent } from './address-view.component';
 import { Address } from '../address';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-
-class AddressViewComponentPageObject {
-  selector = '.address-view'
-  selectors = {};
-
-  getSelector(name?: string): string {
-    if (name && name in this.selectors) {
-      return `${this.selector} ${this.selectors[name]}`;
-    } else {
-      return `${this.selector}`;
-    }
-  }
-}
+import { AngularJestTester } from '@ygg/shared/infra/test-utils';
+import { AddressViewComponentPageObject } from "./address-view.component.po";
 
 describe('AddressViewComponent', () => {
   let component: AddressViewComponent;
   let fixture: ComponentFixture<AddressViewComponent>;
   let debugElement: DebugElement;
-  const pageObject = new AddressViewComponentPageObject();
+  let pageObject: AddressViewComponentPageObject;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -34,6 +23,10 @@ describe('AddressViewComponent', () => {
     fixture = TestBed.createComponent(AddressViewComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
+
+    const tester = new AngularJestTester({debugElement});
+    pageObject = new AddressViewComponentPageObject(tester, '');
+
     fixture.detectChanges();
   });
 
@@ -41,8 +34,7 @@ describe('AddressViewComponent', () => {
     component.address = Address.forge();
     await fixture.whenStable();
     fixture.detectChanges();
-    const addressElement: HTMLElement = debugElement.query(By.css(pageObject.getSelector())).nativeElement;
-    expect(addressElement.innerHTML).toContain(component.address.getFullAddress());
+    expect(pageObject.getTextContent('fullAddress')).toContain(component.address.getFullAddress());
     done();
   });
 });
