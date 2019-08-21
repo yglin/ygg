@@ -35,7 +35,8 @@
       "@ygg/playwhat/play": ["libs/playwhat/play/src/index.ts"],
       "@ygg/shared/infra/device-adapter": [
         "libs/shared/infra/device-adapter/src/index.ts"
-      ]
+      ],
+      "@ygg/shared/infra/test-utils": ["libs/shared/infra/test-utils/src/index.ts"]
     },
     "rootDir": "."
   },

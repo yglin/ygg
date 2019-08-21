@@ -36,6 +36,7 @@ import { AddressControlComponent } from './address/address-control/address-contr
 import { AddressViewComponent } from './address/address-view/address-view.component';
 import { GeoPointControlComponent, GeoPointViewComponent } from './geo-point';
 import { AgmCoreModule } from '@agm/core';
+import { LocationControlComponent, LocationViewComponent } from './location';
 
 @NgModule({
   imports: [
@@ -88,6 +89,8 @@ import { AgmCoreModule } from '@agm/core';
     AddressViewComponent,
     GeoPointControlComponent,
     GeoPointViewComponent,
+    LocationControlComponent,
+    LocationViewComponent,
   ],
   entryComponents: [DateRangePickerDialogComponent, ImageUploaderComponent],
   exports: [
@@ -116,6 +119,8 @@ import { AgmCoreModule } from '@agm/core';
     AddressViewComponent,
     GeoPointControlComponent,
     GeoPointViewComponent,
+    LocationControlComponent,
+    LocationViewComponent,
   ]
 })
 export class SharedTypesModule {}

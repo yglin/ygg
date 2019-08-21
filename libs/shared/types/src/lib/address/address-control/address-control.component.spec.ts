@@ -11,22 +11,13 @@ import {
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { By } from '@angular/platform-browser';
 import { Address } from '../address';
-import { MockComponent } from "ng-mocks";
-import { throwError } from 'rxjs';
+import { PageObject } from '@ygg/shared/infra/test-utils';
 
-class AddressControlComponentPageObject {
+export class AddressControlComponentPageObject extends PageObject {
   selector = '.address-control'
   selectors = {
     rawInput: 'input#raw'
   };
-
-  getSelector(name?: string): string {
-    if (name && name in this.selectors) {
-      return `${this.selector} ${this.selectors[name]}`;
-    } else {
-      return `${this.selector}`;
-    }
-  }
 }
 
 describe('AddressControlComponent as Reactive Form Controller(ControlValueAccessor)', () => {

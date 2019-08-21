@@ -10,26 +10,45 @@ export function isDisabled(
   return !!nativeElement.disabled;
 }
 
-export function setInputValue(
+export function setInputText(
   debugElement: DebugElement,
-  inputType: FormControlType,
-  name: string,
+  selector: string,
   text: string
 ) {
-  let selector: string;
-  switch (inputType) {
-    case FormControlType.text:
-      selector = `#${name} input`;
-      break;
-    case FormControlType.textarea:
-      selector = `#${name} textarea`;
-      break;
-
-    default:
-      break;
-  }
   const nativeElement: HTMLInputElement = debugElement.query(By.css(selector))
     .nativeElement;
   nativeElement.value = text;
   nativeElement.dispatchEvent(new Event('input'));
 }
+
+export function setInputNumber(debugElement: DebugElement, selector: string, value: number) {
+  const nativeElement: HTMLInputElement = debugElement.query(By.css(selector))
+    .nativeElement;
+  nativeElement.value = value.toString();
+  nativeElement.dispatchEvent(new Event('input'));
+}
+
+// Deprecated
+// export function setInputValue(
+//   debugElement: DebugElement,
+//   inputType: FormControlType,
+//   name: string,
+//   text: string
+// ) {
+//   let selector: string;
+//   switch (inputType) {
+//     case FormControlType.text:
+//       selector = `#${name} input`;
+//       break;
+//     case FormControlType.textarea:
+//       selector = `#${name} textarea`;
+//       break;
+
+//     default:
+//       break;
+//   }
+//   const nativeElement: HTMLInputElement = debugElement.query(By.css(selector))
+//     .nativeElement;
+//   nativeElement.value = text;
+//   nativeElement.dispatchEvent(new Event('input'));
+// }

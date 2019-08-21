@@ -11,8 +11,9 @@ import {
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { By } from '@angular/platform-browser';
 import { GeoPoint } from '../geo-point';
+import { PageObject, ControlPageObject, inputMethodsCollection, InputMethodOptions } from '@ygg/shared/infra/test-utils';
 
-class GeoPointControlComponentPageObject {
+export class GeoPointControlComponentPageObject extends ControlPageObject<GeoPoint> {
   selector = '.geo-point-control';
   selectors = {
     label: '.label',
@@ -20,12 +21,10 @@ class GeoPointControlComponentPageObject {
     inputLongitude: 'input#longitude'
   };
 
-  getSelector(name?: string): string {
-    if (name && name in this.selectors) {
-      return `${this.selector} ${this.selectors[name]}`;
-    } else {
-      return `${this.selector}`;
-    }
+  setInput(value: GeoPoint, options: any) {
+    const inputMethodNumber = this.inputMethods['number'];
+    inputMethodNumber(this.getSelector('inputLatitude'), value.latitude, options);
+    inputMethodNumber(this.getSelector('inputLongitude'), value.longitude, options);
   }
 }
 
@@ -72,7 +71,9 @@ describe('GeoPointControlComponent as Reactive Form Controller(ControlValueAcces
   let debugElement: DebugElement;
   let fixture: ComponentFixture<MockFormComponent>;
 
-  const pageObject = new GeoPointControlComponentPageObject();
+  const pageObject = new GeoPointControlComponentPageObject('', inputMethodsCollection);
+  let inputMethodsOptions: InputMethodOptions;
+
   let rawInput: HTMLInputElement;
 
   beforeEach(async(() => {
@@ -96,6 +97,10 @@ describe('GeoPointControlComponent as Reactive Form Controller(ControlValueAcces
     rawInput = debugElement.query(By.css(pageObject.getSelector('rawInput')))
       .nativeElement;
     jest.spyOn(window, 'confirm').mockImplementation(() => true);
+    inputMethodsOptions = {
+      debugElement
+    };
+
     fixture.detectChanges();
   });
 
@@ -132,20 +137,30 @@ describe('GeoPointControlComponent as Reactive Form Controller(ControlValueAcces
 
   it('can directly input latitude and longitude', async done => {
     const testGeoPoint = GeoPoint.forge();
-    const inputLatitude: HTMLInputElement = debugElement.query(
-      By.css(pageObject.getSelector('inputLatitude'))
-    ).nativeElement;
-    const inputLongitude: HTMLInputElement = debugElement.query(
-      By.css(pageObject.getSelector('inputLongitude'))
-    ).nativeElement;
-    inputLatitude.value = testGeoPoint.latitude.toString();
-    inputLatitude.dispatchEvent(new Event('input'));
-    inputLongitude.value = testGeoPoint.longitude.toString();
-    inputLongitude.dispatchEvent(new Event('input'));
+    pageObject.setInput(testGeoPoint, inputMethodsOptions);
     await fixture.whenStable();
     fixture.detectChanges();
     const result: GeoPoint = formComponent.formGroup.get('geoPoint').value;
     expect(result.toJSON()).toEqual(testGeoPoint.toJSON());
     done();
   });
+
+  // it('can directly input latitude and longitude', async done => {
+  //   const testGeoPoint = GeoPoint.forge();
+  //   const inputLatitude: HTMLInputElement = debugElement.query(
+  //     By.css(pageObject.getSelector('inputLatitude'))
+  //   ).nativeElement;
+  //   const inputLongitude: HTMLInputElement = debugElement.query(
+  //     By.css(pageObject.getSelector('inputLongitude'))
+  //   ).nativeElement;
+  //   inputLatitude.value = testGeoPoint.latitude.toString();
+  //   inputLatitude.dispatchEvent(new Event('input'));
+  //   inputLongitude.value = testGeoPoint.longitude.toString();
+  //   inputLongitude.dispatchEvent(new Event('input'));
+  //   await fixture.whenStable();
+  //   fixture.detectChanges();
+  //   const result: GeoPoint = formComponent.formGroup.get('geoPoint').value;
+  //   expect(result.toJSON()).toEqual(testGeoPoint.toJSON());
+  //   done();
+  // });
 });
