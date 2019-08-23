@@ -71,10 +71,10 @@ export class LocationControlComponent
           filter(
             value => this.isSyncMode && (Address.isAddress(value) || GeoPoint.isGeoPoint(value))
           ),
-          tap(() => this.isSyncing = true),
           // tap(value => console.log(`On sync mode and value is valid`)),
-          debounceTime(2000),
+          debounceTime(1000),
           // tap(value => console.log(`Try to gecode: ${value}`)),
+          tap(() => this.isSyncing = true),
           switchMap(value => {
             if (Address.isAddress(value)) {
               return this.geocodeService.addressToGeoPoints(value);

@@ -27,10 +27,10 @@ export class GeoPoint implements SerializableJSON {
     });
   }
 
-  static fromGoogleMapsLatLng(latLng: google.maps.LatLngLiteral): GeoPoint {
+  static fromGoogleMapsLatLng(latLng: google.maps.LatLngLiteral | google.maps.LatLng): GeoPoint {
     return new GeoPoint().fromJSON({
-      latitude: latLng.lat,
-      longitude: latLng.lng
+      latitude: typeof latLng.lat === 'function' ? latLng.lat() : latLng.lat,
+      longitude: typeof latLng.lng === 'function' ? latLng.lng() : latLng.lng
     });
   }
 
