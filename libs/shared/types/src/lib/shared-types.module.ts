@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule } from '@angular/common/http';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
-import { DynamicFormsCoreModule } from "@ng-dynamic-forms/core";
-import { DynamicFormsMaterialUIModule } from "@ng-dynamic-forms/ui-material";
-import { ImageUploadModule } from "angular2-image-upload";
+import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
+import { DynamicFormsMaterialUIModule } from '@ng-dynamic-forms/ui-material';
+import { ImageUploadModule } from 'angular2-image-upload';
 import { ContactComponent, ContactFormComponent } from './contact';
 import { DateRangeComponent, DateRangePickerComponent } from './date-range';
 import {
@@ -26,17 +26,27 @@ import { ImageUploaderComponent } from './image/image-uploader/image-uploader.co
 import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
 import { BusinessHoursControlComponent } from './business-hours/business-hours-control/business-hours-control.component';
 import { BusinessHoursViewComponent } from './business-hours/business-hours-view/business-hours-view.component';
-import { DayTimeRangeControlComponent, DayTimeRangeComponent } from './day-time-range';
+import {
+  DayTimeRangeControlComponent,
+  DayTimeRangeComponent
+} from './day-time-range';
 import { OpenHourComponent } from './business-hours/open-hour/open-hour.component';
 import { WeekDayPipePipe } from './week-day/week-day-pipe.pipe';
 import { DayTimeControlComponent } from './day-time/day-time-control/day-time-control.component';
 // import { LocationControlComponent } from './location/location-control/location-control.component';
 // import { LocationViewComponent } from './location/location-view/location-view.component';
-import { AddressControlComponent } from './address/address-control/address-control.component';
-import { AddressViewComponent } from './address/address-view/address-view.component';
-import { GeoPointControlComponent, GeoPointViewComponent } from './geo-point';
+// import { AddressControlComponent } from './location/address/address-control/address-control.component';
+// import { AddressViewComponent } from './location/address/address-view/address-view.component';
+// import { GeoPointControlComponent, GeoPointViewComponent } from './location/geo-point';
 import { AgmCoreModule } from '@agm/core';
-import { LocationControlComponent, LocationViewComponent } from './location';
+import {
+  AddressControlComponent,
+  AddressViewComponent,
+  GeoPointControlComponent,
+  GeoPointViewComponent,
+  LocationControlComponent,
+  LocationViewComponent
+} from './location';
 
 @NgModule({
   imports: [
@@ -90,7 +100,7 @@ import { LocationControlComponent, LocationViewComponent } from './location';
     GeoPointControlComponent,
     GeoPointViewComponent,
     LocationControlComponent,
-    LocationViewComponent,
+    LocationViewComponent
   ],
   entryComponents: [DateRangePickerDialogComponent, ImageUploaderComponent],
   exports: [
@@ -120,7 +130,7 @@ import { LocationControlComponent, LocationViewComponent } from './location';
     GeoPointControlComponent,
     GeoPointViewComponent,
     LocationControlComponent,
-    LocationViewComponent,
+    LocationViewComponent
   ]
 })
 export class SharedTypesModule {}

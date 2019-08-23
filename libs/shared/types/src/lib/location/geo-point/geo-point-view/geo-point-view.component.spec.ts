@@ -59,7 +59,7 @@ describe('GeoPointViewComponent', () => {
     component.geoPoint = testGeoPoint;
     await fixture.whenStable();
     fixture.detectChanges();
-    expect(pageObject.getTextContent('coordinates')).toEqual(`${testGeoPoint.latitude}, ${testGeoPoint.longitude}`);
+    pageObject.expectValue(testGeoPoint);
     done();
   });
 });

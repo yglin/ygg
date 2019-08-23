@@ -11,22 +11,22 @@
     <div>
       <mat-form-field>
         <input
-          id="longitude"
+          id="latitude"
           type="number"
           matInput
-          placeholder="經度／Longitude"
-          formControlName="longitude"
+          placeholder="緯度／Latitude"
+          formControlName="latitude"
         />
       </mat-form-field>
     </div>
     <div>
       <mat-form-field>
         <input
-          id="latitude"
+          id="longitude"
           type="number"
           matInput
-          placeholder="緯度／Latitude"
-          formControlName="latitude"
+          placeholder="經度／Longitude"
+          formControlName="longitude"
         />
       </mat-form-field>
     </div>
@@ -38,8 +38,8 @@
     <div [hidden]="!isMapReady"><agm-map
     (mapReady)="onMapReady()"
     (mapClick)="onMapClick($event)"
-    [latitude]="googleMapOptions.center.lat"
-    [longitude]="googleMapOptions.center.lng"
+    [latitude]="geoPoint.latitude"
+    [longitude]="geoPoint.longitude"
     [zoom]="googleMapOptions.zoom"
     >
     <agm-marker

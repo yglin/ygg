@@ -6,5 +6,5 @@ module.exports = {
     'jest-preset-angular/AngularSnapshotSerializer.js',
     'jest-preset-angular/HTMLCommentSerializer.js'
   ],
-  testMatch: ['**/geo-point/**/*.spec.ts']
+  testMatch: ['**/location/**/*.spec.ts', '!**/index.spec.ts']
 };

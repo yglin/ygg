@@ -1,6 +1,6 @@
 import { SerializableJSON } from '@ygg/shared/infra/data-access';
-import { Address } from '../address';
-import { GeoPoint } from '../geo-point';
+import { Address } from './address';
+import { GeoPoint } from './geo-point';
 
 export class Location implements SerializableJSON {
   private _address: Address;
@@ -26,6 +26,7 @@ export class Location implements SerializableJSON {
 
   constructor() {
     this._address = new Address();
+    this._geoPoint = new GeoPoint();
   }
 
   fromJSON(data: any = {}): this {

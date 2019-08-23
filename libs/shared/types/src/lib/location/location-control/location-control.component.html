@@ -1,4 +1,42 @@
-<div class="location-control">
-  <label for="location">{{ label }}</label>
-  <input name="location" placeholder="Replace with your custom control here">
+<div class="location-control" [formGroup]="formGroup">
+  <div *ngIf="label">
+    <h4 class="label">{{ label }}</h4>
+  </div>
+  <div class="address">
+    <ygg-address-control
+      label="輸入地址"
+      formControlName="address"
+    ></ygg-address-control>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+    <div id="sync-mode">
+      <mat-slide-toggle
+        [(ngModel)]="isSyncMode"
+        [ngModelOptions]="{ standalone: true }"
+        >同步搜尋地址與座標</mat-slide-toggle
+      >
+    </div>
+    <div>
+      <div [hidden]="isSyncing">
+        <button
+          type="button"
+          mat-raised-button
+          id="next-geo-point"
+          (click)="toNextGeoPoint()"
+          [disabled]="geocodedGeoPoints.length <= 1"
+          matTooltip="下一個可能的座標位置"
+        >
+          <mat-icon>place</mat-icon>
+          <mat-icon>navigate_next</mat-icon>
+        </button>
+      </div>
+      <div [hidden]="!isSyncing">
+        <mat-spinner [diameter]="20"></mat-spinner>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div class="geo-point">
+    <ygg-geo-point-control formControlName="geoPoint"></ygg-geo-point-control>
+  </div>
 </div>

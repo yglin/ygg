@@ -28,6 +28,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   exports: [
@@ -52,6 +53,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatSortModule,
     MatSelectModule,
     MatSliderModule,
+    MatSlideToggleModule,
     MatDividerModule,
     MatTabsModule,
     MatExpansionModule,

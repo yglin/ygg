@@ -34,7 +34,7 @@ describe('AddressViewComponent', () => {
     component.address = Address.forge();
     await fixture.whenStable();
     fixture.detectChanges();
-    expect(pageObject.getTextContent('fullAddress')).toContain(component.address.getFullAddress());
+    pageObject.expectValue(component.address);
     done();
   });
 });

@@ -16,11 +16,14 @@ export abstract class Tester {
   constructor(config: TesterConfig) {
     this.config = config;
   }
-
+  
+  abstract getElement(selector: string): any;
   abstract getTextContent(selector: string): string;
+  abstract expectTextContent(selector: string, text: string): void;
   abstract getAttribute(selector: string, attributeName: string): string;
   abstract inputText(selector: string, value: string, ...args: any[]): void;
   abstract inputNumber(selector: string, value: number, ...args: any[]): void;
+  abstract slideToggle(selector: string, value: boolean, ...args: any[]): void;
 
   getConfig(name: string): any {
     return this.config[name];

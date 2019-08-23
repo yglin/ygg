@@ -11,29 +11,8 @@ import {
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { By } from '@angular/platform-browser';
 import { GeoPoint } from '../geo-point';
-import { GeoPointControlComponentPageObject } from "./geo-point-control.component.po";
+import { GeoPointControlComponentPageObject, MockAgmMapComponent, MockAgmMarkerComponent } from "./geo-point-control.component.po";
 import { AngularJestTester } from '@ygg/shared/infra/test-utils';
-
-@Component({
-  selector: 'agm-map',
-  template: '',
-  styles: ['']
-})
-class MockAgmMapComponent {
-  @Input() latitude: number;
-  @Input() longitude: number;
-  @Input() zoom: number;
-}
-
-@Component({
-  selector: 'agm-marker',
-  template: '',
-  styles: ['']
-})
-class MockAgmMarkerComponent {
-  @Input() latitude: number;
-  @Input() longitude: number;
-}
 
 describe('GeoPointControlComponent as Reactive Form Controller(ControlValueAccessor)', () => {
   @Component({

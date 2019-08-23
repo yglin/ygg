@@ -1,4 +1,5 @@
 import 'hammerjs';
+import { range } from 'lodash';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LocationControlComponent } from './location-control.component';
 import { Component, DebugElement, Injectable } from '@angular/core';
@@ -11,32 +12,23 @@ import {
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { By } from '@angular/platform-browser';
 import { Location } from '../location';
-import { Address } from '../../address';
-import { GeoPoint } from '../../geo-point';
-import { AddressControlComponentPageObject } from "../../address/index.spec";
-import { ControlPageObject, setInputText, setInputNumber, inputMethodsCollection } from '@ygg/shared/infra/test-utils';
-
-class LocationControlComponentPageObject extends ControlPageObject<Location> {
-  selector = '.location-control'
-  selectors = {
-    label: 'label'
-  };
-
-  addressControl: AddressControlComponentPageObject;
-
-  setInput(value: Location, options: any) {
-
-  }
-
-}
+import { Address } from '../address';
+import { GeoPoint } from '../geo-point';
+import { LocationControlComponentPageObject } from './location-control.component.po';
+import { AngularJestTester } from '@ygg/shared/infra/test-utils';
+import { GeocodeService } from '../geocode.service';
+import { AddressControlComponent } from '../address';
+import { GeoPointControlComponent } from '../geo-point';
+import { MockAgmMapComponent, MockAgmMarkerComponent } from '../geo-point/index.spec';
+import { Observable, of } from 'rxjs';
 
 @Injectable()
 class MockGeocodeService {
-  geoPointToAddress(geoPoint: GeoPoint): Address {
-    return null;
+  geoPointToAddress(geoPoint: GeoPoint): Observable<Address> {
+    return of(null);
   }
-  addressToGeoPoints(address: Address): GeoPoint[] {
-    return [];
+  addressToGeoPoints(address: Address): Observable<GeoPoint[]> {
+    return of([]);
   }
 }
 
@@ -62,15 +54,20 @@ describe('LocationControlComponent as Reactive Form Controller(ControlValueAcces
   let debugElement: DebugElement;
   let fixture: ComponentFixture<MockFormComponent>;
 
-  const pageObject = new LocationControlComponentPageObject('', inputMethodsCollection);
-  let rawInput: HTMLInputElement;
+  let pageObject: LocationControlComponentPageObject;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, SharedUiNgMaterialModule],
       declarations: [
-        MockFormComponent, LocationControlComponent
-      ]
+        MockFormComponent,
+        LocationControlComponent,
+        AddressControlComponent,
+        MockAgmMapComponent,
+        MockAgmMarkerComponent,
+        GeoPointControlComponent
+      ],
+      providers: [{ provide: GeocodeService, useClass: MockGeocodeService }]
     }).compileComponents();
   }));
 
@@ -80,8 +77,10 @@ describe('LocationControlComponent as Reactive Form Controller(ControlValueAcces
     formComponent = fixture.componentInstance;
     component = debugElement.query(By.directive(LocationControlComponent))
       .componentInstance;
-    rawInput = debugElement.query(By.css(pageObject.getSelector('rawInput'))).nativeElement;
     jest.spyOn(window, 'confirm').mockImplementation(() => true);
+
+    const tester = new AngularJestTester({ debugElement });
+    pageObject = new LocationControlComponentPageObject(tester, '');
     fixture.detectChanges();
   });
 
@@ -90,8 +89,7 @@ describe('LocationControlComponent as Reactive Form Controller(ControlValueAcces
     await fixture.whenStable();
     fixture.detectChanges();
     // TODO: Add test for your custom label's visibility
-    const labelElement: HTMLElement = debugElement.query(By.css(pageObject.getSelector('label'))).nativeElement;
-    expect(labelElement.textContent).toEqual(formComponent.label);
+    expect(pageObject.getLabel()).toEqual(formComponent.label);
     done();
   });
 
@@ -106,41 +104,84 @@ describe('LocationControlComponent as Reactive Form Controller(ControlValueAcces
 
   it('should output changed value to parent form', async done => {
     const testLocation = Location.forge();
-    component.location = testLocation;
+    pageObject.setValue(testLocation);
     await fixture.whenStable();
     fixture.detectChanges();
-    const location: Location = formComponent.formGroup.get(
-      'location'
-    ).value;
-    expect(location.toJSON()).toEqual(testLocation.toJSON());
+    const location: Location = formComponent.formGroup.get('location').value;
+    expect(location.geoPoint.toJSON()).toEqual(testLocation.geoPoint.toJSON());
+    expect(location.address.getFullAddress()).toEqual(testLocation.address.getFullAddress());
     done();
   });
 
-  // it('on change address, should try to geocode geo-points', async done => {
-  //   const mockGeocodeService: MockGeocodeService = TestBed.get(GeocodeService);
-  //   const stubAddress = Address.forge();
-  //   const stubGeoPoint = GeoPoint.forge();
-  //   jest.spyOn(mockGeocodeService, 'addressToGeoPoints').mockImplementation(() => [stubGeoPoint]);
-  //   setInputText(debugElement, pageObject.addressControl.getSelector('rawInput'), stubAddress.getFullAddress());
-  //   await fixture.whenStable();
-  //   fixture.detectChanges();
-  //   expect(mockGeocodeService.addressToGeoPoints).toHaveBeenCalledWith(stubAddress.getFullAddress());
-  //   const resultLocation: Location = formComponent.formGroup.get('location').value;
-  //   expect(resultLocation.geoPoint.toJSON()).toEqual(stubGeoPoint.toJSON());
-  //   done();
-  // });
-  
-  // it('on change geo-point, should try to (reverse)geocode address', async done => {
-  //   const mockGeocodeService: MockGeocodeService = TestBed.get(GeocodeService);
-  //   const stubGeoPoint = GeoPoint.forge();
-  //   const stubAddress = Address.forge();
-  //   jest.spyOn(mockGeocodeService, 'addressToGeoPoints').mockImplementation(() => [stubGeoPoint]);
-  //   setInputNumer(debugElement, pageObject.addressControl.getSelector('rawInput'), stubAddress.getFullAddress());
-  //   await fixture.whenStable();
-  //   fixture.detectChanges();
-  //   expect(mockGeocodeService.addressToGeoPoints).toHaveBeenCalledWith(stubAddress.getFullAddress());
-  //   const resultLocation: Location = formComponent.formGroup.get('location').value;
-  //   expect(resultLocation.geoPoint.toJSON()).toEqual(stubGeoPoint.toJSON());
-  //   done();
-  // });
+  it('on sync mode, change address should geocode geo-points', async done => {
+    pageObject.setSyncMode(true);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const mockGeocodeService: MockGeocodeService = TestBed.get(GeocodeService);
+    const stubAddress = Address.forge();
+    const stubGeoPoint = GeoPoint.forge();
+    jest.spyOn(mockGeocodeService, 'addressToGeoPoints').mockImplementation(() => of([stubGeoPoint]));
+    pageObject.addressControl.setValue(stubAddress);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(mockGeocodeService.addressToGeoPoints).toHaveBeenCalled();
+    const resultLocation: Location = formComponent.formGroup.get('location').value;
+    expect(resultLocation.geoPoint.toJSON()).toEqual(stubGeoPoint.toJSON());
+    done();
+  });
+
+  it('on sync mode, change geo-point should (reverse)geocode address', async done => {
+    pageObject.setSyncMode(true);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const mockGeocodeService: MockGeocodeService = TestBed.get(GeocodeService);
+    const stubGeoPoint = GeoPoint.forge();
+    const stubAddress = Address.forge();
+    jest.spyOn(mockGeocodeService, 'geoPointToAddress').mockImplementation(() => of(stubAddress));
+    pageObject.geoPointControl.setValue(stubGeoPoint);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(mockGeocodeService.geoPointToAddress).toHaveBeenCalledWith(stubGeoPoint);
+    const resultLocation: Location = formComponent.formGroup.get('location').value;
+    expect(resultLocation.address.getFullAddress()).toEqual(stubAddress.getFullAddress());
+    done();
+  });
+
+  it('If geocoding address results to multiple geo-points, should be able to select one', async done => {
+    jest.setTimeout(10000);
+    pageObject.setSyncMode(true);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const mockGeocodeService: MockGeocodeService = TestBed.get(GeocodeService);
+    const stubAddress = Address.forge();
+    const stubGeoPoints = range(3).map(() => GeoPoint.forge());
+    jest.spyOn(mockGeocodeService, 'addressToGeoPoints').mockImplementation(() => of(stubGeoPoints));
+    pageObject.addressControl.setValue(stubAddress);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(mockGeocodeService.addressToGeoPoints).toHaveBeenCalled();
+    let resultLocation: Location;
+    // Button to-next-geo-point should be visible
+    const buttonNextGeoPoint: HTMLButtonElement = pageObject.getElement('buttonNextGeoPoint');
+    expect(buttonNextGeoPoint.attributes['hidden']).toBeFalsy();
+    // Switch to second one
+    pageObject.toNextGeoPoint();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    resultLocation = formComponent.formGroup.get('location').value;
+    expect(resultLocation.geoPoint.toJSON()).toEqual(stubGeoPoints[1].toJSON());
+    // Switch to third one
+    pageObject.toNextGeoPoint();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    resultLocation = formComponent.formGroup.get('location').value;
+    expect(resultLocation.geoPoint.toJSON()).toEqual(stubGeoPoints[2].toJSON());
+    // Loop back to first one
+    pageObject.toNextGeoPoint();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    resultLocation = formComponent.formGroup.get('location').value;
+    expect(resultLocation.geoPoint.toJSON()).toEqual(stubGeoPoints[0].toJSON());
+    done();
+  });
 });

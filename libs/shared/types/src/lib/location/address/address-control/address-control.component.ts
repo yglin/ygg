@@ -21,8 +21,8 @@ export class AddressControlComponent
   @Input() label: string;
   private _address: Address = new Address();
   set address(value: Address) {
-    if (value) {
-      this._address = value;
+    if (Address.isAddress(value)) {
+      this._address = new Address().fromJSON(value);
       this.emitChange(this._address);
     }
   }
@@ -50,7 +50,8 @@ export class AddressControlComponent
 
   writeValue(value: Address) {
     if (Address.isAddress(value)) {
-      this._address = value;
+      this._address = new Address().fromJSON(value);
+      this.rawInputControl.setValue(this._address.getFullAddress(), { emitEvent: false });
     }
   }
 

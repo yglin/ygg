@@ -17,29 +17,33 @@ export abstract class PageObject {
     return `${this.parentSelector} ${this.selector} ${targetSelector}`.trim();
   }
 
+  getElement(name?: string): any {
+    return this.tester.getElement(this.getSelector(name));
+  }
+
   getTextContent(name: string): string {
     return this.tester.getTextContent(this.getSelector(name));
   }
 }
 
 export abstract class ControlPageObject<T> extends PageObject {
-  constructor(
-    tester: Tester,
-    parentSelector: string
-  ) {
-    super(tester, parentSelector);
-  }
+  // constructor(
+  //   tester: Tester,
+  //   parentSelector: string
+  // ) {
+  //   super(tester, parentSelector);
+  // }
 
   abstract setValue(value: T);
 }
 
-// export abstract class ViewPageObject<T> extends PageObject {
-//   constructor(
-//     tester: Tester,
-//     parentSelector: string
-//   ) {
-//     super(tester, parentSelector);
-//   }
+export abstract class ViewPageObject<T> extends PageObject {
+  // constructor(
+  //   tester: Tester,
+  //   parentSelector: string
+  // ) {
+  //   super(tester, parentSelector);
+  // }
 
-//   abstract getValue(): T;
-// }
+  abstract expectValue(value: T);
+}

@@ -10,6 +10,6 @@ export * from './lib/business-hours';
 export * from './lib/day-time';
 export * from './lib/day-time-range';
 export * from './lib/week-day';
-export * from './lib/address';
-export * from './lib/geo-point';
+export * from './lib/location/address';
+export * from './lib/location/geo-point';
 export * from './lib/location';

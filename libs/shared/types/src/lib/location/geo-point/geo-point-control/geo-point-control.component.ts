@@ -29,7 +29,7 @@ export class GeoPointControlComponent
   private _geoPoint: GeoPoint = new GeoPoint();
   set geoPoint(value: GeoPoint) {
     if (GeoPoint.isGeoPoint(value)) {
-      this._geoPoint = value;
+      this._geoPoint = new GeoPoint().fromJSON(value);
       this.emitChange(this._geoPoint);
     }
   }
@@ -66,11 +66,10 @@ export class GeoPointControlComponent
 
   writeValue(value: GeoPoint) {
     if (GeoPoint.isGeoPoint(value)) {
-      this._geoPoint = value;
-      this.formGroup.setValue({
-        latitude: value.latitude,
-        longitude: value.longitude
-      });
+      this._geoPoint = new GeoPoint().fromJSON(value);
+      if (this.formGroup) {
+        this.formGroup.setValue(this._geoPoint.toJSON(), { emitEvent: false });
+      }
     }
   }
 

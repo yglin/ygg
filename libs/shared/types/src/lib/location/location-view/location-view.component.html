@@ -1,4 +1,4 @@
 <div class="location-view" *ngIf="location">
-  <p>location works!</p>
-  <pre class="location">{{ location | json }}</pre>
+  <ygg-address-view [address]="location.address"></ygg-address-view>
+  <ygg-geo-point-view [geoPoint]="location.geoPoint"></ygg-geo-point-view>
 </div>
