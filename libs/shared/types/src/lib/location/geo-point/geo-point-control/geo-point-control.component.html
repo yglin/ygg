@@ -4,7 +4,7 @@
   </div>
   <div
     fxLayout="row"
-    fxLayoutAlign="start end"
+    fxLayoutAlign="start center"
     fxLayoutGap="10px"
     [formGroup]="formGroup"
   >
@@ -29,6 +29,14 @@
           formControlName="longitude"
         />
       </mat-form-field>
+    </div>
+    <div>
+      <div [hidden]='!isSupportMyLocation || isSearchingMyLocation'>
+        <button mat-mini-fab (click)="toMyLocation()"><mat-icon>my_location</mat-icon></button>
+      </div>
+      <div [hidden]="!isSearchingMyLocation">
+        <mat-spinner [diameter]='25'></mat-spinner>
+      </div>
     </div>
   </div>
   <div class="google-map" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">

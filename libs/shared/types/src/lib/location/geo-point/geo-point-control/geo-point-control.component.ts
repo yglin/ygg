@@ -9,6 +9,8 @@ import {
 import { Subscription, noop } from 'rxjs';
 import { GeoPoint } from '../geo-point';
 import { MouseEvent } from '@agm/core';
+import { GeolocationService } from '../geolocation.service';
+import { finalize } from 'rxjs/operators';
 // import { maps as GoogleMapsApi } from '@types/googlemaps';
 
 @Component({
@@ -44,8 +46,13 @@ export class GeoPointControlComponent
     zoom: 8
   };
   isMapReady = false;
+  isSupportMyLocation = false;
+  isSearchingMyLocation = false;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private geolocationService: GeolocationService
+  ) {
     this.formGroup = this.formBuilder.group(this.geoPoint.toJSON());
     this.subscriptions.push(
       this.formGroup.valueChanges.subscribe(value => {
@@ -54,6 +61,7 @@ export class GeoPointControlComponent
         }
       })
     );
+    this.isSupportMyLocation = this.geolocationService.isSupport();
   }
 
   ngOnInit() {}
@@ -92,5 +100,16 @@ export class GeoPointControlComponent
   onMapClick(mouseEvent: MouseEvent) {
     this.geoPoint = GeoPoint.fromGoogleMapsLatLng(mouseEvent.coords);
     this.formGroup.setValue(this.geoPoint.toJSON());
+  }
+
+  toMyLocation() {
+    this.isSearchingMyLocation = true;
+    this.subscriptions.push(this.geolocationService.getCurrentPosition().pipe(
+      finalize(() => this.isSearchingMyLocation = false)
+    ).subscribe(myLocation => {
+      this.geoPoint = myLocation;
+      this.formGroup.setValue(this.geoPoint.toJSON());
+      this.isSearchingMyLocation = false;
+    }));
   }
 }
