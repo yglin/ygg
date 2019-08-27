@@ -3,7 +3,7 @@
     <h4 class="label">{{ label }}</h4>
   </div>
   <div
-    fxLayout="row"
+    fxLayout="row wrap"
     fxLayoutAlign="start center"
     fxLayoutGap="10px"
     [formGroup]="formGroup"
@@ -30,30 +30,6 @@
         />
       </mat-form-field>
     </div>
-    <div>
-      <div [hidden]='!isSupportMyLocation || isSearchingMyLocation'>
-        <button mat-mini-fab (click)="toMyLocation()"><mat-icon>my_location</mat-icon></button>
-      </div>
-      <div [hidden]="!isSearchingMyLocation">
-        <mat-spinner [diameter]='25'></mat-spinner>
-      </div>
-    </div>
   </div>
-  <div class="google-map" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
-    <div [hidden]="isMapReady">
-      <mat-spinner></mat-spinner>
-    </div>
-    <div [hidden]="!isMapReady"><agm-map
-    (mapReady)="onMapReady()"
-    (mapClick)="onMapClick($event)"
-    [latitude]="geoPoint.latitude"
-    [longitude]="geoPoint.longitude"
-    [zoom]="googleMapOptions.zoom"
-    >
-    <agm-marker
-    [latitude]="geoPoint.latitude"
-    [longitude]="geoPoint.longitude"
-    ></agm-marker
-    ></agm-map></div>
-  </div>
+  <ygg-google-map [geoPoint]="geoPoint" (changeGeoPoint)='onChangeMapMarker($event)'></ygg-google-map>
 </div>

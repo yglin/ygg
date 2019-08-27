@@ -2,13 +2,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LocationViewComponent } from './location-view.component';
 import { Location } from '../location';
 import { DebugElement } from '@angular/core';
-import { By } from '@angular/platform-browser';
 import { LocationViewComponentPageObject } from "./location-view.component.po";
 import { AngularJestTester } from '@ygg/shared/infra/test-utils/jest';
 import { AddressViewComponent } from '../address';
-import { GeoPointViewComponent } from '../geo-point';
-import { MockAgmMapComponent, MockAgmMarkerComponent } from "../geo-point/index.po";
+import { GeoPointViewComponent, GoogleMapComponent } from '../geo-point';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
+import { MockComponent } from 'ng-mocks';
 
 describe('LocationViewComponent', () => {
   let component: LocationViewComponent;
@@ -19,7 +18,7 @@ describe('LocationViewComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [SharedUiNgMaterialModule],
-      declarations: [ LocationViewComponent, AddressViewComponent, GeoPointViewComponent, MockAgmMapComponent, MockAgmMarkerComponent ]
+      declarations: [ LocationViewComponent, AddressViewComponent, GeoPointViewComponent, MockComponent(GoogleMapComponent) ]
     })
     .compileComponents();
   }));

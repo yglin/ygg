@@ -17,16 +17,14 @@
       >
     </div>
     <div>
-      <div [hidden]="isSyncing">
+      <div [hidden]="isSyncing || geocodedGeoPoints.length <= 1">
         <button
           type="button"
-          mat-raised-button
+          mat-mini-fab
           id="next-geo-point"
           (click)="toNextGeoPoint()"
-          [disabled]="geocodedGeoPoints.length <= 1"
           matTooltip="下一個可能的座標位置"
         >
-          <mat-icon>place</mat-icon>
           <mat-icon>navigate_next</mat-icon>
         </button>
       </div>

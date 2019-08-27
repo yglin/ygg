@@ -2,6 +2,7 @@ import 'hammerjs';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { GeoPointControlComponent } from './geo-point-control.component';
 import { Component, DebugElement, Input } from '@angular/core';
+import { MockComponent } from 'ng-mocks';
 import {
   FormGroup,
   FormBuilder,
@@ -12,8 +13,9 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { By } from '@angular/platform-browser';
 import { GeoPoint } from '../geo-point';
 import { GeoPointControlComponentPageObject } from "./geo-point-control.component.po";
-import { MockAgmMapComponent, MockAgmMarkerComponent } from "../mock-agm-map.po";
+import { MockAgmMapComponent, MockAgmMarkerComponent } from "../google-map/mock-agm-map.po";
 import { AngularJestTester } from '@ygg/shared/infra/test-utils/jest';
+import { GoogleMapComponent } from '../google-map/google-map.component';
 
 describe('GeoPointControlComponent as Reactive Form Controller(ControlValueAccessor)', () => {
   @Component({
@@ -43,6 +45,7 @@ describe('GeoPointControlComponent as Reactive Form Controller(ControlValueAcces
       imports: [FormsModule, ReactiveFormsModule, SharedUiNgMaterialModule],
       declarations: [
         MockFormComponent,
+        MockComponent(GoogleMapComponent),
         GeoPointControlComponent,
         MockAgmMapComponent,
         MockAgmMarkerComponent

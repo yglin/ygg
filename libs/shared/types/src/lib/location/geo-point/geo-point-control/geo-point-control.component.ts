@@ -1,4 +1,3 @@
-/// <reference types="@types/googlemaps" />
 import { Component, OnDestroy, forwardRef, Input, OnInit } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -8,10 +7,6 @@ import {
 } from '@angular/forms';
 import { Subscription, noop } from 'rxjs';
 import { GeoPoint } from '../geo-point';
-import { MouseEvent } from '@agm/core';
-import { GeolocationService } from '../geolocation.service';
-import { finalize } from 'rxjs/operators';
-// import { maps as GoogleMapsApi } from '@types/googlemaps';
 
 @Component({
   selector: 'ygg-geo-point-control',
@@ -41,17 +36,9 @@ export class GeoPointControlComponent
   emitChange: (value: GeoPoint) => any = noop;
   subscriptions: Subscription[] = [];
   formGroup: FormGroup;
-  googleMapOptions: google.maps.MapOptions = {
-    center: new GeoPoint().toGoogleMapsLatLng(),
-    zoom: 8
-  };
-  isMapReady = false;
-  isSupportMyLocation = false;
-  isSearchingMyLocation = false;
 
   constructor(
-    private formBuilder: FormBuilder,
-    private geolocationService: GeolocationService
+    private formBuilder: FormBuilder
   ) {
     this.formGroup = this.formBuilder.group(this.geoPoint.toJSON());
     this.subscriptions.push(
@@ -61,7 +48,6 @@ export class GeoPointControlComponent
         }
       })
     );
-    this.isSupportMyLocation = this.geolocationService.isSupport();
   }
 
   ngOnInit() {}
@@ -87,29 +73,8 @@ export class GeoPointControlComponent
 
   registerOnTouched() {}
 
-  onMapReady() {
-    if (GeoPoint.isGeoPoint(this.geoPoint)) {
-      this.googleMapOptions = {
-        center: this.geoPoint.toGoogleMapsLatLng(),
-        zoom: 12
-      };
-    }
-    this.isMapReady = true;
-  }
-
-  onMapClick(mouseEvent: MouseEvent) {
-    this.geoPoint = GeoPoint.fromGoogleMapsLatLng(mouseEvent.coords);
+  onChangeMapMarker(geoPoint: GeoPoint) {
+    this.geoPoint = geoPoint;
     this.formGroup.setValue(this.geoPoint.toJSON());
-  }
-
-  toMyLocation() {
-    this.isSearchingMyLocation = true;
-    this.subscriptions.push(this.geolocationService.getCurrentPosition().pipe(
-      finalize(() => this.isSearchingMyLocation = false)
-    ).subscribe(myLocation => {
-      this.geoPoint = myLocation;
-      this.formGroup.setValue(this.geoPoint.toJSON());
-      this.isSearchingMyLocation = false;
-    }));
   }
 }

@@ -3,6 +3,7 @@ import { range } from 'lodash';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LocationControlComponent } from './location-control.component';
 import { Component, DebugElement, Injectable } from '@angular/core';
+import { MockComponent } from "ng-mocks";
 import {
   FormGroup,
   FormBuilder,
@@ -18,8 +19,7 @@ import { LocationControlComponentPageObject } from './location-control.component
 import { AngularJestTester } from '@ygg/shared/infra/test-utils/jest';
 import { GeocodeService } from '../geocode.service';
 import { AddressControlComponent } from '../address';
-import { GeoPointControlComponent } from '../geo-point';
-import { MockAgmMapComponent, MockAgmMarkerComponent } from '../geo-point/index.po';
+import { GeoPointControlComponent, GoogleMapComponent } from '../geo-point';
 import { Observable, of } from 'rxjs';
 
 @Injectable()
@@ -63,8 +63,7 @@ describe('LocationControlComponent as Reactive Form Controller(ControlValueAcces
         MockFormComponent,
         LocationControlComponent,
         AddressControlComponent,
-        MockAgmMapComponent,
-        MockAgmMarkerComponent,
+        MockComponent(GoogleMapComponent),
         GeoPointControlComponent
       ],
       providers: [{ provide: GeocodeService, useClass: MockGeocodeService }]

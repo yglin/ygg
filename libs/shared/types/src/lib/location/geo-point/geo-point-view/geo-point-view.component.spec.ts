@@ -6,7 +6,8 @@ import { By } from '@angular/platform-browser';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { AngularJestTester } from "@ygg/shared/infra/test-utils/jest";
 import { GeoPointViewComponentPageObject } from './geo-point-view.component.po';
-import { MockAgmMapComponent, MockAgmMarkerComponent } from '../mock-agm-map.po';
+import { MockComponent } from 'ng-mocks';
+import { GoogleMapComponent } from '../google-map/google-map.component';
 
 describe('GeoPointViewComponent', () => {
   let component: GeoPointViewComponent;
@@ -17,7 +18,7 @@ describe('GeoPointViewComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [SharedUiNgMaterialModule],
-      declarations: [ GeoPointViewComponent, MockAgmMapComponent, MockAgmMarkerComponent ]
+      declarations: [ GeoPointViewComponent, MockComponent(GoogleMapComponent) ]
     })
     .compileComponents();
   }));

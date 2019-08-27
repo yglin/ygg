@@ -1,15 +1,5 @@
-.google-map {
+.geo-point-control {
   width: 90vw;
   max-width: 640px;
-  height: 75vh;
-  max-height: 480px;
-}
-
-.google-map > div {
-  width: 100%;
-  height: 100%;
-}
-
-agm-map {
-  height: 100%;
+  overflow: auto;
 }

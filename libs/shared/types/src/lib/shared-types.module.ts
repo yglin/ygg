@@ -45,7 +45,8 @@ import {
   GeoPointControlComponent,
   GeoPointViewComponent,
   LocationControlComponent,
-  LocationViewComponent
+  LocationViewComponent,
+  GoogleMapComponent
 } from './location';
 
 @NgModule({
@@ -100,7 +101,8 @@ import {
     GeoPointControlComponent,
     GeoPointViewComponent,
     LocationControlComponent,
-    LocationViewComponent
+    LocationViewComponent,
+    GoogleMapComponent
   ],
   entryComponents: [DateRangePickerDialogComponent, ImageUploaderComponent],
   exports: [
@@ -130,7 +132,8 @@ import {
     GeoPointControlComponent,
     GeoPointViewComponent,
     LocationControlComponent,
-    LocationViewComponent
+    LocationViewComponent,
+    GoogleMapComponent
   ]
 })
 export class SharedTypesModule {}
