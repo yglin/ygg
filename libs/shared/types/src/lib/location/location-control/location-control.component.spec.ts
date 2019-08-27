@@ -19,7 +19,7 @@ import { AngularJestTester } from '@ygg/shared/infra/test-utils';
 import { GeocodeService } from '../geocode.service';
 import { AddressControlComponent } from '../address';
 import { GeoPointControlComponent } from '../geo-point';
-import { MockAgmMapComponent, MockAgmMarkerComponent } from '../geo-point/index.spec';
+import { MockAgmMapComponent, MockAgmMarkerComponent } from '../geo-point/index.po';
 import { Observable, of } from 'rxjs';
 
 @Injectable()

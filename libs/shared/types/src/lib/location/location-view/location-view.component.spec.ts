@@ -7,7 +7,7 @@ import { LocationViewComponentPageObject } from "./location-view.component.po";
 import { AngularJestTester } from '@ygg/shared/infra/test-utils';
 import { AddressViewComponent } from '../address';
 import { GeoPointViewComponent } from '../geo-point';
-import { MockAgmMapComponent, MockAgmMarkerComponent } from "../geo-point/index.spec";
+import { MockAgmMapComponent, MockAgmMarkerComponent } from "../geo-point/index.po";
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 
 describe('LocationViewComponent', () => {

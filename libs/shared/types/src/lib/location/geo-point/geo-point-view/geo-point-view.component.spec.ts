@@ -6,28 +6,7 @@ import { By } from '@angular/platform-browser';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { AngularJestTester } from "@ygg/shared/infra/test-utils";
 import { GeoPointViewComponentPageObject } from './geo-point-view.component.po';
-
-@Component({
-  selector: 'agm-map',
-  template: '',
-  styles: ['']
-})
-class MockAgmMapComponent {
-  @Input() latitude: number;
-  @Input() longitude: number;
-  @Input() zoom: number;
-}
-
-@Component({
-  selector: 'agm-marker',
-  template: '',
-  styles: ['']
-})
-class MockAgmMarkerComponent {
-  @Input() latitude: number;
-  @Input() longitude: number;
-}
-
+import { MockAgmMapComponent, MockAgmMarkerComponent } from '../mock-agm-map.po';
 
 describe('GeoPointViewComponent', () => {
   let component: GeoPointViewComponent;

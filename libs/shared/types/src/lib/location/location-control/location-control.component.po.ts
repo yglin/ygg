@@ -1,6 +1,6 @@
 import { ControlPageObject, Tester } from "@ygg/shared/infra/test-utils";
-import { AddressControlComponentPageObject } from '../address/index.spec';
-import { GeoPointControlComponentPageObject } from '../geo-point/index.spec';
+import { AddressControlComponentPageObject } from '../address/index.po';
+import { GeoPointControlComponentPageObject } from '../geo-point/index.po';
 import { Location } from '../location';
 
 export class LocationControlComponentPageObject extends ControlPageObject<Location> {

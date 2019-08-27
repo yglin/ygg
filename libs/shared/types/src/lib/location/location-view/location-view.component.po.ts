@@ -1,8 +1,8 @@
 import { ViewPageObject, Tester } from '@ygg/shared/infra/test-utils';
 import { Address } from '../address';
-import { AddressViewComponentPageObject } from '../address/index.spec';
+import { AddressViewComponentPageObject } from '../address/index.po';
 import { GeoPoint } from '../geo-point';
-import { GeoPointViewComponentPageObject } from '../geo-point/index.spec';
+import { GeoPointViewComponentPageObject } from '../geo-point/index.po';
 import { Location } from '../location';
 
 export class LocationViewComponentPageObject extends ViewPageObject<Location> {
