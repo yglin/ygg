@@ -5,10 +5,10 @@ import {
   FormGroupModel,
   FormControlModel,
   FormControlType,
+  Album,
+  BusinessHours,
   Location
 } from '@ygg/shared/types';
-import { Album, BusinessHours, Address } from '@ygg/shared/types';
-import { GeoPoint } from 'libs/shared/types/src/lib/geo-point';
 
 export class Play implements DataItem {
   id: string;
