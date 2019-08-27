@@ -12,7 +12,7 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { By } from '@angular/platform-browser';
 import { Address } from '../address';
 import { AddressControlComponentPageObject } from "./address-control.component.po";
-import { AngularJestTester } from '@ygg/shared/infra/test-utils';
+import { AngularJestTester } from '@ygg/shared/infra/test-utils/jest';
 
 describe('AddressControlComponent as Reactive Form Controller(ControlValueAccessor)', () => {
   @Component({

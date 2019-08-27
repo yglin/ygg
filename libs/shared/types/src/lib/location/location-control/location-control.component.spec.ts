@@ -15,7 +15,7 @@ import { Location } from '../location';
 import { Address } from '../address';
 import { GeoPoint } from '../geo-point';
 import { LocationControlComponentPageObject } from './location-control.component.po';
-import { AngularJestTester } from '@ygg/shared/infra/test-utils';
+import { AngularJestTester } from '@ygg/shared/infra/test-utils/jest';
 import { GeocodeService } from '../geocode.service';
 import { AddressControlComponent } from '../address';
 import { GeoPointControlComponent } from '../geo-point';

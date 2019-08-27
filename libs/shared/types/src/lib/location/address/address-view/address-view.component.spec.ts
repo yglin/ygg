@@ -3,7 +3,7 @@ import { AddressViewComponent } from './address-view.component';
 import { Address } from '../address';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { AngularJestTester } from '@ygg/shared/infra/test-utils';
+import { AngularJestTester } from '@ygg/shared/infra/test-utils/jest';
 import { AddressViewComponentPageObject } from "./address-view.component.po";
 
 describe('AddressViewComponent', () => {

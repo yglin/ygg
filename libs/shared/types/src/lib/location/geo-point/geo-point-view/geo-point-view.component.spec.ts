@@ -4,7 +4,7 @@ import { GeoPoint } from '../geo-point';
 import { DebugElement, Component, Input } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-import { AngularJestTester } from "@ygg/shared/infra/test-utils";
+import { AngularJestTester } from "@ygg/shared/infra/test-utils/jest";
 import { GeoPointViewComponentPageObject } from './geo-point-view.component.po';
 import { MockAgmMapComponent, MockAgmMarkerComponent } from '../mock-agm-map.po';
 

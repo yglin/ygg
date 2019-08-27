@@ -30,13 +30,16 @@
         "libs/shared/infra/data-access/src/index.ts"
       ],
       "@ygg/shared/types": ["libs/shared/types/src/index.ts"],
+      "@ygg/shared/types/po": ["libs/shared/types/src/index.po.ts"],
       "@ygg/playwhat/admin": ["libs/playwhat/admin/src/index.ts"],
       "@ygg/shared/ui/navigation": ["libs/shared/ui/navigation/src/index.ts"],
       "@ygg/playwhat/play": ["libs/playwhat/play/src/index.ts"],
       "@ygg/shared/infra/device-adapter": [
         "libs/shared/infra/device-adapter/src/index.ts"
       ],
-      "@ygg/shared/infra/test-utils": ["libs/shared/infra/test-utils/src/index.ts"]
+      "@ygg/shared/infra/test-utils": ["libs/shared/infra/test-utils/src/index.ts"],
+      "@ygg/shared/infra/test-utils/cypress": ["libs/shared/infra/test-utils/src/lib/test-framworks/angular-cypress/index.ts"],
+      "@ygg/shared/infra/test-utils/jest": ["libs/shared/infra/test-utils/src/lib/test-framworks/angular-jest/index.ts"]
     },
     "rootDir": "."
   },
