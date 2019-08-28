@@ -105,6 +105,9 @@ export class Play implements DataItem {
     if (data.businessHours) {
       this.businessHours = new BusinessHours().fromJSON(data.businessHours);
     }
+    if (data.location) {
+      this.location = new Location().fromJSON(data.location);
+    }
     return this;
   }
 

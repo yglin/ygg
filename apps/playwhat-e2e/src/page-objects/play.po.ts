@@ -6,6 +6,11 @@ import {
   BusinessHoursViewPageObject
 } from './business-hours.po';
 import { PageObject } from './page-object.po';
+import {
+  LocationViewPageObject,
+  LocationControlPageObject
+} from './location.po';
+import { AngularCypressTester } from '@ygg/shared/infra/test-utils/cypress';
 
 export class PlayFormPageObject extends PageObject {
   selector = '.play-form';
@@ -51,6 +56,14 @@ export class PlayFormPageObject extends PageObject {
               `${this.getSelector()} #form-control-${name}`
             );
             businessHoursControl.fillIn(play.businessHours);
+            break;
+          case FormControlType.location:
+            const tester = new AngularCypressTester({});
+            const locationControl = new LocationControlPageObject(
+              tester,
+              `${this.getSelector()} #form-control-${name}`
+            );
+            locationControl.setValue(play.location);
             break;
           default:
             cy.log(
@@ -104,6 +117,14 @@ export class PlayViewPageObject {
             break;
           case FormControlType.businessHours:
             this.businessHoursView.expect(play[name]);
+            break;
+          case FormControlType.location:
+            const tester = new AngularCypressTester({});
+            const locationView = new LocationViewPageObject(
+              tester,
+              this.selector
+            );
+            locationView.expectValue(play[name]);
             break;
           default:
             cy.log(
