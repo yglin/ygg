@@ -18,7 +18,7 @@ import {
 import { TagsComponent } from './tags/tags.component';
 import { TagsInputComponent } from './tags/tags-input/tags-input.component';
 import { DateRangePickerDialogComponent } from './date-range/date-range-picker/date-range-picker-dialog/date-range-picker-dialog.component';
-import { AlbumComponent } from './album/album.component';
+import { AlbumViewComponent } from './album/album-view/album-view.component';
 import { ImageComponent } from './image/image.component';
 import { FormControlComponent } from './form/form-control/form-control.component';
 import { AlbumControlComponent } from './album/album-control/album-control.component';
@@ -82,7 +82,7 @@ import {
     TagsComponent,
     TagsInputComponent,
     DateRangePickerDialogComponent,
-    AlbumComponent,
+    AlbumViewComponent,
     ImageComponent,
     FormControlComponent,
     AlbumControlComponent,
@@ -114,7 +114,7 @@ import {
     ContactFormComponent,
     TagsComponent,
     TagsInputComponent,
-    AlbumComponent,
+    AlbumViewComponent,
     ImageComponent,
     FormControlComponent,
     AlbumControlComponent,

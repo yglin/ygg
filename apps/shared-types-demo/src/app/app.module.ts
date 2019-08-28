@@ -10,9 +10,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LocationComponent } from './location/location.component';
+import { AlbumComponent } from './album/album.component';
 
 @NgModule({
-  declarations: [AppComponent, GeoPointComponent, LocationComponent],
+  declarations: [AppComponent, GeoPointComponent, LocationComponent, AlbumComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -20,7 +21,8 @@ import { LocationComponent } from './location/location.component';
     FlexLayoutModule,
     RouterModule.forRoot([
       { path: 'geo-point', component: GeoPointComponent },
-      { path: 'location', component: LocationComponent }
+      { path: 'location', component: LocationComponent },
+      { path: 'album', component: AlbumComponent }
     ], { initialNavigation: 'enabled' }),
     SharedUiNgMaterialModule,
     SharedTypesModule,

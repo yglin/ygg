@@ -1,12 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Album } from './album';
+import { Album } from '../album';
 
 @Component({
-  selector: 'ygg-album',
-  templateUrl: './album.component.html',
-  styleUrls: ['./album.component.css']
+  selector: 'ygg-album-view',
+  templateUrl: './album-view.component.html',
+  styleUrls: ['./album-view.component.css']
 })
-export class AlbumComponent implements OnInit {
+export class AlbumViewComponent implements OnInit {
   @Input() album: Album;
 
   constructor() { }
