@@ -3,8 +3,18 @@ import { Image } from "../image/image";
 import { toJSONDeep, SerializableJSON } from '@ygg/shared/infra/data-access';
 
 export class Album implements SerializableJSON {
+  static clone = Album.fromAlbum;
+
   cover: Image;
   photos: Image[];
+
+  static fromAlbum(album: Album): Album {
+    return new Album().fromJSON(album.toJSON());
+  }
+
+  static isAlbum(value: any): value is Album {
+    return !!(value && value.cover && isArray(value.photos));
+  }
 
   static forge(): Album {
     const forged = new Album();

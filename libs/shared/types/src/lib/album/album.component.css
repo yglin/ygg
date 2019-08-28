@@ -1,0 +1,55 @@
+.cover {
+  width: 50vw;
+  min-width: 300px;
+  max-width: 640px;
+  height: 50vw;
+  min-height: 300px;
+  max-height: 640px;
+  margin: 10px;
+}
+
+.cover img {
+  width: 100%;
+  height: 100%;
+}
+
+/* .photo-list {
+  min-width: 300px;
+  max-width: 800px;
+} */
+
+.photo {
+  margin: 5px 5px;
+  position: relative;
+  width: 40vw;
+  max-width: 150px;
+  height: 40vw;
+  max-height: 150px;
+}
+
+.photo .img-wrapper {
+  width: 100%;
+  height: 100%;
+  border-radius: 5%;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+}
+
+.photo .delete-button {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+}
+
+.photo .add-button-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

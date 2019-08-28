@@ -1,0 +1,36 @@
+<div class="album" *ngIf="album">
+  <div [fxLayout]="fxLayout" fxLayoutAlign="start start">
+    <div class="mat-elevation-z12 cover">
+      <img [src]="album.cover.src" />
+    </div>
+    <div fxFlex
+      fxLayout="row wrap"
+      fxLayoutAlign="start center"
+      class="photo-list"
+    >
+      <div
+        *ngFor="let photo of album.photos; let idx = index"
+        class="photo"
+        (click)="setCover(idx)"
+        [id]="'photo-' + idx"
+      >
+        <div class="img-wrapper mat-elevation-z6">
+          <img [src]="photo.src" />
+        </div>
+        <div class="delete-button" *ngIf="!readonly">
+          <button
+            mat-mini-fab
+            (click)="deletePhoto(idx); $event.stopPropagation()"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="photo mat-elevation-z6" *ngIf="!readonly">
+        <div id="add-photos" class="add-button-container" (click)="addPhoto()">
+          <button mat-fab><mat-icon>add</mat-icon></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

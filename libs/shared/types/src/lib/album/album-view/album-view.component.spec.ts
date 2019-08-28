@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AlbumViewComponent } from './album-view.component';
+import { MockComponent } from 'ng-mocks';
+import { AlbumComponent } from '../album.component';
 
 describe('AlbumViewComponent', () => {
   let component: AlbumViewComponent;
@@ -8,7 +10,7 @@ describe('AlbumViewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AlbumViewComponent ]
+      declarations: [ AlbumViewComponent, MockComponent(AlbumComponent) ]
     })
     .compileComponents();
   }));

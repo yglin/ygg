@@ -9,14 +9,7 @@ import { Album } from '../album';
 export class AlbumViewComponent implements OnInit {
   @Input() album: Album;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
-  showOnCover(index: number) {
-    if (this.album && this.album.photos[index]) {
-      this.album.cover = this.album.photos[index];
-    }
-  }
+  ngOnInit() {}
 }

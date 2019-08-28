@@ -48,6 +48,7 @@ import {
   LocationViewComponent,
   GoogleMapComponent
 } from './location';
+import { AlbumComponent } from './album/album.component';
 
 @NgModule({
   imports: [
@@ -102,7 +103,8 @@ import {
     GeoPointViewComponent,
     LocationControlComponent,
     LocationViewComponent,
-    GoogleMapComponent
+    GoogleMapComponent,
+    AlbumComponent
   ],
   entryComponents: [DateRangePickerDialogComponent, ImageUploaderComponent],
   exports: [

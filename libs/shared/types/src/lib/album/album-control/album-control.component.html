@@ -4,41 +4,5 @@
       <span>{{ label }}</span>
     </h4>
   </div>
-  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="30px">
-    <div class="mat-elevation-z12">
-      <div class="cover">
-        <img [src]="album.cover.src" />
-      </div>
-    </div>
-    <div>
-      <div
-        fxLayout="row wrap"
-        fxLayoutAlign="start center"
-        fxLayoutGap="10px"
-        class="photo-list"
-      >
-        <div
-          *ngFor="let photo of album.photos; let idx = index"
-          class="photo mat-elevation-z6"
-          (click)="setCover(idx)"
-          [id]="'photo-' + idx"
-        >
-          <img [src]="photo.src" />
-          <div class="delete-button">
-            <button
-              mat-mini-fab
-              (click)="deletePhoto(idx); $event.stopPropagation()"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        </div>
-        <div class="photo mat-elevation-z6">
-          <div id='add-photos' class="add-button-container" (click)="addPhoto()">
-            <button mat-fab><mat-icon>add</mat-icon></button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <ygg-album [album]="album" (albumChanged)='onAlbumChanged($event)'></ygg-album>
 </div>

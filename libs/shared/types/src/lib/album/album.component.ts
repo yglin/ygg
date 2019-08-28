@@ -1,0 +1,87 @@
+import { isEmpty } from "lodash";
+import {
+  Component,
+  OnInit,
+  Input,
+  OnChanges,
+  EventEmitter,
+  OnDestroy,
+  SimpleChanges,
+  Output
+} from '@angular/core';
+import { Album } from './album';
+import { fromEvent, Subscription } from 'rxjs';
+import { YggDialogService } from '@ygg/shared/ui/widgets';
+import { ImageUploaderComponent } from '../image/image-uploader/image-uploader.component';
+
+@Component({
+  selector: 'ygg-album',
+  templateUrl: './album.component.html',
+  styleUrls: ['./album.component.css']
+})
+export class AlbumComponent implements OnInit, OnDestroy, OnChanges {
+  @Input() album: Album;
+  @Input() readonly: boolean;
+  @Output() albumChanged: EventEmitter<Album> = new EventEmitter();
+  fxLayout = 'row wrap';
+  subscriptions: Subscription[] = [];
+
+  constructor(protected yggDialog: YggDialogService) {
+    this.subscriptions.push(
+      fromEvent(window, 'resize').subscribe(() => {
+        this.fxLayout = window.innerWidth >= 960 ? 'row' : 'column';
+      })
+    );
+  }
+
+  ngOnInit() {
+    this.readonly = (this.readonly !== undefined && this.readonly !== false);
+    if (this.album && this.readonly) {
+      this.album = Album.clone(this.album);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    // console.log('Input album change!!')
+    if (changes.album.currentValue) {
+      const newAlbum: Album = changes.album.currentValue;
+      if (this.readonly) {
+        this.album = Album.clone(newAlbum);
+      } else {
+        this.album = newAlbum;
+      }
+    }    
+  }
+
+  ngOnDestroy() {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
+
+  setCover(index) {
+    this.album.cover = this.album.photos[index];
+    this.albumChanged.emit(this.album);
+  }
+
+  deletePhoto(index) {
+    if (confirm('確定刪除這張照片？')) {
+      this.album.photos.splice(index, 1);
+      this.albumChanged.emit(this.album);
+    }
+  }
+
+  addPhoto() {
+    const dialogRef = this.yggDialog.open(ImageUploaderComponent, {
+      title: '圖片上傳'
+    });
+    this.subscriptions.push(
+      dialogRef.afterClosed().subscribe(images => {
+        if (!isEmpty(images)) {
+          this.album.photos.push(...images);
+          this.albumChanged.emit(this.album);
+        }
+      })
+    );
+  }
+}

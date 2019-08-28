@@ -1,8 +1,8 @@
-<div [formGroup]='formGroup' fxLayout="row wrap" fxLayoutAlign="space-around start" fxLayoutGap="30px">
+<div [formGroup]='formGroup'>
   <div class="control">
     <ygg-album-control formControlName="album"></ygg-album-control>
   </div>
   <div class="view">
-    <ygg-album-view [album]="formGroup.get('album').value"></ygg-album-view>
+    <ygg-album-view [album]="album"></ygg-album-view>
   </div>
 </div>

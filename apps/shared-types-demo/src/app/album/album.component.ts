@@ -8,11 +8,19 @@ import { Album } from '@ygg/shared/types';
   styleUrls: ['./album.component.css']
 })
 export class AlbumComponent implements OnInit {
+  album: Album = Album.forge();
   formGroup: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {
     this.formGroup = this.formBuilder.group({
-      album: new Album()
+      album: this.album
+    });
+    this.formGroup.get('album').valueChanges.subscribe(value => {
+      // console.log('Album control changed~!!!');
+      // console.log(value);
+      if (Album.isAlbum(value)) {
+        this.album = Album.clone(value);
+      }
     });
   }
 
