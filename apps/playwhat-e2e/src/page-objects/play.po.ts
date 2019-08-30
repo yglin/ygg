@@ -10,6 +10,7 @@ import {
   LocationViewPageObject,
   LocationControlPageObject
 } from './location.po';
+import { TagsControlComponentPageObject, TagsViewComponentPageObject } from '@ygg/shared/types/po';
 import { AngularCypressTester } from '@ygg/shared/infra/test-utils/cypress';
 
 export class PlayFormPageObject extends PageObject {
@@ -27,6 +28,7 @@ export class PlayFormPageObject extends PageObject {
   }
 
   fillIn(play: Play) {
+    const tester = new AngularCypressTester({});
     const formModel = Play.getFormModel();
     for (const name in formModel.controls) {
       if (formModel.controls.hasOwnProperty(name)) {
@@ -58,12 +60,18 @@ export class PlayFormPageObject extends PageObject {
             businessHoursControl.fillIn(play.businessHours);
             break;
           case FormControlType.location:
-            const tester = new AngularCypressTester({});
             const locationControl = new LocationControlPageObject(
               tester,
               `${this.getSelector()} #form-control-${name}`
             );
             locationControl.setValue(play.location);
+            break;
+          case FormControlType.tags:
+            const tagsControl = new TagsControlComponentPageObject(
+              tester,
+              `${this.getSelector()} #form-control-${name}`
+            );
+            tagsControl.setValue(play.tags);
             break;
           default:
             cy.log(
@@ -103,6 +111,7 @@ export class PlayViewPageObject {
         play.hasOwnProperty(name)
       ) {
         const controlModel = formModel.controls[name];
+        const tester = new AngularCypressTester({});
         let valueSelector = '';
         switch (controlModel.type) {
           case FormControlType.text:
@@ -119,12 +128,18 @@ export class PlayViewPageObject {
             this.businessHoursView.expect(play[name]);
             break;
           case FormControlType.location:
-            const tester = new AngularCypressTester({});
             const locationView = new LocationViewPageObject(
               tester,
               this.selector
             );
             locationView.expectValue(play[name]);
+            break;
+          case FormControlType.tags:
+            const tagsView = new TagsViewComponentPageObject(
+              tester,
+              this.selector
+            );
+            tagsView.expectValue(play[name]);
             break;
           default:
             cy.log(

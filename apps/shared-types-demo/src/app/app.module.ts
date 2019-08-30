@@ -11,9 +11,10 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LocationComponent } from './location/location.component';
 import { AlbumComponent } from './album/album.component';
+import { TagsComponent } from './tags/tags.component';
 
 @NgModule({
-  declarations: [AppComponent, GeoPointComponent, LocationComponent, AlbumComponent],
+  declarations: [AppComponent, GeoPointComponent, LocationComponent, AlbumComponent, TagsComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -22,7 +23,8 @@ import { AlbumComponent } from './album/album.component';
     RouterModule.forRoot([
       { path: 'geo-point', component: GeoPointComponent },
       { path: 'location', component: LocationComponent },
-      { path: 'album', component: AlbumComponent }
+      { path: 'album', component: AlbumComponent },
+      { path: 'tags', component: TagsComponent },
     ], { initialNavigation: 'enabled' }),
     SharedUiNgMaterialModule,
     SharedTypesModule,

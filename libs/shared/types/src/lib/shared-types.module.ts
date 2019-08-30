@@ -15,8 +15,6 @@ import {
   NumberRangeComponent,
   NumberRangeControlComponent
 } from './number-range';
-import { TagsComponent } from './tags/tags.component';
-import { TagsInputComponent } from './tags/tags-input/tags-input.component';
 import { DateRangePickerDialogComponent } from './date-range/date-range-picker/date-range-picker-dialog/date-range-picker-dialog.component';
 import { AlbumViewComponent } from './album/album-view/album-view.component';
 import { ImageComponent } from './image/image.component';
@@ -49,6 +47,7 @@ import {
   GoogleMapComponent
 } from './location';
 import { AlbumComponent } from './album/album.component';
+import { TagsControlComponent, TagsViewComponent } from './tags';
 
 @NgModule({
   imports: [
@@ -80,8 +79,6 @@ import { AlbumComponent } from './album/album.component';
     DateRangePickerComponent,
     ContactComponent,
     ContactFormComponent,
-    TagsComponent,
-    TagsInputComponent,
     DateRangePickerDialogComponent,
     AlbumViewComponent,
     ImageComponent,
@@ -104,7 +101,9 @@ import { AlbumComponent } from './album/album.component';
     LocationControlComponent,
     LocationViewComponent,
     GoogleMapComponent,
-    AlbumComponent
+    AlbumComponent,
+    TagsControlComponent,
+    TagsViewComponent
   ],
   entryComponents: [DateRangePickerDialogComponent, ImageUploaderComponent],
   exports: [
@@ -114,8 +113,6 @@ import { AlbumComponent } from './album/album.component';
     DateRangePickerComponent,
     ContactComponent,
     ContactFormComponent,
-    TagsComponent,
-    TagsInputComponent,
     AlbumViewComponent,
     ImageComponent,
     FormControlComponent,
@@ -135,7 +132,9 @@ import { AlbumComponent } from './album/album.component';
     GeoPointViewComponent,
     LocationControlComponent,
     LocationViewComponent,
-    GoogleMapComponent
+    GoogleMapComponent,
+    TagsControlComponent,
+    TagsViewComponent
   ]
 })
 export class SharedTypesModule {}

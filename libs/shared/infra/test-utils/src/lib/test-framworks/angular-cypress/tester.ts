@@ -26,6 +26,10 @@ export class AngularCypressTester extends Tester {
     this.getElement(selector).clear();
     this.getElement(selector).type(value);
   }
+
+  clearInput(selector: string) {
+    this.getElement(selector).clear();
+  }
   
   inputNumber(selector: string, value: number) {
     this.getElement(selector).clear();

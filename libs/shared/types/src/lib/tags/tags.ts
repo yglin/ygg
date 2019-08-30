@@ -1,14 +1,27 @@
-import { isArray, sample, find, remove } from 'lodash';
+import { SerializableJSON } from '@ygg/shared/infra/data-access';
+import { isArray, isEmpty, sample, range, random, find, remove } from 'lodash';
 
-export class Tag {
+export class Tag implements SerializableJSON {
   name: string;
 
-  constructor(name: string) {
-    this.name = name;
+  constructor(arg1?: string) {
+    this.name = '';
+
+    if (arg1) {
+      this.name = arg1;
+    }
   }
 
   static isTag(value: any): value is Tag {
-    return !!(value && value.name);
+    return !!(value && typeof value.name === 'string');
+  }
+
+  static toName(value: Tag | string): string {
+    if (Tag.isTag(value)) {
+      return value.name;
+    } else {
+      return value;
+    }
   }
 
   static forge(): Tag {
@@ -37,49 +50,84 @@ export class Tag {
     ]);
     return new Tag(name);
   }
+
+  fromJSON(data: any = {}): this {
+    if (typeof data === 'string') {
+      this.name = data;
+    }
+    return this;
+  }
+
+  toJSON(): any {
+    return this.name;
+  }
 }
 
-// export class TagsSet extends Array<Tag> {
+export class Tags implements SerializableJSON {
+  private tags: Tag[];
 
-//   static forge(length: number = 10): TagsSet {
-//     const forged = new TagsSet();
-//     while (forged.length < length) {
-//       forged.push(Tag.forge());
-//     }
-//     return forged;
-//   }
+  static isTags(value: any): value is Tags {
+    return !!(value && isArray(value.tags));
+  }
 
-//   constructor(tags?: Array<Tag>) {
-//     super(...tags);
-//     if (isArray(tags)) {
-//       this.push.apply(this, tags);
-//     }
-//   }
+  static forge(): Tags {
+    return new Tags(range(random(5,10)).map(() => Tag.forge()));
+  }
 
-//   has(tag: Tag | string): boolean {
-//     let name: string;
-//     if (Tag.isTag(tag)) {
-//       name = tag.name;      
-//     } else {
-//       name = tag;
-//     }
-//     return !!find(this, _tag => _tag.name === name);
-//   }
+  constructor(arg1?: Tags | Tag[] | string[]) {
+    this.tags = [];
 
-//   push(...tags: Tag[]): number {
-//     for (const tag of tags) {
-//       if (!this.has(tag)) {
-//         super.push(tag);
-//       }
-//     }
-//     return this.length;
-//   }
+    let sourceTags: Tag[] | string[];
+    if (Tags.isTags(arg1)) {
+      sourceTags = arg1.tags;
+    } else if (isArray(arg1) && !isEmpty(arg1)) {
+      sourceTags = arg1;
+    }
+    if (!isEmpty(sourceTags)) {
+      this.push(...sourceTags);
+    }
+  }
 
-//   add(name: string) {
-//     this.push(new Tag(name));
-//   }
+  getNames(): string[] {
+    return this.tags.map(tag => tag.name);
+  }
 
-//   delete(name: string) {
-//     remove(this, _tag => _tag.name === name);
-//   }
-// }
+  has(tag: Tag | string): boolean {
+    return !!find(this.tags, _tag => _tag.name === Tag.toName(tag));
+  }
+
+  push(...tags: Tag[] | string[]) {
+    for (const tag of tags) {
+      if (!this.has(tag)) {
+        if (Tag.isTag(tag)) {
+          this.tags.push(tag);
+        } else if (typeof tag === 'string') {
+          this.tags.push(new Tag(tag));
+        }
+      }
+    }
+  }
+
+  clear() {
+    this.tags.length = 0;
+  }
+
+  remove(tag: Tag | string) {
+    remove(this.tags, _tag => _tag.name === Tag.toName(tag));
+  }
+
+  filter(filterFn: (tag: Tag) => boolean): Tags {
+    return new Tags(this.tags.filter(filterFn));
+  }
+
+  fromJSON(data: any = []): this {
+    if (isArray(data)) {
+      this.push(...data.map(element => new Tag().fromJSON(element)));
+    }
+    return this;
+  }
+
+  toJSON(): any {
+    return this.tags.map(tag => tag.toJSON());
+  }
+}

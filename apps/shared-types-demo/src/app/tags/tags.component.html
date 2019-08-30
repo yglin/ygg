@@ -1,0 +1,9 @@
+<div
+  fxLayout="column"
+  fxLayoutAlign="center strech"
+  fxLayoutGap="10px"
+  [formGroup]="formGroup"
+>
+  <div><ygg-tags-control formControlName="tags" [autocompleteTags]='autocompleteTags'></ygg-tags-control></div>
+  <div><ygg-tags-view [tags]="tags"></ygg-tags-view></div>
+</div>

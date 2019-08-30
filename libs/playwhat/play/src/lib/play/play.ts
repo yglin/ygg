@@ -9,6 +9,7 @@ import {
   BusinessHours,
   Location
 } from '@ygg/shared/types';
+import { PlayTag } from '../tag';
 
 export class Play implements DataItem {
   id: string;
@@ -86,7 +87,13 @@ export class Play implements DataItem {
         type: FormControlType.location,
         label: '地點',
         default: new Location()
-      }
+      },
+      tags: {
+        name: 'tags',
+        type: FormControlType.tags,
+        label: '體驗類型',
+        default: []
+      },
     };
 
     const formModel = { name: 'play-form', controls };

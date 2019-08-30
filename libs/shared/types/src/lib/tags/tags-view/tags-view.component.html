@@ -1,0 +1,5 @@
+<div class="tags-view" *ngIf="tags">
+  <mat-chip-list>
+    <mat-chip *ngFor="let name of tags.getNames()" [attr.tagName]='name' class='tag-chip'>{{ name }}</mat-chip>
+  </mat-chip-list>
+</div>

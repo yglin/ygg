@@ -24,6 +24,10 @@ export abstract class PageObject {
   getTextContent(name: string): string {
     return this.tester.getTextContent(this.getSelector(name));
   }
+
+  expectTextContent(name: string, text: string) {
+    this.tester.expectTextContent(this.getSelector(name), text);
+  }
 }
 
 export abstract class ControlPageObject<T> extends PageObject {
@@ -34,7 +38,7 @@ export abstract class ControlPageObject<T> extends PageObject {
   //   super(tester, parentSelector);
   // }
 
-  abstract setValue(value: T);
+  abstract async setValue(value: T);
 }
 
 export abstract class ViewPageObject<T> extends PageObject {
@@ -45,5 +49,5 @@ export abstract class ViewPageObject<T> extends PageObject {
   //   super(tester, parentSelector);
   // }
 
-  abstract expectValue(value: T);
+  abstract async expectValue(value: T);
 }
