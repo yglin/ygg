@@ -12,6 +12,7 @@ describe('TagsViewComponent', () => {
   let fixture: ComponentFixture<TagsViewComponent>;
   let debugElement: DebugElement;
   let pageObject: TagsViewComponentPageObject;
+  let testTags: Tags;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -26,15 +27,13 @@ describe('TagsViewComponent', () => {
     debugElement = fixture.debugElement;
     const tester = new AngularJestTester({ fixture, debugElement });
     pageObject = new TagsViewComponentPageObject(tester, '');
+    testTags = Tags.forge();
+    component.tags = testTags;
     fixture.detectChanges();
   });
 
   it('should show correct data', async done => {
-    // TODO: Implement testing for individual property of your model
-    component.tags = Tags.forge();
-    await fixture.whenStable();
-    fixture.detectChanges();
-    pageObject.expectValue(component.tags);
+    pageObject.expectValue(testTags);
     done();
   });
 });

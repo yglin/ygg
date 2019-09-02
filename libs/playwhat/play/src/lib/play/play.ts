@@ -1,13 +1,14 @@
-import { extend, sample } from 'lodash';
+import { range, random, extend, sample, isArray } from 'lodash';
 import { v4 as uuid } from 'uuid';
 import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
 import {
+  Album,
+  BusinessHours,
+  Location,
+  Tags,
   FormGroupModel,
   FormControlModel,
   FormControlType,
-  Album,
-  BusinessHours,
-  Location
 } from '@ygg/shared/types';
 import { PlayTag } from '../tag';
 
@@ -18,6 +19,7 @@ export class Play implements DataItem {
   album: Album;
   businessHours: BusinessHours;
   location: Location;
+  tags: Tags;
 
   static forge(): Play {
     const newOne = new Play();
@@ -41,6 +43,7 @@ export class Play implements DataItem {
     newOne.album = Album.forge();
     newOne.businessHours = BusinessHours.forge();
     newOne.location = Location.forge();
+    newOne.tags = new Tags(range(random(2, 5)).map(() => PlayTag.forge()));
     return newOne;
   }
 
@@ -114,6 +117,9 @@ export class Play implements DataItem {
     }
     if (data.location) {
       this.location = new Location().fromJSON(data.location);
+    }
+    if (isArray(data.tags)) {
+      this.tags = new Tags(data.tags.map(tag => new PlayTag(tag)));
     }
     return this;
   }

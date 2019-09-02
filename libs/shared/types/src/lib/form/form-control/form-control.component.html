@@ -54,6 +54,13 @@
         [formControlName]="model.name"
       ></ygg-location-control>
     </div>
+    <div *ngSwitchCase="formControlTypes.tags">
+      <ygg-tags-control
+        [label]="model.label"
+        [formControlName]="model.name"
+        [autocompleteTags]="model.options?.autocompleteTags"
+      ></ygg-tags-control>
+    </div>
     <div *ngSwitchDefault></div>
   </div>
 </div>

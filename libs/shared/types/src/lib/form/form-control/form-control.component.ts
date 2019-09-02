@@ -16,6 +16,7 @@ export class FormControlComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    // console.log(this.model);
     this.formControl = this.formGroup.get(this.model.name);
   }
 

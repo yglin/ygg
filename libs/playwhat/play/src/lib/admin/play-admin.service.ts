@@ -6,8 +6,8 @@ import { switchMap, map } from 'rxjs/operators';
 // import { adminMenu } from './menu';
 import { MenuTree } from '@ygg/shared/ui/navigation';
 import { PlaywhatAdminService } from '@ygg/playwhat/admin';
-import { PlayTag } from '../tag/play-tag';
-import { PlayTagService } from '../tag/play-tag.service';
+// import { PlayTag } from '../tag/play-tag';
+// import { PlayTagService } from '../tag/play-tag.service';
 
 
 @Injectable({
@@ -26,7 +26,7 @@ export class PlayAdminService {
 
   constructor(
     private playwhatAdminService: PlaywhatAdminService,
-    private playTagService: PlayTagService
+    // private playTagService: PlayTagService
   ) {
     this._menu = new MenuTree();
   }
@@ -46,15 +46,15 @@ export class PlayAdminService {
     return this.playwhatAdminService.getData$<T>(path);
   }
 
-  // Get id of tags
-  getPlayTags$(): Observable<PlayTag[]> {
-    return this.getData$<string[]>('tags').pipe(
-      switchMap(ids => this.playTagService.listByIds$(ids))
-    );
-  }
+  // // Get id of tags
+  // getPlayTags$(): Observable<PlayTag[]> {
+  //   return this.getData$<string[]>('tags').pipe(
+  //     switchMap(ids => this.playTagService.listByIds$(ids))
+  //   );
+  // }
 
-  // Set tags by id
-  async setPlayTags(playTags: PlayTag[]) {
-    await this.setData<string[]>('tags', playTags.map(tag => tag.id));
-  }
+  // // Set tags by id
+  // async setPlayTags(playTags: PlayTag[]) {
+  //   await this.setData<string[]>('tags', playTags.map(tag => tag.id));
+  // }
 }

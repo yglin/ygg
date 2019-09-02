@@ -8,7 +8,8 @@ export enum FormControlType {
   businessHours = 'businessHours',
   address = 'address',
   geoPoint = 'geoPoint',
-  location = 'location'
+  location = 'location',
+  tags = 'tags'
 }
 
 export interface FormControlModel {

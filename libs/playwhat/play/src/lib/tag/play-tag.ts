@@ -10,17 +10,24 @@ export class PlayTag extends Tag implements DataItem {
     return new PlayTag(Tag.forge().name);
   }
 
+  static isPlayTag(value: any): value is PlayTag {
+    return !!(value && value.id && Tag.isTag(value));
+  }
+
   constructor(name?: string) {
     super(name);
     this.id = uuid();
   }
 
-  fromJSON(data: any): this {
+  fromJSON(data: any = {}): this {
     extend(this, data);
     return this;
   }
 
   toJSON(): any {
-    return toJSONDeep(this);
+    const data: any = {};
+    data.id = this.id;
+    data.name = this.name;
+    return data;
   }
 }

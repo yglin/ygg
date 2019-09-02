@@ -24,11 +24,11 @@ export class AdminPlayTagsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscriptions.push(
-      combineLatest(
+      combineLatest([
         this.playTagService.list$(),
-        this.playAdminService.getPlayTags$()
-      ).subscribe(([tagsAll, tagsSelected]) => {
-        this.selected = tagsSelected;
+        this.playTagService.playTags$
+      ]).subscribe(([tagsAll, tagsSelected]) => {
+        this.selected = (tagsSelected.toTags() as PlayTag[]);
         const selectedIds = this.selected.map(tag => tag.id);
         this.unselected = tagsAll.filter(tag => selectedIds.indexOf(tag.id) < 0);
       })
@@ -49,7 +49,7 @@ export class AdminPlayTagsComponent implements OnInit, OnDestroy {
 
   async submit(selected: PlayTag[]) {
     if (confirm('確定要修改體驗標籤的設定嗎？')) {
-      await this.playAdminService.setPlayTags(selected);
+      await this.playAdminService.setData<string[]>('tags', selected.map(tag => tag.id));
       alert('修改完成');
     }
   }

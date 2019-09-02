@@ -96,6 +96,10 @@ export class Tags implements SerializableJSON {
     return !!find(this.tags, _tag => _tag.name === Tag.toName(tag));
   }
 
+  toTags(): Tag[] {
+    return this.tags;
+  }
+
   push(...tags: Tag[] | string[]) {
     for (const tag of tags) {
       if (!this.has(tag)) {

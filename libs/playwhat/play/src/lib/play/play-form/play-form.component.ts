@@ -7,10 +7,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { LogService } from '@ygg/shared/infra/log';
 import {
   FormControlModel,
-  FormGroupModel,
-  FormFactoryService
+  FormGroupModel
+  // FormFactoryService
 } from '@ygg/shared/types';
 import { Subscription } from 'rxjs';
+import { PlayFactoryService } from '../play-factory.service';
 
 @Component({
   selector: 'ygg-play-form',
@@ -29,23 +30,28 @@ export class PlayFormComponent implements OnInit, OnDestroy {
     private playService: PlayService,
     private router: Router,
     private route: ActivatedRoute,
-    private formFactory: FormFactoryService
+    // private formFactory: FormFactoryService,
+    private playFactory: PlayFactoryService
   ) {
-    this.formModel = Play.getFormModel();
+    this.formModel = this.playFactory.createModel();
     this.controlModels = values(this.formModel.controls);
-    this.formGroup = this.formFactory.buildGroup(this.formModel);
-    this.subscriptions.push(
-      this.formGroup.valueChanges.subscribe(formValue =>
-        extend(this.play, formValue)
-      )
-    );
+    this.formGroup = this.playFactory.createFormGroup();
   }
 
   ngOnInit() {
-    if (!this.play) {
+    if (this.play) {
+      this.formGroup.patchValue(this.play);
+    } else {
       this.play = new Play();
     }
-    this.formGroup.patchValue(this.play);
+    this.subscriptions.push(
+      this.formGroup.valueChanges.subscribe(value => {
+        console.log(value);
+        if (value) {
+          extend(this.play, value);
+        }
+      })
+    );
   }
 
   ngOnDestroy() {

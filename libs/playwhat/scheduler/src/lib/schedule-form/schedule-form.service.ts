@@ -10,6 +10,7 @@ import { Observable, of } from 'rxjs';
 // import { UserService, User } from './schedule-form-list/node_modules/@ygg/shared/user';
 import { Query } from '@ygg/shared/infra/data-access';
 import { map } from 'rxjs/operators';
+import { PlayTagService, PlayTag } from '@ygg/playwhat/play';
 
 @Injectable({ providedIn: 'root' })
 export class ScheduleFormService {
@@ -17,6 +18,7 @@ export class ScheduleFormService {
 
   constructor(
     private dataAccessService: DataAccessService,
+    private playTagService: PlayTagService
   ) {}
 
   // defaultForm(): ScheduleForm {
@@ -42,6 +44,7 @@ export class ScheduleFormService {
   }
 
   async upsert(scheduleForm: ScheduleForm) {
+    await this.playTagService.upsertList(scheduleForm.likeTags.map(tagName => new PlayTag(tagName)));
     return await this.dataAccessService.upsert(
       this.collection,
       scheduleForm,

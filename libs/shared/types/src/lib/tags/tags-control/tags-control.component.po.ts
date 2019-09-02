@@ -13,11 +13,12 @@ export class TagsControlComponentPageObject extends ControlPageObject<Tags> {
   };
 
   async setValue(tags: Tags) {
-    for (const name of tags.getNames()) {
+    this.tester.iterate<string>(tags.getNames(), async (name) => {
       this.tester.inputText(this.getSelector('inputTagName'), name);
       this.tester.clickButton(this.getSelector('buttonAdd'));
       await this.tester.wait();
-    }
+      this.tester.expectVisible(`${this.getSelector('tagChip')}[tagName="${name}"]`, true);
+    });
   }
 
   async clearAll() {

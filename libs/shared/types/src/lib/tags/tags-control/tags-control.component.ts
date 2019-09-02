@@ -94,10 +94,12 @@ export class TagsControlComponent
   constructor() {}
 
   ngOnInit() {
+    // console.log(this.autocompleteTags);
     if (Tags.isTags(this.autocompleteTags)) {
       this.autocompleteTags$ = of(this.autocompleteTags);
     } else if (isObservable(this.autocompleteTags)) {
       this.autocompleteTags$ = this.autocompleteTags.pipe(
+        // tap(value => console.log(value)),
         filter(value => Tags.isTags(value))
       );
     } else {

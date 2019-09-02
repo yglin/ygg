@@ -15,7 +15,7 @@ import {
   FormBuilder,
   Validators
 } from '@angular/forms';
-import { NumberRange, Contact } from '@ygg/shared/types';
+import { NumberRange, Contact, Tags } from '@ygg/shared/types';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
 
@@ -29,7 +29,7 @@ import {
 } from '@ygg/shared/user';
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { PlayTagsInputComponent } from '@ygg/playwhat/play';
+import { PlayTagService } from '@ygg/playwhat/play';
 
 @Component({
   selector: 'ygg-schedule-form',
@@ -40,7 +40,6 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
   @Input() formGroup: FormGroup;
   @Input() scheduleForm: ScheduleForm;
   @Output() onSubmit: EventEmitter<ScheduleForm>;
-  @ViewChild('playTagsInput', { static: false }) playTagsInput: PlayTagsInputComponent;
 
   budgetType = 'total';
   budgetHintMessage = '';
@@ -49,6 +48,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[];
   currentUser: User;
   agentUsers: User[];
+  playTags$: Observable<Tags>;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -56,7 +56,8 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     private scheduleFormService: ScheduleFormService,
     private authService: AuthenticateService,
     private authUiService: AuthenticateUiService,
-    private userService: UserService
+    private userService: UserService,
+    private playTagService: PlayTagService
   ) {
     this.onSubmit = new EventEmitter();
     this.subscriptions = [];
@@ -84,6 +85,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
           this.agentUsers = [];
         }
       });
+    this.playTags$ = this.playTagService.playTags$;
   }
 
   ngOnInit() {
@@ -128,6 +130,11 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(subsc);
+    subsc = this.formGroup.get('likeTags').valueChanges.subscribe(tags => {
+      if (Tags.isTags(tags)) {
+        this.scheduleForm.likeTags = tags.getNames();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -237,7 +244,6 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
           this.scheduleForm.creatorId = this.currentUser.id;
         }
       }
-      await this.playTagsInput.upsertTags();
       await this.scheduleFormService.upsert(this.scheduleForm);
       alert('已成功更新／新增需求資料');
       this.onSubmit.emit(this.scheduleForm);

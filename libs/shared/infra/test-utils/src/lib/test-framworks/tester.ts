@@ -17,6 +17,7 @@ export abstract class Tester {
     this.config = config;
   }
   
+  abstract iterate<T>(array: Array<T>, iteratorFn: (value: T, index: number, array: Array<T>) => any): void;
   abstract getElement(selector: string): any;
   abstract getTextContent(selector: string): string;
   abstract expectVisible(selector: string, flag: boolean): void;

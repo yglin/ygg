@@ -11,6 +11,13 @@ export interface AngularJestTesterConfig extends TesterConfig {
 export class AngularJestTester extends Tester {
   config: AngularJestTesterConfig;
 
+  iterate<T>(array: Array<T>, iteratorFn: (value: T, index: number, array: Array<T>) => any) {
+    for (let index = 0; index < array.length; index++) {
+      const element = array[index];
+      iteratorFn(element, index, array);
+    }
+  }
+
   getElement(selector: string): any {
     try {
       return this.config.debugElement.query(

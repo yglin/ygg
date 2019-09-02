@@ -254,11 +254,11 @@
               <ygg-title-divider> 體驗需求 </ygg-title-divider>
             </mat-expansion-panel-header>
             <div class="form-control">
-              <ygg-play-tags-input
-                #playTagsInput
+              <ygg-tags-control
                 formControlName="likeTags"
+                [autocompleteTags]="playTags$"
                 label="喜歡的體驗類型"
-              ></ygg-play-tags-input>
+              ></ygg-tags-control>
               <!-- <ygg-tags-input
                 formControlName="likes"
                 label="喜歡的體驗類型"
