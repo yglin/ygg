@@ -69,8 +69,8 @@
         "allow": [],
         "depConstraints": [
           {
-            "sourceTag": "scope:shared",
-            "onlyDependOnLibsWithTags": ["scope:shared"]
+            "sourceTag": "scope:playwhat",
+            "onlyDependOnLibsWithTags": ["scope:playwhat", "scope:shared"]
           }
         ]
       }

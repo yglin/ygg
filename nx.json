@@ -42,7 +42,7 @@
       "tags": ["scope:playwhat", "type:app", "platform:mobile"]
     },
     "playwhat-e2e": {
-      "tags": []
+      "tags": ["scope:playwhat", "type:e2e", "platform:mobile"]
     },
     "playwhat-scheduler": {
       "tags": ["scope:playwhat", "type:feature", "platform:mobile"]
