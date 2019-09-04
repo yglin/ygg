@@ -5,37 +5,62 @@ import {
   Input,
   Output,
   EventEmitter,
-  OnChanges
+  OnChanges,
+  OnDestroy,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  NgZone
 } from '@angular/core';
 import { GeoPoint } from '../geo-point';
-import { MouseEvent } from '@agm/core';
 import { Subscription } from 'rxjs';
 import { GeolocationService } from '../geolocation.service';
 import { finalize } from 'rxjs/operators';
+import { GoogleMapsApiService } from '../../google-maps-api.service';
 
 @Component({
   selector: 'ygg-google-map',
   templateUrl: './google-map.component.html',
   styleUrls: ['./google-map.component.css']
 })
-export class GoogleMapComponent implements OnInit, OnChanges {
+export class GoogleMapComponent
+  implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() geoPoint: GeoPoint = new GeoPoint();
   @Input() readonly: boolean;
   @Output() changeGeoPoint: EventEmitter<GeoPoint> = new EventEmitter();
+  @ViewChild('googleMap', { static: false }) googleMapElement: ElementRef;
+
   subscriptions: Subscription[] = [];
   zoom = 14;
   googleMap: google.maps.Map;
   mainMarker: google.maps.Marker;
-  isMapReady = false;
+
+  mapReady = false;
   isSupportMyLocation = false;
   isSearchingMyLocation = false;
 
-  constructor(private geolocationService: GeolocationService) {
+  constructor(
+    private geolocationService: GeolocationService,
+    private googleMapsApiService: GoogleMapsApiService,
+    private ngZone: NgZone
+  ) {
     this.isSupportMyLocation = this.geolocationService.isSupport();
   }
 
   ngOnInit() {
     this.readonly = this.readonly !== undefined && this.readonly !== false;
+  }
+
+  ngOnDestroy() {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.googleMapsApiService.getGoogleMapsApi(googleMapsApi =>
+      this.onLoadedGoogleMapsApi()
+    );
   }
 
   ngOnChanges() {
@@ -45,14 +70,31 @@ export class GoogleMapComponent implements OnInit, OnChanges {
     }
   }
 
-  onMapReady(map: google.maps.Map) {
-    this.isMapReady = true;
-    this.googleMap = map;
+  onLoadedGoogleMapsApi() {
+    if (!this.googleMap) {
+      this.googleMap = new google.maps.Map(this.googleMapElement.nativeElement, {
+        zoom: this.zoom,
+
+      });
+      this.googleMap.addListener('click', event => this.ngZone.run(() => {
+        this.onMapClick(event);
+      }));
+    }
     if (this.geoPoint) {
       this.setMainMarker(this.geoPoint);
       this.setMapCenter(this.geoPoint);
     }
+    this.mapReady = true;
   }
+
+  // onMapReady(map: google.maps.Map) {
+  //   this.mapReady = true;
+  //   this.googleMap = map;
+  //   if (this.geoPoint) {
+  //     this.setMainMarker(this.geoPoint);
+  //     this.setMapCenter(this.geoPoint);
+  //   }
+  // }
 
   setMainMarker(geoPoint: GeoPoint) {
     if (this.googleMap) {
@@ -63,9 +105,7 @@ export class GoogleMapComponent implements OnInit, OnChanges {
         position: geoPoint.toGoogleMapsLatLng(),
         animation: google.maps.Animation.DROP
       });
-      if (this.googleMap) {
-        this.mainMarker.setMap(this.googleMap);
-      }
+      this.mainMarker.setMap(this.googleMap);
     }
   }
 
@@ -75,9 +115,9 @@ export class GoogleMapComponent implements OnInit, OnChanges {
     }
   }
 
-  onMapClick(mouseEvent: MouseEvent) {
+  onMapClick(mouseEvent: google.maps.MouseEvent) {
     if (!this.readonly) {
-      this.geoPoint = GeoPoint.fromGoogleMapsLatLng(mouseEvent.coords);
+      this.geoPoint = GeoPoint.fromGoogleMapsLatLng(mouseEvent.latLng);
       this.changeGeoPoint.emit(this.geoPoint);
       this.setMapCenter(this.geoPoint);
       this.setMainMarker(this.geoPoint);

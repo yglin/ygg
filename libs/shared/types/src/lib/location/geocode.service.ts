@@ -3,7 +3,7 @@ import { random, range } from 'lodash';
 import { Injectable } from '@angular/core';
 import { GeoPoint } from './geo-point';
 import { Address } from './address';
-import { Observable, of, AsyncSubject } from 'rxjs';
+import { Observable, of, AsyncSubject, from } from 'rxjs';
 import { delay, switchMap, timeout, catchError, map } from 'rxjs/operators';
 import { GoogleMapsApiService } from './google-maps-api.service';
 
@@ -12,10 +12,10 @@ export class GeocodeService {
   constructor(private googleMapsApiService: GoogleMapsApiService) {}
 
   geoPointToAddress(geoPoint: GeoPoint): Observable<Address> {
-    return this.googleMapsApiService.getGoogleMapsApi().pipe(
-      switchMap(googleMapsApi => {
+    return from(this.googleMapsApiService.getGoogleMapsApi()).pipe(
+      switchMap(() => {
         const doneGeocoding = new AsyncSubject<google.maps.GeocoderResult[]>();
-        const geocoder: google.maps.Geocoder = new googleMapsApi.Geocoder();
+        const geocoder: google.maps.Geocoder = new google.maps.Geocoder();
         geocoder.geocode(
           {
             location: geoPoint.toGoogleMapsLatLng()
@@ -43,10 +43,10 @@ export class GeocodeService {
   }
 
   addressToGeoPoints(address: Address): Observable<GeoPoint[]> {
-    return this.googleMapsApiService.getGoogleMapsApi().pipe(
-      switchMap(googleMapsApi => {
+    return from(this.googleMapsApiService.getGoogleMapsApi()).pipe(
+      switchMap(() => {
         const doneGeocoding = new AsyncSubject<google.maps.GeocoderResult[]>();
-        const geocoder: google.maps.Geocoder = new googleMapsApi.Geocoder();
+        const geocoder: google.maps.Geocoder = new google.maps.Geocoder();
         geocoder.geocode(
           {
             address: address.getFullAddress()

@@ -1,0 +1,4 @@
+<div class="messages">
+  <h5 >Current marker place: {{ geoPoint.latitude }}, {{ geoPoint.longitude }}</h5>
+</div>
+<ygg-google-map [geoPoint]='geoPoint' (changeGeoPoint)='onMoveMarker($event)'></ygg-google-map>

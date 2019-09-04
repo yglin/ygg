@@ -12,9 +12,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LocationComponent } from './location/location.component';
 import { AlbumComponent } from './album/album.component';
 import { TagsComponent } from './tags/tags.component';
+import { GoogleMapComponent } from './google-map/google-map.component';
 
 @NgModule({
-  declarations: [AppComponent, GeoPointComponent, LocationComponent, AlbumComponent, TagsComponent],
+  declarations: [AppComponent, GeoPointComponent, LocationComponent, AlbumComponent, TagsComponent, GoogleMapComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -23,6 +24,7 @@ import { TagsComponent } from './tags/tags.component';
     RouterModule.forRoot([
       { path: 'geo-point', component: GeoPointComponent },
       { path: 'location', component: LocationComponent },
+      { path: 'google-map', component: GoogleMapComponent },
       { path: 'album', component: AlbumComponent },
       { path: 'tags', component: TagsComponent },
     ], { initialNavigation: 'enabled' }),

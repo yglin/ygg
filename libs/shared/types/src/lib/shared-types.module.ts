@@ -36,7 +36,7 @@ import { DayTimeControlComponent } from './day-time/day-time-control/day-time-co
 // import { AddressControlComponent } from './location/address/address-control/address-control.component';
 // import { AddressViewComponent } from './location/address/address-view/address-view.component';
 // import { GeoPointControlComponent, GeoPointViewComponent } from './location/geo-point';
-import { AgmCoreModule } from '@agm/core';
+// import { AgmCoreModule } from '@agm/core';
 import {
   AddressControlComponent,
   AddressViewComponent,
@@ -67,10 +67,10 @@ import { TagsControlComponent, TagsViewComponent } from './tags';
     DynamicFormsMaterialUIModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyBxqFHIHMhy8UdOPpCHrzB-Ktjngsa_UjI',
-      language: 'zh-TW'
-    })
+    // AgmCoreModule.forRoot({
+    //   apiKey: 'AIzaSyBxqFHIHMhy8UdOPpCHrzB-Ktjngsa_UjI',
+    //   language: 'zh-TW'
+    // })
   ],
   declarations: [
     NumberRangeComponent,
