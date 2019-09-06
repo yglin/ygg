@@ -12,6 +12,11 @@ export abstract class PageObject {
   }
 
   getSelector(name?: string): string {
+    if (name && !(name in this.selectors)) {
+      const error = new Error(`Not found css seletor for "${name}" in page object`);
+      this.tester.log(error.message);
+      throw error;
+    }
     const targetSelector =
       name && name in this.selectors ? this.selectors[name] : '';
     return `${this.parentSelector} ${this.selector} ${targetSelector}`.trim();

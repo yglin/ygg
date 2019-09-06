@@ -1,60 +1,66 @@
-<ygg-action-barred
-  >
-  <div yggActionBarredActions>
-    <div><button mat-fab id='submit' (click)=onSubmit()><mat-icon>save</mat-icon></button></div>
-  </div>
-  <div yggActionBarredContent fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="30px">
-    <mat-card id="left-group" class="group-pane">
-      <h4 id="title-left">{{ titleLeft }}</h4>
-      <div class="items-list" id="items-left">
-        <div
-          *ngFor="let item of itemsLeft"
-          class="item"
-          [ngClass]="{ selected: iSelectedIn(item.id, 'left') }"
-          [attr.data-id]="item.id"
-          (click)="onClickItem(item.id, 'left')"
-        >
-          <span class="name">{{ item.name }}</span>
-        </div>
+<div
+  class="item-group-switcher"
+  fxLayout="row"
+  fxLayoutAlign="space-between start"
+  fxLayoutGap="30px"
+>
+  <div id="left-group" class="group-pane">
+    <h4 id="title-left" class="title">{{ titleLeft }}</h4>
+    <div class="action-bar">
+      <ng-content select="[ygg-left-group-actions]"></ng-content>
+    </div>
+    <mat-card class="items-list" id="items-left">
+      <div
+        *ngFor="let item of itemsLeft"
+        class="item"
+        [ngClass]="{ selected: iSelectedIn(item.id, 'left') }"
+        [attr.data-id]="item.id"
+        [attr.name]="item.name"
+        (click)="onClickItem(item.id, 'left')"
+      >
+        <span class="name">{{ item.name }}</span>
       </div>
     </mat-card>
-    <div class="switch-buttons">
-      <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px">
-        <div>
-          <button
-            mat-mini-fab
-            id="move-to-right"
-            [disabled]="!hasSelectedItemsIn('left')"
-            (click)="moveItemsToRight()"
-          >
-            <mat-icon>fast_forward</mat-icon>
-          </button>
-        </div>
-        <div>
-          <button
-            mat-mini-fab
-            id="move-to-left"
-            [disabled]="!hasSelectedItemsIn('right')"
-            (click)="moveItemsToLeft()"
-          >
-            <mat-icon>fast_rewind</mat-icon>
-          </button>
-        </div>
+  </div>
+  <div class="switch-buttons">
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px">
+      <div>
+        <button
+          mat-mini-fab
+          id="move-to-right"
+          [disabled]="!hasSelectedItemsIn('left')"
+          (click)="moveItemsToRight()"
+        >
+          <mat-icon>fast_forward</mat-icon>
+        </button>
+      </div>
+      <div>
+        <button
+          mat-mini-fab
+          id="move-to-left"
+          [disabled]="!hasSelectedItemsIn('right')"
+          (click)="moveItemsToLeft()"
+        >
+          <mat-icon>fast_rewind</mat-icon>
+        </button>
       </div>
     </div>
-    <mat-card id="right-group" class="group-pane">
-      <h4 id="title-right">{{ titleRight }}</h4>
-      <div class="items-list" id="items-right">
-        <div
-          *ngFor="let item of itemsRight"
-          [attr.data-id]="item.id"
-          class="item"
-          [ngClass]="{ selected: iSelectedIn(item.id, 'right') }"
-          (click)="onClickItem(item.id, 'right')"
-        >
-          <span class="name">{{ item.name }}</span>
-        </div>
+  </div>
+  <div id="right-group" class="group-pane">
+    <h4 id="title-right" class="title">{{ titleRight }}</h4>
+    <div class="action-bar">
+      <ng-content select="[ygg-right-group-actions]"></ng-content>
+    </div>
+    <mat-card class="items-list" id="items-right">
+      <div
+        *ngFor="let item of itemsRight"
+        [attr.data-id]="item.id"
+        class="item"
+        [ngClass]="{ selected: iSelectedIn(item.id, 'right') }"
+        (click)="onClickItem(item.id, 'right')"
+      >
+        <span class="name">{{ item.name }}</span>
       </div>
     </mat-card>
-  </div></ygg-action-barred
->
+  </div>
+</div>

@@ -6,11 +6,7 @@ import {
   BusinessHoursViewPageObject
 } from './business-hours.po';
 import { PageObject } from './page-object.po';
-import {
-  LocationViewPageObject,
-  LocationControlPageObject
-} from './location.po';
-import { TagsControlComponentPageObject, TagsViewComponentPageObject } from '@ygg/shared/types/po';
+import { PageObjects } from '@ygg/shared/types';
 import { AngularCypressTester } from '@ygg/shared/infra/test-utils/cypress';
 
 export class PlayFormPageObject extends PageObject {
@@ -60,14 +56,14 @@ export class PlayFormPageObject extends PageObject {
             businessHoursControl.fillIn(play.businessHours);
             break;
           case FormControlType.location:
-            const locationControl = new LocationControlPageObject(
+            const locationControl = new PageObjects.LocationControlComponentPageObject(
               tester,
               `${this.getSelector()} #form-control-${name}`
             );
             locationControl.setValue(play.location);
             break;
           case FormControlType.tags:
-            const tagsControl = new TagsControlComponentPageObject(
+            const tagsControl = new PageObjects.TagsControlComponentPageObject(
               tester,
               `${this.getSelector()} #form-control-${name}`
             );
@@ -128,14 +124,14 @@ export class PlayViewPageObject {
             this.businessHoursView.expect(play[name]);
             break;
           case FormControlType.location:
-            const locationView = new LocationViewPageObject(
+            const locationView = new PageObjects.LocationViewComponentPageObject(
               tester,
               this.selector
             );
             locationView.expectValue(play[name]);
             break;
           case FormControlType.tags:
-            const tagsView = new TagsViewComponentPageObject(
+            const tagsView = new PageObjects.TagsViewComponentPageObject(
               tester,
               this.selector
             );

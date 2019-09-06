@@ -55,10 +55,11 @@ export class AngularJestTester extends Tester {
     return nativeElement.getAttribute(attributeName);
   }
 
-  inputText(selector: string, value: string) {
+  async inputText(selector: string, value: string) {
     const nativeElement: HTMLInputElement = this.getElement(selector);
     nativeElement.value = value;
     nativeElement.dispatchEvent(new Event('input'));
+    await this.wait();
   }
 
   typeInput(selector: string, letter: string) {
@@ -98,11 +99,16 @@ export class AngularJestTester extends Tester {
 
   clickButton(selector: string) {
     const buttonElement: HTMLButtonElement = this.getElement(selector);
+    expect(buttonElement.disabled).toBeFalsy();
     buttonElement.click();
   }
 
   async wait() {
     await this.config.fixture.whenStable();
     this.config.fixture.detectChanges();
+  }
+
+  log(message: string) {
+    console.log(message);
   }
 }

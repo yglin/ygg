@@ -32,6 +32,7 @@ export abstract class Tester {
   abstract slideToggle(selector: string, value: boolean, ...args: any[]): void;
   abstract clickButton(selector: string): void;
   abstract async wait();
+  abstract log(message: string);
 
   getConfig(name: string): any {
     return this.config[name];

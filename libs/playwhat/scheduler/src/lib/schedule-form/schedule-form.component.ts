@@ -17,7 +17,7 @@ import {
 } from '@angular/forms';
 import { NumberRange, Contact, Tags } from '@ygg/shared/types';
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { first, switchMap } from 'rxjs/operators';
+import { first, switchMap, map } from 'rxjs/operators';
 
 import { ScheduleForm } from './schedule-form';
 import { ScheduleFormService } from './schedule-form.service';
@@ -85,7 +85,9 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
           this.agentUsers = [];
         }
       });
-    this.playTags$ = this.playTagService.playTags$;
+    this.playTags$ = this.playTagService.playTags$.pipe(
+      map(playTags => new Tags(playTags))
+    );
   }
 
   ngOnInit() {

@@ -1,5 +1,6 @@
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { PlayAdminService } from './admin/play-admin.service';
 import { PlaywhatAdminService } from '@ygg/playwhat/admin';
 import { adminMenu } from './admin';
@@ -9,7 +10,7 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 @NgModule({
   declarations: [AdminPlayTagsComponent],
   entryComponents: [AdminPlayTagsComponent],
-  imports: [CommonModule, SharedUiWidgetsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, SharedUiWidgetsModule],
   providers: [
     {
       provide: APP_INITIALIZER,

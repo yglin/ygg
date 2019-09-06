@@ -63,4 +63,8 @@ export class AngularCypressTester extends Tester {
 
   async wait() {
   }
+
+  log(message: string) {
+    cy.log(message);
+  }
 }

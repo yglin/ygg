@@ -1,9 +1,14 @@
-import { remove } from "lodash";
+import { remove, find } from "lodash";
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 export interface GroupSwitchableItem {
   id: string;
   name: string;
+}
+
+export interface GroupSwitcherChangeEvent {
+  left: GroupSwitchableItem[];
+  right: GroupSwitchableItem[];
 }
 
 @Component({
@@ -35,7 +40,8 @@ export class ItemsGroupSwitcherComponent implements OnInit {
     return this._itemsRight;
   }
   @Input() titleRight: string = 'Right Items';
-  @Output() submit: EventEmitter<any> = new EventEmitter();
+  @Output() change: EventEmitter<GroupSwitcherChangeEvent> = new EventEmitter();
+  @Output() selectLeft: EventEmitter<GroupSwitchableItem[]> = new EventEmitter();
 
   selectionMap: { [SetId: string]: Set<string> } = {
     left: new Set([]),
@@ -46,12 +52,24 @@ export class ItemsGroupSwitcherComponent implements OnInit {
 
   ngOnInit() {}
 
+  notifyChange() {
+    this.change.emit({
+      left: this.itemsLeft,
+      right: this.itemsRight
+    });
+  }
+
   onClickItem(id: string, setId: string) {
     if (setId in this.selectionMap) {
       if (this.selectionMap[setId].has(id)) {
         this.selectionMap[setId].delete(id);
       } else {
         this.selectionMap[setId].add(id);
+      }
+
+      if (setId === 'left') {
+        const selectedLeftItem = this.itemsLeft.filter(item => this.selectionMap[setId].has(item.id));
+        this.selectLeft.emit(selectedLeftItem);
       }
     }
   }
@@ -70,6 +88,7 @@ export class ItemsGroupSwitcherComponent implements OnInit {
     // console.log(`Move \n${items.join('\n')}\nto right group`);
     this.itemsRight.push.apply(this.itemsRight, items);
     this.selectionMap['left'].clear();
+    this.notifyChange();
   }
 
   moveItemsToLeft() {
@@ -78,12 +97,6 @@ export class ItemsGroupSwitcherComponent implements OnInit {
     // console.log(`Move \n${items.join('\n')}\nto right group`);
     this.itemsLeft.push.apply(this.itemsLeft, items);
     this.selectionMap['right'].clear();
-  }
-
-  onSubmit() {
-    this.submit.emit({
-      left: this.itemsLeft,
-      right: this.itemsRight
-    });
+    this.notifyChange();
   }
 }

@@ -166,6 +166,10 @@ export class DataAccessService {
       .then(() => item);
   }
 
+  async delete(collection: string, itemId: string) {
+    return this.getCollection(collection).doc(itemId).delete();
+  }
+
   async setDataObject<T>(path: string, data: T) {
     return this.fireRealDB.object<T>(path).set(data);
   }

@@ -8,5 +8,5 @@
   "videosFolder": "../../dist/out-tsc/apps/playwhat-e2e/videos",
   "screenshotsFolder": "../../dist/out-tsc/apps/playwhat-e2e/screenshots",
   "chromeWebSecurity": false,
-  "testFiles": "**/play.spec.*"
+  "testFiles": "**/tags.spec.*"
 }
