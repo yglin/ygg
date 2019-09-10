@@ -73,6 +73,9 @@
     },
     "shared-types-demo": {
       "tags": ["scope:demo", "type:app"]
+    },
+    "playwhat-tag": {
+      "tags": ["scope:playwhat", "type:feature", "platform:mobile"]
     }
   }
 }

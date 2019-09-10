@@ -56,14 +56,18 @@ export class DataAccessService {
 
   list$<T extends DataItem>(
     collection: string,
-    constructor: { new (): T }
+    constructor?: new () => T
   ): Observable<T[]> {
     return this.firestore
-      .collection(collection)
+      .collection<T>(collection)
       .valueChanges()
       .pipe(
         map(items => {
-          return items.map(item => new constructor().fromJSON(item));
+          if (constructor) {
+            return items.map(item => new constructor().fromJSON(item));
+          } else {
+            return items;
+          }
         })
       );
   }
@@ -71,18 +75,20 @@ export class DataAccessService {
   get$<T extends DataItem>(
     collection: string,
     id: string,
-    constructor: {
-      new (): T;
-    }
+    constructor?: new () => T
   ): Observable<T> {
     return this.getCollection(collection)
-      .doc(id)
+      .doc<T>(id)
       .snapshotChanges()
       .pipe(
         map(action => {
           const snapshot = action.payload;
           if (snapshot.exists) {
-            return new constructor().fromJSON(snapshot.data());
+            if (constructor) {
+              return new constructor().fromJSON(snapshot.data());
+            } else {
+              return snapshot.data();
+            }
           } else {
             throw new DataAccessError(
               DataAccessErrorCode.DataNotFound,
@@ -97,9 +103,7 @@ export class DataAccessService {
   listByIds$<T extends DataItem>(
     collection: string,
     ids: string[],
-    constructor: {
-      new (): T;
-    }
+    constructor?: new () => T
   ): Observable<T[]> {
     if (isEmpty(ids)) {
       return of([]);
@@ -118,9 +122,7 @@ export class DataAccessService {
   find$<T extends DataItem>(
     collection: string,
     query: Query | Query[],
-    constructor: {
-      new (): T;
-    }
+    constructor: new () => T
   ): Observable<T[]> {
     let queries: Query[];
     if (isArray(query)) {
@@ -141,7 +143,7 @@ export class DataAccessService {
   findWithOr$<T extends DataItem>(
     collection: string,
     queries: Query[],
-    constructor: { new (): T }
+    constructor: new () => T
   ): Observable<T[]> {
     const findings = queries.map(query =>
       this.find$(collection, query, constructor)
@@ -156,9 +158,7 @@ export class DataAccessService {
   upsert<T extends DataItem>(
     collection: string,
     item: T,
-    constructor: {
-      new (): T;
-    }
+    constructor: new () => T
   ): Promise<T> {
     return this.getCollection(collection)
       .doc(item.id)

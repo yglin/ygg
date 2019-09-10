@@ -1,0 +1,60 @@
+<div class=".tags-control">
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+    <div>
+      <h4 *ngIf="label" class="label">{{ label }}</h4>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+      <div>
+        <button id="add-tag" mat-mini-fab (click)="addTag()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <div>
+        <button id="clear-all" mat-mini-fab (click)="clearTags()">
+          <mat-icon>delete_sweep</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <mat-form-field>
+      <mat-chip-list #chipList>
+        <mat-chip
+          *ngFor="let name of tags.getNames()"
+          [value]="name"
+          [attr.tagName]='name'
+          removable
+          (removed)="removeChip($event)"
+          class='tag-chip'
+        >
+          {{ name }}
+          <mat-icon matChipRemove class='delete'>cancel</mat-icon>
+        </mat-chip>
+        <input
+          id="tag-name"
+          [placeholder]="label"
+          #tagInput
+          [matAutocomplete]="auto"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="addChip($event)"
+        />
+      </mat-chip-list>
+      <mat-autocomplete
+        class="autocomplete-panel"
+        #auto="matAutocomplete"
+        (optionSelected)="addSelected($event)"
+      >
+        <mat-option *ngFor="let name of tagsForAutoComplete" [value]="name" [attr.tagName]='name'>
+          {{ name }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-icon
+        class="toggle-button"
+        matSuffix
+        (click)="toggleAutoComplete($event)"
+        >{{ auto.isOpen ? 'arrow_drop_up' : 'arrow_drop_down' }}</mat-icon
+      >
+    </mat-form-field>
+  </div>
+</div>

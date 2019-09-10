@@ -68,8 +68,8 @@ export class PlayFormComponent implements OnInit, OnDestroy {
         alert('新增體驗完成');
         this.router.navigate([this.play.id], { relativeTo: this.route.parent });
       } catch (error) {
-        alert('新增體驗失敗');
-        this.logService.error(error);
+        alert(`新增體驗失敗，錯誤：${error.message}`);
+        // this.logService.error(error);
       }
     }
   }

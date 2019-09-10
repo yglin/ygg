@@ -25,7 +25,7 @@ describe('New tags source from user inputs in various scenarios', () => {
     login();
   });
 
-  it('From new play', async () => {
+  it('From new play', () => {
     siteNavigator.goto(['plays', 'new']);
     playFormPageObject.fillIn(testPlay);
     playFormPageObject.submit();
@@ -39,13 +39,24 @@ describe('New tags source from user inputs in various scenarios', () => {
       cy.wrap(newPlayId).as('newPlayId');
     });
 
-    siteNavigator.goto(['admin', 'play', 'tags']).then(() => {
-      adminPlayTagsPageObject.expectTag(testTag);
-      adminPlayTagsPageObject.removeTag(testTag);
-      cy.get('@newPlayId').then(newPlayId => {
-        // @ts-ignore
-        cy.callFirestore('delete', `plays/${newPlayId}`);
-      });
+    siteNavigator.goto(['admin', 'play', 'tags']);
+    cy.get(adminPlayTagsPageObject.getSelector('searchInput')).type(testTag);
+    cy.get(adminPlayTagsPageObject.tagSelector(testTag)).should('be.visible');
+    cy.get(adminPlayTagsPageObject.tagSelector(testTag)).click();
+    cy.get(adminPlayTagsPageObject.getSelector('removeButton')).click();
+    cy.get(adminPlayTagsPageObject.tagSelector(testTag)).should('not.be.visible');
+
+    cy.get('@newPlayId').then(newPlayId => {
+      // @ts-ignore
+      cy.callFirestore('delete', `plays/${newPlayId}`);
     });
+    // siteNavigator.goto(['admin', 'play', 'tags']).then(async () => {
+    //   await adminPlayTagsPageObject.expectTag(testTag);
+    //   await adminPlayTagsPageObject.removeTag(testTag);
+    //   cy.get('@newPlayId').then(newPlayId => {
+    //     // @ts-ignore
+    //     cy.callFirestore('delete', `plays/${newPlayId}`);
+    //   });
+    // });
   });
 });

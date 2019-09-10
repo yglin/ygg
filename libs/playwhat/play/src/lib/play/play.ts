@@ -5,12 +5,11 @@ import {
   Album,
   BusinessHours,
   Location,
-  Tags,
   FormGroupModel,
   FormControlModel,
   FormControlType,
 } from '@ygg/shared/types';
-import { PlayTag } from '../tag';
+import { Tags } from '@ygg/playwhat/tag';
 
 export class Play implements DataItem {
   id: string;
@@ -43,7 +42,7 @@ export class Play implements DataItem {
     newOne.album = Album.forge();
     newOne.businessHours = BusinessHours.forge();
     newOne.location = Location.forge();
-    newOne.tags = new Tags(range(random(2, 5)).map(() => PlayTag.forge()));
+    newOne.tags = Tags.forge();
     return newOne;
   }
 
@@ -119,7 +118,7 @@ export class Play implements DataItem {
       this.location = new Location().fromJSON(data.location);
     }
     if (isArray(data.tags)) {
-      this.tags = new Tags(data.tags.map(tag => new PlayTag(tag)));
+      this.tags = new Tags().fromJSON(data.tags);
     }
     return this;
   }

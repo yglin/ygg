@@ -1,0 +1,11 @@
+.tags-control {
+  width: 100%;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.delete {
+  cursor: pointer;
+}

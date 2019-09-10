@@ -35,6 +35,7 @@ export class PlayTagService {
   }
 
   upsert(tag: PlayTag): Promise<PlayTag> {
+    console.log(this.collection);
     return this.dataAccessService.upsert(this.collection, tag, PlayTag);
   }
 
@@ -55,9 +56,11 @@ export class PlayTagService {
     const tagsInStock: PlayTag[] = await this.list$()
       .pipe(take(1))
       .toPromise();
-    const newTags = tags.filter(
+    const newTags: PlayTag[] = tags.filter(
       tag => !find(tagsInStock, _tag => _tag.name === tag.name)
     );
+    console.log(tagsInStock);
+    console.log(newTags);
     return Promise.all(newTags.map(newTag => this.upsert(newTag)));
   }
 }

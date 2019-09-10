@@ -36,9 +36,16 @@
       "@ygg/shared/infra/device-adapter": [
         "libs/shared/infra/device-adapter/src/index.ts"
       ],
-      "@ygg/shared/infra/test-utils": ["libs/shared/infra/test-utils/src/index.ts"],
-      "@ygg/shared/infra/test-utils/cypress": ["libs/shared/infra/test-utils/src/lib/test-framworks/angular-cypress/index.ts"],
-      "@ygg/shared/infra/test-utils/jest": ["libs/shared/infra/test-utils/src/lib/test-framworks/angular-jest/index.ts"]
+      "@ygg/shared/infra/test-utils": [
+        "libs/shared/infra/test-utils/src/index.ts"
+      ],
+      "@ygg/shared/infra/test-utils/cypress": [
+        "libs/shared/infra/test-utils/src/lib/test-framworks/angular-cypress/index.ts"
+      ],
+      "@ygg/shared/infra/test-utils/jest": [
+        "libs/shared/infra/test-utils/src/lib/test-framworks/angular-jest/index.ts"
+      ],
+      "@ygg/playwhat/tag": ["libs/playwhat/tag/src/index.ts"]
     },
     "rootDir": "."
   },
