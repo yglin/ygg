@@ -21,7 +21,7 @@
       "tags": ["scope:shopping", "type:feature", "platform:desktop"]
     },
     "firebase-functions": {
-      "tags": ["scope:backend", "type:app"]
+      "tags": ["scope:playwhat", "type:backend"]
     },
     "shared-infra-error": {
       "tags": ["scope:shared", "type:infrastructure"]
@@ -76,6 +76,15 @@
     },
     "playwhat-tag": {
       "tags": ["scope:playwhat", "type:feature", "platform:mobile"]
+    },
+    "shared-infra-log": {
+      "tags": ["scope:shared", "type:util"]
+    },
+    "shared-infra-test-utils": {
+      "tags": ["scope:shared", "type:utils"]
+    },
+    "shared-ui-ng-material": {
+      "tags": ["scope:shared", "type:ui"]
     }
   }
 }

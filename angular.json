@@ -868,6 +868,90 @@
         }
       },
       "schematics": {}
+    },
+    "shared-infra-log": {
+      "projectType": "library",
+      "root": "libs/shared/infra/log",
+      "sourceRoot": "libs/shared/infra/log/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/infra/log/tsconfig.lib.json",
+              "libs/shared/infra/log/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/infra/log/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/infra/log/jest.config.js",
+            "tsConfig": "libs/shared/infra/log/tsconfig.spec.json",
+            "setupFile": "libs/shared/infra/log/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shared-infra-test-utils": {
+      "projectType": "library",
+      "root": "libs/shared/infra/test-utils",
+      "sourceRoot": "libs/shared/infra/test-utils/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/infra/test-utils/tsconfig.lib.json",
+              "libs/shared/infra/test-utils/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/infra/test-utils/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/infra/test-utils/jest.config.js",
+            "tsConfig": "libs/shared/infra/test-utils/tsconfig.spec.json",
+            "setupFile": "libs/shared/infra/test-utils/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shared-ui-ng-material": {
+      "projectType": "library",
+      "root": "libs/shared/ui/ng-material",
+      "sourceRoot": "libs/shared/ui/ng-material/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/ng-material/tsconfig.lib.json",
+              "libs/shared/ui/ng-material/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/ui/ng-material/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/ng-material/jest.config.js",
+            "tsConfig": "libs/shared/ui/ng-material/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/ng-material/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {
