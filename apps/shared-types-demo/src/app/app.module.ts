@@ -13,9 +13,11 @@ import { LocationComponent } from './location/location.component';
 import { AlbumComponent } from './album/album.component';
 import { TagsComponent } from './tags/tags.component';
 import { GoogleMapComponent } from './google-map/google-map.component';
+import { ChipsControlDemoComponent } from './chips-control/chips-control.component';
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 @NgModule({
-  declarations: [AppComponent, GeoPointComponent, LocationComponent, AlbumComponent, TagsComponent, GoogleMapComponent],
+  declarations: [AppComponent, GeoPointComponent, LocationComponent, AlbumComponent, TagsComponent, GoogleMapComponent, ChipsControlDemoComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -27,9 +29,11 @@ import { GoogleMapComponent } from './google-map/google-map.component';
       { path: 'google-map', component: GoogleMapComponent },
       { path: 'album', component: AlbumComponent },
       { path: 'tags', component: TagsComponent },
+      { path: 'chips-control', component: ChipsControlDemoComponent },
     ], { initialNavigation: 'enabled' }),
     SharedUiNgMaterialModule,
     SharedTypesModule,
+    SharedUiWidgetsModule,
     BrowserAnimationsModule
   ],
   providers: [],

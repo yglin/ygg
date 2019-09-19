@@ -16,14 +16,13 @@ export class PlayFactoryService {
 
   createModel(): FormGroupModel {
     const playModel = Play.getFormModel();
-    playModel.controls['tags'].options = {
-      autocompleteTags: this.playTagsService.playTags$
-    };
     return playModel;
   }
 
   createFormGroup(): FormGroup {
     const formGroupModel = this.createModel();
-    return this.formFactoryService.buildGroup(formGroupModel);
+    const formGroup = this.formFactoryService.buildGroup(formGroupModel);
+    formGroup.addControl('tags', new FormControl(new Tags()));
+    return formGroup;
   }
 }

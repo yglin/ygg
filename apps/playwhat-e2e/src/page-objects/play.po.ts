@@ -9,9 +9,12 @@ import { PageObject } from './page-object.po';
 import { PageObjects } from '@ygg/shared/types';
 import { AngularCypressTester } from '@ygg/shared/infra/test-utils/cypress';
 
+import { TagsControlPageObject, TagsViewComponentPageObject } from "./tags.po";
+
 export class PlayFormPageObject extends PageObject {
   selector = '.play-form';
   selectors = {
+    tagsControl: '.tags-control',
     buttonSubmit: 'button#submit'
   };
 
@@ -62,13 +65,13 @@ export class PlayFormPageObject extends PageObject {
             );
             locationControl.setValue(play.location);
             break;
-          case FormControlType.tags:
-            const tagsControl = new PageObjects.TagsControlComponentPageObject(
-              tester,
-              `${this.getSelector()} #form-control-${name}`
-            );
-            tagsControl.setValue(play.tags);
-            break;
+          // case FormControlType.tags:
+          //   const tagsControl = new PlaywhatTagPageObjects.TagsControlComponentPageObject(
+          //     tester,
+          //     `${this.getSelector()} #form-control-${name}`
+          //   );
+          //   tagsControl.setValue(play.tags);
+          //   break;
           default:
             cy.log(
               `Can not find fillIn method for control type = ${controlModel.type}`
@@ -77,6 +80,8 @@ export class PlayFormPageObject extends PageObject {
         }
       }
     }
+    const tagsControlPO = new TagsControlPageObject(`${this.getSelector('tagsControl')}`);
+    tagsControlPO.setValue(play.tags);
   }
 
   submit() {
@@ -101,13 +106,13 @@ export class PlayViewPageObject {
 
   checkData(play: Play) {
     const formModel = Play.getFormModel();
+    const tester = new AngularCypressTester({});
     for (const name in formModel.controls) {
       if (
         formModel.controls.hasOwnProperty(name) &&
         play.hasOwnProperty(name)
       ) {
         const controlModel = formModel.controls[name];
-        const tester = new AngularCypressTester({});
         let valueSelector = '';
         switch (controlModel.type) {
           case FormControlType.text:
@@ -130,13 +135,13 @@ export class PlayViewPageObject {
             );
             locationView.expectValue(play[name]);
             break;
-          case FormControlType.tags:
-            const tagsView = new PageObjects.TagsViewComponentPageObject(
-              tester,
-              this.selector
-            );
-            tagsView.expectValue(play[name]);
-            break;
+          // case FormControlType.tags:
+          //   const tagsView = new PageObjects.TagsViewComponentPageObject(
+          //     tester,
+          //     this.selector
+          //   );
+          //   tagsView.expectValue(play[name]);
+          //   break;
           default:
             cy.log(
               `Can not find fillIn method for control type = ${controlModel.type}`
@@ -145,5 +150,7 @@ export class PlayViewPageObject {
         }
       }
     }
+    const tagsView = new TagsViewComponentPageObject(`${this.selector}`);
+    tagsView.expectValue(play.tags);
   }
 }

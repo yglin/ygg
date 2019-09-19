@@ -19,6 +19,7 @@ import { ReactiveTextInputComponent } from './reactive-text-input/reactive-text-
 import { ItemsGroupSwitcherComponent } from './items-group-switcher/items-group-switcher.component';
 import { TimeInputComponent } from './time-input/time-input.component';
 import { AmazingTimePickerModule } from "amazing-time-picker";
+import { ChipsControlComponent } from './chips-control/chips-control.component';
 @NgModule({
   declarations: [
     ProgressSpinnerComponent,
@@ -32,6 +33,7 @@ import { AmazingTimePickerModule } from "amazing-time-picker";
     ReactiveTextInputComponent,
     ItemsGroupSwitcherComponent,
     TimeInputComponent,
+    ChipsControlComponent,
   ],
   imports: [
     CommonModule,
@@ -53,6 +55,7 @@ import { AmazingTimePickerModule } from "amazing-time-picker";
     ReactiveTextInputComponent,
     ItemsGroupSwitcherComponent,
     TimeInputComponent,
+    ChipsControlComponent,
   ],
   entryComponents: [ProgressSpinnerComponent, YggDialogComponent]
 })

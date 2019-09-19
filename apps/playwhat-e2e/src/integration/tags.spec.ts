@@ -8,8 +8,9 @@ import { PageObjects } from '@ygg/playwhat/play';
 import { Play } from '@ygg/playwhat/play';
 import { v4 as uuid } from 'uuid';
 import { AngularCypressTester } from '@ygg/shared/infra/test-utils/cypress';
+import { TagsAdminPageObject } from "../page-objects/tags-admin.po";
 
-describe('New tags source from user inputs in various scenarios', () => {
+describe('Add new tags from various user activities', () => {
   const siteNavigator = new SiteNavigator();
   const tester = new AngularCypressTester({});
   const adminPlayTagsPageObject = new PageObjects.AdminPlayTagsPageObject(
@@ -19,16 +20,18 @@ describe('New tags source from user inputs in various scenarios', () => {
   const testTag = uuid();
   testPlay.tags.push(testTag);
   const playFormPageObject = new PlayFormPageObject();
+  const tagsAdminPageObject = new TagsAdminPageObject();
 
   beforeEach(() => {
     cy.visit('/');
     login();
   });
 
-  it('From new play', () => {
+  it('From creating/updating play', () => {
     siteNavigator.goto(['plays', 'new']);
     playFormPageObject.fillIn(testPlay);
     playFormPageObject.submit();
+    cy.url().should('not.match', /\/plays\/new/);
     cy.url().should('match', /\/plays\/(.+)/);
 
     cy.location().then(loc => {
@@ -40,11 +43,7 @@ describe('New tags source from user inputs in various scenarios', () => {
     });
 
     siteNavigator.goto(['admin', 'play', 'tags']);
-    cy.get(adminPlayTagsPageObject.getSelector('searchInput')).type(testTag);
-    cy.get(adminPlayTagsPageObject.tagSelector(testTag)).should('be.visible');
-    cy.get(adminPlayTagsPageObject.tagSelector(testTag)).click();
-    cy.get(adminPlayTagsPageObject.getSelector('removeButton')).click();
-    cy.get(adminPlayTagsPageObject.tagSelector(testTag)).should('not.be.visible');
+    tagsAdminPageObject.expectTags(testPlay.tags);
 
     cy.get('@newPlayId').then(newPlayId => {
       // @ts-ignore

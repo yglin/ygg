@@ -1,58 +1,39 @@
-import { Tester } from "../test-framworks";
+export interface SelectorsConfig {
+  main: string;
+  [elementName: string]: string;
+}
 
 export abstract class PageObject {
   parentSelector: string = '';
-  selector: string = '';
-  selectors: { [index: string]: string } = {};
-  tester: Tester
+  selectors: SelectorsConfig;
 
-  constructor(tester: Tester, parentSelector: string = '') {
-    this.tester = tester;
+  constructor(parentSelector: string = '', selectorsConfig: SelectorsConfig = { main: '' }) {
     this.parentSelector = parentSelector;
+    this.selectors = selectorsConfig;
   }
 
-  getSelector(name?: string): string {
-    if (name && !(name in this.selectors)) {
-      const error = new Error(`Not found css seletor for "${name}" in page object`);
-      this.tester.log(error.message);
-      throw error;
+  getSelector(nameOrSelector?: string): string {
+    const rootSelector = `${this.parentSelector} ${this.selectors.main}`.trim();
+    if (!nameOrSelector) {
+      // console.log(`Return root selector: ${rootSelector}`);
+      return rootSelector;
     }
-    const targetSelector =
-      name && name in this.selectors ? this.selectors[name] : '';
-    return `${this.parentSelector} ${this.selector} ${targetSelector}`.trim();
-  }
-
-  getElement(name?: string): any {
-    return this.tester.getElement(this.getSelector(name));
-  }
-
-  getTextContent(name: string): string {
-    return this.tester.getTextContent(this.getSelector(name));
-  }
-
-  expectTextContent(name: string, text: string) {
-    this.tester.expectTextContent(this.getSelector(name), text);
+    if (this.selectors.hasOwnProperty(nameOrSelector)) {
+      // It's a ui name predefined in selectors
+      // console.log(`Found selector "${this.selectors[nameOrSelector]}" by element name ${nameOrSelector}`);
+      return `${rootSelector} ${this.selectors[nameOrSelector]}`.trim();
+    } else {
+      // It's a raw selector string
+      // console.log(`This seems a raw selector: ${nameOrSelector}`);
+      return `${nameOrSelector}`.trim();
+    }
   }
 }
 
 export abstract class ControlPageObject<T> extends PageObject {
-  // constructor(
-  //   tester: Tester,
-  //   parentSelector: string
-  // ) {
-  //   super(tester, parentSelector);
-  // }
-
   abstract async setValue(value: T);
 }
 
 export abstract class ViewPageObject<T> extends PageObject {
-  // constructor(
-  //   tester: Tester,
-  //   parentSelector: string
-  // ) {
-  //   super(tester, parentSelector);
-  // }
-
   abstract async expectValue(value: T);
 }

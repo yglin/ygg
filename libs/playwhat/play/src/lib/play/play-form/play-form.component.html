@@ -20,6 +20,8 @@
             [model]="controlModel"
             [id]="'form-control-' + controlModel.name"
           ></ygg-form-control>
+          <br>
+          <ygg-tags-control formControlName='tags' taggableType='play' label='體驗類型標籤'></ygg-tags-control>
         </mat-tab>
         <mat-tab label="預先檢視">
           <ygg-play-view [play]="play"></ygg-play-view>

@@ -1,8 +1,9 @@
+import 'hammerjs';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlayFormComponent } from './play-form.component';
 import { DebugElement, Injectable } from '@angular/core';
-import { isDisabled, setInputValue } from '@ygg/shared/infra/test-utils';
+import { isDisabled, PageObject } from '@ygg/shared/infra/test-utils';
 import { Play } from '../play';
 import { hasValidator, FormControlType } from '@ygg/shared/types';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -12,17 +13,22 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedTypesModule } from '@ygg/shared/types';
+import { MockComponent } from "ng-mocks";
+import { PlayViewComponent } from '../play-view/play-view.component';
 
 describe('PlayFormComponent', () => {
   @Injectable()
   class MockLogService {}
 
   @Injectable()
-  class MockPlayService {}
+  class MockPlayService {
+    async upsert(play: Play) {};
+  }
 
   let component: PlayFormComponent;
   let fixture: ComponentFixture<PlayFormComponent>;
   let debugElement: DebugElement;
+  let mockPlayService: MockPlayService;
 
   const playFormModel = Play.getFormModel();
   const testPlay = Play.forge();
@@ -41,7 +47,7 @@ describe('PlayFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [PlayFormComponent],
+      declarations: [PlayFormComponent, MockComponent(PlayViewComponent)],
       imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -61,6 +67,7 @@ describe('PlayFormComponent', () => {
     fixture = TestBed.createComponent(PlayFormComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
+    mockPlayService = TestBed.get(PlayService);
     fixture.detectChanges();
   });
 
@@ -74,8 +81,8 @@ describe('PlayFormComponent', () => {
       if (playFormModel.controls.hasOwnProperty(name)) {
         const controlModel = playFormModel.controls[name];
         if (hasValidator(controlModel, 'required')) {
-          // component.formGroup.get(name).setValue(testPlay[name]);
-          setInputValue(debugElement, controlModel.type, name, testPlay[name]);
+          component.formGroup.get(name).setValue(testPlay[name]);
+          // setInputValue(debugElement, controlModel.type, name, testPlay[name]);
           // console.log(`Set value "${testPlay[name]}" to ${name}`);
         }
       }
@@ -85,5 +92,14 @@ describe('PlayFormComponent', () => {
     expect(component.formGroup.valid).toBe(true);
     expect(isDisabled(debugElement, 'button#submit')).toBe(false);
     done();
+  });
+
+  it('Should submit consistent data', async done => {
+    jest.spyOn(mockPlayService, 'upsert').mockImplementation(async (play: Play) => {
+      expect(play.toJSON()).toEqual(testPlay.toJSON());
+      done();
+    });
+    component.formGroup.setValue(testPlay);
+    component.onSubmit();
   });
 });
