@@ -13,6 +13,10 @@ export class Tags implements SerializableJSON {
     return new Tags(range(random(5,10)).map(() => Tag.forge()));
   }
 
+  static fromJSON(data: any): Tags {
+    return new Tags().fromJSON(data);
+  }
+
   constructor(arg1?: Tags | Tag[] | string[]) {
     this.tags = [];
 
@@ -75,6 +79,6 @@ export class Tags implements SerializableJSON {
   }
 
   toJSON(): any {
-    return this.tags.map(tag => tag.toJSON());
+    return this.tags.map(tag => tag.id);
   }
 }
