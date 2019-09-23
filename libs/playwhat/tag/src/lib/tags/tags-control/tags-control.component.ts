@@ -49,6 +49,7 @@ export class TagsControlComponent
     if (this.taggableType && !this.optionTags$) {
       this.optionTags$ = this.tagService.getOptionTags$(this.taggableType);
     }
+    console.log(`Taggable type = ${this.taggableType}, optionTags$ = ${this.optionTags$}`);
     if (this.optionTags$) {
       this.subscriptions.push(
         this.optionTags$.subscribe(tags => {

@@ -31,6 +31,10 @@ export class Tags implements SerializableJSON {
     }
   }
 
+  isEmpty(): boolean {
+    return isEmpty(this.tags);
+  }
+
   getNames(): string[] {
     return this.tags.map(tag => tag.name);
   }

@@ -1,10 +1,10 @@
 import { noop, find, remove } from "lodash";
-import { Component, OnInit, Input, forwardRef, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, forwardRef, AfterViewInit, ViewChild, ElementRef, OnDestroy, OnChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatChipEvent, MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
-import { Observable, merge, fromEvent, Subscription } from 'rxjs';
-import { map, startWith, debounceTime, distinctUntilChanged, combineLatest } from 'rxjs/operators';
+import { Observable, merge, fromEvent, Subscription, BehaviorSubject, combineLatest } from 'rxjs';
+import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 
 @Component({
@@ -19,9 +19,10 @@ import { ENTER, COMMA } from '@angular/cdk/keycodes';
     }
   ]
 })
-export class ChipsControlComponent implements OnInit, OnDestroy, AfterViewInit, ControlValueAccessor {
+export class ChipsControlComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit, ControlValueAccessor {
   @Input() label: string;
   @Input() autocompleteOptions: string[] = [];
+  autocompleteOptions$: BehaviorSubject<string[]> = new BehaviorSubject(this.autocompleteOptions);
   autocompleteOptionsFiltered: string[] = [];
   emitChange: (chips: string[]) => any = noop;
   chips: string[] = [];
@@ -51,10 +52,10 @@ export class ChipsControlComponent implements OnInit, OnDestroy, AfterViewInit, 
   
   constructor() { }
 
-  ngOnInit() {
-    if (this.autocompleteOptions) {
-      this.autocompleteOptionsFiltered = this.autocompleteOptions;
-    }
+  ngOnInit() {}
+
+  ngOnChanges() {
+    this.autocompleteOptions$.next(this.autocompleteOptions);
   }
 
   ngAfterViewInit() {
@@ -68,7 +69,7 @@ export class ChipsControlComponent implements OnInit, OnDestroy, AfterViewInit, 
       distinctUntilChanged(),
     );
 
-    const subscription = inputKeyword$.subscribe(inputKeyword => {
+    const subscription = combineLatest([inputKeyword$, this.autocompleteOptions$]).subscribe(([inputKeyword, autocompleteOptions]) => {
       // Things changed, close autocomplete panel in advance
       this.isDisplayAutocompleteSelector = false;
       if (
@@ -76,14 +77,14 @@ export class ChipsControlComponent implements OnInit, OnDestroy, AfterViewInit, 
         inputKeyword.length >= this.minCountOfLettersForAutoComplete
       ) {
         // console.dir(autocompleteTagsSource.getNames());
-        this.autocompleteOptionsFiltered = this.autocompleteOptions
+        this.autocompleteOptionsFiltered = autocompleteOptions
           .filter(chip => chip.includes(inputKeyword));
         if (this.autocompleteOptionsFiltered.length > 0) {
           // Open autocomplete panel, only when input over 2 letters and matched
           this.isDisplayAutocompleteSelector = true;
         }
       } else {
-        this.autocompleteOptionsFiltered = this.autocompleteOptions;
+        this.autocompleteOptionsFiltered = autocompleteOptions;
       }
     });
     this.subscriptions.push(subscription);

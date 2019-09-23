@@ -133,8 +133,8 @@ import { TagsControlComponent, TagsViewComponent } from './tags';
     LocationControlComponent,
     LocationViewComponent,
     GoogleMapComponent,
-    TagsControlComponent,
-    TagsViewComponent
+    // TagsControlComponent,
+    // TagsViewComponent
   ]
 })
 export class SharedTypesModule {}

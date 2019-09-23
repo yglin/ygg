@@ -90,12 +90,6 @@ export class Play implements DataItem {
         label: '地點',
         default: new Location()
       },
-      tags: {
-        name: 'tags',
-        type: FormControlType.tags,
-        label: '體驗類型',
-        default: []
-      },
     };
 
     const formModel = { name: 'play-form', controls };

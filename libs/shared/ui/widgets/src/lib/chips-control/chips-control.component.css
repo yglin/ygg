@@ -1,5 +1,6 @@
 .chips-control {
-  width: 100%;
+  width: 90vw;
+  max-width: 640px;
 }
 
 .mat-form-field {

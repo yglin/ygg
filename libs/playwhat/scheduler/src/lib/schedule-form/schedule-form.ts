@@ -4,7 +4,8 @@ import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
 // import {BadValueError, BadValueErrorCode} from '@ygg/shared/infra/error';
 import { NumberRange, DateRange, Contact } from '@ygg/shared/types';
 import { User } from '@ygg/shared/user';
-import { PlayTag } from '@ygg/playwhat/play';
+// import { PlayTag } from '@ygg/playwhat/play';
+import { Tags } from '@ygg/playwhat/tag';
 
 export class ScheduleForm implements DataItem {
   id: string;
@@ -19,7 +20,7 @@ export class ScheduleForm implements DataItem {
   transpotation: string;
   transpotationHelp: string;
   accommodationHelp: string;
-  likeTags: string[]; // PlayTag Names
+  likeTags: Tags; // PlayTag Names
   likesDescription: string;
   agentId: string;
   creatorId: string;
@@ -72,7 +73,7 @@ export class ScheduleForm implements DataItem {
     forged.transpotationHelp = '我想騎鴕鳥...';
     forged.accommodationHelp =
       '請幫我安排住宿，房間乾淨就好，最好是有養駝鳥的民宿';
-    forged.likeTags = range(10).map(() => PlayTag.forge().name);
+    forged.likeTags = Tags.forge();
     forged.likesDescription = '希望有年輕漂亮的導遊，沒有的話鴕鳥也可以';
     forged.agentId = User.forge().id;
     return forged;
@@ -85,7 +86,7 @@ export class ScheduleForm implements DataItem {
   }
 
   hasLikes(): boolean {
-    return (this.likeTags && this.likeTags.length > 0) || !!this.likesDescription;
+    return (this.likeTags && !this.likeTags.isEmpty()) || !!this.likesDescription;
   }
 
   fromJSON(data: any = {}): this {

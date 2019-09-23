@@ -15,7 +15,7 @@ import {
   FormBuilder,
   Validators
 } from '@angular/forms';
-import { NumberRange, Contact, Tags } from '@ygg/shared/types';
+import { NumberRange, Contact } from '@ygg/shared/types';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { first, switchMap, map } from 'rxjs/operators';
 
@@ -30,6 +30,7 @@ import {
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { PlayTagService } from '@ygg/playwhat/play';
+import { Tags } from '@ygg/playwhat/tag';
 
 @Component({
   selector: 'ygg-schedule-form',
@@ -85,9 +86,9 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
           this.agentUsers = [];
         }
       });
-    this.playTags$ = this.playTagService.playTags$.pipe(
-      map(playTags => new Tags(playTags))
-    );
+    // this.playTags$ = this.playTagService.playTags$.pipe(
+    //   map(playTags => new Tags(playTags))
+    // );
   }
 
   ngOnInit() {
@@ -134,7 +135,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     this.subscriptions.push(subsc);
     subsc = this.formGroup.get('likeTags').valueChanges.subscribe(tags => {
       if (Tags.isTags(tags)) {
-        this.scheduleForm.likeTags = tags.getNames();
+        this.scheduleForm.likeTags = tags;
       }
     });
   }

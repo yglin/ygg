@@ -1,18 +1,23 @@
 import { Injectable } from '@angular/core';
-import { FormGroupModel, Tags, FormControlType, BusinessHours, Album, FormControlModel, Location, FormFactoryService } from "@ygg/shared/types";
+import {
+  FormGroupModel,
+  FormControlType,
+  BusinessHours,
+  Album,
+  FormControlModel,
+  Location,
+  FormFactoryService
+} from '@ygg/shared/types';
 import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 // import { Play } from "./play";
-import { PlayTagService, PlayTag } from '../tag';
 import { Play } from './play';
+import { Tags } from '@ygg/playwhat/tag';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlayFactoryService {
-
-  constructor(
-    private formFactoryService: FormFactoryService,
-    private playTagsService: PlayTagService) { }
+  constructor(private formFactoryService: FormFactoryService) {}
 
   createModel(): FormGroupModel {
     const playModel = Play.getFormModel();

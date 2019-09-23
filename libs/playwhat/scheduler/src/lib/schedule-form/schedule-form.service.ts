@@ -44,7 +44,7 @@ export class ScheduleFormService {
   }
 
   async upsert(scheduleForm: ScheduleForm) {
-    await this.playTagService.upsertList(scheduleForm.likeTags.map(tagName => new PlayTag(tagName)));
+    // await this.playTagService.upsertList(scheduleForm.likeTags.map(tagName => new PlayTag(tagName)));
     return await this.dataAccessService.upsert(
       this.collection,
       scheduleForm,
