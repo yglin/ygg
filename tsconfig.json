@@ -45,7 +45,8 @@
       "@ygg/shared/infra/test-utils/jest": [
         "libs/shared/infra/test-utils/src/lib/test-framworks/angular-jest/index.ts"
       ],
-      "@ygg/playwhat/tag": ["libs/playwhat/tag/src/index.ts"]
+      "@ygg/playwhat/tag": ["libs/playwhat/tag/src/index.ts"],
+      "@ygg/firebase/*": [".firebase/*"]
     },
     "rootDir": "."
   },

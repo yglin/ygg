@@ -9,9 +9,9 @@ import {
   FormControlModel,
   FormControlType,
 } from '@ygg/shared/types';
-import { Tags } from '@ygg/playwhat/tag';
+import { Tags, Taggable } from '@ygg/playwhat/tag';
 
-export class Play implements DataItem {
+export class Play implements DataItem, Taggable {
   id: string;
   name: string;
   introduction: string;

@@ -2,6 +2,8 @@ import { sample } from 'lodash';
 import { DataItem } from '@ygg/shared/infra/data-access';
 
 export class Tag implements DataItem {
+  static collectionName = 'tags';
+  
   readonly id: string;
   readonly name: string;
 

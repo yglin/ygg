@@ -6,5 +6,6 @@ module.exports = {
     'jest-preset-angular/AngularSnapshotSerializer.js',
     'jest-preset-angular/HTMLCommentSerializer.js'
   ],
-  testMatch: ['**/tags-control/*.spec.ts']
+  testMatch: ['**/firebase-functions/*.spec.ts'],
+  moduleFileExtensions: ['ts', 'js', 'html', 'json']
 };
