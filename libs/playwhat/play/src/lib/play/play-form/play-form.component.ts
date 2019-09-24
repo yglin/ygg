@@ -46,7 +46,7 @@ export class PlayFormComponent implements OnInit, OnDestroy {
     }
     this.subscriptions.push(
       this.formGroup.valueChanges.subscribe(value => {
-        console.log(value);
+        // console.log(value);
         if (value) {
           extend(this.play, value);
         }

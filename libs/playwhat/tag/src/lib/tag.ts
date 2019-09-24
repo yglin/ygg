@@ -2,17 +2,8 @@ import { sample } from 'lodash';
 import { DataItem } from '@ygg/shared/infra/data-access';
 
 export class Tag implements DataItem {
-  id: string;
-  _name: string;
-  set name(value: string) {
-    if (value) {
-      this.id = value.toLocaleLowerCase().normalize();
-      this._name = value;
-    }
-  }
-  get name(): string {
-    return this._name;
-  }
+  readonly id: string;
+  readonly name: string;
 
   constructor(arg1: string | Tag) {
     if (!arg1) {
@@ -23,6 +14,11 @@ export class Tag implements DataItem {
     } else if (Tag.isTag(arg1)) {
       this.name = arg1.name;
     }
+    this.id = this.name.toLocaleLowerCase().normalize();
+  }
+
+  static fromJSON(data: any): Tag {
+    return new Tag(data);
   }
 
   static isTag(value: any): value is Tag {
@@ -65,14 +61,12 @@ export class Tag implements DataItem {
   }
 
   fromJSON(data: any = {}): this {
-    if (Tag.isTag(data)) {
-      this.name = data.name;
-    }
-    return this;
+    throw new Error(`Deprecated, use Tag.fromJSON() instead`);
   }
 
   toJSON(): any {
     return {
+      id: this.id,
       name: this.name
     };
   }

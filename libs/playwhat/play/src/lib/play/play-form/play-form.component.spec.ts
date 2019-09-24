@@ -1,9 +1,10 @@
 import 'hammerjs';
+import { omit } from 'lodash';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlayFormComponent } from './play-form.component';
 import { DebugElement, Injectable } from '@angular/core';
-import { isDisabled, PageObject } from '@ygg/shared/infra/test-utils';
+// import { isDisabled, PageObject } from '@ygg/shared/infra/test-utils';
 import { Play } from '../play';
 import { hasValidator, FormControlType } from '@ygg/shared/types';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -15,6 +16,9 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedTypesModule } from '@ygg/shared/types';
 import { MockComponent } from "ng-mocks";
 import { PlayViewComponent } from '../play-view/play-view.component';
+import { PlaywhatTagModule } from '@ygg/playwhat/tag';
+import { By } from '@angular/platform-browser';
+import { Router, ActivatedRoute } from '@angular/router';
 
 describe('PlayFormComponent', () => {
   @Injectable()
@@ -23,6 +27,16 @@ describe('PlayFormComponent', () => {
   @Injectable()
   class MockPlayService {
     async upsert(play: Play) {};
+  }
+
+  @Injectable()
+  class MockRouter {
+    navigate() {}
+  }
+
+  @Injectable()
+  class MockActivatedRoute {
+    parent = null;
   }
 
   let component: PlayFormComponent;
@@ -51,14 +65,17 @@ describe('PlayFormComponent', () => {
       imports: [
         FormsModule,
         ReactiveFormsModule,
-        RouterTestingModule.withRoutes([]),
+        // RouterTestingModule.withRoutes([]),
         SharedUiWidgetsModule,
         SharedUiNgMaterialModule,
-        SharedTypesModule
+        SharedTypesModule,
+        PlaywhatTagModule
       ],
       providers: [
         { provide: PlayService, useClass: MockPlayService },
-        { provide: LogService, useClass: MockLogService }
+        { provide: LogService, useClass: MockLogService },
+        { provide: Router, useClass: MockRouter },
+        { provide: ActivatedRoute, useClass: MockActivatedRoute }
       ]
     }).compileComponents();
   }));
@@ -68,38 +85,38 @@ describe('PlayFormComponent', () => {
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
     mockPlayService = TestBed.get(PlayService);
+    jest.spyOn(window, 'confirm').mockImplementation(() => true);
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
     fixture.detectChanges();
   });
 
-  it('Initially invalid and submit button disabled', () => {
+  it('Fields "name" and "introduction" should be required', async done => {
     expect(component.formGroup.invalid).toBe(true);
-    expect(isDisabled(debugElement, 'button#submit')).toBe(true);
-  });
 
-  it('After all required fields filled, form should turn valid and enable submit button', async done => {
-    for (const name in playFormModel.controls) {
-      if (playFormModel.controls.hasOwnProperty(name)) {
-        const controlModel = playFormModel.controls[name];
-        if (hasValidator(controlModel, 'required')) {
-          component.formGroup.get(name).setValue(testPlay[name]);
-          // setInputValue(debugElement, controlModel.type, name, testPlay[name]);
-          // console.log(`Set value "${testPlay[name]}" to ${name}`);
-        }
-      }
-    }
+    const nameControl = component.formGroup.get('name');
+    nameControl.setValue(null);
+    nameControl.markAsTouched();
+    expect(nameControl.hasError('required')).toBe(true);
+
+    const introductionControl = component.formGroup.get('introduction');
+    introductionControl.setValue(null);
+    introductionControl.markAsTouched();
+    expect(introductionControl.hasError('required')).toBe(true);
+
+    nameControl.setValue('ggyy');
+    introductionControl.setValue('this is ggyy');
     await fixture.whenStable();
     fixture.detectChanges();
     expect(component.formGroup.valid).toBe(true);
-    expect(isDisabled(debugElement, 'button#submit')).toBe(false);
     done();
   });
 
   it('Should submit consistent data', async done => {
-    jest.spyOn(mockPlayService, 'upsert').mockImplementation(async (play: Play) => {
-      expect(play.toJSON()).toEqual(testPlay.toJSON());
+    jest.spyOn(mockPlayService, 'upsert').mockImplementation(async play => {
+      expect(omit(play.toJSON(), ['id'])).toEqual(omit(testPlay.toJSON(), ['id']));
       done();
     });
-    component.formGroup.setValue(testPlay);
+    component.formGroup.patchValue(testPlay);
     component.onSubmit();
   });
 });

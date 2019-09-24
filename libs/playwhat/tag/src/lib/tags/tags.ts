@@ -1,5 +1,5 @@
 import { SerializableJSON } from '@ygg/shared/infra/data-access';
-import { isArray, isEmpty, sample, range, random, find, remove } from 'lodash';
+import { isArray, isEmpty, range, random, find, remove } from 'lodash';
 import { Tag } from "../tag";
 
 export class Tags implements SerializableJSON {
@@ -14,7 +14,11 @@ export class Tags implements SerializableJSON {
   }
 
   static fromJSON(data: any): Tags {
-    return new Tags().fromJSON(data);
+    if (isArray(data)) {
+      return new Tags(data);
+    } else {
+      throw new Error(`Tags.fromJSON(): JSON Data error, need Array, received ${typeof data}`);
+    }
   }
 
   constructor(arg1?: Tags | Tag[] | string[]) {
@@ -47,6 +51,10 @@ export class Tags implements SerializableJSON {
     return this.tags;
   }
 
+  toIDArray(): string[] {
+    return this.tags.map(tag => tag.id);
+  }
+
   toNameArray(): string[] {
     return this.tags.map(tag => tag.name);
   }
@@ -76,13 +84,10 @@ export class Tags implements SerializableJSON {
   }
 
   fromJSON(data: any = []): this {
-    if (isArray(data)) {
-      this.push(...data.map(tag => new Tag(tag)));
-    }
-    return this;
+    throw new Error(`Deprecated, use Tags.fromJSON() instead`);
   }
 
   toJSON(): any {
-    return this.tags.map(tag => tag.id);
+    return this.tags.map(tag => tag.toJSON());
   }
 }
