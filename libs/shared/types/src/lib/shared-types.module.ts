@@ -6,8 +6,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
-import { DynamicFormsCoreModule } from '@ng-dynamic-forms/core';
-import { DynamicFormsMaterialUIModule } from '@ng-dynamic-forms/ui-material';
 import { ImageUploadModule } from 'angular2-image-upload';
 import { ContactComponent, ContactFormComponent } from './contact';
 import { DateRangeComponent, DateRangePickerComponent } from './date-range';
@@ -18,7 +16,7 @@ import {
 import { DateRangePickerDialogComponent } from './date-range/date-range-picker/date-range-picker-dialog/date-range-picker-dialog.component';
 import { AlbumViewComponent } from './album/album-view/album-view.component';
 import { ImageComponent } from './image/image.component';
-import { FormControlComponent } from './form/form-control/form-control.component';
+import { FormControlComponent } from './form';
 import { AlbumControlComponent } from './album/album-control/album-control.component';
 import { ImageUploaderComponent } from './image/image-uploader/image-uploader.component';
 import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
@@ -63,8 +61,6 @@ import { TagsControlComponent, TagsViewComponent } from './tags';
     HttpClientModule,
     ImageUploadModule.forRoot(),
     SharedInfraDataAccessModule,
-    DynamicFormsCoreModule,
-    DynamicFormsMaterialUIModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
     // AgmCoreModule.forRoot({

@@ -27,7 +27,7 @@
     "dep-graph": "./node_modules/.bin/nx dep-graph",
     "help": "./node_modules/.bin/nx help",
     "firebase:shell": "npm run build firebase-functions && firebase functions:shell",
-    "firebase:deploy:functions": "npm run build firebase-functions && firebase deploy --only functions",
+    "firebase:deploy:functions": "firebase deploy --only functions",
     "firebase:deploy": "ng build --prod && firebase deploy --only hosting"
   },
   "private": true,
@@ -49,8 +49,6 @@
     "@nestjs/common": "^6.2.4",
     "@nestjs/core": "^6.2.4",
     "@nestjs/platform-express": "^6.2.4",
-    "@ng-dynamic-forms/core": "^8.1.0",
-    "@ng-dynamic-forms/ui-material": "^8.1.0",
     "@ngrx/effects": "8.1.0",
     "@ngrx/router-store": "8.1.0",
     "@ngrx/store": "8.1.0",

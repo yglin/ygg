@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 import { Injectable } from '@angular/core';
-import { FormGroupModel, FormControlModel } from './form';
+import { FormGroupModel, FormControlModel } from './form-model';
 import {
   FormGroup,
   AbstractControl,
