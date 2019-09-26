@@ -842,33 +842,6 @@
         }
       }
     },
-    "playwhat-tag": {
-      "projectType": "library",
-      "root": "libs/playwhat/tag",
-      "sourceRoot": "libs/playwhat/tag/src",
-      "prefix": "ygg",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/playwhat/tag/tsconfig.lib.json",
-              "libs/playwhat/tag/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/tag/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/playwhat/tag/jest.config.js",
-            "tsConfig": "libs/playwhat/tag/tsconfig.spec.json",
-            "setupFile": "libs/playwhat/tag/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {}
-    },
     "shared-infra-log": {
       "projectType": "library",
       "root": "libs/shared/infra/log",
@@ -948,6 +921,117 @@
             "jestConfig": "libs/shared/ui/ng-material/jest.config.js",
             "tsConfig": "libs/shared/ui/ng-material/tsconfig.spec.json",
             "setupFile": "libs/shared/ui/ng-material/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "tags-core": {
+      "projectType": "library",
+      "root": "libs/tags/core",
+      "sourceRoot": "libs/tags/core/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/tags/core/tsconfig.lib.json",
+              "libs/tags/core/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/tags/core/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/tags/core/jest.config.js",
+            "tsConfig": "libs/tags/core/tsconfig.spec.json",
+            "setupFile": "libs/tags/core/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "tags-ui": {
+      "projectType": "library",
+      "root": "libs/tags/ui",
+      "sourceRoot": "libs/tags/ui/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/tags/ui/tsconfig.lib.json",
+              "libs/tags/ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/tags/ui/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/tags/ui/jest.config.js",
+            "tsConfig": "libs/tags/ui/tsconfig.spec.json",
+            "setupFile": "libs/tags/ui/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "tags-admin": {
+      "projectType": "library",
+      "root": "libs/tags/admin",
+      "sourceRoot": "libs/tags/admin/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/tags/admin/tsconfig.lib.json",
+              "libs/tags/admin/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/tags/admin/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/tags/admin/jest.config.js",
+            "tsConfig": "libs/tags/admin/tsconfig.spec.json",
+            "setupFile": "libs/tags/admin/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "tags-firebase-functions": {
+      "projectType": "library",
+      "root": "libs/tags/firebase-functions",
+      "sourceRoot": "libs/tags/firebase-functions/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/tags/firebase-functions/tsconfig.lib.json",
+              "libs/tags/firebase-functions/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/tags/firebase-functions/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/tags/firebase-functions/jest.config.js",
+            "tsConfig": "libs/tags/firebase-functions/tsconfig.spec.json",
+            "setupFile": "libs/tags/firebase-functions/src/test-setup.ts"
           }
         }
       },

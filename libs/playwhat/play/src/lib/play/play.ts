@@ -9,7 +9,7 @@ import {
   FormControlModel,
   FormControlType,
 } from '@ygg/shared/types';
-import { Tags, Taggable } from '@ygg/playwhat/tag';
+import { Tags, Taggable } from '@ygg/tags/core';
 
 export class Play implements DataItem, Taggable {
   id: string;

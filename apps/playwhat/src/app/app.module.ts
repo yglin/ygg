@@ -11,6 +11,7 @@ import { PlaywhatSchedulerFrontendModule } from '@ygg/playwhat/scheduler';
 import { PlaywhatAdminModule } from '@ygg/playwhat/admin';
 import { PlaywhatSchedulerAdminModule } from "@ygg/playwhat/scheduler";
 import { PlaywhatPlayAdminModule, PlaywhatPlayFrontendModule } from "@ygg/playwhat/play";
+import { TagsAdminModule } from "@ygg/tags/admin";
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './layout/header/header.component';
@@ -42,6 +43,7 @@ import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
     PlaywhatSchedulerAdminModule,
     PlaywhatPlayFrontendModule,
     PlaywhatPlayAdminModule,
+    TagsAdminModule,
     PlaywhatAdminModule,
   ],
   providers: [],

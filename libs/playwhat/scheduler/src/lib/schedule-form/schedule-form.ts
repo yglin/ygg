@@ -5,7 +5,7 @@ import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { NumberRange, DateRange, Contact } from '@ygg/shared/types';
 import { User } from '@ygg/shared/user';
 // import { PlayTag } from '@ygg/playwhat/play';
-import { Tags } from '@ygg/playwhat/tag';
+import { Tags } from '@ygg/tags/core';
 
 export class ScheduleForm implements DataItem {
   id: string;

@@ -1,9 +1,10 @@
 import { PageObjects } from '@ygg/shared/infra/test-utils';
 import { Tag, Tags } from '@ygg/playwhat/tag';
 
-export class TagsAdminPageObject extends PageObjects.PageObject {
+export class TagsAdminUserOptionsPageObject extends PageObjects.PageObject {
   selector = '.tags-admin';
   selectors = {
+    main: '.tags-admin',
     searchInput: 'input.search',
     removeButton: 'button.remove-tags',
     addTagButton: 'button.add-new-tag',

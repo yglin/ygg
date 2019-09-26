@@ -30,7 +30,7 @@ import {
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { PlayTagService } from '@ygg/playwhat/play';
-import { Tags } from '@ygg/playwhat/tag';
+import { Tags } from '@ygg/tags/core';
 
 @Component({
   selector: 'ygg-schedule-form',

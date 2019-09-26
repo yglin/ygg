@@ -8,7 +8,7 @@ import { PageObjects } from '@ygg/playwhat/play';
 import { Play } from '@ygg/playwhat/play';
 import { v4 as uuid } from 'uuid';
 import { AngularCypressTester } from '@ygg/shared/infra/test-utils/cypress';
-import { TagsAdminPageObject } from "../page-objects/tags-admin.po";
+import { TagsAdminUserOptionsPageObject } from "../page-objects/tags-admin.po";
 
 describe('Add new tags from various user activities', () => {
   const siteNavigator = new SiteNavigator();
@@ -20,7 +20,7 @@ describe('Add new tags from various user activities', () => {
   const testTag = uuid();
   testPlay.tags.push(testTag);
   const playFormPageObject = new PlayFormPageObject();
-  const tagsAdminPageObject = new TagsAdminPageObject();
+  const tagsAdminPageObject = new TagsAdminUserOptionsPageObject();
 
   beforeEach(() => {
     cy.visit('/');
@@ -42,8 +42,8 @@ describe('Add new tags from various user activities', () => {
       cy.wrap(newPlayId).as('newPlayId');
     });
 
-    siteNavigator.goto(['admin', 'play', 'tags']);
-    tagsAdminPageObject.expectTags(testPlay.tags);
+    siteNavigator.goto(['admin', 'tags', 'user-options']);
+    tagsAdminUserOptionsPageObject.expectTags(testPlay.tags);
 
     cy.get('@newPlayId').then(newPlayId => {
       // @ts-ignore

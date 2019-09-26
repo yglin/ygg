@@ -11,7 +11,7 @@ import {
 import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 // import { Play } from "./play";
 import { Play } from './play';
-import { Tags } from '@ygg/playwhat/tag';
+import { Tags } from '@ygg/tags/core';
 
 @Injectable({
   providedIn: 'root'

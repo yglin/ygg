@@ -7,7 +7,7 @@ import { SharedTypesModule } from '@ygg/shared/types';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { PlaywhatPlayModule } from '@ygg/playwhat/play';
-import { PlaywhatTagModule } from '@ygg/playwhat/tag';
+import { TagsUiModule } from '@ygg/tags/ui';
 
 import { ScheduleFormComponent } from './schedule-form';
 import { ScheduleFormViewComponent } from './schedule-form/schedule-form-view/schedule-form-view.component';
@@ -19,9 +19,16 @@ import { RouterModule } from '@angular/router';
 import { ScheduleFormThumbnailComponent } from './schedule-form/schedule-form-thumbnail/schedule-form-thumbnail.component';
 import { ScheduleFormTableComponent } from './schedule-form/schedule-form-table/schedule-form-table.component';
 
-
 @NgModule({
-  declarations: [SchedulerNewComponent, ScheduleFormComponent, ScheduleFormViewComponent, SchedulerDashboardComponent, ScheduleFormListComponent, ScheduleFormThumbnailComponent, ScheduleFormTableComponent],
+  declarations: [
+    SchedulerNewComponent,
+    ScheduleFormComponent,
+    ScheduleFormViewComponent,
+    SchedulerDashboardComponent,
+    ScheduleFormListComponent,
+    ScheduleFormThumbnailComponent,
+    ScheduleFormTableComponent
+  ],
   imports: [
     CommonModule,
     RouterModule,
@@ -33,9 +40,16 @@ import { ScheduleFormTableComponent } from './schedule-form/schedule-form-table/
     SharedTypesModule,
     SharedUserModule,
     PlaywhatPlayModule,
-    PlaywhatTagModule
+    TagsUiModule
   ],
-  exports: [SchedulerNewComponent, ScheduleFormComponent, ScheduleFormViewComponent, SchedulerDashboardComponent, ScheduleFormListComponent, ScheduleFormThumbnailComponent, ScheduleFormTableComponent],
+  exports: [
+    SchedulerNewComponent,
+    ScheduleFormComponent,
+    ScheduleFormViewComponent,
+    SchedulerDashboardComponent,
+    ScheduleFormListComponent,
+    ScheduleFormThumbnailComponent,
+    ScheduleFormTableComponent
+  ]
 })
 export class PlaywhatSchedulerModule {}
-

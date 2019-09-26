@@ -7,10 +7,18 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { PlayViewComponent } from './play/play-view/play-view.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PlaywhatTagModule } from '@ygg/playwhat/tag';
+import { TagsUiModule } from '@ygg/tags/ui';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, SharedTypesModule, SharedUiWidgetsModule, SharedUiNgMaterialModule, PlaywhatTagModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    SharedTypesModule,
+    SharedUiWidgetsModule,
+    SharedUiNgMaterialModule,
+    TagsUiModule
+  ],
   declarations: [PlayFormComponent, PlayViewComponent],
   exports: [PlayFormComponent, PlayViewComponent]
 })

@@ -74,9 +74,6 @@
     "shared-types-demo": {
       "tags": ["scope:demo", "type:app"]
     },
-    "playwhat-tag": {
-      "tags": ["scope:playwhat", "type:feature", "platform:mobile"]
-    },
     "shared-infra-log": {
       "tags": ["scope:shared", "type:util"]
     },
@@ -85,6 +82,18 @@
     },
     "shared-ui-ng-material": {
       "tags": ["scope:shared", "type:ui"]
+    },
+    "tags-core": {
+      "tags": ["scope:tags", "type:feature"]
+    },
+    "tags-ui": {
+      "tags": ["scope:tags", "type:ui"]
+    },
+    "tags-admin": {
+      "tags": ["scope:tags", "type:ui"]
+    },
+    "tags-firebase-functions": {
+      "tags": ["scope:tags", "type:backend"]
     }
   }
 }
