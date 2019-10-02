@@ -2,11 +2,9 @@ import { isEmpty } from 'lodash';
 import * as functions from 'firebase-functions';
 // import * as admin from 'firebase-admin';
 // import { Play } from 'libs/taggablewhat/taggable/src/lib/taggable/taggable';
-import { Taggable } from '../taggable';
+import { Taggable, Tags } from '@ygg/tags/core';
 import { upsertTags } from './crud';
 import { tag, untag } from './tagging';
-// import * as projectConfig from '../../../config.json';
-import { Tags } from '../tags';
 
 // for (const taggableConfig of projectConfig.taggables) {
 //   exports[`onWrite${taggableConfig.name}`] = createOnWriteTrigger(taggableConfig.collection);

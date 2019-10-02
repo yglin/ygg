@@ -4,11 +4,21 @@ import { TagsAdminUserOptionsComponent } from './tags-admin-user-options/tags-ad
 import { TagsAdminService } from './tags-admin.service';
 import { PlaywhatAdminService } from '@ygg/playwhat/admin';
 import { adminMenu } from './admin-menu';
+import { TagsAdminListComponent } from './tags-admin-list/tags-admin-list.component';
+import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 @NgModule({
-  declarations: [TagsAdminUserOptionsComponent],
-  imports: [CommonModule],
-  entryComponents: [TagsAdminUserOptionsComponent],
+  declarations: [TagsAdminUserOptionsComponent, TagsAdminListComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    SharedUiNgMaterialModule,
+    SharedUiWidgetsModule
+  ],
+  entryComponents: [TagsAdminListComponent, TagsAdminUserOptionsComponent],
   providers: [
     {
       provide: APP_INITIALIZER,

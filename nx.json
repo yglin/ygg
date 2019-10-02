@@ -94,6 +94,15 @@
     },
     "tags-firebase-functions": {
       "tags": ["scope:tags", "type:backend"]
+    },
+    "tags-data-access": {
+      "tags": ["scope:tags", "type:data-access"]
+    },
+    "shared-test-page-object": {
+      "tags": ["scope:shared", "type:test"]
+    },
+    "shared-test-angular-jest": {
+      "tags": ["scope:shared", "type:test"]
     }
   }
 }

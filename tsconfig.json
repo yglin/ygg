@@ -4,6 +4,7 @@
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
@@ -52,6 +53,13 @@
       "@ygg/tags/admin": ["libs/tags/admin/src/index.ts"],
       "@ygg/tags/firebase-functions": [
         "libs/tags/firebase-functions/src/index.ts"
+      ],
+      "@ygg/tags/data-access": ["libs/tags/data-access/src/index.ts"],
+      "@ygg/shared/test/page-object": [
+        "libs/shared/test/page-object/src/index.ts"
+      ],
+      "@ygg/shared/test/angular-jest": [
+        "libs/shared/test/angular-jest/src/index.ts"
       ]
     },
     "rootDir": "."

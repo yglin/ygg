@@ -1,4 +1,4 @@
-import { remove, find } from "lodash";
+import { remove, filter, find, isArray } from "lodash";
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 export interface GroupSwitchableItem {
@@ -20,7 +20,7 @@ export class ItemsGroupSwitcherComponent implements OnInit {
   _itemsLeft: GroupSwitchableItem[] = [];
   @Input()
   set itemsLeft(value: GroupSwitchableItem[]) {
-    if (value) {
+    if (isArray(value)) {
       this._itemsLeft = [...value];
     }
   }
@@ -28,11 +28,12 @@ export class ItemsGroupSwitcherComponent implements OnInit {
     return this._itemsLeft;
   }
   @Input() titleLeft: string = 'Left Items';
+  @Input() copyLeft: boolean = false;
 
   _itemsRight: GroupSwitchableItem[] = [];
   @Input()
   set itemsRight(value: GroupSwitchableItem[]) {
-    if (value) {
+    if (isArray(value)) {
       this._itemsRight = [...value];
     }
   }
@@ -42,6 +43,7 @@ export class ItemsGroupSwitcherComponent implements OnInit {
   @Input() titleRight: string = 'Right Items';
   @Output() change: EventEmitter<GroupSwitcherChangeEvent> = new EventEmitter();
   @Output() selectLeft: EventEmitter<GroupSwitchableItem[]> = new EventEmitter();
+  @Input() copyRight: boolean = false;
 
   selectionMap: { [SetId: string]: Set<string> } = {
     left: new Set([]),
@@ -50,7 +52,10 @@ export class ItemsGroupSwitcherComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.copyLeft = this.copyLeft !== undefined && this.copyLeft !== false;
+    this.copyRight = this.copyRight !== undefined && this.copyRight !== false;
+  }
 
   notifyChange() {
     this.change.emit({
@@ -82,21 +87,24 @@ export class ItemsGroupSwitcherComponent implements OnInit {
     return (setId in this.selectionMap) && this.selectionMap[setId].size > 0;
   }
 
-  moveItemsToRight() {
-    const selectedItemIds = Array.from(this.selectionMap['left'].values());
-    const items = remove(this.itemsLeft, item => selectedItemIds.indexOf(item.id) >= 0);
-    // console.log(`Move \n${items.join('\n')}\nto right group`);
-    this.itemsRight.push.apply(this.itemsRight, items);
-    this.selectionMap['left'].clear();
-    this.notifyChange();
-  }
+  moveItems(from: string, to: string) {
+    const groupFrom: GroupSwitchableItem[] = (from === "left") ? this.itemsLeft : this.itemsRight;
+    const groupTo: GroupSwitchableItem[] = (from === "left") ? this.itemsRight : this.itemsLeft;
+    const copyFrom = (from === "left") ? this.copyLeft : this.copyRight;
 
-  moveItemsToLeft() {
-    const selectedItemIds = Array.from(this.selectionMap['right'].values());
-    const items = remove(this.itemsRight, item => selectedItemIds.indexOf(item.id) >= 0);
-    // console.log(`Move \n${items.join('\n')}\nto right group`);
-    this.itemsLeft.push.apply(this.itemsLeft, items);
-    this.selectionMap['right'].clear();
+    const selectedItemIds = Array.from(this.selectionMap[from].values());
+    let items: GroupSwitchableItem[];
+    if (copyFrom) {
+      items = filter(groupFrom, item => selectedItemIds.indexOf(item.id) >= 0);      
+    } else {
+      items = remove(groupFrom, item => selectedItemIds.indexOf(item.id) >= 0);
+    }
+    for (const item of items) {
+      if (!find(groupTo, _item => _item.id === item.id)) {
+        groupTo.push(item);
+      }
+    }
+    this.selectionMap[from].clear();
     this.notifyChange();
   }
 }

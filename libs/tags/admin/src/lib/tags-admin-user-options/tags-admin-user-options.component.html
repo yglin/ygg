@@ -1,1 +1,65 @@
-<p>tags-admin-user-options works!</p>
+<div class="tags-admin-user-options">
+  <ygg-items-group-switcher
+    [itemsLeft]="tagsAll"
+    copyLeft
+    titleLeft="其他標籤"
+    [itemsRight]="userOptionTags"
+    titleRight="選單標籤（在選單中顯示）"
+    (change)="onSwitchTagsGroup($event)"
+  >
+    <div ygg-left-group-actions>
+      <div
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+        fxLayoutGap="10px"
+      >
+        <div fxFlex class="tag-filter">
+          <mat-form-field>
+            <input
+              matInput
+              class="search"
+              placeholder="搜尋標籤"
+              [formControl]="searchControl"
+            />
+            <div matPrefix>
+              <mat-icon>search</mat-icon>
+            </div>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div ygg-right-group-actions>
+      <div fxLayout="row" fxLayoutAlign="space-between end" fxLayoutGap="10px">
+        <div class="taggable-type">
+          <mat-form-field>
+            <mat-label>選擇標籤分類...</mat-label>
+            <select matNativeControl [formControl]="taggableTypeControl">
+              <option
+                *ngFor="let taggableType of taggableTypes"
+                [value]="taggableType.id"
+              >
+                {{ taggableType.label }}
+              </option>
+            </select>
+          </mat-form-field>
+          <!-- <mat-select
+            placeholder="選擇標籤分類..."
+            [formControl]="taggableTypeControl"
+          >
+            <mat-option
+              *ngFor="let taggableType of taggableTypes"
+              [value]="taggableType.id"
+            >
+              {{ taggableType.label }}
+            </mat-option>
+          </mat-select> -->
+        </div>
+        <div>
+          <button class="save-user-option-tags" mat-fab (click)="onSaveSelected()">
+            <mat-icon>save</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ygg-items-group-switcher>
+</div>

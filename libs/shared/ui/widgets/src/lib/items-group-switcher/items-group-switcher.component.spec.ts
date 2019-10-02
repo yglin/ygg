@@ -5,7 +5,7 @@ import {
   ItemsGroupSwitcherComponent,
   GroupSwitchableItem
 } from './items-group-switcher.component';
-import { ActionBarredComponent } from "../action-barred/action-barred.component";
+import { ActionBarredComponent } from '../action-barred/action-barred.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
@@ -62,9 +62,7 @@ describe('ItemsGroupSwitcherComponent', () => {
 
   // Click to toggle selection of item
   function clickItem(id: string) {
-    debugElement
-      .query(By.css(`[data-id="${id}"]`))
-      .nativeElement.click();
+    debugElement.query(By.css(`[item-id="${id}"]`)).nativeElement.click();
   }
 
   beforeAll(function() {
@@ -138,9 +136,7 @@ describe('ItemsGroupSwitcherComponent', () => {
   });
 
   it('should disable/enable move-to-left button when nothing/something selected in items-left list', async done => {
-    const buttonMoveToLeft = debugElement.query(
-      By.css('button#move-to-left')
-    );
+    const buttonMoveToLeft = debugElement.query(By.css('button#move-to-left'));
     // Initially nothing selected
     expect(component.hasSelectedItemsIn('right')).toBe(false);
     expect(buttonMoveToLeft.nativeElement.disabled).toBeTruthy();
@@ -156,7 +152,7 @@ describe('ItemsGroupSwitcherComponent', () => {
   });
 
   it('should be able to move items from left to right group', async done => {
-    jest.spyOn(component, 'moveItemsToRight');
+    jest.spyOn(component, 'moveItems');
     // Select first item in left group
     const itemsLeft0 = component.itemsLeft[0];
     clickItem(itemsLeft0.id);
@@ -171,57 +167,122 @@ describe('ItemsGroupSwitcherComponent', () => {
 
     await fixture.whenStable();
     fixture.detectChanges();
-    expect(component.moveItemsToRight).toHaveBeenCalled();
-    // Check items in left group
+    expect(component.moveItems).toHaveBeenCalled();
+    // Check items not in left group
     expect(component.itemsLeft).not.toContain(itemsLeft0);
     expect(component.itemsLeft).not.toContain(itemsLeft1);
+    // Check items in right group
     expect(component.itemsRight).toContain(itemsLeft0);
     expect(component.itemsRight).toContain(itemsLeft1);
 
     // Should clear selection of left
     expect(component.hasSelectedItemsIn('left')).toBe(false);
-    
+
     done();
   });
 
   it('should be able to move items from right to left group', async done => {
+    jest.spyOn(component, 'moveItems');
     // Select last item in right group
     const itemsRightLast =
       component.itemsRight[component.itemsRight.length - 1];
-      clickItem(itemsRightLast.id);
+    clickItem(itemsRightLast.id);
     // Select second last item in right group
     const itemsRightLast2nd =
       component.itemsRight[component.itemsRight.length - 2];
-      clickItem(itemsRightLast2nd.id);
+    clickItem(itemsRightLast2nd.id);
 
     // Wait for button "move to left" enabled and click it
     await fixture.whenStable();
     fixture.detectChanges();
     debugElement.query(By.css('button#move-to-left')).nativeElement.click();
 
-
     await fixture.whenStable();
     fixture.detectChanges();
-    // Check items in right group
+    expect(component.moveItems).toHaveBeenCalled();
+    // Check items not in right group
     expect(component.itemsRight).not.toContain(itemsRightLast);
     expect(component.itemsRight).not.toContain(itemsRightLast2nd);
+    // Check items in left group
     expect(component.itemsLeft).toContain(itemsRightLast);
     expect(component.itemsLeft).toContain(itemsRightLast2nd);
 
     // Should clear selection of right
     expect(component.hasSelectedItemsIn('right')).toBe(false);
-    
+
     done();
   });
 
-  it('should onSubmit() with @Output() submit emitting { left: comopnent.itemsLeft, right: component.itemsRight }', done => {
-    component.submit.subscribe(payload => {
-      expect(payload).toEqual({
-        left: component.itemsLeft,
-        right: component.itemsRight
-      });
-      done();
-    });
-    debugElement.query(By.css('button#submit')).nativeElement.click();
+  it('If copyLeft = true, moving item from left to right becomes copying', async done => {
+    component.copyLeft = true;
+    // Select first item in left group
+    const itemsLeft0 = component.itemsLeft[0];
+    clickItem(itemsLeft0.id);
+    // Select second item in right group
+    const itemsLeft1 = component.itemsLeft[1];
+    clickItem(itemsLeft1.id);
+
+    // Wait for button "move to right" enabled and click it
+    await fixture.whenStable();
+    fixture.detectChanges();
+    debugElement.query(By.css('button#move-to-right')).nativeElement.click();
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+    // Check items still in left group
+    expect(component.itemsLeft).toContain(itemsLeft0);
+    expect(component.itemsLeft).toContain(itemsLeft1);
+    // Check items also in right group
+    expect(component.itemsRight).toContain(itemsLeft0);
+    expect(component.itemsRight).toContain(itemsLeft1);
+
+    // Should clear selection of left
+    expect(component.hasSelectedItemsIn('left')).toBe(false);
+
+    done();
   });
+
+  it('If copyRight = true, moving item from right to left becomes copying', async done => {
+    component.copyRight = true;
+    jest.spyOn(component, 'moveItems');
+    // Select last item in right group
+    const itemsRightLast =
+      component.itemsRight[component.itemsRight.length - 1];
+    clickItem(itemsRightLast.id);
+    // Select second last item in right group
+    const itemsRightLast2nd =
+      component.itemsRight[component.itemsRight.length - 2];
+    clickItem(itemsRightLast2nd.id);
+
+    // Wait for button "move to left" enabled and click it
+    await fixture.whenStable();
+    fixture.detectChanges();
+    debugElement.query(By.css('button#move-to-left')).nativeElement.click();
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(component.moveItems).toHaveBeenCalled();
+    // Check items still in right group
+    expect(component.itemsRight).toContain(itemsRightLast);
+    expect(component.itemsRight).toContain(itemsRightLast2nd);
+    // Check items in left group
+    expect(component.itemsLeft).toContain(itemsRightLast);
+    expect(component.itemsLeft).toContain(itemsRightLast2nd);
+
+    // Should clear selection of right
+    expect(component.hasSelectedItemsIn('right')).toBe(false);
+
+    done();
+  });
+
+  // it('should onSubmit() with @Output() submit emitting { left: comopnent.itemsLeft, right: component.itemsRight }', done => {
+  //   component.submit.subscribe(payload => {
+  //     expect(payload).toEqual({
+  //       left: component.itemsLeft,
+  //       right: component.itemsRight
+  //     });
+  //     done();
+  //   });
+  //   debugElement.query(By.css('button#submit')).nativeElement.click();
+  // });
 });

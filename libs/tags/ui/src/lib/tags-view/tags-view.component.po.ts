@@ -1,15 +1,16 @@
-import { ViewPageObject } from '@ygg/shared/infra/test-utils';
-import { Tags } from '../tags';
+import { PageObject } from '@ygg/shared/test/page-object';
+import { Tags, Tag } from '@ygg/tags/core';
 
-export class TagsViewComponentPageObject extends ViewPageObject<Tags> {
-  selector = '.tags-view';
+export abstract class TagsViewComponentPageObject extends PageObject {
   selectors = {
+    main: '.tags-view',
     tagChip: '.tag-chip'
   };
-  
-  expectValue(tags: Tags) {
-    for (const tagName of tags.getNames()) {
-      this.tester.expectTextContent(`${this.getSelector('tagChip')}[tagName="${tagName}"]`, tagName);
-    }
+
+  getSelectorForTagChip(tag: Tag): string {
+    return `${this.getSelector('tagChip')}[tagName="${tag.name}"]`;
   }
+
+  abstract expectValue(tags: Tags): any;
+  
 }

@@ -1,0 +1,50 @@
+<div class="tags-admin-list">
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px">
+    <div fxFlex class="tag-filter">
+      <mat-form-field>
+        <input
+          matInput
+          class="search"
+          placeholder="搜尋標籤"
+          [formControl]="searchControl"
+        />
+        <div matPrefix>
+          <mat-icon>search</mat-icon>
+        </div>
+        <div matSuffix>
+          <button
+            type="button"
+            mat-mini-fab
+            class="add-new-tag"
+            [disabled]="isAddNewTagButtonDisabled"
+            (click)="addNewTag()"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </mat-form-field>
+    </div>
+    <div>
+      <button
+        class="remove-tags"
+        mat-fab
+        [disabled]="isRemoveTagsButtonDisabled"
+        (click)="removeSelectedTags()"
+      >
+        <mat-icon>delete_sweep</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="tags-list">
+    <mat-selection-list #list>
+      <mat-list-option
+        *ngFor="let tag of tags"
+        [attr.tagId]="tag.id"
+        class="tag-item"
+        [value]='tag.id'
+      >
+        {{ tag.name }}
+      </mat-list-option>
+    </mat-selection-list>
+  </div>
+</div>

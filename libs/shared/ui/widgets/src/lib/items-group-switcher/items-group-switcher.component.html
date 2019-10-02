@@ -9,12 +9,12 @@
     <div class="action-bar">
       <ng-content select="[ygg-left-group-actions]"></ng-content>
     </div>
-    <mat-card class="items-list" id="items-left">
+    <mat-card class="items-list items-left" id="items-left">
       <div
         *ngFor="let item of itemsLeft"
         class="item"
         [ngClass]="{ selected: iSelectedIn(item.id, 'left') }"
-        [attr.data-id]="item.id"
+        [attr.item-id]="item.id"
         [attr.name]="item.name"
         (click)="onClickItem(item.id, 'left')"
       >
@@ -29,7 +29,7 @@
           mat-mini-fab
           id="move-to-right"
           [disabled]="!hasSelectedItemsIn('left')"
-          (click)="moveItemsToRight()"
+          (click)="moveItems('left', 'right')"
         >
           <mat-icon>fast_forward</mat-icon>
         </button>
@@ -39,7 +39,7 @@
           mat-mini-fab
           id="move-to-left"
           [disabled]="!hasSelectedItemsIn('right')"
-          (click)="moveItemsToLeft()"
+          (click)="moveItems('right', 'left')"
         >
           <mat-icon>fast_rewind</mat-icon>
         </button>
@@ -51,10 +51,10 @@
     <div class="action-bar">
       <ng-content select="[ygg-right-group-actions]"></ng-content>
     </div>
-    <mat-card class="items-list" id="items-right">
+    <mat-card class="items-list items-right" id="items-right">
       <div
         *ngFor="let item of itemsRight"
-        [attr.data-id]="item.id"
+        [attr.item-id]="item.id"
         class="item"
         [ngClass]="{ selected: iSelectedIn(item.id, 'right') }"
         (click)="onClickItem(item.id, 'right')"

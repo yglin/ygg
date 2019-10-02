@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { MenuTree } from '@ygg/shared/ui/navigation';
-import { DataAccessService } from '@ygg/shared/infra/data-access';
-import { Observable } from 'rxjs';
+import { TaggableType, Tag } from '@ygg/tags/core';
+import { TagsService } from '@ygg/tags/data-access';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TagsAdminService {
-  adminPath = 'admin/tags';
 
   private _menu: MenuTree;
   set menu(value: MenuTree) {
@@ -20,19 +19,12 @@ export class TagsAdminService {
   }
 
   constructor(
-    private dataAccessService: DataAccessService
+    private tagsService: TagsService
   ) {
     this._menu = new MenuTree();
   }
 
-  async setData(path: string, data: any) {
-    const fullPath = this.adminPath + '/' + path;
-    return await this.dataAccessService.setDataObject<any>(fullPath, data);
-  }
-
-  getData$(path: string): Observable<any> {
-    // console.log(this.menu.getPath('agent'));
-    const fullPath = this.adminPath + '/' + path;
-    return this.dataAccessService.getDataObject$<any>(fullPath);
+  async saveUserOptionTags(taggableType: TaggableType, userOptionTags: Tag[]) {
+    return this.tagsService.setOptionTags$(taggableType, userOptionTags);
   }
 }

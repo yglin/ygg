@@ -1,4 +1,5 @@
 import { sample } from 'lodash';
+import { v4 as uuid} from 'uuid';
 import { DataItem } from '@ygg/shared/infra/data-access';
 
 export class Tag implements DataItem {
@@ -36,30 +37,7 @@ export class Tag implements DataItem {
   }
 
   static forge(): Tag {
-    const name = sample([
-      'HAVE',
-      'YOU',
-      'EVER',
-      'SEE',
-      'THE',
-      'RAIN',
-      'YYGG',
-      'BIRD',
-      'BIRB',
-      'BORB',
-      'ORB',
-      'Cockatiel',
-      'Cockatoo',
-      'Eclectus',
-      'Conure',
-      'Parakeet',
-      'Budgie',
-      'Macaw',
-      'Lovebird',
-      'Caique',
-      'Amazon'
-    ]);
-    return new Tag(name);
+    return new Tag(uuid());
   }
 
   fromJSON(data: any = {}): this {

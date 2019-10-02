@@ -5,6 +5,20 @@ export interface Taggable {
   tags: Tags;
 }
 
+export interface TaggableType {
+  id: string;
+  label: string;
+  collection: string;
+}
+
+export function toTaggableTypeId(tt: TaggableType | string): string {
+  if (typeof tt === 'string') {
+    return tt;
+  } else {
+    return tt.id;
+  }
+}
+
 // export class Taggable {
 //   readonly id: string;
 //   readonly collection: string;

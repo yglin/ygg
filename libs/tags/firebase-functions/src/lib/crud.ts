@@ -1,5 +1,4 @@
-import { Tag } from '../tag';
-import { Tags } from '../tags';
+import { Tag, Tags } from '@ygg/tags/core';
 import * as admin from 'firebase-admin';
 import { WriteResult } from '@google-cloud/firestore';
 

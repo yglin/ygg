@@ -1,0 +1,12 @@
+.tags-admin-list {
+  width: 90vw;
+  max-width: 640px;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+button.add-new-tag {
+  margin-bottom: 5px;
+}

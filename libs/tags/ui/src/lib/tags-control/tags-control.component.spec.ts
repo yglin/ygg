@@ -10,22 +10,85 @@ import {
 } from '@angular/forms';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { ChipsControlComponent } from '@ygg/shared/ui/widgets';
-import { MockComponent, MockedComponent } from "ng-mocks";
+import { MockComponent, MockedComponent } from 'ng-mocks';
 import { By } from '@angular/platform-browser';
-import { Tags } from '../tags';
+import { Tags, Tag, TaggableType } from '@ygg/tags/core';
 import { TagsControlComponentPageObject } from './tags-control.component.po';
-import { AngularJestTester } from '@ygg/shared/infra/test-utils/jest';
+import { AngularJestTester } from '@ygg/shared/test/angular-jest';
 import { BehaviorSubject, of, Observable } from 'rxjs';
-import { TagService } from '../../tag.service';
+import { TagsService } from '@ygg/tags/data-access';
 import { take } from 'rxjs/operators';
 
+// class TagsControlComponentPageObjectAngularJest extends TagsControlComponentPageObject {
+//   tester: AngularJestTester;
+
+//   constructor(parentSelector: string, tester: AngularJestTester) {
+//     super(parentSelector);
+//     this.tester = tester;
+//   }
+
+//   async setValue(tags: Tags) {
+//     await this.clearAll();
+//     for (const tag of tags.toTagsArray()) {
+//       await this.tester.inputText(this.getSelector('inputTagName'), tag.name);
+//       await this.tester.click(this.getSelector('buttonAdd'));
+//       await this.tester.expectVisible(this.getSelectorForTagChip(tag), true);
+//     }
+//   }
+
+//   async clearAll() {
+//     return this.tester.click(this.getSelector('buttonClear'));
+//   }
+
+//   async removeTag(tag: Tag) {
+//     return this.tester.click(this.getSelectorForTagDeleteButton(tag));
+//   }
+
+//   // yglin: 2019/08/30
+//   // This method is useless right now,
+//   // because I can't get the autocomplete panel hidden as expect after clearInput().
+//   // It behaves normal outside test, so I'll postpone this.
+//   expectAutoCompleteDropdownVisible(flag: boolean) {
+//     this.tester.expectVisible(this.getSelectorForAutocompletePanel(), flag);
+//   }
+
+//   async typeIntoName(letter: string) {
+//     return this.tester.type(this.getSelector('inputTagName'), letter);
+//   }
+
+//   async clearInput() {
+//     return this.tester.inputText(this.getSelector('inputTagName'), '');
+//   }
+
+//   async expectAutoCompleteDropdownOptions(values: string[]) {
+//     for (const value of values) {
+//       await this.tester.expectVisible(
+//         this.getSelectorForAutocompleteOption(value),
+//         true
+//       );
+//     }
+//     return Promise.resolve();
+//   }
+// }
+
 describe('TagsControlComponent as Reactive Form Controller(ControlValueAccessor)', () => {
-  const stubOptionTags = Tags.forge();
+  const stubOptionTags = Tags.forge().toTagsArray();
+  const stubTaggableTypes = [
+    {
+      id: 'ggyy',
+      label: 'GGYY',
+      collection: 'garbages'
+    }
+  ];
 
   @Injectable()
-  class MockTagService {
-    getOptionTags$(taggableType: string): Observable<Tags> {
+  class MockTagsService {
+    getOptionTags$(taggableType: TaggableType): Observable<Tag[]> {
       return of(stubOptionTags);
+    }
+
+    getTaggableTypes$(): Observable<TaggableType[]> {
+      return of(stubTaggableTypes);
     }
   }
 
@@ -52,13 +115,17 @@ describe('TagsControlComponent as Reactive Form Controller(ControlValueAccessor)
   let debugElement: DebugElement;
   // let pageObject: TagsControlComponentPageObject;
   let fixture: ComponentFixture<MockFormComponent>;
-  let mockTagService: MockTagService;
+  let mockTagsService: MockTagsService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, SharedUiNgMaterialModule],
-      declarations: [MockFormComponent, TagsControlComponent, MockComponent(ChipsControlComponent)],
-      providers: [{ provide: TagService, useClass: MockTagService }]
+      declarations: [
+        MockFormComponent,
+        TagsControlComponent,
+        MockComponent(ChipsControlComponent)
+      ],
+      providers: [{ provide: TagsService, useClass: MockTagsService }]
     }).compileComponents();
   }));
 
@@ -68,8 +135,9 @@ describe('TagsControlComponent as Reactive Form Controller(ControlValueAccessor)
     formComponent = fixture.componentInstance;
     component = debugElement.query(By.directive(TagsControlComponent))
       .componentInstance;
-    mockChipsControlComponent = debugElement.query(By.css('ygg-chips-control')).componentInstance;
-    mockTagService = TestBed.get(TagService);
+    mockChipsControlComponent = debugElement.query(By.css('ygg-chips-control'))
+      .componentInstance;
+    mockTagsService = TestBed.get(TagsService);
     fixture.detectChanges();
   });
 
@@ -87,7 +155,9 @@ describe('TagsControlComponent as Reactive Form Controller(ControlValueAccessor)
     formComponent.formGroup.get('tags').setValue(testTags);
     await fixture.whenStable();
     fixture.detectChanges();
-    expect(mockChipsControlComponent.writeValue).toHaveBeenCalledWith(testTags.toNameArray());
+    expect(mockChipsControlComponent.writeValue).toHaveBeenCalledWith(
+      testTags.toNameArray()
+    );
     done();
   });
 
@@ -101,30 +171,28 @@ describe('TagsControlComponent as Reactive Form Controller(ControlValueAccessor)
     done();
   });
 
-  it('Should connect optionTags$ to TagService.getOptionTags$() when given taggableType', async done => {
-    const testTags = Tags.forge();
-    const taggableType = 'garbage';
-    jest
-      .spyOn(mockTagService, 'getOptionTags$')
-      .mockImplementation(() => of(testTags));
-    component.taggableType = taggableType;
+  it('Should fetch taggable-types on init, and pass the received taggableType to TagsService.getOptionTags$', async done => {
+    jest.spyOn(mockTagsService, 'getTaggableTypes$');
+    jest.spyOn(mockTagsService, 'getOptionTags$');
+    component.taggableType = stubTaggableTypes[0].id;
     component.ngOnInit();
     await fixture.whenStable();
     fixture.detectChanges();
-    component.optionTags$.pipe(take(1)).subscribe(autoCompleteTags => {
-      expect(mockTagService.getOptionTags$).toHaveBeenCalledWith(taggableType);
-      expect(autoCompleteTags).toBe(testTags);
-      done();
-    });
+    expect(mockTagsService.getTaggableTypes$).toHaveBeenCalled();
+    expect(mockTagsService.getOptionTags$).toHaveBeenCalledWith(
+      stubTaggableTypes[0]
+    );
+    done();
   });
 
-  it('Should pass option tags to ygg-chips-control component', async done => {
-    const testTags = Tags.forge();
-    component.optionTags$ = of(testTags);
+  it('Should pass TagsService.getOptionTags$() as names array to chipControlComponet.autocompleteOptions', async done => {
+    jest.spyOn(mockTagsService, 'getOptionTags$');
+    component.taggableType = stubTaggableTypes[0].id;
     component.ngOnInit();
     await fixture.whenStable();
     fixture.detectChanges();
-    expect(mockChipsControlComponent.autocompleteOptions).toEqual(testTags.toNameArray());
+    expect(mockTagsService.getOptionTags$).toHaveBeenCalled();
+    expect(mockChipsControlComponent.autocompleteOptions).toEqual(stubOptionTags.map(tag => tag.name));
     done();
   });
 });

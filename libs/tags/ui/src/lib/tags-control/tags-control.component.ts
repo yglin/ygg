@@ -1,23 +1,14 @@
-import {
-  Component,
-  OnDestroy,
-  forwardRef,
-  Input,
-  OnInit
-} from '@angular/core';
+import { find, isArray } from 'lodash';
+import { Component, OnDestroy, forwardRef, Input, OnInit } from '@angular/core';
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
   FormControl
 } from '@angular/forms';
-import {
-  Subscription,
-  noop,
-  Observable,
-} from 'rxjs';
-import { Tags } from '@ygg/tags/core';
-// import { Tag } from '../../tag';
-import { TagService } from '../tag.service';
+import { Subscription, noop, Observable, throwError } from 'rxjs';
+import { Tags, Tag } from '@ygg/tags/core';
+import { TagsService } from '@ygg/tags/data-access';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'ygg-tags-control',
@@ -35,7 +26,7 @@ export class TagsControlComponent
   implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() label: string;
   @Input() taggableType: string;
-  optionTags$: Observable<Tags>;
+  optionTags$: Observable<Tag[]>;
   optionTags: string[] = [];
   chipsControl: FormControl;
 
@@ -43,18 +34,30 @@ export class TagsControlComponent
 
   subscriptions: Subscription[] = [];
 
-  constructor(private tagService: TagService) {}
+  constructor(private tagsService: TagsService) {}
 
   ngOnInit() {
     if (this.taggableType && !this.optionTags$) {
-      this.optionTags$ = this.tagService.getOptionTags$(this.taggableType);
+      this.optionTags$ = this.tagsService.getTaggableTypes$().pipe(
+        switchMap(taggableTypes => {
+          const taggableType = find(taggableTypes, t => t.id === this.taggableType);
+          if (taggableType) {
+            return this.tagsService.getOptionTags$(taggableType);
+          } else {
+            const error = new Error(`Not supported taggable type: ${this.taggableType}`);
+            return throwError(error);
+          }
+        })
+      )
     }
     // console.log(`Taggable type = ${this.taggableType}, optionTags$ = ${this.optionTags$}`);
     if (this.optionTags$) {
       this.subscriptions.push(
         this.optionTags$.subscribe(tags => {
-          if (Tags.isTags(tags)) {
-            this.optionTags = tags.toNameArray();
+          if (isArray(tags)) {
+            this.optionTags = tags.map(tag => tag.name);
+          } else {
+            this.optionTags = [];
           }
         })
       );
@@ -85,5 +88,4 @@ export class TagsControlComponent
   }
 
   registerOnTouched() {}
-
 }
