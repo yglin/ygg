@@ -77,9 +77,6 @@
     "shared-infra-log": {
       "tags": ["scope:shared", "type:util"]
     },
-    "shared-infra-test-utils": {
-      "tags": ["scope:shared", "type:utils"]
-    },
     "shared-ui-ng-material": {
       "tags": ["scope:shared", "type:ui"]
     },

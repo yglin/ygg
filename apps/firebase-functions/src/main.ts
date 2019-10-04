@@ -1,10 +1,11 @@
 // import * as express from 'express';
 // import * as functions from 'firebase-functions';
-// import * as admin from 'firebase-admin';
+import * as admin from 'firebase-admin';
+// import * as projectConfig from '@ygg/firebase/project-config.json';
 // import * as cors from 'cors';
 
 // // admin.initializeApp(functions.config().firebase);
-// admin.initializeApp();
+admin.initializeApp();
 // // admin.firestore().settings({ timestampsInSnapshots: true });
 
 // const corsHandler = cors({origin: true});
@@ -34,6 +35,5 @@
 // exports.api = functions.https.onRequest(app);
 
 // ========================== Event Functions ===========================
-import { FirebaseFunctions } from "@ygg/playwhat/tag";
-export const onWritePlay = FirebaseFunctions.onWritePlay;
+export * from "@ygg/tags/firebase-functions";
 

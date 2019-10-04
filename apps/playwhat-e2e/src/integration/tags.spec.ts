@@ -1,26 +1,18 @@
 import { login } from '../page-objects/app.po';
 import { SiteNavigator } from '../page-objects/site-navigator';
-import {
-  PlayFormPageObject,
-  PlayViewPageObject
-} from '../page-objects/play.po';
-import { PageObjects } from '@ygg/playwhat/play';
+import { PlayFormPageObject } from '../page-objects/play.po';
 import { Play } from '@ygg/playwhat/play';
+import { Tags, Tag } from '@ygg/tags/core';
 import { v4 as uuid } from 'uuid';
-import { AngularCypressTester } from '@ygg/shared/infra/test-utils/cypress';
-import { TagsAdminUserOptionsPageObject } from "../page-objects/tags-admin.po";
+import { TagsAdminListPageObjectCypress } from '../page-objects/tags/tags-admin-list.po';
 
 describe('Add new tags from various user activities', () => {
   const siteNavigator = new SiteNavigator();
-  const tester = new AngularCypressTester({});
-  const adminPlayTagsPageObject = new PageObjects.AdminPlayTagsPageObject(
-    tester
-  );
+  const tagsAdminListPageObject = new TagsAdminListPageObjectCypress();
   const testPlay = Play.forge();
-  const testTag = uuid();
-  testPlay.tags.push(testTag);
+  const testTags = Tags.forge();
+  testPlay.tags = testTags;
   const playFormPageObject = new PlayFormPageObject();
-  const tagsAdminPageObject = new TagsAdminUserOptionsPageObject();
 
   beforeEach(() => {
     cy.visit('/');
@@ -42,20 +34,17 @@ describe('Add new tags from various user activities', () => {
       cy.wrap(newPlayId).as('newPlayId');
     });
 
-    siteNavigator.goto(['admin', 'tags', 'user-options']);
-    tagsAdminUserOptionsPageObject.expectTags(testPlay.tags);
+    siteNavigator.goto(['admin', 'tags', 'list']);
+    tagsAdminListPageObject.expectTags(testPlay.tags.toTagsArray());
 
     cy.get('@newPlayId').then(newPlayId => {
       // @ts-ignore
       cy.callFirestore('delete', `plays/${newPlayId}`);
+      // Delete test tags
+      cy.wrap(testTags.toTagsArray()).each((element, index, array) => {
+        // @ts-ignore
+        cy.callFirestore('delete', `tags/${(element as Tag).id}`);
+      });
     });
-    // siteNavigator.goto(['admin', 'play', 'tags']).then(async () => {
-    //   await adminPlayTagsPageObject.expectTag(testTag);
-    //   await adminPlayTagsPageObject.removeTag(testTag);
-    //   cy.get('@newPlayId').then(newPlayId => {
-    //     // @ts-ignore
-    //     cy.callFirestore('delete', `plays/${newPlayId}`);
-    //   });
-    // });
   });
 });

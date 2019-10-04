@@ -5,10 +5,10 @@ export abstract class TagsControlComponentPageObject extends PageObject {
   selectors = {
     main: '.tags-control',
     label: '.label',
-    inputTagName: 'input#tag-name',
-    buttonAdd: 'button#add-tag',
+    inputTagName: 'input#chip',
+    buttonAdd: 'button#add-chip',
     buttonClear: 'button#clear-all',
-    tagChip: '.tag-chip',
+    tagChip: '.chip',
   };
 
   getSelectorForAutocompletePanel(): string {
@@ -16,7 +16,7 @@ export abstract class TagsControlComponentPageObject extends PageObject {
   }
 
   getSelectorForTagChip(tag: Tag): string {
-    return `${this.getSelector('tagChip')}[tagName="${tag.name}"]`;
+    return `${this.getSelector('tagChip')}[chipName="${tag.name}"]`;
   }
 
   getSelectorForTagDeleteButton(tag: Tag): string {

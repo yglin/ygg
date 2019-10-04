@@ -16,7 +16,7 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedTypesModule } from '@ygg/shared/types';
 import { MockComponent } from "ng-mocks";
 import { PlayViewComponent } from '../play-view/play-view.component';
-import { PlaywhatTagModule } from '@ygg/playwhat/tag';
+import { TagsUiModule } from '@ygg/tags/ui';
 import { By } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -69,7 +69,7 @@ describe('PlayFormComponent', () => {
         SharedUiWidgetsModule,
         SharedUiNgMaterialModule,
         SharedTypesModule,
-        PlaywhatTagModule
+        TagsUiModule
       ],
       providers: [
         { provide: PlayService, useClass: MockPlayService },

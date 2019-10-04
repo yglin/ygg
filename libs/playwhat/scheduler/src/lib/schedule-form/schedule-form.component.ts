@@ -29,7 +29,6 @@ import {
 } from '@ygg/shared/user';
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { PlayTagService } from '@ygg/playwhat/play';
 import { Tags } from '@ygg/tags/core';
 
 @Component({
@@ -58,7 +57,6 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     private authService: AuthenticateService,
     private authUiService: AuthenticateUiService,
     private userService: UserService,
-    private playTagService: PlayTagService
   ) {
     this.onSubmit = new EventEmitter();
     this.subscriptions = [];

@@ -4,12 +4,11 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { PlayAdminService } from './admin/play-admin.service';
 import { PlaywhatAdminService } from '@ygg/playwhat/admin';
 import { adminMenu } from './admin';
-import { AdminPlayTagsComponent } from './admin/admin-play-tags/admin-play-tags.component';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 @NgModule({
-  declarations: [AdminPlayTagsComponent],
-  entryComponents: [AdminPlayTagsComponent],
+  declarations: [],
+  entryComponents: [],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, SharedUiWidgetsModule],
   providers: [
     {

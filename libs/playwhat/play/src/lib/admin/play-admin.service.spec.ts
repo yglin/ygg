@@ -4,7 +4,6 @@ import { PlayAdminService } from './Play-admin.service';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { PlaywhatAdminService } from '@ygg/playwhat/admin';
-import { PlayTag, PlayTagService } from '../tag';
 
 @Injectable()
 class MockPlaywhatAdminService {
@@ -14,19 +13,12 @@ class MockPlaywhatAdminService {
   }
 }
 
-@Injectable()
-class MockPlayTagService {
-  listByIds$(): Observable<PlayTag[]> {
-    return of([]);
-  }
-}
 
 describe('PlayAdminService', () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
       providers: [
-        { provide: PlaywhatAdminService, useClass: MockPlaywhatAdminService },
-        { provide: PlayTagService, useClass: MockPlayTagService }
+        { provide: PlaywhatAdminService, useClass: MockPlaywhatAdminService }
       ]
     })
   );

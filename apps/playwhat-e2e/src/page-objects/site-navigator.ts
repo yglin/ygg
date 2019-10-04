@@ -26,6 +26,8 @@ export class SiteNavigator {
     const route = path.shift();
     if (route === 'play') {
       this.gotoAdminPlay(path);
+    } else if (route === 'tags') {
+      this.gotoAdminTags(path);
     }
   }
 
@@ -35,5 +37,13 @@ export class SiteNavigator {
     if (route === 'tags') {
       cy.get('#tags').click();
     }    
+  }
+
+  private gotoAdminTags(path: string[] = []) {
+    cy.get('#tags').click();
+    const route = path.shift();
+    if (route === 'list') {
+      cy.get('#list').click();
+    }
   }
 }

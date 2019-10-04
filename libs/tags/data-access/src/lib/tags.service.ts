@@ -25,7 +25,7 @@ export class TagsService {
     this.tags$ = this.firestore
       .collection<Tag>(Tag.collectionName)
       .valueChanges()
-      .pipe(map(tags => tags.map(tag => new Tag(tag))));
+      .pipe(map(tags => tags.filter(tagData => Tag.isTag(tagData)).map(tagData => Tag.fromJSON(tagData))));
     this.configs$ = this.fireRealDB
       .object<TagsFeatureConfig>(this.configPath)
       .valueChanges().pipe(shareReplay());

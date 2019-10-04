@@ -11,5 +11,5 @@ export * from './lib/day-time-range';
 export * from './lib/week-day';
 export * from './lib/location';
 export * from './lib/tags';
-import * as PageObjects from './index.po';
-export { PageObjects };
+// import * as PageObjects from './index.po';
+// export { PageObjects };

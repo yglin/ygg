@@ -6,15 +6,17 @@ import {
   BusinessHoursViewPageObject
 } from './business-hours.po';
 import { PageObject } from './page-object.po';
-import { PageObjects } from '@ygg/shared/types';
-import { AngularCypressTester } from '@ygg/shared/infra/test-utils/cypress';
-
-import { TagsControlPageObject, TagsViewComponentPageObject } from "./tags.po";
+// import { PageObjects } from '@ygg/shared/types';
+// import { AngularCypressTester } from '@ygg/shared/infra/test-utils/cypress';
+import { Location } from './shared-types';
+import {
+  TagsControlPageObjectCypress,
+  TagsViewPageObjectCypress
+} from './tags';
 
 export class PlayFormPageObject extends PageObject {
   selector = '.play-form';
   selectors = {
-    tagsControl: '.tags-control',
     buttonSubmit: 'button#submit'
   };
 
@@ -27,7 +29,7 @@ export class PlayFormPageObject extends PageObject {
   }
 
   fillIn(play: Play) {
-    const tester = new AngularCypressTester({});
+    // const tester = new AngularCypressTester({});
     const formModel = Play.getFormModel();
     for (const name in formModel.controls) {
       if (formModel.controls.hasOwnProperty(name)) {
@@ -59,8 +61,7 @@ export class PlayFormPageObject extends PageObject {
             businessHoursControl.fillIn(play.businessHours);
             break;
           case FormControlType.location:
-            const locationControl = new PageObjects.LocationControlComponentPageObject(
-              tester,
+            const locationControl = new Location.LocationControlPageObjectCypress(
               `${this.getSelector()} #form-control-${name}`
             );
             locationControl.setValue(play.location);
@@ -80,7 +81,7 @@ export class PlayFormPageObject extends PageObject {
         }
       }
     }
-    const tagsControlPO = new TagsControlPageObject(`${this.getSelector('tagsControl')}`);
+    const tagsControlPO = new TagsControlPageObjectCypress();
     tagsControlPO.setValue(play.tags);
   }
 
@@ -106,7 +107,7 @@ export class PlayViewPageObject {
 
   checkData(play: Play) {
     const formModel = Play.getFormModel();
-    const tester = new AngularCypressTester({});
+    // const tester = new AngularCypressTester({});
     for (const name in formModel.controls) {
       if (
         formModel.controls.hasOwnProperty(name) &&
@@ -129,8 +130,7 @@ export class PlayViewPageObject {
             this.businessHoursView.expect(play[name]);
             break;
           case FormControlType.location:
-            const locationView = new PageObjects.LocationViewComponentPageObject(
-              tester,
+            const locationView = new Location.LocationViewPageObjectCypress(
               this.selector
             );
             locationView.expectValue(play[name]);
@@ -150,7 +150,7 @@ export class PlayViewPageObject {
         }
       }
     }
-    const tagsView = new TagsViewComponentPageObject(`${this.selector}`);
+    const tagsView = new TagsViewPageObjectCypress(`${this.selector}`);
     tagsView.expectValue(play.tags);
   }
 }
