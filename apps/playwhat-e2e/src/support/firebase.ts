@@ -40,6 +40,17 @@ export function attachCustomCommands({ Cypress, cy, firebase }) {
     }
   });
 
+  Cypress.Commands.add('getCurrentUser', () => {
+    return new Promise((resolve, reject) => {
+      const user = firebase.auth().currentUser;
+      if (user) {
+        resolve(user);
+      } else {
+        reject(user);
+      }
+    });
+  });
+
   /**
    * Log out of Firebase instance
    * @memberOf Cypress.Chainable#

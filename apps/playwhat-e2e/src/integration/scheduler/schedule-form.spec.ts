@@ -1,4 +1,4 @@
-import { login, hitUserMenu } from "../page-objects/app.po";
+import { login, hitUserMenu } from "../../page-objects/app.po";
 
 describe('Scheduler', () => {
   beforeEach(function() {

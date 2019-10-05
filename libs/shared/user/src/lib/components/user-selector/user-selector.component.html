@@ -1,7 +1,7 @@
 <div id="user-selector" class="user-selector">
   <ygg-action-barred>
     <div yggActionBarredActions>
-      <button mat-fab (click)='onSubmit()'><mat-icon>save</mat-icon></button>
+      <button class='submit' mat-fab (click)='onSubmit()'><mat-icon>save</mat-icon></button>
     </div>
     <div yggActionBarredContent fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
       <mat-selection-list (selectionChange)="onChangeSelection($event)">
@@ -10,6 +10,9 @@
           [value]="id"
           [id]="id"
           [selected]="isSelected(id)"
+          [attr.user-id]="id"
+          [attr.selected]="isSelected(id)"
+          class='option'
         >
           <ygg-user-thumbnail [id]="id"></ygg-user-thumbnail>
         </mat-list-option>

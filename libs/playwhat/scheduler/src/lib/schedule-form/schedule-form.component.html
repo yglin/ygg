@@ -1,12 +1,12 @@
 <div class="ygg-schedule-form">
   <form [formGroup]="formGroup" id="schedule-form">
     <div fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px">
-      <div *ngIf="agentUsers?.length > 0">
+      <div *ngIf="agentUsers?.length > 0" class='agent'>
         <mat-form-field>
           <mat-label>選擇接單窗口</mat-label>
-          <mat-select formControlName="agentId">
-            <mat-option value="">請幫我指定</mat-option>
-            <mat-option *ngFor="let user of agentUsers" [value]="user.id">
+          <mat-select formControlName="agentId" class='select'>
+            <mat-option class='agent-option' value="">請幫我指定</mat-option>
+            <mat-option class='agent-option' *ngFor="let user of agentUsers" [value]="user.id" [attr.user-id]='user.id'>
               <ygg-user-thumbnail [id]="user.id"></ygg-user-thumbnail>
             </mat-option>
           </mat-select>

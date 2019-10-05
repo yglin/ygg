@@ -1,4 +1,4 @@
-<div id='user-thumbnail' class="ygg-user-thumbnail" *ngIf="user">
+<div id='user-thumbnail' class="ygg-user-thumbnail" *ngIf="user" [attr.userId]="user.id">
   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
     <div fxFlex='50px' class='avatar'>
       <img [src]="user.avatarUrl" />
