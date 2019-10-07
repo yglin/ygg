@@ -19,6 +19,7 @@
           matTooltip="送出"
           (click)="submit()"
           [disabled]="formGroup.invalid"
+          class='submit'
         >
           <mat-icon>save</mat-icon>
         </button>
@@ -34,7 +35,7 @@
                 >預計日期範圍＊</ygg-title-divider
               >
             </mat-expansion-panel-header>
-            <div class="form-control">
+            <div class="form-control date-range">
               <ygg-date-range-picker
                 formControlName="dateRange"
               ></ygg-date-range-picker>

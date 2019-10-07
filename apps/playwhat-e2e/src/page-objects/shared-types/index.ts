@@ -1,2 +1,3 @@
 import * as Location from './location';
-export { Location };
+import * as DateRange from './date-range';
+export { DateRange, Location };

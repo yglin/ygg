@@ -20,7 +20,7 @@ export class ScheduleForm implements DataItem {
   transpotation: string;
   transpotationHelp: string;
   accommodationHelp: string;
-  likeTags: Tags; // PlayTag Names
+  likeTags: Tags;
   likesDescription: string;
   agentId: string;
   creatorId: string;
