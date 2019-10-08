@@ -1,4 +1,7 @@
 
 .ygg-date-range-picker .mat-form-field {
-  min-width: 300px;
+  width: 100%;
+  min-width: 250px;
+  max-width: 360px;
+  font-size: 20px;
 }

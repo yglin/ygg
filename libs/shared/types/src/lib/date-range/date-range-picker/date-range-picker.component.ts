@@ -1,9 +1,18 @@
-import {Component, forwardRef} from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import * as moment from 'moment';
+import { Component, forwardRef, OnDestroy } from '@angular/core';
+import {
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+  FormControl
+} from '@angular/forms';
+// import * as moment from 'moment';
 import { DateRange } from '../date-range';
-import { YggDialogService } from '@ygg/shared/ui/widgets';
-import { DateRangePickerDialogComponent, DateRangePickerDialogData } from './date-range-picker-dialog/date-range-picker-dialog.component';
+// import { YggDialogService } from '@ygg/shared/ui/widgets';
+// import {
+//   DateRangePickerDialogComponent,
+//   DateRangePickerDialogData
+// } from './date-range-picker-dialog/date-range-picker-dialog.component';
+import { Subscription, merge, combineLatest } from 'rxjs';
+import { auditTime, filter, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'ygg-date-range-picker',
@@ -17,14 +26,14 @@ import { DateRangePickerDialogComponent, DateRangePickerDialogData } from './dat
     }
   ]
 })
-export class DateRangePickerComponent implements ControlValueAccessor {
+export class DateRangePickerComponent
+  implements ControlValueAccessor, OnDestroy {
   _dateRange: DateRange;
   emitChange: (value: DateRange) => {};
   emitTouched: () => {};
-
-  constructor(
-    private yggDialog: YggDialogService
-  ) {}
+  startFormControl: FormControl = new FormControl(null);
+  endFormControl: FormControl = new FormControl(null);
+  subscriptions: Subscription[] = [];
 
   get dateRange(): DateRange {
     return this._dateRange;
@@ -34,6 +43,42 @@ export class DateRangePickerComponent implements ControlValueAccessor {
     if (DateRange.isDateRange(value)) {
       this._dateRange = value;
       this.emitChange(this._dateRange);
+    }
+  }
+
+  constructor() {
+    this.subscriptions.push(
+      combineLatest([
+        this.startFormControl.valueChanges,
+        this.endFormControl.valueChanges
+      ])
+        .pipe(
+          auditTime(500),
+          filter(([startValue, endValue]) => startValue && endValue)
+        )
+        .subscribe(([startValue, endValue]) => {
+          // console.log(startValue);
+          // console.log(endValue);
+          // Check end date must after start date
+          if (endValue.isBefore(startValue)) {
+            this.startFormControl.setValue(endValue, {
+              onlySelf: true
+            });
+            this.endFormControl.setValue(startValue, {
+              onlySelf: true
+            });
+          }
+          this.dateRange = new DateRange().fromMoment({
+            start: startValue,
+            end: endValue
+          });
+        })
+    );
+  }
+
+  ngOnDestroy() {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
     }
   }
 
@@ -53,19 +98,19 @@ export class DateRangePickerComponent implements ControlValueAccessor {
     this.emitTouched = fn;
   }
 
-  openPicker() {
-    const dialogData: DateRangePickerDialogData = {
-      dateRange: this.dateRange
-    };
-    const dialogRef = this.yggDialog.open(DateRangePickerDialogComponent, {
-      title: '請選擇日期',
-      data: dialogData
-    });
-    const subscription = dialogRef.afterClosed().subscribe(dateRange => {
-      this.dateRange = dateRange;
-      subscription.unsubscribe();
-    });
-  }
+  // openPicker() {
+  //   const dialogData: DateRangePickerDialogData = {
+  //     dateRange: this.dateRange
+  //   };
+  //   const dialogRef = this.yggDialog.open(DateRangePickerDialogComponent, {
+  //     title: '請選擇日期',
+  //     data: dialogData
+  //   });
+  //   const subscription = dialogRef.afterClosed().subscribe(dateRange => {
+  //     this.dateRange = dateRange;
+  //     subscription.unsubscribe();
+  //   });
+  // }
 
   onBlur() {
     if (this.emitTouched) {

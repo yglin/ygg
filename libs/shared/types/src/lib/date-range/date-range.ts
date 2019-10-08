@@ -1,25 +1,31 @@
-import {SerializableJSON} from '@ygg/shared/infra/data-access';
-import {isArray, random} from 'lodash';
+import { SerializableJSON } from '@ygg/shared/infra/data-access';
+import { isArray, random } from 'lodash';
 import * as moment from 'moment';
 
 export interface DateRangeMoment {
-  start: moment.Moment, end: moment.Moment
+  start: moment.Moment;
+  end: moment.Moment;
 }
 
 export class DateRange implements SerializableJSON {
+  static format = 'M/D/YYYY';
   private _start: Date;
   private _end: Date;
 
   static isDateRange(value: any): value is DateRange {
     return (
-        value && value.start && value.start instanceof Date && value.end &&
-        value.end instanceof Date);
+      value &&
+      value.start &&
+      value.start instanceof Date &&
+      value.end &&
+      value.end instanceof Date
+    );
   }
 
   static forge(): DateRange {
     const start = moment().add(random(6), 'month');
     const end = moment(start).add(random(30), 'day');
-    return new DateRange().fromMoment({start, end});
+    return new DateRange().fromMoment({ start, end });
   }
 
   get start(): Date {
@@ -36,42 +42,54 @@ export class DateRange implements SerializableJSON {
   }
 
   fromJSON(data: any): this {
-    let start: Date;
-    let end: Date;
-    if (isArray(data) && data.length >= 2) {
-      start = new Date(data[0]);
-      end = new Date(data[1]);
-    } else if (DateRange.isDateRange(data)) {
-      start = data.start;
-      end = data.end;
-    } else {
-      start = moment().add(1, 'month').toDate();
-      end = moment().add(1, 'month').add(1, 'week').toDate();
-    }
-    if (start > end) {
-      this._start = end;
-      this._end = start;
-    } else {
-      this._start = start;
-      this._end = end;
+    try {
+      let start: Date;
+      let end: Date;
+      if (DateRange.isDateRange(data)) {
+        start = data.start;
+        end = data.end;
+      } else if (isArray(data) && data.length >= 2) {
+        start = moment(data[0], DateRange.format).toDate();
+        end = moment(data[1], DateRange.format).toDate();
+      } else {
+        const forged = DateRange.forge();
+        start = forged.start;
+        end = forged.end;
+      }
+      if (start > end) {
+        this._start = end;
+        this._end = start;
+      } else {
+        this._start = start;
+        this._end = end;
+      }
+    } catch (error) {
+      console.error(error);
     }
     return this;
   }
 
-  toJSON(): any{return [this._start.toISOString(), this._end.toISOString()]}
+  toJSON(): any {
+    return [
+      moment(this.start).format(DateRange.format),
+      moment(this.end).format(DateRange.format)
+    ];
+  }
 
   fromMoment(dateRangeMoment: DateRangeMoment): this {
     return this.fromJSON([
       dateRangeMoment.start.toDate(),
-      dateRangeMoment.end.toDate(),
+      dateRangeMoment.end.toDate()
     ]);
   }
 
   toMoment(): DateRangeMoment {
-    return {start: moment(this.start), end: moment(this.end)};
+    return { start: moment(this.start), end: moment(this.end) };
   }
 
   format(): string {
-    return `${moment(this.start).format('YYYY/MM/DD')} — ${moment(this.end).format('YYYY/MM/DD')}`;
+    return `${moment(this.start).format('YYYY/MM/DD')} — ${moment(
+      this.end
+    ).format('YYYY/MM/DD')}`;
   }
 }

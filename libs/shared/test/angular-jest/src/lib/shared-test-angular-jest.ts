@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ComponentFixture } from '@angular/core/testing';
@@ -93,6 +94,15 @@ export class AngularJestTester {
   async inputText(selector: string, text: string) {
     const input = this.getNativeElement<HTMLInputElement>(selector);
     input.value = text;
+    input.dispatchEvent(new Event('input'));
+    await this.fixture.whenStable();
+    this.fixture.detectChanges();
+    return Promise.resolve();
+  }
+
+  async inputDate(selector: string, date: Date) {
+    const input = this.getNativeElement<HTMLInputElement>(selector);
+    input.value = moment(date).format('M/D/YYYY');
     input.dispatchEvent(new Event('input'));
     await this.fixture.whenStable();
     this.fixture.detectChanges();
