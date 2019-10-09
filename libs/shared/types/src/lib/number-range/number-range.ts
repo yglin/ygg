@@ -1,10 +1,17 @@
-import { isArray, defaults } from "lodash";
+import { isArray, random } from "lodash";
 import { SerializableJSON } from '@ygg/shared/infra/data-access';
 // import { NUMBER_FORMAT_REGEXP } from "@angular/common/src/i18n/format_number";
 
 export class NumberRange implements SerializableJSON {
   _min: number;
   _max: number;
+
+  static forge(): NumberRange {
+    const forged = new NumberRange();
+    forged.min = random(1, 100);
+    forged.max = random(1, 100);
+    return forged;
+  }
 
   static isNumberRange(value: any): value is NumberRange {
     if (value && value.min >= 0 && value.max >= 0 && value.min <= value.max) {

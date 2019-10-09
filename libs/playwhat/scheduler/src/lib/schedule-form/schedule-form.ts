@@ -75,7 +75,7 @@ export class ScheduleForm implements DataItem {
       '請幫我安排住宿，房間乾淨就好，最好是有養駝鳥的民宿';
     forged.likeTags = Tags.forge();
     forged.likesDescription = '希望有年輕漂亮的導遊，沒有的話鴕鳥也可以';
-    forged.agentId = User.forge().id;
+    // forged.agentId = User.forge().id;
     return forged;
   }
 
