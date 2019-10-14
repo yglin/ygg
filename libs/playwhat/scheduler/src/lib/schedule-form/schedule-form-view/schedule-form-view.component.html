@@ -83,13 +83,13 @@
       </td>
     </tr>
     <tr
-      class="likeTags"
+      class="tags"
       *ngIf="scheduleForm.hasLikes()"
     >
       <td>體驗需求</td>
       <td>
-        <div *ngIf="scheduleForm.likeTags" id="likeTags">
-          <ygg-tags-view [tags]="scheduleForm.likeTags"></ygg-tags-view>
+        <div *ngIf="scheduleForm.tags" id="tags">
+          <ygg-tags-view [tags]="scheduleForm.tags"></ygg-tags-view>
         </div>
         <div *ngIf="scheduleForm.likesDescription" id="likesDescription">
           <h5>對於體驗行程的需求...</h5>

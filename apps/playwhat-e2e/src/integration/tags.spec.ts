@@ -53,7 +53,7 @@ describe('Add new tags from various user activities', () => {
   // });
 
   it('From creating schedule-form', () => {
-    testScheduleForm.likeTags = testTags;
+    testScheduleForm.tags = testTags;
     siteNavigator.goto(['scheduler', 'new']);
     scheduleFormPage.setValue(testScheduleForm);
     scheduleFormPage.submit();
@@ -66,7 +66,7 @@ describe('Add new tags from various user activities', () => {
     });
 
     siteNavigator.goto(['admin', 'tags', 'list']);
-    tagsAdminListPageObject.expectTags(testScheduleForm.likeTags.toTagsArray());
+    tagsAdminListPageObject.expectTags(testScheduleForm.tags.toTagsArray());
 
     cy.get('@newScheduleFormId').then(newScheduleFormId => {
       // @ts-ignore

@@ -40,7 +40,7 @@ abstract class ScheduleFormPageObject extends PageObject {
   // abstract setGroupName(groupName: string): any;
   // abstract setTranspotation(transpotation: string): any;
   // abstract setTranspotationHelp(transpotationHelp: string): any;
-  // abstract setLikeTags(likeTags: Tags): any;
+  // abstract settags(tags: Tags): any;
   // abstract setLikesDescription(likesDescription: string): any;
   // abstract setAccommodationHelp(accommodationHelp: string): any;
 }
@@ -85,7 +85,7 @@ export class ScheduleFormPageObjectCypress extends ScheduleFormPageObject {
     // this.setGroupName(scheduleForm.groupName);
     // this.setTranspotation(scheduleForm.transpotation);
     // this.setTranspotationHelp(scheduleForm.transpotationHelp);
-    // this.setLikeTags(scheduleForm.likeTags);
+    // this.settags(scheduleForm.tags);
     // this.setLikesDescription(scheduleForm.likesDescription);
     // this.setAccommodationHelp(scheduleForm.accommodationHelp);
   }

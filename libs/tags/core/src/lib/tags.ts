@@ -21,6 +21,10 @@ export class Tags implements SerializableJSON {
     }
   }
 
+  get length(): number {
+    return this.tags.length;
+  }
+
   constructor(arg1?: Tags | Tag[] | string[]) {
     this.tags = [];
 

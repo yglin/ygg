@@ -183,7 +183,7 @@ describe('ScheduleFormComponent', () => {
       'transpotation',
       'transpotationHelp',
       'accommodationHelp',
-      'likeTags',
+      'tags',
       'likesDescription',
       'agentId'
     ];
@@ -209,7 +209,7 @@ describe('ScheduleFormComponent', () => {
     component.submit();
   });
 
-  it('when submit, should also call PlayTagsInput.upsertTags() to upsert likeTags', async done => {
+  it('when submit, should also call PlayTagsInput.upsertTags() to upsert tags', async done => {
     const mockPlayTagsInputComponent = debugElement.query(By.directive(MockPlayTagsInputComponent)).componentInstance;
     jest.spyOn(mockPlayTagsInputComponent, 'upsertTags').mockImplementation(() => Promise.resolve());
     await component.submit();

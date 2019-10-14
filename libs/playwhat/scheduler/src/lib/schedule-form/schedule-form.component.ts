@@ -131,9 +131,9 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(subsc);
-    subsc = this.formGroup.get('likeTags').valueChanges.subscribe(tags => {
+    subsc = this.formGroup.get('tags').valueChanges.subscribe(tags => {
       if (Tags.isTags(tags)) {
-        this.scheduleForm.likeTags = tags;
+        this.scheduleForm.tags = tags;
       }
     });
   }
@@ -210,7 +210,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
       transpotation: '',
       transpotationHelp: '',
       accommodationHelp: new FormControl({ value: '', disabled: true }),
-      likeTags: [],
+      tags: [],
       likesDescription: '',
       agentId: null
     });
