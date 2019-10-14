@@ -1,37 +1,39 @@
-<div class="ygg-contact-form">
+<div class="ygg-contact-control">
   <form [formGroup]="contactForm">
     <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="20px">
-      <div class='form-control'>
+      <div class="form-control">
         <mat-form-field>
           <mat-label>姓名</mat-label>
-          <input matInput formControlName="name" required />
+          <input id="name" matInput formControlName="name" required />
           <span matPrefix><mat-icon>person</mat-icon></span>
           <mat-error *ngIf="contactForm.get('name').hasError('required')"
             >請填入姓名</mat-error
           >
         </mat-form-field>
       </div>
-      <div class='form-control'>
+      <div class="form-control">
         <mat-form-field>
           <mat-label>電話</mat-label>
           <input
+            id="phone"
             matInput
             formControlName="phone"
             [errorStateMatcher]="leastRequireErrorMatcher"
           />
           <span matPrefix><mat-icon>phone</mat-icon></span>
           <!--
-            <mat-error *ngIf="contactForm.get('phone').invalid">{{ getErrorMessage('phone') }}</mat-error>
-          -->
+              <mat-error *ngIf="contactForm.get('phone').invalid">{{ getErrorMessage('phone') }}</mat-error>
+            -->
           <mat-error *ngIf="contactForm.hasError('requireEmailOrPhone')"
             >請至少留下電話或是Email</mat-error
           >
         </mat-form-field>
       </div>
-      <div class='form-control'>
+      <div class="form-control">
         <mat-form-field>
           <mat-label>Email</mat-label>
           <input
+            id="email"
             placeholder="ygg@ygmail.com"
             type="email"
             matInput
@@ -41,8 +43,8 @@
           />
           <span matPrefix><mat-icon>email</mat-icon></span>
           <!--
-            <mat-error *ngIf="contactForm.get('email').invalid">{{ getErrorMessage('email') }}</mat-error>
-          -->
+              <mat-error *ngIf="contactForm.get('email').invalid">{{ getErrorMessage('email') }}</mat-error>
+            -->
           <mat-error *ngIf="contactForm.hasError('requireEmailOrPhone')"
             >請至少留下電話或是Email</mat-error
           >
@@ -51,18 +53,18 @@
           >
         </mat-form-field>
       </div>
-      <div class='form-control'>
+      <div class="form-control">
         <mat-form-field>
           <mat-label>LINE ID</mat-label>
-          <input matInput formControlName="lineID" />
+          <input id="lineID" matInput formControlName="lineID" />
           <span matPrefix>
             <img
               src="https://img.icons8.com/ios/50/000000/line-me-filled.png"
             />
           </span>
           <!--
-          <mat-error *ngIf="contactForm.get('lineID').invalid">{{ getErrorMessage('lineID') }}</mat-error>
-        -->
+            <mat-error *ngIf="contactForm.get('lineID').invalid">{{ getErrorMessage('lineID') }}</mat-error>
+          -->
         </mat-form-field>
       </div>
     </div>

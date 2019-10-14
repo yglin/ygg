@@ -14,6 +14,7 @@ import {
   Validator
 } from '@angular/forms';
 import { Contact } from '../contact';
+import { Subscription } from 'rxjs';
 
 class LeastRequireErrorMatcher implements ErrorStateMatcher {
   fields: string[];
@@ -45,31 +46,30 @@ class LeastRequireErrorMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: 'ygg-contact-form',
-  templateUrl: './contact-form.component.html',
-  styleUrls: ['./contact-form.component.css'],
+  selector: 'ygg-contact-control',
+  templateUrl: './contact-control.component.html',
+  styleUrls: ['./contact-control.component.css'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ContactFormComponent),
+      useExisting: forwardRef(() => ContactControlComponent),
       multi: true
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => ContactFormComponent),
+      useExisting: forwardRef(() => ContactControlComponent),
       multi: true
     }
   ]
 })
-export class ContactFormComponent implements OnDestroy, ControlValueAccessor, Validator {
+export class ContactControlComponent
+  implements OnDestroy, ControlValueAccessor, Validator {
   contactForm: FormGroup;
   leastRequireErrorMatcher = new LeastRequireErrorMatcher(['email', 'phone']);
   emitChange: (contact: Contact) => any;
-  // subscriptions: Subscription[];
+  subscriptions: Subscription[] = [];
 
-  constructor(
-    private formBuilder: FormBuilder,
-  ) {
+  constructor(private formBuilder: FormBuilder) {
     this.contactForm = this.formBuilder.group(
       {
         name: '',
@@ -84,10 +84,14 @@ export class ContactFormComponent implements OnDestroy, ControlValueAccessor, Va
   }
 
   ngOnDestroy() {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   writeValue(contact: Contact) {
-    if (contact) {
+    if (Contact.isContact(contact)) {
+      this.contactForm.reset();
       this.contactForm.patchValue(contact);
     }
   }
@@ -95,11 +99,15 @@ export class ContactFormComponent implements OnDestroy, ControlValueAccessor, Va
   registerOnChange(fn) {
     this.emitChange = fn;
     // alert('registerOnChange!!!');
-    this.contactForm.valueChanges.pipe(debounceTime(500)).subscribe(contact => {
-      // console.log('Contact changed~!!!');
-      // console.log(contact);
-      this.emitChange(contact);
-    });
+    this.subscriptions.push(
+      this.contactForm.valueChanges
+        .pipe(debounceTime(500))
+        .subscribe(contactValue => {
+          // console.log('Contact changed~!!!');
+          // console.log(contact);
+          this.emitChange(new Contact().fromJSON(contactValue));
+        })
+    );
   }
 
   registerOnTouched(fn) {}

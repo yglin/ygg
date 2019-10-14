@@ -6,5 +6,5 @@ module.exports = {
     'jest-preset-angular/AngularSnapshotSerializer.js',
     'jest-preset-angular/HTMLCommentSerializer.js'
   ],
-  testMatch: ['**/number-range-control*.spec.ts']
+  testMatch: ['**/contact/**/*.spec.ts']
 };

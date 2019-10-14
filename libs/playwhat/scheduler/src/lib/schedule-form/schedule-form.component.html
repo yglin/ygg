@@ -52,6 +52,8 @@
                 >請填日期範圍</mat-error
               >
             </div>
+            <h3>{{ formGroup.get("dateRange").value.start | date: 'short' }}</h3>
+            <h3>{{ formGroup.get("dateRange").value.end | date: 'short' }}</h3>
           </mat-expansion-panel>
           <mat-expansion-panel>
             <mat-expansion-panel-header class="panel-header">
@@ -139,11 +141,13 @@
             </div>
           </mat-expansion-panel>
           <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <ygg-title-divider
-                [style.color]="formGroup.get('contacts').invalid ? 'red' : ''"
-                >聯絡資料＊</ygg-title-divider
-              >
+            <mat-expansion-panel-header class="panel-header">
+              <div class="contacts">
+                <ygg-title-divider
+                  [style.color]="formGroup.get('contacts').invalid ? 'red' : ''"
+                  >聯絡資料＊</ygg-title-divider
+                >
+              </div>
             </mat-expansion-panel-header>
             <div>
               <mat-form-field style="width:100%;">
@@ -164,9 +168,11 @@
                 <div
                   *ngFor="
                     let contactControl of contactsFormArray.controls;
-                    let idx = index
+                    let idx = index;
+                    let isLast = last
                   "
                   class="contact-control"
+                  [ngClass]="{ last: isLast }"
                 >
                   <ygg-action-barred layout="row">
                     <div yggActionBarredActions>
@@ -197,9 +203,9 @@
                     </div>
                     <div yggActionBarredContent>
                       <h4>聯絡人{{ idx + 1 }}</h4>
-                      <ygg-contact-form
+                      <ygg-contact-control 
                         [formControlName]="idx"
-                      ></ygg-contact-form>
+                      ></ygg-contact-control >
                     </div>
                   </ygg-action-barred>
                   <mat-divider> </mat-divider>
@@ -209,6 +215,17 @@
               <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
                 <div>
                   <button
+                    mat-mini-fab
+                    (click)="clearAllContacts()"
+                    class="clear-contacts"
+                    matTooltip="刪除所有聯絡人"
+                  >
+                    <mat-icon>delete_sweep</mat-icon>
+                  </button>
+                </div>
+                <div>
+                  <button
+                    class="add-contact"
                     mat-mini-fab
                     (click)="addContactControl()"
                     matTooltip="增加一位聯絡人"

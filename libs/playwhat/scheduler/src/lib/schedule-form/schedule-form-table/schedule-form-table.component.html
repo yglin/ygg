@@ -36,10 +36,10 @@
       <ng-container matColumnDef="contacts">
         <th mat-header-cell *matHeaderCellDef>聯絡人</th>
         <td mat-cell *matCellDef="let scheduleForm" class="contacts">
-          <ygg-contact
+          <ygg-contact-view
             class="value"
             [contact]="scheduleForm.contacts[0]"
-          ></ygg-contact>
+          ></ygg-contact-view>
           <div *ngIf="scheduleForm.contacts.length > 1">
             <mat-divider> </mat-divider>
             <div>

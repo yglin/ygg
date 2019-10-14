@@ -1,3 +1,4 @@
 export * from './contact';
-export * from './contact.component';
-export * from './contact-form/contact-form.component';
+export * from './contact-control/contact-control.component';
+export * from './contact-control/contact-control.component.po';
+export * from './contact-view/contact-view.component';

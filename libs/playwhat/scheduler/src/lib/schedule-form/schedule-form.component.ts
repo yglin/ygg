@@ -1,4 +1,4 @@
-import { extend, isEmpty } from 'lodash';
+import { extend, isEmpty, eachRight } from 'lodash';
 import {
   Component,
   EventEmitter,
@@ -15,7 +15,7 @@ import {
   FormBuilder,
   Validators
 } from '@angular/forms';
-import { NumberRange, Contact } from '@ygg/shared/types';
+import { NumberRange, Contact, DateRange } from '@ygg/shared/types';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { first, switchMap, map } from 'rxjs/operators';
 
@@ -181,6 +181,10 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     return this.formGroup.get('contacts') as FormArray;
   }
 
+  clearAllContacts() {
+    this.contactsFormArray.clear();
+  }
+
   addContactControl(contact?: Contact) {
     const contactControl = new FormControl();
     if (contact) {
@@ -195,7 +199,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
 
   createFormGroup(): FormGroup {
     const formGroup = this.formBuilder.group({
-      dateRange: [null, Validators.required],
+      dateRange: [DateRange.forge(), Validators.required],
       numParticipants: [null, Validators.required],
       numElders: 0,
       numKids: 0,

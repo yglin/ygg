@@ -2,45 +2,17 @@
   <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="20px">
     <div>
       <mat-form-field>
-        <input matInput [matDatepicker]="pickerStart" placeholder="開始" class="start" [formControl]='startFormControl' />
+        <input matInput [matDatepicker]="pickerStart" placeholder="開始" class="start" [formControl]='startFormControl' (blur)='onBlur()' />
         <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
         <mat-datepicker #pickerStart></mat-datepicker>
       </mat-form-field>
     </div>
     <div>
       <mat-form-field>
-        <input matInput [matDatepicker]="pickerEnd"  placeholder="結束" class="end" [formControl]='endFormControl' />
+        <input matInput [matDatepicker]="pickerEnd"  placeholder="結束" class="end" [formControl]='endFormControl' (blur)='onBlur()' />
         <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
         <mat-datepicker #pickerEnd></mat-datepicker>
       </mat-form-field>
     </div>
-    <!-- <div>
-      <button mat-mini-fab (click)="openPicker()"><mat-icon>date_range</mat-icon></button>
-    </div> -->
   </div>
-  <!--   
-  <button mat-raised-button (click)="openPicker()">
-    <mat-icon>date_range</mat-icon>
-    <span *ngIf="dateRange"
-      >{{ dateRange.start | date: 'shortDate' }}&nbsp;&mdash;&nbsp;{{
-        dateRange.end | date: 'shortDate'
-      }}</span
-    >
-    <span *ngIf="!dateRange">開始 — 結束</span>
-  </button>
-   -->
-  <!--
-    <mat-form-field>
-      <input
-        matInput
-        placeholder="開始 — 結束"
-        type="text"
-        autocomplete="off"
-        [value]="dateRangeText"
-        (blur)="onBlur()"
-        (click)='openPicker()'
-      />
-      <span matPrefix></span>
-    </mat-form-field>
-  -->
 </div>

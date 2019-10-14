@@ -8,7 +8,9 @@ export interface DateRangeMoment {
 }
 
 export class DateRange implements SerializableJSON {
-  static format = 'M/D/YYYY';
+  // Refer to https://momentjs.com/docs/#/displaying/format/
+  // for format signature options
+  static format = 'l';
   private _start: Date;
   private _end: Date;
 

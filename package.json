@@ -74,7 +74,6 @@
     "moment": "^2.24.0",
     "moment-range": "^4.0.2",
     "ng-mocks": "^8.1.0",
-    "ngx-daterangepicker-material": "^2.1.7",
     "reflect-metadata": "^0.1.13",
     "rxjs": "6.5.2",
     "uuid": "^3.3.2",

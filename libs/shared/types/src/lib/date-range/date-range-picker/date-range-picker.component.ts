@@ -1,10 +1,11 @@
+import { noop } from "lodash";
 import { Component, forwardRef, OnDestroy } from '@angular/core';
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
   FormControl
 } from '@angular/forms';
-// import * as moment from 'moment';
+import * as moment from 'moment';
 import { DateRange } from '../date-range';
 // import { YggDialogService } from '@ygg/shared/ui/widgets';
 // import {
@@ -28,23 +29,11 @@ import { auditTime, filter, distinctUntilChanged } from 'rxjs/operators';
 })
 export class DateRangePickerComponent
   implements ControlValueAccessor, OnDestroy {
-  _dateRange: DateRange;
-  emitChange: (value: DateRange) => {};
-  emitTouched: () => {};
+  emitChange: (value: DateRange) => any = noop;
+  emitTouched: () => any = noop;
   startFormControl: FormControl = new FormControl(null);
   endFormControl: FormControl = new FormControl(null);
   subscriptions: Subscription[] = [];
-
-  get dateRange(): DateRange {
-    return this._dateRange;
-  }
-
-  set dateRange(value: DateRange) {
-    if (DateRange.isDateRange(value)) {
-      this._dateRange = value;
-      this.emitChange(this._dateRange);
-    }
-  }
 
   constructor() {
     this.subscriptions.push(
@@ -57,21 +46,12 @@ export class DateRangePickerComponent
           filter(([startValue, endValue]) => startValue && endValue)
         )
         .subscribe(([startValue, endValue]) => {
-          // console.log(startValue);
-          // console.log(endValue);
-          // Check end date must after start date
-          if (endValue.isBefore(startValue)) {
-            this.startFormControl.setValue(endValue, {
-              onlySelf: true
-            });
-            this.endFormControl.setValue(startValue, {
-              onlySelf: true
-            });
-          }
-          this.dateRange = new DateRange().fromMoment({
+          const dateRange = new DateRange().fromMoment({
             start: startValue,
             end: endValue
           });
+          this.emitChange(dateRange);
+          console.log(`Emit Change: ${dateRange.format()}`);
         })
     );
   }
@@ -83,10 +63,13 @@ export class DateRangePickerComponent
   }
 
   writeValue(value: DateRange) {
-    // console.log(value);
     if (DateRange.isDateRange(value)) {
-      this._dateRange = value;
-      // console.log(this.dateRange);
+      this.startFormControl.setValue(value.start.toISOString(), {
+        emitEvent: false
+      });
+      this.endFormControl.setValue(value.end.toISOString(), {
+        emitEvent: false
+      });      
     }
   }
 
@@ -112,9 +95,28 @@ export class DateRangePickerComponent
   //   });
   // }
 
+  formalize() {
+    const startValue: moment.Moment = this.startFormControl.value;
+    const endValue: moment.Moment = this.endFormControl.value;
+    if (startValue.isAfter(endValue)) {
+      this.startFormControl.setValue(endValue, {
+        emitEvent: false
+      });
+      this.endFormControl.setValue(startValue, {
+        emitEvent: false
+      });
+      const dateRange = new DateRange().fromMoment({
+        start: endValue,
+        end: startValue
+      });
+      this.emitChange(dateRange);
+    }
+  }
+
   onBlur() {
     if (this.emitTouched) {
       this.emitTouched();
     }
+    this.formalize();
   }
 }

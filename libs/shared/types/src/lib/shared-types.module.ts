@@ -5,15 +5,14 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
-import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
+// import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 import { ImageUploadModule } from 'angular2-image-upload';
-import { ContactComponent, ContactFormComponent } from './contact';
 import { DateRangeComponent, DateRangePickerComponent } from './date-range';
 import {
   NumberRangeComponent,
   NumberRangeControlComponent
 } from './number-range';
-import { DateRangePickerDialogComponent } from './date-range/date-range-picker/date-range-picker-dialog/date-range-picker-dialog.component';
+// import { DateRangePickerDialogComponent } from './date-range/date-range-picker/date-range-picker-dialog/date-range-picker-dialog.component';
 import { AlbumViewComponent } from './album/album-view/album-view.component';
 import { ImageComponent } from './image/image.component';
 import { FormControlComponent } from './form';
@@ -46,6 +45,7 @@ import {
 } from './location';
 import { AlbumComponent } from './album/album.component';
 import { TagsControlComponent, TagsViewComponent } from './tags';
+import { ContactControlComponent, ContactViewComponent } from './contact';
 
 @NgModule({
   imports: [
@@ -53,11 +53,11 @@ import { TagsControlComponent, TagsViewComponent } from './tags';
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    NgxDaterangepickerMd.forRoot({
-      applyLabel: '確定',
-      cancelLabel: '取消',
-      format: 'YYYY/MM/DD'
-    }),
+    // NgxDaterangepickerMd.forRoot({
+    //   applyLabel: '確定',
+    //   cancelLabel: '取消',
+    //   format: 'YYYY/MM/DD'
+    // }),
     HttpClientModule,
     ImageUploadModule.forRoot(),
     SharedInfraDataAccessModule,
@@ -73,9 +73,7 @@ import { TagsControlComponent, TagsViewComponent } from './tags';
     NumberRangeControlComponent,
     DateRangeComponent,
     DateRangePickerComponent,
-    ContactComponent,
-    ContactFormComponent,
-    DateRangePickerDialogComponent,
+    // DateRangePickerDialogComponent,
     AlbumViewComponent,
     ImageComponent,
     FormControlComponent,
@@ -99,16 +97,16 @@ import { TagsControlComponent, TagsViewComponent } from './tags';
     GoogleMapComponent,
     AlbumComponent,
     TagsControlComponent,
-    TagsViewComponent
+    TagsViewComponent,
+    ContactControlComponent,
+    ContactViewComponent
   ],
-  entryComponents: [DateRangePickerDialogComponent, ImageUploaderComponent],
+  entryComponents: [/* DateRangePickerDialogComponent, */ImageUploaderComponent],
   exports: [
     NumberRangeComponent,
     NumberRangeControlComponent,
     DateRangeComponent,
     DateRangePickerComponent,
-    ContactComponent,
-    ContactFormComponent,
     AlbumViewComponent,
     ImageComponent,
     FormControlComponent,
@@ -129,6 +127,8 @@ import { TagsControlComponent, TagsViewComponent } from './tags';
     LocationControlComponent,
     LocationViewComponent,
     GoogleMapComponent,
+    ContactControlComponent,
+    ContactViewComponent,
     // TagsControlComponent,
     // TagsViewComponent
   ]
