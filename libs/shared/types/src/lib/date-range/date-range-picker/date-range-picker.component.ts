@@ -1,5 +1,5 @@
-import { noop } from "lodash";
-import { Component, forwardRef, OnDestroy } from '@angular/core';
+import { noop } from 'lodash';
+import { Component, forwardRef, OnDestroy, Inject } from '@angular/core';
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
@@ -14,6 +14,13 @@ import { DateRange } from '../date-range';
 // } from './date-range-picker-dialog/date-range-picker-dialog.component';
 import { Subscription, merge, combineLatest } from 'rxjs';
 import { auditTime, filter, distinctUntilChanged } from 'rxjs/operators';
+import {
+  MAT_DATE_LOCALE,
+  DateAdapter,
+  MAT_DATE_FORMATS
+} from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+// import { LOCALE_ID } from '@angular/core';
 
 @Component({
   selector: 'ygg-date-range-picker',
@@ -24,6 +31,21 @@ import { auditTime, filter, distinctUntilChanged } from 'rxjs/operators';
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => DateRangePickerComponent),
       multi: true
+    },
+    { provide: DateAdapter, useClass: MomentDateAdapter },
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: {
+        parse: {
+          dateInput: ['l', 'L']
+        },
+        display: {
+          dateInput: 'L',
+          monthYearLabel: 'MM YYYY',
+          dateA11yLabel: 'LL',
+          monthYearA11yLabel: 'MMMM YYYY'
+        }
+      }
     }
   ]
 })
@@ -31,27 +53,53 @@ export class DateRangePickerComponent
   implements ControlValueAccessor, OnDestroy {
   emitChange: (value: DateRange) => any = noop;
   emitTouched: () => any = noop;
-  startFormControl: FormControl = new FormControl(null);
-  endFormControl: FormControl = new FormControl(null);
+  startFormControl: FormControl;
+  endFormControl: FormControl;
   subscriptions: Subscription[] = [];
 
-  constructor() {
+  constructor(
+    private dateAdapter: DateAdapter<any>,
+    // @Inject(LOCALE_ID) public locale_id: string
+  ) {
+    // Set locale
+    //@ts-ignore
+    const locale_id = navigator.language || navigator.userLanguage;
+    // console.log(locale_id);
+    this.dateAdapter.setLocale(locale_id);
+
+    // Initialize some value
+    const initialValue = DateRange.forge();
+    this.startFormControl = new FormControl(moment(initialValue.start));
+    this.endFormControl = new FormControl(moment(initialValue.end));
+
     this.subscriptions.push(
-      combineLatest([
+      merge(
         this.startFormControl.valueChanges,
         this.endFormControl.valueChanges
-      ])
+      )
         .pipe(
-          auditTime(500),
-          filter(([startValue, endValue]) => startValue && endValue)
+          // auditTime(500)
+          filter(() => {
+            const startValue: moment.Moment = this.startFormControl.value;
+            const endValue: moment.Moment = this.endFormControl.value;
+            return (
+              startValue &&
+              startValue.isValid() &&
+              endValue &&
+              endValue.isValid()
+            );
+          })
         )
-        .subscribe(([startValue, endValue]) => {
+        // this.startFormControl.valueChanges
+        .subscribe(() => {
+          const startValue: moment.Moment = this.startFormControl.value;
+          const endValue: moment.Moment = this.endFormControl.value;
           const dateRange = new DateRange().fromMoment({
             start: startValue,
             end: endValue
           });
           this.emitChange(dateRange);
-          console.log(`Emit Change: ${dateRange.format()}`);
+          // console.log(`Emit Change: ${dateRange.format()}`);
         })
     );
   }
@@ -64,12 +112,12 @@ export class DateRangePickerComponent
 
   writeValue(value: DateRange) {
     if (DateRange.isDateRange(value)) {
-      this.startFormControl.setValue(value.start.toISOString(), {
+      this.startFormControl.setValue(moment(value.start), {
         emitEvent: false
       });
-      this.endFormControl.setValue(value.end.toISOString(), {
+      this.endFormControl.setValue(moment(value.end), {
         emitEvent: false
-      });      
+      });
     }
   }
 
@@ -98,7 +146,7 @@ export class DateRangePickerComponent
   formalize() {
     const startValue: moment.Moment = this.startFormControl.value;
     const endValue: moment.Moment = this.endFormControl.value;
-    if (startValue.isAfter(endValue)) {
+    if (startValue && endValue && startValue.isAfter(endValue)) {
       this.startFormControl.setValue(endValue, {
         emitEvent: false
       });

@@ -80,6 +80,12 @@ export class AngularJestTester {
     }
   }
 
+  expectInputValue(selector: string, value: any) {
+    const inputElement: HTMLInputElement = this.getNativeElement<HTMLInputElement>(selector);
+    // console.log(typeof inputElement.value);
+    expect(inputElement.value).toEqual(value);
+  }
+
   async expectTextContent(selector: string, text: string) {
     expect(this.getNativeElement<HTMLElement>(selector).textContent).toEqual(text);
   }

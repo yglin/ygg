@@ -12,8 +12,8 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { DateRangePickerDialogComponent } from './date-range-picker-dialog/date-range-picker-dialog.component';
-import { of } from 'rxjs';
+// import { DateRangePickerDialogComponent } from './date-range-picker-dialog/date-range-picker-dialog.component';
+// import { of } from 'rxjs';
 // import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 
@@ -48,6 +48,11 @@ class DateRangePickerPageObjectAngularJest extends DateRangePickerPageObject {
       this.getSelector('inputEnd'),
       endDateString
     );
+  }
+
+  expectValue(dateRange: DateRange) {
+    this.tester.expectInputValue(this.getSelector('inputStart'), moment(dateRange.start).format('L'));
+    this.tester.expectInputValue(this.getSelector('inputEnd'), moment(dateRange.end).format('L'));
   }
 }
 
@@ -123,7 +128,7 @@ describe('DateRangePickerComponent', () => {
     formComponent.formGroup.get('dateRange').setValue(testDateRange);
     await fixture.whenStable();
     fixture.detectChanges();
-    expect(component.dateRange.toJSON()).toEqual(testDateRange.toJSON());
+    pageObject.expectValue(testDateRange);
     done();
   });
 

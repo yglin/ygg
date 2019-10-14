@@ -31,7 +31,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatMomentDateModule } from "@angular/material-moment-adapter";
-import { MAT_DATE_LOCALE } from "@angular/material";
 
 @NgModule({
   exports: [
@@ -66,9 +65,6 @@ import { MAT_DATE_LOCALE } from "@angular/material";
     MatMomentDateModule,
     MatDatepickerModule,
     DragDropModule
-  ],
-  providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'zh-TW'}
   ]
 })
 export class SharedUiNgMaterialModule {}

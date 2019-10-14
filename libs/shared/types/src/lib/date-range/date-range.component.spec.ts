@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DateRangeComponent } from './date-range.component';
+import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 
 describe('DateRangeComponent', () => {
   let component: DateRangeComponent;
@@ -8,6 +9,7 @@ describe('DateRangeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ SharedUiNgMaterialModule ],
       declarations: [ DateRangeComponent ]
     })
     .compileComponents();
