@@ -52,8 +52,6 @@
                 >請填日期範圍</mat-error
               >
             </div>
-            <h3>{{ formGroup.get("dateRange").value.start | date: 'short' }}</h3>
-            <h3>{{ formGroup.get("dateRange").value.end | date: 'short' }}</h3>
           </mat-expansion-panel>
           <mat-expansion-panel>
             <mat-expansion-panel-header class="panel-header">
@@ -149,7 +147,7 @@
                 >
               </div>
             </mat-expansion-panel-header>
-            <div>
+            <div class="group-name">
               <mat-form-field style="width:100%;">
                 <input
                   matInput
@@ -203,9 +201,9 @@
                     </div>
                     <div yggActionBarredContent>
                       <h4>聯絡人{{ idx + 1 }}</h4>
-                      <ygg-contact-control 
+                      <ygg-contact-control
                         [formControlName]="idx"
-                      ></ygg-contact-control >
+                      ></ygg-contact-control>
                     </div>
                   </ygg-action-barred>
                   <mat-divider> </mat-divider>
@@ -237,23 +235,26 @@
             </div>
           </mat-expansion-panel>
           <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <ygg-title-divider>交通方式</ygg-title-divider>
+            <mat-expansion-panel-header class="panel-header">
+              <div class="transpotation">
+                <ygg-title-divider>交通方式</ygg-title-divider>
+              </div>
             </mat-expansion-panel-header>
-            <div class="form-control">
-              <div>
+            <div class="form-control transpotation">
+              <div class="radio-group">
                 <mat-radio-group formControlName="transpotation">
                   <div
                     fxLayout="row"
                     fxLayoutAlign="space-around center"
                     fxLayoutGap="20px"
                   >
-                    <mat-radio-button [value]="'遊覽車'"
-                      >遊覽車</mat-radio-button
-                    >
-                    <mat-radio-button [value]="'自行開車'"
-                      >自行開車</mat-radio-button
-                    >
+                    <div *ngFor="let item of transpotationTypes | keyvalue">
+                      <mat-radio-button
+                        [value]="item.value.id"
+                        [attr.transpotation]="item.value.id"
+                        >{{ item.value.label }}</mat-radio-button
+                      >
+                    </div>
                   </div>
                 </mat-radio-group>
                 <br />
@@ -265,20 +266,15 @@
                   />
                 </mat-form-field>
               </div>
-              <div>
-                <mat-checkbox
-                  [(ngModel)]="needTranspotationHelp"
-                  [ngModelOptions]="{ standalone: true }"
-                  >請幫我安排交通</mat-checkbox
-                >
-              </div>
               <br />
-              <div *ngIf="needTranspotationHelp" class="needTranspotationHelp">
+              <h4>其他交通方面的需求</h4>
+              <div class="needTranspotationHelp">
                 <mat-form-field>
                   <textarea
                     matInput
                     placeholder="請詳述交通的需求，以便我們的工作人員幫忙安排"
                     formControlName="transpotationHelp"
+                    class="transpotation-help"
                     cdkTextareaAutosize
                     #autosize="cdkTextareaAutosize"
                     cdkAutosizeMinRows="2"
@@ -289,10 +285,12 @@
             </div>
           </mat-expansion-panel>
           <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <ygg-title-divider> 體驗需求 </ygg-title-divider>
+            <mat-expansion-panel-header class='panel-header'>
+              <div class="likes">
+                <ygg-title-divider> 體驗需求 </ygg-title-divider>
+              </div>
             </mat-expansion-panel-header>
-            <div class="form-control">
+            <div class="form-control likes">
               <ygg-tags-control
                 formControlName="tags"
                 taggableType="schedule-form"
@@ -314,21 +312,21 @@
                     #autosize="cdkTextareaAutosize"
                     cdkAutosizeMinRows="2"
                     cdkAutosizeMaxRows="10"
+                    class='likes-description'
                   ></textarea>
                 </mat-form-field>
               </div>
             </div>
           </mat-expansion-panel>
           <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <ygg-title-divider>其它需求</ygg-title-divider>
+            <mat-expansion-panel-header class='panel-header'>
+              <div class="miscellaneous">
+                <ygg-title-divider>其它需求</ygg-title-divider>
+              </div>
             </mat-expansion-panel-header>
-            <div class="form-control">
+            <div class="form-control miscellaneous">
               <div id="needAccommodationHelp" class="needAccommodationHelp">
-                <mat-checkbox (change)="onChangeNeedAccommodationHelp($event)"
-                  >請幫我安排住宿</mat-checkbox
-                >
-                <br />
+                <h4>關於住宿需求</h4>
                 <mat-form-field>
                   <textarea
                     name="accommodationHelp"
@@ -339,6 +337,7 @@
                     #autosize="cdkTextareaAutosize"
                     cdkAutosizeMinRows="2"
                     cdkAutosizeMaxRows="10"
+                    class='accommodation-help'
                   ></textarea>
                 </mat-form-field>
               </div>

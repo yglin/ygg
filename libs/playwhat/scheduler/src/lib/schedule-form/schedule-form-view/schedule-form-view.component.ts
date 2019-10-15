@@ -3,6 +3,7 @@ import { ScheduleForm } from '../schedule-form';
 import { ActivatedRoute } from '@angular/router';
 import { ScheduleFormService } from '../schedule-form.service';
 import { Subscription } from 'rxjs';
+import { TranspotationTypes } from "../transpotation";
 
 @Component({
   selector: 'ygg-schedule-form-view',
@@ -12,6 +13,7 @@ import { Subscription } from 'rxjs';
 export class ScheduleFormViewComponent implements OnInit, OnDestroy {
   @Input() scheduleForm: ScheduleForm;
   subscriptions: Subscription[] = [];
+  transpotationTypes = TranspotationTypes;
 
   constructor(
     private route: ActivatedRoute,

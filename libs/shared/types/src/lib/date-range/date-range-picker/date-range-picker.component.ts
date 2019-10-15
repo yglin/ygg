@@ -6,7 +6,7 @@ import {
   FormControl
 } from '@angular/forms';
 import * as moment from 'moment';
-import { DateRange } from '../date-range';
+import { DateRange, DATE_FORMATS } from '../date-range';
 // import { YggDialogService } from '@ygg/shared/ui/widgets';
 // import {
 //   DateRangePickerDialogComponent,
@@ -35,17 +35,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
     { provide: DateAdapter, useClass: MomentDateAdapter },
     {
       provide: MAT_DATE_FORMATS,
-      useValue: {
-        parse: {
-          dateInput: ['l', 'L']
-        },
-        display: {
-          dateInput: 'L',
-          monthYearLabel: 'MM YYYY',
-          dateA11yLabel: 'LL',
-          monthYearA11yLabel: 'MMMM YYYY'
-        }
-      }
+      useValue: DATE_FORMATS
     }
   ]
 })
@@ -68,9 +58,9 @@ export class DateRangePickerComponent
     this.dateAdapter.setLocale(locale_id);
 
     // Initialize some value
-    const initialValue = DateRange.forge();
-    this.startFormControl = new FormControl(moment(initialValue.start));
-    this.endFormControl = new FormControl(moment(initialValue.end));
+    // const initialValue = DateRange.forge();
+    this.startFormControl = new FormControl(null);
+    this.endFormControl = new FormControl(null);
 
     this.subscriptions.push(
       merge(

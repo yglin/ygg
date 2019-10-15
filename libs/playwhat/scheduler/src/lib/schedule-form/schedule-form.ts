@@ -6,6 +6,7 @@ import { NumberRange, DateRange, Contact } from '@ygg/shared/types';
 import { User } from '@ygg/shared/user';
 // import { PlayTag } from '@ygg/playwhat/play';
 import { Tags, Taggable } from '@ygg/tags/core';
+import { TranspotationTypes } from "./transpotation";
 
 export class ScheduleForm implements DataItem, Taggable {
   id: string;
@@ -60,16 +61,7 @@ export class ScheduleForm implements DataItem, Taggable {
     while (forged.contacts.length < numContacts) {
       forged.contacts.push(Contact.forge());
     }
-    forged.transpotation = sample([
-      '步行',
-      '鴕鳥',
-      '開車',
-      '歐托拜',
-      '遊覽車',
-      '直升機',
-      '空軍一號',
-      '鋼鐵人'
-    ]);
+    forged.transpotation = sample(TranspotationTypes).id;
     forged.transpotationHelp = '我想騎鴕鳥...';
     forged.accommodationHelp =
       '請幫我安排住宿，房間乾淨就好，最好是有養駝鳥的民宿';
@@ -97,6 +89,12 @@ export class ScheduleForm implements DataItem, Taggable {
     }
     if (data.totalBudget) {
       this.totalBudget = new NumberRange().fromJSON(data.totalBudget);
+    }
+    if (data.singleBudget) {
+      this.singleBudget = new NumberRange().fromJSON(data.singleBudget);
+    }
+    if (data.tags) {
+      this.tags = Tags.fromJSON(data.tags);
     }
 
     return this;

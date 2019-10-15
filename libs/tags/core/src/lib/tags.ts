@@ -66,11 +66,7 @@ export class Tags implements SerializableJSON {
   push(...tags: Tag[] | string[]) {
     for (const tag of tags) {
       if (!this.has(tag)) {
-        if (Tag.isTag(tag)) {
-          this.tags.push(tag);
-        } else if (typeof tag === 'string') {
-          this.tags.push(new Tag(tag));
-        }
+        this.tags.push(new Tag(tag));
       }
     }
   }

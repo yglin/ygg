@@ -1,4 +1,6 @@
-<div class='ygg-date-range' *ngIf='dateRange'>
+<div class="ygg-date-range" *ngIf="dateRange">
   <span><mat-icon>date_range</mat-icon></span>
-  <span>{{dateRange.start | date: 'yyyy/MM/dd'}}&nbsp;&mdash;&nbsp;{{ dateRange.end | date: 'yyyy/MM/dd'}}</span>
+  <span class="start">{{ startText }}</span
+  ><span>&nbsp;&mdash;&nbsp;</span
+  ><span class="end">{{ endText }}</span>
 </div>

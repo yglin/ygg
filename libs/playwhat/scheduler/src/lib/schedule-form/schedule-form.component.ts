@@ -30,6 +30,7 @@ import {
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Tags } from '@ygg/tags/core';
+import { TranspotationTypes } from "./transpotation";
 
 @Component({
   selector: 'ygg-schedule-form',
@@ -43,12 +44,13 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
 
   budgetType = 'total';
   budgetHintMessage = '';
-  needTranspotationHelp = false;
+  // needTranspotationHelp = false;
   needAccommodationHelp = false;
   subscriptions: Subscription[];
   currentUser: User;
   agentUsers: User[];
   playTags$: Observable<Tags>;
+  transpotationTypes = TranspotationTypes;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -144,14 +146,14 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  onChangeNeedAccommodationHelp(event: MatCheckboxChange) {
-    const controlAccommodationHelp = this.formGroup.get('accommodationHelp');
-    if (event.checked) {
-      controlAccommodationHelp.enable();
-    } else {
-      controlAccommodationHelp.disable();
-    }
-  }
+  // onChangeNeedAccommodationHelp(event: MatCheckboxChange) {
+  //   const controlAccommodationHelp = this.formGroup.get('accommodationHelp');
+  //   if (event.checked) {
+  //     controlAccommodationHelp.enable();
+  //   } else {
+  //     controlAccommodationHelp.disable();
+  //   }
+  // }
 
   setContacts(contacts: Contact[] = []) {
     while (this.contactsFormArray.length > 0) {
@@ -199,7 +201,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
 
   createFormGroup(): FormGroup {
     const formGroup = this.formBuilder.group({
-      dateRange: [DateRange.forge(), Validators.required],
+      dateRange: [null, Validators.required],
       numParticipants: [null, Validators.required],
       numElders: 0,
       numKids: 0,
@@ -209,7 +211,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
       contacts: this.formBuilder.array([new FormControl()]),
       transpotation: '',
       transpotationHelp: '',
-      accommodationHelp: new FormControl({ value: '', disabled: true }),
+      accommodationHelp: '',
       tags: [],
       likesDescription: '',
       agentId: null

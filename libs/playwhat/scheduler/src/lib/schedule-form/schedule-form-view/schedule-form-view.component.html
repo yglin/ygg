@@ -12,13 +12,13 @@
     <tr class="numberPeople">
       <td>預定人數</td>
       <td>
-        <div id="numParticipants">
+        <div class="numParticipants">
           總人數：<span class="value">{{ scheduleForm.numParticipants }}</span>
         </div>
-        <div *ngIf="scheduleForm.numElders" id="numElders">
+        <div *ngIf="scheduleForm.numElders" class="numElders">
           65歲以上人數：<span class="value">{{ scheduleForm.numElders }}</span>
         </div>
-        <div *ngIf="scheduleForm.numKids" id="numKids">
+        <div *ngIf="scheduleForm.numKids" class="numKids">
           孩童人數：<span class="value">{{ scheduleForm.numKids }}</span>
         </div>
       </td>
@@ -36,8 +36,9 @@
             unit="NTD"
           ></ygg-number-range>
         </div>
-        <div *ngIf="scheduleForm.singleBudget">
+        <div *ngIf="scheduleForm.singleBudget" id="singleBudget">
           單人預算：<ygg-number-range
+            class="value"
             [range]="scheduleForm.singleBudget"
             unit="NTD"
           ></ygg-number-range>
@@ -66,7 +67,7 @@
       <td>交通方式</td>
       <td>
         <div *ngIf="scheduleForm.transpotation" id="transpotation">
-          <span class="value">{{ scheduleForm.transpotation }}</span>
+          <span class="value">{{ transpotationTypes[scheduleForm.transpotation].label }}</span>
         </div>
         <div *ngIf="scheduleForm.transpotationHelp" id="transpotationHelp">
           <h5>我需要幫忙安排...</h5>

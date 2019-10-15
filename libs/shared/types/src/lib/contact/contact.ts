@@ -49,6 +49,11 @@ export class Contact implements SerializableJSON {
   }
 
   toJSON(): any {
-    return toJSONDeep(this);
+    return {
+      name: this.name,
+      phone: this.phone || '',
+      email: this.email || '',
+      lineID: this.lineID || ''
+    };
   }
 }

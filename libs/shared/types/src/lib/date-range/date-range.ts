@@ -7,6 +7,20 @@ export interface DateRangeMoment {
   end: moment.Moment;
 }
 
+  // Formats refers to https://momentjs.com/docs/#/displaying/format/
+  export const DATE_FORMATS = {
+  parse: {
+    dateInput: ['l', 'L']
+  },
+  display: {
+    date: 'L',
+    dateInput: 'L',
+    monthYearLabel: 'MM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY'
+  }
+};
+
 export class DateRange implements SerializableJSON {
   // Refer to https://momentjs.com/docs/#/displaying/format/
   // for format signature options

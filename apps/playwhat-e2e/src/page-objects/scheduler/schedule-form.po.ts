@@ -5,6 +5,7 @@ import { ScheduleForm } from '@ygg/playwhat/scheduler';
 import { DateRangePickerPageObjectCypress } from '../shared-types/date-range';
 import { NumberRangeControlPageObjectCypress } from '../shared-types/number-range';
 import { ContactControlPageObjectCypress } from '../shared-types/contact';
+import { TagsControlPageObjectCypress } from '../tags';
 
 abstract class ScheduleFormPageObject extends PageObject {
   selectors = {
@@ -22,11 +23,23 @@ abstract class ScheduleFormPageObject extends PageObject {
     totalBudget: '.total-budget',
     singleBudget: '.single-budget',
     buttonClearContacts: 'button.clear-contacts',
-    buttonAddContact: 'button.add-contact'
+    buttonAddContact: 'button.add-contact',
+    inputGroupName: '.group-name input',
+    transpotationRadioGroup: '.transpotation .radio-group',
+    transpotationHelp: '.transpotation textarea.transpotation-help',
+    likesTags: '.form-control.likes',
+    textareaLikesDescription: '.form-control.likes textarea.likes-description',
+    textareaAccommodationHelp: '.form-control.miscellaneous textarea.accommodation-help'
   };
 
   getSelectorForPanelHeader(panelSelector: string): string {
     return `${this.getSelector()} .panel-header ${panelSelector}`;
+  }
+
+  getSelectorForTranspotationRadioButton(value: string): string {
+    return `${this.getSelector(
+      'transpotationRadioGroup'
+    )} [transpotation="${value}"] input[type="radio"]`;
   }
 
   abstract selectAgent(agentId: string): any;
@@ -37,18 +50,19 @@ abstract class ScheduleFormPageObject extends PageObject {
   abstract setSingleBudget(singleBudget: NumberRange): any;
   abstract setTotalBudget(totalBudget: NumberRange): any;
   abstract setContacts(contacts: Contact[]): any;
-  // abstract setGroupName(groupName: string): any;
-  // abstract setTranspotation(transpotation: string): any;
-  // abstract setTranspotationHelp(transpotationHelp: string): any;
-  // abstract settags(tags: Tags): any;
-  // abstract setLikesDescription(likesDescription: string): any;
-  // abstract setAccommodationHelp(accommodationHelp: string): any;
+  abstract setGroupName(groupName: string): any;
+  abstract setTranspotation(transpotation: string): any;
+  abstract setTranspotationHelp(transpotationHelp: string): any;
+  abstract setLikeTags(tags: Tags): any;
+  abstract setLikesDescription(likesDescription: string): any;
+  abstract setAccommodationHelp(accommodationHelp: string): any;
 }
 
 export class ScheduleFormPageObjectCypress extends ScheduleFormPageObject {
   dateRangePageObject: DateRangePickerPageObjectCypress;
   totalBudgetPageObject: NumberRangeControlPageObjectCypress;
   singleBudgetPageObject: NumberRangeControlPageObjectCypress;
+  tagsControlPageObject: TagsControlPageObjectCypress;
 
   constructor(parentSelector: string) {
     super(parentSelector);
@@ -60,6 +74,9 @@ export class ScheduleFormPageObjectCypress extends ScheduleFormPageObject {
     );
     this.singleBudgetPageObject = new NumberRangeControlPageObjectCypress(
       this.getSelector('singleBudget')
+    );
+    this.tagsControlPageObject = new TagsControlPageObjectCypress(
+      this.getSelector('likesTags')
     );
   }
 
@@ -79,15 +96,19 @@ export class ScheduleFormPageObjectCypress extends ScheduleFormPageObject {
     this.setTotalBudget(scheduleForm.totalBudget);
     // open contacts panel
     cy.get(this.getSelectorForPanelHeader('.contacts')).click();
+    this.setGroupName(scheduleForm.groupName);
     this.setContacts(scheduleForm.contacts);
-
-    // this.setContacts(scheduleForm.contacts);
-    // this.setGroupName(scheduleForm.groupName);
-    // this.setTranspotation(scheduleForm.transpotation);
-    // this.setTranspotationHelp(scheduleForm.transpotationHelp);
-    // this.settags(scheduleForm.tags);
-    // this.setLikesDescription(scheduleForm.likesDescription);
-    // this.setAccommodationHelp(scheduleForm.accommodationHelp);
+    // open transpotation panel
+    cy.get(this.getSelectorForPanelHeader('.transpotation')).click();
+    this.setTranspotation(scheduleForm.transpotation);
+    this.setTranspotationHelp(scheduleForm.transpotationHelp);
+    // open likes panel
+    cy.get(this.getSelectorForPanelHeader('.likes')).click();
+    this.setLikeTags(scheduleForm.tags);
+    this.setLikesDescription(scheduleForm.likesDescription);
+    // open miscellaneous panel
+    cy.get(this.getSelectorForPanelHeader('.miscellaneous')).click();
+    this.setAccommodationHelp(scheduleForm.accommodationHelp);
   }
 
   submit() {
@@ -154,5 +175,35 @@ export class ScheduleFormPageObjectCypress extends ScheduleFormPageObject {
       const contact = contacts[index];
       this.addNewContact(contact);
     });
+  }
+
+  setGroupName(groupName: string) {
+    cy.get(this.getSelector('inputGroupName'))
+      .clear()
+      .type(groupName);
+  }
+
+  setTranspotation(transpotation: string) {
+    cy.get(this.getSelectorForTranspotationRadioButton(transpotation)).check({
+      force: true
+    });
+  }
+
+  setTranspotationHelp(transpotationHelp: string) {
+    cy.get(this.getSelector('transpotationHelp'))
+      .clear()
+      .type(transpotationHelp);
+  }
+
+  setLikeTags(tags: Tags) {
+    this.tagsControlPageObject.setValue(tags);
+  }
+
+  setLikesDescription(likesDescription: string) {
+    cy.get(this.getSelector('textareaLikesDescription')).clear().type(likesDescription);
+  }
+
+  setAccommodationHelp(accommodationHelp: string) {
+    cy.get(this.getSelector('textareaAccommodationHelp')).clear().type(accommodationHelp);
   }
 }

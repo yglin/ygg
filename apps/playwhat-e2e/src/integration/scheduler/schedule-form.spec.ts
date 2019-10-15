@@ -1,24 +1,24 @@
-import { login, hitUserMenu } from "../../page-objects/app.po";
+import { login } from "../../page-objects/app.po";
+import { SiteNavigator } from '../../page-objects/site-navigator';
+import { ScheduleFormPageObjectCypress, ScheduleFormViewPageObjectCypress } from "../../page-objects/scheduler";
+import { ScheduleForm } from '@ygg/playwhat/scheduler';
 
 describe('Scheduler', () => {
+  const siteNavigator = new SiteNavigator();
+  const scheduleFormPageObject: ScheduleFormPageObjectCypress = new ScheduleFormPageObjectCypress('');
+  const scheduleFormViewPageObject: ScheduleFormViewPageObjectCypress = new ScheduleFormViewPageObjectCypress('');
+
   beforeEach(function() {
-    cy.visit('/scheduler');
+    cy.visit('/');
+    login();
+    siteNavigator.goto(['scheduler', 'new']);
   });
   
-  it('New schedule shows schedule form', () => {
-    cy.get('form#schedule-form').should('be.visible');
+  it('Should submit consistent data', () => {
+    const scheduleForm = ScheduleForm.forge();
+    scheduleFormPageObject.setValue(scheduleForm);
+    scheduleFormPageObject.submit();
+    scheduleFormViewPageObject.expectValue(scheduleForm);
   });
 
-  it('should follow user menu link to my schedule forms page', () => {
-    login();
-    hitUserMenu('scheduler');
-    cy.url().should(url => {
-      expect(url).to.match(/.*\/scheduler\/my$/);
-    });
-    cy.get('#scheduler-dashboard a#schedule-form-list').click();
-    cy.url().should(url => {
-      expect(url).to.match(/.*\/scheduler\/my\/forms$/);
-    });
-    cy.get('#schedule-forms-list').should('be.visible');
-  });
 });
