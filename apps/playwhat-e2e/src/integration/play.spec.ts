@@ -3,7 +3,8 @@
 import { login } from '../page-objects/app.po';
 import {
   PlayFormPageObject,
-  PlayViewPageObject
+  PlayViewPageObject,
+  deletePlay
 } from '../page-objects/play.po';
 import { Play } from '@ygg/playwhat/play';
 import { SiteNavigator } from '../page-objects/site-navigator';
@@ -33,17 +34,8 @@ describe('Play form, new and update play', () => {
       const newPlayId = matched[1];
       cy.log(`Created play id = ${newPlayId}`);
       testPlay.id = newPlayId;
-      deletePlayInDB(testPlay);
+      deletePlay(testPlay);
     });
   });
 
-  function deletePlayInDB(play: Play) {
-    // @ts-ignore
-    cy.callFirestore('delete', `plays/${play.id}`);
-    // delete play tags
-    cy.wrap(play.tags.toTagsArray()).each((element, index, array) => {
-      // @ts-ignore
-      cy.callFirestore('delete', `tags/${(element as Tag).id}`);
-    });    
-  }
 });

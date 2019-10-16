@@ -1,24 +1,13 @@
 import { last } from "lodash";
 import { login } from "../../page-objects/app.po";
 import { SiteNavigator } from '../../page-objects/site-navigator';
-import { ScheduleFormPageObjectCypress, ScheduleFormViewPageObjectCypress } from "../../page-objects/scheduler";
+import { ScheduleFormPageObjectCypress, ScheduleFormViewPageObjectCypress, deleteScheduleForm } from "../../page-objects/scheduler";
 import { ScheduleForm } from '@ygg/playwhat/scheduler';
 
 describe('Scheduler', () => {
   const siteNavigator = new SiteNavigator();
   const scheduleFormPageObject: ScheduleFormPageObjectCypress = new ScheduleFormPageObjectCypress('');
   const scheduleFormViewPageObject: ScheduleFormViewPageObjectCypress = new ScheduleFormViewPageObjectCypress('');
-
-  function deleteScheduleForm(scheduleForm: ScheduleForm) {
-    // @ts-ignore
-    cy.callFirestore('delete', `schedule-forms/${scheduleForm.id}`);
-    // delete play tags
-    cy.wrap(scheduleForm.tags.toTagsArray()).each((element, index, array) => {
-      // @ts-ignore
-      cy.callFirestore('delete', `tags/${(element as Tag).id}`);
-    });    
-
-  }
 
   beforeEach(function() {
     cy.visit('/');

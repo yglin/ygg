@@ -14,6 +14,16 @@ import {
   TagsViewPageObjectCypress
 } from './tags';
 
+export function deletePlay(play: Play) {
+  // @ts-ignore
+  cy.callFirestore('delete', `plays/${play.id}`);
+  // delete play tags
+  cy.wrap(play.tags.toTagsArray()).each((element, index, array) => {
+    // @ts-ignore
+    cy.callFirestore('delete', `tags/${(element as Tag).id}`);
+  });
+}
+
 export class PlayFormPageObject extends PageObject {
   selector = '.play-form';
   selectors = {
