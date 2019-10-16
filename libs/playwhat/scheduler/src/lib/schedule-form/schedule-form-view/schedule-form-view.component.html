@@ -29,14 +29,14 @@
     >
       <td>預算</td>
       <td>
-        <div *ngIf="scheduleForm.totalBudget" id="totalBudget">
+        <div *ngIf="scheduleForm.totalBudget" class="total-budget">
           總預算：<ygg-number-range
             class="value"
             [range]="scheduleForm.totalBudget"
             unit="NTD"
           ></ygg-number-range>
         </div>
-        <div *ngIf="scheduleForm.singleBudget" id="singleBudget">
+        <div *ngIf="scheduleForm.singleBudget" class="single-budget">
           單人預算：<ygg-number-range
             class="value"
             [range]="scheduleForm.singleBudget"
@@ -48,11 +48,15 @@
     <tr class="contacts">
       <td>聯絡資料</td>
       <td>
-        <h3 *ngIf="scheduleForm.groupName" id="groupName">
+        <h3 *ngIf="scheduleForm.groupName" class="group-name">
           團體名稱：<span class="value">{{ scheduleForm.groupName }}</span>
         </h3>
         <div id="contacts">
-          <div *ngFor="let contact of scheduleForm.contacts" class="value">
+          <div
+            *ngFor="let contact of scheduleForm.contacts; let idx = index"
+            class="value"
+            [attr.index]="idx"
+          >
             <mat-card>
               <ygg-contact-view [contact]="contact"></ygg-contact-view>
             </mat-card>
@@ -66,33 +70,32 @@
     >
       <td>交通方式</td>
       <td>
-        <div *ngIf="scheduleForm.transpotation" id="transpotation">
-          <span class="value">{{ transpotationTypes[scheduleForm.transpotation].label }}</span>
+        <div *ngIf="scheduleForm.transpotation" class="transpotation-type">
+          <span class="value">{{
+            transpotationTypes[scheduleForm.transpotation].label
+          }}</span>
         </div>
-        <div *ngIf="scheduleForm.transpotationHelp" id="transpotationHelp">
+        <div *ngIf="scheduleForm.transpotationHelp" class="transpotation-help">
           <h5>我需要幫忙安排...</h5>
           <pre class="value">{{ scheduleForm.transpotationHelp }}</pre>
         </div>
       </td>
     </tr>
-    <tr class="accommodationHelp" *ngIf="scheduleForm.accommodationHelp">
+    <tr class="miscellaneous" *ngIf="scheduleForm.accommodationHelp">
       <td>住宿需求</td>
       <td>
-        <div *ngIf="scheduleForm.accommodationHelp" id="accommodationHelp">
+        <div *ngIf="scheduleForm.accommodationHelp" class="accommodation-help">
           <pre class="value">{{ scheduleForm.accommodationHelp }}</pre>
         </div>
       </td>
     </tr>
-    <tr
-      class="tags"
-      *ngIf="scheduleForm.hasLikes()"
-    >
+    <tr class="likes" *ngIf="scheduleForm.hasLikes()">
       <td>體驗需求</td>
       <td>
-        <div *ngIf="scheduleForm.tags" id="tags">
+        <div *ngIf="scheduleForm.tags" class="tags">
           <ygg-tags-view [tags]="scheduleForm.tags"></ygg-tags-view>
         </div>
-        <div *ngIf="scheduleForm.likesDescription" id="likesDescription">
+        <div *ngIf="scheduleForm.likesDescription" class="description">
           <h5>對於體驗行程的需求...</h5>
           <pre class="value">{{ scheduleForm.likesDescription }}</pre>
         </div>
@@ -100,7 +103,7 @@
     </tr>
   </table>
 
-  <div class='debug'>
+  <div class="debug">
     <pre>
     {{ scheduleForm | json }}
   </pre

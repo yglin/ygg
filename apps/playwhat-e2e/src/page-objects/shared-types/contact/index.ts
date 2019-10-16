@@ -1,1 +1,2 @@
-export * from './contact.po';
+export * from './contact-control.po';
+export * from './contact-view.po';

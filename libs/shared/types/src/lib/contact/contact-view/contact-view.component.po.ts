@@ -1,4 +1,5 @@
 import { PageObject } from '@ygg/shared/test/page-object';
+import { Contact } from '../contact';
 
 export abstract class ContactViewPageObject extends PageObject {
   selectors = {
@@ -8,4 +9,6 @@ export abstract class ContactViewPageObject extends PageObject {
     email: '.email .field-value',
     lineID: '.lineID .field-value',
   }
+
+  abstract expectValue(value: Contact): any;
 }

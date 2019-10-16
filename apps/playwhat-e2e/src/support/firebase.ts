@@ -1,5 +1,9 @@
 // Based on https://github.com/prescottprue/cypress-firebase
 import { isObject, isBoolean } from 'lodash';
+import 'firebase/auth';
+import 'firebase/database';
+import 'firebase/firestore';
+import * as fbConfig from '@ygg/firebase/project-config.develop.json';
 
 // Constants
 const FIREBASE_TOOLS_YES_ARGUMENT = '-y';
@@ -7,6 +11,9 @@ const FIREBASE_TOOLS_BASE_COMMAND = 'firebase';
 const FIREBASE_EXTRA_PATH = '$(npm bin)/firebase-extra';
 
 export function attachCustomCommands({ Cypress, cy, firebase }) {
+  
+  firebase.initializeApp(fbConfig);
+
   /**
    * Login to Firebase auth using FIREBASE_AUTH_JWT environment variable
    * which is generated using firebase-admin authenticated with serviceAccount

@@ -1,3 +1,4 @@
+import { last } from "lodash";
 import { login } from "../../page-objects/app.po";
 import { SiteNavigator } from '../../page-objects/site-navigator';
 import { ScheduleFormPageObjectCypress, ScheduleFormViewPageObjectCypress } from "../../page-objects/scheduler";
@@ -7,6 +8,17 @@ describe('Scheduler', () => {
   const siteNavigator = new SiteNavigator();
   const scheduleFormPageObject: ScheduleFormPageObjectCypress = new ScheduleFormPageObjectCypress('');
   const scheduleFormViewPageObject: ScheduleFormViewPageObjectCypress = new ScheduleFormViewPageObjectCypress('');
+
+  function deleteScheduleForm(scheduleForm: ScheduleForm) {
+    // @ts-ignore
+    cy.callFirestore('delete', `schedule-forms/${scheduleForm.id}`);
+    // delete play tags
+    cy.wrap(scheduleForm.tags.toTagsArray()).each((element, index, array) => {
+      // @ts-ignore
+      cy.callFirestore('delete', `tags/${(element as Tag).id}`);
+    });    
+
+  }
 
   beforeEach(function() {
     cy.visit('/');
@@ -18,7 +30,16 @@ describe('Scheduler', () => {
     const scheduleForm = ScheduleForm.forge();
     scheduleFormPageObject.setValue(scheduleForm);
     scheduleFormPageObject.submit();
+    cy.url().should('not.match', /.*scheduler\/new.*/);
     scheduleFormViewPageObject.expectValue(scheduleForm);
+    cy.location('pathname').then((loc: any) => {
+      const pathname: string = loc as string;
+      const id = last(pathname.split('/'));
+      if (id) {
+        scheduleForm.id = id;
+        deleteScheduleForm(scheduleForm);
+      }
+    });
   });
 
 });

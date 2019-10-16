@@ -3,6 +3,10 @@ export function login() {
   // @ts-ignore
   cy.login();
   cy.get('.account-widget .user-account').should('be.visible');
+  //@ts-ignore
+  cy.getCurrentUser().then(user => {
+    cy.log(`Login as user ${user.displayName}, uid=${user.uid}`);
+  });
 }
 
 export function loginAdmin() {
