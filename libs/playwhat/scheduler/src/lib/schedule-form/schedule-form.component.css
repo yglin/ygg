@@ -1,5 +1,13 @@
+.ygg-schedule-form {
+  margin: 20px 10px;
+}
+
 .hint {
   color: blue;
+}
+
+button.submit {
+  margin-right: 10px;
 }
 
 .mat-tab-body-content {
