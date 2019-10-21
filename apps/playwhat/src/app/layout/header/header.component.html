@@ -6,7 +6,8 @@
     fxLayoutAlign="space-between center"
   >
     <div>
-      <a mat-icon-button [routerLink]="[ '/home' ]" id='to-home'><mat-icon>home</mat-icon></a>
+      <button [routerLink]="[ '/home' ]" id='to-home' mat-mini-fab><mat-icon>home</mat-icon></button>
+      <!-- <a mat-icon-button [routerLink]="[ '/home' ]" id='to-home'><mat-icon>home</mat-icon></a> -->
     </div>
     <div>
       <ygg-account-widget></ygg-account-widget>
