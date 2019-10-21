@@ -6,4 +6,6 @@
   border: none;
   font-size: 20px;
   text-align: right;
+  width: 10vw;
+  max-width: 100px;
 }

@@ -10,3 +10,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 div {
   max-width: 100vw;
 }
+
+.flex-row-wrap-item {
+  margin-bottom: 20px;
+}

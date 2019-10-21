@@ -5,17 +5,23 @@
     </h4>
   </div>
   <div
-    fxLayout="row"
-    fxLayoutAlign="start end"
+    fxLayout="row wrap"
+    fxLayoutAlign="start center"
     fxLayoutGap="10px"
     [formGroup]="formGroupOpenHour"
   >
-    <div fxFlex="150px" id="week-day-select">
+    <div fxFlex="150px" id="week-day-select" class='flex-row-wrap-item'>
       <div class="week-day-select">
-        <mat-select placeholder="選擇星期幾..." formControlName="weekDay" id='select'>
-          <mat-option class='week-day-option'
+        <mat-select
+          placeholder="選擇星期幾..."
+          formControlName="weekDay"
+          id="select"
+        >
+          <mat-option
+            class="week-day-option"
             *ngFor="let weekDayName of weekDayNames; let idx = index"
-            [value]="idx" [attr.weekDay]="idx"
+            [value]="idx"
+            [attr.weekDay]="idx"
           >
             {{ weekDayName }}
           </mat-option>
@@ -23,29 +29,31 @@
         </mat-select>
       </div>
     </div>
-    <div id="day-time-range-control">
+    <div class='time-range-control flex-row-wrap-item' id="day-time-range-control" style='margin-bottom: 20px;'>
       <ygg-day-time-range-control
         formControlName="dayTimeRange"
       ></ygg-day-time-range-control>
     </div>
-    <div>
-      <button
-        id="add-open-hour"
-        mat-mini-fab
-        (click)="addOpenHour()"
-        matTooltip="加入服務時段"
-      >
-        <mat-icon>timer</mat-icon>
-      </button>
-    </div>
-    <div>
-      <button
-        mat-mini-fab
-        (click)="subtractOpenHour()"
-        matTooltip="減去服務時段"
-      >
-        <mat-icon>timer_off</mat-icon>
-      </button>
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px" class='flex-row-wrap-item'>
+      <div>
+        <button
+          id="add-open-hour"
+          mat-mini-fab
+          (click)="addOpenHour()"
+          matTooltip="加入服務時段"
+        >
+          <mat-icon>timer</mat-icon>
+        </button>
+      </div>
+      <div>
+        <button
+          mat-mini-fab
+          (click)="subtractOpenHour()"
+          matTooltip="減去服務時段"
+        >
+          <mat-icon>timer_off</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
   <br />
