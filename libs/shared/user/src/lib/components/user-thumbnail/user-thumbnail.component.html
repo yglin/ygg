@@ -4,7 +4,7 @@
       <img [src]="user.avatarUrl" />
     </div>
     <div fxFlex class='name'>
-      <span>{{ user.name }}</span>
+      <span [hidden]='!showName'>{{ user.name }}</span>
     </div>
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, OnDestroy } from '@angular/core';
 import { User } from '../../models/user';
 import { UserService } from '../../user.service';
 import { Subscription } from 'rxjs';
@@ -8,21 +8,26 @@ import { Subscription } from 'rxjs';
   templateUrl: './user-thumbnail.component.html',
   styleUrls: ['./user-thumbnail.component.css']
 })
-export class UserThumbnailComponent implements OnChanges {
+export class UserThumbnailComponent implements OnInit, OnDestroy {
   @Input() id: string;
+  @Input() showName = true;
   user: User;
-  subscription: Subscription;
+  subscriptions: Subscription[] = [];
 
   constructor(private userService: UserService) {}
 
-  ngOnChanges() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+  ngOnInit() {
+    // console.log(`showName=${this.showName}`);
     if (this.id) {
-      this.subscription = this.userService
+      this.subscriptions.push(this.userService
         .get$(this.id)
-        .subscribe(user => (this.user = user));
+        .subscribe(user => (this.user = user)));
+    }
+  }
+
+  ngOnDestroy() {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
     }
   }
 }

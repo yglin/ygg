@@ -2,7 +2,7 @@
   <div *ngIf="user">
     <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px" class='user-account'>
       <ygg-user-menu>
-        <ygg-user-thumbnail [id]="user.id"></ygg-user-thumbnail>
+        <ygg-user-thumbnail [id]="user.id" [showName]='!isViewPortXSmall'></ygg-user-thumbnail>
       </ygg-user-menu>
       <!--
         <ygg-user-thumbnail [user]='currentUser' [matMenuTriggerFor]="userMenu"></ygg-user-thumbnail>

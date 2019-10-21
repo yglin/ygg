@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutModule } from "@angular/cdk/layout";
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
 import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
@@ -39,6 +40,7 @@ import { UserSelectorComponent } from './components/user-selector/user-selector.
 @NgModule({
   imports: [
     CommonModule,
+    LayoutModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
