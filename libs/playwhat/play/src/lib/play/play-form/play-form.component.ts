@@ -1,5 +1,5 @@
 import { extend, values } from 'lodash';
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Play } from '../play';
 import { PlayService } from '../play.service';
@@ -20,6 +20,7 @@ import { PlayFactoryService } from '../play-factory.service';
 })
 export class PlayFormComponent implements OnInit, OnDestroy {
   @Input() play: Play;
+  @Output() valueChanged: EventEmitter<Play> = new EventEmitter();
   formModel: FormGroupModel;
   controlModels: FormControlModel[];
   formGroup: FormGroup;
@@ -40,6 +41,8 @@ export class PlayFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.play) {
+      // console.log(this.play);
+      this.play = this.play.clone();
       this.formGroup.patchValue(this.play);
     } else {
       this.play = new Play();
@@ -49,6 +52,7 @@ export class PlayFormComponent implements OnInit, OnDestroy {
         // console.log(value);
         if (value) {
           extend(this.play, value);
+          this.valueChanged.emit(this.play);
         }
       })
     );

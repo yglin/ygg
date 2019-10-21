@@ -119,4 +119,8 @@ export class Play implements DataItem, Taggable {
     const data = toJSONDeep(this);
     return data;
   }
+
+  clone(): Play {
+    return new Play().fromJSON(this.toJSON());
+  }
 }

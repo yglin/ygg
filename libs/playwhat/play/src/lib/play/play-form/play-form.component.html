@@ -1,9 +1,15 @@
-<div class='play-form'>
+<div class="play-form">
   <form [formGroup]="formGroup" [id]="formModel.name">
-    <ygg-action-barred>
-      <div yggActionBarredActions>
+    <div
+      class="action-bar"
+      fxLayout="row"
+      fxLayoutAlign="end center"
+      fxLayoutGap="10px"
+    >
+      <div>
         <button
           id="submit"
+          class="submit"
           [disabled]="formGroup.invalid"
           mat-fab
           type="button"
@@ -12,21 +18,18 @@
           <mat-icon>save</mat-icon>
         </button>
       </div>
-      <mat-tab-group yggActionBarredContent>
-        <mat-tab label="填寫資料">
-          <ygg-form-control
-            *ngFor="let controlModel of controlModels"
-            [formGroup]="formGroup"
-            [model]="controlModel"
-            [id]="'form-control-' + controlModel.name"
-          ></ygg-form-control>
-          <br>
-          <ygg-tags-control formControlName='tags' taggableType='play' label='體驗類型標籤'></ygg-tags-control>
-        </mat-tab>
-        <mat-tab label="預先檢視">
-          <ygg-play-view [play]="play"></ygg-play-view>
-        </mat-tab>
-      </mat-tab-group>
-    </ygg-action-barred>
+    </div>
+    <ygg-form-control
+      *ngFor="let controlModel of controlModels"
+      [formGroup]="formGroup"
+      [model]="controlModel"
+      [id]="'form-control-' + controlModel.name"
+    ></ygg-form-control>
+    <br />
+    <ygg-tags-control
+      formControlName="tags"
+      taggableType="play"
+      label="體驗類型標籤"
+    ></ygg-tags-control>
   </form>
 </div>

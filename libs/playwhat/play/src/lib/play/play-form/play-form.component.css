@@ -1,8 +1,14 @@
 .play-form {
   width: 100vw;
+  padding: 30px 10px;
   overflow: auto;
 }
 
-.mat-tab-body-content {
-  padding: 20px 10px;
+.action-bar {
+  height: 50px;
+  overflow: visible;
+}
+
+button.submit {
+  margin-right: 20px;
 }

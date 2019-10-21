@@ -8,6 +8,8 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { PlayViewComponent } from './play/play-view/play-view.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TagsUiModule } from '@ygg/tags/ui';
+// import { PlayNewComponent } from './pages/play-new/play-new.component';
+import { PlayEditPageComponent } from './pages/play-edit-page/play-edit-page.component';
 
 @NgModule({
   imports: [
@@ -19,7 +21,7 @@ import { TagsUiModule } from '@ygg/tags/ui';
     SharedUiNgMaterialModule,
     TagsUiModule
   ],
-  declarations: [PlayFormComponent, PlayViewComponent],
+  declarations: [PlayFormComponent, PlayViewComponent, PlayEditPageComponent],
   exports: [PlayFormComponent, PlayViewComponent]
 })
 export class PlaywhatPlayModule {}
