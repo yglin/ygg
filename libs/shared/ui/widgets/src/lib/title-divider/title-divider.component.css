@@ -4,8 +4,11 @@
 
 .ygg-title-divider .title {
   font-style: italic;
+  font-size: 150%;
+  font-weight: 700;
 }
 
 .ygg-title-divider .mat-divider {
-  border-top-width: 2px;
+  border-width: 2px;
+  border-color: black;
 }

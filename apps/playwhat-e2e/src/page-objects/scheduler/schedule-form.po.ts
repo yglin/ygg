@@ -85,29 +85,23 @@ export class ScheduleFormPageObjectCypress extends ScheduleFormPageObject {
       this.selectAgent(scheduleForm.agentId);
     }
     this.setDateRange(scheduleForm.dateRange);
-    // open panel num-people
-    cy.get(this.getSelectorForPanelHeader('.num-people')).click();
+
     this.setNumParticipants(scheduleForm.numParticipants);
     this.setNumElders(scheduleForm.numElders);
     this.setNumKids(scheduleForm.numKids);
-    // open panel budget
-    cy.get(this.getSelectorForPanelHeader('.budget')).click();
+
     this.setSingleBudget(scheduleForm.singleBudget);
     this.setTotalBudget(scheduleForm.totalBudget);
-    // open contacts panel
-    cy.get(this.getSelectorForPanelHeader('.contacts')).click();
+
     this.setGroupName(scheduleForm.groupName);
     this.setContacts(scheduleForm.contacts);
-    // open transpotation panel
-    cy.get(this.getSelectorForPanelHeader('.transpotation')).click();
+
     this.setTranspotation(scheduleForm.transpotation);
     this.setTranspotationHelp(scheduleForm.transpotationHelp);
-    // open likes panel
-    cy.get(this.getSelectorForPanelHeader('.likes')).click();
+
     this.setLikeTags(scheduleForm.tags);
     this.setLikesDescription(scheduleForm.likesDescription);
-    // open miscellaneous panel
-    cy.get(this.getSelectorForPanelHeader('.miscellaneous')).click();
+
     this.setAccommodationHelp(scheduleForm.accommodationHelp);
   }
 
