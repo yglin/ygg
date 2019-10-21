@@ -1,7 +1,11 @@
 <div class="app-root">
-  <pw-header></pw-header>
-  <div fxLayout="row" fxLayoutAlign="center stretch">
-    <div class="pw-page"><router-outlet></router-outlet></div>
+  <div class="main-layout" fxLayout="column" fxLayoutAlign="stretch stretch" fxLayoutGap="10px">
+    <div fxFlex="60px" class="pw-header"><pw-header></pw-header></div>
+    <div fxFlex class="pw-page" #page><router-outlet></router-outlet></div>
+    <div fxFlex="10px" class="pw-footer"></div>
     <!-- <div [ngClass]="pageClass"><router-outlet></router-outlet></div> -->
+  </div>
+  <div class='button-to-top' [hidden]='isOnTop'>
+    <button mat-fab (click)='scrollToTop()' matTooltip="回到頁首"><mat-icon>publish</mat-icon></button>
   </div>
 </div>

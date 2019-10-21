@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { ViewportScroller } from "@angular/common";
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import {
   AuthenticateService,
@@ -7,7 +8,7 @@ import {
   UserMenuItem,
   User
 } from '@ygg/shared/user';
-import { Subscription, of } from 'rxjs';
+import { Subscription, of, fromEvent } from 'rxjs';
 import { switchMap, filter } from 'rxjs/operators';
 
 @Component({
@@ -15,18 +16,21 @@ import { switchMap, filter } from 'rxjs/operators';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   title = 'playwhat';
   loggedIn = false;
   subscriptions: Subscription[] = [];
   pageClass = 'pw-page';
+  isOnTop = true;
+  @ViewChild('page', {static: false}) pageElement: ElementRef;
 
   constructor(
     private authenticateService: AuthenticateService,
     private authorizeService: AuthorizeService,
     private userMenuService: UserMenuService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private viewportScroller: ViewportScroller
   ) {}
 
   ngOnInit() {
@@ -76,9 +80,24 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscriptions.push(subscription);
   }
 
+  ngAfterViewInit() {
+    if (this.pageElement) {
+      fromEvent(this.pageElement.nativeElement, 'scroll').subscribe(() => {
+        // console.log(this.pageElement.nativeElement.scrollTop);
+        this.isOnTop = this.pageElement.nativeElement.scrollTop <= 100;
+      });
+    }
+  }
+
   ngOnDestroy() {
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
+    }
+  }
+
+  scrollToTop() {
+    if (this.pageElement) {
+      this.pageElement.nativeElement.scrollTop = 0;
     }
   }
 }
