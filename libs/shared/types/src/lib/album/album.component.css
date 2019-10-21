@@ -1,9 +1,9 @@
 .cover {
   width: 50vw;
-  min-width: 300px;
+  min-width: 270px;
   max-width: 640px;
   height: 50vw;
-  min-height: 300px;
+  min-height: 270px;
   max-height: 640px;
   margin: 10px;
 }
