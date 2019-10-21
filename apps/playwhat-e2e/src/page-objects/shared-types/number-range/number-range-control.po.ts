@@ -5,5 +5,7 @@ export class NumberRangeControlPageObjectCypress extends NumberRangeControlPageO
   setValue(numberRange: NumberRange) {
     cy.get(this.getSelector('inputMin')).clear().type(numberRange.min.toString());
     cy.get(this.getSelector('inputMax')).clear().type(numberRange.max.toString());
+    cy.get(this.getSelector('inputMin')).should('have.value', numberRange.min.toString());
+    cy.get(this.getSelector('inputMax')).should('have.value', numberRange.max.toString());
   }
 }

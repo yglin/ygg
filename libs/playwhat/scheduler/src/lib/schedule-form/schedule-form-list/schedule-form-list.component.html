@@ -1,8 +1,16 @@
-<div id="schedule-forms-list">
+<div class="ygg-schedule-forms-list">
   <ygg-page-title>{{ title }}</ygg-page-title>
-  <div *ngIf="ids" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="10px">
-    <div *ngFor="let id of ids">
-      <ygg-schedule-form-thumbnail [id]="id"></ygg-schedule-form-thumbnail>
+  <div
+    *ngIf="ids"
+    fxLayout="column"
+    fxLayoutAlign="start center"
+    fxLayoutGap="10px"
+  >
+    <div *ngFor="let id of ids" [attr.schedule-form-id]="id">
+      <!-- <ygg-schedule-form-thumbnail [id]="id"></ygg-schedule-form-thumbnail> -->
+      <a [routerLink]="['/scheduler/forms', id]">
+        <ygg-schedule-form-thumbnail [id]="id"></ygg-schedule-form-thumbnail>
+      </a>
     </div>
   </div>
 </div>

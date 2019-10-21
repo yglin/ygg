@@ -26,6 +26,8 @@ export class SiteNavigator {
     const route = path.shift();
     if (route === 'new') {
       cy.get('a#new-schedule').click();
+    } else if (route === 'my') {
+      this.gotoMyScheduler(path);
     }
   }
 
@@ -71,6 +73,15 @@ export class SiteNavigator {
     const route = path.shift();
     if (route === 'list') {
       cy.get('#list').click();
+    }
+  }
+
+  private gotoMyScheduler(path: string[] = []) {
+    cy.get('#account-widget .menu-trigger').click();
+    cy.get('#user-menu button#scheduler').click();
+    const route = path.shift();
+    if (route === 'forms') {
+      cy.get('#schedule-form-list').click();
     }
   }
 }

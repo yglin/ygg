@@ -17,6 +17,8 @@ export class DateRangeComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     const newDateRange = changes.dateRange.currentValue;
     if (DateRange.isDateRange(newDateRange)) {
+      // console.log(newDateRange.start);
+      // console.log(newDateRange.end);
       this.startText = moment(newDateRange.start).format(DATE_FORMATS.display.date);
       this.endText = moment(newDateRange.end).format(DATE_FORMATS.display.date);
     } else {

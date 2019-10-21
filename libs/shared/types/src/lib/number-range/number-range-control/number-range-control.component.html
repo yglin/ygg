@@ -2,7 +2,7 @@
   <div [fxLayout]="layout" fxLayoutAlign="start stretch" fxLayoutGap="10px">
     <div class='min' [fxFlexAlign]='layout === "row" ? "end" : "start"'>
       <mat-form-field>
-        <input matInput placeholder='下限' type="number" [(ngModel)]='min'>
+        <input matInput placeholder='下限' type="number" [formControl]='inputMinControl'>
         <span matPrefix *ngIf='icon'><mat-icon>{{icon}}</mat-icon></span>
       </mat-form-field>
     </div>
@@ -10,17 +10,17 @@
       <div class='indicator'>{{ globalMax }}</div>
       <div fxFlex [fxLayout]="layout" fxLayoutAlign="space-between stretch" fxLayoutGap="10px">
         <div>
-          <mat-slider [vertical]='layout === "row"' [min]='globalMin' [max]='globalMax' [step]='globalStep' [(value)]='min'></mat-slider>
+          <mat-slider [vertical]='layout === "row"' [min]='globalMin' [max]='globalMax' [step]='globalStep' [formControl]='sliderMinControl'></mat-slider>
         </div>
         <div>
-          <mat-slider [vertical]='layout === "row"' [min]='globalMin' [max]='globalMax' [step]='globalStep' [(value)]='max'></mat-slider>
+          <mat-slider [vertical]='layout === "row"' [min]='globalMin' [max]='globalMax' [step]='globalStep' [formControl]='sliderMaxControl'></mat-slider>
         </div>
       </div>
       <div class='indicator'>{{ globalMin }}</div>
     </div>
     <div class='max' [fxFlexAlign]='layout === "row" ? "start" : "end"'>
       <mat-form-field>
-        <input matInput placeholder='上限' type="number" [(ngModel)]='max'>
+        <input matInput placeholder='上限' type="number" [formControl]='inputMaxControl'>
         <span matPrefix *ngIf='icon'><mat-icon>{{icon}}</mat-icon></span>
       </mat-form-field>
     </div>

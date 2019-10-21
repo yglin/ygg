@@ -17,7 +17,7 @@ import { ScheduleFormViewComponent } from './schedule-form-view/schedule-form-vi
 import { User, AuthenticateService, AuthenticateUiService, UserService } from '@ygg/shared/user';
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
 import { By } from '@angular/platform-browser';
-import { PlaywhatPlayModule } from '@ygg/playwhat/play';
+// import { PlaywhatPlayModule } from '@ygg/playwhat/play';
 
 let testScheduleForm: ScheduleForm;
 let loginUser: User;
@@ -201,18 +201,18 @@ describe('ScheduleFormComponent', () => {
     }
     component.setContacts(testScheduleForm.contacts);
     
-    component.onSubmit.subscribe((result: ScheduleForm) => {
+    component.submit.subscribe((result: ScheduleForm) => {
       // Only check data consistence of properties in formControlNames
       expect(pick(result.toJSON(), formControlNames)).toEqual(pick(testScheduleForm.toJSON(), formControlNames));
       done();
     });
-    component.submit();
+    component.onSubmit();
   });
 
   it('when submit, should also call PlayTagsInput.upsertTags() to upsert tags', async done => {
     const mockPlayTagsInputComponent = debugElement.query(By.directive(MockPlayTagsInputComponent)).componentInstance;
     jest.spyOn(mockPlayTagsInputComponent, 'upsertTags').mockImplementation(() => Promise.resolve());
-    await component.submit();
+    await component.onSubmit();
     expect(mockPlayTagsInputComponent.upsertTags).toHaveBeenCalled();
     done();
   });
@@ -220,11 +220,11 @@ describe('ScheduleFormComponent', () => {
   it('If logged in, ScheudleForm.creatorId should be current user\'s', done => {
     const mockAuthenticateService: MockAuthenticateService = TestBed.get(AuthenticateService);
     mockAuthenticateService.login();
-    component.onSubmit.subscribe((result: ScheduleForm) => {
+    component.submit.subscribe((result: ScheduleForm) => {
       expect(result.creatorId).toBe(loginUser.id);
       done();
     });
-    component.submit();
+    component.onSubmit();
   });
 
   it('If not logged in, ScheudleForm.creatorId should be undefined', done => {
@@ -235,11 +235,11 @@ describe('ScheduleFormComponent', () => {
       // Do nothing, user skip login;
       return Promise.resolve();
     });
-    component.onSubmit.subscribe((result: ScheduleForm) => {
+    component.submit.subscribe((result: ScheduleForm) => {
       expect(result.creatorId).toBeUndefined();
       done();
     });
-    component.submit();
+    component.onSubmit();
   });
 
   it('If not logged in, when submit, ask user to log in to get ScheduleForm.creatorId', done => {
@@ -252,13 +252,13 @@ describe('ScheduleFormComponent', () => {
       mockAuthenticateService.currentUser$.next(loginUser);
       return Promise.resolve(loginUser);
     });
-    component.onSubmit.subscribe((result: ScheduleForm) => {
+    component.submit.subscribe((result: ScheduleForm) => {
       expect(window.confirm).toHaveBeenCalled();
       expect(mockAuthenticateUiService.openLoginDialog).toHaveBeenCalled();
       expect(result.creatorId).toBe(loginUser.id);
       done();
     });
-    component.submit();
+    component.onSubmit();
   });
   
 });

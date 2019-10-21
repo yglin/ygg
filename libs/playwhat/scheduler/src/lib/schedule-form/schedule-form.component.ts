@@ -17,7 +17,7 @@ import {
 } from '@angular/forms';
 import { NumberRange, Contact, DateRange } from '@ygg/shared/types';
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { first, switchMap, map } from 'rxjs/operators';
+import { first, switchMap, map, startWith } from 'rxjs/operators';
 
 import { ScheduleForm } from './schedule-form';
 import { ScheduleFormService } from './schedule-form.service';
@@ -30,7 +30,8 @@ import {
 import { SchedulerAdminService } from '../admin/scheduler-admin.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Tags } from '@ygg/tags/core';
-import { TranspotationTypes } from "./transpotation";
+import { TranspotationTypes } from './transpotation';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'ygg-schedule-form',
@@ -40,7 +41,8 @@ import { TranspotationTypes } from "./transpotation";
 export class ScheduleFormComponent implements OnInit, OnDestroy {
   @Input() formGroup: FormGroup;
   @Input() scheduleForm: ScheduleForm;
-  @Output() onSubmit: EventEmitter<ScheduleForm>;
+  @Output() submit: EventEmitter<ScheduleForm> = new EventEmitter();
+  @Output() valueChanged: EventEmitter<ScheduleForm> = new EventEmitter();
 
   budgetType = 'total';
   budgetHintMessage = '';
@@ -59,8 +61,8 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     private authService: AuthenticateService,
     private authUiService: AuthenticateUiService,
     private userService: UserService,
+    private route: ActivatedRoute
   ) {
-    this.onSubmit = new EventEmitter();
     this.subscriptions = [];
     this.subscriptions.push(
       this.authService.currentUser$.subscribe(user => {
@@ -92,6 +94,7 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    let subsc: Subscription;
     if (!this.formGroup) {
       this.formGroup = this.createFormGroup();
     }
@@ -101,10 +104,11 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     } else {
       this.scheduleForm = new ScheduleForm();
     }
-    let subsc: Subscription;
     // Sync data between scheduleForm and formGroup
-    subsc = this.formGroup.valueChanges.subscribe(formGroupValue => {
-      extend(this.scheduleForm, formGroupValue);
+    subsc = this.formGroup.valueChanges.subscribe(scheduleFormValue => {
+      const scheduleForm = this.scheduleForm.clone();
+      extend(scheduleForm, scheduleFormValue);
+      this.valueChanged.emit(scheduleForm);
     });
     this.subscriptions.push(subsc);
 
@@ -241,19 +245,23 @@ export class ScheduleFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  async submit() {
+  async onSubmit() {
     if (confirm('確定已填寫完畢，要送出需求嗎？')) {
-      if (this.currentUser) {
-        this.scheduleForm.creatorId = this.currentUser.id;
-      } else {
-        this.currentUser = await this.askForLogin();
+      const scheduleForm = this.scheduleForm.clone();
+      extend(scheduleForm, this.formGroup.value);
+      if (!scheduleForm.creatorId) {
         if (this.currentUser) {
-          this.scheduleForm.creatorId = this.currentUser.id;
+          scheduleForm.creatorId = this.currentUser.id;
+        } else {
+          this.currentUser = await this.askForLogin();
+          if (this.currentUser) {
+            scheduleForm.creatorId = this.currentUser.id;
+          }
         }
       }
-      await this.scheduleFormService.upsert(this.scheduleForm);
-      alert('已成功更新／新增需求資料');
-      this.onSubmit.emit(this.scheduleForm);
+      await this.scheduleFormService.upsert(scheduleForm);
+      alert('已成功更新／新增遊程需求');
+      this.submit.emit(scheduleForm);
     }
   }
 }

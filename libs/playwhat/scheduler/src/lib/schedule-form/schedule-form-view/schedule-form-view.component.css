@@ -14,3 +14,7 @@
 .ygg-schedule-form-view th, .ygg-schedule-form-view td {
   padding: 20px 10px;
 }
+
+.toolbar {
+  margin-bottom: 20px;
+}

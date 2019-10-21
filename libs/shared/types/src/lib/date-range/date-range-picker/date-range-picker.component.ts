@@ -155,6 +155,7 @@ export class DateRangePickerComponent
     if (this.emitTouched) {
       this.emitTouched();
     }
-    this.formalize();
+    // Don't automatically fix date order for user in this stage
+    // this.formalize();
   }
 }

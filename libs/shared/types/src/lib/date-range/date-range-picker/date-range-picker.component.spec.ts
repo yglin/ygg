@@ -142,23 +142,24 @@ describe('DateRangePickerComponent', () => {
     done();
   });
 
-  it('should swap end and start date if end date before start', async done => {
-    const startDate = moment()
-      .add(10, 'day')
-      .startOf('day')
-      .toDate();
-    const endDate = moment()
-      .startOf('day')
-      .toDate();
-    await pageObject.setStart(startDate);
-    await pageObject.setEnd(endDate);
-    await fixture.whenStable();
-    fixture.detectChanges();
-    const dateRange: DateRange = formComponent.formGroup.get('dateRange').value;
-    expect(dateRange.start).toEqual(endDate);
-    expect(dateRange.end).toEqual(startDate);
-    done();
-  });
+  // Turn this feature off because it confuses user
+  // it('should swap end and start date if end date before start', async done => {
+  //   const startDate = moment()
+  //     .add(10, 'day')
+  //     .startOf('day')
+  //     .toDate();
+  //   const endDate = moment()
+  //     .startOf('day')
+  //     .toDate();
+  //   await pageObject.setStart(startDate);
+  //   await pageObject.setEnd(endDate);
+  //   await fixture.whenStable();
+  //   fixture.detectChanges();
+  //   const dateRange: DateRange = formComponent.formGroup.get('dateRange').value;
+  //   expect(dateRange.start).toEqual(endDate);
+  //   expect(dateRange.end).toEqual(startDate);
+  //   done();
+  // });
 
   // it('should open picker dialog and pass current value', async done => {
   //   const testDateRange = DateRange.forge();

@@ -1,36 +1,10 @@
-import { PageObject } from '@ygg/shared/test/page-object';
-import { ScheduleForm, TranspotationTypes } from '@ygg/playwhat/scheduler';
+import { ScheduleForm, TranspotationTypes, ScheduleFormViewPageObject } from '@ygg/playwhat/scheduler';
 import { DateRange, NumberRange, Contact } from '@ygg/shared/types';
 import { DateRange as DateRangePageObjects } from '../shared-types';
 import { NumberRangeViewPageObjectCypress } from '../shared-types/number-range';
 import { ContactViewPageObjectCypress } from '../shared-types/contact';
 import { TagsViewPageObjectCypress } from '../tags';
 import { Tags } from '@ygg/tags/core';
-
-export abstract class ScheduleFormViewPageObject extends PageObject {
-  selectors = {
-    main: '.ygg-schedule-form-view',
-    dateRange: '.date-range',
-    numParticipants: '.numberPeople .numParticipants',
-    numElders: '.numberPeople .numElders',
-    numKids: '.numberPeople .numKids',
-    totalBudget: '.budget .total-budget',
-    singleBudget: '.budget .single-budget',
-    groupName: '.contacts .group-name',
-    contacts: '.contacts',
-    transpotation: '.transpotation .transpotation-type',
-    transpotationHelp: '.transpotation .transpotation-help',
-    accommodationHelp: '.miscellaneous .accommodation-help',
-    likesTags: '.likes .tags',
-    likesDescription: '.likes .description'
-  };
-
-  getSelectorForContactAt(index: number): string {
-    return `${this.getSelector('contacts')} [index="${index}"]`;
-  }
-
-  abstract expectValue(scheduleForm: ScheduleForm): any;
-}
 
 export class ScheduleFormViewPageObjectCypress extends ScheduleFormViewPageObject {
   expectValue(scheduleForm: ScheduleForm) {
@@ -115,5 +89,9 @@ export class ScheduleFormViewPageObjectCypress extends ScheduleFormViewPageObjec
 
   expectLikesDescription(likesDescription: string) {
     cy.get(this.getSelector('likesDescription')).contains(likesDescription);
+  }
+
+  gotoEdit() {
+    cy.get(this.getSelector('buttonEdit')).click();
   }
 }

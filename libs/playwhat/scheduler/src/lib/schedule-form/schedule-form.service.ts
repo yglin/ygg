@@ -9,7 +9,7 @@ import { Observable, of } from 'rxjs';
 // import { switchMap } from 'rxjs/operators';
 // import { UserService, User } from './schedule-form-list/node_modules/@ygg/shared/user';
 import { Query } from '@ygg/shared/infra/data-access';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ScheduleFormService {

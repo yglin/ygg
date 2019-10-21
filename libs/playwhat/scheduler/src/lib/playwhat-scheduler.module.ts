@@ -18,6 +18,8 @@ import { ScheduleFormListComponent } from './schedule-form/schedule-form-list/sc
 import { RouterModule } from '@angular/router';
 import { ScheduleFormThumbnailComponent } from './schedule-form/schedule-form-thumbnail/schedule-form-thumbnail.component';
 import { ScheduleFormTableComponent } from './schedule-form/schedule-form-table/schedule-form-table.component';
+import { ScheduleFormEditPageComponent } from './schedule-form/pages/schedule-form-edit-page/schedule-form-edit-page.component';
+import { ScheduleFormViewPageComponent } from './schedule-form/pages/schedule-form-view-page/schedule-form-view-page.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { ScheduleFormTableComponent } from './schedule-form/schedule-form-table/
     SchedulerDashboardComponent,
     ScheduleFormListComponent,
     ScheduleFormThumbnailComponent,
-    ScheduleFormTableComponent
+    ScheduleFormTableComponent,
+    ScheduleFormEditPageComponent,
+    ScheduleFormViewPageComponent
   ],
   imports: [
     CommonModule,

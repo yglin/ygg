@@ -1,0 +1,17 @@
+<div class="ygg-schedule-form-edit-page" *ngIf="scheduleForm">
+  <mat-tab-group>
+    <mat-tab label="填寫需求">
+      <ygg-schedule-form
+        [scheduleForm]="scheduleForm"
+        (submit)="onSubmitForm($event)"
+        (valueChanged)="onChangeForm($event)"
+      >
+      </ygg-schedule-form>
+    </mat-tab>
+    <mat-tab label="預先檢視">
+      <ygg-schedule-form-view
+        [scheduleForm]="scheduleForm"
+      ></ygg-schedule-form-view>
+    </mat-tab>
+  </mat-tab-group>
+</div>

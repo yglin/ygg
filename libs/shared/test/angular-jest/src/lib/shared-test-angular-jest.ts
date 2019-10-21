@@ -86,6 +86,10 @@ export class AngularJestTester {
     expect(inputElement.value).toEqual(value);
   }
 
+  expectTextIncluded(selector: string, text: string) {
+    expect(this.getNativeElement<HTMLElement>(selector).innerHTML).toContain(text);
+  }
+
   async expectTextContent(selector: string, text: string) {
     expect(this.getNativeElement<HTMLElement>(selector).textContent).toEqual(text);
   }

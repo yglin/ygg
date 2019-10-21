@@ -71,6 +71,10 @@ export class Tags implements SerializableJSON {
     }
   }
 
+  merge(tags: Tags): Tags {
+    return new Tags(this.toTagsArray().concat(tags.toTagsArray()));
+  }
+
   clear() {
     this.tags.length = 0;
   }

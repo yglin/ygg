@@ -1,38 +1,68 @@
 import { DebugElement, Inject, Injectable } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { SharedTypesModule } from '@ygg/shared/types';
+import { SharedTypesModule, DATE_FORMATS } from '@ygg/shared/types';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import * as moment from 'moment';
 
 import { ScheduleForm } from '../schedule-form';
 import { ScheduleFormViewComponent } from './schedule-form-view.component';
-import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { of, BehaviorSubject } from 'rxjs';
 import { ScheduleFormService } from '../schedule-form.service';
+import { User, AuthenticateService } from '@ygg/shared/user';
+import { AngularJestTester } from "@ygg/shared/test/angular-jest";
+import { ScheduleFormViewPageObject } from "./schedule-form-view.component.po";
+import { TagsUiModule } from '@ygg/tags/ui';
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
-function getFieldElement(
-  dbElement: DebugElement,
-  fieldName: string
-): HTMLElement {
-  return dbElement.query(By.css(`#${fieldName} .value`)).nativeElement;
-}
+// function getFieldElement(
+//   dbElement: DebugElement,
+//   fieldName: string
+// ): HTMLElement {
+//   return dbElement.query(By.css(`#${fieldName} .value`)).nativeElement;
+// }
 
-function countPluralField(dbElement: DebugElement, fieldName: string): number {
-  return dbElement.query(By.css(`#${fieldName}`)).queryAll(By.css('.value'))
-    .length;
-}
+// function countPluralField(dbElement: DebugElement, fieldName: string): number {
+//   return dbElement.query(By.css(`#${fieldName}`)).queryAll(By.css('.value'))
+//     .length;
+// }
 
-function getValueText(dbElement: DebugElement, fieldName: string): string {
-  return getFieldElement(dbElement, fieldName).textContent;
+// function getValueText(dbElement: DebugElement, fieldName: string): string {
+//   return getFieldElement(dbElement, fieldName).textContent;
+// }
+
+class ScheduleFormViewPageObjectAngularJest extends ScheduleFormViewPageObject {
+  tester: AngularJestTester;
+
+  constructor(parentSelector: string, tester: AngularJestTester) {
+    super(parentSelector);
+    this.tester = tester;
+  }
+
+  expectValue(scheduleForm: ScheduleForm) {
+    // TO BE Implement...
+  }
+
+  expectEditButton(flag: boolean) {
+    this.tester.expectVisible(this.getSelector('buttonEdit'), flag);
+  }
+
+  async gotoEdit() {
+    return this.tester.click(this.getSelector('buttonEdit'));
+  }
 }
 
 describe('ScheduleFormViewComponent', () => {
   let component: ScheduleFormViewComponent;
   let fixture: ComponentFixture<ScheduleFormViewComponent>;
-  let testScheduleForm: ScheduleForm;
   let debugElement: DebugElement;
 
+  @Injectable()
+  class MockAuthenticateService {
+    currentUser$: BehaviorSubject<User> = new BehaviorSubject(null);
+  }
+  
   @Injectable()
   class MockActivatedRoute {
     snapshot = {
@@ -40,20 +70,33 @@ describe('ScheduleFormViewComponent', () => {
         get: () => 'fakeId'
       }
     };
+    data = of(null);
+  }
+
+  @Injectable()
+  class MockRouter {
+    navigate() {}
   }
 
   @Injectable()
   class MockScheduleFormService {
     get$() {
-      return of(testScheduleForm);
+      return of(null);
     }
   }
+
+  let mockAuthenticateService: MockAuthenticateService;
+  let mockRouter: MockRouter;
+  let mockActivatedRoute: MockActivatedRoute;
+  let scheduleFormViewPageObject: ScheduleFormViewPageObjectAngularJest;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ScheduleFormViewComponent],
-      imports: [SharedUiNgMaterialModule, SharedTypesModule],
+      imports: [SharedUiNgMaterialModule, SharedUiWidgetsModule, SharedTypesModule, TagsUiModule],
       providers: [
+        { provide: AuthenticateService, useClass: MockAuthenticateService },
+        { provide: Router, useClass: MockRouter },
         { provide: ActivatedRoute, useClass: MockActivatedRoute },
         { provide: ScheduleFormService, useClass: MockScheduleFormService }
       ]
@@ -61,82 +104,22 @@ describe('ScheduleFormViewComponent', () => {
   }));
 
   beforeEach(() => {
-    testScheduleForm = ScheduleForm.forge();
     fixture = TestBed.createComponent(ScheduleFormViewComponent);
-    component = fixture.componentInstance;
-  });
-
-  it('if @Input() schedule form not provided, fetch by route param id', done => {
-    const mockActivatedRoute: MockActivatedRoute = TestBed.get(ActivatedRoute);
-    jest.spyOn(mockActivatedRoute.snapshot.paramMap, 'get');
-    const mockScheduleFormService: MockScheduleFormService = TestBed.get(ScheduleFormService);
-    jest.spyOn(mockScheduleFormService, 'get$');
-    fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      expect(mockActivatedRoute.snapshot.paramMap.get).toHaveBeenCalled();
-      expect(mockScheduleFormService.get$).toHaveBeenCalled();
-      expect(component.scheduleForm).toBe(testScheduleForm);
-      done();
-    });
-  });
-  
-
-  it('should display correct data', () => {
-    component.scheduleForm = testScheduleForm;
     debugElement = fixture.debugElement;
-    fixture.detectChanges();
-
-    const startDateText = moment(testScheduleForm.dateRange.start).format(
-      'YYYY/MM/DD'
-    );
-    const endDateText = moment(testScheduleForm.dateRange.end).format(
-      'YYYY/MM/DD'
-    );
-    expect(getFieldElement(debugElement, 'dateRange').innerHTML).toContain(
-      startDateText
-    );
-    expect(getFieldElement(debugElement, 'dateRange').innerHTML).toContain(
-      endDateText
-    );
-    expect(getValueText(debugElement, 'numParticipants')).toEqual(
-      testScheduleForm.numParticipants.toString()
-    );
-    expect(getValueText(debugElement, 'numElders')).toEqual(
-      testScheduleForm.numElders.toString()
-    );
-    expect(getValueText(debugElement, 'numKids')).toEqual(
-      testScheduleForm.numKids.toString()
-    );
-    expect(getFieldElement(debugElement, 'totalBudget').innerHTML).toContain(
-      testScheduleForm.totalBudget.min.toString()
-    );
-    expect(getFieldElement(debugElement, 'totalBudget').innerHTML).toContain(
-      testScheduleForm.totalBudget.max.toString()
-    );
-    expect(getValueText(debugElement, 'groupName')).toEqual(
-      testScheduleForm.groupName
-    );
-
-    expect(countPluralField(debugElement, 'contacts')).toEqual(
-      testScheduleForm.contacts.length
-    );
-
-    expect(getValueText(debugElement, 'transpotation')).toEqual(
-      testScheduleForm.transpotation
-    );
-    expect(getValueText(debugElement, 'transpotationHelp')).toEqual(
-      testScheduleForm.transpotationHelp
-    );
-    expect(getValueText(debugElement, 'accommodationHelp')).toEqual(
-      testScheduleForm.accommodationHelp
-    );
-
-    expect(countPluralField(debugElement, 'tags')).toEqual(
-      testScheduleForm.tags.length
-    );
-
-    expect(getValueText(debugElement, 'likesDescription')).toEqual(
-      testScheduleForm.likesDescription
-    );
+    component = fixture.componentInstance;
+    mockAuthenticateService = TestBed.get(AuthenticateService);
+    mockRouter = TestBed.get(Router);
+    mockActivatedRoute = TestBed.get(ActivatedRoute);
+    const tester = new AngularJestTester({ fixture, debugElement });
+    scheduleFormViewPageObject = new ScheduleFormViewPageObjectAngularJest('', tester);
   });
+
+  // it('should display correct data', async done => {
+  //   const testScheduleForm = ScheduleForm.forge();
+  //   component.scheduleForm = testScheduleForm;
+  //   await fixture.whenStable();
+  //   fixture.detectChanges();
+  //   scheduleFormViewPageObject.expectValue(testScheduleForm);
+  //   done();
+  // });  
 });
