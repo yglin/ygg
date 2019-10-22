@@ -1,13 +1,13 @@
 // import { sample } from "lodash";
 // import { SerializableJSON } from '@ygg/shared/infra/data-access';
-import { login } from '../page-objects/app.po';
+import { login } from '../../page-objects/app.po';
 import {
   PlayFormPageObject,
   PlayViewPageObject,
   deletePlay
-} from '../page-objects/play.po';
+} from '../../page-objects/play.po';
 import { Play } from '@ygg/playwhat/play';
-import { SiteNavigator } from '../page-objects/site-navigator';
+import { SiteNavigator } from '../../page-objects/site-navigator';
 
 describe('Play form, new and update play', () => {
   const siteNavigator = new SiteNavigator();
