@@ -16,12 +16,16 @@ import {
   User
 } from '@ygg/shared/user';
 import { Subscription, of, fromEvent, BehaviorSubject } from 'rxjs';
-import { switchMap, filter, auditTime, tap, debounceTime } from 'rxjs/operators';
+import { switchMap, filter, auditTime, tap, debounceTime, delay } from 'rxjs/operators';
+import { fadeOutAnimation } from "./animations";
 
 @Component({
   selector: 'pw-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  animations: [
+    fadeOutAnimation
+  ]
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   title = 'playwhat';
@@ -92,18 +96,18 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.pageElement) {
       this.subscriptions.push(
       fromEvent(this.pageElement.nativeElement, 'scroll')
-        .pipe(auditTime(500))
+        // .pipe(auditTime(500))
         .subscribe(() => {
           const isOnTop = this.pageElement.nativeElement.scrollTop <= 100;
           if (!isOnTop && !this.showGoToTopButton) {
             this.showGoToTopButton$.next(true);
-          } else {
-            this.showGoToTopButton$.next(false);
           }
         }));
       this.subscriptions.push(this.showGoToTopButton$.pipe(
-        tap(value => this.showGoToTopButton = value),
+        tap(value => this.showGoToTopButton = true),
         debounceTime(3000),
+        // switchMap(() => of(true)),
+        // delay(3000)
       ).subscribe(() => {
         if (this.showGoToTopButton) {
           this.showGoToTopButton = false;

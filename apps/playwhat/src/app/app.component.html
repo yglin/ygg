@@ -5,7 +5,7 @@
     <div fxFlex="10px" class="pw-footer"></div>
     <!-- <div [ngClass]="pageClass"><router-outlet></router-outlet></div> -->
   </div>
-  <div class='button-to-top' [hidden]='!showGoToTopButton'>
+  <div class='button-to-top' [@fadeOutAnimation]='showGoToTopButton ? "show" : "hide"'>
     <button mat-fab (click)='scrollToTop()' matTooltip="回到頁首"><mat-icon>publish</mat-icon></button>
   </div>
 </div>
