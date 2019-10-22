@@ -21,21 +21,21 @@ export class AlbumControlPageObject {
   }
 }
 
-export class AlbumViewPageObject {
+export class AlbumViewPageObjectCypress {
   selector: string;
 
   constructor(parentSelector: string = '') {
     this.selector = `${parentSelector} .album-view`.trim();
   }
 
-  checkData(album: Album) {
+  expectValue(album: Album) {
     cy.get(
       `${this.selector} .cover img[src="${album.cover.src}"]`
-    ).should('be.visible');
+    ).should('exist');
     for (const photo of album.photos) {
       cy.get(
         `${this.selector} .photo-list .photo img[src="${photo.src}"]`
-      ).should('be.visible');
+      ).should('exist');
     }
   }
 }

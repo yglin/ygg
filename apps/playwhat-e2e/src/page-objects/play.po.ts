@@ -1,6 +1,6 @@
 import { Play } from '@ygg/playwhat/play';
 import { FormControlType } from '@ygg/shared/types';
-import { AlbumControlPageObject, AlbumViewPageObject } from './album.po';
+import { AlbumControlPageObject, AlbumViewPageObjectCypress } from './album.po';
 import {
   BusinessHoursControlPageObject,
   BusinessHoursViewPageObject
@@ -102,12 +102,12 @@ export class PlayFormPageObject extends PageObject {
 
 export class PlayViewPageObject {
   selector: string;
-  albumView: AlbumViewPageObject;
+  albumView: AlbumViewPageObjectCypress;
   businessHoursView: BusinessHoursViewPageObject;
 
   constructor(parentSelector: string = '') {
     this.selector = `${parentSelector} .play-view`.trim();
-    this.albumView = new AlbumViewPageObject(this.selector);
+    this.albumView = new AlbumViewPageObjectCypress(this.selector);
     this.businessHoursView = new BusinessHoursViewPageObject(this.selector);
   }
 
@@ -134,7 +134,7 @@ export class PlayViewPageObject {
             );
             break;
           case FormControlType.album:
-            this.albumView.checkData(play[name]);
+            this.albumView.expectValue(play[name]);
             break;
           case FormControlType.businessHours:
             this.businessHoursView.expect(play[name]);
