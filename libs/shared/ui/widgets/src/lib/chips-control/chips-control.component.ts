@@ -123,7 +123,7 @@ export class ChipsControlComponent implements OnInit, OnChanges, OnDestroy, Afte
     }
   }
 
-  addChip(event: MatChipInputEvent) {
+  addChip(event?: MatChipInputEvent) {
     let chip: string;
     if (event) {
       chip = event.value;
