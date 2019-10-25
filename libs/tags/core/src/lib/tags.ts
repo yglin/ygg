@@ -10,7 +10,7 @@ export class Tags implements SerializableJSON {
   }
 
   static forge(): Tags {
-    return new Tags(range(random(5,10)).map(() => Tag.forge()));
+    return new Tags(range(random(2, 7)).map(() => Tag.forge()));
   }
 
   static fromJSON(data: any): Tags {

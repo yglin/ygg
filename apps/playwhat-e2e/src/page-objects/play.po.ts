@@ -13,6 +13,7 @@ import {
   TagsControlPageObjectCypress,
   TagsViewPageObjectCypress
 } from './tags';
+import { User } from '@ygg/shared/user';
 
 export function deletePlay(play: Play) {
   // @ts-ignore
@@ -48,13 +49,13 @@ export class PlayFormPageObject extends PageObject {
         switch (controlModel.type) {
           case FormControlType.text:
             valueSelector = `#${controlModel.name} input`;
-            cy.get(`${this.selector} ${valueSelector}`).type(
+            cy.get(`${this.selector} ${valueSelector}`).clear().type(
               play[controlModel.name]
             );
             break;
           case FormControlType.textarea:
             valueSelector = `#${controlModel.name} textarea`;
-            cy.get(`${this.selector} ${valueSelector}`).type(
+            cy.get(`${this.selector} ${valueSelector}`).clear().type(
               play[controlModel.name]
             );
             break;
@@ -62,13 +63,13 @@ export class PlayFormPageObject extends PageObject {
             const albumControl = new AlbumControlPageObject(
               `${this.getSelector()} #form-control-${name}`
             );
-            albumControl.fillIn(play.album);
+            albumControl.setValue(play.album);
             break;
           case FormControlType.businessHours:
             const businessHoursControl = new BusinessHoursControlPageObject(
               `${this.getSelector()} #form-control-${name}`
             );
-            businessHoursControl.fillIn(play.businessHours);
+            businessHoursControl.setValue(play.businessHours);
             break;
           case FormControlType.location:
             const locationControl = new Location.LocationControlPageObjectCypress(
@@ -113,6 +114,11 @@ export class PlayViewPageObject {
 
   expectVisible() {
     cy.get(this.selector).should('be.visible');
+  }
+
+  expectCreator(user: User) {
+    cy.log(`Expect the creator is ${user.name}`);
+    cy.get('.creator').contains(user.name);
   }
 
   checkData(play: Play) {

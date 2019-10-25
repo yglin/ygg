@@ -1,0 +1,16 @@
+<div class="ygg-play-view-page" *ngIf="play">
+  <div
+    *ngIf="isCreator"
+    class="toolbar"
+    fxLayout="row"
+    fxLayoutAlign="end center"
+    fxLayoutGap="10px"
+  >
+    <div>
+      <button mat-fab (click)="gotoEdit()" class='go-to-edit'><mat-icon>edit</mat-icon></button>
+    </div>
+  </div>
+  <div>
+    <ygg-play-view [play]="play"></ygg-play-view>
+  </div>
+</div>

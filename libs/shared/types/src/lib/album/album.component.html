@@ -3,7 +3,8 @@
     <div class="mat-elevation-z12 cover">
       <img [src]="album.cover.src" />
     </div>
-    <div fxFlex
+    <div
+      fxFlex
       fxLayout="row wrap"
       fxLayoutAlign="start center"
       class="photo-list"
@@ -26,9 +27,12 @@
           </button>
         </div>
       </div>
-      <div class="photo mat-elevation-z6" *ngIf="!readonly">
-        <div id="add-photos" class="add-button-container" (click)="addPhoto()">
+      <div *ngIf="!readonly">
+        <div id="add-photos" (click)="addPhoto()">
           <button mat-fab><mat-icon>add</mat-icon></button>
+        </div>
+        <div id="clear-all" (click)="clearAll()">
+          <button mat-fab><mat-icon>delete_sweep</mat-icon></button>
         </div>
       </div>
     </div>

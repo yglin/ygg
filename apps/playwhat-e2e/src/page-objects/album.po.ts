@@ -10,7 +10,8 @@ export class AlbumControlPageObject {
     this.imageUploader = new ImageUploaderPageObject();
   }
 
-  fillIn(album: Album) {
+  setValue(album: Album) {
+    cy.get(`${this.selector} #clear-all`).click();
     cy.get(`${this.selector} #add-photos`).click();
     this.imageUploader.expectOpen();
     this.imageUploader.addImagesByUrl(album.photos);

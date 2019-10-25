@@ -1,0 +1,15 @@
+<div
+  class="ygg-play-thumbnail"
+  *ngIf="play"
+  fxLayout="row"
+  fxLayoutAlign="start center"
+  fxLayoutGap="10px"
+>
+  <div fxFlex="70px">
+    <ygg-image-icon [src]="play.album.cover.src"></ygg-image-icon>
+  </div>
+  <div fxFlex>
+    <div class='name'>{{ play.name }}</div>
+    <pre class='introduction'>{{ play.introduction }}</pre>
+  </div>
+</div>

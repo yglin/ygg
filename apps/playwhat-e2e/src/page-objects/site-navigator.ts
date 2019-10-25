@@ -19,6 +19,17 @@ export class SiteNavigator {
     const route = path.shift();
     if (route === 'new') {
       cy.get('a#add-my-play').click();
+    } else if (route === 'my') {
+      this.gotoMyPlay(path);
+    }
+  }
+
+  private gotoMyPlay(path: string[]) {
+    cy.get('#account-widget .menu-trigger').click();
+    cy.get('#user-menu button#play').click();
+    const route = path.shift();
+    if (route === 'list') {
+      cy.get('#play-list').click({force: true});
     }
   }
 

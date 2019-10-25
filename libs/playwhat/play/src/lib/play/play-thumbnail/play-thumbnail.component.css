@@ -1,0 +1,14 @@
+.ygg-play-thumbnail {
+  width: 80vw;
+  max-width: 360px;
+  height: 70px;
+  padding: 0;
+  border-radius: 5px;
+  box-shadow: 5px 5px 8px #3d3d3d;
+  overflow: hidden;
+}
+
+.name {
+  font-size: 150%;
+  font-weight: bold;
+}

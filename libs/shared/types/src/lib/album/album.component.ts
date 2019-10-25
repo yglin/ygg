@@ -84,4 +84,10 @@ export class AlbumComponent implements OnInit, OnDestroy, OnChanges {
       })
     );
   }
+
+  clearAll() {
+    if (confirm(`確定要清空所有照片?`)) {
+      this.album.clear();
+    }
+  }
 }

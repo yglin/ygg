@@ -1,5 +1,6 @@
 import {DataItem, toJSONDeep} from '@ygg/shared/infra/data-access';
 import {extend, sample} from 'lodash';
+import * as firebase from 'firebase';
 
 export enum UserState {
   Unknown = 0,
@@ -43,6 +44,16 @@ export class User implements DataItem {
       'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Breathe-face-devil-grin.svg/128px-Breathe-face-devil-grin.svg.png'
     ]));
     return forged;
+  }
+
+  static fromFirebase(firebaseUser: firebase.User): User {
+    const user = new User();
+    user.id = firebaseUser.uid;
+    user.name = firebaseUser.displayName;
+    user.avatarUrl = new URL(firebaseUser.photoURL);
+    user.email = firebaseUser.email;
+    user.phone = firebaseUser.phoneNumber;
+    return user;
   }
 
   constructor() {

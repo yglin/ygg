@@ -20,6 +20,7 @@ import { ItemsGroupSwitcherComponent } from './items-group-switcher/items-group-
 import { TimeInputComponent } from './time-input/time-input.component';
 import { AmazingTimePickerModule } from "amazing-time-picker";
 import { ChipsControlComponent } from './chips-control/chips-control.component';
+import { ImageIconComponent } from './image-icon/image-icon.component';
 @NgModule({
   declarations: [
     ProgressSpinnerComponent,
@@ -34,6 +35,7 @@ import { ChipsControlComponent } from './chips-control/chips-control.component';
     ItemsGroupSwitcherComponent,
     TimeInputComponent,
     ChipsControlComponent,
+    ImageIconComponent,
   ],
   imports: [
     CommonModule,
@@ -56,6 +58,7 @@ import { ChipsControlComponent } from './chips-control/chips-control.component';
     ItemsGroupSwitcherComponent,
     TimeInputComponent,
     ChipsControlComponent,
+    ImageIconComponent,
   ],
   entryComponents: [ProgressSpinnerComponent, YggDialogComponent]
 })

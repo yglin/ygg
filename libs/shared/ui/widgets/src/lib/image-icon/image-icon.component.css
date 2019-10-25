@@ -1,0 +1,11 @@
+.ygg-image-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.ygg-image-icon img {
+  width: 100%;
+  height: 100%;
+}

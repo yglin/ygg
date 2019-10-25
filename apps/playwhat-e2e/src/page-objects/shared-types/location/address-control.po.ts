@@ -8,6 +8,6 @@ export class AddressControlPageObjectCypress extends PageObject {
   };
 
   setValue(address: Address) {
-    cy.get(this.getSelector('rawInput')).type(address.getFullAddress());
+    cy.get(this.getSelector('rawInput')).clear().type(address.getFullAddress());
   }
 }

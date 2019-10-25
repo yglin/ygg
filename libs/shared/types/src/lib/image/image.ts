@@ -44,7 +44,12 @@ export class Image implements SerializableJSON {
       'https://memeguy.com/photos/images/this-birb-321394.jpg',
       'https://i.redd.it/f99b8okdhtqz.jpg',
       'https://i.pinimg.com/originals/8d/17/f4/8d17f4e6cacd537fceaf710a78dca094.jpg',
-      'https://img.memecdn.com/leave-birb-alone_c_7227405.jpg'
+      'https://img.memecdn.com/leave-birb-alone_c_7227405.jpg',
+      'https://pbs.twimg.com/media/D00cBGOWkAYUKvf.jpg',
+      'https://cdn.ebaumsworld.com/mediaFiles/picture/516050/85945551.png',
+      'https://media3.giphy.com/media/ceHKRKMR6Ojao/giphy.gif',
+      'https://i.imgur.com/MHQCezP.jpg',
+      'https://i.pinimg.com/236x/7e/e8/5e/7ee85eaea776ad40cc10fb8cbf3cf1d4--bird-memes.jpg'
     ]);
     return new Image(src);
   }

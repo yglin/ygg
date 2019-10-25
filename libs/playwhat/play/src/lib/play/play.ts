@@ -19,6 +19,7 @@ export class Play implements DataItem, Taggable {
   businessHours: BusinessHours;
   location: Location;
   tags: Tags;
+  creatorId: string;
 
   static forge(): Play {
     const newOne = new Play();

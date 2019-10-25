@@ -51,15 +51,17 @@ export class BusinessHoursControlPageObject extends PageObject {
     buttonClearAll: 'button#clear-all'
   }
 
-  fillIn(businessHours: BusinessHours) {
-    for (const openHour of businessHours.getOpenHours()) {
+  setValue(businessHours: BusinessHours) {
+    cy.log(`Set business hours`);
+    cy.get(this.getSelector('buttonClearAll')).click({force: true});
+    cy.wrap(businessHours.getOpenHours()).each((openHour: any) => {
       cy.log(`Add open-hour ${openHour.format()}`);
       this.addOpenHour(openHour);
-    }
+    });
   }
 
   addOpenHour(openHour: OpenHour) {
-    cy.wait(1000);
+    // cy.wait(1000);
     const weekDaySelect = new WeekDaySelectPageObject(this.getSelector('weekDaySelect'));
     const dayTimeRangeInput = new DayTimeRangeControlPageObject(this.getSelector('dayTimeRangeInput'));
     weekDaySelect.select(openHour.weekDay);

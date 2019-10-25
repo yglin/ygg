@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Play } from '../../play';
-import { ActivatedRoute } from '@angular/router';
+import { Play } from '../..';
+import { ActivatedRoute, Router } from '@angular/router';
 import { take, first, timeout } from 'rxjs/operators';
 
 @Component({
@@ -11,7 +11,7 @@ import { take, first, timeout } from 'rxjs/operators';
 export class PlayEditPageComponent implements OnInit {
   play: Play;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
     if (this.route.data) {
@@ -35,6 +35,12 @@ export class PlayEditPageComponent implements OnInit {
   onPlayChanged(play: Play) {
     if (play) {
       this.play = play;
+    }
+  }
+
+  onPlaySubmitted(play: Play) {
+    if (play) {
+      this.router.navigate(['/', 'plays', play.id]);
     }
   }
 }

@@ -1,0 +1,7 @@
+<div class="ygg-play-list" *ngIf="plays">
+  <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="30px">
+    <div *ngFor="let play of plays" (click)="onClick(play.id)" [attr.playId]='play.id'>
+      <ygg-play-thumbnail [id]="play.id"></ygg-play-thumbnail>
+    </div>
+  </div>
+</div>

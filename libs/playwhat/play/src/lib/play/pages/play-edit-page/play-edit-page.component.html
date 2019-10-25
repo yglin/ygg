@@ -1,7 +1,7 @@
 <div class="play-edit-page" *ngIf="play">
   <mat-tab-group yggActionBarredContent>
     <mat-tab label="填寫資料">
-      <ygg-play-form [play]="play" (valueChanged)='onPlayChanged($event)'></ygg-play-form>
+      <ygg-play-form [play]="play" (valueChanged)='onPlayChanged($event)' (submit)='onPlaySubmitted($event)'></ygg-play-form>
     </mat-tab>
     <mat-tab label="預先檢視">
       <ygg-play-view [play]="play"></ygg-play-view>

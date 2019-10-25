@@ -18,12 +18,17 @@ export class Album implements SerializableJSON {
 
   static forge(): Album {
     const forged = new Album();
-    forged.photos = range(random(5,10)).map(() => Image.forge());
+    forged.photos = range(random(3,10)).map(() => Image.forge());
     forged.cover = sample(forged.photos);
     return forged;
   }
 
   constructor() {
+    this.cover = new Image();
+    this.photos = [];
+  }
+
+  clear() {
     this.cover = new Image();
     this.photos = [];
   }
