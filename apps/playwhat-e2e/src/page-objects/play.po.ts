@@ -26,7 +26,7 @@ export function deletePlay(play: Play) {
 }
 
 export class PlayFormPageObject extends PageObject {
-  selector = '.play-form';
+  selector = '.ygg-play-form';
   selectors = {
     buttonSubmit: 'button#submit'
   };

@@ -30,8 +30,6 @@ export class PlayViewPageComponent implements OnInit, OnDestroy {
         ]).subscribe(([data, user]) => {
           if (data && data.play) {
             this.play = data.play;
-          } else {
-            this.play = new Play();
           }
           if (this.play && user && this.play.creatorId === user.id) {
             this.isCreator = true;
@@ -40,8 +38,6 @@ export class PlayViewPageComponent implements OnInit, OnDestroy {
           }
         })
       );
-    } else {
-      this.play = new Play();
     }
   }
 

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Play } from '../..';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take, first, timeout } from 'rxjs/operators';
+import { AuthenticateService } from '@ygg/shared/user';
+import { PlayFactoryService } from '../../play-factory.service';
 
 @Component({
   selector: 'ygg-play-edit-page',
@@ -11,24 +13,28 @@ import { take, first, timeout } from 'rxjs/operators';
 export class PlayEditPageComponent implements OnInit {
   play: Play;
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private playFactory: PlayFactoryService
+  ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     if (this.route.data) {
       this.route.data
         .pipe(
           timeout(5000),
           first(play => !!play)
         )
-        .subscribe((data: any) => {
+        .subscribe(async (data: any) => {
           if (data && data.play) {
             this.play = data.play;
           } else {
-            this.play = new Play();
+            this.play = await this.playFactory.create();
           }
         });
     } else {
-      this.play = new Play();
+      this.play = await this.playFactory.create();
     }
   }
 

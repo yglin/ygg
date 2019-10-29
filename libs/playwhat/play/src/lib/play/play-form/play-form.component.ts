@@ -60,8 +60,6 @@ export class PlayFormComponent implements OnInit, OnDestroy {
       // console.log(this.play);
       this.play = this.play.clone();
       this.formGroup.patchValue(this.play);
-    } else {
-      this.play = new Play();
     }
     this.subscriptions.push(
       this.formGroup.valueChanges.subscribe(value => {
