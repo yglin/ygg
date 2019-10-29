@@ -18,15 +18,15 @@ export class SiteNavigator {
   private gotoPlays(path: string[] = []) {
     const route = path.shift();
     if (route === 'new') {
-      cy.get('a#add-my-play').click();
+      cy.get('a#add-my-play').click({force: true});
     } else if (route === 'my') {
       this.gotoMyPlay(path);
     }
   }
 
   private gotoMyPlay(path: string[]) {
-    cy.get('#account-widget .menu-trigger').click();
-    cy.get('#user-menu button#play').click();
+    cy.get('#account-widget .menu-trigger').click({force: true});
+    cy.get('#user-menu button#play').click({force: true});
     const route = path.shift();
     if (route === 'list') {
       cy.get('#play-list').click({force: true});
@@ -36,15 +36,15 @@ export class SiteNavigator {
   private gotoScheduler(path: string[]) {
     const route = path.shift();
     if (route === 'new') {
-      cy.get('a#new-schedule').click();
+      cy.get('a#new-schedule').click({force: true});
     } else if (route === 'my') {
       this.gotoMyScheduler(path);
     }
   }
 
   private gotoAdmin(path: string[] = []) {
-    cy.get('#account-widget .menu-trigger').click();
-    cy.get('#user-menu button#admin').click();
+    cy.get('#account-widget .menu-trigger').click({force: true});
+    cy.get('#user-menu button#admin').click({force: true});
     const route = path.shift();
     if (route === 'play') {
       this.gotoAdminPlay(path);
@@ -56,7 +56,7 @@ export class SiteNavigator {
   }
 
   private gotoAdminScheduler(path: string[]) {
-    cy.get('#scheduler').click();
+    cy.get('#scheduler').click({force: true});
     const route = path.shift();
     if (route === 'staff') {
       this.gotoAdminSchedulerStaff(path);
@@ -64,35 +64,35 @@ export class SiteNavigator {
   }
 
   private gotoAdminSchedulerStaff(path: string[]) {
-    cy.get('#staff').click();
+    cy.get('#staff').click({force: true});
     const route = path.shift();
     if (route === 'agent') {
-      cy.get('#agent').click();
+      cy.get('#agent').click({force: true});
     }
   }
 
   private gotoAdminPlay(path: string[] = []) {
-    cy.get('#play').click();
+    cy.get('#play').click({force: true});
     const route = path.shift();
     if (route === 'tags') {
-      cy.get('#tags').click();
+      cy.get('#tags').click({force: true});
     }
   }
 
   private gotoAdminTags(path: string[] = []) {
-    cy.get('#tags').click();
+    cy.get('#tags a').click({force: true});
     const route = path.shift();
     if (route === 'list') {
-      cy.get('#list').click();
+      cy.get('#list a').click({force: true});
     }
   }
 
   private gotoMyScheduler(path: string[] = []) {
-    cy.get('#account-widget .menu-trigger').click();
-    cy.get('#user-menu button#scheduler').click();
+    cy.get('#account-widget .menu-trigger').click({force: true});
+    cy.get('#user-menu button#scheduler').click({force: true});
     const route = path.shift();
     if (route === 'forms') {
-      cy.get('#schedule-form-list').click();
+      cy.get('#schedule-form-list').click({force: true});
     }
   }
 }
