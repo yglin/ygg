@@ -1,14 +1,14 @@
-.play-form {
-  width: 100vw;
-  padding: 30px 10px;
-  overflow: auto;
+.ygg-play-form {
+  width: 100%;
+  overflow: hidden;
 }
 
-.action-bar {
+/* .action-bar {
   height: 50px;
+  width: 95%;
   overflow: visible;
-}
+} */
 
-button.submit {
+/* button.submit {
   margin-right: 20px;
-}
+} */

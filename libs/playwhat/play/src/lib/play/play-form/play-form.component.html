@@ -1,12 +1,7 @@
-<div class="play-form">
+<div class="ygg-play-form">
   <form [formGroup]="formGroup" [id]="formModel.name">
-    <div
-      class="action-bar"
-      fxLayout="row"
-      fxLayoutAlign="end center"
-      fxLayoutGap="10px"
-    >
-      <div>
+    <ygg-action-bar-layout position="top">
+      <div ygg-action-bar-button>
         <button
           id="submit"
           class="submit"
@@ -18,18 +13,43 @@
           <mat-icon>save</mat-icon>
         </button>
       </div>
-    </div>
-    <ygg-form-control
-      *ngFor="let controlModel of controlModels"
-      [formGroup]="formGroup"
-      [model]="controlModel"
-      [id]="'form-control-' + controlModel.name"
-    ></ygg-form-control>
-    <br />
-    <ygg-tags-control
-      formControlName="tags"
-      taggableType="play"
-      label="體驗類型標籤"
-    ></ygg-tags-control>
+      <div ygg-action-bar-content>
+        <ygg-title-divider>名稱＆簡介</ygg-title-divider>
+        <ygg-form-control
+          [formGroup]="formGroup"
+          [model]="this.formModel.controls['name']"
+          id="form-control-name"
+        ></ygg-form-control>
+        <ygg-form-control
+          [formGroup]="formGroup"
+          [model]="this.formModel.controls['introduction']"
+          id="form-control-introduction"
+        ></ygg-form-control>
+        <ygg-title-divider>相簿＆照片</ygg-title-divider>
+        <ygg-form-control
+          [formGroup]="formGroup"
+          [model]="this.formModel.controls['album']"
+          id="form-control-album"
+        ></ygg-form-control>
+        <ygg-title-divider>服務時段</ygg-title-divider>
+        <ygg-form-control
+          [formGroup]="formGroup"
+          [model]="this.formModel.controls['businessHours']"
+          id="form-control-businessHours"
+        ></ygg-form-control>
+        <ygg-title-divider>地點</ygg-title-divider>
+        <ygg-form-control
+          [formGroup]="formGroup"
+          [model]="this.formModel.controls['location']"
+          id="form-control-location"
+        ></ygg-form-control>
+        <ygg-title-divider>類型標籤</ygg-title-divider>
+        <ygg-tags-control
+          formControlName="tags"
+          taggableType="play"
+          label="體驗類型標籤"
+        ></ygg-tags-control>
+      </div>
+    </ygg-action-bar-layout>
   </form>
 </div>

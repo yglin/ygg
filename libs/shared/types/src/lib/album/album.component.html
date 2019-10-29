@@ -27,7 +27,7 @@
           </button>
         </div>
       </div>
-      <div *ngIf="!readonly">
+      <div *ngIf="!readonly" class='photo' fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
         <div id="add-photos" (click)="addPhoto()">
           <button mat-fab><mat-icon>add</mat-icon></button>
         </div>

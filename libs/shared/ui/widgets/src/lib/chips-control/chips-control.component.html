@@ -1,16 +1,14 @@
 <div class="chips-control">
-  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
-    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
-      <div>
-        <button type="button" id="add-chip" mat-mini-fab (click)="addChip()">
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-      <div>
-        <button type="button" id="clear-all" mat-mini-fab (click)="clearAll()">
-          <mat-icon>delete_sweep</mat-icon>
-        </button>
-      </div>
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+    <div>
+      <button type="button" id="clear-all" mat-mini-fab (click)="clearAll()">
+        <mat-icon>delete_sweep</mat-icon>
+      </button>
+    </div>
+    <div>
+      <button type="button" id="add-chip" mat-mini-fab (click)="addChip()">
+        <mat-icon>add</mat-icon>
+      </button>
     </div>
   </div>
   <div>

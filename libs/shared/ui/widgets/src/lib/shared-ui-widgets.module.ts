@@ -21,6 +21,7 @@ import { TimeInputComponent } from './time-input/time-input.component';
 import { AmazingTimePickerModule } from "amazing-time-picker";
 import { ChipsControlComponent } from './chips-control/chips-control.component';
 import { ImageIconComponent } from './image-icon/image-icon.component';
+import { ActionBarLayoutComponent } from './action-bar-layout/action-bar-layout.component';
 @NgModule({
   declarations: [
     ProgressSpinnerComponent,
@@ -36,6 +37,7 @@ import { ImageIconComponent } from './image-icon/image-icon.component';
     TimeInputComponent,
     ChipsControlComponent,
     ImageIconComponent,
+    ActionBarLayoutComponent,
   ],
   imports: [
     CommonModule,
@@ -59,6 +61,7 @@ import { ImageIconComponent } from './image-icon/image-icon.component';
     TimeInputComponent,
     ChipsControlComponent,
     ImageIconComponent,
+    ActionBarLayoutComponent,
   ],
   entryComponents: [ProgressSpinnerComponent, YggDialogComponent]
 })
