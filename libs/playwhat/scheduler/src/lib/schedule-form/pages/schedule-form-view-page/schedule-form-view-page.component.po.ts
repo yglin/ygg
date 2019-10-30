@@ -7,4 +7,5 @@ export abstract class ScheduleFormViewPagePageObject extends PageObject {
   }
 
   abstract gotoEdit(): any;
+  abstract createSchedule(): any;
 }

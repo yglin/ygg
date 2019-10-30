@@ -5,4 +5,8 @@ export class ScheduleFormViewPagePageObjectCypress extends ScheduleFormViewPageP
   gotoEdit() {
     cy.get(this.getSelector('buttonEdit')).click();
   }
+
+  createSchedule() {
+    
+  }
 }

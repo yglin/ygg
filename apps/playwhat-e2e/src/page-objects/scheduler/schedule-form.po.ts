@@ -1,3 +1,4 @@
+import { last } from "lodash";
 import { PageObject } from '@ygg/shared/test/page-object';
 import { DateRange, NumberRange, Contact } from '@ygg/shared/types';
 import { Tags } from '@ygg/tags/core';
@@ -29,7 +30,8 @@ abstract class ScheduleFormPageObject extends PageObject {
     transpotationHelp: '.transpotation textarea.transpotation-help',
     likesTags: '.form-control.likes',
     textareaLikesDescription: '.form-control.likes textarea.likes-description',
-    textareaAccommodationHelp: '.form-control.miscellaneous textarea.accommodation-help'
+    textareaAccommodationHelp:
+      '.form-control.miscellaneous textarea.accommodation-help'
   };
 
   getSelectorForPanelHeader(panelSelector: string): string {
@@ -194,10 +196,15 @@ export class ScheduleFormPageObjectCypress extends ScheduleFormPageObject {
   }
 
   setLikesDescription(likesDescription: string) {
-    cy.get(this.getSelector('textareaLikesDescription')).clear().type(likesDescription);
+    cy.get(this.getSelector('textareaLikesDescription'))
+      .clear()
+      .type(likesDescription);
   }
 
   setAccommodationHelp(accommodationHelp: string) {
-    cy.get(this.getSelector('textareaAccommodationHelp')).clear().type(accommodationHelp);
+    cy.get(this.getSelector('textareaAccommodationHelp'))
+      .clear()
+      .type(accommodationHelp);
   }
 }
+
