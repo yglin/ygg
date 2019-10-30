@@ -53,29 +53,37 @@ describe('Scheduler - schedule-form', () => {
     // Goto scheduler/new page, create testScheduleForm
     siteNavigator.goto(['scheduler', 'new']);
     const testScheduleForm = ScheduleForm.forge();
-    cy.log('##### Create new schedule form #####');
+    
+    // XXX Debug number-range input
+    // testScheduleForm.singleBudget.min = 0;
+    // testScheduleForm.singleBudget.max = 500;
+    // testScheduleForm.totalBudget.min = 3068;
+    // testScheduleForm.totalBudget.max = 54088
+    // XXX End
+
+    cy.log('##### Create test schedule form #####');
     scheduleFormPageObject.setValue(testScheduleForm);
     scheduleFormPageObject.submit();
-    cy.url().should('not.match', /.*scheduler\/new.*/);
+    cy.url({ timeout: 10000 }).should('not.match', /.*scheduler\/new.*/);
     cy.location('pathname').then((loc: any) => {
       const pathname: string = loc as string;
       const id = last(pathname.split('/'));
       cy.wrap(id).as('newScheduleFormId');
     });
     cy.get<string>('@newScheduleFormId').then(newScheduleFormId => {
-      cy.log(`##### Got new schedule form, id = ${newScheduleFormId} #####`);
+      cy.log(`##### Got test schedule form, id = ${newScheduleFormId} #####`);
       testScheduleForm.id = newScheduleFormId;
 
       // Goto my-schedules page, find the testScheduleForm and check it out
       siteNavigator.goto(['scheduler', 'my', 'forms']);
-      cy.log(`##### Find new schedule form in my schedule-forms #####`);
+      cy.log(`##### Find test schedule form in my schedule-forms #####`);
       const myScheduleFormsPageObject = new ScheduleFormListPageObjectCypress();
       myScheduleFormsPageObject.expectScheduleForm(testScheduleForm);
       myScheduleFormsPageObject.viewScheduleForm(testScheduleForm);
 
       // In view page of testScheduleForm, click edit button and goto edit page
       cy.location('pathname').should('include', testScheduleForm.id);
-      cy.log(`##### Found new schedule form, go to its edit page #####`);
+      cy.log(`##### Found test schedule form, go to its edit page #####`);
       scheduleFormViewPagePageObject.gotoEdit();
 
       // In edit page of testScheduleForm, change data and submit
@@ -83,14 +91,14 @@ describe('Scheduler - schedule-form', () => {
       // so we can reuse the same page object
       cy.location('pathname').should('include', `${testScheduleForm.id}/edit`);
       const changedScheduleForm = ScheduleForm.forge();
-      cy.log(`##### Edit new schedule form, fill in different data #####`);
+      cy.log(`##### Edit test schedule form, fill in different data #####`);
       scheduleFormPageObject.setValue(changedScheduleForm);
       scheduleFormPageObject.submit();
 
       // // Being redirected to view page again,
       // // but this time we assert data with changedchangedScheduleForm
       cy.location('pathname').should('include', testScheduleForm.id);
-      cy.log(`##### New schedule form updated, check if data is updated #####`);
+      cy.log(`##### Test schedule form updated, check if data is updated #####`);
       scheduleFormViewPageObject.expectValue(changedScheduleForm);
 
       cy.log(`##### All done, clean temporary test data #####`);
