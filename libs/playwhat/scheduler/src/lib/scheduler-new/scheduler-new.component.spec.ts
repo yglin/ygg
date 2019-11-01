@@ -2,7 +2,7 @@ import { MockComponent } from 'ng-mocks';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SchedulerNewComponent } from './scheduler-new.component';
-import { ScheduleFormComponent } from '../schedule-form';
+import { SchedulePlanComponent } from '../schedule-plan';
 import { DebugElement, Injectable } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -20,7 +20,7 @@ describe('SchedulerNewComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         SchedulerNewComponent,
-        MockComponent(ScheduleFormComponent)
+        MockComponent(SchedulePlanComponent)
       ],
       providers: [{ provide: Router, useClass: MockRouter }]
     }).compileComponents();
@@ -32,8 +32,8 @@ describe('SchedulerNewComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should show schedule-form', () => {
+  it('should show schedule-plan', () => {
     const debugElement: DebugElement = fixture.debugElement;
-    expect(debugElement.query(By.css('ygg-schedule-form'))).toBeDefined();
+    expect(debugElement.query(By.css('ygg-schedule-plan'))).toBeDefined();
   });
 });

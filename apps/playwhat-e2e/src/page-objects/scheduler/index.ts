@@ -1,51 +1,51 @@
 import { last } from "lodash";
-import { ScheduleForm } from '@ygg/playwhat/scheduler';
+import { SchedulePlan } from '@ygg/playwhat/scheduler';
 import { SiteNavigator } from '../site-navigator';
-import { ScheduleFormPageObjectCypress } from "./schedule-form.po";
-import { ScheduleFormListPageObjectCypress } from './schedule-form-list.po';
+import { SchedulePlanPageObjectCypress } from "./schedule-plan.po";
+import { SchedulePlanListPageObjectCypress } from './schedule-plan-list.po';
 
-export * from './schedule-form.po';
-export * from './schedule-form-view.po';
-export * from './schedule-form-list.po';
+export * from './schedule-plan.po';
+export * from './schedule-plan-view.po';
+export * from './schedule-plan-list.po';
 
 const siteNavigator = new SiteNavigator();
 
-export function createScheduleForm(scheduleForm: ScheduleForm): Cypress.Chainable<any> {
+export function createSchedulePlan(schedulePlan: SchedulePlan): Cypress.Chainable<any> {
   siteNavigator.goto(['scheduler', 'new']);
 
   // XXX Debug number-range input
-  // testScheduleForm.singleBudget.min = 0;
-  // testScheduleForm.singleBudget.max = 500;
-  // testScheduleForm.totalBudget.min = 3068;
-  // testScheduleForm.totalBudget.max = 54088
+  // testSchedulePlan.singleBudget.min = 0;
+  // testSchedulePlan.singleBudget.max = 500;
+  // testSchedulePlan.totalBudget.min = 3068;
+  // testSchedulePlan.totalBudget.max = 54088
   // XXX End
 
   cy.log('##### Create test schedule form #####');
-  const scheduleFormPageObject: ScheduleFormPageObjectCypress = new ScheduleFormPageObjectCypress(
+  const schedulePlanPageObject: SchedulePlanPageObjectCypress = new SchedulePlanPageObjectCypress(
     ''
   );
-  scheduleFormPageObject.setValue(scheduleForm);
-  scheduleFormPageObject.submit();
+  schedulePlanPageObject.setValue(schedulePlan);
+  schedulePlanPageObject.submit();
   cy.url({ timeout: 10000 }).should('not.match', /.*scheduler\/new.*/);
   cy.location('pathname').then((loc: any) => {
     const pathname: string = loc as string;
     const id = last(pathname.split('/'));
-    scheduleForm.id = id;
-    cy.wrap(scheduleForm).as('newScheduleForm');
+    schedulePlan.id = id;
+    cy.wrap(schedulePlan).as('newSchedulePlan');
   });
-  return cy.get('@newScheduleForm');
+  return cy.get('@newSchedulePlan');
 }
 
-export function gotoMyScheduleFormView(scheduleForm: ScheduleForm) {
+export function gotoMySchedulePlanView(schedulePlan: SchedulePlan) {
   siteNavigator.goto(['scheduler', 'my', 'forms']);
-  cy.log(`##### Find test schedule form in my schedule-forms #####`);
-  const myScheduleFormsPageObject = new ScheduleFormListPageObjectCypress();
-  myScheduleFormsPageObject.expectScheduleForm(scheduleForm);
-  myScheduleFormsPageObject.viewScheduleForm(scheduleForm);
+  cy.log(`##### Find test schedule form in my schedule-plans #####`);
+  const mySchedulePlansPageObject = new SchedulePlanListPageObjectCypress();
+  mySchedulePlansPageObject.expectSchedulePlan(schedulePlan);
+  mySchedulePlansPageObject.viewSchedulePlan(schedulePlan);
 }
 
-export function deleteScheduleForm(scheduleForm: ScheduleForm) {
+export function deleteSchedulePlan(schedulePlan: SchedulePlan) {
   // @ts-ignore
-  cy.callFirestore('delete', `schedule-forms/${scheduleForm.id}`);
+  cy.callFirestore('delete', `schedule-plans/${schedulePlan.id}`);
 }
 

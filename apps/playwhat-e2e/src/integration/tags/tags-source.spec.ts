@@ -7,17 +7,17 @@ import { Tags, Tag } from '@ygg/tags/core';
 // import { v4 as uuid } from 'uuid';
 import { TagsAdminListPageObjectCypress } from '../../page-objects/tags/tags-admin-list.po';
 import { Scheduler } from '../../page-objects';
-import { ScheduleForm } from '@ygg/playwhat/scheduler';
-import { deleteScheduleForm } from "../../page-objects/scheduler";
+import { SchedulePlan } from '@ygg/playwhat/scheduler';
+import { deleteSchedulePlan } from "../../page-objects/scheduler";
 
 describe('Add new tags from various user activities', () => {
   const siteNavigator = new SiteNavigator();
   const tagsAdminListPageObject = new TagsAdminListPageObjectCypress();
   const testPlay = Play.forge();
-  const testScheduleForm = ScheduleForm.forge();
+  const testSchedulePlan = SchedulePlan.forge();
   const testTags = Tags.forge();
   const playFormPageObject = new PlayFormPageObject();
-  const scheduleFormPage = new Scheduler.ScheduleFormPageObjectCypress('');
+  const schedulePlanPage = new Scheduler.SchedulePlanPageObjectCypress('');
 
   beforeEach(() => {
     cy.visit('/');
@@ -47,22 +47,22 @@ describe('Add new tags from various user activities', () => {
     deletePlay(testPlay);
   });
 
-  it('From creating/updating schedule-form', () => {
-    testScheduleForm.tags = testTags;
+  it('From creating/updating schedule-plan', () => {
+    testSchedulePlan.tags = testTags;
     siteNavigator.goto(['scheduler', 'new']);
-    scheduleFormPage.setValue(testScheduleForm);
-    scheduleFormPage.submit();
+    schedulePlanPage.setValue(testSchedulePlan);
+    schedulePlanPage.submit();
     cy.url().should('not.match', /.*scheudler\/new.*/);
     cy.location('pathname').then((loc: any) => {
       const pathname: string = loc as string;
       // Clean out test data in Database
       const id = last(pathname.split('/'));
       if (id) {
-        testScheduleForm.id = id;
+        testSchedulePlan.id = id;
       }
     });
     siteNavigator.goto(['admin', 'tags', 'list']);
-    tagsAdminListPageObject.expectTags(testScheduleForm.tags.toTagsArray());
-    deleteScheduleForm(testScheduleForm);
+    tagsAdminListPageObject.expectTags(testSchedulePlan.tags.toTagsArray());
+    deleteSchedulePlan(testSchedulePlan);
   });
 });

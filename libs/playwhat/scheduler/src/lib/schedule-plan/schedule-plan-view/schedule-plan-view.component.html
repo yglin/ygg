@@ -1,0 +1,123 @@
+<div class="ygg-schedule-plan-view" *ngIf="schedulePlan">
+  <div>
+    <table>
+      <tr class="date-range" id="dateRange">
+        <td>預定日期</td>
+        <td>
+          <ygg-date-range
+            class="value"
+            [dateRange]="schedulePlan.dateRange"
+          ></ygg-date-range>
+        </td>
+      </tr>
+      <tr class="numberPeople">
+        <td>預定人數</td>
+        <td>
+          <div class="numParticipants">
+            總人數：<span class="value">{{
+              schedulePlan.numParticipants
+            }}</span>
+          </div>
+          <div *ngIf="schedulePlan.numElders" class="numElders">
+            65歲以上人數：<span class="value">{{
+              schedulePlan.numElders
+            }}</span>
+          </div>
+          <div *ngIf="schedulePlan.numKids" class="numKids">
+            孩童人數：<span class="value">{{ schedulePlan.numKids }}</span>
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="budget"
+        *ngIf="schedulePlan.singleBudget || schedulePlan.totalBudget"
+      >
+        <td>預算</td>
+        <td>
+          <div *ngIf="schedulePlan.totalBudget" class="total-budget">
+            總預算：<ygg-number-range
+              class="value"
+              [range]="schedulePlan.totalBudget"
+              unit="NTD"
+            ></ygg-number-range>
+          </div>
+          <div *ngIf="schedulePlan.singleBudget" class="single-budget">
+            單人預算：<ygg-number-range
+              class="value"
+              [range]="schedulePlan.singleBudget"
+              unit="NTD"
+            ></ygg-number-range>
+          </div>
+        </td>
+      </tr>
+      <tr class="contacts">
+        <td>聯絡資料</td>
+        <td>
+          <h3 *ngIf="schedulePlan.groupName" class="group-name">
+            團體名稱：<span class="value">{{ schedulePlan.groupName }}</span>
+          </h3>
+          <div id="contacts">
+            <div
+              *ngFor="let contact of schedulePlan.contacts; let idx = index"
+              class="value"
+              [attr.index]="idx"
+            >
+              <mat-card>
+                <ygg-contact-view [contact]="contact"></ygg-contact-view>
+              </mat-card>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="transpotation"
+        *ngIf="schedulePlan.transpotation || schedulePlan.transpotationHelp"
+      >
+        <td>交通方式</td>
+        <td>
+          <div *ngIf="schedulePlan.transpotation" class="transpotation-type">
+            <span class="value">{{
+              transpotationTypes[schedulePlan.transpotation]?.label
+            }}</span>
+          </div>
+          <div
+            *ngIf="schedulePlan.transpotationHelp"
+            class="transpotation-help"
+          >
+            <h5>我需要幫忙安排...</h5>
+            <pre class="value">{{ schedulePlan.transpotationHelp }}</pre>
+          </div>
+        </td>
+      </tr>
+      <tr class="miscellaneous" *ngIf="schedulePlan.accommodationHelp">
+        <td>住宿需求</td>
+        <td>
+          <div
+            *ngIf="schedulePlan.accommodationHelp"
+            class="accommodation-help"
+          >
+            <pre class="value">{{ schedulePlan.accommodationHelp }}</pre>
+          </div>
+        </td>
+      </tr>
+      <tr class="likes" *ngIf="schedulePlan.hasLikes()">
+        <td>體驗需求</td>
+        <td>
+          <div *ngIf="schedulePlan.tags" class="tags">
+            <ygg-tags-view [tags]="schedulePlan.tags"></ygg-tags-view>
+          </div>
+          <div *ngIf="schedulePlan.likesDescription" class="description">
+            <h5>對於體驗行程的需求...</h5>
+            <pre class="value">{{ schedulePlan.likesDescription }}</pre>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="debug">
+    <pre>
+    {{ schedulePlan | json }}
+  </pre
+    >
+  </div>
+</div>

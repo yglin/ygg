@@ -1,0 +1,20 @@
+.ygg-schedule-plan-view {
+  padding: 30px 10px;
+}
+
+.ygg-schedule-plan-view table {
+  width: 100%;
+}
+
+.ygg-schedule-plan-view table, .ygg-schedule-plan-view th, .ygg-schedule-plan-view td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.ygg-schedule-plan-view th, .ygg-schedule-plan-view td {
+  padding: 20px 10px;
+}
+
+.toolbar {
+  margin-bottom: 20px;
+}

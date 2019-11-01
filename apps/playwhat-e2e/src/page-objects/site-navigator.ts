@@ -92,7 +92,7 @@ export class SiteNavigator {
     cy.get('#user-menu button#scheduler').click({force: true});
     const route = path.shift();
     if (route === 'forms') {
-      cy.get('#schedule-form-list').click({force: true});
+      cy.get('#schedule-plan-list').click({force: true});
     }
   }
 }

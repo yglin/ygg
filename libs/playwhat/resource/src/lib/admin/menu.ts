@@ -1,7 +1,7 @@
 import { Image } from '@ygg/shared/types';
 import { MenuTree } from '@ygg/shared/ui/navigation';
 import { AdminAgentComponent } from './admin-agent/admin-agent.component';
-import { AdminScheduleFormsComponent } from './admin-schedule-forms/admin-schedule-forms.component';
+import { AdminSchedulePlansComponent } from './admin-schedule-plans/admin-schedule-plans.component';
 
 export const adminMenu: MenuTree = new MenuTree({
   id: 'scheduler',
@@ -31,8 +31,8 @@ adminMenu.addItem({
 adminMenu.addItem({
   id: 'forms',
   label: '遊程表單',
-  icon: new Image('/assets/images/admin/schedule-forms.svg'),
+  icon: new Image('/assets/images/admin/schedule-plans.svg'),
   link: 'forms',
   tooltip: '管理遊程需求表單',
-  component: AdminScheduleFormsComponent
+  component: AdminSchedulePlansComponent
 }, 'scheduler');

@@ -1,12 +1,12 @@
 import { login } from '../../page-objects/app.po';
 import {
-  createScheduleForm,
-  deleteScheduleForm,
-  gotoMyScheduleFormView
+  createSchedulePlan,
+  deleteSchedulePlan,
+  gotoMySchedulePlanView
 } from '../../page-objects/scheduler';
-import { ScheduleForm, ScheduleFormViewPagePageObject } from '@ygg/playwhat/scheduler';
+import { SchedulePlan, SchedulePlanViewPagePageObject } from '@ygg/playwhat/scheduler';
 import { deleteTags } from '../../page-objects/tags';
-import { ScheduleFormViewPagePageObjectCypress } from '../../page-objects/scheduler/schedule-form-view-page.po';
+import { SchedulePlanViewPagePageObjectCypress } from '../../page-objects/scheduler/schedule-plan-view-page.po';
 
 // ================== What data we need ? ================
 // A schedule, composite of events
@@ -30,13 +30,13 @@ import { ScheduleFormViewPagePageObjectCypress } from '../../page-objects/schedu
 // ============================================================
 
 // ================== What UI components we need ? ================
-// "Create schedule" button link in schedule-form view page.
+// "Create schedule" button link in schedule-plan view page.
 // Schedule edit page.
 // Schedule form component
 // Daily time table to show schedule events
 // Event-thumbnail
 // Swipe-slide for switching days, with left/right arrow buttons
-// "Add-plays" button in schedule-form component
+// "Add-plays" button in schedule-plan component
 // "Remove" button on event-thumbnail
 // "moveToNextDay", "moveToPreviousDay" butttons on event-thumbnail
 // Draggable event handler
@@ -44,37 +44,37 @@ import { ScheduleFormViewPagePageObjectCypress } from '../../page-objects/schedu
 // Play list multi-selector
 // ============================================================
 
-describe('Create a new schedule from schedule-form', () => {
-  const testScheduleForms: ScheduleForm[] = [];
+describe('Create a new schedule from schedule-plan', () => {
+  const testSchedulePlans: SchedulePlan[] = [];
 
   before(function() {
     cy.visit('/');
     login();
     cy.log('======= Create a test schedule form');
-    createScheduleForm(ScheduleForm.forge()).then(scheduleForm => {
-      testScheduleForms.push(scheduleForm);
-      cy.wrap(scheduleForm).as('testScheduleForm');
+    createSchedulePlan(SchedulePlan.forge()).then(schedulePlan => {
+      testSchedulePlans.push(schedulePlan);
+      cy.wrap(schedulePlan).as('testSchedulePlan');
     });
   });
 
   after(function() {
-    cy.wrap(testScheduleForms).each((scheduleForm: any, index: number) => {
-      deleteScheduleForm(scheduleForm);
-      deleteTags(scheduleForm.tags);
+    cy.wrap(testSchedulePlans).each((schedulePlan: any, index: number) => {
+      deleteSchedulePlan(schedulePlan);
+      deleteTags(schedulePlan.tags);
     });
   });
 
   beforeEach(function() {});
 
-  it('should start from an exist schedule-form, its view page', () => {
-    cy.get<ScheduleForm>('@testScheduleForm').then(testScheduleForm => {
+  it('should start from an exist schedule-plan, its view page', () => {
+    cy.get<SchedulePlan>('@testSchedulePlan').then(testSchedulePlan => {
       cy.log('======= Go to the view page of test schedule form');
-      gotoMyScheduleFormView(testScheduleForm);
+      gotoMySchedulePlanView(testSchedulePlan);
       cy.log('======= Click the create-schedule button');
-      const scheduleFormViewPagePageObject: ScheduleFormViewPagePageObject = new ScheduleFormViewPagePageObjectCypress(
+      const schedulePlanViewPagePageObject: SchedulePlanViewPagePageObject = new SchedulePlanViewPagePageObjectCypress(
         ''
       );
-      scheduleFormViewPagePageObject.createSchedule();
+      schedulePlanViewPagePageObject.createSchedule();
       cy.log("======= Should land on new schedule's edit page now");
       cy.url().should('match', /\/schedules\/.*\/edit/);
     });

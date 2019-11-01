@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ScheduleForm } from '../schedule-form/schedule-form';
+import { SchedulePlan } from '../schedule-plan/schedule-plan';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,7 +16,7 @@ export class SchedulerNewComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSubmitForm(form: ScheduleForm) {
+  onSubmitForm(form: SchedulePlan) {
     if (form && form.id) {
       this.router.navigate(['scheduler', 'forms', form.id]);
     }

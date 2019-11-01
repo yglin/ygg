@@ -1,0 +1,38 @@
+.ygg-schedule-plan {
+  margin: 20px 10px;
+}
+
+.hint {
+  color: blue;
+}
+
+button.submit {
+  margin-right: 10px;
+}
+
+.mat-tab-body-content {
+  padding: 30px 10px;
+}
+
+.date-range.mat-form-field {
+  width: 250px;
+}
+
+.form-control {
+  margin-bottom: 30px;
+}
+
+.needTranspotationHelp .mat-form-field,
+.needAccommodationHelp .mat-form-field,
+.likesDescription .mat-form-field {
+  width: 100%;
+}
+
+.contact-control {
+  margin: 20px 10px;
+  width: 100%;
+}
+
+.mat-divider {
+  margin: 20px 5px;
+}

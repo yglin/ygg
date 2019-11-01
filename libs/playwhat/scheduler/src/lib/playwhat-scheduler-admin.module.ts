@@ -7,11 +7,11 @@ import { SchedulerAdminService } from './admin/scheduler-admin.service';
 import { AdminAgentComponent } from './admin/admin-agent/admin-agent.component';
 import { SharedUserModule } from '@ygg/shared/user';
 import { adminMenu } from "./admin";
-import { AdminScheduleFormsComponent } from './admin/admin-schedule-forms/admin-schedule-forms.component';
+import { AdminSchedulePlansComponent } from './admin/admin-schedule-plans/admin-schedule-plans.component';
 import { PlaywhatSchedulerModule } from './playwhat-scheduler.module';
 
 @NgModule({
-  declarations: [AdminAgentComponent, AdminScheduleFormsComponent],
+  declarations: [AdminAgentComponent, AdminSchedulePlansComponent],
   imports: [
     CommonModule,
     SharedUserModule,
@@ -19,7 +19,7 @@ import { PlaywhatSchedulerModule } from './playwhat-scheduler.module';
   ],
   entryComponents: [
     AdminAgentComponent,
-    AdminScheduleFormsComponent
+    AdminSchedulePlansComponent
   ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: configMenuTree, deps:[SchedulerAdminService, PlaywhatAdminService], multi: true },

@@ -8,7 +8,7 @@ import {map, take} from 'rxjs/operators';
 
 import {EventService} from './event.service';
 import {Schedule} from './models';
-import {ScheduleForm} from './schedule-form';
+import {SchedulePlan} from './schedule-plan';
 import {Event} from './models/event';
 
 @Injectable({providedIn: 'root'})
@@ -57,7 +57,7 @@ export class ScheduleService {
     }
   }
 
-  autoSchedule(resources: Resource[], form: ScheduleForm):
+  autoSchedule(resources: Resource[], form: SchedulePlan):
       Observable<Schedule> {
     // TODO implement in real
     const maxOutputsCount = 3;

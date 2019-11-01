@@ -9,29 +9,29 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { PlaywhatPlayModule } from '@ygg/playwhat/play';
 import { TagsUiModule } from '@ygg/tags/ui';
 
-import { ScheduleFormComponent } from './schedule-form';
-import { ScheduleFormViewComponent } from './schedule-form/schedule-form-view/schedule-form-view.component';
+import { SchedulePlanComponent } from './schedule-plan';
+import { SchedulePlanViewComponent } from './schedule-plan/schedule-plan-view/schedule-plan-view.component';
 import { SharedUserModule } from '@ygg/shared/user';
 import { SchedulerNewComponent } from './scheduler-new/scheduler-new.component';
 import { SchedulerDashboardComponent } from './scheduler-dashboard/scheduler-dashboard.component';
-import { ScheduleFormListComponent } from './schedule-form/schedule-form-list/schedule-form-list.component';
+import { SchedulePlanListComponent } from './schedule-plan/schedule-plan-list/schedule-plan-list.component';
 import { RouterModule } from '@angular/router';
-import { ScheduleFormThumbnailComponent } from './schedule-form/schedule-form-thumbnail/schedule-form-thumbnail.component';
-import { ScheduleFormTableComponent } from './schedule-form/schedule-form-table/schedule-form-table.component';
-import { ScheduleFormEditPageComponent } from './schedule-form/pages/schedule-form-edit-page/schedule-form-edit-page.component';
-import { ScheduleFormViewPageComponent } from './schedule-form/pages/schedule-form-view-page/schedule-form-view-page.component';
+import { SchedulePlanThumbnailComponent } from './schedule-plan/schedule-plan-thumbnail/schedule-plan-thumbnail.component';
+import { SchedulePlanTableComponent } from './schedule-plan/schedule-plan-table/schedule-plan-table.component';
+import { SchedulePlanEditPageComponent } from './schedule-plan/pages/schedule-plan-edit-page/schedule-plan-edit-page.component';
+import { SchedulePlanViewPageComponent } from './schedule-plan/pages/schedule-plan-view-page/schedule-plan-view-page.component';
 
 @NgModule({
   declarations: [
     SchedulerNewComponent,
-    ScheduleFormComponent,
-    ScheduleFormViewComponent,
+    SchedulePlanComponent,
+    SchedulePlanViewComponent,
     SchedulerDashboardComponent,
-    ScheduleFormListComponent,
-    ScheduleFormThumbnailComponent,
-    ScheduleFormTableComponent,
-    ScheduleFormEditPageComponent,
-    ScheduleFormViewPageComponent
+    SchedulePlanListComponent,
+    SchedulePlanThumbnailComponent,
+    SchedulePlanTableComponent,
+    SchedulePlanEditPageComponent,
+    SchedulePlanViewPageComponent
   ],
   imports: [
     CommonModule,
@@ -48,12 +48,12 @@ import { ScheduleFormViewPageComponent } from './schedule-form/pages/schedule-fo
   ],
   exports: [
     SchedulerNewComponent,
-    ScheduleFormComponent,
-    ScheduleFormViewComponent,
+    SchedulePlanComponent,
+    SchedulePlanViewComponent,
     SchedulerDashboardComponent,
-    ScheduleFormListComponent,
-    ScheduleFormThumbnailComponent,
-    ScheduleFormTableComponent
+    SchedulePlanListComponent,
+    SchedulePlanThumbnailComponent,
+    SchedulePlanTableComponent
   ]
 })
 export class PlaywhatSchedulerModule {}

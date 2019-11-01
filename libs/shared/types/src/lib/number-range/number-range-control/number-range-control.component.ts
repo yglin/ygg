@@ -61,18 +61,20 @@ export class NumberRangeControlComponent
     const minChange$ = merge(inputMinValueChange$, sliderMinValueChange$).pipe(
       tap(min => {
         this.min = min;
-        if (this.inputMaxControl.value && this.inputMaxControl.value < min) {
-          this.inputMaxControl.setValue(min);
-        }
+        // This functionality confuse user more than help them, so we discard it.
+        // if (this.inputMaxControl.value && this.inputMaxControl.value < min) {
+        //   this.inputMaxControl.setValue(min);
+        // }
       })
     )
 
     const maxChange$ = merge(inputMaxValueChange$, sliderMaxValueChange$).pipe(
       tap(max => {
         this.max = max;
-        if (this.inputMinControl.value && this.inputMinControl.value > max) {
-          this.inputMinControl.setValue(max);
-        }
+        // This functionality confuse user more than help them, so we discard it.
+        // if (this.inputMinControl.value && this.inputMinControl.value > max) {
+        //   this.inputMinControl.setValue(max);
+        // }
       })
     )
 

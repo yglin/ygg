@@ -1,0 +1,295 @@
+<div class="ygg-schedule-plan">
+  <form [formGroup]="formGroup" id="schedule-plan">
+    <div fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px">
+      <div *ngIf="agentUsers?.length > 0" class="agent">
+        <mat-form-field>
+          <mat-label>選擇接單窗口</mat-label>
+          <mat-select formControlName="agentId" class="select">
+            <mat-option class="agent-option" value="">請幫我指定</mat-option>
+            <mat-option
+              class="agent-option"
+              *ngFor="let user of agentUsers"
+              [value]="user.id"
+              [attr.user-id]="user.id"
+            >
+              <ygg-user-thumbnail [id]="user.id"></ygg-user-thumbnail>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <button
+          type="button"
+          mat-fab
+          matTooltip="送出"
+          (click)="onSubmit()"
+          [disabled]="formGroup.invalid"
+          class="submit"
+        >
+          <mat-icon>save</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div>
+      <ygg-title-divider
+        [style.color]="formGroup.get('dateRange').invalid ? 'red' : ''"
+        >預計日期範圍＊</ygg-title-divider
+      >
+      <div class="form-control date-range">
+        <ygg-date-range-picker
+          formControlName="dateRange"
+        ></ygg-date-range-picker>
+        <mat-error *ngIf="isError('dateRange', 'required')"
+          >請填日期範圍</mat-error
+        >
+      </div>
+      <ygg-title-divider
+        [style.color]="formGroup.get('numParticipants').invalid ? 'red' : ''"
+        >預計參加人數＊</ygg-title-divider
+      >
+      <div fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="30px">
+        <div class="form-control num-participants">
+          <ygg-number-slider
+            label="總人數"
+            formControlName="numParticipants"
+            icon="person"
+            required
+          ></ygg-number-slider>
+        </div>
+        <div class="form-control num-elders">
+          <ygg-number-slider
+            label="65歲以上人數"
+            formControlName="numElders"
+            icon="https://img.icons8.com/ios/50/000000/elderly-person.png"
+          ></ygg-number-slider>
+        </div>
+        <div class="form-control num-kids">
+          <ygg-number-slider
+            label="孩童人數"
+            formControlName="numKids"
+            icon="child_care"
+          ></ygg-number-slider>
+        </div>
+      </div>
+      <ygg-title-divider>預算</ygg-title-divider>
+      <div class="form-control">
+        <mat-radio-group
+          [(ngModel)]="budgetType"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <div
+            class="budget-radio-group"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            fxLayoutGap="20px"
+          >
+            <div class="total-budget">
+              <mat-radio-button [value]="'total'">總和</mat-radio-button>
+            </div>
+            <div class="single-budget">
+              <mat-radio-button [value]="'single'">單人</mat-radio-button>
+            </div>
+            <h3 class="hint">{{ budgetHintMessage }}</h3>
+          </div>
+        </mat-radio-group>
+        <br />
+        <div>
+          <div *ngIf="budgetType === 'total'" class="total-budget">
+            <ygg-number-range-control
+              formControlName="totalBudget"
+              [globalMax]="100000"
+              icon="monetization_on"
+            ></ygg-number-range-control>
+          </div>
+          <div *ngIf="budgetType === 'single'" class="single-budget">
+            <ygg-number-range-control
+              formControlName="singleBudget"
+              [globalMax]="10000"
+              icon="monetization_on"
+            ></ygg-number-range-control>
+          </div>
+        </div>
+      </div>
+      <ygg-title-divider
+        [style.color]="formGroup.get('contacts').invalid ? 'red' : ''"
+        >聯絡資料＊</ygg-title-divider
+      >
+      <div class="group-name">
+        <mat-form-field style="width:100%;">
+          <input
+            matInput
+            placeholder="公司行號或團體名稱"
+            formControlName="groupName"
+          />
+          <span matPrefix><mat-icon>group</mat-icon></span>
+        </mat-form-field>
+      </div>
+      <div formArrayName="contacts" class="form-control">
+        <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
+          <div
+            *ngFor="
+              let contactControl of contactsFormArray.controls;
+              let idx = index;
+              let isLast = last
+            "
+            class="contact-control"
+            [ngClass]="{ last: isLast }"
+          >
+            <ygg-action-barred layout="row">
+              <div yggActionBarredActions>
+                <div
+                  fxLayout="column"
+                  fxLayoutAlign="center center"
+                  fxLayoutGap="10px"
+                >
+                  <div [hidden]="contactsFormArray.controls.length <= 1">
+                    <button
+                      mat-mini-fab
+                      (click)="deleteContact(idx)"
+                      matTooltip="刪除聯絡人"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                  <div *ngIf="currentUser">
+                    <button
+                      mat-mini-fab
+                      matTooltip="帶入我的資料"
+                      (click)="substituteContactWithCurrentUser(idx)"
+                    >
+                      <mat-icon>assignment_ind</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div yggActionBarredContent>
+                <h4>聯絡人{{ idx + 1 }}</h4>
+                <ygg-contact-control
+                  [formControlName]="idx"
+                ></ygg-contact-control>
+              </div>
+            </ygg-action-barred>
+            <mat-divider> </mat-divider>
+          </div>
+        </div>
+        <br />
+        <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
+          <div>
+            <button
+              mat-mini-fab
+              (click)="clearAllContacts()"
+              class="clear-contacts"
+              matTooltip="刪除所有聯絡人"
+            >
+              <mat-icon>delete_sweep</mat-icon>
+            </button>
+          </div>
+          <div>
+            <button
+              class="add-contact"
+              mat-mini-fab
+              (click)="addContactControl()"
+              matTooltip="增加一位聯絡人"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <ygg-title-divider>交通方式</ygg-title-divider>
+      <div class="form-control transpotation">
+        <div class="radio-group">
+          <mat-radio-group formControlName="transpotation">
+            <div
+              fxLayout="row"
+              fxLayoutAlign="space-around center"
+              fxLayoutGap="20px"
+            >
+              <div *ngFor="let item of transpotationTypes | keyvalue">
+                <mat-radio-button
+                  [value]="item.value.id"
+                  [attr.transpotation]="item.value.id"
+                  >{{ item.value.label }}</mat-radio-button
+                >
+              </div>
+            </div>
+          </mat-radio-group>
+          <br />
+          <mat-form-field style="width:100%;">
+            <input
+              matInput
+              placeholder="其他"
+              formControlName="transpotation"
+            />
+          </mat-form-field>
+        </div>
+        <br />
+        <h4>其他交通方面的需求</h4>
+        <div class="needTranspotationHelp">
+          <mat-form-field>
+            <textarea
+              matInput
+              placeholder="請詳述交通的需求，以便我們的工作人員幫忙安排"
+              formControlName="transpotationHelp"
+              class="transpotation-help"
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="2"
+              cdkAutosizeMaxRows="10"
+            ></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+      <ygg-title-divider> 體驗需求 </ygg-title-divider>
+      <div class="form-control likes">
+        <ygg-tags-control
+          formControlName="tags"
+          taggableType="schedule-plan"
+          label="喜歡的體驗類型"
+        ></ygg-tags-control>
+        <!-- <ygg-tags-input
+        formControlName="likes"
+        label="喜歡的體驗類型"
+        [tagsSource$]="likesSource$"
+        ></ygg-tags-input> -->
+        <br />
+        <div class="likesDescription">
+          <mat-form-field>
+            <textarea
+              matInput
+              placeholder="對於體驗行程的安排，有特別的期望嗎？"
+              formControlName="likesDescription"
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="2"
+              cdkAutosizeMaxRows="10"
+              class="likes-description"
+            ></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+      <ygg-title-divider>其它需求</ygg-title-divider>
+      <div class="form-control miscellaneous">
+        <div id="needAccommodationHelp" class="needAccommodationHelp">
+          <h4>關於住宿需求</h4>
+          <mat-form-field>
+            <textarea
+              name="accommodationHelp"
+              matInput
+              placeholder="請詳述住宿需求，以便我們的工作人員幫忙安排"
+              formControlName="accommodationHelp"
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="2"
+              cdkAutosizeMaxRows="10"
+              class="accommodation-help"
+            ></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="debug">
+    <pre>{{ formGroup.value | json }}</pre>
+  </div>
+</div>
