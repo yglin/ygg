@@ -9,6 +9,7 @@ import { TagsAdminListPageObjectCypress } from '../../page-objects/tags/tags-adm
 import { Scheduler } from '../../page-objects';
 import { SchedulePlan } from '@ygg/playwhat/scheduler';
 import { deleteSchedulePlan } from "../../page-objects/scheduler";
+import { deleteTags } from '../../page-objects/tags';
 
 describe('Add new tags from various user activities', () => {
   const siteNavigator = new SiteNavigator();
@@ -45,6 +46,7 @@ describe('Add new tags from various user activities', () => {
     tagsAdminListPageObject.expectTags(testPlay.tags.toTagsArray());
 
     deletePlay(testPlay);
+    deleteTags(testPlay.tags);
   });
 
   it('From creating/updating schedule-plan', () => {
@@ -64,5 +66,6 @@ describe('Add new tags from various user activities', () => {
     siteNavigator.goto(['admin', 'tags', 'list']);
     tagsAdminListPageObject.expectTags(testSchedulePlan.tags.toTagsArray());
     deleteSchedulePlan(testSchedulePlan);
+    deleteTags(testSchedulePlan.tags);
   });
 });
