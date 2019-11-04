@@ -11,7 +11,7 @@ describe('SchedulerDashboardComponent', () => {
     TestBed.configureTestingModule({
       declarations: [SchedulerDashboardComponent],
       imports: [
-        RouterTestingModule.withRoutes([{ path: 'forms', redirectTo: 'home' }])
+        RouterTestingModule.withRoutes([{ path: 'plans', redirectTo: 'home' }])
       ]
     }).compileComponents();
   }));

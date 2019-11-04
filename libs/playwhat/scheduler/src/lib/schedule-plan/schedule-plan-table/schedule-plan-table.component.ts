@@ -66,6 +66,6 @@ export class SchedulePlanTableComponent
   }
 
   gotoView(id: string) {
-    this.router.navigate(['scheduler', 'forms', id]);
+    this.router.navigate(['scheduler', 'plans', id]);
   }
 }

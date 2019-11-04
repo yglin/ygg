@@ -29,10 +29,10 @@ adminMenu.addItem({
 }, 'staff');
 
 adminMenu.addItem({
-  id: 'forms',
+  id: 'plans',
   label: '遊程表單',
   icon: new Image('/assets/images/admin/schedule-plans.svg'),
-  link: 'forms',
+  link: 'plans',
   tooltip: '管理遊程需求表單',
   component: AdminSchedulePlansComponent
 }, 'scheduler');

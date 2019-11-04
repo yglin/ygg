@@ -75,7 +75,7 @@ describe('Scheduler - schedule-plan', () => {
       testSchedulePlan.id = newSchedulePlanId;
 
       // Goto my-schedules page, find the testSchedulePlan and check it out
-      siteNavigator.goto(['scheduler', 'my', 'forms']);
+      siteNavigator.goto(['scheduler', 'my', 'plans']);
       cy.log(`##### Find test schedule form in my schedule-plans #####`);
       const mySchedulePlansPageObject = new SchedulePlanListPageObjectCypress();
       mySchedulePlansPageObject.expectSchedulePlan(testSchedulePlan);

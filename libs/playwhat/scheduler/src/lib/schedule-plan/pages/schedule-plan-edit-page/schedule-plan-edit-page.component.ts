@@ -44,7 +44,7 @@ export class SchedulePlanEditPageComponent implements OnInit, OnDestroy {
 
   onSubmitForm(schedulePlan: SchedulePlan) {
     if (schedulePlan && schedulePlan.id) {
-      this.router.navigate(['/', 'scheduler', 'forms', schedulePlan.id]);
+      this.router.navigate(['/', 'scheduler', 'plans', schedulePlan.id]);
     }
   }
 }

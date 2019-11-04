@@ -18,7 +18,7 @@ export class SchedulerNewComponent implements OnInit {
 
   onSubmitForm(form: SchedulePlan) {
     if (form && form.id) {
-      this.router.navigate(['scheduler', 'forms', form.id]);
+      this.router.navigate(['scheduler', 'plans', form.id]);
     }
   }
 }

@@ -14,7 +14,7 @@ const loadChildrenRoutes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'new' },
   { path: 'new', component: SchedulePlanEditPageComponent },
   {
-    path: 'forms',
+    path: 'plans',
     children: [
       {
         path: ':id',
@@ -43,7 +43,7 @@ const loadChildrenRoutes: Routes = [
     children: [
       { path: '', pathMatch: 'full', component: SchedulerDashboardComponent },
       {
-        path: 'forms',
+        path: 'plans',
         children: [
           { path: '', pathMatch: 'full', component: SchedulePlanListComponent },
           {

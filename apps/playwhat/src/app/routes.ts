@@ -11,7 +11,7 @@ export const routes: Routes = [
   //     { path: '', pathMatch: 'full', redirectTo: 'new' },
   //     { path: 'new', component: SchedulerNewComponent },
   //     {
-  //       path: 'forms',
+  //       path: 'plans',
   //       children: [{ path: ':id', component: SchedulerFormViewComponent }]
   //     }
   //   ]

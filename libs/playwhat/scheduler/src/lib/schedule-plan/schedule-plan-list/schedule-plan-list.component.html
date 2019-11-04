@@ -8,7 +8,7 @@
   >
     <div *ngFor="let id of ids" [attr.schedule-plan-id]="id">
       <!-- <ygg-schedule-plan-thumbnail [id]="id"></ygg-schedule-plan-thumbnail> -->
-      <a [routerLink]="['/scheduler/forms', id]">
+      <a [routerLink]="['/', 'scheduler', 'plans', id]">
         <ygg-schedule-plan-thumbnail [id]="id"></ygg-schedule-plan-thumbnail>
       </a>
     </div>

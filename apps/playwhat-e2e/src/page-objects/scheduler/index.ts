@@ -37,7 +37,7 @@ export function createSchedulePlan(schedulePlan: SchedulePlan): Cypress.Chainabl
 }
 
 export function gotoMySchedulePlanView(schedulePlan: SchedulePlan) {
-  siteNavigator.goto(['scheduler', 'my', 'forms']);
+  siteNavigator.goto(['scheduler', 'my', 'plans']);
   cy.log(`##### Find test schedule form in my schedule-plans #####`);
   const mySchedulePlansPageObject = new SchedulePlanListPageObjectCypress();
   mySchedulePlansPageObject.expectSchedulePlan(schedulePlan);

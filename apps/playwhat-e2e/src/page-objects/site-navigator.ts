@@ -91,7 +91,7 @@ export class SiteNavigator {
     cy.get('#account-widget .menu-trigger').click({force: true});
     cy.get('#user-menu button#scheduler').click({force: true});
     const route = path.shift();
-    if (route === 'forms') {
+    if (route === 'plans') {
       cy.get('#schedule-plan-list').click({force: true});
     }
   }
