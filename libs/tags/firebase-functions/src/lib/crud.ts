@@ -10,6 +10,14 @@ export async function upsertTags(tags: Tags) {
   return Promise.all(promises);
 }
 
+export function deleteTags(tags: Tags) {
+  const promises: Promise<WriteResult | void>[] = [];
+  for (const tag of tags.toTagsArray()) {
+    promises.push(deleteTag(tag));
+  }
+  return Promise.all(promises);  
+}
+
 async function upsertTag(tag: Tag) {
   console.log(`Upsert tag: ${tag.id}`);
   tag = new Tag(tag);
@@ -22,3 +30,9 @@ async function upsertTag(tag: Tag) {
     return Promise.resolve();
   }
 }
+
+async function deleteTag(tag: Tag) {
+  console.log(`Delete tag: ${tag.id}`);
+  return await admin.firestore().collection(Tag.collectionName).doc(tag.id).delete();
+}
+
