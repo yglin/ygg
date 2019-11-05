@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["node", "jest"]
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts", "../../schedule/core/src/lib/schedule-plan/transpotation.ts", "../../schedule/core/src/lib/schedule-plan/schedule-plan.ts", "../../schedule/core/src/lib/schedule-plan/schedule-plan.service.ts", "../../schedule/core/src/lib/schedule-plan/schedule-plan.service.spec.ts", "../../schedule/admin/src/lib/scheduler-admin.service.ts", "../../schedule/admin/src/lib/scheduler-admin.service.spec.ts", "../../schedule/admin/src/lib/menu.ts", "../../schedule/admin/src/lib/index.ts"]
 }

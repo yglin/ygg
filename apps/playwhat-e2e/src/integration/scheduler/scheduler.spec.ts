@@ -4,7 +4,8 @@ import {
   deleteSchedulePlan,
   gotoMySchedulePlanView
 } from '../../page-objects/scheduler';
-import { SchedulePlan, SchedulePlanViewPagePageObject } from '@ygg/playwhat/scheduler';
+import { SchedulePlan } from '@ygg/schedule/core';
+import { SchedulePlanViewPagePageObject } from "@ygg/schedule/ui";
 import { deleteTags } from '../../page-objects/tags';
 import { SchedulePlanViewPagePageObjectCypress } from '../../page-objects/scheduler/schedule-plan-view-page.po';
 
@@ -50,7 +51,7 @@ describe('Create a new schedule from schedule-plan', () => {
   before(function() {
     cy.visit('/');
     login();
-    cy.log('======= Create a test schedule form');
+    cy.log('======= Create a test schedule plan');
     createSchedulePlan(SchedulePlan.forge()).then(schedulePlan => {
       testSchedulePlans.push(schedulePlan);
       cy.wrap(schedulePlan).as('testSchedulePlan');
@@ -68,7 +69,7 @@ describe('Create a new schedule from schedule-plan', () => {
 
   it('should start from an exist schedule-plan, its view page', () => {
     cy.get<SchedulePlan>('@testSchedulePlan').then(testSchedulePlan => {
-      cy.log('======= Go to the view page of test schedule form');
+      cy.log('======= Go to the view page of test schedule plan');
       gotoMySchedulePlanView(testSchedulePlan);
       cy.log('======= Click the create-schedule button');
       const schedulePlanViewPagePageObject: SchedulePlanViewPagePageObject = new SchedulePlanViewPagePageObjectCypress(
@@ -76,12 +77,12 @@ describe('Create a new schedule from schedule-plan', () => {
       );
       schedulePlanViewPagePageObject.createSchedule();
       cy.log("======= Should land on new schedule's edit page now");
-      cy.url().should('match', /\/schedules\/.*\/edit/);
+      cy.url().should('match', /scheduler\/\/schedules\/.*\/edit/);
     });
   });
 
   // it('should automatic generate the first version schedule', () => {
-  //   cy.log('======= Go to the view page of test schedule form');
+  //   cy.log('======= Go to the view page of test schedule plan');
   //   cy.log('======= Click the create-schedule button');
   //   cy.log("======= Should land on new schedule's edit page now");
   //   cy.log('======= Should show events of first version schedule');

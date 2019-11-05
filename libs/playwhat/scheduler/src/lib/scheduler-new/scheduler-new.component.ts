@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SchedulePlan } from '../schedule-plan/schedule-plan';
+import { SchedulePlan } from '@ygg/schedule/core';
 import { Router } from '@angular/router';
 
 @Component({

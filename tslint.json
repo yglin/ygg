@@ -70,11 +70,15 @@
         "depConstraints": [
           {
             "sourceTag": "scope:playwhat",
-            "onlyDependOnLibsWithTags": ["scope:playwhat", "scope:tags", "scope:shared"]
+            "onlyDependOnLibsWithTags": ["scope:playwhat", "scope:schedule", "scope:tags", "scope:shared"]
           },
           {
             "sourceTag": "scope:tags",
             "onlyDependOnLibsWithTags": ["scope:tags", "scope:shared"]
+          },
+          {
+            "sourceTag": "scope:schedule",
+            "onlyDependOnLibsWithTags": ["scope:schedule", "scope:tags", "scope:shared"]
           }
         ]
       }

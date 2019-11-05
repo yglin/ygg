@@ -8,9 +8,7 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUserModule } from '@ygg/shared/user';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
-import { PlaywhatSchedulerFrontendModule } from '@ygg/playwhat/scheduler';
 import { PlaywhatAdminModule } from '@ygg/playwhat/admin';
-import { PlaywhatSchedulerAdminModule } from "@ygg/playwhat/scheduler";
 import { PlaywhatPlayAdminModule, PlaywhatPlayFrontendModule } from "@ygg/playwhat/play";
 import { TagsAdminModule } from "@ygg/tags/admin";
 
@@ -21,6 +19,8 @@ import { routes } from './routes';
 // import { SchedulerNewComponent } from './pages/scheduler/new/scheduler-new.component';
 // import { SchedulerFormViewComponent } from './pages/scheduler/form/scheduler-form-view/scheduler-form-view.component';
 import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
+import { ScheduleUiModule } from "@ygg/schedule/ui";
+import { ScheduleAdminModule } from '@ygg/schedule/admin';
 
 @NgModule({
   declarations: [
@@ -39,8 +39,8 @@ import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
     SharedUiWidgetsModule,
     SharedUiNavigationModule,
     RouterModule.forRoot(routes),
-    PlaywhatSchedulerFrontendModule,
-    PlaywhatSchedulerAdminModule,
+    ScheduleUiModule,
+    ScheduleAdminModule,
     PlaywhatPlayFrontendModule,
     PlaywhatPlayAdminModule,
     TagsAdminModule,

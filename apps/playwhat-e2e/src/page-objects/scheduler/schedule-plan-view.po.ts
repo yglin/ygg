@@ -1,4 +1,5 @@
-import { SchedulePlan, TranspotationTypes, SchedulePlanViewPageObject } from '@ygg/playwhat/scheduler';
+import { SchedulePlan, TranspotationTypes } from '@ygg/schedule/core';
+import { SchedulePlanViewPageObject } from "@ygg/schedule/ui";
 import { DateRange, NumberRange, Contact } from '@ygg/shared/types';
 import { DateRange as DateRangePageObjects } from '../shared-types';
 import { NumberRangeViewPageObjectCypress } from '../shared-types/number-range';

@@ -1,4 +1,4 @@
-import { SchedulePlanViewPagePageObject } from "@ygg/playwhat/scheduler";
+import { SchedulePlanViewPagePageObject } from "@ygg/schedule/ui";
 
 export class SchedulePlanViewPagePageObjectCypress extends SchedulePlanViewPagePageObject {
 
@@ -7,6 +7,6 @@ export class SchedulePlanViewPagePageObjectCypress extends SchedulePlanViewPageP
   }
 
   createSchedule() {
-
+    cy.get(this.getSelector('buttonCreateSchedule')).click();
   }
 }

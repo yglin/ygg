@@ -10,7 +10,11 @@ export class SiteNavigator {
     } else if (route === 'admin') {
       this.gotoAdmin(path);
     } else if (route === 'scheduler') {
-      this.gotoScheduler(path);
+      if (path[0] === 'schedule-plans' && path[1] === 'new') {
+        cy.get('a#new-schedule').click({force: true});
+      } else {
+        this.gotoScheduler(path);
+      }
     }
     return cy.location('pathname').should('eq', fullPathName);
   }
@@ -35,10 +39,8 @@ export class SiteNavigator {
 
   private gotoScheduler(path: string[]) {
     const route = path.shift();
-    if (route === 'new') {
-      cy.get('a#new-schedule').click({force: true});
-    } else if (route === 'my') {
-      this.gotoMyScheduler(path);
+    if (route === 'schedule-plans') {
+      this.gotoSchedulePlans(path);
     }
   }
 
@@ -87,12 +89,12 @@ export class SiteNavigator {
     }
   }
 
-  private gotoMyScheduler(path: string[] = []) {
-    cy.get('#account-widget .menu-trigger').click({force: true});
-    cy.get('#user-menu button#scheduler').click({force: true});
+  private gotoSchedulePlans(path: string[] = []) {
     const route = path.shift();
-    if (route === 'plans') {
-      cy.get('#schedule-plan-list').click({force: true});
+    if (route === 'my') {
+      cy.get('#account-widget .menu-trigger').click({force: true});
+      cy.get('#user-menu button#scheduler').click({force: true});
+      cy.get('.my-schedule-plan-list').click({force: true});
     }
   }
 }

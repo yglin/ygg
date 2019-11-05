@@ -1089,6 +1089,114 @@
           }
         }
       }
+    },
+    "schedule-core": {
+      "projectType": "library",
+      "root": "libs/schedule/core",
+      "sourceRoot": "libs/schedule/core/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/schedule/core/tsconfig.lib.json",
+              "libs/schedule/core/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/schedule/core/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/schedule/core/jest.config.js",
+            "tsConfig": "libs/schedule/core/tsconfig.spec.json",
+            "setupFile": "libs/schedule/core/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "schedule-data-access": {
+      "projectType": "library",
+      "root": "libs/schedule/data-access",
+      "sourceRoot": "libs/schedule/data-access/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/schedule/data-access/tsconfig.lib.json",
+              "libs/schedule/data-access/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/schedule/data-access/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/schedule/data-access/jest.config.js",
+            "tsConfig": "libs/schedule/data-access/tsconfig.spec.json",
+            "setupFile": "libs/schedule/data-access/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "schedule-ui": {
+      "projectType": "library",
+      "root": "libs/schedule/ui",
+      "sourceRoot": "libs/schedule/ui/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/schedule/ui/tsconfig.lib.json",
+              "libs/schedule/ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/schedule/ui/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/schedule/ui/jest.config.js",
+            "tsConfig": "libs/schedule/ui/tsconfig.spec.json",
+            "setupFile": "libs/schedule/ui/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "schedule-admin": {
+      "projectType": "library",
+      "root": "libs/schedule/admin",
+      "sourceRoot": "libs/schedule/admin/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/schedule/admin/tsconfig.lib.json",
+              "libs/schedule/admin/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/schedule/admin/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/schedule/admin/jest.config.js",
+            "tsConfig": "libs/schedule/admin/tsconfig.spec.json",
+            "setupFile": "libs/schedule/admin/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

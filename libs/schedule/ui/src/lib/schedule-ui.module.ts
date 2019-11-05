@@ -1,0 +1,67 @@
+import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  SchedulePlanControlComponent,
+  SchedulePlanListComponent,
+  SchedulePlanTableComponent,
+  SchedulePlanThumbnailComponent,
+  SchedulePlanViewComponent,
+  SchedulePlanEditPageComponent,
+  SchedulePlanViewPageComponent,
+} from './schedule-plan';
+import { RouterModule } from '@angular/router';
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
+import { SharedUserModule, UserMenuService } from '@ygg/shared/user';
+import { SharedTypesModule } from '@ygg/shared/types';
+import { TagsUiModule } from '@ygg/tags/ui';
+import { MyScheduleDashboardComponent } from './dashboard';
+import { ScheduleUiRoutingModule } from './schedule-ui-routing.module';
+
+@NgModule({
+  declarations: [
+    SchedulePlanControlComponent,
+    SchedulePlanListComponent,
+    SchedulePlanTableComponent,
+    SchedulePlanThumbnailComponent,
+    SchedulePlanViewComponent,
+    SchedulePlanEditPageComponent,
+    SchedulePlanViewPageComponent,
+    MyScheduleDashboardComponent,
+  ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule,
+    SharedUiNgMaterialModule,
+    SharedUiWidgetsModule,
+    SharedUserModule,
+    SharedTypesModule,
+    TagsUiModule,
+    ScheduleUiRoutingModule
+  ],
+  exports: [
+    SchedulePlanControlComponent,
+    SchedulePlanListComponent,
+    SchedulePlanTableComponent,
+    SchedulePlanThumbnailComponent,
+    SchedulePlanViewComponent,
+  ],
+  providers: [
+    { provide: APP_INITIALIZER, useFactory: configUserMenu, deps: [UserMenuService], multi: true }
+  ]
+})
+export class ScheduleUiModule {}
+
+export function configUserMenu(userMenuService: UserMenuService) {
+  return () => {
+    userMenuService.addItem({
+      id: 'scheduler',
+      label: '我的遊程',
+      link: 'scheduler/dashboard',
+      icon: 'directions_bike'
+    });
+  };
+}

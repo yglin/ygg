@@ -1,5 +1,5 @@
-import { SchedulePlan } from '@ygg/playwhat/scheduler';
-import { SchedulePlanListPageObject } from "@ygg/playwhat/scheduler";
+import { SchedulePlan } from '@ygg/schedule/core';
+import { SchedulePlanListPageObject } from "@ygg/schedule/ui";
 
 export class SchedulePlanListPageObjectCypress extends SchedulePlanListPageObject {
   

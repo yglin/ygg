@@ -1,0 +1,39 @@
+import { TestBed } from '@angular/core/testing';
+
+import { ScheduleService } from './schedule.service';
+import { Schedule, Event } from '../../../../playwhat/scheduler/src/lib/models';
+import { of } from 'rxjs';
+import { DataAccessService, CacheService } from '@ygg/shared/infra/data-access';
+import { EventService } from '../../../../playwhat/scheduler/src/lib/event.service';
+
+class MockDataAccessService {
+  get$() {
+    return of(new Schedule());
+  }
+}
+
+class MockCacheService {
+  has() { return true; }
+  add() {}
+  get() { return new Schedule();}
+}
+
+class MockEventService {
+  fromResource() {return new Event()}
+}
+
+
+describe('ScheduleService', () => {
+  beforeEach(() => TestBed.configureTestingModule({
+    providers: [
+      {provide: DataAccessService, useClass: MockDataAccessService},
+      {provide: CacheService, useClass: MockCacheService},
+      {provide: EventService, useClass: MockEventService},
+    ]
+  }));
+
+  it('should be created', () => {
+    const service: ScheduleService = TestBed.get(ScheduleService);
+    expect(service).toBeTruthy();
+  });
+});

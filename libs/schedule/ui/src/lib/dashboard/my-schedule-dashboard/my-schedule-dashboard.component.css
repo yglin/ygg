@@ -1,0 +1,21 @@
+.my-schedule-dashboard {
+  padding: 20px 10px;
+}
+
+.panel-item {
+  padding: 10px 5px;
+}
+
+.icon {
+  width: 128px;
+  height: 128px;
+}
+
+.icon img {
+  width: 100%;
+  height: 100%;
+}
+
+.title {
+  text-align: center;
+}

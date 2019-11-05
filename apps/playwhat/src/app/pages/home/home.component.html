@@ -4,10 +4,20 @@
     <mat-card-title>我想要...</mat-card-title>
     <!-- <mat-card-subtitle>subtitle</mat-card-subtitle> -->
   </mat-card-header>
-  <mat-card-content class='quick-start'>
+  <mat-card-content class="quick-start">
     <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
-      <a class='page-link' id="new-schedule" routerLink="/scheduler" mat-raised-button>排個遊程</a>
-      <a class='page-link' id="add-my-play" routerLink="/plays/new" mat-raised-button
+      <a
+        class="page-link"
+        id="new-schedule"
+        [routerLink]="['/scheduler', 'schedule-plans', 'new']"
+        mat-raised-button
+        >規劃遊程</a
+      >
+      <a
+        class="page-link"
+        id="add-my-play"
+        [routerLink]="['/plays', 'new']"
+        mat-raised-button
         >新增我的體驗</a
       >
     </div>

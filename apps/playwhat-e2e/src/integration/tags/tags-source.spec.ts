@@ -1,4 +1,4 @@
-import { last } from "lodash";
+import { last } from 'lodash';
 import { login } from '../../page-objects/app.po';
 import { SiteNavigator } from '../../page-objects/site-navigator';
 import { PlayFormPageObject, deletePlay } from '../../page-objects/play.po';
@@ -6,9 +6,12 @@ import { Play } from '@ygg/playwhat/play';
 import { Tags, Tag } from '@ygg/tags/core';
 // import { v4 as uuid } from 'uuid';
 import { TagsAdminListPageObjectCypress } from '../../page-objects/tags/tags-admin-list.po';
-import { Scheduler } from '../../page-objects';
-import { SchedulePlan } from '@ygg/playwhat/scheduler';
-import { deleteSchedulePlan } from "../../page-objects/scheduler";
+import {
+  SchedulePlanControlPageObjectCypress,
+  createSchedulePlan
+} from '../../page-objects/scheduler';
+import { SchedulePlan } from '@ygg/schedule/core';
+import { deleteSchedulePlan } from '../../page-objects/scheduler';
 import { deleteTags } from '../../page-objects/tags';
 
 describe('Add new tags from various user activities', () => {
@@ -18,7 +21,7 @@ describe('Add new tags from various user activities', () => {
   const testSchedulePlan = SchedulePlan.forge();
   const testTags = Tags.forge();
   const playFormPageObject = new PlayFormPageObject();
-  const schedulePlanPage = new Scheduler.SchedulePlanPageObjectCypress('');
+  const schedulePlanPage = new SchedulePlanControlPageObjectCypress('');
 
   beforeEach(() => {
     cy.visit('/');
@@ -51,21 +54,11 @@ describe('Add new tags from various user activities', () => {
 
   it('From creating/updating schedule-plan', () => {
     testSchedulePlan.tags = testTags;
-    siteNavigator.goto(['scheduler', 'new']);
-    schedulePlanPage.setValue(testSchedulePlan);
-    schedulePlanPage.submit();
-    cy.url().should('not.match', /.*scheudler\/new.*/);
-    cy.location('pathname').then((loc: any) => {
-      const pathname: string = loc as string;
-      // Clean out test data in Database
-      const id = last(pathname.split('/'));
-      if (id) {
-        testSchedulePlan.id = id;
-      }
+    createSchedulePlan(testSchedulePlan).then(() => {
+      siteNavigator.goto(['admin', 'tags', 'list']);
+      tagsAdminListPageObject.expectTags(testSchedulePlan.tags.toTagsArray());
+      deleteSchedulePlan(testSchedulePlan);
+      deleteTags(testSchedulePlan.tags);
     });
-    siteNavigator.goto(['admin', 'tags', 'list']);
-    tagsAdminListPageObject.expectTags(testSchedulePlan.tags.toTagsArray());
-    deleteSchedulePlan(testSchedulePlan);
-    deleteTags(testSchedulePlan.tags);
   });
 });

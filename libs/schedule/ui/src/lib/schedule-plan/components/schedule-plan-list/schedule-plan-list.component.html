@@ -1,0 +1,21 @@
+<div class="ygg-schedule-plan-list">
+  <ygg-page-title>{{ title }}</ygg-page-title>
+  <div
+    *ngIf="schedulePlans"
+    fxLayout="column"
+    fxLayoutAlign="start center"
+    fxLayoutGap="10px"
+  >
+    <div
+      *ngFor="let schedulePlan of schedulePlans"
+      [attr.schedule-plan-id]="schedulePlan.id"
+    >
+      <!-- <ygg-schedule-plan-thumbnail [id]="id"></ygg-schedule-plan-thumbnail> -->
+      <a [routerLink]="['/', 'scheduler', 'schedule-plans', schedulePlan.id]">
+        <ygg-schedule-plan-thumbnail
+          [id]="schedulePlan.id"
+        ></ygg-schedule-plan-thumbnail>
+      </a>
+    </div>
+  </div>
+</div>

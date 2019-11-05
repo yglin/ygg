@@ -1,0 +1,25 @@
+<div class="ygg-schedule-plan-view-page" *ngIf="schedulePlan">
+  <div>
+    <div
+      *ngIf="isCreator"
+      fxLayout="row"
+      fxLayoutAlign="end center"
+      fxLayoutGap="10px"
+      class="toolbar"
+    >
+      <div>
+        <button mat-fab class="create-schedule" (click)="createSchedule()">
+          <mat-icon>schedule</mat-icon>
+        </button>
+      </div>
+      <div>
+        <button class="edit" mat-fab (click)="gotoEdit()">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+    </div>
+    <ygg-schedule-plan-view
+      [schedulePlan]="schedulePlan"
+    ></ygg-schedule-plan-view>
+  </div>
+</div>
