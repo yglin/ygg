@@ -7,5 +7,5 @@ export const scheduleHousecleanTags = functions.pubsub
   .schedule('0 0 * * *')
   .timeZone('Asia/Taipei')
   .onRun((context: functions.EventContext) => {
-    clearTags();
+    return clearTags();
   });
