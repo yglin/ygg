@@ -1224,6 +1224,33 @@
         }
       },
       "schematics": {}
+    },
+    "schedule-factory": {
+      "projectType": "library",
+      "root": "libs/schedule/factory",
+      "sourceRoot": "libs/schedule/factory/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/schedule/factory/tsconfig.lib.json",
+              "libs/schedule/factory/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/schedule/factory/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/schedule/factory/jest.config.js",
+            "tsConfig": "libs/schedule/factory/tsconfig.spec.json",
+            "setupFile": "libs/schedule/factory/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

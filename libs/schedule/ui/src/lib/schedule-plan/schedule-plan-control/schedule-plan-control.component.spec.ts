@@ -78,7 +78,6 @@ class MockSchedulePlanService {
   }
 }
 
-// @ts-ignore
 @Component({
   selector: 'ygg-play-tags-input',
   template: '',
@@ -91,7 +90,7 @@ class MockSchedulePlanService {
     }
   ]
 })
-export class MockPlayTagsInputComponent implements ControlValueAccessor {
+class MockPlayTagsInputComponent implements ControlValueAccessor {
   writeValue() {}
   registerOnChange() {}
   registerOnTouched() {}

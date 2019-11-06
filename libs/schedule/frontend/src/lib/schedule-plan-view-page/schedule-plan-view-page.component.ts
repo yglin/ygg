@@ -4,7 +4,7 @@ import { Observable, Subscription, merge } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
 import { User, AuthenticateService } from '@ygg/shared/user';
-import { ScheduleFactoryService } from "@ygg/schedule/core";
+import { ScheduleFactoryService } from "@ygg/schedule/factory";
 
 @Component({
   selector: 'ygg-schedule-plan-view-page',

@@ -9,13 +9,15 @@ import { RouterModule } from '@angular/router';
 import { routes } from './routes';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { MyScheduleDashboardComponent } from "./my-schedule-dashboard/my-schedule-dashboard.component";
+import { ScheduleEditPageComponent } from './schedule-edit-page/schedule-edit-page.component';
 
 @NgModule({
   declarations: [
     SchedulePlanListPageComponent,
     SchedulePlanEditPageComponent,
     SchedulePlanViewPageComponent,
-    MyScheduleDashboardComponent
+    MyScheduleDashboardComponent,
+    ScheduleEditPageComponent
   ],
   imports: [
     CommonModule,

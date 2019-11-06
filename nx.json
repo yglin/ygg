@@ -115,6 +115,9 @@
     },
     "schedule-frontend": {
       "tags": ["scope:schedule", "type:ui"]
+    },
+    "schedule-factory": {
+      "tags": ["scope:schedule", "type:factory"]
     }
   }
 }

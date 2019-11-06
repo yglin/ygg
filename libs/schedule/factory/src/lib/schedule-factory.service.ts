@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SchedulePlan } from '@ygg/schedule/core';
-import { Schedule } from './schedule';
+import { Schedule } from '../../../core/src/lib/schedule/schedule';
 
 @Injectable({
   providedIn: 'root'

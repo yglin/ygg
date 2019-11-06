@@ -196,7 +196,7 @@ export function attachCustomCommands({ Cypress, cy, firebase }) {
 
       cy.log(`Calling Firestore command:\n${firestoreCommand}`);
 
-      cy.exec(firestoreCommand, { timeout: 100000 }).then(out => {
+      return cy.exec(firestoreCommand, { timeout: 100000 }).then(out => {
         const { stdout, stderr } = out || { stdout: null, stderr: null };
         // Reject with Error if error in firestoreCommand call
         if (stderr) {

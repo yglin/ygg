@@ -8,6 +8,7 @@ import {
   MySchedulePlansResolverService
 } from './schedule-plan-resolver.service';
 import { MyScheduleDashboardComponent } from './my-schedule-dashboard/my-schedule-dashboard.component';
+import { ScheduleEditPageComponent } from './schedule-edit-page/schedule-edit-page.component';
 
 export const routes: Routes = [
   {
@@ -53,6 +54,15 @@ export const routes: Routes = [
                 }
               }
             ]
+          }
+        ]
+      },
+      {
+        path: 'schedules',
+        children: [
+          {
+            path: ':id',
+            children: [{ path: 'edit', component: ScheduleEditPageComponent }]
           }
         ]
       }

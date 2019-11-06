@@ -1,11 +1,11 @@
-import { login } from '../../page-objects/app.po';
+import { login, getCurrentUser, insertDB } from '../../page-objects/app.po';
 import {
   createSchedulePlan,
   deleteSchedulePlan,
   gotoMySchedulePlanView
 } from '../../page-objects/scheduler';
 import { SchedulePlan } from '@ygg/schedule/core';
-import { SchedulePlanViewPagePageObject } from "@ygg/schedule/frontend";
+import { SchedulePlanViewPagePageObject } from '@ygg/schedule/frontend';
 import { deleteTags } from '../../page-objects/tags';
 import { SchedulePlanViewPagePageObjectCypress } from '../../page-objects/scheduler/schedule-plan-view-page.po';
 
@@ -50,11 +50,13 @@ describe('Create a new schedule from schedule-plan', () => {
 
   before(function() {
     cy.visit('/');
-    login();
-    cy.log('======= Create a test schedule plan');
-    createSchedulePlan(SchedulePlan.forge()).then(schedulePlan => {
-      testSchedulePlans.push(schedulePlan);
-      cy.wrap(schedulePlan).as('testSchedulePlan');
+    login().then(user => {
+      const testSchedulePlan = SchedulePlan.forge();
+      testSchedulePlan.creatorId = user.id;
+      insertDB('schedule-plans', testSchedulePlan).then(() => {
+        testSchedulePlans.push(testSchedulePlan);
+        cy.wrap(testSchedulePlan).as('testSchedulePlan');
+      });
     });
   });
 
@@ -77,7 +79,7 @@ describe('Create a new schedule from schedule-plan', () => {
       );
       schedulePlanViewPagePageObject.createSchedule();
       cy.log("======= Should land on new schedule's edit page now");
-      cy.url().should('match', /scheduler\/\/schedules\/.*\/edit/);
+      cy.url().should('match', /scheduler\/schedules\/.*\/edit/);
     });
   });
 
