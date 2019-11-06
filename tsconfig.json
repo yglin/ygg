@@ -55,7 +55,8 @@
       "@ygg/schedule/data-access": ["libs/schedule/data-access/src/index.ts"],
       "@ygg/schedule/ui": ["libs/schedule/ui/src/index.ts"],
       "@ygg/schedule/admin": ["libs/schedule/admin/src/index.ts"],
-      "@ygg/playwhat/scheduler": ["libs/playwhat/scheduler/src/index.ts"]
+      "@ygg/playwhat/scheduler": ["libs/playwhat/scheduler/src/index.ts"],
+      "@ygg/schedule/frontend": ["libs/schedule/frontend/src/index.ts"]
     },
     "rootDir": "."
   },

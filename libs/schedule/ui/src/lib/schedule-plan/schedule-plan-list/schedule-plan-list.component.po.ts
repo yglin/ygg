@@ -3,7 +3,7 @@ import { SchedulePlan } from '@ygg/schedule/core';
 
 export abstract class SchedulePlanListPageObject extends PageObject {
   selectors = {
-    'main': '.ygg-schedule-plan-list'
+    'main': '.schedule-plan-list'
   }
 
   getSelectorForSchedulePlan(schedulePlan: SchedulePlan): string {

@@ -1,4 +1,4 @@
-import { SchedulePlanViewPagePageObject } from "@ygg/schedule/ui";
+import { SchedulePlanViewPagePageObject } from "@ygg/schedule/frontend";
 
 export class SchedulePlanViewPagePageObjectCypress extends SchedulePlanViewPagePageObject {
 

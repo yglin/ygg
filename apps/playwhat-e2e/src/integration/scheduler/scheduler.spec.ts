@@ -5,7 +5,7 @@ import {
   gotoMySchedulePlanView
 } from '../../page-objects/scheduler';
 import { SchedulePlan } from '@ygg/schedule/core';
-import { SchedulePlanViewPagePageObject } from "@ygg/schedule/ui";
+import { SchedulePlanViewPagePageObject } from "@ygg/schedule/frontend";
 import { deleteTags } from '../../page-objects/tags';
 import { SchedulePlanViewPagePageObjectCypress } from '../../page-objects/scheduler/schedule-plan-view-page.po';
 

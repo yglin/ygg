@@ -19,7 +19,7 @@ import { routes } from './routes';
 // import { SchedulerNewComponent } from './pages/scheduler/new/scheduler-new.component';
 // import { SchedulerFormViewComponent } from './pages/scheduler/form/scheduler-form-view/scheduler-form-view.component';
 import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
-import { ScheduleUiModule } from "@ygg/schedule/ui";
+import { ScheduleFrontendModule } from "@ygg/schedule/frontend";
 import { ScheduleAdminModule } from '@ygg/schedule/admin';
 
 @NgModule({
@@ -39,7 +39,7 @@ import { ScheduleAdminModule } from '@ygg/schedule/admin';
     SharedUiWidgetsModule,
     SharedUiNavigationModule,
     RouterModule.forRoot(routes),
-    ScheduleUiModule,
+    ScheduleFrontendModule,
     ScheduleAdminModule,
     PlaywhatPlayFrontendModule,
     PlaywhatPlayAdminModule,

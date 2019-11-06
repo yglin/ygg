@@ -1,8 +1,9 @@
-
 export function login() {
   // @ts-ignore
   cy.login();
-  cy.get('.account-widget .user-account').should('be.visible');
+  cy.get('.account-widget .user-account', { timeout: 10000 }).should(
+    'be.visible'
+  );
   //@ts-ignore
   cy.getCurrentUser().then(user => {
     cy.log(`Login as user ${user.displayName}, uid=${user.uid}`);
@@ -12,7 +13,7 @@ export function login() {
 export function loginAdmin() {
   // @ts-ignore
   cy.login();
-};
+}
 
 export function logout() {
   // @ts-ignore
@@ -22,7 +23,7 @@ export function logout() {
 export function hitUserMenu(menuButtonId?: string) {
   cy.get('#account-widget .menu-trigger').click();
   if (menuButtonId) {
-    cy.get(`#user-menu button#${menuButtonId}`).click();    
+    cy.get(`#user-menu button#${menuButtonId}`).click();
   }
 }
 

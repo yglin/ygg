@@ -112,6 +112,9 @@
     },
     "schedule-admin": {
       "tags": ["scope:schedule", "type:admin"]
+    },
+    "schedule-frontend": {
+      "tags": ["scope:schedule", "type:ui"]
     }
   }
 }

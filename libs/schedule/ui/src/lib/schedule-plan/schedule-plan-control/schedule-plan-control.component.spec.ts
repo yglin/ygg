@@ -1,10 +1,20 @@
-import { pick } from "lodash";
+import { pick } from 'lodash';
 import 'hammerjs';
-import { NO_ERRORS_SCHEMA, DebugElement, forwardRef, Component } from '@angular/core';
+import {
+  NO_ERRORS_SCHEMA,
+  DebugElement,
+  forwardRef,
+  Component
+} from '@angular/core';
 import { Injectable } from '@angular/core';
-import { MockComponent } from "ng-mocks";
+import { MockComponent } from 'ng-mocks';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  NG_VALUE_ACCESSOR,
+  ControlValueAccessor
+} from '@angular/forms';
 import { SharedTypesModule, DateRange, Contact } from '@ygg/shared/types';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
@@ -14,8 +24,12 @@ import { SchedulePlan } from '@ygg/schedule/core';
 import { of, Observable, Subject, BehaviorSubject } from 'rxjs';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SchedulePlanViewComponent } from '../schedule-plan-view/schedule-plan-view.component';
-import { User, AuthenticateService, AuthenticateUiService, UserService } from '@ygg/shared/user';
-import { ScheduleAdminService } from '@ygg/schedule/admin';
+import {
+  User,
+  AuthenticateService,
+  AuthenticateUiService,
+  UserService
+} from '@ygg/shared/user';
 import { By } from '@angular/platform-browser';
 // import { PlaywhatPlayModule } from '@ygg/playwhat/play';
 
@@ -64,6 +78,7 @@ class MockSchedulePlanService {
   }
 }
 
+// @ts-ignore
 @Component({
   selector: 'ygg-play-tags-input',
   template: '',
@@ -92,14 +107,18 @@ describe('SchedulePlanControlComponent', () => {
     testSchedulePlan = SchedulePlan.forge();
     loginUser = User.forge();
     forgedUsers = [];
-    while(forgedUsers.length < 10) {
+    while (forgedUsers.length < 10) {
       forgedUsers.push(User.forge());
     }
   });
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SchedulePlanControlComponent, MockComponent(SchedulePlanViewComponent), MockPlayTagsInputComponent],
+      declarations: [
+        SchedulePlanControlComponent,
+        MockComponent(SchedulePlanViewComponent),
+        MockPlayTagsInputComponent
+      ],
       imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -109,7 +128,6 @@ describe('SchedulePlanControlComponent', () => {
       ],
       providers: [
         { provide: SchedulePlanService, useClass: MockSchedulePlanService },
-        { provide: SchedulerAdminService, useClass: MockSchedulerAdminService },
         { provide: AuthenticateService, useClass: MockAuthenticateService },
         { provide: AuthenticateUiService, useClass: MockAuthenticateUiService },
         { provide: UserService, useClass: MockUserService }
@@ -130,7 +148,6 @@ describe('SchedulePlanControlComponent', () => {
     jest.spyOn(window, 'confirm').mockImplementation(() => true);
     jest.spyOn(window, 'alert').mockImplementation(() => {});
   });
-  
 
   it('should be invalid initially, require dateRange, numParticipants, and at least one contact', () => {
     expect(component.formGroup.valid).toBe(false);
@@ -148,8 +165,12 @@ describe('SchedulePlanControlComponent', () => {
   });
 
   it('control "accommodationHelp" is initially disabled, a checkbox can enable it', () => {
-    const controlAccommodationHelp = debugElement.query(By.css('#needAccommodationHelp [name=accommodationHelp]')).nativeElement;
-    const checkboxAccommodationHelp = debugElement.query(By.css('#needAccommodationHelp [type="checkbox"]')).nativeElement;
+    const controlAccommodationHelp = debugElement.query(
+      By.css('#needAccommodationHelp [name=accommodationHelp]')
+    ).nativeElement;
+    const checkboxAccommodationHelp = debugElement.query(
+      By.css('#needAccommodationHelp [type="checkbox"]')
+    ).nativeElement;
     expect(controlAccommodationHelp.disabled).toBeTruthy();
     checkboxAccommodationHelp.click();
     expect(controlAccommodationHelp.disabled).toBeFalsy();
@@ -167,7 +188,7 @@ describe('SchedulePlanControlComponent', () => {
     const contact = component.contactsFormArray.at(0).value;
     expect(new Contact().fromUser(loginUser)).toEqual(contact);
   });
-  
+
   it('should submit correct data from user input', done => {
     const formGroup = component.formGroup;
 
@@ -195,30 +216,39 @@ describe('SchedulePlanControlComponent', () => {
         control.enable();
         control.setValue(testSchedulePlan[controlName]);
       } catch (error) {
-        error.message = (error.message || '') + `, controlName = ${controlName}`;
+        error.message =
+          (error.message || '') + `, controlName = ${controlName}`;
         throw error;
       }
     }
     component.setContacts(testSchedulePlan.contacts);
-    
+
     component.submit.subscribe((result: SchedulePlan) => {
       // Only check data consistence of properties in formControlNames
-      expect(pick(result.toJSON(), formControlNames)).toEqual(pick(testSchedulePlan.toJSON(), formControlNames));
+      expect(pick(result.toJSON(), formControlNames)).toEqual(
+        pick(testSchedulePlan.toJSON(), formControlNames)
+      );
       done();
     });
     component.onSubmit();
   });
 
   it('when submit, should also call PlayTagsInput.upsertTags() to upsert tags', async done => {
-    const mockPlayTagsInputComponent = debugElement.query(By.directive(MockPlayTagsInputComponent)).componentInstance;
-    jest.spyOn(mockPlayTagsInputComponent, 'upsertTags').mockImplementation(() => Promise.resolve());
+    const mockPlayTagsInputComponent = debugElement.query(
+      By.directive(MockPlayTagsInputComponent)
+    ).componentInstance;
+    jest
+      .spyOn(mockPlayTagsInputComponent, 'upsertTags')
+      .mockImplementation(() => Promise.resolve());
     await component.onSubmit();
     expect(mockPlayTagsInputComponent.upsertTags).toHaveBeenCalled();
     done();
   });
 
-  it('If logged in, ScheudleForm.creatorId should be current user\'s', done => {
-    const mockAuthenticateService: MockAuthenticateService = TestBed.get(AuthenticateService);
+  it("If logged in, ScheudleForm.creatorId should be current user's", done => {
+    const mockAuthenticateService: MockAuthenticateService = TestBed.get(
+      AuthenticateService
+    );
     mockAuthenticateService.login();
     component.submit.subscribe((result: SchedulePlan) => {
       expect(result.creatorId).toBe(loginUser.id);
@@ -228,13 +258,19 @@ describe('SchedulePlanControlComponent', () => {
   });
 
   it('If not logged in, ScheudleForm.creatorId should be undefined', done => {
-    const mockAuthenticateUiService: MockAuthenticateUiService = TestBed.get(AuthenticateUiService);
-    const mockAuthenticateService: MockAuthenticateService = TestBed.get(AuthenticateService);
+    const mockAuthenticateUiService: MockAuthenticateUiService = TestBed.get(
+      AuthenticateUiService
+    );
+    const mockAuthenticateService: MockAuthenticateService = TestBed.get(
+      AuthenticateService
+    );
     mockAuthenticateService.logout();
-    jest.spyOn(mockAuthenticateUiService, 'openLoginDialog').mockImplementation(() => {
-      // Do nothing, user skip login;
-      return Promise.resolve();
-    });
+    jest
+      .spyOn(mockAuthenticateUiService, 'openLoginDialog')
+      .mockImplementation(() => {
+        // Do nothing, user skip login;
+        return Promise.resolve();
+      });
     component.submit.subscribe((result: SchedulePlan) => {
       expect(result.creatorId).toBeUndefined();
       done();
@@ -243,15 +279,21 @@ describe('SchedulePlanControlComponent', () => {
   });
 
   it('If not logged in, when submit, ask user to log in to get SchedulePlan.creatorId', done => {
-    const mockAuthenticateUiService: MockAuthenticateUiService = TestBed.get(AuthenticateUiService);
-    const mockAuthenticateService: MockAuthenticateService = TestBed.get(AuthenticateService);
+    const mockAuthenticateUiService: MockAuthenticateUiService = TestBed.get(
+      AuthenticateUiService
+    );
+    const mockAuthenticateService: MockAuthenticateService = TestBed.get(
+      AuthenticateService
+    );
     mockAuthenticateService.logout();
 
-    jest.spyOn(mockAuthenticateUiService, 'openLoginDialog').mockImplementation(() => {
-      // Just mock login;
-      mockAuthenticateService.currentUser$.next(loginUser);
-      return Promise.resolve(loginUser);
-    });
+    jest
+      .spyOn(mockAuthenticateUiService, 'openLoginDialog')
+      .mockImplementation(() => {
+        // Just mock login;
+        mockAuthenticateService.currentUser$.next(loginUser);
+        return Promise.resolve(loginUser);
+      });
     component.submit.subscribe((result: SchedulePlan) => {
       expect(window.confirm).toHaveBeenCalled();
       expect(mockAuthenticateUiService.openLoginDialog).toHaveBeenCalled();
@@ -260,5 +302,4 @@ describe('SchedulePlanControlComponent', () => {
     });
     component.onSubmit();
   });
-  
 });

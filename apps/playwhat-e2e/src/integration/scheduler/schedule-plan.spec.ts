@@ -8,7 +8,7 @@ import {
   deleteSchedulePlan
 } from '../../page-objects/scheduler';
 import { SchedulePlan } from '@ygg/schedule/core';
-import { SchedulePlanViewPagePageObject } from '@ygg/schedule/ui';
+import { SchedulePlanViewPagePageObject } from '@ygg/schedule/frontend';
 import { SchedulePlanViewPagePageObjectCypress, createSchedulePlan } from '../../page-objects/scheduler';
 import { Tags } from '@ygg/tags/core';
 import { deleteTags } from '../../page-objects/tags';

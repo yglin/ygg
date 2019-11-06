@@ -1197,6 +1197,33 @@
         }
       },
       "schematics": {}
+    },
+    "schedule-frontend": {
+      "projectType": "library",
+      "root": "libs/schedule/frontend",
+      "sourceRoot": "libs/schedule/frontend/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/schedule/frontend/tsconfig.lib.json",
+              "libs/schedule/frontend/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/schedule/frontend/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/schedule/frontend/jest.config.js",
+            "tsConfig": "libs/schedule/frontend/tsconfig.spec.json",
+            "setupFile": "libs/schedule/frontend/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {
