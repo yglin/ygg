@@ -12,6 +12,7 @@ import { SchedulePlanViewPagePageObject } from '@ygg/schedule/frontend';
 import { SchedulePlanViewPagePageObjectCypress, createSchedulePlan } from '../../page-objects/scheduler';
 import { Tags } from '@ygg/tags/core';
 import { deleteTags } from '../../page-objects/tags';
+import { MockDatabase } from '../../support/mock-database';
 
 describe('Scheduler - schedule-plan', () => {
   const siteNavigator = new SiteNavigator();
@@ -24,8 +25,9 @@ describe('Scheduler - schedule-plan', () => {
   const schedulePlanViewPagePageObject: SchedulePlanViewPagePageObject = new SchedulePlanViewPagePageObjectCypress(
     ''
   );
+  const mockDatabase: MockDatabase = new MockDatabase();
 
-  beforeEach(function() {
+  before(function() {
     cy.visit('/');
     login();
   });
@@ -65,8 +67,10 @@ describe('Scheduler - schedule-plan', () => {
       const allTags: Tags = testSchedulePlan.tags.merge(
         changedSchedulePlan.tags
       );
-      deleteSchedulePlan(testSchedulePlan);
-      deleteTags(allTags);
+      mockDatabase.delete(`schedule-plans/${testSchedulePlan.id}`);
+      cy.wrap(allTags.toTagsArray()).each((tag: any) => {
+        mockDatabase.delete(`tags/${tag.id}`);
+      });
     });
   });
 });

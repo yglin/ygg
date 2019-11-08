@@ -1,14 +1,3 @@
-import { login, getCurrentUser, insertDB } from '../../page-objects/app.po';
-import {
-  createSchedulePlan,
-  deleteSchedulePlan,
-  gotoMySchedulePlanView
-} from '../../page-objects/scheduler';
-import { SchedulePlan } from '@ygg/schedule/core';
-import { SchedulePlanViewPagePageObject } from '@ygg/schedule/frontend';
-import { deleteTags } from '../../page-objects/tags';
-import { SchedulePlanViewPagePageObjectCypress } from '../../page-objects/scheduler/schedule-plan-view-page.po';
-
 // ================== What data we need ? ================
 // A schedule, composite of events
 // Events, each with start time, end time, and which play consumed
@@ -44,52 +33,6 @@ import { SchedulePlanViewPagePageObjectCypress } from '../../page-objects/schedu
 // "landing" button on event-thumbnail
 // Play list multi-selector
 // ============================================================
-
-describe('Create a new schedule from schedule-plan', () => {
-  const testSchedulePlans: SchedulePlan[] = [];
-
-  before(function() {
-    cy.visit('/');
-    login().then(user => {
-      const testSchedulePlan = SchedulePlan.forge();
-      testSchedulePlan.creatorId = user.id;
-      insertDB('schedule-plans', testSchedulePlan).then(() => {
-        testSchedulePlans.push(testSchedulePlan);
-        cy.wrap(testSchedulePlan).as('testSchedulePlan');
-      });
-    });
-  });
-
-  after(function() {
-    cy.wrap(testSchedulePlans).each((schedulePlan: any, index: number) => {
-      deleteSchedulePlan(schedulePlan);
-      deleteTags(schedulePlan.tags);
-    });
-  });
-
-  beforeEach(function() {});
-
-  it('should start from an exist schedule-plan, its view page', () => {
-    cy.get<SchedulePlan>('@testSchedulePlan').then(testSchedulePlan => {
-      cy.log('======= Go to the view page of test schedule plan');
-      gotoMySchedulePlanView(testSchedulePlan);
-      cy.log('======= Click the create-schedule button');
-      const schedulePlanViewPagePageObject: SchedulePlanViewPagePageObject = new SchedulePlanViewPagePageObjectCypress(
-        ''
-      );
-      schedulePlanViewPagePageObject.createSchedule();
-      cy.log("======= Should land on new schedule's edit page now");
-      cy.url().should('match', /scheduler\/schedules\/.*\/edit/);
-    });
-  });
-
-  // it('should automatic generate the first version schedule', () => {
-  //   cy.log('======= Go to the view page of test schedule plan');
-  //   cy.log('======= Click the create-schedule button');
-  //   cy.log("======= Should land on new schedule's edit page now");
-  //   cy.log('======= Should show events of first version schedule');
-  // });
-});
 
 // describe('Edit schedule', () => {
 //   before(function() {

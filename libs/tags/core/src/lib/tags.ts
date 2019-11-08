@@ -75,6 +75,10 @@ export class Tags implements SerializableJSON {
     return new Tags(this.toTagsArray().concat(tags.toTagsArray()));
   }
 
+  forEach(iterator: (value: Tag, index: number, array: Tag[]) => void) {
+    this.tags.forEach(iterator);
+  }
+
   clear() {
     this.tags.length = 0;
   }

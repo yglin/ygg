@@ -1,64 +1,43 @@
-import { last } from 'lodash';
-import { login } from '../../page-objects/app.po';
+import { loginAdmin } from '../../page-objects/app.po';
 import { SiteNavigator } from '../../page-objects/site-navigator';
-import { PlayFormPageObject, deletePlay } from '../../page-objects/play.po';
 import { Play } from '@ygg/playwhat/play';
-import { Tags, Tag } from '@ygg/tags/core';
 // import { v4 as uuid } from 'uuid';
 import { TagsAdminListPageObjectCypress } from '../../page-objects/tags/tags-admin-list.po';
-import {
-  SchedulePlanControlPageObjectCypress,
-  createSchedulePlan
-} from '../../page-objects/scheduler';
 import { SchedulePlan } from '@ygg/schedule/core';
-import { deleteSchedulePlan } from '../../page-objects/scheduler';
-import { deleteTags } from '../../page-objects/tags';
+import { MockDatabase } from '../../support/mock-database';
 
 describe('Add new tags from various user activities', () => {
   const siteNavigator = new SiteNavigator();
   const tagsAdminListPageObject = new TagsAdminListPageObjectCypress();
-  const testPlay = Play.forge();
-  const testSchedulePlan = SchedulePlan.forge();
-  const testTags = Tags.forge();
-  const playFormPageObject = new PlayFormPageObject();
-  const schedulePlanPage = new SchedulePlanControlPageObjectCypress('');
+  const mockDatabase: MockDatabase = new MockDatabase();
 
-  beforeEach(() => {
+  before(() => {
     cy.visit('/');
-    login();
+    loginAdmin();
+  });
+
+  after(() => {
+    mockDatabase.clear();
   });
 
   it('From creating/updating play', () => {
-    siteNavigator.goto(['plays', 'new']);
-    testPlay.tags = testTags;
-    playFormPageObject.fillIn(testPlay);
-    playFormPageObject.submit();
-    cy.url().should('not.match', /\/plays\/new/);
-    cy.url().should('match', /\/plays\/(.+)/);
-
-    cy.location('pathname').then((loc: any) => {
-      const pathname: string = loc as string;
-      // Clean out test data in Database
-      const id = last(pathname.split('/'));
-      if (id) {
-        testPlay.id = id;
-      }
+    const testPlay = Play.forge();
+    mockDatabase.insert(`plays/${testPlay.id}`, testPlay.toJSON()).then(() => {
+      siteNavigator.goto(['admin', 'tags', 'list']);
+      tagsAdminListPageObject.expectTags(testPlay.tags.toTagsArray());
     });
-
-    siteNavigator.goto(['admin', 'tags', 'list']);
-    tagsAdminListPageObject.expectTags(testPlay.tags.toTagsArray());
-
-    deletePlay(testPlay);
-    deleteTags(testPlay.tags);
   });
 
   it('From creating/updating schedule-plan', () => {
-    testSchedulePlan.tags = testTags;
-    createSchedulePlan(testSchedulePlan).then(() => {
-      siteNavigator.goto(['admin', 'tags', 'list']);
-      tagsAdminListPageObject.expectTags(testSchedulePlan.tags.toTagsArray());
-      deleteSchedulePlan(testSchedulePlan);
-      deleteTags(testSchedulePlan.tags);
-    });
+    const testSchedulePlan = SchedulePlan.forge();
+    mockDatabase
+      .insert(
+        `schedule-plans/${testSchedulePlan.id}`,
+        testSchedulePlan.toJSON()
+      )
+      .then(() => {
+        siteNavigator.goto(['admin', 'tags', 'list']);
+        tagsAdminListPageObject.expectTags(testSchedulePlan.tags.toTagsArray());
+      });
   });
 });

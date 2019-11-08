@@ -50,7 +50,11 @@ export class User implements DataItem {
     const user = new User();
     user.id = firebaseUser.uid;
     user.name = firebaseUser.displayName;
-    user.avatarUrl = new URL(firebaseUser.photoURL);
+    try {
+      user.avatarUrl = new URL(firebaseUser.photoURL);
+    } catch (error) {
+      console.warn(error);      
+    }
     user.email = firebaseUser.email;
     user.phone = firebaseUser.phoneNumber;
     return user;
