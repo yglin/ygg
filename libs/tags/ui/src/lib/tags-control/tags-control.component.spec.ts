@@ -192,7 +192,13 @@ describe('TagsControlComponent as Reactive Form Controller(ControlValueAccessor)
     await fixture.whenStable();
     fixture.detectChanges();
     expect(mockTagsService.getOptionTags$).toHaveBeenCalled();
-    expect(mockChipsControlComponent.autocompleteOptions).toEqual(stubOptionTags.map(tag => tag.name));
+    expect(mockChipsControlComponent.autocompleteOptions).toEqual(
+      stubOptionTags.map(tag => tag.name)
+    );
     done();
+  });
+
+  it('Should only show add button when input has value', async done => {
+    
   });
 });

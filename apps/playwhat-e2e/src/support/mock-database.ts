@@ -1,3 +1,4 @@
+import { values } from "lodash";
 import { Tags } from '@ygg/tags/core';
 
 interface Document {
@@ -6,24 +7,26 @@ interface Document {
 }
 
 export class MockDatabase {
-  documents: Document[] = [];
+  documents: { [path: string]: Document } = {};
+
+  pushDocument(doc: Document) {
+    this.documents[doc.path] = doc;
+    if (doc.data && doc.data.tags) {
+      new Tags(doc.data.tags).forEach(tag => {
+        const tagPath = `tags/${tag.id}`;
+        this.documents[tagPath] = {
+          path: tagPath,
+          data: tag
+        };
+      });
+    }
+  }
 
   insert(path: string, data: any): Cypress.Chainable<any> {
     // @ts-ignore
     cy.callFirestore('set', path, data).then(() => {
       cy.log(`Insert test data at ${path}`);
-      this.documents.push({
-        path,
-        data
-      });
-      if (data && data.tags) {
-        new Tags(data.tags).forEach(tag => {
-          this.documents.push({
-            path: `tags/${tag.id}`,
-            data: tag
-          });
-        });
-      }
+      this.pushDocument({ path, data });
       // Wait for the database to persist data
       cy.wait(10000);
       cy.wrap(data).as(data.id);
@@ -38,7 +41,7 @@ export class MockDatabase {
   }
 
   clear(): Cypress.Chainable<any> {
-    return cy.wrap<Document[]>(this.documents).each((document: any) => {
+    return cy.wrap<Document[]>(values(this.documents)).each((document: any) => {
       this.delete(document.path);
     });
   }

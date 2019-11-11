@@ -1,10 +1,36 @@
-import { noop, find, remove } from "lodash";
-import { Component, OnInit, Input, forwardRef, AfterViewInit, ViewChild, ElementRef, OnDestroy, OnChanges } from '@angular/core';
+import { noop, find, remove } from 'lodash';
+import {
+  Component,
+  OnInit,
+  Input,
+  forwardRef,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+  OnChanges
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatChipEvent, MatChipInputEvent } from '@angular/material/chips';
-import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
-import { Observable, merge, fromEvent, Subscription, BehaviorSubject, combineLatest } from 'rxjs';
-import { map, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import {
+  MatAutocompleteSelectedEvent,
+  MatAutocompleteTrigger,
+  MatAutocomplete
+} from '@angular/material/autocomplete';
+import {
+  Observable,
+  merge,
+  fromEvent,
+  Subscription,
+  BehaviorSubject,
+  combineLatest
+} from 'rxjs';
+import {
+  map,
+  startWith,
+  debounceTime,
+  distinctUntilChanged
+} from 'rxjs/operators';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 
 @Component({
@@ -19,10 +45,11 @@ import { ENTER, COMMA } from '@angular/cdk/keycodes';
     }
   ]
 })
-export class ChipsControlComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit, ControlValueAccessor {
+export class ChipsControlComponent
+  implements OnInit, OnDestroy, AfterViewInit, ControlValueAccessor {
   @Input() label: string;
   @Input() autocompleteOptions: string[] = [];
-  autocompleteOptions$: BehaviorSubject<string[]> = new BehaviorSubject(this.autocompleteOptions);
+  @Input() chipMinLength = 2;
   autocompleteOptionsFiltered: string[] = [];
   emitChange: (chips: string[]) => any = noop;
   chips: string[] = [];
@@ -31,8 +58,9 @@ export class ChipsControlComponent implements OnInit, OnChanges, OnDestroy, Afte
   @ViewChild('chipInput', { read: MatAutocompleteTrigger, static: false })
   matAutocompleteTrigger: MatAutocompleteTrigger;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
-  minCountOfLettersForAutoComplete = 2;
   separatorKeysCodes: number[] = [ENTER, COMMA];
+  showButtonAdd = false;
+  showButtonClearAll = false;
 
   _isDisplayAutocompleteSelector = false;
   set isDisplayAutocompleteSelector(value: boolean) {
@@ -49,14 +77,9 @@ export class ChipsControlComponent implements OnInit, OnChanges, OnDestroy, Afte
     return this._isDisplayAutocompleteSelector;
   }
 
-  
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {}
-
-  ngOnChanges() {
-    this.autocompleteOptions$.next(this.autocompleteOptions);
-  }
 
   ngAfterViewInit() {
     const inputKeyword$: Observable<string> = merge(
@@ -66,25 +89,29 @@ export class ChipsControlComponent implements OnInit, OnChanges, OnDestroy, Afte
       map(keyboardEvent => (<HTMLInputElement>keyboardEvent.target).value),
       startWith(''),
       debounceTime(500),
-      distinctUntilChanged(),
+      distinctUntilChanged()
     );
 
-    const subscription = combineLatest([inputKeyword$, this.autocompleteOptions$]).subscribe(([inputKeyword, autocompleteOptions]) => {
+    const subscription = inputKeyword$.subscribe(inputKeyword => {
       // Things changed, close autocomplete panel in advance
+      // console.log(inputKeyword);
       this.isDisplayAutocompleteSelector = false;
-      if (
-        inputKeyword &&
-        inputKeyword.length >= this.minCountOfLettersForAutoComplete
-      ) {
+      if (inputKeyword && inputKeyword.length >= this.chipMinLength) {
+        this.showButtonAdd = true;
+        // console.log('Show button-add');
         // console.dir(autocompleteTagsSource.getNames());
-        this.autocompleteOptionsFiltered = autocompleteOptions
-          .filter(chip => chip.includes(inputKeyword));
+        // console.log(this.autocompleteOptions);
+        this.autocompleteOptionsFiltered = this.autocompleteOptions.filter(
+          chip => chip.includes(inputKeyword)
+        );
         if (this.autocompleteOptionsFiltered.length > 0) {
           // Open autocomplete panel, only when input over 2 letters and matched
+          // console.log(this.autocompleteOptionsFiltered);
           this.isDisplayAutocompleteSelector = true;
         }
       } else {
-        this.autocompleteOptionsFiltered = autocompleteOptions;
+        this.autocompleteOptionsFiltered = this.autocompleteOptions;
+        this.showButtonAdd = false;
       }
     });
     this.subscriptions.push(subscription);
@@ -99,6 +126,7 @@ export class ChipsControlComponent implements OnInit, OnChanges, OnDestroy, Afte
   writeValue(value: string[]) {
     if (value) {
       this.chips = value;
+      this.showButtonClearAll = this.chips.length >= 2;
     }
   }
 
@@ -109,6 +137,7 @@ export class ChipsControlComponent implements OnInit, OnChanges, OnDestroy, Afte
   registerOnTouched() {}
 
   notifyChange() {
+    this.showButtonClearAll = this.chips.length >= 2;
     this.emitChange(Array.from(this.chips));
   }
 
@@ -133,6 +162,9 @@ export class ChipsControlComponent implements OnInit, OnChanges, OnDestroy, Afte
     if (chip) {
       this.addChipUnique(chip);
       this.notifyChange();
+    }
+    if (this.chipInput) {
+      this.chipInput.nativeElement.value = null;
     }
   }
 

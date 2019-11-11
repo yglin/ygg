@@ -3,6 +3,10 @@
   max-width: 640px;
 }
 
+.action-bar {
+  height: 50px;
+}
+
 .mat-form-field {
   width: 100%;
 }

@@ -56,6 +56,12 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
     this.setAccommodationHelp(schedulePlan.accommodationHelp);
   }
 
+  clearValue(schedulePlan: SchedulePlan) {
+    if (schedulePlan.tags) {
+      this.clearLikeTags();
+    }
+  }
+
   submit() {
     cy.get(this.getSelector('submitButton')).click();
   }
@@ -138,6 +144,10 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
     cy.get(this.getSelector('transpotationHelp'))
       .clear()
       .type(transpotationHelp);
+  }
+
+  clearLikeTags() {
+    this.tagsControlPageObject.clear();
   }
 
   setLikeTags(tags: Tags) {

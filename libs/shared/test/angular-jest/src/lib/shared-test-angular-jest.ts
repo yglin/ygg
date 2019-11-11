@@ -33,7 +33,7 @@ export class AngularJestTester {
       console.warn(errorMessage);
       throw new Error(errorMessage);
     }
-    return debugElement
+    return debugElement;
   }
 
   getNativeElement<T>(selector: string): T {
@@ -55,43 +55,44 @@ export class AngularJestTester {
   }
 
   expectVisible(selector: string, flag: boolean) {
-    let isHidden: boolean;
+    // let isHidden: boolean;
     let debugElement: DebugElement;
     try {
-      debugElement = this.getDebugElement(selector)
-      if (debugElement) {
-        const nativeElement: HTMLElement = debugElement.nativeElement;
-        isHidden = nativeElement.attributes['hidden'] !== undefined && nativeElement.attributes['hidden'] !== false;
-      } else {
-        isHidden = true;
-      }
+      debugElement = this.getDebugElement(selector);
+      const nativeElement: HTMLElement = debugElement.nativeElement;
+      expect(nativeElement).toBeVisible();
     } catch (error) {
-      isHidden = true;
+      expect(true).toEqual(!flag);
     }
-    expect(isHidden).toEqual(!flag);
   }
 
   expectDisabled(selector: string, flag: boolean) {
     const element = this.getNativeElement<HTMLButtonElement>(selector);
     if (flag) {
-      expect(element.disabled).not.toBeFalsy();      
+      expect(element.disabled).not.toBeFalsy();
     } else {
       expect(element.disabled).toBeFalsy();
     }
   }
 
   expectInputValue(selector: string, value: any) {
-    const inputElement: HTMLInputElement = this.getNativeElement<HTMLInputElement>(selector);
+    const inputElement: HTMLInputElement = this.getNativeElement<
+      HTMLInputElement
+    >(selector);
     // console.log(typeof inputElement.value);
     expect(inputElement.value).toEqual(value);
   }
 
   expectTextIncluded(selector: string, text: string) {
-    expect(this.getNativeElement<HTMLElement>(selector).innerHTML).toContain(text);
+    expect(this.getNativeElement<HTMLElement>(selector).innerHTML).toContain(
+      text
+    );
   }
 
   async expectTextContent(selector: string, text: string) {
-    expect(this.getNativeElement<HTMLElement>(selector).textContent).toEqual(text);
+    expect(this.getNativeElement<HTMLElement>(selector).textContent).toEqual(
+      text
+    );
   }
 
   async click(selector: string) {
@@ -114,6 +115,7 @@ export class AngularJestTester {
     const input = this.getNativeElement<HTMLInputElement>(selector);
     input.value = moment(date).format('M/D/YYYY');
     input.dispatchEvent(new Event('input'));
+    input.dispatchEvent(new Event('change'));
     await this.fixture.whenStable();
     this.fixture.detectChanges();
     return Promise.resolve();
@@ -122,7 +124,7 @@ export class AngularJestTester {
   async type(selector: string, letter: string) {
     const input = this.getNativeElement<HTMLInputElement>(selector);
     input.value += letter;
-    input.dispatchEvent(new KeyboardEvent('keyup', { key: letter}));
+    input.dispatchEvent(new KeyboardEvent('keyup', { key: letter }));
     input.dispatchEvent(new Event('change'));
     await this.fixture.whenStable();
     this.fixture.detectChanges();

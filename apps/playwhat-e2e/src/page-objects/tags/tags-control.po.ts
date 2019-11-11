@@ -15,7 +15,6 @@ export class TagsControlPageObjectCypress extends TagsControlComponentPageObject
   }
 
   setValue(tags: Tags) {
-    this.clear();
     const tagsArray = tags.toTagsArray();
     cy.wrap(tagsArray).each((element, index, array) => {
       this.addTag(tagsArray[index]);

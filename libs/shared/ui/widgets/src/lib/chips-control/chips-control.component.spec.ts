@@ -12,10 +12,8 @@ import {
 } from '@angular/forms';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { By } from '@angular/platform-browser';
-import {
-  ChipsControlComponentPageObject,
-  selectorsConfig
-} from './chips-control.component.po';
+import { ChipsControlPageObject } from './chips-control.component.po';
+import { AngularJestTester } from '@ygg/shared/test/angular-jest';
 
 function forgeChips(): string[] {
   return range(random(2, 5)).map(() => uuid());
@@ -41,7 +39,8 @@ describe('ChipsControlComponent as Reactive Form Controller(ControlValueAccessor
   let formComponent: MockFormComponent;
   let component: ChipsControlComponent;
   let debugElement: DebugElement;
-  let pageObject: ChipsControlComponentPageObject<ChipsControlComponent>;
+  let pageObject: ChipsControlPageObject;
+  let angularJestTester: AngularJestTester;
   let fixture: ComponentFixture<MockFormComponent>;
 
   beforeEach(async(() => {
@@ -57,10 +56,9 @@ describe('ChipsControlComponent as Reactive Form Controller(ControlValueAccessor
     formComponent = fixture.componentInstance;
     component = debugElement.query(By.directive(ChipsControlComponent))
       .componentInstance;
-    pageObject = new ChipsControlComponentPageObject('', selectorsConfig, {
-      fixture,
-      debugElement
-    });
+
+    pageObject = new ChipsControlPageObject('');
+    angularJestTester = new AngularJestTester({ fixture, debugElement });
     jest.spyOn(window, 'confirm').mockImplementation(() => true);
     fixture.detectChanges();
   });
@@ -74,7 +72,6 @@ describe('ChipsControlComponent as Reactive Form Controller(ControlValueAccessor
     done();
   });
 
-
   it('should output changed value to parent form', async done => {
     const testChips = forgeChips();
     component.emitChange(testChips);
@@ -85,38 +82,40 @@ describe('ChipsControlComponent as Reactive Form Controller(ControlValueAccessor
     done();
   });
 
-  it('should be able to clear all chips', async done => {
-    component.chips = forgeChips();
-    // const buttonClearAll = debugElement.query(By.css('.chips-control button#clear-all')).nativeElement;
-    await pageObject.clearAll();
-    // buttonClearAll.click();
-    // await fixture.whenStable();
-    // fixture.detectChanges();
-    const chips = formComponent.formGroup.get('chips').value;
-    expect(chips).toHaveLength(0);
+  it('should only show add button when input more than 2 letters', async done => {
+    await angularJestTester.inputText(pageObject.getSelector('inputChip'), '');
+    angularJestTester.expectVisible(pageObject.getSelector('buttonAdd'), false);
+    await angularJestTester.type(pageObject.getSelector('inputChip'), 'G');
+    angularJestTester.expectVisible(pageObject.getSelector('buttonAdd'), false);
+    await angularJestTester.type(pageObject.getSelector('inputChip'), 'Y');
+    angularJestTester.expectVisible(pageObject.getSelector('buttonAdd'), true);
     done();
   });
 
   it('can add chips by input names', async done => {
-    await pageObject.clearAll();
     const testChips = forgeChips();
     for (const chip of testChips) {
-      await pageObject.addChip(chip);
+      await angularJestTester.inputText(
+        pageObject.getSelector('inputChip'),
+        chip
+      );
+      await angularJestTester.click(pageObject.getSelector('buttonAdd'));
     }
     const chips = formComponent.formGroup.get('chips').value;
     expect(chips).toEqual(testChips);
     done();
   });
 
-
-  it('chip should be unique, adding duplicates results to only one', async done => {
-    await pageObject.clearAll();
-    const testChip = 'yygg';
-    await pageObject.addChip(testChip);
-    await pageObject.addChip(testChip);
-    await pageObject.addChip(testChip);
-    const chips = formComponent.formGroup.get('chips').value;
-    expect(chips).toEqual([testChip]);
+  it('should clear input after add', async done => {
+    await angularJestTester.inputText(
+      pageObject.getSelector('inputChip'),
+      'GGYY'
+    );
+    await angularJestTester.click(pageObject.getSelector('buttonAdd'));
+    angularJestTester.expectInputValue(
+      pageObject.getSelector('inputChip'),
+      ''
+    );
     done();
   });
 
@@ -127,20 +126,101 @@ describe('ChipsControlComponent as Reactive Form Controller(ControlValueAccessor
     component.chips = testChips;
     await fixture.whenStable();
     fixture.detectChanges();
-
-    await pageObject.removeChip(testChip);
-    // const deleteButton = debugElement.query(By.css('.chips-control .chip[chipName="yygg"] .delete')).nativeElement;
-    // deleteButton.click();
-    // await fixture.whenStable();
-    // fixture.detectChanges();
-
+    await angularJestTester.click(
+      pageObject.getSelectorForChipDeleteButton(testChip)
+    );
     remove(testChips, chip => chip === testChip);
     const chips = formComponent.formGroup.get('chips').value;
     expect(chips).toEqual(testChips);
     done();
   });
 
+  it('should only show clear-all button when more than 2 chips', async done => {
+    // Initially visible if given more than 2 chips
+    formComponent.formGroup.get('chips').setValue(['ggyy', 'yygg']);
+    await fixture.whenStable();
+    fixture.detectChanges();    
+    angularJestTester.expectVisible(
+      pageObject.getSelector('buttonClear'),
+      true
+    );
+
+    // Initially hidden if no chips
+    formComponent.formGroup.get('chips').setValue([]);
+    await fixture.whenStable();
+    fixture.detectChanges();    
+    angularJestTester.expectVisible(
+      pageObject.getSelector('buttonClear'),
+      false
+    );
+    
+    // Add first chip, still hidden
+    await angularJestTester.inputText(
+      pageObject.getSelector('inputChip'),
+      'GGYY'
+    );
+    await angularJestTester.click(pageObject.getSelector('buttonAdd'));
+    angularJestTester.expectVisible(
+      pageObject.getSelector('buttonClear'),
+      false
+    );
+    
+    // Add second chip, now show up
+    await angularJestTester.inputText(
+      pageObject.getSelector('inputChip'),
+      'YYGG'
+    );
+    await angularJestTester.click(pageObject.getSelector('buttonAdd'));
+    angularJestTester.expectVisible(
+      pageObject.getSelector('buttonClear'),
+      true
+    );
+
+    // Delete 1 chip, left 1 chip, hidden again
+    await angularJestTester.click(
+      pageObject.getSelectorForChipDeleteButton('GGYY')
+    );
+    angularJestTester.expectVisible(
+      pageObject.getSelector('buttonClear'),
+      false
+    );
+
+    done();
+  });
+
+  it('there should be button to clear all chips', async done => {
+    component.chips = forgeChips();
+    await angularJestTester.click(pageObject.getSelector('buttonClear'));
+    const chips = formComponent.formGroup.get('chips').value;
+    expect(chips).toHaveLength(0);
+    done();
+  });
+
+  it('chip should be unique, adding duplicates results to only one', async done => {
+    const testChip = 'yygg';
+    await angularJestTester.inputText(
+      pageObject.getSelector('inputChip'),
+      testChip
+    );
+    await angularJestTester.click(pageObject.getSelector('buttonAdd'));
+    await angularJestTester.inputText(
+      pageObject.getSelector('inputChip'),
+      testChip
+    );
+    await angularJestTester.click(pageObject.getSelector('buttonAdd'));
+    const chips = formComponent.formGroup.get('chips').value;
+    expect(chips).toEqual([testChip]);
+    done();
+  });
+
   it('show autocomplete dropdown after typed 2 letters, and show filtered option chips', async done => {
+    function expectAutoCompleteOptions(values: string[]) {
+      for (const value of values) {
+        const optionSelector = `.autocomplete-panel [optionName="${value}"]`;
+        angularJestTester.expectVisible(optionSelector, true);
+      }
+    }
+
     jest.setTimeout(10000);
     const autocompleteOptions = [
       'APPLE',
@@ -154,27 +234,25 @@ describe('ChipsControlComponent as Reactive Form Controller(ControlValueAccessor
     await fixture.whenStable();
     fixture.detectChanges();
 
-    await pageObject.clearInput();
-    expect(component.isDisplayAutocompleteSelector).toBe(false);
-    await pageObject.typeIntoInput('A');
-    expect(component.isDisplayAutocompleteSelector).toBe(false);
-    await pageObject.typeIntoInput('P');
-    expect(component.isDisplayAutocompleteSelector).toBe(true);
-    pageObject.expectAutoCompleteOptions(['APPLE']);
-    await pageObject.clearInput();
-    expect(component.isDisplayAutocompleteSelector).toBe(false);
-    await pageObject.typeIntoInput('M');
-    expect(component.isDisplayAutocompleteSelector).toBe(false);
-    await pageObject.typeIntoInput('O');
-    expect(component.isDisplayAutocompleteSelector).toBe(true);
-    pageObject.expectAutoCompleteOptions(['MONGO', 'MONKEY']);
-    await pageObject.clearInput();
-    expect(component.isDisplayAutocompleteSelector).toBe(false);
-    await pageObject.typeIntoInput('G');
-    expect(component.isDisplayAutocompleteSelector).toBe(false);
-    await pageObject.typeIntoInput('Y');
-    expect(component.isDisplayAutocompleteSelector).toBe(false);
+    angularJestTester.expectVisible('.autocomplete-panel', false);
+    await angularJestTester.type(pageObject.getSelector('inputChip'), 'A');
+    angularJestTester.expectVisible('.autocomplete-panel', false);
+    await angularJestTester.type(pageObject.getSelector('inputChip'), 'P');
+    angularJestTester.expectVisible('.autocomplete-panel', true);
+    expectAutoCompleteOptions(['APPLE']);
+    await angularJestTester.inputText(pageObject.getSelector('inputChip'), '');
+    angularJestTester.expectVisible('.autocomplete-panel', false);
+    await angularJestTester.type(pageObject.getSelector('inputChip'), 'M');
+    angularJestTester.expectVisible('.autocomplete-panel', false);
+    await angularJestTester.type(pageObject.getSelector('inputChip'), 'O');
+    angularJestTester.expectVisible('.autocomplete-panel', true);
+    expectAutoCompleteOptions(['MONGO', 'MONKEY']);
+    await angularJestTester.inputText(pageObject.getSelector('inputChip'), '');
+    angularJestTester.expectVisible('.autocomplete-panel', false);
+    await angularJestTester.type(pageObject.getSelector('inputChip'), 'G');
+    angularJestTester.expectVisible('.autocomplete-panel', false);
+    await angularJestTester.type(pageObject.getSelector('inputChip'), 'Y');
+    angularJestTester.expectVisible('.autocomplete-panel', false);
     done();
   });
-
 });
