@@ -21,9 +21,17 @@ export class NumberRange implements SerializableJSON {
     }
   }
 
-  constructor() {
+  constructor(...args: number[]) {
     this._min = 0;
     this._max = 0;
+    if (args) {
+      if (args.length === 1) {
+        this._max = args[0];
+      } else if (args.length >= 2) {
+        this._min = args[0];
+        this._max = args[1];
+      }
+    }
   }
 
   set min(_min: number) {

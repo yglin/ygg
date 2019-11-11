@@ -83,25 +83,25 @@
             fxLayoutAlign="start center"
             fxLayoutGap="20px"
           >
-            <div class="total-budget">
+          <div class="single-budget">
+            <mat-radio-button [value]="'single'">單人</mat-radio-button>
+          </div>
+          <div class="total-budget">
               <mat-radio-button [value]="'total'">總和</mat-radio-button>
             </div>
-            <div class="single-budget">
-              <mat-radio-button [value]="'single'">單人</mat-radio-button>
-            </div>
-            <h3 class="hint">{{ budgetHintMessage }}</h3>
+            <!-- <h3 class="hint">{{ budgetHintMessage }}</h3> -->
           </div>
         </mat-radio-group>
         <br />
         <div>
-          <div *ngIf="budgetType === 'total'" class="total-budget">
+          <div [hidden]="budgetType !== 'total'" class="total-budget">
             <ygg-number-range-control
               formControlName="totalBudget"
               [globalMax]="100000"
               icon="monetization_on"
             ></ygg-number-range-control>
           </div>
-          <div *ngIf="budgetType === 'single'" class="single-budget">
+          <div [hidden]="budgetType !== 'single'" class="single-budget">
             <ygg-number-range-control
               formControlName="singleBudget"
               [globalMax]="10000"

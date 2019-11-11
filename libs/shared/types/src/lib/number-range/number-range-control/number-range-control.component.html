@@ -2,7 +2,7 @@
   <div [fxLayout]="layout" fxLayoutAlign="start stretch" fxLayoutGap="10px">
     <div class='min' [fxFlexAlign]='layout === "row" ? "end" : "start"'>
       <mat-form-field>
-        <input matInput placeholder='下限' type="number" [formControl]='inputMinControl'>
+        <input matInput placeholder='下限' type="tel" [formControl]='inputMinControl'>
         <span matPrefix *ngIf='icon'><mat-icon>{{icon}}</mat-icon></span>
       </mat-form-field>
     </div>
@@ -20,7 +20,7 @@
     </div>
     <div class='max' [fxFlexAlign]='layout === "row" ? "start" : "end"'>
       <mat-form-field>
-        <input matInput placeholder='上限' type="number" [formControl]='inputMaxControl'>
+        <input matInput placeholder='上限' type="tel" [formControl]='inputMaxControl'>
         <span matPrefix *ngIf='icon'><mat-icon>{{icon}}</mat-icon></span>
       </mat-form-field>
     </div>

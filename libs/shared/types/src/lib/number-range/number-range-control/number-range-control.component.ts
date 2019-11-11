@@ -6,8 +6,8 @@ import {
 } from '@angular/forms';
 import { NumberRange } from '../number-range';
 import { noop } from 'lodash';
-import { Subscription, merge } from 'rxjs';
-import { debounceTime, tap } from 'rxjs/operators';
+import { Subscription, merge, combineLatest } from 'rxjs';
+import { debounceTime, tap, map, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'ygg-number-range-control',
@@ -29,8 +29,6 @@ export class NumberRangeControlComponent
   @Input() icon;
   @Input() layout;
   emitChange: (numberRange: NumberRange) => any = noop;
-  min = 0;
-  max = 0;
   inputMinControl: FormControl;
   sliderMinControl: FormControl;
   inputMaxControl: FormControl;
@@ -38,57 +36,41 @@ export class NumberRangeControlComponent
   subscriptions: Subscription[] = [];
 
   constructor() {
-    this.inputMinControl = new FormControl(this.min);
-    this.sliderMinControl = new FormControl(this.min);
-    this.inputMaxControl = new FormControl(this.max);
-    this.sliderMaxControl = new FormControl(this.max);
+    this.inputMinControl = new FormControl();
+    this.sliderMinControl = new FormControl();
+    this.inputMaxControl = new FormControl();
+    this.sliderMaxControl = new FormControl();
 
     const inputMinValueChange$ = this.inputMinControl.valueChanges.pipe(
-      debounceTime(500),
-      tap(value => this.sliderMinControl.setValue(value, { emitEvent: false }))
+      debounceTime(100),
+      map((value: string) => parseInt(value)),
+      filter(value => typeof(value) === 'number'),
+      tap((value: number) => this.sliderMinControl.setValue(value, { emitEvent: false }))
     );
     const sliderMinValueChange$ = this.sliderMinControl.valueChanges.pipe(
       tap(value => this.inputMinControl.setValue(value, { emitEvent: false }))
     );
     const inputMaxValueChange$ = this.inputMaxControl.valueChanges.pipe(
-      debounceTime(500),
+      debounceTime(100),
+      map((value: string) => parseInt(value)),
+      filter(value => typeof(value) === 'number'),
       tap(value => this.sliderMaxControl.setValue(value, { emitEvent: false }))
     );
     const sliderMaxValueChange$ = this.sliderMaxControl.valueChanges.pipe(
       tap(value => this.inputMaxControl.setValue(value, { emitEvent: false }))
     );
 
-    const minChange$ = merge(inputMinValueChange$, sliderMinValueChange$).pipe(
-      tap(min => {
-        this.min = min;
-        // This functionality confuse user more than help them, so we discard it.
-        // if (this.inputMaxControl.value && this.inputMaxControl.value < min) {
-        //   this.inputMaxControl.setValue(min);
-        // }
-      })
-    )
+    const minChange$ = merge(inputMinValueChange$, sliderMinValueChange$);
 
-    const maxChange$ = merge(inputMaxValueChange$, sliderMaxValueChange$).pipe(
-      tap(max => {
-        this.max = max;
-        // This functionality confuse user more than help them, so we discard it.
-        // if (this.inputMinControl.value && this.inputMinControl.value > max) {
-        //   this.inputMinControl.setValue(max);
-        // }
-      })
-    )
+    const maxChange$ = merge(inputMaxValueChange$, sliderMaxValueChange$);
 
-    merge(
-      minChange$,
-      maxChange$
-    )
-      .pipe(debounceTime(300))
-      .subscribe(() => {
-        const numberRange = new NumberRange();
-        numberRange.min = this.min;
-        numberRange.max = this.max;
-        this.emitChange(numberRange);
-      });
+    this.subscriptions.push(combineLatest([minChange$, maxChange$])
+      .subscribe(([min, max]) => {
+        if ((min > 0 || max > 0) && min <= max) {
+          const numberRange = new NumberRange(min, max);
+          this.emitChange(numberRange);
+        }
+      }));
   }
 
   writeValue(value: NumberRange) {

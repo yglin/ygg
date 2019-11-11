@@ -16,6 +16,7 @@ import {
 import { Tags } from '@ygg/tags/core';
 import { deleteTags } from '../../page-objects/tags';
 import { MockDatabase } from '../../support/mock-database';
+import { NumberRange } from '@ygg/shared/types';
 
 describe('Scheduler - schedule-plan', () => {
   const siteNavigator = new SiteNavigator();
@@ -40,7 +41,7 @@ describe('Scheduler - schedule-plan', () => {
     mockDatabase.clear();
   });
 
-  it('should be able to find and edit, update schedule-plan', () => {
+    it('should be able to find and edit, update schedule-plan', () => {
     createSchedulePlan(SchedulePlan.forge()).then(testSchedulePlan => {
       mockDatabase.pushDocument({
         path: `schedule-plans/${testSchedulePlan.id}`,
@@ -85,5 +86,110 @@ describe('Scheduler - schedule-plan', () => {
     });
   });
 
-  // it('should auto sync total budget and single budget', () => {});
+  it('should auto sync total budget and single budget', () => {
+    let testNumParticipants;
+    let testTotalBudget: NumberRange;
+    let testSingleBudget: NumberRange;
+    siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+    // Set total-budget, should update single-budget
+    testNumParticipants = 13;
+    testTotalBudget = new NumberRange(1000, 5000);
+    testSingleBudget = new NumberRange(
+      Math.floor(1000 / testNumParticipants),
+      Math.floor(5000 / testNumParticipants)
+    );
+    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+    cy.wait(1000);
+    schedulePlanControlPageObject.setTotalBudget(testTotalBudget);
+    cy.wait(1000);
+    schedulePlanControlPageObject.expectSingleBudget(testSingleBudget);
+    testNumParticipants = 17;
+    testTotalBudget = new NumberRange(2343, 12345);
+    testSingleBudget = new NumberRange(
+      Math.floor(2343 / testNumParticipants),
+      Math.floor(12345 / testNumParticipants)
+    );
+    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+    cy.wait(1000);
+    schedulePlanControlPageObject.setTotalBudget(testTotalBudget);
+    cy.wait(1000);
+    schedulePlanControlPageObject.expectSingleBudget(testSingleBudget);
+    testNumParticipants = 29;
+    testTotalBudget = new NumberRange(17854, 30678);
+    testSingleBudget = new NumberRange(
+      Math.floor(17854 / testNumParticipants),
+      Math.floor(30678 / testNumParticipants)
+    );
+    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+    cy.wait(1000);
+    schedulePlanControlPageObject.setTotalBudget(testTotalBudget);
+    cy.wait(1000);
+    schedulePlanControlPageObject.expectSingleBudget(testSingleBudget);
+
+    // Set single-budget, should update total-budget
+    testNumParticipants = 7;
+    testSingleBudget = new NumberRange(100, 700);
+    testTotalBudget = new NumberRange(
+      100 * testNumParticipants,
+      700 * testNumParticipants
+    );
+    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+    cy.wait(1000);
+    schedulePlanControlPageObject.setSingleBudget(testSingleBudget);
+    cy.wait(1000);
+    schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
+    testNumParticipants = 17;
+    testSingleBudget = new NumberRange(333, 777);
+    testTotalBudget = new NumberRange(
+      333 * testNumParticipants,
+      777 * testNumParticipants
+    );
+    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+    cy.wait(1000);
+    schedulePlanControlPageObject.setSingleBudget(testSingleBudget);
+    cy.wait(1000);
+    schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
+    testNumParticipants = 37;
+    testSingleBudget = new NumberRange(3, 12345);
+    testTotalBudget = new NumberRange(
+      3 * testNumParticipants,
+      12345 * testNumParticipants
+    );
+    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+    cy.wait(1000);
+    schedulePlanControlPageObject.setSingleBudget(testSingleBudget);
+    cy.wait(1000);
+    schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
+
+    // change num-participants, should update total-budget from single-budget
+    testSingleBudget = new NumberRange(3, 52);
+    schedulePlanControlPageObject.setSingleBudget(testSingleBudget);
+    cy.wait(1000);
+    testNumParticipants = 13;
+    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+    cy.wait(1000);
+    testTotalBudget = new NumberRange(
+      3 * testNumParticipants,
+      52 * testNumParticipants
+    );
+    schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
+
+    testNumParticipants = 31;
+    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+    cy.wait(1000);
+    testTotalBudget = new NumberRange(
+      3 * testNumParticipants,
+      52 * testNumParticipants
+    );
+    schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
+
+    testNumParticipants = 47;
+    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+    cy.wait(1000);
+    testTotalBudget = new NumberRange(
+      3 * testNumParticipants,
+      52 * testNumParticipants
+    );
+    schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
+  });
 });

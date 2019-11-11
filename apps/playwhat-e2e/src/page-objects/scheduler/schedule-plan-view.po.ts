@@ -13,7 +13,7 @@ export class SchedulePlanViewPageObjectCypress extends SchedulePlanViewPageObjec
     this.expectNumParticipants(schedulePlan.numParticipants);
     this.expectNumElders(schedulePlan.numElders);
     this.expectNumKids(schedulePlan.numKids);
-    this.expectTotalBudget(schedulePlan.totalBudget);
+    // this.expectTotalBudget(schedulePlan.totalBudget);
     this.expectSingleBudget(schedulePlan.singleBudget);
     this.expectGroupName(schedulePlan.groupName);
     this.expectContacts(schedulePlan.contacts);

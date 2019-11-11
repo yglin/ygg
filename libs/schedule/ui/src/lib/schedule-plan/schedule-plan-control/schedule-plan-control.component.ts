@@ -16,11 +16,14 @@ import {
   Validators
 } from '@angular/forms';
 import { NumberRange, Contact, DateRange } from '@ygg/shared/types';
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { first, switchMap, map, startWith } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription, merge } from 'rxjs';
+import { first, switchMap, map, startWith, debounceTime, single } from 'rxjs/operators';
 
 import { SchedulePlan } from '@ygg/schedule/core';
-import { SchedulePlanService, ScheduleConfigService } from '@ygg/schedule/data-access';
+import {
+  SchedulePlanService,
+  ScheduleConfigService
+} from '@ygg/schedule/data-access';
 import {
   User,
   AuthenticateService,
@@ -42,7 +45,7 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
   @Output() submit: EventEmitter<SchedulePlan> = new EventEmitter();
   @Output() valueChanged: EventEmitter<SchedulePlan> = new EventEmitter();
 
-  budgetType = 'total';
+  budgetType = 'single';
   budgetHintMessage = '';
   // needTranspotationHelp = false;
   needAccommodationHelp = false;
@@ -97,6 +100,7 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
       this.formGroup = this.createFormGroup();
     }
     if (this.schedulePlan) {
+      this.schedulePlan = this.schedulePlan.clone();
       this.formGroup.patchValue(this.schedulePlan);
       this.setContacts(this.schedulePlan.contacts);
     } else {
@@ -113,33 +117,72 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
     // Show budget hint message
     const formControlNumParticipants = this.formGroup.get('numParticipants');
     const formControlTotalBudget = this.formGroup.get('totalBudget');
-    subsc = combineLatest([
-      formControlNumParticipants.valueChanges as Observable<number>,
-      formControlTotalBudget.valueChanges as Observable<NumberRange>
-    ]).subscribe(([numParticipants, totalBudget]) => {
-      // console.log(totalBudget);
-      if (numParticipants > 0 && NumberRange.isNumberRange(totalBudget)) {
-        const singleMax = Math.ceil(totalBudget.max / numParticipants);
-        this.budgetHintMessage = `您正在調總預算，單人預算上限應調整為${singleMax}`;
-      }
-    });
-    this.subscriptions.push(subsc);
     const formControlSingleBudget = this.formGroup.get('singleBudget');
-    subsc = combineLatest([
-      formControlNumParticipants.valueChanges as Observable<number>,
-      formControlSingleBudget.valueChanges as Observable<NumberRange>
-    ]).subscribe(([numParticipants, singleBudget]) => {
-      if (numParticipants > 0 && NumberRange.isNumberRange(singleBudget)) {
-        const totalMax = Math.ceil(singleBudget.max * numParticipants);
-        this.budgetHintMessage = `您正在調單人預算，總預算上限應調整為${totalMax}`;
+    subsc = formControlTotalBudget.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(() => {
+        const numParticipants = formControlNumParticipants.value;
+        const totalBudget = formControlTotalBudget.value;
+        // console.log(`totalBudget changed to ${totalBudget.toJSON()}`);
+        if (numParticipants > 0 && NumberRange.isNumberRange(totalBudget)) {
+          const singleBudget = new NumberRange(
+            Math.floor(totalBudget.min / numParticipants),
+            Math.floor(totalBudget.max / numParticipants)
+          );
+          // console.log(`Update singleBudget ${singleBudget.toJSON()}`);
+          formControlSingleBudget.setValue(singleBudget, { emitEvent: false });
+        }
+      });
+    this.subscriptions.push(subsc);
+
+    subsc = formControlSingleBudget.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(() => {
+        const numParticipants = formControlNumParticipants.value;
+        const singleBudget = formControlSingleBudget.value;
+        // console.log(`singleBudget changed to ${singleBudget.toJSON()}`);
+        if (numParticipants > 0 && NumberRange.isNumberRange(singleBudget)) {
+          const totalBudget = new NumberRange(
+            singleBudget.min * numParticipants,
+            singleBudget.max * numParticipants
+          );
+          // console.log(`Update totalBudget ${totalBudget.toJSON()}`);
+          formControlTotalBudget.setValue(totalBudget, { emitEvent: false });
+        }
+      });
+    this.subscriptions.push(subsc);
+
+    subsc = formControlNumParticipants.valueChanges.pipe(debounceTime(500)).subscribe(() => {
+      const numParticipants = formControlNumParticipants.value;
+      let singleBudget = formControlSingleBudget.value;
+      let totalBudget = formControlTotalBudget.value;
+      // console.log(`numParticipants changed to ${numParticipants}`);
+      if (numParticipants > 0 ) {
+        if (NumberRange.isNumberRange(singleBudget)) {
+          totalBudget = new NumberRange(
+            singleBudget.min * numParticipants,
+            singleBudget.max * numParticipants
+          );
+          // console.log(`Update totalBudget ${totalBudget.toJSON()}`);
+          formControlTotalBudget.setValue(totalBudget, { emitEvent: false });          
+        } else if (NumberRange.isNumberRange(totalBudget)) {
+          singleBudget = new NumberRange(
+            Math.floor(totalBudget.min / numParticipants),
+            Math.floor(totalBudget.max / numParticipants)
+          );
+          // console.log(`Update singleBudget ${singleBudget.toJSON()}`);
+          formControlSingleBudget.setValue(singleBudget, { emitEvent: false });
+        }
       }
     });
     this.subscriptions.push(subsc);
+
     subsc = this.formGroup.get('tags').valueChanges.subscribe(tags => {
       if (Tags.isTags(tags)) {
         this.schedulePlan.tags = tags;
       }
     });
+    this.subscriptions.push(subsc);
   }
 
   ngOnDestroy() {

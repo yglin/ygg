@@ -42,7 +42,7 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
     this.setNumKids(schedulePlan.numKids);
 
     this.setSingleBudget(schedulePlan.singleBudget);
-    this.setTotalBudget(schedulePlan.totalBudget);
+    // this.setTotalBudget(schedulePlan.totalBudget);
 
     this.setGroupName(schedulePlan.groupName);
     this.setContacts(schedulePlan.contacts);
@@ -98,10 +98,20 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
     this.singleBudgetPageObject.setValue(singleBudget);
   }
 
+  expectSingleBudget(singleBudget: NumberRange) {
+    cy.get(this.getSelector('singleBudgetRadioButton')).check({ force: true });
+    this.singleBudgetPageObject.expectValue(singleBudget);
+  }
+
   setTotalBudget(totalBudget: NumberRange) {
     // Switch to total budget control
     cy.get(this.getSelector('totalBudgetRadioButton')).check({ force: true });
     this.totalBudgetPageObject.setValue(totalBudget);
+  }
+
+  expectTotalBudget(totalBudget: NumberRange) {
+    cy.get(this.getSelector('totalBudgetRadioButton')).check({ force: true });
+    this.totalBudgetPageObject.expectValue(totalBudget);
   }
 
   getSelectorForLastContactControl(): string {
