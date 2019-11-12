@@ -103,6 +103,17 @@ export class DateRange implements SerializableJSON {
     return { start: moment(this.start), end: moment(this.end) };
   }
 
+  toDateArray(): Date[] {
+    const dates: Date[] = [];
+    const momentRange = this.toMoment();
+    const iterator = moment(momentRange.start);
+    while (iterator.isBefore(momentRange.end)) {
+      dates.push(iterator.startOf('day').toDate());
+      iterator.add(1, 'day');
+    }
+    return dates;
+  }
+
   format(): string {
     return `${moment(this.start).format('YYYY/MM/DD')} — ${moment(
       this.end

@@ -1,6 +1,7 @@
+import { login } from "../../page-objects/app.po";
 // ================== What data we need ? ================
 // A schedule, composite of events
-// Events, each with start time, end time, and which play consumed
+// Events, each with start time, end time, and what resources consumed
 //
 // ============================================================
 
@@ -34,21 +35,23 @@
 // Play list multi-selector
 // ============================================================
 
-// describe('Edit schedule', () => {
-//   before(function() {
-//     cy.visit('/');
-//     login();
-//     cy.log('======= Create a test schedule');
-//   });
+describe('Edit schedule', () => {
+  before(function() {
+    cy.visit('/');
+    login();
+    cy.log('======= Create a test schedule');
+  });
 
-//   beforeEach(function() {
-//     cy.log("======= Go to the test schedule's edit page");
-//   });
+  beforeEach(function() {
+    cy.log("======= Go to the test schedule's edit page");
+  });
 
-//   it('should show day 1 of schedule at the beginning', () => {
-//     cy.log('======= Get events in day 1');
-//     cy.log('======= Expect events in day 1 are all shown');
-//   });
+
+
+// it('should show day 1 of schedule at the beginning', () => {
+//   cy.log('======= Get events in day 1');
+//   cy.log('======= Expect events in day 1 are all shown');
+// });
 
 //   it('should show next day when swipe right on page', () => {
 //     cy.log('======= Swipe on page to right');
@@ -153,4 +156,4 @@
 //       '======= Expect availability warning dialog and message of none available'
 //     );
 //   });
-// });
+});
