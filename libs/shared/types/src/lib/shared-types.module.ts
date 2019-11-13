@@ -7,12 +7,11 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 // import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 import { ImageUploadModule } from 'angular2-image-upload';
-import { DateRangeComponent, DateRangePickerComponent } from './date-range';
 import {
   NumberRangeComponent,
   NumberRangeControlComponent
 } from './number-range';
-// import { DateRangePickerDialogComponent } from './date-range/date-range-picker/date-range-picker-dialog/date-range-picker-dialog.component';
+// import { DateRangeControlDialogComponent } from './date-range/date-range-control/date-range-control-dialog/date-range-control-dialog.component';
 import { AlbumViewComponent } from './album/album-view/album-view.component';
 import { ImageComponent } from './image/image.component';
 import { FormControlComponent } from './form';
@@ -22,12 +21,14 @@ import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
 import { BusinessHoursControlComponent } from './business-hours/business-hours-control/business-hours-control.component';
 import { BusinessHoursViewComponent } from './business-hours/business-hours-view/business-hours-view.component';
 import {
+  DateRangeControlComponent,
+  DateRangeViewComponent,
+  DayTimeControlComponent,
   DayTimeRangeControlComponent,
-  DayTimeRangeComponent
-} from './day-time-range';
+  DayTimeRangeComponent,
+  WeekDayPipePipe
+} from './datetime';
 import { OpenHourComponent } from './business-hours/open-hour/open-hour.component';
-import { WeekDayPipePipe } from './week-day/week-day-pipe.pipe';
-import { DayTimeControlComponent } from './day-time/day-time-control/day-time-control.component';
 // import { LocationControlComponent } from './location/location-control/location-control.component';
 // import { LocationViewComponent } from './location/location-view/location-view.component';
 // import { AddressControlComponent } from './location/address/address-control/address-control.component';
@@ -71,9 +72,9 @@ import { ContactControlComponent, ContactViewComponent } from './contact';
   declarations: [
     NumberRangeComponent,
     NumberRangeControlComponent,
-    DateRangeComponent,
-    DateRangePickerComponent,
-    // DateRangePickerDialogComponent,
+    DateRangeViewComponent,
+    DateRangeControlComponent,
+    // DateRangeControlDialogComponent,
     AlbumViewComponent,
     ImageComponent,
     FormControlComponent,
@@ -101,12 +102,12 @@ import { ContactControlComponent, ContactViewComponent } from './contact';
     ContactControlComponent,
     ContactViewComponent
   ],
-  entryComponents: [/* DateRangePickerDialogComponent, */ImageUploaderComponent],
+  entryComponents: [/* DateRangeControlDialogComponent, */ImageUploaderComponent],
   exports: [
     NumberRangeComponent,
     NumberRangeControlComponent,
-    DateRangeComponent,
-    DateRangePickerComponent,
+    DateRangeViewComponent,
+    DateRangeControlComponent,
     AlbumViewComponent,
     ImageComponent,
     FormControlComponent,

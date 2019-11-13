@@ -3,21 +3,21 @@ import { PageObject } from '@ygg/shared/test/page-object';
 import { DateRange, NumberRange, Contact } from '@ygg/shared/types';
 import { Tags } from '@ygg/tags/core';
 import { SchedulePlan } from '@ygg/schedule/core';
-import { DateRangePickerPageObjectCypress } from '../shared-types/date-range';
+import { DateRangeControlPageObjectCypress } from '../shared-types/date-range';
 import { NumberRangeControlPageObjectCypress } from '../shared-types/number-range';
 import { ContactControlPageObjectCypress } from '../shared-types/contact';
 import { TagsControlPageObjectCypress } from '../tags';
 import { SchedulePlanControlPageObject } from "@ygg/schedule/ui";
 
 export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPageObject {
-  dateRangePageObject: DateRangePickerPageObjectCypress;
+  dateRangePageObject: DateRangeControlPageObjectCypress;
   totalBudgetPageObject: NumberRangeControlPageObjectCypress;
   singleBudgetPageObject: NumberRangeControlPageObjectCypress;
   tagsControlPageObject: TagsControlPageObjectCypress;
 
   constructor(parentSelector: string) {
     super(parentSelector);
-    this.dateRangePageObject = new DateRangePickerPageObjectCypress(
+    this.dateRangePageObject = new DateRangeControlPageObjectCypress(
       this.getSelector('dateRange')
     );
     this.totalBudgetPageObject = new NumberRangeControlPageObjectCypress(

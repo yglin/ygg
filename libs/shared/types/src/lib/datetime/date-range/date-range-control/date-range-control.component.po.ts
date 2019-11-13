@@ -1,9 +1,9 @@
 import { PageObject } from "@ygg/shared/test/page-object";
 import { DateRange } from '../date-range';
 
-export abstract class DateRangePickerPageObject extends PageObject {
+export abstract class DateRangeControlPageObject extends PageObject {
   selectors = {
-    main: '.ygg-date-range-picker',
+    main: '.ygg-date-range-control',
     inputStart: 'input.start',
     inputEnd: 'input.end'
   }

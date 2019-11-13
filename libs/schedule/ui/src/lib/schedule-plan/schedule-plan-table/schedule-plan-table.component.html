@@ -19,10 +19,10 @@
       <ng-container matColumnDef="dateRange">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>預定日期範圍</th>
         <td mat-cell *matCellDef="let schedulePlan" class="dateRange">
-          <ygg-date-range
+          <ygg-date-range-view 
             class="value"
             [dateRange]="schedulePlan.dateRange"
-          ></ygg-date-range>
+          ></ygg-date-range-view>
         </td>
       </ng-container>
 

@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { DateRangePickerComponent } from './date-range-picker.component';
-import { DateRangePickerPageObject } from './date-range-picker.component.po';
+import { DateRangeControlComponent } from './date-range-control.component';
+import { DateRangeControlPageObject } from './date-range-control.component.po';
 import { DateRange } from '../date-range';
 import { AngularJestTester } from '@ygg/shared/test/angular-jest';
 import { Component, DebugElement, Injectable } from '@angular/core';
@@ -12,12 +12,10 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-// import { DateRangePickerDialogComponent } from './date-range-picker-dialog/date-range-picker-dialog.component';
-// import { of } from 'rxjs';
-// import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
+import { DATE_FORMATS } from '../../time-range';
 
-class DateRangePickerPageObjectAngularJest extends DateRangePickerPageObject {
+class DateRangeControlPageObjectAngularJest extends DateRangeControlPageObject {
   tester: AngularJestTester;
 
   constructor(parentSelector: string, tester: AngularJestTester) {
@@ -35,7 +33,7 @@ class DateRangePickerPageObjectAngularJest extends DateRangePickerPageObject {
   }
 
   async setStart(startDate: Date) {
-    const startDateString = moment(startDate).format(DateRange.format);
+    const startDateString = moment(startDate).format(DATE_FORMATS.parse.dateInput[0]);
     return this.tester.inputText(
       this.getSelector('inputStart'),
       startDateString
@@ -43,7 +41,7 @@ class DateRangePickerPageObjectAngularJest extends DateRangePickerPageObject {
   }
 
   async setEnd(endDate: Date) {
-    const endDateString = moment(endDate).format(DateRange.format);
+    const endDateString = moment(endDate).format(DATE_FORMATS.parse.dateInput[0]);
     return this.tester.inputText(
       this.getSelector('inputEnd'),
       endDateString
@@ -51,30 +49,15 @@ class DateRangePickerPageObjectAngularJest extends DateRangePickerPageObject {
   }
 
   expectValue(dateRange: DateRange) {
-    this.tester.expectInputValue(this.getSelector('inputStart'), moment(dateRange.start).format('L'));
-    this.tester.expectInputValue(this.getSelector('inputEnd'), moment(dateRange.end).format('L'));
+    this.tester.expectInputValue(this.getSelector('inputStart'), moment(dateRange.start).format(DATE_FORMATS.display.dateInput));
+    this.tester.expectInputValue(this.getSelector('inputEnd'), moment(dateRange.end).format(DATE_FORMATS.display.dateInput));
   }
 }
-
-// class MockDateRangePickerDialogComponent {
-//   dateRange: DateRange;
-//   afterClosed() {
-//     return of(this.dateRange);
-//   }
-// }
-
-// @Injectable()
-// class MockYggDialogService {
-//   mockDateRangePickerDialogComponent = new MockDateRangePickerDialogComponent();
-//   open() {
-//     return this.mockDateRangePickerDialogComponent;
-//   }
-// }
 
 @Component({
   selector: 'ygg-welcome-to-my-form',
   template:
-    '<form [formGroup]="formGroup"><ygg-date-range-picker formControlName="dateRange"></ygg-date-range-picker></form>',
+    '<form [formGroup]="formGroup"><ygg-date-range-control formControlName="dateRange"></ygg-date-range-control></form>',
   styles: ['']
 })
 class MockFormComponent {
@@ -87,23 +70,17 @@ class MockFormComponent {
   }
 }
 
-describe('DateRangePickerComponent', () => {
-  let component: DateRangePickerComponent;
+describe('DateRangeControlComponent', () => {
+  let component: DateRangeControlComponent;
   let formComponent: MockFormComponent;
   let fixture: ComponentFixture<MockFormComponent>;
   let debugElement: DebugElement;
-  let pageObject: DateRangePickerPageObjectAngularJest;
+  let pageObject: DateRangeControlPageObjectAngularJest;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, SharedUiNgMaterialModule],
-      declarations: [DateRangePickerComponent, MockFormComponent]
-      // providers: [
-      //   {
-      //     provide: YggDialogService,
-      //     useClass: MockYggDialogService
-      //   }
-      // ]
+      declarations: [DateRangeControlComponent, MockFormComponent]
     }).compileComponents();
   }));
 
@@ -111,9 +88,9 @@ describe('DateRangePickerComponent', () => {
     fixture = TestBed.createComponent(MockFormComponent);
     formComponent = fixture.componentInstance;
     debugElement = fixture.debugElement;
-    component = debugElement.query(By.css('ygg-date-range-picker'))
+    component = debugElement.query(By.css('ygg-date-range-control'))
       .componentInstance;
-    pageObject = new DateRangePickerPageObjectAngularJest(
+    pageObject = new DateRangeControlPageObjectAngularJest(
       '',
       new AngularJestTester({
         fixture,
@@ -165,15 +142,15 @@ describe('DateRangePickerComponent', () => {
   //   const testDateRange = DateRange.forge();
   //   await pageObject.setValue(testDateRange);
   //   await pageObject.openPickerDialog();
-  //   expect(mockDateRangePickerDialogComponent.dateRange.toJSON()).toEqual(testDateRange.toJSON());
+  //   expect(mockDateRangeControlDialogComponent.dateRange.toJSON()).toEqual(testDateRange.toJSON());
   //   done();
   // });
 
   // it('should update value received from dialog close', async done => {
   //   const testDateRange = DateRange.forge();
   //   await pageObject.openPickerDialog();
-  //   mockDateRangePickerDialogComponent.dateRange = testDateRange;
-  //   await mockDateRangePickerDialogComponent.close();
+  //   mockDateRangeControlDialogComponent.dateRange = testDateRange;
+  //   await mockDateRangeControlDialogComponent.close();
   //   expect(component.dateRange.toJSON()).toEqual(testDateRange);
   //   done();
   // });

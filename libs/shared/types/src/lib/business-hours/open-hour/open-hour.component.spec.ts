@@ -4,8 +4,8 @@ import { OpenHourComponent } from './open-hour.component';
 import { OpenHour } from './open-hour';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { WeekDayNames, WeekDayPipePipe } from '../../week-day';
-import { DayTimeRangeComponent } from '../../day-time-range';
+import { WeekDayNames, WeekDayPipePipe } from '../../datetime';
+import { DayTimeRangeComponent } from '../../datetime/day-time-range';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 
 describe('OpenHourComponent', () => {

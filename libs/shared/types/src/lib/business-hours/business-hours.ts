@@ -1,7 +1,7 @@
 import { isArray, isEmpty, random } from 'lodash';
 import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { OpenHour } from './open-hour/open-hour';
-import { WeekDay } from '../week-day';
+import { WeekDay } from '../datetime';
 
 export class BusinessHours implements SerializableJSON {
   private openHours: OpenHour[] = [];

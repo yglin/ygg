@@ -1,7 +1,7 @@
 import { random } from 'lodash';
 import { SerializableJSON } from '@ygg/shared/infra/data-access';
-import { WeekDay, WeekDayNames } from '../../week-day';
-import { DayTimeRange } from '../../day-time-range';
+import { WeekDay, WeekDayNames } from '../../datetime';
+import { DayTimeRange } from '../../datetime/day-time-range';
 
 export class OpenHour implements SerializableJSON {
   weekDay: WeekDay;

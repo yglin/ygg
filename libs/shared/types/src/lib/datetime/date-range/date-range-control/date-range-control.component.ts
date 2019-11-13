@@ -6,30 +6,24 @@ import {
   FormControl
 } from '@angular/forms';
 import * as moment from 'moment';
-import { DateRange, DATE_FORMATS } from '../date-range';
-// import { YggDialogService } from '@ygg/shared/ui/widgets';
-// import {
-//   DateRangePickerDialogComponent,
-//   DateRangePickerDialogData
-// } from './date-range-picker-dialog/date-range-picker-dialog.component';
-import { Subscription, merge, combineLatest } from 'rxjs';
-import { auditTime, filter, distinctUntilChanged } from 'rxjs/operators';
+import { DateRange } from '../date-range';
+import { DATE_FORMATS } from "../../time-range";
+import { Subscription, merge } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import {
-  MAT_DATE_LOCALE,
   DateAdapter,
   MAT_DATE_FORMATS
 } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-// import { LOCALE_ID } from '@angular/core';
 
 @Component({
-  selector: 'ygg-date-range-picker',
-  templateUrl: './date-range-picker.component.html',
-  styleUrls: ['./date-range-picker.component.css'],
+  selector: 'ygg-date-range-control',
+  templateUrl: './date-range-control.component.html',
+  styleUrls: ['./date-range-control.component.css'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DateRangePickerComponent),
+      useExisting: forwardRef(() => DateRangeControlComponent),
       multi: true
     },
     { provide: DateAdapter, useClass: MomentDateAdapter },
@@ -39,7 +33,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
     }
   ]
 })
-export class DateRangePickerComponent
+export class DateRangeControlComponent
   implements ControlValueAccessor, OnDestroy {
   emitChange: (value: DateRange) => any = noop;
   emitTouched: () => any = noop;
@@ -84,10 +78,7 @@ export class DateRangePickerComponent
         .subscribe(() => {
           const startValue: moment.Moment = this.startFormControl.value;
           const endValue: moment.Moment = this.endFormControl.value;
-          const dateRange = new DateRange().fromMoment({
-            start: startValue,
-            end: endValue
-          });
+          const dateRange = new DateRange(startValue.toDate(), endValue.toDate());
           this.emitChange(dateRange);
           // console.log(`Emit Change: ${dateRange.format()}`);
         })
@@ -101,6 +92,8 @@ export class DateRangePickerComponent
   }
 
   writeValue(value: DateRange) {
+    console.log(value);
+    console.log(DateRange.isDateRange(value));
     if (DateRange.isDateRange(value)) {
       this.startFormControl.setValue(moment(value.start), {
         emitEvent: false
@@ -120,10 +113,10 @@ export class DateRangePickerComponent
   }
 
   // openPicker() {
-  //   const dialogData: DateRangePickerDialogData = {
+  //   const dialogData: DateRangeControlDialogData = {
   //     dateRange: this.dateRange
   //   };
-  //   const dialogRef = this.yggDialog.open(DateRangePickerDialogComponent, {
+  //   const dialogRef = this.yggDialog.open(DateRangeControlDialogComponent, {
   //     title: '請選擇日期',
   //     data: dialogData
   //   });

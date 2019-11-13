@@ -1,13 +1,14 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { DateRange, DATE_FORMATS } from './date-range';
+import { DateRange } from '../date-range';
+import { DATE_FORMATS } from "../../time-range";
 import * as moment from 'moment';
 
 @Component({
-  selector: 'ygg-date-range',
-  templateUrl: './date-range.component.html',
-  styleUrls: ['./date-range.component.css']
+  selector: 'ygg-date-range-view',
+  templateUrl: './date-range-view.component.html',
+  styleUrls: ['./date-range-view.component.css']
 })
-export class DateRangeComponent implements OnChanges {
+export class DateRangeViewComponent implements OnChanges {
   @Input() dateRange: DateRange;
   startText = '';
   endText = '';
@@ -16,9 +17,9 @@ export class DateRangeComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     const newDateRange = changes.dateRange.currentValue;
+    // console.log(newDateRange);
+    // console.log(DateRange.isDateRange(newDateRange));
     if (DateRange.isDateRange(newDateRange)) {
-      // console.log(newDateRange.start);
-      // console.log(newDateRange.end);
       this.startText = moment(newDateRange.start).format(DATE_FORMATS.display.date);
       this.endText = moment(newDateRange.end).format(DATE_FORMATS.display.date);
     } else {

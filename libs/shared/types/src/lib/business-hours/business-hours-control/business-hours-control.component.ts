@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, forwardRef } from '@angular/core';
 import { BusinessHours } from '../business-hours';
 import { OpenHour } from '../open-hour/open-hour';
-import { WeekDayNames } from '../../week-day';
+import { WeekDayNames } from '../../datetime';
 import {
   // FormControl,
   ControlValueAccessor,
@@ -10,7 +10,7 @@ import {
   FormBuilder
 } from '@angular/forms';
 import { noop, range } from 'lodash';
-import { DayTimeRange } from '../../day-time-range';
+import { DayTimeRange } from '../../datetime/day-time-range';
 
 @Component({
   selector: 'ygg-business-hours-control',

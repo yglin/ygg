@@ -1,8 +1,8 @@
 import * as moment from 'moment';
 import { DateRange, DATE_FORMATS } from '@ygg/shared/types';
-import { DateRangePickerPageObject } from '@ygg/shared/types';
+import { DateRangeControlPageObject } from '@ygg/shared/types';
 
-export class DateRangePickerPageObjectCypress extends DateRangePickerPageObject {
+export class DateRangeControlPageObjectCypress extends DateRangeControlPageObject {
   setValue(dateRange: DateRange) {
     cy.get(this.getSelector('inputStart')).clear();
     cy.get(this.getSelector('inputEnd')).clear();
