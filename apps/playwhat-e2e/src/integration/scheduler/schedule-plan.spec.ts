@@ -14,13 +14,13 @@ import {
   createSchedulePlan
 } from '../../page-objects/scheduler';
 import { Tags } from '@ygg/tags/core';
-import { Purchase } from "@ygg/shopping/core";
+import { Purchase } from '@ygg/shopping/core';
 import { deleteTags } from '../../page-objects/tags';
 import { MockDatabase } from '../../support/mock-database';
 import { NumberRange } from '@ygg/shared/types';
 import { Play } from '@ygg/playwhat/play';
 import { PlaySelectorPageObjectCypress } from '../../page-objects/play';
-import { PurchaseListPageObjectCypress } from "../../page-objects/shopping/purchase";
+import { PurchaseListPageObjectCypress } from '../../page-objects/shopping/purchase';
 
 describe('Scheduler - schedule-plan', () => {
   const testPlays: Play[] = range(random(3, 7)).map(() => Play.forge());
@@ -202,7 +202,7 @@ describe('Scheduler - schedule-plan', () => {
     );
     schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
   });
- */
+
 
   it('should list all plays', () => {
     siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
@@ -219,6 +219,31 @@ describe('Scheduler - schedule-plan', () => {
     const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
     playSelectorPageObject.clickPlays(selectedPlays);
     const purchaseListPageObject = new PurchaseListPageObjectCypress('');
+    purchaseListPageObject.expectProducts(selectedPlays);
+    purchaseListPageObject.expectTotalPrice(expectedTotalPrice);
+  });
+  */
+
+  it('Change numParticipants should refresh purchases and total price', () => {
+    let numParticipants = 13;
+    const selectedPlays = sampleSize(testPlays, 3);
+    let expectedTotalPrice = sumBy(selectedPlays, play =>
+      new Purchase(play, numParticipants).getPrice()
+    );
+    siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+    schedulePlanControlPageObject.setNumParticipants(numParticipants);
+    const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
+    playSelectorPageObject.clickPlays(selectedPlays);
+    const purchaseListPageObject = new PurchaseListPageObjectCypress('');
+    purchaseListPageObject.expectProducts(selectedPlays);
+    purchaseListPageObject.expectTotalPrice(expectedTotalPrice);
+
+    // Change numParticipants
+    numParticipants = 29;
+    expectedTotalPrice = sumBy(selectedPlays, play =>
+      new Purchase(play, numParticipants).getPrice()
+    );
+    schedulePlanControlPageObject.setNumParticipants(numParticipants);
     purchaseListPageObject.expectProducts(selectedPlays);
     purchaseListPageObject.expectTotalPrice(expectedTotalPrice);
   });

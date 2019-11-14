@@ -181,6 +181,7 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
           formControlSingleBudget.setValue(singleBudget, { emitEvent: false });
         }
       }
+      this.shoppingCart.resetQuantityAll(numParticipants);
     });
     this.subscriptions.push(subsc);
 

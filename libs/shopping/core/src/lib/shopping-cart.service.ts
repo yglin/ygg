@@ -1,4 +1,4 @@
-import { remove, sumBy } from 'lodash';
+import { remove, sumBy, isEmpty } from 'lodash';
 import { Injectable } from '@angular/core';
 import { Purchase } from './purchase';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -14,6 +14,15 @@ export class ShoppingCartService {
   constructor() {
     this.purchases = [];
     this.purchases$ = new BehaviorSubject(this.purchases);
+  }
+
+  resetQuantityAll(quantity: number) {
+    if (!isEmpty(this.purchases)) {
+      for (const purchase of this.purchases) {
+        purchase.quantity = quantity;
+      }
+      this.purchases$.next(this.purchases);
+    }
   }
 
   addPurchase(purchase: Purchase) {

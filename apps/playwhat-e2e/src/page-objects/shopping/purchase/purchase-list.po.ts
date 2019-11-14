@@ -9,6 +9,6 @@ export class PurchaseListPageObjectCypress extends PurchaseListPageObject {
   }
 
   expectTotalPrice(totalPrice: number) {
-    cy.get(this.getSelector('totalPrice')).contains(totalPrice.toString());
+    cy.get(this.getSelector('totalPrice')).should('include.text', totalPrice.toString());
   }
 }
