@@ -20,7 +20,7 @@ export class SchedulePlanViewPageObjectCypress extends SchedulePlanViewPageObjec
     this.expectTranspotation(schedulePlan.transpotation);
     this.expectTranspotationHelp(schedulePlan.transpotationHelp);
     this.expectAccommodationHelp(schedulePlan.accommodationHelp);
-    this.expectLikesTags(schedulePlan.tags);
+    // this.expectLikesTags(schedulePlan.tags);
     this.expectLikesDescription(schedulePlan.likesDescription);
   }
 

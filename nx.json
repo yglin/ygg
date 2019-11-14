@@ -118,6 +118,12 @@
     },
     "schedule-factory": {
       "tags": ["scope:schedule", "type:factory"]
+    },
+    "shopping-core": {
+      "tags": ["scope:shopping", "type:feature"]
+    },
+    "shopping-ui": {
+      "tags": ["scope:shopping", "type:ui"]
     }
   }
 }

@@ -18,7 +18,7 @@ import {
 import { NumberRange, Contact, DateRange } from '@ygg/shared/types';
 import { combineLatest, Observable, Subscription, merge } from 'rxjs';
 import { first, switchMap, map, startWith, debounceTime, single } from 'rxjs/operators';
-
+import { Play, PlayService } from "@ygg/playwhat/play";
 import { SchedulePlan } from '@ygg/schedule/core';
 import {
   SchedulePlanService,
@@ -33,6 +33,7 @@ import {
 import { Tags } from '@ygg/tags/core';
 import { TranspotationTypes } from '@ygg/schedule/core';
 import { ActivatedRoute } from '@angular/router';
+import { Purchase, ShoppingCartService } from '@ygg/shopping/core';
 
 @Component({
   selector: 'ygg-schedule-plan-control',
@@ -54,6 +55,8 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
   agentUsers: User[];
   playTags$: Observable<Tags>;
   transpotationTypes = TranspotationTypes;
+  playsAll: Play[];
+  // purchases: Purchase[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -62,7 +65,8 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
     private authService: AuthenticateService,
     private authUiService: AuthenticateUiService,
     private userService: UserService,
-    private route: ActivatedRoute
+    private playService: PlayService,
+    private shoppingCart: ShoppingCartService
   ) {
     this.subscriptions = [];
     this.subscriptions.push(
@@ -74,6 +78,9 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
         }
       })
     );
+    this.subscriptions.push(this.playService.list$().subscribe(plays => {
+      this.playsAll = plays;
+    }));
     this.agentUsers = [];
     this.scheduleConfigService
       .get$('agents')
@@ -191,15 +198,6 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
     }
   }
 
-  // onChangeNeedAccommodationHelp(event: MatCheckboxChange) {
-  //   const controlAccommodationHelp = this.formGroup.get('accommodationHelp');
-  //   if (event.checked) {
-  //     controlAccommodationHelp.enable();
-  //   } else {
-  //     controlAccommodationHelp.disable();
-  //   }
-  // }
-
   setContacts(contacts: Contact[] = []) {
     while (this.contactsFormArray.length > 0) {
       this.contactsFormArray.removeAt(this.contactsFormArray.length - 1);
@@ -217,12 +215,6 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
       contactControl.setValue(new Contact().fromUser(this.currentUser));
     }
   }
-
-  // addContactFromCurrentUser() {
-  //   if (this.currentUser) {
-  //     this.addContactControl(new Contact().fromUser(this.currentUser));
-  //   }
-  // }
 
   get contactsFormArray() {
     return this.formGroup.get('contacts') as FormArray;
@@ -242,6 +234,11 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
 
   deleteContact(index: number) {
     this.contactsFormArray.removeAt(index);
+  }
+
+  addPlayPurchase(play: Play) {
+    const newPurchase = new Purchase(play, this.formGroup.get('numParticipants').value);
+    this.shoppingCart.addPurchase(newPurchase);
   }
 
   createFormGroup(): FormGroup {

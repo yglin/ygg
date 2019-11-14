@@ -18,6 +18,10 @@ export class PlayService {
     return this.dataAccessService.get$(this.collection, id, Play);
   }
 
+  list$():Observable<Play[]> {
+    return this.dataAccessService.list$(this.collection, Play);
+  }
+
   listByCreator$(user: User): Observable<Play[]> {
     const queries = [new Query('creatorId', '==', user.id)];
     return this.dataAccessService.find$(this.collection, queries, Play);

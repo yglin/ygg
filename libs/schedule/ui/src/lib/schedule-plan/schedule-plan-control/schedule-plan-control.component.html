@@ -242,16 +242,13 @@
       </div>
       <ygg-title-divider> 體驗需求 </ygg-title-divider>
       <div class="form-control likes">
-        <ygg-tags-control
+        <ygg-play-selector [plays]='playsAll' (clickPlay)='addPlayPurchase($event)'></ygg-play-selector>
+        <ygg-purchase-list></ygg-purchase-list>
+        <!-- <ygg-tags-control
           formControlName="tags"
           taggableType="schedule-plan"
           label="請輸入喜歡的體驗類型"
-        ></ygg-tags-control>
-        <!-- <ygg-tags-input
-        formControlName="likes"
-        label="喜歡的體驗類型"
-        [tagsSource$]="likesSource$"
-        ></ygg-tags-input> -->
+        ></ygg-tags-control> -->
         <br />
         <div class="likesDescription">
           <mat-form-field>

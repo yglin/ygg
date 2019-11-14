@@ -25,7 +25,8 @@ export abstract class SchedulePlanControlPageObject extends PageObject {
     likesTags: '.form-control.likes',
     textareaLikesDescription: '.form-control.likes textarea.likes-description',
     textareaAccommodationHelp:
-      '.form-control.miscellaneous textarea.accommodation-help'
+      '.form-control.miscellaneous textarea.accommodation-help',
+    totalPrice: '.price'
   };
 
   getSelectorForPanelHeader(panelSelector: string): string {
@@ -53,4 +54,3 @@ export abstract class SchedulePlanControlPageObject extends PageObject {
   abstract setLikesDescription(likesDescription: string): any;
   abstract setAccommodationHelp(accommodationHelp: string): any;
 }
-

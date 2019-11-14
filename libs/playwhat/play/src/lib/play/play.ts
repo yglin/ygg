@@ -10,8 +10,9 @@ import {
   FormControlType,
 } from '@ygg/shared/types';
 import { Tags, Taggable } from '@ygg/tags/core';
+import { Product } from "@ygg/shopping/core";
 
-export class Play implements DataItem, Taggable {
+export class Play implements DataItem, Taggable, Product {
   id: string;
   name: string;
   introduction: string;
@@ -20,6 +21,7 @@ export class Play implements DataItem, Taggable {
   location: Location;
   tags: Tags;
   creatorId: string;
+  price: number;
 
   static forge(): Play {
     const newOne = new Play();
@@ -44,6 +46,7 @@ export class Play implements DataItem, Taggable {
     newOne.businessHours = BusinessHours.forge();
     newOne.location = Location.forge();
     newOne.tags = Tags.forge();
+    newOne.price = random(0, 1000);
     return newOne;
   }
 
@@ -97,6 +100,7 @@ export class Play implements DataItem, Taggable {
 
   constructor() {
     this.id = uuid();
+    this.price = 0;
   }
 
   fromJSON(data: any): this {

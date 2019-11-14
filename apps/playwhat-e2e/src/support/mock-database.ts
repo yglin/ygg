@@ -22,13 +22,20 @@ export class MockDatabase {
     }
   }
 
+  insertDocuments(documents: Document[]): Cypress.Chainable<any> {
+    return cy.wrap(documents).each((doc: Document) => {
+      this.insert(doc.path, doc.data);
+    }).then(() => {
+      cy.log('Wait for database to persist test data');
+      cy.wait(10000);
+    });
+  }
+
   insert(path: string, data: any): Cypress.Chainable<any> {
     // @ts-ignore
     cy.callFirestore('set', path, data).then(() => {
       cy.log(`Insert test data at ${path}`);
       this.pushDocument({ path, data });
-      // Wait for the database to persist data
-      cy.wait(10000);
       cy.wrap(data).as(data.id);
     });
     return cy.get(`@${data.id}`);

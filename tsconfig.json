@@ -57,7 +57,9 @@
       "@ygg/schedule/admin": ["libs/schedule/admin/src/index.ts"],
       "@ygg/playwhat/scheduler": ["libs/playwhat/scheduler/src/index.ts"],
       "@ygg/schedule/frontend": ["libs/schedule/frontend/src/index.ts"],
-      "@ygg/schedule/factory": ["libs/schedule/factory/src/index.ts"]
+      "@ygg/schedule/factory": ["libs/schedule/factory/src/index.ts"],
+      "@ygg/shopping/core": ["libs/shopping/core/src/index.ts"],
+      "@ygg/shopping/ui": ["libs/shopping/ui/src/index.ts"]
     },
     "rootDir": "."
   },

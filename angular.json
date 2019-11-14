@@ -1251,6 +1251,60 @@
         }
       },
       "schematics": {}
+    },
+    "shopping-core": {
+      "projectType": "library",
+      "root": "libs/shopping/core",
+      "sourceRoot": "libs/shopping/core/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shopping/core/tsconfig.lib.json",
+              "libs/shopping/core/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shopping/core/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shopping/core/jest.config.js",
+            "tsConfig": "libs/shopping/core/tsconfig.spec.json",
+            "setupFile": "libs/shopping/core/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shopping-ui": {
+      "projectType": "library",
+      "root": "libs/shopping/ui",
+      "sourceRoot": "libs/shopping/ui/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shopping/ui/tsconfig.lib.json",
+              "libs/shopping/ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shopping/ui/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shopping/ui/jest.config.js",
+            "tsConfig": "libs/shopping/ui/tsconfig.spec.json",
+            "setupFile": "libs/shopping/ui/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

@@ -1,4 +1,4 @@
-import { last } from 'lodash';
+import { random, range, sample, sampleSize, sumBy } from 'lodash';
 import { login } from '../../page-objects/app.po';
 import { SiteNavigator } from '../../page-objects/site-navigator';
 import {
@@ -14,11 +14,16 @@ import {
   createSchedulePlan
 } from '../../page-objects/scheduler';
 import { Tags } from '@ygg/tags/core';
+import { Purchase } from "@ygg/shopping/core";
 import { deleteTags } from '../../page-objects/tags';
 import { MockDatabase } from '../../support/mock-database';
 import { NumberRange } from '@ygg/shared/types';
+import { Play } from '@ygg/playwhat/play';
+import { PlaySelectorPageObjectCypress } from '../../page-objects/play';
+import { PurchaseListPageObjectCypress } from "../../page-objects/shopping/purchase";
 
 describe('Scheduler - schedule-plan', () => {
+  const testPlays: Play[] = range(random(3, 7)).map(() => Play.forge());
   const siteNavigator = new SiteNavigator();
   const schedulePlanControlPageObject = new SchedulePlanControlPageObjectCypress(
     ''
@@ -34,14 +39,19 @@ describe('Scheduler - schedule-plan', () => {
   before(function() {
     cy.visit('/');
     login();
+    mockDatabase.insertDocuments(
+      testPlays.map(play => {
+        return { path: `plays/${play.id}`, data: play.toJSON() };
+      })
+    );
   });
 
   after(() => {
     cy.log(`##### All done, clean temporary test data #####`);
     mockDatabase.clear();
   });
-
-    it('should be able to find and edit, update schedule-plan', () => {
+  /* 
+  it('should be able to find and edit, update schedule-plan', () => {
     createSchedulePlan(SchedulePlan.forge()).then(testSchedulePlan => {
       mockDatabase.pushDocument({
         path: `schedule-plans/${testSchedulePlan.id}`,
@@ -191,5 +201,25 @@ describe('Scheduler - schedule-plan', () => {
       52 * testNumParticipants
     );
     schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
+  });
+ */
+
+  it('should list all plays', () => {
+    siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+    const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
+    playSelectorPageObject.expectPlays(testPlays);
+  });
+
+  it('Click on plays should add purchases of them ,and sum up total price', () => {
+    const numParticipants = 13;
+    const selectedPlays = sampleSize(testPlays, 3);
+    const expectedTotalPrice = sumBy(selectedPlays, play => new Purchase(play, numParticipants).getPrice());
+    siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+    schedulePlanControlPageObject.setNumParticipants(numParticipants);
+    const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
+    playSelectorPageObject.clickPlays(selectedPlays);
+    const purchaseListPageObject = new PurchaseListPageObjectCypress('');
+    purchaseListPageObject.expectProducts(selectedPlays);
+    purchaseListPageObject.expectTotalPrice(expectedTotalPrice);
   });
 });

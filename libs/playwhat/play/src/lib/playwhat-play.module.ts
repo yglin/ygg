@@ -16,6 +16,7 @@ import { PlayDashboardComponent } from './play/play-dashboard/play-dashboard.com
 import { RouterModule } from '@angular/router';
 import { SharedUserModule } from '@ygg/shared/user';
 import { PlayViewPageComponent } from './play/pages/play-view-page/play-view-page.component';
+import { PlaySelectorComponent } from './play/play-selector/play-selector.component';
 
 @NgModule({
   imports: [
@@ -36,8 +37,9 @@ import { PlayViewPageComponent } from './play/pages/play-view-page/play-view-pag
     PlayListComponent,
     PlayThumbnailComponent,
     PlayDashboardComponent,
-    PlayViewPageComponent
+    PlayViewPageComponent,
+    PlaySelectorComponent,
   ],
-  exports: [PlayFormComponent, PlayViewComponent]
+  exports: [PlayFormComponent, PlayViewComponent, PlaySelectorComponent]
 })
 export class PlaywhatPlayModule {}

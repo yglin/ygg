@@ -50,7 +50,7 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
     this.setTranspotation(schedulePlan.transpotation);
     this.setTranspotationHelp(schedulePlan.transpotationHelp);
 
-    this.setLikeTags(schedulePlan.tags);
+    // this.setLikeTags(schedulePlan.tags);
     this.setLikesDescription(schedulePlan.likesDescription);
 
     this.setAccommodationHelp(schedulePlan.accommodationHelp);
@@ -174,6 +174,10 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
     cy.get(this.getSelector('textareaAccommodationHelp'))
       .clear()
       .type(accommodationHelp);
+  }
+
+  expectTotalPrice(totalPrice: number) {
+    cy.get(this.getSelector('totalPrice')).contains(totalPrice.toString());
   }
 }
 
