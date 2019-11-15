@@ -1,0 +1,1 @@
+export * from './shopping-cart/shopping-cart.component.po';

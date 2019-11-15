@@ -1,5 +1,5 @@
-import { extend, defaults, sample, range, isArray } from 'lodash';
-import * as uuid from 'uuid';
+import { isEmpty, extend, defaults, sample, range, isArray } from 'lodash';
+import { v4 as uuid } from 'uuid';
 import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
 // import {BadValueError, BadValueErrorCode} from '@ygg/shared/infra/error';
 import { NumberRange, DateRange, Contact } from '@ygg/shared/types';
@@ -7,9 +7,12 @@ import { User } from '@ygg/shared/user';
 // import { PlayTag } from '@ygg/playwhat/play';
 import { Tags, Taggable } from '@ygg/tags/core';
 import { TranspotationTypes } from './transpotation';
+import { Purchase } from '@ygg/shopping/core';
 
 export class SchedulePlan implements DataItem, Taggable {
   id: string;
+  agentId: string;
+  creatorId: string;
   dateRange: DateRange;
   numParticipants: number;
   numElders: number;
@@ -23,8 +26,7 @@ export class SchedulePlan implements DataItem, Taggable {
   accommodationHelp: string;
   tags: Tags;
   likesDescription: string;
-  agentId: string;
-  creatorId: string;
+  purchases: Purchase[];
 
   static isSchedulePlan(value: any): value is SchedulePlan {
     if (value && value.dateRange && value.numParticipants) {
@@ -34,7 +36,7 @@ export class SchedulePlan implements DataItem, Taggable {
     }
   }
 
-  static forge(): SchedulePlan {
+  static forge(extData: any = {}): SchedulePlan {
     const forged: SchedulePlan = new SchedulePlan();
     forged.dateRange = DateRange.forge();
     forged.numParticipants = Math.floor(50 + 50 * Math.random());
@@ -87,14 +89,14 @@ export class SchedulePlan implements DataItem, Taggable {
       '希望有淨灘行程，海灘或是河灘',
       '希望有捉蟬或是蟋蟀的體驗',
     ]);
+    extend(forged, extData);
     // forged.agentId = User.forge().id;
     return forged;
   }
 
   constructor() {
-    defaults(this, {
-      id: uuid.v4()
-    });
+    this.id = uuid();
+    this.purchases = [];
   }
 
   hasLikes(): boolean {

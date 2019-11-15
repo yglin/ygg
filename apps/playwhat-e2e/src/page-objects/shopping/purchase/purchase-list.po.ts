@@ -1,5 +1,5 @@
-import { Product } from '@ygg/shopping/core';
-import { PurchaseListPageObject } from "@ygg/shopping/ui";
+import { Product, Purchase } from '@ygg/shopping/core';
+import { PurchaseListPageObject } from '@ygg/shopping/ui';
 
 export class PurchaseListPageObjectCypress extends PurchaseListPageObject {
   expectProducts(products: Product[]) {
@@ -8,7 +8,17 @@ export class PurchaseListPageObjectCypress extends PurchaseListPageObject {
     });
   }
 
+  expectPurchases(purchases: Purchase[]) {
+    cy.wrap(purchases).each((purchase: Purchase) => {
+      cy.get(this.getSelectorForPurchase(purchase))
+        .should('exist');
+    });
+  }
+
   expectTotalPrice(totalPrice: number) {
-    cy.get(this.getSelector('totalPrice')).should('include.text', totalPrice.toString());
+    cy.get(this.getSelector('totalPrice')).should(
+      'include.text',
+      totalPrice.toString()
+    );
   }
 }

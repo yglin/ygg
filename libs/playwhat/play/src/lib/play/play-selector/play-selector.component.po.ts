@@ -6,7 +6,8 @@ export class PlaySelectorPageObject extends PageObject {
     main: '.play-selector'
   };
 
-  getSelectorForPlay(play: Play) {
-    return `${this.getSelector()} [play-id="${play.id}"]`;
+  getSelectorForPlay(arg1: Play | string): string {
+    const id = typeof arg1 === 'string' ? arg1 : arg1.id;
+    return `${this.getSelector()} [play-id="${id}"]`;
   }
 }

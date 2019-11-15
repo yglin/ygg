@@ -1,7 +1,16 @@
-import { isEmpty, sumBy } from "lodash";
-import { Component, OnInit, Input, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
-import { Purchase, ShoppingCartService } from '@ygg/shopping/core';
-import { Subscription } from 'rxjs';
+import { isEmpty, sumBy } from 'lodash';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  OnDestroy
+} from '@angular/core';
+import { Purchase } from '@ygg/shopping/core';
+import { ShoppingCartService } from '@ygg/shopping/factory';
+import { Subscription, Observable, of } from 'rxjs';
+import { tap, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'ygg-purchase-list',
@@ -13,17 +22,26 @@ export class PurchaseListComponent implements OnInit, OnDestroy {
   totalPrice = 0;
   subscriptions: Subscription[] = [];
 
-  constructor(private shoppingCartService: ShoppingCartService) { }
+  constructor(private shoppingCartService: ShoppingCartService) {}
 
   async ngOnInit() {
+    let purchases$: Observable<Purchase[]>;
     if (this.purchases) {
-      this.totalPrice = await this.shoppingCartService.evaluateTotalPrice(this.purchases);
+      purchases$ = of(this.purchases);
     } else {
-      this.subscriptions.push(this.shoppingCartService.purchases$.subscribe(async purchases => {
-        this.purchases = purchases;
-        this.totalPrice = await this.shoppingCartService.evaluateTotalPrice(this.purchases);
-      }));
+      purchases$ = this.shoppingCartService.purchases$;
     }
+    this.subscriptions.push(
+      purchases$
+        .pipe(
+          tap(purchases => (this.purchases = purchases)),
+          switchMap(purchases =>
+            this.shoppingCartService.evaluateTotalPrice$(purchases)
+          ),
+          tap(totalPrice => (this.totalPrice = totalPrice))
+        )
+        .subscribe()
+    );
   }
 
   ngOnDestroy() {
@@ -31,5 +49,4 @@ export class PurchaseListComponent implements OnInit, OnDestroy {
       subscription.unsubscribe();
     }
   }
-
 }

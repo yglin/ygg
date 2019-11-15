@@ -124,6 +124,12 @@
     },
     "shopping-ui": {
       "tags": ["scope:shopping", "type:ui"]
+    },
+    "shopping-data-access": {
+      "tags": ["scope:shopping", "type:data-access"]
+    },
+    "shopping-factory": {
+      "tags": ["scope:shopping", "type:feature"]
     }
   }
 }

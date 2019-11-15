@@ -17,8 +17,15 @@ import {
 } from '@angular/forms';
 import { NumberRange, Contact, DateRange } from '@ygg/shared/types';
 import { combineLatest, Observable, Subscription, merge } from 'rxjs';
-import { first, switchMap, map, startWith, debounceTime, single } from 'rxjs/operators';
-import { Play, PlayService } from "@ygg/playwhat/play";
+import {
+  first,
+  switchMap,
+  map,
+  startWith,
+  debounceTime,
+  single
+} from 'rxjs/operators';
+import { Play, PlayService } from '@ygg/playwhat/play';
 import { SchedulePlan } from '@ygg/schedule/core';
 import {
   SchedulePlanService,
@@ -33,7 +40,8 @@ import {
 import { Tags } from '@ygg/tags/core';
 import { TranspotationTypes } from '@ygg/schedule/core';
 import { ActivatedRoute } from '@angular/router';
-import { Purchase, ShoppingCartService } from '@ygg/shopping/core';
+import { Purchase, ProductType } from '@ygg/shopping/core';
+import { ShoppingCartService } from '@ygg/shopping/factory';
 
 @Component({
   selector: 'ygg-schedule-plan-control',
@@ -78,9 +86,11 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
         }
       })
     );
-    this.subscriptions.push(this.playService.list$().subscribe(plays => {
-      this.playsAll = plays;
-    }));
+    this.subscriptions.push(
+      this.playService.list$().subscribe(plays => {
+        this.playsAll = plays;
+      })
+    );
     this.agentUsers = [];
     this.scheduleConfigService
       .get$('agents')
@@ -159,30 +169,34 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
       });
     this.subscriptions.push(subsc);
 
-    subsc = formControlNumParticipants.valueChanges.pipe(debounceTime(500)).subscribe(() => {
-      const numParticipants = formControlNumParticipants.value;
-      let singleBudget = formControlSingleBudget.value;
-      let totalBudget = formControlTotalBudget.value;
-      // console.log(`numParticipants changed to ${numParticipants}`);
-      if (numParticipants > 0 ) {
-        if (NumberRange.isNumberRange(singleBudget)) {
-          totalBudget = new NumberRange(
-            singleBudget.min * numParticipants,
-            singleBudget.max * numParticipants
-          );
-          // console.log(`Update totalBudget ${totalBudget.toJSON()}`);
-          formControlTotalBudget.setValue(totalBudget, { emitEvent: false });          
-        } else if (NumberRange.isNumberRange(totalBudget)) {
-          singleBudget = new NumberRange(
-            Math.floor(totalBudget.min / numParticipants),
-            Math.floor(totalBudget.max / numParticipants)
-          );
-          // console.log(`Update singleBudget ${singleBudget.toJSON()}`);
-          formControlSingleBudget.setValue(singleBudget, { emitEvent: false });
+    subsc = formControlNumParticipants.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(() => {
+        const numParticipants = formControlNumParticipants.value;
+        let singleBudget = formControlSingleBudget.value;
+        let totalBudget = formControlTotalBudget.value;
+        // console.log(`numParticipants changed to ${numParticipants}`);
+        if (numParticipants > 0) {
+          if (NumberRange.isNumberRange(singleBudget)) {
+            totalBudget = new NumberRange(
+              singleBudget.min * numParticipants,
+              singleBudget.max * numParticipants
+            );
+            // console.log(`Update totalBudget ${totalBudget.toJSON()}`);
+            formControlTotalBudget.setValue(totalBudget, { emitEvent: false });
+          } else if (NumberRange.isNumberRange(totalBudget)) {
+            singleBudget = new NumberRange(
+              Math.floor(totalBudget.min / numParticipants),
+              Math.floor(totalBudget.max / numParticipants)
+            );
+            // console.log(`Update singleBudget ${singleBudget.toJSON()}`);
+            formControlSingleBudget.setValue(singleBudget, {
+              emitEvent: false
+            });
+          }
         }
-      }
-      this.shoppingCart.resetQuantityAll(numParticipants);
-    });
+        this.shoppingCart.resetQuantityAll(numParticipants);
+      });
     this.subscriptions.push(subsc);
 
     subsc = this.formGroup.get('tags').valueChanges.subscribe(tags => {
@@ -238,7 +252,11 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
   }
 
   addPlayPurchase(play: Play) {
-    const newPurchase = new Purchase(play, this.formGroup.get('numParticipants').value);
+    const newPurchase = new Purchase({
+      productType: ProductType.Play,
+      productId: play.id,
+      quantity: this.formGroup.get('numParticipants').value
+    });
     this.shoppingCart.addPurchase(newPurchase);
   }
 
@@ -298,7 +316,7 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
           }
         }
       }
-      await this.schedulePlanService.upsert(schedulePlan);
+      await this.schedulePlanService.save(schedulePlan);
       alert('已成功更新／新增遊程需求');
       this.submit.emit(schedulePlan);
     }

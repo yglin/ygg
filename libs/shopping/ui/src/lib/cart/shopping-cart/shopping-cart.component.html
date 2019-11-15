@@ -1,0 +1,17 @@
+<div
+  class="shopping-cart"
+  fxLayout="row"
+  fxLayoutAlign="space-between end"
+  fxLayoutGap="30px"
+>
+  <div class="purchase-list">
+    <mat-list>
+      <mat-list-item *ngFor="let purchase of purchases">
+        <ygg-purchase-thumbnail [purchase]="purchase"></ygg-purchase-thumbnail>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <div class="total-price">
+    <h6>總價：<ygg-price [price]="totalPrice"></ygg-price></h6>
+  </div>
+</div>

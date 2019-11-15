@@ -14,7 +14,7 @@ import {
   createSchedulePlan
 } from '../../page-objects/scheduler';
 import { Tags } from '@ygg/tags/core';
-import { Purchase } from '@ygg/shopping/core';
+import { Purchase, ProductType } from '@ygg/shopping/core';
 import { deleteTags } from '../../page-objects/tags';
 import { MockDatabase } from '../../support/mock-database';
 import { NumberRange } from '@ygg/shared/types';
@@ -24,6 +24,26 @@ import { PurchaseListPageObjectCypress } from '../../page-objects/shopping/purch
 
 describe('Scheduler - schedule-plan', () => {
   const testPlays: Play[] = range(random(3, 7)).map(() => Play.forge());
+  let numParticipants = 53;
+  let purchases: Purchase[] = sampleSize(testPlays, 3).map(
+    play =>
+      new Purchase({
+        productType: ProductType.Play,
+        productId: play.id,
+        quantity: numParticipants
+      })
+  );
+  const testSchedulePlan1 = SchedulePlan.forge({ numParticipants, purchases });
+  numParticipants = 67;
+  purchases = sampleSize(testPlays, 3).map(
+    play =>
+      new Purchase({
+        productType: ProductType.Play,
+        productId: play.id,
+        quantity: numParticipants
+      })
+  );
+  const testSchedulePlan2 = SchedulePlan.forge({ numParticipants, purchases });
   const siteNavigator = new SiteNavigator();
   const schedulePlanControlPageObject = new SchedulePlanControlPageObjectCypress(
     ''
@@ -50,9 +70,9 @@ describe('Scheduler - schedule-plan', () => {
     cy.log(`##### All done, clean temporary test data #####`);
     mockDatabase.clear();
   });
-  /* 
+
   it('should be able to find and edit, update schedule-plan', () => {
-    createSchedulePlan(SchedulePlan.forge()).then(testSchedulePlan => {
+    createSchedulePlan(testSchedulePlan1).then(testSchedulePlan => {
       mockDatabase.pushDocument({
         path: `schedule-plans/${testSchedulePlan.id}`,
         data: testSchedulePlan
@@ -73,10 +93,9 @@ describe('Scheduler - schedule-plan', () => {
       // The edit page is exactly the same as scheduler/new page,
       // so we can reuse the same page object
       cy.location('pathname').should('include', `${testSchedulePlan.id}/edit`);
-      const changedSchedulePlan = SchedulePlan.forge();
       cy.log(`##### Edit test schedule form, fill in different data #####`);
       schedulePlanControlPageObject.clearValue(testSchedulePlan);
-      schedulePlanControlPageObject.setValue(changedSchedulePlan);
+      schedulePlanControlPageObject.setValue(testSchedulePlan2);
       schedulePlanControlPageObject.submit();
 
       // // Being redirected to view page again,
@@ -86,16 +105,17 @@ describe('Scheduler - schedule-plan', () => {
         .then(() => {
           mockDatabase.pushDocument({
             path: `schedule-plans/${testSchedulePlan.id}`,
-            data: changedSchedulePlan
+            data: testSchedulePlan2
           });
         });
       cy.log(
         `##### Test schedule form updated, check if data is updated #####`
       );
-      schedulePlanViewPageObject.expectValue(changedSchedulePlan);
+      schedulePlanViewPageObject.expectValue(testSchedulePlan2);
     });
   });
 
+  /*
   it('should auto sync total budget and single budget', () => {
     let testNumParticipants;
     let testTotalBudget: NumberRange;
@@ -203,7 +223,6 @@ describe('Scheduler - schedule-plan', () => {
     schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
   });
 
-
   it('should list all plays', () => {
     siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
     const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
@@ -222,7 +241,6 @@ describe('Scheduler - schedule-plan', () => {
     purchaseListPageObject.expectProducts(selectedPlays);
     purchaseListPageObject.expectTotalPrice(expectedTotalPrice);
   });
-  */
 
   it('Change numParticipants should refresh purchases and total price', () => {
     let numParticipants = 13;
@@ -247,4 +265,5 @@ describe('Scheduler - schedule-plan', () => {
     purchaseListPageObject.expectProducts(selectedPlays);
     purchaseListPageObject.expectTotalPrice(expectedTotalPrice);
   });
+*/
 });

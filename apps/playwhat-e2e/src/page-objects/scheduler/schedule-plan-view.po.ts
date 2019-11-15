@@ -6,8 +6,16 @@ import { NumberRangeViewPageObjectCypress } from '../shared-types/number-range';
 import { ContactViewPageObjectCypress } from '../shared-types/contact';
 import { TagsViewPageObjectCypress } from '../tags';
 import { Tags } from '@ygg/tags/core';
+import { PurchaseListPageObjectCypress } from '../shopping/purchase';
 
 export class SchedulePlanViewPageObjectCypress extends SchedulePlanViewPageObject {
+  purchasesListPageObject: PurchaseListPageObjectCypress;
+
+  constructor(parentSelector: string) {
+    super(parentSelector);
+    this.purchasesListPageObject = new PurchaseListPageObjectCypress(this.getSelector('purchaseList'));
+  }
+
   expectValue(schedulePlan: SchedulePlan) {
     this.expectDateRange(schedulePlan.dateRange);
     this.expectNumParticipants(schedulePlan.numParticipants);
@@ -22,6 +30,7 @@ export class SchedulePlanViewPageObjectCypress extends SchedulePlanViewPageObjec
     this.expectAccommodationHelp(schedulePlan.accommodationHelp);
     // this.expectLikesTags(schedulePlan.tags);
     this.expectLikesDescription(schedulePlan.likesDescription);
+    this.purchasesListPageObject.expectPurchases(schedulePlan.purchases);
   }
 
   expectDateRange(dateRange: DateRange) {

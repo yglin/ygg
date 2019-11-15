@@ -122,7 +122,7 @@ export class DataAccessService {
   find$<T extends DataItem>(
     collection: string,
     query: Query | Query[],
-    constructor: new () => T
+    constructor?: new () => T
   ): Observable<T[]> {
     let queries: Query[];
     if (isArray(query)) {
@@ -131,11 +131,15 @@ export class DataAccessService {
       queries = [query];
     }
     return this.firestore
-      .collection(collection, ref => this.transformQueries(ref, queries))
+      .collection<T>(collection, ref => this.transformQueries(ref, queries))
       .valueChanges()
       .pipe(
         map(items => {
-          return items.map(item => new constructor().fromJSON(item));
+          if (constructor) {
+            return items.map(item => new constructor().fromJSON(item));
+          } else {
+            return items;
+          }
         })
       );
   }
@@ -158,11 +162,12 @@ export class DataAccessService {
   upsert<T extends DataItem>(
     collection: string,
     item: T,
-    constructor: new () => T
+    constructor?: new () => T
   ): Promise<T> {
+    const data = typeof item.toJSON === 'function' ? item.toJSON() : item;
     return this.getCollection(collection)
       .doc(item.id)
-      .set(item.toJSON())
+      .set(data)
       .then(() => item);
   }
 

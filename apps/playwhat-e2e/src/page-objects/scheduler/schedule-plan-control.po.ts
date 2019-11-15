@@ -1,4 +1,4 @@
-import { last } from "lodash";
+import { last } from 'lodash';
 import { PageObject } from '@ygg/shared/test/page-object';
 import { DateRange, NumberRange, Contact } from '@ygg/shared/types';
 import { Tags } from '@ygg/tags/core';
@@ -7,13 +7,18 @@ import { DateRangeControlPageObjectCypress } from '../shared-types/date-range';
 import { NumberRangeControlPageObjectCypress } from '../shared-types/number-range';
 import { ContactControlPageObjectCypress } from '../shared-types/contact';
 import { TagsControlPageObjectCypress } from '../tags';
-import { SchedulePlanControlPageObject } from "@ygg/schedule/ui";
+import { SchedulePlanControlPageObject } from '@ygg/schedule/ui';
+import { ShoppingCartPageObjectCypress } from '../../page-objects/shopping';
+import { PlaySelectorPageObjectCypress } from '../play';
+import { Purchase } from '@ygg/shopping/core';
 
 export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPageObject {
   dateRangePageObject: DateRangeControlPageObjectCypress;
   totalBudgetPageObject: NumberRangeControlPageObjectCypress;
   singleBudgetPageObject: NumberRangeControlPageObjectCypress;
   tagsControlPageObject: TagsControlPageObjectCypress;
+  playSelectorPageObject: PlaySelectorPageObjectCypress;
+  shoppingCartPageObject: ShoppingCartPageObjectCypress;
 
   constructor(parentSelector: string) {
     super(parentSelector);
@@ -25,6 +30,12 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
     );
     this.singleBudgetPageObject = new NumberRangeControlPageObjectCypress(
       this.getSelector('singleBudget')
+    );
+    this.playSelectorPageObject = new PlaySelectorPageObjectCypress(
+      this.getSelector('playSelector')
+    );
+    this.shoppingCartPageObject = new ShoppingCartPageObjectCypress(
+      this.getSelector('shoppingCart')
     );
     this.tagsControlPageObject = new TagsControlPageObjectCypress(
       this.getSelector('likesTags')
@@ -51,15 +62,18 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
     this.setTranspotationHelp(schedulePlan.transpotationHelp);
 
     // this.setLikeTags(schedulePlan.tags);
-    this.setLikesDescription(schedulePlan.likesDescription);
+    // Purchases
+    this.setPurchases(schedulePlan.purchases);
 
+    this.setLikesDescription(schedulePlan.likesDescription);
     this.setAccommodationHelp(schedulePlan.accommodationHelp);
   }
 
   clearValue(schedulePlan: SchedulePlan) {
-    if (schedulePlan.tags) {
-      this.clearLikeTags();
-    }
+    // Discard likeTags for now
+    // if (schedulePlan.tags) {
+    //   this.clearLikeTags();
+    // }
   }
 
   submit() {
@@ -179,5 +193,12 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
   expectTotalPrice(totalPrice: number) {
     cy.get(this.getSelector('totalPrice')).contains(totalPrice.toString());
   }
-}
 
+  setPurchases(purchases: Purchase[]) {
+    cy.wrap(purchases).each((purchase: Purchase) => {
+      this.playSelectorPageObject.clickPlayById(purchase.productId);
+      this.shoppingCartPageObject.setPurchase(purchase);
+      this.shoppingCartPageObject.expectPurchase(purchase);
+    });
+  }
+}

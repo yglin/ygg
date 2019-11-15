@@ -103,9 +103,10 @@
       <tr class="likes" *ngIf="schedulePlan.hasLikes()">
         <td>體驗需求</td>
         <td>
-          <div *ngIf="schedulePlan.tags" class="tags">
+          <ygg-purchase-list [purchases]="schedulePlan.purchases" readonly></ygg-purchase-list>
+          <!-- <div *ngIf="schedulePlan.tags" class="tags">
             <ygg-tags-view [tags]="schedulePlan.tags"></ygg-tags-view>
-          </div>
+          </div> -->
           <div *ngIf="schedulePlan.likesDescription" class="description">
             <h5>對於體驗行程的需求...</h5>
             <pre class="value">{{ schedulePlan.likesDescription }}</pre>

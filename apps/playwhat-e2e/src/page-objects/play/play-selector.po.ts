@@ -11,6 +11,10 @@ export class PlaySelectorPageObjectCypress extends PlaySelectorPageObject {
     cy.get(this.getSelectorForPlay(play)).click({force: true});
   }
 
+  clickPlayById(playId: string) {
+    cy.get(this.getSelectorForPlay(playId)).click({force: true});
+  }
+
   clickPlays(plays: Play[]) {
     cy.wrap(plays).each((play: Play) => {
       this.clickPlay(play);

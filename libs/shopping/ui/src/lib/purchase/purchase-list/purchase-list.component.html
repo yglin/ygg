@@ -6,24 +6,8 @@
 >
   <div class="list">
     <mat-list>
-      <mat-list-item
-        *ngFor="let purchase of purchases"
-        [attr.product-id]="purchase.product.id"
-      >
-        <div
-          fxLayout="row"
-          fxLayoutAlign="space-between end"
-          fxLayoutGap="10px"
-        >
-          <div fxFlex>
-            <h6>{{ purchase.product.name }} X {{ purchase.quantity }}</h6>
-          </div>
-          <div fxFlex='100px'>
-            <h6>
-              <ygg-price [price]="purchase.getPrice()"></ygg-price>
-            </h6>
-          </div>
-        </div>
+      <mat-list-item *ngFor="let purchase of purchases">
+        <ygg-purchase-thumbnail [purchase]="purchase"></ygg-purchase-thumbnail>
       </mat-list-item>
     </mat-list>
   </div>

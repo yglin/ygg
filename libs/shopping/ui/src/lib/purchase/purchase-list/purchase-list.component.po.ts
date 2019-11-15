@@ -1,5 +1,5 @@
 import { PageObject } from '@ygg/shared/test/page-object';
-import { Product } from '@ygg/shopping/core';
+import { Product, Purchase } from '@ygg/shopping/core';
 
 export class PurchaseListPageObject extends PageObject {
   selectors = {
@@ -10,5 +10,9 @@ export class PurchaseListPageObject extends PageObject {
 
   getSelectorForProduct(product: Product): string {
     return `${this.getSelector('list')} [product-id="${product.id}"]`;
+  }
+
+  getSelectorForPurchase(purchase: Purchase): string {
+    return `${this.getSelector('list')} [purchase-id="${purchase.id}"]`;
   }
 }

@@ -1,5 +1,8 @@
-import { Product } from './product';
-import { Duration } from "@ygg/shared/types";
+import { extend } from 'lodash';
+import { v4 as uuid } from "uuid";
+import { Product, ProductType } from './product';
+import { Duration } from '@ygg/shared/types';
+import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
 
 export enum PurchaseState {
   Unknown = -1,
@@ -8,20 +11,40 @@ export enum PurchaseState {
   Complete
 }
 
-export class Purchase {
-  product: Product;
+interface PurchaseOptions {
+  productType: ProductType;
+  productId: string;
+  quantity: number;
+  [key: string]: any;
+}
+
+export class Purchase implements SerializableJSON {
+  id: string;
+  productType: ProductType;
+  productId: string;
   quantity: number;
   duration: Duration;
   state: PurchaseState;
 
-  constructor(product: Product, quantity: number, duration?: Duration) {
-    this.product = product;
-    this.quantity = quantity || 0;
-    this.duration = duration;
+  static isPurchase(value: any): value is Purchase {
+    return !!(value && value.productType && value.productId);
+  }
+
+  constructor(options: PurchaseOptions) {
+    this.id = uuid();
+    this.productType = options.productType || ProductType.Unknown;
+    this.productId = options.productId || '';
+    this.quantity = options.quantity || 0;
+    this.duration = options.duration;
     this.state = PurchaseState.New;
   }
 
-  getPrice(): number {
-    return this.product.price * this.quantity;
+  fromJSON(data: any): this {
+    extend(this, data);
+    return this;
+  }
+
+  toJSON(): any {
+    return toJSONDeep(this);
   }
 }

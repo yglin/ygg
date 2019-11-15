@@ -1,8 +1,9 @@
-import { remove, sumBy, isEmpty } from 'lodash';
+import { remove, sum, isEmpty } from 'lodash';
 import { Injectable } from '@angular/core';
-import { Purchase } from './purchase';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Purchase } from '../../../core/src/lib/purchase';
+import { BehaviorSubject, Observable, of, combineLatest } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { ProductService } from '@ygg/shopping/data-access';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class ShoppingCartService {
   purchases: Purchase[];
   purchases$: BehaviorSubject<Purchase[]>;
 
-  constructor() {
+  constructor(private productService: ProductService) {
     this.purchases = [];
     this.purchases$ = new BehaviorSubject(this.purchases);
   }
@@ -45,8 +46,23 @@ export class ShoppingCartService {
     this.purchases$.next(this.purchases);
   }
 
-  async evaluateTotalPrice(purchases: Purchase[]): Promise<number> {
-    const totalPrice = sumBy(purchases, purchase => purchase.getPrice());
-    return Promise.resolve(totalPrice);
+  evaluatePrice$(purchase: Purchase): Observable<number> {
+    return this.productService
+      .get$(purchase.productType, purchase.productId)
+      .pipe(
+        map(product => {
+          return product.price * purchase.quantity;
+        })
+      );
+  }
+
+  evaluateTotalPrice$(purchases: Purchase[]): Observable<number> {
+    if (isEmpty(purchases)) {
+      return of(0);
+    } else {
+      return combineLatest(
+        purchases.map(purchase => this.evaluatePrice$(purchase))
+      ).pipe(map(prices => sum(prices)));
+    }
   }
 }
