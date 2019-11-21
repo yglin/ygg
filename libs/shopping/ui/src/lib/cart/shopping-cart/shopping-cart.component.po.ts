@@ -4,8 +4,9 @@ import { Product, Purchase } from '@ygg/shopping/core';
 export class ShoppingCartPageObject extends PageObject {
   selectors = {
     main: '.shopping-cart',
-    purchaseList: '.purchase-list',
-    totalPrice: '.total-price'
+    purchaseList: '.purchases-table',
+    totalPrice: '.total-price',
+    buttonClear: 'button.clear-all'
   };
 
   getSelectorForProduct(product: Product): string {
@@ -13,11 +14,11 @@ export class ShoppingCartPageObject extends PageObject {
   }
 
   getSelectorForPurchase(purchase: Purchase): string {
-    return `${this.getSelector('purchaseList')} [purchase-id="${purchase.id}"]`;
+    return `${this.getSelector('purchaseList')} [item-id="${purchase.productId}"]`;
   }
 
   getSelectorForQuantityInput(purchase: Purchase): string {
-    return `${this.getSelector('purchaseList')} [purchase-id="${purchase.id}"] .quantity input`;
+    return `${this.getSelectorForPurchase(purchase)} .quantity input`;
   }
   
 }

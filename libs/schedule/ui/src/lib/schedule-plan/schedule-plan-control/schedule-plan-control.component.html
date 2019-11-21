@@ -242,8 +242,8 @@
       </div>
       <ygg-title-divider> 體驗需求 </ygg-title-divider>
       <div class="form-control likes">
-        <ygg-play-selector [plays]='playsAll' (clickPlay)='addPlayPurchase($event)'></ygg-play-selector>
-        <ygg-shopping-cart></ygg-shopping-cart>
+        <ygg-play-selector class='play-selector' [plays]='playsAll' (clickPlay)='addPlayPurchase($event)'></ygg-play-selector>
+        <ygg-shopping-cart class='shopping-cart' [numShare]='formGroup.get("numParticipants").value'></ygg-shopping-cart>
         <!-- <ygg-tags-control
           formControlName="tags"
           taggableType="schedule-plan"

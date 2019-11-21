@@ -18,7 +18,7 @@ export abstract class SchedulePlanViewPageObject extends PageObject {
     likesTags: '.likes .tags',
     likesDescription: '.likes .description',
     buttonEdit: 'button.edit',
-    purchaseList: '.purchase-list'
+    purchaseList: '.purchases'
   };
 
   getSelectorForContactAt(index: number): string {

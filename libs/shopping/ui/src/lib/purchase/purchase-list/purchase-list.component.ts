@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { Purchase } from '@ygg/shopping/core';
 import { ShoppingCartService } from '@ygg/shopping/factory';
-import { Subscription, Observable, of } from 'rxjs';
+import { Subscription, Observable, of, BehaviorSubject } from 'rxjs';
 import { tap, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -17,31 +17,30 @@ import { tap, switchMap } from 'rxjs/operators';
   templateUrl: './purchase-list.component.html',
   styleUrls: ['./purchase-list.component.css']
 })
-export class PurchaseListComponent implements OnInit, OnDestroy {
+export class PurchaseListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() purchases: Purchase[];
   totalPrice = 0;
   subscriptions: Subscription[] = [];
+  purchases$: BehaviorSubject<Purchase[]> = new BehaviorSubject([]);
 
-  constructor(private shoppingCartService: ShoppingCartService) {}
+  constructor(private shoppingCart: ShoppingCartService) {
+    this.subscriptions.push(
+      this.purchases$
+        .pipe(
+          switchMap(purchases => {
+            return this.shoppingCart.evaluateTotalPrice$(purchases);
+          })
+        )
+        .subscribe(totalPrice => (this.totalPrice = totalPrice))
+    );
+  }
 
   async ngOnInit() {
-    let purchases$: Observable<Purchase[]>;
-    if (this.purchases) {
-      purchases$ = of(this.purchases);
-    } else {
-      purchases$ = this.shoppingCartService.purchases$;
-    }
-    this.subscriptions.push(
-      purchases$
-        .pipe(
-          tap(purchases => (this.purchases = purchases)),
-          switchMap(purchases =>
-            this.shoppingCartService.evaluateTotalPrice$(purchases)
-          ),
-          tap(totalPrice => (this.totalPrice = totalPrice))
-        )
-        .subscribe()
-    );
+    this.purchases$.next(this.purchases);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.purchases$.next(changes.purchases.currentValue);
   }
 
   ngOnDestroy() {

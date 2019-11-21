@@ -24,18 +24,25 @@ export class Purchase implements SerializableJSON {
   productId: string;
   quantity: number;
   duration: Duration;
+  price: number;
   state: PurchaseState;
 
   static isPurchase(value: any): value is Purchase {
     return !!(value && value.productType && value.productId);
   }
 
-  constructor(options: PurchaseOptions) {
+  constructor(options?: PurchaseOptions) {
+    options = options || {
+      productType: ProductType.Unknown,
+      productId: '',
+      quantity: 0
+    };
     this.id = uuid();
     this.productType = options.productType || ProductType.Unknown;
     this.productId = options.productId || '';
     this.quantity = options.quantity || 0;
-    this.duration = options.duration;
+    this.price = options.price || 0;
+    this.duration = options.duration || undefined;
     this.state = PurchaseState.New;
   }
 

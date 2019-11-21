@@ -3,10 +3,10 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-.debug {
+/* .debug {
   display: none;
 }
-
+ */
 div {
   max-width: 100vw;
 }

@@ -100,10 +100,12 @@
           </div>
         </td>
       </tr>
-      <tr class="likes" *ngIf="schedulePlan.hasLikes()">
+      <tr class="likes" *ngIf="schedulePlan.hasPurchases()">
         <td>體驗需求</td>
         <td>
-          <ygg-purchase-list [purchases]="schedulePlan.purchases" readonly></ygg-purchase-list>
+          <div class="purchases">
+            <ygg-purchase-list [purchases]="schedulePlan.purchases"></ygg-purchase-list>
+          </div>
           <!-- <div *ngIf="schedulePlan.tags" class="tags">
             <ygg-tags-view [tags]="schedulePlan.tags"></ygg-tags-view>
           </div> -->

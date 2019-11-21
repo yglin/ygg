@@ -13,6 +13,6 @@ export class PurchaseListPageObject extends PageObject {
   }
 
   getSelectorForPurchase(purchase: Purchase): string {
-    return `${this.getSelector('list')} [purchase-id="${purchase.id}"]`;
+    return `${this.getSelector('list')} [product-id="${purchase.productId}"]`;
   }
 }

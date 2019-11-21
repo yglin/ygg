@@ -1,23 +1,24 @@
 <div
-fxLayout="row"
-fxLayoutAlign="space-between end"
-fxLayoutGap="10px"
-*ngIf="purchase"
-[attr.purchase-id]='purchase.id'
-[attr.product-id]="purchase.productId"
+  class="purchase-thumbnail"
+  fxLayout="row"
+  fxLayoutAlign="space-between end"
+  fxLayoutGap="10px"
+  *ngIf="purchase"
+  [attr.purchase-id]="purchase.id"
+  [attr.product-id]="purchase.productId"
 >
-<div fxFlex>
-  <div>
-    <ygg-product-thumbnail
-      [id]="purchase.productId"
-      [type]="purchase.productType"
-    ></ygg-product-thumbnail
-    ><span>X {{ purchase.quantity }}</span>
+  <div fxFlex>
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+      <ygg-product-thumbnail
+        [id]="purchase.productId"
+        [type]="purchase.productType"
+      ></ygg-product-thumbnail>
+      <div>X {{ purchase.quantity }}</div>
+    </div>
   </div>
-</div>
-<div fxFlex="100px">
-  <h6>
-    <ygg-price [price]="price"></ygg-price>
-  </h6>
-</div>
+  <div fxFlex="100px">
+    <h6>
+      <ygg-price [price]="price"></ygg-price>
+    </h6>
+  </div>
 </div>

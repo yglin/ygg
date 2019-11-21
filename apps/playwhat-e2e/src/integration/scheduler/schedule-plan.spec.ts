@@ -22,26 +22,26 @@ import { Play } from '@ygg/playwhat/play';
 import { PlaySelectorPageObjectCypress } from '../../page-objects/play';
 import { PurchaseListPageObjectCypress } from '../../page-objects/shopping/purchase';
 
+function forgePurchase(play: Play, quantity: number): Purchase {
+  const purchase = new Purchase({
+    productId: play.id,
+    productType: ProductType.Play,
+    quantity
+  });
+  purchase.price = play.price * quantity;
+  return purchase;
+}
+
 describe('Scheduler - schedule-plan', () => {
   const testPlays: Play[] = range(random(3, 7)).map(() => Play.forge());
   let numParticipants = 53;
-  let purchases: Purchase[] = sampleSize(testPlays, 3).map(
-    play =>
-      new Purchase({
-        productType: ProductType.Play,
-        productId: play.id,
-        quantity: numParticipants
-      })
+  let purchases: Purchase[] = sampleSize(testPlays, 3).map(play =>
+    forgePurchase(play, numParticipants)
   );
   const testSchedulePlan1 = SchedulePlan.forge({ numParticipants, purchases });
   numParticipants = 67;
-  purchases = sampleSize(testPlays, 3).map(
-    play =>
-      new Purchase({
-        productType: ProductType.Play,
-        productId: play.id,
-        quantity: numParticipants
-      })
+  purchases = sampleSize(testPlays, 3).map(play =>
+    forgePurchase(play, numParticipants)
   );
   const testSchedulePlan2 = SchedulePlan.forge({ numParticipants, purchases });
   const siteNavigator = new SiteNavigator();

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Purchase } from '@ygg/shopping/core';
 import { ProductService } from '@ygg/shopping/data-access';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { ShoppingCartService } from '@ygg/shopping/factory';
 
 @Component({

@@ -1,3 +1,4 @@
+import { sum } from "lodash";
 import { Product, Purchase } from '@ygg/shopping/core';
 import { PurchaseListPageObject } from '@ygg/shopping/ui';
 
@@ -13,9 +14,11 @@ export class PurchaseListPageObjectCypress extends PurchaseListPageObject {
       cy.get(this.getSelectorForPurchase(purchase))
         .should('exist');
     });
+    this.expectTotalPrice(sum(purchases.map(p => p.price)))
   }
 
   expectTotalPrice(totalPrice: number) {
+    cy.log(`Expect total price = ${totalPrice}`);
     cy.get(this.getSelector('totalPrice')).should(
       'include.text',
       totalPrice.toString()

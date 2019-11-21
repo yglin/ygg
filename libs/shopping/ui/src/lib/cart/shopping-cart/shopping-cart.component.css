@@ -1,0 +1,24 @@
+.shopping-cart .mat-table {
+  width: 100%;
+}
+
+.mat-table .mat-row, .mat-table .mat-footer-row {
+  height: 75px;
+}
+
+/* .shopping-cart .thumbnail {
+  width: 64px;
+  height: 64px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.shopping-cart .thumbnail img {
+  width: 100%;
+  height: 100%;
+} */
+
+.shopping-cart .quantity .mat-form-field {
+  width: 75px;
+  font-size: 20px;
+}

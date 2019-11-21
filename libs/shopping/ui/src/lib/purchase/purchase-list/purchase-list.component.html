@@ -1,9 +1,4 @@
-<div
-  class="purchase-list"
-  fxLayout="row"
-  fxLayoutAlign="space-between end"
-  fxLayoutGap="30px"
->
+<div class="purchase-list">
   <div class="list">
     <mat-list>
       <mat-list-item *ngFor="let purchase of purchases">
@@ -11,7 +6,7 @@
       </mat-list-item>
     </mat-list>
   </div>
-  <div class="total-price">
+  <div class="total-price" fxLayout="row" fxLayoutAlign="end center">
     <h6>總價：<ygg-price [price]="totalPrice"></ygg-price></h6>
   </div>
 </div>

@@ -26,7 +26,9 @@ export abstract class SchedulePlanControlPageObject extends PageObject {
     textareaLikesDescription: '.form-control.likes textarea.likes-description',
     textareaAccommodationHelp:
       '.form-control.miscellaneous textarea.accommodation-help',
-    totalPrice: '.price'
+    totalPrice: '.price',
+    playSelector: '.play-selector',
+    shoppingCart: '.shopping-cart'
   };
 
   getSelectorForPanelHeader(panelSelector: string): string {

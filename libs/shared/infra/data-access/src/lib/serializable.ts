@@ -19,7 +19,7 @@ export function toJSONDeep(obj: any = {}): any {
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
       const property = obj[key];
-      if (typeof property === 'function') {
+      if (!property || typeof property === 'function') {
         continue;
       } else if (isSerializableJSON(property)) {
         data[key] = property.toJSON();

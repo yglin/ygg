@@ -28,16 +28,17 @@ describe('Add new tags from various user activities', () => {
     });
   });
 
-  it('From creating/updating schedule-plan', () => {
-    const testSchedulePlan = SchedulePlan.forge();
-    mockDatabase
-      .insert(
-        `schedule-plans/${testSchedulePlan.id}`,
-        testSchedulePlan.toJSON()
-      )
-      .then(() => {
-        siteNavigator.goto(['admin', 'tags', 'list']);
-        tagsAdminListPageObject.expectTags(testSchedulePlan.tags.toTagsArray());
-      });
-  });
+  // yglin 2019/11/21 Obsolete tags in schedule-plan
+  // it('From creating/updating schedule-plan', () => {
+  //   const testSchedulePlan = SchedulePlan.forge();
+  //   mockDatabase
+  //     .insert(
+  //       `schedule-plans/${testSchedulePlan.id}`,
+  //       testSchedulePlan.toJSON()
+  //     )
+  //     .then(() => {
+  //       siteNavigator.goto(['admin', 'tags', 'list']);
+  //       tagsAdminListPageObject.expectTags(testSchedulePlan.tags.toTagsArray());
+  //     });
+  // });
 });

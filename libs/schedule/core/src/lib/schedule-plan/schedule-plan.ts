@@ -103,6 +103,10 @@ export class SchedulePlan implements DataItem, Taggable {
     return (this.tags && !this.tags.isEmpty()) || !!this.likesDescription;
   }
 
+  hasPurchases(): boolean {
+    return !isEmpty(this.purchases);
+  }
+
   fromJSON(data: any = {}): this {
     extend(this, data);
 
@@ -117,6 +121,9 @@ export class SchedulePlan implements DataItem, Taggable {
     }
     if (data.tags) {
       this.tags = Tags.fromJSON(data.tags);
+    }
+    if (!isEmpty(data.purchases)) {
+      this.purchases = data.purchases.map(p => new Purchase().fromJSON(p));
     }
 
     return this;

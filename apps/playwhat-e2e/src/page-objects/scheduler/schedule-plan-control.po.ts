@@ -195,10 +195,12 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
   }
 
   setPurchases(purchases: Purchase[]) {
+    this.shoppingCartPageObject.clear();
     cy.wrap(purchases).each((purchase: Purchase) => {
       this.playSelectorPageObject.clickPlayById(purchase.productId);
       this.shoppingCartPageObject.setPurchase(purchase);
-      this.shoppingCartPageObject.expectPurchase(purchase);
+    }).then(() => {
+      this.shoppingCartPageObject.expectPurchases(purchases);
     });
   }
 }

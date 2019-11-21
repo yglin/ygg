@@ -195,7 +195,8 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
             });
           }
         }
-        this.shoppingCart.resetQuantityAll(numParticipants);
+        // reset purchase quantities follow up numParticipants
+        // this.shoppingCart.resetQuantityAll(numParticipants);
       });
     this.subscriptions.push(subsc);
 
@@ -205,6 +206,11 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(subsc);
+
+    subsc = this.shoppingCart.purchases$.subscribe(() => {
+      this.schedulePlan.purchases = this.shoppingCart.getPurchases();
+      this.valueChanged.emit(this.schedulePlan);
+    });
   }
 
   ngOnDestroy() {
@@ -306,6 +312,7 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
     if (confirm('確定已填寫完畢，要送出需求嗎？')) {
       const schedulePlan = this.schedulePlan.clone();
       extend(schedulePlan, this.formGroup.value);
+      // schedulePlan.purchases = this.shoppingCart.getPurchases();
       if (!schedulePlan.creatorId) {
         if (this.currentUser) {
           schedulePlan.creatorId = this.currentUser.id;
