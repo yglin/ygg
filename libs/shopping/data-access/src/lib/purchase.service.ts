@@ -20,7 +20,7 @@ export class PurchaseService {
 
   async load(purchaseData: any): Promise<Purchase> {
     return Promise.resolve(
-      new Purchase(purchaseData)
+      new Purchase().fromJSON(purchaseData)
     );
   }
 }

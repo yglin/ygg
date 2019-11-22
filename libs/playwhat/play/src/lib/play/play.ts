@@ -7,10 +7,11 @@ import {
   Location,
   FormGroupModel,
   FormControlModel,
-  FormControlType,
+  FormControlType
 } from '@ygg/shared/types';
 import { Tags, Taggable } from '@ygg/tags/core';
-import { Product } from "@ygg/shopping/core";
+import { Product, ProductType } from '@ygg/shopping/core';
+import { Equipment } from '@ygg/resource/core';
 
 export class Play implements DataItem, Taggable, Product {
   id: string;
@@ -22,10 +23,17 @@ export class Play implements DataItem, Taggable, Product {
   tags: Tags;
   creatorId: string;
   price: number;
+  productType: ProductType = ProductType.Play;
+  // products: Product[] = [];
+  equipments: Equipment[] = [];
+
+  get products(): Product[] {
+    return this.equipments;
+  }
 
   static forge(): Play {
-    const newOne = new Play();
-    newOne.name = sample([
+    const play = new Play();
+    play.name = sample([
       '總統府遛鳥',
       '馬里雅納海溝深潛',
       '佔領釣魚台',
@@ -35,19 +43,20 @@ export class Play implements DataItem, Taggable, Product {
       '野外踏青捉蟬',
       '獨角仙夏令營'
     ]);
-    newOne.introduction = sample([
+    play.introduction = sample([
       '地球上提供給我們的物質財富足以滿足每個人的需求，但不足以滿足每個人的貪慾',
       '在這個世界上，你必須成為你希望看到的改變。',
       '要活就要像明天你就會死去一般活著。要學習就要好像你會永遠活著一般學習。',
       '心若改變，態度就會改變,態度改變，習慣就改變；習慣改變，人生就會改變。',
       '我覺得，當心靈發展到了某個階段的時候，我們將不再為了滿足食慾而殘殺動物。'
     ]);
-    newOne.album = Album.forge();
-    newOne.businessHours = BusinessHours.forge();
-    newOne.location = Location.forge();
-    newOne.tags = Tags.forge();
-    newOne.price = random(0, 1000);
-    return newOne;
+    play.album = Album.forge();
+    play.businessHours = BusinessHours.forge();
+    play.location = Location.forge();
+    play.tags = Tags.forge();
+    play.price = random(0, 1000);
+    play.equipments = range(random(0, 5)).map(() => Equipment.forge());
+    return play;
   }
 
   static getFormModel(): FormGroupModel {
@@ -91,7 +100,7 @@ export class Play implements DataItem, Taggable, Product {
         type: FormControlType.location,
         label: '地點',
         default: new Location()
-      },
+      }
     };
 
     const formModel = { name: 'play-form', controls };
@@ -122,10 +131,13 @@ export class Play implements DataItem, Taggable, Product {
 
   toJSON(): any {
     const data = toJSONDeep(this);
+    data.equipments = this.equipments.map(eq => eq.id);
     return data;
   }
 
   clone(): Play {
-    return new Play().fromJSON(this.toJSON());
+    const cloned = new Play().fromJSON(this.toJSON());
+    cloned.equipments = this.equipments;
+    return cloned;
   }
 }

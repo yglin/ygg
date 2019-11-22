@@ -1,7 +1,7 @@
 import { values } from "lodash";
 import { Tags } from '@ygg/tags/core';
 
-interface Document {
+export interface Document {
   path: string;
   data: any;
 }

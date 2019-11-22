@@ -21,4 +21,7 @@ export class ShoppingCartPageObject extends PageObject {
     return `${this.getSelectorForPurchase(purchase)} .quantity input`;
   }
   
+  getSelectorForExpandButton(purchase: Purchase): string {
+    return `${this.getSelectorForPurchase(purchase)} button.expand`;
+  }
 }

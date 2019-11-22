@@ -1,4 +1,4 @@
-import { sum } from "lodash";
+import { sum, isEmpty } from "lodash";
 import { Product, Purchase } from '@ygg/shopping/core';
 import { PurchaseListPageObject } from '@ygg/shopping/ui';
 
@@ -13,6 +13,9 @@ export class PurchaseListPageObjectCypress extends PurchaseListPageObject {
     cy.wrap(purchases).each((purchase: Purchase) => {
       cy.get(this.getSelectorForPurchase(purchase))
         .should('exist');
+        if (!isEmpty(purchase.children)) {
+          this.expectPurchases(purchase.children);
+        }
     });
     this.expectTotalPrice(sum(purchases.map(p => p.price)))
   }

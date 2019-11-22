@@ -1,5 +1,5 @@
-import { extend } from 'lodash';
-import { v4 as uuid } from "uuid";
+import { extend, isEmpty, sum } from 'lodash';
+import { v4 as uuid } from 'uuid';
 import { Product, ProductType } from './product';
 import { Duration } from '@ygg/shared/types';
 import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
@@ -12,8 +12,7 @@ export enum PurchaseState {
 }
 
 interface PurchaseOptions {
-  productType: ProductType;
-  productId: string;
+  product: Product;
   quantity: number;
   [key: string]: any;
 }
@@ -24,30 +23,45 @@ export class Purchase implements SerializableJSON {
   productId: string;
   quantity: number;
   duration: Duration;
-  price: number;
+  selfPrice: number;
   state: PurchaseState;
+  children: Purchase[] = [];
 
   static isPurchase(value: any): value is Purchase {
     return !!(value && value.productType && value.productId);
   }
 
-  constructor(options?: PurchaseOptions) {
-    options = options || {
-      productType: ProductType.Unknown,
-      productId: '',
-      quantity: 0
-    };
-    this.id = uuid();
-    this.productType = options.productType || ProductType.Unknown;
-    this.productId = options.productId || '';
-    this.quantity = options.quantity || 0;
-    this.price = options.price || 0;
-    this.duration = options.duration || undefined;
-    this.state = PurchaseState.New;
+  get price(): number {
+    return this.selfPrice + sum(this.children.map(child => child.selfPrice));
   }
 
-  fromJSON(data: any): this {
+  constructor(options?: PurchaseOptions) {
+    this.id = uuid();
+    if (options) {
+      this.productType = options.product.productType || ProductType.Unknown;
+      this.productId = options.product.id || '';
+      this.quantity = options.quantity || 0;
+      this.selfPrice = options.product.price || 0;
+      this.duration = options.duration || null;
+      this.state = PurchaseState.New;
+
+      if (!isEmpty(options.product.products)) {
+        this.children = options.product.products.map(childProduct => {
+          options.product = childProduct;
+          return new Purchase(options);
+        });
+      }
+    }
+  }
+
+  fromJSON(data: any = {}): this {
     extend(this, data);
+    if (data.duration) {
+      this.duration = new Duration().fromJSON(data.duration);
+    }
+    if (!isEmpty(data.children)) {
+      this.children = data.children.map(child => new Purchase().fromJSON(child));
+    }
     return this;
   }
 

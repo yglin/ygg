@@ -130,6 +130,12 @@
     },
     "shopping-factory": {
       "tags": ["scope:shopping", "type:feature"]
+    },
+    "resource-core": {
+      "tags": ["scope:resource", "type:core"]
+    },
+    "resource-data-access": {
+      "tags": ["scope:resource", "type:data-access"]
     }
   }
 }

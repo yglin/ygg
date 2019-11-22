@@ -61,7 +61,9 @@
       "@ygg/shopping/core": ["libs/shopping/core/src/index.ts"],
       "@ygg/shopping/ui": ["libs/shopping/ui/src/index.ts"],
       "@ygg/shopping/data-access": ["libs/shopping/data-access/src/index.ts"],
-      "@ygg/shopping/factory": ["libs/shopping/factory/src/index.ts"]
+      "@ygg/shopping/factory": ["libs/shopping/factory/src/index.ts"],
+      "@ygg/resource/core": ["libs/resource/core/src/index.ts"],
+      "@ygg/resource/data-access": ["libs/resource/data-access/src/index.ts"]
     },
     "rootDir": "."
   },

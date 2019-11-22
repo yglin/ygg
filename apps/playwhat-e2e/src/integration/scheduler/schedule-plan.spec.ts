@@ -1,4 +1,4 @@
-import { random, range, sample, sampleSize, sumBy } from 'lodash';
+import { random, range, isEmpty, sampleSize, sumBy } from 'lodash';
 import { login } from '../../page-objects/app.po';
 import { SiteNavigator } from '../../page-objects/site-navigator';
 import {
@@ -14,36 +14,25 @@ import {
   createSchedulePlan
 } from '../../page-objects/scheduler';
 import { Tags } from '@ygg/tags/core';
-import { Purchase, ProductType } from '@ygg/shopping/core';
+import {
+  Purchase,
+  ProductType,
+  Product,
+  PurchaseState
+} from '@ygg/shopping/core';
 import { deleteTags } from '../../page-objects/tags';
-import { MockDatabase } from '../../support/mock-database';
+import { MockDatabase, Document } from '../../support/mock-database';
 import { NumberRange } from '@ygg/shared/types';
 import { Play } from '@ygg/playwhat/play';
 import { PlaySelectorPageObjectCypress } from '../../page-objects/play';
 import { PurchaseListPageObjectCypress } from '../../page-objects/shopping/purchase';
-
-function forgePurchase(play: Play, quantity: number): Purchase {
-  const purchase = new Purchase({
-    productId: play.id,
-    productType: ProductType.Play,
-    quantity
-  });
-  purchase.price = play.price * quantity;
-  return purchase;
-}
+import { Equipment } from '@ygg/resource/core';
 
 describe('Scheduler - schedule-plan', () => {
-  const testPlays: Play[] = range(random(3, 7)).map(() => Play.forge());
-  let numParticipants = 53;
-  let purchases: Purchase[] = sampleSize(testPlays, 3).map(play =>
-    forgePurchase(play, numParticipants)
-  );
-  const testSchedulePlan1 = SchedulePlan.forge({ numParticipants, purchases });
-  numParticipants = 67;
-  purchases = sampleSize(testPlays, 3).map(play =>
-    forgePurchase(play, numParticipants)
-  );
-  const testSchedulePlan2 = SchedulePlan.forge({ numParticipants, purchases });
+  let testPlays: Play[];
+  let testSchedulePlan1;
+  let testSchedulePlan2;
+
   const siteNavigator = new SiteNavigator();
   const schedulePlanControlPageObject = new SchedulePlanControlPageObjectCypress(
     ''
@@ -56,14 +45,43 @@ describe('Scheduler - schedule-plan', () => {
   );
   const mockDatabase: MockDatabase = new MockDatabase();
 
+  function prepareTestData() {
+    const documents: Document[] = [];
+    testPlays = range(random(3, 7)).map(() => Play.forge());
+    let numParticipants = 53;
+    let purchases: Purchase[] = sampleSize(testPlays, 3).map(
+      play =>
+        new Purchase({
+          product: play,
+          quantity: numParticipants
+        })
+    );
+    testSchedulePlan1 = SchedulePlan.forge({ numParticipants, purchases });
+    numParticipants = 67;
+    purchases = sampleSize(testPlays, 3).map(
+      play =>
+        new Purchase({
+          product: play,
+          quantity: numParticipants
+        })
+    );
+    testSchedulePlan2 = SchedulePlan.forge({ numParticipants, purchases });
+    testPlays.forEach(play => {
+      documents.push({ path: `plays/${play.id}`, data: play.toJSON() });
+      play.equipments.forEach(eq => {
+        documents.push({ path: `${Equipment.collection}/${eq.id}`, data: eq.toJSON()})
+      });
+    });
+
+    mockDatabase.insertDocuments(
+      documents
+    );
+  }
+
   before(function() {
     cy.visit('/');
     login();
-    mockDatabase.insertDocuments(
-      testPlays.map(play => {
-        return { path: `plays/${play.id}`, data: play.toJSON() };
-      })
-    );
+    prepareTestData();
   });
 
   after(() => {

@@ -259,8 +259,7 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
 
   addPlayPurchase(play: Play) {
     const newPurchase = new Purchase({
-      productType: ProductType.Play,
-      productId: play.id,
+      product: play,
       quantity: this.formGroup.get('numParticipants').value
     });
     this.shoppingCart.addPurchase(newPurchase);
