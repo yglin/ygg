@@ -1,3 +1,4 @@
-<div class="ygg-image-icon" *ngIf="src">
-  <img [src]="src">
+<div class="ygg-image-icon">
+  <img [src]="src" *ngIf="src">
+  <mat-icon *ngIf="!src && icon">{{icon}}</mat-icon>
 </div>

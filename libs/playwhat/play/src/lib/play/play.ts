@@ -5,10 +5,8 @@ import {
   Album,
   BusinessHours,
   Location,
-  FormGroupModel,
-  FormControlModel,
-  FormControlType
 } from '@ygg/shared/types';
+import { FormGroupModel, FormControlModel, FormControlType } from "@ygg/shared/ui/dynamic-form";
 import { Tags, Taggable } from '@ygg/tags/core';
 import { Product, ProductType } from '@ygg/shopping/core';
 import { Equipment } from '@ygg/resource/core';
@@ -31,7 +29,7 @@ export class Play implements DataItem, Taggable, Product {
     return this.equipments;
   }
 
-  static forge(): Play {
+  static forge(options: any = {}): Play {
     const play = new Play();
     play.name = sample([
       '總統府遛鳥',
@@ -55,11 +53,13 @@ export class Play implements DataItem, Taggable, Product {
     play.location = Location.forge();
     play.tags = Tags.forge();
     play.price = random(0, 1000);
-    play.equipments = range(random(0, 5)).map(() => Equipment.forge());
+
+    options.numEquipments = options.numEquipments || random(0, 5);
+    play.equipments = range(options.numEquipments).map(() => Equipment.forge());
     return play;
   }
 
-  static getFormModel(): FormGroupModel {
+  static getFormGroupModel(): FormGroupModel {
     const controls: { [key: string]: FormControlModel } = {
       name: {
         name: 'name',
@@ -106,6 +106,7 @@ export class Play implements DataItem, Taggable, Product {
     const formModel = { name: 'play-form', controls };
     return formModel;
   }
+
 
   constructor() {
     this.id = uuid();

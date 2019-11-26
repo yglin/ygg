@@ -5,6 +5,10 @@
   overflow: hidden;
 }
 
+.mat-icon {
+  font-size: 70px;
+}
+
 .ygg-image-icon img {
   width: 100%;
   height: 100%;

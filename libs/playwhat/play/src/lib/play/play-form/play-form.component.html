@@ -49,6 +49,76 @@
           taggableType="play"
           label="體驗類型標籤"
         ></ygg-tags-control>
+        <ygg-title-divider>設備用具</ygg-title-divider>
+        <div class="equipments-control">
+          <!-- <pre>{{ play.equipments | json }}</pre> -->
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
+            <button
+              mat-mini-fab
+              type="button"
+              class="clear-equipments"
+              (click)="clearEquipments()"
+              matToolTip="移除所有設備用具"
+              [disabled]="!(play.equipments) || play.equipments.length <= 2"
+            >
+              <mat-icon>delete_sweep</mat-icon>
+            </button>
+            <button
+              type="button"
+              mat-mini-fab
+              matToolTip="增加設備用具"
+              (click)="addEquipment()"
+              class="add-equipment"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <br />
+          <div class="equipment-list">
+            <div *ngFor="let equipment of play.equipments; let idx = index">
+              <div
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="20px"
+                [attr.index]="idx"
+              >
+                <div class="mat-elevation-z8">
+                  <ygg-equipment-thumbnail
+                    [equipment]="equipment"
+                  ></ygg-equipment-thumbnail>
+                </div>
+                <div>
+                  <div
+                    fxLayout="row"
+                    fxLayoutAlign="end center"
+                    fxLayoutGap="10px"
+                  >
+                    <div>
+                      <button
+                        type="button"
+                        class="edit"
+                        mat-mini-fab
+                        (click)="editEquipment(idx)"
+                      >
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                    </div>
+                    <div>
+                      <button
+                        type="button"
+                        class="delete"
+                        mat-mini-fab
+                        (click)="deleteEquipment(idx)"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </ygg-action-bar-layout>
   </form>

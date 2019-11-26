@@ -1,0 +1,65 @@
+<div *ngIf="formGroup && model" [formGroup]="formGroup" [id]="model.name" class='dynamic-control' [attr.control-name]='model.name'>
+  <div [ngSwitch]="model.type">
+    <div *ngSwitchCase="formControlTypes.text">
+      <mat-form-field>
+        <input
+          matInput
+          [placeholder]="model.label"
+          [formControlName]="model.name"
+        />
+        <mat-error *ngFor="let error of formControl.errors | keyvalue">{{
+          getErrorMessage(error.key)
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+    <div *ngSwitchCase="formControlTypes.textarea">
+      <mat-form-field>
+        <textarea
+          matInput
+          [placeholder]="model.label"
+          [formControlName]="model.name"
+        ></textarea>
+        <mat-error *ngFor="let error of formControl.errors | keyvalue">{{
+          getErrorMessage(error.key)
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+    <div *ngSwitchCase="formControlTypes.number">
+      <ygg-number-slider
+        [formControlName]="model.name"
+        [label]="model.label"
+      ></ygg-number-slider>
+    </div>
+    <div *ngSwitchCase="formControlTypes.album">
+      <ygg-album-control
+        [label]="model.label"
+        [formControlName]="model.name"
+      ></ygg-album-control>
+    </div>
+    <div *ngSwitchCase="formControlTypes.businessHours">
+      <ygg-business-hours-control
+        [label]="model.label"
+        [formControlName]="model.name"
+      ></ygg-business-hours-control>
+    </div>
+    <div *ngSwitchCase="formControlTypes.address">
+      <ygg-address-control
+        [label]="model.label"
+        [formControlName]="model.name"
+      ></ygg-address-control>
+    </div>
+    <div *ngSwitchCase="formControlTypes.geoPoint">
+      <ygg-geo-point-control
+        [label]="model.label"
+        [formControlName]="model.name"
+      ></ygg-geo-point-control>
+    </div>
+    <div *ngSwitchCase="formControlTypes.location">
+      <ygg-location-control
+        [label]="model.label"
+        [formControlName]="model.name"
+      ></ygg-location-control>
+    </div>
+    <div *ngSwitchDefault></div>
+  </div>
+</div>

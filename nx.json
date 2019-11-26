@@ -136,6 +136,15 @@
     },
     "resource-data-access": {
       "tags": ["scope:resource", "type:data-access"]
+    },
+    "resource-ui": {
+      "tags": ["scope:resource", "type:ui"]
+    },
+    "shared-ui-dynamic-form": {
+      "tags": ["scope:shared", "type:ui"]
+    },
+    "resource-factory": {
+      "tags": ["scope:resource", "type:factory"]
     }
   }
 }

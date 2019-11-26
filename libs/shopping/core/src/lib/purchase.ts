@@ -32,7 +32,7 @@ export class Purchase implements SerializableJSON {
   }
 
   get price(): number {
-    return this.selfPrice + sum(this.children.map(child => child.selfPrice));
+    return this.selfPrice + sum(this.children.map(child => child.price));
   }
 
   constructor(options?: PurchaseOptions) {
@@ -41,7 +41,7 @@ export class Purchase implements SerializableJSON {
       this.productType = options.product.productType || ProductType.Unknown;
       this.productId = options.product.id || '';
       this.quantity = options.quantity || 0;
-      this.selfPrice = options.product.price || 0;
+      this.selfPrice = options.product.price * this.quantity;
       this.duration = options.duration || null;
       this.state = PurchaseState.New;
 

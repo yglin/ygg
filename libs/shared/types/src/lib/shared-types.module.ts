@@ -14,7 +14,7 @@ import {
 // import { DateRangeControlDialogComponent } from './date-range/date-range-control/date-range-control-dialog/date-range-control-dialog.component';
 import { AlbumViewComponent } from './album/album-view/album-view.component';
 import { ImageComponent } from './image/image.component';
-import { FormControlComponent } from './form';
+// import { FormControlComponent } from './form';
 import { AlbumControlComponent } from './album/album-control/album-control.component';
 import { ImageUploaderComponent } from './image/image-uploader/image-uploader.component';
 import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
@@ -45,7 +45,7 @@ import {
   GoogleMapComponent
 } from './location';
 import { AlbumComponent } from './album/album.component';
-import { TagsControlComponent, TagsViewComponent } from './tags';
+// import { TagsControlComponent, TagsViewComponent } from './tags';
 import { ContactControlComponent, ContactViewComponent } from './contact';
 
 @NgModule({
@@ -77,7 +77,7 @@ import { ContactControlComponent, ContactViewComponent } from './contact';
     // DateRangeControlDialogComponent,
     AlbumViewComponent,
     ImageComponent,
-    FormControlComponent,
+    // FormControlComponent,
     AlbumControlComponent,
     ImageUploaderComponent,
     BusinessHoursControlComponent,
@@ -97,8 +97,8 @@ import { ContactControlComponent, ContactViewComponent } from './contact';
     LocationViewComponent,
     GoogleMapComponent,
     AlbumComponent,
-    TagsControlComponent,
-    TagsViewComponent,
+    // TagsControlComponent,
+    // TagsViewComponent,
     ContactControlComponent,
     ContactViewComponent
   ],
@@ -110,7 +110,7 @@ import { ContactControlComponent, ContactViewComponent } from './contact';
     DateRangeControlComponent,
     AlbumViewComponent,
     ImageComponent,
-    FormControlComponent,
+    // FormControlComponent,
     AlbumControlComponent,
     ImageUploaderComponent,
     BusinessHoursControlComponent,

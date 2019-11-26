@@ -29,10 +29,10 @@
       </div>
       <div *ngIf="!readonly" class='photo' fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
         <div id="add-photos" (click)="addPhoto()">
-          <button mat-fab><mat-icon>add</mat-icon></button>
+          <button type="button" mat-fab><mat-icon>add</mat-icon></button>
         </div>
         <div id="clear-all" (click)="clearAll()">
-          <button mat-fab><mat-icon>delete_sweep</mat-icon></button>
+          <button type="button" mat-fab><mat-icon>delete_sweep</mat-icon></button>
         </div>
       </div>
     </div>

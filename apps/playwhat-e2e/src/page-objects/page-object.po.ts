@@ -9,8 +9,12 @@ export class PageObject {
 
   getSelector(name?: string): string {
     let targetSelector = '';
-    if (name && (name in this.selectors)) {
-      targetSelector = this.selectors[name];
+    if (name) {
+      if (name in this.selectors) {
+        targetSelector = this.selectors[name];
+      } else {
+        targetSelector = name;
+      }
     }
     return `${this.parentSelector} ${this.selector} ${targetSelector}`.trim();
   }

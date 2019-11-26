@@ -1440,6 +1440,87 @@
         }
       },
       "schematics": {}
+    },
+    "resource-ui": {
+      "projectType": "library",
+      "root": "libs/resource/ui",
+      "sourceRoot": "libs/resource/ui/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/resource/ui/tsconfig.lib.json",
+              "libs/resource/ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/resource/ui/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/resource/ui/jest.config.js",
+            "tsConfig": "libs/resource/ui/tsconfig.spec.json",
+            "setupFile": "libs/resource/ui/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shared-ui-dynamic-form": {
+      "projectType": "library",
+      "root": "libs/shared/ui/dynamic-form",
+      "sourceRoot": "libs/shared/ui/dynamic-form/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/dynamic-form/tsconfig.lib.json",
+              "libs/shared/ui/dynamic-form/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/ui/dynamic-form/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/dynamic-form/jest.config.js",
+            "tsConfig": "libs/shared/ui/dynamic-form/tsconfig.spec.json",
+            "setupFile": "libs/shared/ui/dynamic-form/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "resource-factory": {
+      "projectType": "library",
+      "root": "libs/resource/factory",
+      "sourceRoot": "libs/resource/factory/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/resource/factory/tsconfig.lib.json",
+              "libs/resource/factory/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/resource/factory/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/resource/factory/jest.config.js",
+            "tsConfig": "libs/resource/factory/tsconfig.spec.json",
+            "setupFile": "libs/resource/factory/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

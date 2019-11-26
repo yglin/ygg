@@ -1,5 +1,5 @@
 {
-  "compileOnSave": false,
+  "compileOnSave": true,
   "compilerOptions": {
     "sourceMap": true,
     "declaration": false,
@@ -63,7 +63,12 @@
       "@ygg/shopping/data-access": ["libs/shopping/data-access/src/index.ts"],
       "@ygg/shopping/factory": ["libs/shopping/factory/src/index.ts"],
       "@ygg/resource/core": ["libs/resource/core/src/index.ts"],
-      "@ygg/resource/data-access": ["libs/resource/data-access/src/index.ts"]
+      "@ygg/resource/data-access": ["libs/resource/data-access/src/index.ts"],
+      "@ygg/resource/ui": ["libs/resource/ui/src/index.ts"],
+      "@ygg/shared/ui/dynamic-form": [
+        "libs/shared/ui/dynamic-form/src/index.ts"
+      ],
+      "@ygg/resource/factory": ["libs/resource/factory/src/index.ts"]
     },
     "rootDir": "."
   },

@@ -1,0 +1,17 @@
+<div class="resource-control">
+  <ygg-action-bar-layout position="top">
+    <div ygg-action-bar-button>
+      <button
+        id="submit"
+        class="submit"
+        [disabled]="formGroup.invalid"
+        mat-fab
+        type="button"
+        (click)="onSubmit()"
+      >
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+    <div ygg-action-bar-content></div>
+  </ygg-action-bar-layout>
+</div>

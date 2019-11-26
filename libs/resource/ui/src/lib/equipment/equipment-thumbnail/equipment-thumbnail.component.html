@@ -1,0 +1,21 @@
+<div class="equipment-thumbnail">
+  <div
+    *ngIf="equipment"
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    fxLayoutGap="20px"
+  >
+    <div class="icon">
+      <ygg-image-icon [src]="iconSrc" icon='sports_tennis'></ygg-image-icon>
+    </div>
+    <div>
+      <div class="name">{{ equipment.name }}</div>
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+        <div class="stock">X {{ equipment.stock }}</div>
+        <div class="price">
+          <ygg-price [price]="equipment.price"></ygg-price>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -17,6 +17,9 @@ import { RouterModule } from '@angular/router';
 import { SharedUserModule } from '@ygg/shared/user';
 import { PlayViewPageComponent } from './play/pages/play-view-page/play-view-page.component';
 import { PlaySelectorComponent } from './play/play-selector/play-selector.component';
+import { EquipmentEditDialogComponent } from './play/equipment-edit-dialog/equipment-edit-dialog.component';
+import { ResourceUiModule } from '@ygg/resource/ui';
+import { SharedUiDynamicFormModule } from '@ygg/shared/ui/dynamic-form';
 
 @NgModule({
   imports: [
@@ -28,7 +31,9 @@ import { PlaySelectorComponent } from './play/play-selector/play-selector.compon
     SharedTypesModule,
     SharedUiWidgetsModule,
     SharedUiNgMaterialModule,
-    TagsUiModule
+    TagsUiModule,
+    ResourceUiModule,
+    SharedUiDynamicFormModule
   ],
   declarations: [
     PlayFormComponent,
@@ -39,6 +44,10 @@ import { PlaySelectorComponent } from './play/play-selector/play-selector.compon
     PlayDashboardComponent,
     PlayViewPageComponent,
     PlaySelectorComponent,
+    EquipmentEditDialogComponent,
+  ],
+  entryComponents: [
+    EquipmentEditDialogComponent
   ],
   exports: [PlayFormComponent, PlayViewComponent, PlaySelectorComponent]
 })

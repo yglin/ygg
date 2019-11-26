@@ -1,12 +1,16 @@
 import { Play } from '@ygg/playwhat/play';
-import { MockDatabase } from '../../support/mock-database';
+import { MockDatabase, Document } from '../../support/mock-database';
 import { login } from '../../page-objects/app.po';
 import { SiteNavigator } from '../../page-objects/site-navigator';
-import { PlayListPageObjectCypress, PlayViewPagePageObjectCypress } from '../../page-objects/play';
+import {
+  PlayListPageObjectCypress,
+  PlayViewPagePageObjectCypress
+} from '../../page-objects/play';
 import {
   PlayFormPageObject,
   PlayViewPageObject
 } from '../../page-objects/play.po';
+import { Equipment } from '@ygg/resource/core';
 
 describe('Update Play', () => {
   const siteNavigator = new SiteNavigator();
@@ -15,9 +19,20 @@ describe('Update Play', () => {
   before(() => {
     cy.visit('/');
     login().then((user: any) => {
-      const testPlay = Play.forge();
+      const documents: Document[] = [];
+      const testPlay = Play.forge({
+        numEquipments: 3
+      });
       testPlay.creatorId = user.id;
-      mockDatabase.insert(`plays/${testPlay.id}`, testPlay.toJSON());
+      documents.push({
+        path: `plays/${testPlay.id}`,
+        data: testPlay.toJSON()
+      });
+      testPlay.equipments.forEach(equipment => documents.push({
+        path: `${Equipment.collection}/${equipment.id}`,
+        data: equipment.toJSON()
+      }));
+      mockDatabase.insertDocuments(documents);
       cy.wrap(testPlay).as('testPlay');
     });
   });
@@ -34,7 +49,9 @@ describe('Update Play', () => {
       myPlayListPage.clickPlay(testPlay);
       const playViewPagePageObject = new PlayViewPagePageObjectCypress();
       playViewPagePageObject.gotoEdit();
-      const changedPlay = Play.forge();
+      const changedPlay = Play.forge({
+        numEquipments: 4
+      });
       const playFormPageObject = new PlayFormPageObject();
       playFormPageObject.fillIn(changedPlay);
       playFormPageObject.submit();

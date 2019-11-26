@@ -96,13 +96,14 @@ export class ShoppingCartService {
     } else if (isObservable(arg1)) {
       purchase$ = arg1;
     }
-    return purchase$.pipe(
-      switchMap(purchase => {
-        return this.productService
-          .get$(purchase.productType, purchase.productId)
-          .pipe(map(product => product.price * purchase.quantity), tap(price => purchase.price = price));
-      })
-    );
+    return purchase$.pipe(map(purchase => purchase.price));
+    // return purchase$.pipe(
+    //   switchMap(purchase => {
+    //     return this.productService
+    //       .get$(purchase.productType, purchase.productId)
+    //       .pipe(map(product => product.price * purchase.quantity));
+    //   })
+    // );
   }
 
   evaluateTotalPrice$(

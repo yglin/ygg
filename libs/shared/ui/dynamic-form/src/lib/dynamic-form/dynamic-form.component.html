@@ -1,0 +1,29 @@
+<div class="dynamic-form" [attr.form-name]='model.name'>
+  <form [formGroup]="formGroup" *ngIf="formGroup">
+    <ygg-action-bar-layout position="top">
+      <div ygg-action-bar-button>
+        <button
+          id="submit"
+          class="submit"
+          [disabled]="formGroup.invalid"
+          mat-fab
+          type="button"
+          (click)="onSubmit()"
+        >
+          <mat-icon>save</mat-icon>
+        </button>
+      </div>
+      <div ygg-action-bar-content>
+        <div *ngFor="let name of controlModelNames">
+          <div *ngIf="model.controls[name] as controlModel">
+            <ygg-title-divider>{{ controlModel.label }}</ygg-title-divider>
+            <ygg-form-control
+              [formGroup]="formGroup"
+              [model]="controlModel"
+            ></ygg-form-control>
+          </div>
+        </div>
+      </div>
+    </ygg-action-bar-layout>
+  </form>
+</div>

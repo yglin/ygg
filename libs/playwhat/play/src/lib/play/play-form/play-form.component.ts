@@ -16,10 +16,13 @@ import {
   FormControlModel,
   FormGroupModel
   // FormFactoryService
-} from '@ygg/shared/types';
+} from '@ygg/shared/ui/dynamic-form';
 import { Subscription } from 'rxjs';
 import { PlayFactoryService } from '../play-factory.service';
 import { AuthenticateService, User } from '@ygg/shared/user';
+import { YggDialogService } from '@ygg/shared/ui/widgets';
+import { Equipment } from '@ygg/resource/core';
+import { EquipmentEditDialogComponent } from '../equipment-edit-dialog/equipment-edit-dialog.component';
 
 @Component({
   selector: 'ygg-play-form',
@@ -43,7 +46,8 @@ export class PlayFormComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     // private formFactory: FormFactoryService,
-    private playFactory: PlayFactoryService
+    private playFactory: PlayFactoryService,
+    private yggDialog: YggDialogService
   ) {
     this.formModel = this.playFactory.createModel();
     this.controlModels = values(this.formModel.controls);
@@ -76,6 +80,45 @@ export class PlayFormComponent implements OnInit, OnDestroy {
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
     }
+  }
+
+  clearEquipments() {
+    if (confirm('移除所有的設備用具？')) {
+      this.play.equipments = [];
+    }
+  }
+
+  addEquipment() {
+    const dialogRef = this.yggDialog.open(EquipmentEditDialogComponent, {
+      title: '新增設備'
+    });
+    this.subscriptions.push(dialogRef.afterClosed().subscribe((equipment: Equipment) => {
+      if (equipment) {
+        this.play.equipments.push(equipment);
+        this.valueChanged.emit(this.play);
+      }      
+    }));
+  }
+
+  editEquipment(index: number) {
+    const equipment = this.play.equipments[index];
+    const dialogRef = this.yggDialog.open(EquipmentEditDialogComponent, {
+      title: '修改設備',
+      data: {
+        equipment
+      }
+    });
+    this.subscriptions.push(dialogRef.afterClosed().subscribe((equipment: Equipment) => {
+      if (equipment) {
+        this.play.equipments[index] = equipment;
+        this.valueChanged.emit(this.play);
+      }      
+    }));
+  }
+
+  deleteEquipment(index: number) {
+    this.play.equipments.splice(index, 1);
+    this.valueChanged.emit(this.play);
   }
 
   async onSubmit() {

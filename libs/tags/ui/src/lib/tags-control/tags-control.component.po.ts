@@ -1,4 +1,4 @@
-import { PageObject } from "@ygg/shared/test/page-object";
+import { PageObject } from '@ygg/shared/test/page-object';
 import { Tags, Tag } from '@ygg/tags/core';
 
 export abstract class TagsControlComponentPageObject extends PageObject {
@@ -8,18 +8,22 @@ export abstract class TagsControlComponentPageObject extends PageObject {
     inputTagName: 'input#chip',
     buttonAdd: 'button#add-chip',
     buttonClear: 'button#clear-all',
-    tagChip: '.chip',
+    tagChip: '.chip'
   };
 
   getSelectorForAutocompletePanel(): string {
     return '.autocomplete-panel';
   }
 
-  getSelectorForTagChip(tag: Tag): string {
-    return `${this.getSelector('tagChip')}[chipName="${tag.name}"]`;
+  getSelectorForTagChip(tag?: Tag): string {
+    if (tag) {
+      return `${this.getSelector('tagChip')}[chipName="${tag.name}"]`;
+    } else {
+      return `${this.getSelector('tagChip')}`;
+    }
   }
 
-  getSelectorForTagDeleteButton(tag: Tag): string {
+  getSelectorForTagDeleteButton(tag?: Tag): string {
     return `${this.getSelectorForTagChip(tag)} .delete`;
   }
 
