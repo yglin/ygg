@@ -181,13 +181,15 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
   setLikesDescription(likesDescription: string) {
     cy.get(this.getSelector('textareaLikesDescription'))
       .clear()
-      .type(likesDescription);
+      .type(likesDescription)
+      .should('have.value', likesDescription);
   }
 
   setAccommodationHelp(accommodationHelp: string) {
     cy.get(this.getSelector('textareaAccommodationHelp'))
       .clear()
-      .type(accommodationHelp);
+      .type(accommodationHelp)
+      .should('have.value', accommodationHelp);
   }
 
   expectTotalPrice(totalPrice: number) {
@@ -196,11 +198,13 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
 
   setPurchases(purchases: Purchase[]) {
     this.shoppingCartPageObject.clear();
-    cy.wrap(purchases).each((purchase: Purchase) => {
-      this.playSelectorPageObject.clickPlayById(purchase.productId);
-      this.shoppingCartPageObject.setPurchase(purchase);
-    }).then(() => {
-      this.shoppingCartPageObject.expectPurchases(purchases);
-    });
+    cy.wrap(purchases)
+      .each((purchase: Purchase) => {
+        this.playSelectorPageObject.clickPlayById(purchase.productId);
+        this.shoppingCartPageObject.setPurchase(purchase);
+      })
+      .then(() => {
+        this.shoppingCartPageObject.expectPurchases(purchases);
+      });
   }
 }

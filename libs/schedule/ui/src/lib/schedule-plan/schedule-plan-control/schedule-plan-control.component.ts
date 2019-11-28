@@ -124,6 +124,9 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
       this.schedulePlan = this.schedulePlan.clone();
       this.formGroup.patchValue(this.schedulePlan);
       this.setContacts(this.schedulePlan.contacts);
+      if (!isEmpty(this.schedulePlan.purchases)) {
+        this.shoppingCart.setPurchases(this.schedulePlan.purchases);
+      }
     } else {
       this.schedulePlan = new SchedulePlan();
     }
@@ -267,8 +270,8 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
       quantity: this.formGroup.get('numParticipants').value
     });
     if (!isEmpty(newPurchase.children)) {
-      console.log(`Play has ${play.equipments.length} equipments`);
-      console.log(play.equipments);
+      // console.log(`Play has ${play.equipments.length} equipments`);
+      // console.log(play.equipments);
       const dialogRef = this.dialog.open(PurchaseControlComponent, {
         title: '修改購買選項',
         data: {

@@ -1,4 +1,4 @@
-import { random, range, isEmpty, sample, sampleSize, sum, sumBy } from 'lodash';
+import { random, range, isEmpty, sample, sampleSize, sum, last } from 'lodash';
 import { login } from '../../page-objects/app.po';
 import { SiteNavigator } from '../../page-objects/site-navigator';
 import {
@@ -31,6 +31,7 @@ import {
 } from '../../page-objects/shopping/purchase';
 import { Equipment } from '@ygg/resource/core';
 import { ShoppingCartPageObjectCypress } from '../../page-objects/shopping';
+import { PlayFormPageObject } from '../../page-objects/play.po';
 
 describe('Scheduler - schedule-plan', () => {
   let testPlays: Play[];
@@ -108,6 +109,26 @@ describe('Scheduler - schedule-plan', () => {
     cy.log(`##### All done, clean temporary test data #####`);
     mockDatabase.clear();
   });
+
+  it('Should keep input data on leaving page', () => {
+    siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+    schedulePlanControlPageObject.setValue(testSchedulePlan1);
+    cy.visit('/');
+    siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+    schedulePlanControlPageObject.submit();
+    cy.url({ timeout: 10000 }).should('not.match', /scheduler\/schedule-plans\/new.*/);
+    cy.location('pathname').then((loc: any) => {
+      const pathname: string = loc as string;
+      const id = last(pathname.split('/'));
+      testSchedulePlan1.id = id;
+      mockDatabase.pushDocument({
+        path: `schedule-plans/${id}`,
+        data: testSchedulePlan1.toJSON()
+      });
+      schedulePlanViewPageObject.expectValue(testSchedulePlan1);
+    });
+  });
+
 
   it('should auto sync total budget and single budget', () => {
     let testNumParticipants;
@@ -228,9 +249,10 @@ describe('Scheduler - schedule-plan', () => {
     const purchase = new Purchase({ product: play, quantity: numParticipants });
     siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
     schedulePlanControlPageObject.setNumParticipants(numParticipants);
-    const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
-    playSelectorPageObject.clickPlay(play);
     const shoppingCartPageObject = new ShoppingCartPageObjectCypress('');
+    const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
+    shoppingCartPageObject.clear();
+    playSelectorPageObject.clickPlay(play);
     shoppingCartPageObject.expectPurchase(purchase);
   });
 
@@ -240,17 +262,38 @@ describe('Scheduler - schedule-plan', () => {
     const purchase = new Purchase({ product: play, quantity: numParticipants });
     siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
     schedulePlanControlPageObject.setNumParticipants(numParticipants);
+    const shoppingCartPageObject = new ShoppingCartPageObjectCypress('');
     const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
+    shoppingCartPageObject.clear();
     playSelectorPageObject.clickPlay(play);
     const purchaseControlPageObject = new PurchaseControlPageObjectCypress(
       '.ygg-dialog'
     );
     purchaseControlPageObject.setValue(purchase);
     purchaseControlPageObject.submit();
-    const shoppingCartPageObject = new ShoppingCartPageObjectCypress('');
     shoppingCartPageObject.expectPurchase(purchase);
   });
 
+
+/*   it('Should be able to add play on the fly', () => {
+    siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+    const testPlay = Play.forge();
+    schedulePlanControlPageObject.setValue(testSchedulePlan1);
+    schedulePlanControlPageObject.gotoNewPlay();
+    const playFormPageObject = new PlayFormPageObject();
+    playFormPageObject.fillIn(testPlay);
+    playFormPageObject.submit();
+    cy.url().should('not.match', /\/plays\/new/);
+    cy.location('pathname').then((pathnames: any) => {
+      const id = last((pathnames as string).split('/'));
+      testPlay.id = id;
+      siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+      const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
+      // The new play should show up
+      playSelectorPageObject.expectPlay(testPlay);
+    });
+  });
+ */  
 
   // Too thoughtful for user, rather not do it for now
   // it('Change numParticipants should refresh purchases and total price', () => {

@@ -65,9 +65,9 @@ export class Purchase implements SerializableJSON {
   }
 
   fromJSON(data: any = {}): this {
-    console.log(data);
+    // console.log(data);
     extend(this, data);
-    console.log(this);
+    // console.log(this);
     if (data.duration) {
       this.duration = new Duration().fromJSON(data.duration);
     }

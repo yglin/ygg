@@ -1,5 +1,5 @@
 import { filter, isEmpty } from 'lodash';
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { DataAccessService } from '@ygg/shared/infra/data-access';
 
 // import {DateRange, NumberRange} from
@@ -12,6 +12,9 @@ import { Query } from '@ygg/shared/infra/data-access';
 import { map, tap, switchMap } from 'rxjs/operators';
 import { Purchase } from '@ygg/shopping/core';
 import { PurchaseService } from "@ygg/shopping/data-access";
+import { LOCAL_STORAGE, StorageService } from "ngx-webstorage-service";
+
+const STORAGE_KEY = 'schedule-plan';
 
 @Injectable({ providedIn: 'root' })
 export class SchedulePlanService {
@@ -19,7 +22,8 @@ export class SchedulePlanService {
 
   constructor(
     private dataAccessService: DataAccessService,
-    private purchaseService: PurchaseService
+    private purchaseService: PurchaseService,
+    @Inject(LOCAL_STORAGE) private storage: StorageService
   ) {}
 
   // defaultForm(): SchedulePlan {
@@ -75,6 +79,16 @@ export class SchedulePlanService {
       schedulePlan.purchases = purchases;
     }
     return schedulePlan;
+  }
+
+  getLocalStorage(): SchedulePlan {
+    const data = this.storage.get(STORAGE_KEY);
+    // console.log(data);
+    return !!data ? new SchedulePlan().fromJSON(data) : null;
+  }
+
+  setLocalStorage(schedulePlan: SchedulePlan) {
+    this.storage.set(STORAGE_KEY, schedulePlan.toJSON());
   }
 
   // async upsert(schedulePlan: SchedulePlan) {

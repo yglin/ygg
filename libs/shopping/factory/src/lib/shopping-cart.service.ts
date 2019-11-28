@@ -96,6 +96,11 @@ export class ShoppingCartService {
     this.purchases$.next([]);
   }
 
+  setPurchases(purchases: Purchase[]) {
+    this.clear();
+    purchases.forEach(p => this.addPurchase(p));
+  }
+
   // evaluatePrice$(arg1: Observable<Purchase> | Purchase): Observable<number> {
   //   let purchase$: Observable<Purchase>;
   //   if (Purchase.isPurchase(arg1)) {

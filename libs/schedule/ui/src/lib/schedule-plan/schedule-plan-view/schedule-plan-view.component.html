@@ -100,7 +100,7 @@
           </div>
         </td>
       </tr>
-      <tr class="likes" *ngIf="schedulePlan.hasPurchases()">
+      <tr class="likes" *ngIf="schedulePlan.hasPurchases() || schedulePlan.likesDescription">
         <td>體驗需求</td>
         <td>
           <div class="purchases">
