@@ -1,4 +1,4 @@
-import { isEmpty, sumBy } from 'lodash';
+import { isEmpty, sumBy, sum } from 'lodash';
 import {
   Component,
   OnInit,
@@ -26,16 +26,19 @@ export class PurchaseListComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private shoppingCart: ShoppingCartService) {
     this.subscriptions.push(
       this.purchases$
-        .pipe(
-          switchMap(purchases => {
-            return this.shoppingCart.evaluateTotalPrice$(purchases);
-          })
-        )
-        .subscribe(totalPrice => (this.totalPrice = totalPrice))
+        // .pipe(
+        //   switchMap(purchases => {
+        //     return this.shoppingCart.evaluateTotalPrice$(purchases);
+        //   })
+        // )
+        .subscribe(purchases => {
+          this.purchases = purchases;
+          this.totalPrice = sum(purchases.map(p => p.totalPrice));
+        })
     );
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.purchases$.next(this.purchases);
   }
 

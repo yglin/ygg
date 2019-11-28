@@ -5,9 +5,10 @@ import {
   PlayViewPageObject
 } from '../../page-objects/play.po';
 import { Play } from '@ygg/playwhat/play';
-import { MockDatabase } from "../../support/mock-database";
+import { MockDatabase } from '../../support/mock-database';
 import { User } from '@ygg/shared/user';
 import { login } from '../../page-objects/app.po';
+import { Equipment } from '@ygg/resource/core';
 
 describe('Create Play', () => {
   const siteNavigator = new SiteNavigator();
@@ -40,9 +41,12 @@ describe('Create Play', () => {
       });
       // Clear test data
       mockDatabase.delete(`plays/${id}`);
-      cy.wrap(testPlay.tags.toTagsArray()).each((tag: any) => {
-        mockDatabase.delete(`tags/${tag.id}`);
-      });
+      cy.wrap(testPlay.tags.toTagsArray()).each((tag: any) =>
+        mockDatabase.delete(`tags/${tag.id}`)
+      );
+      cy.wrap(testPlay.equipments).each((eq: Equipment) =>
+        mockDatabase.delete(`resources/${eq.id}`)
+      );
     });
   });
 });

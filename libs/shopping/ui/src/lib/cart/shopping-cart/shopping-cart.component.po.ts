@@ -17,8 +17,16 @@ export class ShoppingCartPageObject extends PageObject {
     return `${this.getSelector('purchaseList')} [item-id="${purchase.productId}"]`;
   }
 
-  getSelectorForQuantityInput(purchase: Purchase): string {
-    return `${this.getSelectorForPurchase(purchase)} .quantity input`;
+  getSelectorForPurchaseQuantity(purchase: Purchase): string {
+    return `${this.getSelectorForPurchase(purchase)} .quantity`;
+  }
+
+  getSelectorForPurchaseTotalPrice(purchase: Purchase): string {
+    return `${this.getSelectorForPurchase(purchase)} .price`;
+  }
+
+  getSelectorForPurchaseEditButton(purchase: Purchase): string {
+    return `${this.getSelectorForPurchase(purchase)} button.edit`;
   }
   
   getSelectorForExpandButton(purchase: Purchase): string {

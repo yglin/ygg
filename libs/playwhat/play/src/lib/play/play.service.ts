@@ -4,7 +4,7 @@ import { DataAccessService, Query } from '@ygg/shared/infra/data-access';
 import { Play } from './play';
 import { Observable, of, combineLatest } from 'rxjs';
 import { User } from '@ygg/shared/user';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import { Equipment } from '@ygg/resource/core';
 import { EquipmentService } from '@ygg/resource/data-access';
 
@@ -24,7 +24,11 @@ export class PlayService {
       return of([]);
     } else {
       return combineLatest(
-        equipmentIds.map(id => this.equipmentService.get$(id))
+        equipmentIds.map(id =>
+          this.equipmentService.get$(id).pipe(catchError(error => of(null)))
+        )
+      ).pipe(
+        map((equipments: Equipment[]) => equipments.filter(eq => !isEmpty(eq)))
       );
     }
   }

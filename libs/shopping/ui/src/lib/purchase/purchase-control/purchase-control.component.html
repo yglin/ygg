@@ -1,0 +1,134 @@
+<div class="purchase-control" *ngIf="purchase">
+  <ygg-action-bar-layout>
+    <div ygg-action-bar-button>
+      <button mat-fab type="button" class="submit" (click)="onSubmit()">
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+    <div ygg-action-bar-content>
+      <h4>
+        總價：<ygg-price
+          class="total-price"
+          [price]="purchase.totalPrice"
+        ></ygg-price>
+      </h4>
+      <div
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="30px"
+        [attr.product-id]="purchase.productId"
+      >
+        <div>
+          <ygg-product-thumbnail
+            [id]="purchase.productId"
+            [type]="purchase.productType"
+          ></ygg-product-thumbnail>
+        </div>
+        <div>
+          <h4>單價：<ygg-price [price]="purchase.unitPrice"></ygg-price></h4>
+        </div>
+        <div class='quantity'>
+          <ygg-number-slider
+            min="1"
+            [(ngModel)]="purchase.quantity"
+            label="數量"
+          >
+          </ygg-number-slider>
+        </div>
+      </div>
+      <div *ngIf="purchase.children && purchase.children.length > 0">
+        <ygg-title-divider>其他購買品項</ygg-title-divider>
+        <div>
+          <div class="purchases-table">
+            <table mat-table [dataSource]="purchasesDataSource">
+              <ng-container matColumnDef="product">
+                <th mat-header-cell *matHeaderCellDef>品項</th>
+                <td
+                  mat-cell
+                  *matCellDef="let childPurchase"
+                  class="cell product-name"
+                >
+                  <ygg-product-thumbnail
+                    [id]="childPurchase.productId"
+                    [type]="childPurchase.productType"
+                  ></ygg-product-thumbnail>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef>數量</th>
+                <td
+                  mat-cell
+                  *matCellDef="let childPurchase; let idx = index"
+                  class="quantity"
+                >
+                  <ygg-number-slider
+                    min="1"
+                    [(ngModel)]="childPurchase.quantity"
+                    label="數量"
+                  >
+                  </ygg-number-slider>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="unitPrice">
+                <th mat-header-cell *matHeaderCellDef>單價</th>
+                <td mat-cell *matCellDef="let childPurchase">
+                  <ygg-price [price]="childPurchase.unitPrice"></ygg-price>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container matColumnDef="management">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let childPurchase; let idx = index">
+                  <div
+                    fxLayout="row"
+                    fxLayoutAlign="end center"
+                    fxLayoutGap="10px"
+                  >
+                    <button
+                      type="button"
+                      mat-mini-fab
+                      (click)="removePurchase(idx)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+                <td mat-footer-cell *matFooterCellDef>
+                  <div
+                    fxLayout="row"
+                    fxLayoutAlign="end center"
+                    fxLayoutGap="10px"
+                  >
+                    <button
+                      type="button"
+                      mat-mini-fab
+                      (click)="removeAll()"
+                      class="clear-all"
+                      [hidden]="purchase.children.length <= 2"
+                    >
+                      <mat-icon>delete_sweep</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedColumns"
+                [attr.item-id]="row.productId"
+                [attr.product-id]="row.productId"
+              ></tr>
+              <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ygg-action-bar-layout>
+</div>

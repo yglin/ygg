@@ -42,6 +42,9 @@ import { TranspotationTypes } from '@ygg/schedule/core';
 import { ActivatedRoute } from '@angular/router';
 import { Purchase, ProductType } from '@ygg/shopping/core';
 import { ShoppingCartService } from '@ygg/shopping/factory';
+import { ShoppingCartComponent } from 'libs/shopping/ui/src/lib/cart/shopping-cart/shopping-cart.component';
+import { YggDialogService } from '@ygg/shared/ui/widgets';
+import { PurchaseControlComponent } from '@ygg/shopping/ui';
 
 @Component({
   selector: 'ygg-schedule-plan-control',
@@ -74,7 +77,8 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
     private authUiService: AuthenticateUiService,
     private userService: UserService,
     private playService: PlayService,
-    private shoppingCart: ShoppingCartService
+    private shoppingCart: ShoppingCartService,
+    private dialog: YggDialogService
   ) {
     this.subscriptions = [];
     this.subscriptions.push(
@@ -262,7 +266,27 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
       product: play,
       quantity: this.formGroup.get('numParticipants').value
     });
-    this.shoppingCart.addPurchase(newPurchase);
+    if (!isEmpty(newPurchase.children)) {
+      console.log(`Play has ${play.equipments.length} equipments`);
+      console.log(play.equipments);
+      const dialogRef = this.dialog.open(PurchaseControlComponent, {
+        title: '修改購買選項',
+        data: {
+          purchase: newPurchase
+        }
+      });
+      this.subscriptions.push(
+        dialogRef.afterClosed().subscribe(purchase => {
+          if (purchase) {
+            this.shoppingCart.addPurchase(purchase);
+          } else {
+            this.shoppingCart.addPurchase(newPurchase);
+          }
+        })
+      );
+    } else {
+      this.shoppingCart.addPurchase(newPurchase);
+    }
   }
 
   createFormGroup(): FormGroup {

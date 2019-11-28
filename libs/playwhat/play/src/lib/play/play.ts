@@ -54,7 +54,7 @@ export class Play implements DataItem, Taggable, Product {
     play.tags = Tags.forge();
     play.price = random(0, 1000);
 
-    options.numEquipments = options.numEquipments || random(0, 5);
+    options.numEquipments = (typeof options.numEquipments === 'number') ? options.numEquipments : random(0, 5);
     play.equipments = range(options.numEquipments).map(() => Equipment.forge());
     return play;
   }

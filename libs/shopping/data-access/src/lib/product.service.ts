@@ -5,6 +5,7 @@ import { Product, ProductType } from '@ygg/shopping/core';
 import { map } from 'rxjs/operators';
 import { PlayService } from '@ygg/playwhat/play';
 import { LogService } from '@ygg/shared/infra/log';
+import { EquipmentService } from '@ygg/resource/data-access';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ import { LogService } from '@ygg/shared/infra/log';
 export class ProductService {
   constructor(
     private playService: PlayService,
+    private equipmentService: EquipmentService,
     private logService: LogService
   ) {}
 
@@ -19,6 +21,8 @@ export class ProductService {
     switch (type) {
       case ProductType.Play:
         return this.playService.get$(id);
+      case ProductType.Equipment:
+        return this.equipmentService.get$(id);
       default:
         const error = new Error(`Unsupported product type ${type}`);
         this.logService.error(error.message);

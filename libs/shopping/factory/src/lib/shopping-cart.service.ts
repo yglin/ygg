@@ -65,7 +65,7 @@ export class ShoppingCartService {
         subject$: purchaseObsrv
       };
       // Evaluate price once
-      this.evaluatePrice$(purchaseObsrv).pipe(take(1)).subscribe();
+      // this.evaluatePrice$(purchaseObsrv).pipe(take(1)).subscribe();
       this.purchases$.next(
         values(this.purchaseSubjects).map(subject => subject.data)
       );
@@ -80,44 +80,55 @@ export class ShoppingCartService {
     );
   }
 
+  updatePurchase(purchase: Purchase, data: any = {}) {
+    purchase.fromJSON(data);
+    if (purchase.productId in this.purchaseSubjects) {
+      this.purchaseSubjects[purchase.productId].data = purchase;
+      this.purchaseSubjects[purchase.productId].subject$.next(purchase);
+      this.purchases$.next(
+        values(this.purchaseSubjects).map(subject => subject.data)
+      );
+    }
+  }
+
   clear() {
     this.purchaseSubjects = {};
     this.purchases$.next([]);
   }
 
-  evaluatePrice$(arg1: Observable<Purchase> | Purchase): Observable<number> {
-    let purchase$: Observable<Purchase>;
-    if (Purchase.isPurchase(arg1)) {
-      if (arg1.productId in this.purchaseSubjects) {
-        purchase$ = this.purchaseSubjects[arg1.productId].subject$;
-      } else {
-        purchase$ = of(arg1);
-      }
-    } else if (isObservable(arg1)) {
-      purchase$ = arg1;
-    }
-    return purchase$.pipe(map(purchase => purchase.price));
-    // return purchase$.pipe(
-    //   switchMap(purchase => {
-    //     return this.productService
-    //       .get$(purchase.productType, purchase.productId)
-    //       .pipe(map(product => product.price * purchase.quantity));
-    //   })
-    // );
-  }
+  // evaluatePrice$(arg1: Observable<Purchase> | Purchase): Observable<number> {
+  //   let purchase$: Observable<Purchase>;
+  //   if (Purchase.isPurchase(arg1)) {
+  //     if (arg1.productId in this.purchaseSubjects) {
+  //       purchase$ = this.purchaseSubjects[arg1.productId].subject$;
+  //     } else {
+  //       purchase$ = of(arg1);
+  //     }
+  //   } else if (isObservable(arg1)) {
+  //     purchase$ = arg1;
+  //   }
+  //   return purchase$.pipe(map(purchase => purchase.price));
+  //   // return purchase$.pipe(
+  //   //   switchMap(purchase => {
+  //   //     return this.productService
+  //   //       .get$(purchase.productType, purchase.productId)
+  //   //       .pipe(map(product => product.price * purchase.quantity));
+  //   //   })
+  //   // );
+  // }
 
-  evaluateTotalPrice$(
-    purchase$Array: (Observable<Purchase> | Purchase)[]
-  ): Observable<number> {
-    if (isEmpty(purchase$Array)) {
-      return of(0);
-    } else {
-      const evaluatePrice$Array: Observable<number>[] = purchase$Array.map(p =>
-        this.evaluatePrice$(p)
-      );
-      return combineLatest(evaluatePrice$Array).pipe(
-        map(prices => sum(prices))
-      );
-    }
-  }
+  // evaluateTotalPrice$(
+  //   purchase$Array: (Observable<Purchase> | Purchase)[]
+  // ): Observable<number> {
+  //   if (isEmpty(purchase$Array)) {
+  //     return of(0);
+  //   } else {
+  //     const evaluatePrice$Array: Observable<number>[] = purchase$Array.map(p =>
+  //       this.evaluatePrice$(p)
+  //     );
+  //     return combineLatest(evaluatePrice$Array).pipe(
+  //       map(prices => sum(prices))
+  //     );
+  //   }
+  // }
 }

@@ -5,6 +5,8 @@ import { Subscription, Observable, of, combineLatest } from 'rxjs';
 import { ShoppingCartService } from '@ygg/shopping/factory';
 import { tap, switchMap } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
+import { YggDialogService } from '@ygg/shared/ui/widgets';
+import { PurchaseControlComponent } from '../../purchase';
 
 @Component({
   selector: 'ygg-shopping-cart',
@@ -21,7 +23,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   clearButtonDisabled = true;
 
-  constructor(protected shoppingCart: ShoppingCartService) {
+  constructor(protected shoppingCart: ShoppingCartService, private dialog: YggDialogService) {
     this.totalPrice = 0;
     this.displayedColumns = ['product', 'quantity', 'price', 'management'];
     this.purchasesDataSource = new MatTableDataSource<Purchase>([]);
@@ -32,31 +34,32 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
           tap(purchases => {
             this.purchasesDataSource.data = purchases;
             this.clearButtonDisabled = purchases.length > 1 ? false : true;
-          }),
-          switchMap(purchases => {
-            this.asyncPurchasesData = {};
-            if (isEmpty(purchases)) {
-              return of([]);
-            } else {
-              return combineLatest(
-                purchases.map(purchase => {
-                  this.asyncPurchasesData[purchase.id] = {};
-                  const asyncData = this.asyncPurchasesData[purchase.id];
-                  return this.shoppingCart
-                    .evaluatePrice$(purchase)
-                    .pipe(tap(price => (asyncData.price = price)));
-                })
-              );
-            }
-          }),
-          tap((prices: number[]) => {
-            this.totalPrice = sum(prices);
+            this.totalPrice = sum(purchases.map(p => p.totalPrice));
             if (this.numShare > 1) {
               this.singlePrice = Math.ceil(this.totalPrice / this.numShare);
             } else {
               this.singlePrice = undefined;
             }
-          })
+          }),
+          // switchMap(purchases => {
+          //   this.asyncPurchasesData = {};
+          //   if (isEmpty(purchases)) {
+          //     return of([]);
+          //   } else {
+          //     return combineLatest(
+          //       purchases.map(purchase => {
+          //         this.asyncPurchasesData[purchase.id] = {};
+          //         const asyncData = this.asyncPurchasesData[purchase.id];
+          //         return this.shoppingCart
+          //           .evaluatePrice$(purchase)
+          //           .pipe(tap(price => (asyncData.price = price)));
+          //       })
+          //     );
+          //   }
+          // }),
+          // tap((prices: number[]) => {
+          //   this.totalPrice = sum(prices);
+          // })
         )
         .subscribe()
     );
@@ -72,6 +75,20 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
 
   removePurchase(purchase: Purchase) {
     this.shoppingCart.removePurchase(purchase);
+  }
+
+  editPurchase(purchase: Purchase) {
+    const dialogRef = this.dialog.open(PurchaseControlComponent, {
+      title: '修改購買項目',
+      data: {
+        purchase
+      }
+    });
+    this.subscriptions.push(dialogRef.afterClosed().subscribe(purchase => {
+      if (purchase) {
+        this.shoppingCart.updatePurchase(purchase);
+      }
+    }));
   }
 
   removeAll() {

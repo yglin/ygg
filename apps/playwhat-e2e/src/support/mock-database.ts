@@ -22,6 +22,7 @@ export class MockDatabase {
     }
   }
 
+
   insertDocuments(documents: Document[]): Cypress.Chainable<any> {
     return cy.wrap(documents).each((doc: Document) => {
       this.insert(doc.path, doc.data);

@@ -23,7 +23,7 @@ export class Purchase implements SerializableJSON {
   productId: string;
   quantity: number;
   duration: Duration;
-  selfPrice: number;
+  unitPrice: number;
   state: PurchaseState;
   children: Purchase[] = [];
 
@@ -31,17 +31,23 @@ export class Purchase implements SerializableJSON {
     return !!(value && value.productType && value.productId);
   }
 
-  get price(): number {
-    return this.selfPrice + sum(this.children.map(child => child.price));
+  get totalPrice(): number {
+    return (
+      this.unitPrice * this.quantity +
+      sum(this.children.map(child => child.totalPrice))
+    );
   }
 
   constructor(options?: PurchaseOptions) {
     this.id = uuid();
+    this.productType = ProductType.Unknown;
+    this.productId = '';
+    this.quantity = 0;
     if (options) {
       this.productType = options.product.productType || ProductType.Unknown;
       this.productId = options.product.id || '';
       this.quantity = options.quantity || 0;
-      this.selfPrice = options.product.price * this.quantity;
+      this.unitPrice = options.product.price;
       this.duration = options.duration || null;
       this.state = PurchaseState.New;
 
@@ -54,13 +60,21 @@ export class Purchase implements SerializableJSON {
     }
   }
 
+  clone(): Purchase {
+    return new Purchase().fromJSON(this.toJSON());
+  }
+
   fromJSON(data: any = {}): this {
+    console.log(data);
     extend(this, data);
+    console.log(this);
     if (data.duration) {
       this.duration = new Duration().fromJSON(data.duration);
     }
     if (!isEmpty(data.children)) {
-      this.children = data.children.map(child => new Purchase().fromJSON(child));
+      this.children = data.children.map(child =>
+        new Purchase().fromJSON(child)
+      );
     }
     return this;
   }

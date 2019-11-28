@@ -7,6 +7,7 @@ import { ProductThumbnailComponent } from './product/product-thumbnail/product-t
 import { PurchaseThumbnailComponent } from './purchase/purchase-thumbnail/purchase-thumbnail.component';
 import { ShoppingCartComponent } from './cart/shopping-cart/shopping-cart.component';
 import { FormsModule } from '@angular/forms';
+import { PurchaseControlComponent } from './purchase/purchase-control/purchase-control.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, SharedUiNgMaterialModule, SharedUiWidgetsModule],
@@ -14,8 +15,10 @@ import { FormsModule } from '@angular/forms';
     PurchaseListComponent,
     ProductThumbnailComponent,
     PurchaseThumbnailComponent,
-    ShoppingCartComponent
+    ShoppingCartComponent,
+    PurchaseControlComponent
   ],
-  exports: [PurchaseListComponent, ShoppingCartComponent]
+  exports: [PurchaseListComponent, ShoppingCartComponent, PurchaseControlComponent],
+  entryComponents: [PurchaseControlComponent]
 })
 export class ShoppingUiModule {}

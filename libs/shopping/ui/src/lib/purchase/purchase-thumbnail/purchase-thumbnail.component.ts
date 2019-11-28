@@ -12,20 +12,17 @@ import { ShoppingCartService } from '@ygg/shopping/factory';
 export class PurchaseThumbnailComponent implements OnInit, OnDestroy {
   @Input() purchase: Purchase;
   subscriptions: Subscription[] = [];
-  price: number;
 
-  constructor(
-    private shoppingCart: ShoppingCartService
-  ) {}
+  constructor() {}
 
   ngOnInit() {
-    if (this.purchase) {
-      this.subscriptions.push(
-        this.shoppingCart
-          .evaluatePrice$(this.purchase)
-          .subscribe(price => (this.price = price))
-      );
-    }
+    // if (this.purchase) {
+    //   this.subscriptions.push(
+    //     this.shoppingCart
+    //       .evaluatePrice$(this.purchase)
+    //       .subscribe(price => (this.price = price))
+    //   );
+    // }
   }
 
   ngOnDestroy() {

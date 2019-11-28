@@ -1,3 +1,5 @@
+import { Album } from '@ygg/shared/types';
+
 export enum ProductType {
   Unknown = 'XXX',
   Play = 'play',
@@ -9,5 +11,6 @@ export interface Product {
   productType: ProductType;
   name: string;
   price: number;
+  album?: Album;
   products?: Product[];
 }

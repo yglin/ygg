@@ -1,4 +1,4 @@
-import { random, range, isEmpty, sampleSize, sumBy } from 'lodash';
+import { random, range, isEmpty, sample, sampleSize, sum, sumBy } from 'lodash';
 import { login } from '../../page-objects/app.po';
 import { SiteNavigator } from '../../page-objects/site-navigator';
 import {
@@ -25,11 +25,17 @@ import { MockDatabase, Document } from '../../support/mock-database';
 import { NumberRange } from '@ygg/shared/types';
 import { Play } from '@ygg/playwhat/play';
 import { PlaySelectorPageObjectCypress } from '../../page-objects/play';
-import { PurchaseListPageObjectCypress } from '../../page-objects/shopping/purchase';
+import {
+  PurchaseListPageObjectCypress,
+  PurchaseControlPageObjectCypress
+} from '../../page-objects/shopping/purchase';
 import { Equipment } from '@ygg/resource/core';
+import { ShoppingCartPageObjectCypress } from '../../page-objects/shopping';
 
 describe('Scheduler - schedule-plan', () => {
   let testPlays: Play[];
+  let playsNoEquipments: Play[];
+  let playsWithEquipments: Play[];
   let testSchedulePlan1;
   let testSchedulePlan2;
 
@@ -47,9 +53,22 @@ describe('Scheduler - schedule-plan', () => {
 
   function prepareTestData() {
     const documents: Document[] = [];
-    testPlays = range(random(3, 7)).map(() => Play.forge());
+    testPlays = [];
+    playsNoEquipments = range(random(2, 5)).map(() =>
+      Play.forge({
+        numEquipments: 0
+      })
+    );
+    testPlays.push(...playsNoEquipments);
+    playsWithEquipments = range(random(1, 3)).map(() =>
+      Play.forge({
+        numEquipments: random(1, 4)
+      })
+    );
+    testPlays.push(...playsWithEquipments);
+
     let numParticipants = 53;
-    let purchases: Purchase[] = sampleSize(testPlays, 3).map(
+    let purchases: Purchase[] = sampleSize(playsNoEquipments, 3).map(
       play =>
         new Purchase({
           product: play,
@@ -58,7 +77,7 @@ describe('Scheduler - schedule-plan', () => {
     );
     testSchedulePlan1 = SchedulePlan.forge({ numParticipants, purchases });
     numParticipants = 67;
-    purchases = sampleSize(testPlays, 3).map(
+    purchases = sampleSize(playsNoEquipments, 3).map(
       play =>
         new Purchase({
           product: play,
@@ -69,13 +88,14 @@ describe('Scheduler - schedule-plan', () => {
     testPlays.forEach(play => {
       documents.push({ path: `plays/${play.id}`, data: play.toJSON() });
       play.equipments.forEach(eq => {
-        documents.push({ path: `${Equipment.collection}/${eq.id}`, data: eq.toJSON()})
+        documents.push({
+          path: `${Equipment.collection}/${eq.id}`,
+          data: eq.toJSON()
+        });
       });
     });
 
-    mockDatabase.insertDocuments(
-      documents
-    );
+    mockDatabase.insertDocuments(documents);
   }
 
   before(function() {
@@ -89,51 +109,6 @@ describe('Scheduler - schedule-plan', () => {
     mockDatabase.clear();
   });
 
-  it('should be able to find and edit, update schedule-plan', () => {
-    createSchedulePlan(testSchedulePlan1).then(testSchedulePlan => {
-      mockDatabase.pushDocument({
-        path: `schedule-plans/${testSchedulePlan.id}`,
-        data: testSchedulePlan
-      });
-      // Goto my-schedules page, find the testSchedulePlan and check it out
-      siteNavigator.goto(['scheduler', 'schedule-plans', 'my']);
-      cy.log(`##### Find test schedule form in my schedule-plans #####`);
-      const mySchedulePlansPageObject = new SchedulePlanListPageObjectCypress();
-      mySchedulePlansPageObject.expectSchedulePlan(testSchedulePlan);
-      mySchedulePlansPageObject.viewSchedulePlan(testSchedulePlan);
-
-      // In view page of testSchedulePlan, click edit button and goto edit page
-      cy.location('pathname').should('include', testSchedulePlan.id);
-      cy.log(`##### Found test schedule form, go to its edit page #####`);
-      schedulePlanViewPagePageObject.gotoEdit();
-
-      // In edit page of testSchedulePlan, change data and submit
-      // The edit page is exactly the same as scheduler/new page,
-      // so we can reuse the same page object
-      cy.location('pathname').should('include', `${testSchedulePlan.id}/edit`);
-      cy.log(`##### Edit test schedule form, fill in different data #####`);
-      schedulePlanControlPageObject.clearValue(testSchedulePlan);
-      schedulePlanControlPageObject.setValue(testSchedulePlan2);
-      schedulePlanControlPageObject.submit();
-
-      // // Being redirected to view page again,
-      // // but this time we assert data with changedchangedSchedulePlan
-      cy.location('pathname')
-        .should('include', testSchedulePlan.id)
-        .then(() => {
-          mockDatabase.pushDocument({
-            path: `schedule-plans/${testSchedulePlan.id}`,
-            data: testSchedulePlan2
-          });
-        });
-      cy.log(
-        `##### Test schedule form updated, check if data is updated #####`
-      );
-      schedulePlanViewPageObject.expectValue(testSchedulePlan2);
-    });
-  });
-
-  /*
   it('should auto sync total budget and single budget', () => {
     let testNumParticipants;
     let testTotalBudget: NumberRange;
@@ -247,41 +222,102 @@ describe('Scheduler - schedule-plan', () => {
     playSelectorPageObject.expectPlays(testPlays);
   });
 
-  it('Click on plays should add purchases of them ,and sum up total price', () => {
+  it('Click on play with no equipment should add purchase of it directly', () => {
     const numParticipants = 13;
-    const selectedPlays = sampleSize(testPlays, 3);
-    const expectedTotalPrice = sumBy(selectedPlays, play => new Purchase(play, numParticipants).getPrice());
+    const play = sample(playsNoEquipments);
+    const purchase = new Purchase({ product: play, quantity: numParticipants });
     siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
     schedulePlanControlPageObject.setNumParticipants(numParticipants);
     const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
-    playSelectorPageObject.clickPlays(selectedPlays);
-    const purchaseListPageObject = new PurchaseListPageObjectCypress('');
-    purchaseListPageObject.expectProducts(selectedPlays);
-    purchaseListPageObject.expectTotalPrice(expectedTotalPrice);
+    playSelectorPageObject.clickPlay(play);
+    const shoppingCartPageObject = new ShoppingCartPageObjectCypress('');
+    shoppingCartPageObject.expectPurchase(purchase);
   });
 
-  it('Change numParticipants should refresh purchases and total price', () => {
-    let numParticipants = 13;
-    const selectedPlays = sampleSize(testPlays, 3);
-    let expectedTotalPrice = sumBy(selectedPlays, play =>
-      new Purchase(play, numParticipants).getPrice()
-    );
+  it('Click on play with equipments should pop purchase edit dialog', () => {
+    const numParticipants = 23;
+    const play = sample(playsWithEquipments);
+    const purchase = new Purchase({ product: play, quantity: numParticipants });
     siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
     schedulePlanControlPageObject.setNumParticipants(numParticipants);
     const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
-    playSelectorPageObject.clickPlays(selectedPlays);
-    const purchaseListPageObject = new PurchaseListPageObjectCypress('');
-    purchaseListPageObject.expectProducts(selectedPlays);
-    purchaseListPageObject.expectTotalPrice(expectedTotalPrice);
-
-    // Change numParticipants
-    numParticipants = 29;
-    expectedTotalPrice = sumBy(selectedPlays, play =>
-      new Purchase(play, numParticipants).getPrice()
+    playSelectorPageObject.clickPlay(play);
+    const purchaseControlPageObject = new PurchaseControlPageObjectCypress(
+      '.ygg-dialog'
     );
-    schedulePlanControlPageObject.setNumParticipants(numParticipants);
-    purchaseListPageObject.expectProducts(selectedPlays);
-    purchaseListPageObject.expectTotalPrice(expectedTotalPrice);
+    purchaseControlPageObject.setValue(purchase);
+    purchaseControlPageObject.submit();
+    const shoppingCartPageObject = new ShoppingCartPageObjectCypress('');
+    shoppingCartPageObject.expectPurchase(purchase);
   });
-*/
+
+
+  // Too thoughtful for user, rather not do it for now
+  // it('Change numParticipants should refresh purchases and total price', () => {
+  //   let numParticipants = 13;
+  //   const selectedPlays = sampleSize(testPlays, 3);
+  //   let expectedTotalPrice = sumBy(selectedPlays, play =>
+  //     new Purchase(play, numParticipants).getPrice()
+  //   );
+  //   siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+  //   schedulePlanControlPageObject.setNumParticipants(numParticipants);
+  //   const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
+  //   playSelectorPageObject.clickPlays(selectedPlays);
+  //   const purchaseListPageObject = new PurchaseListPageObjectCypress('');
+  //   purchaseListPageObject.expectProducts(selectedPlays);
+  //   purchaseListPageObject.expectTotalPrice(expectedTotalPrice);
+
+  //   // Change numParticipants
+  //   numParticipants = 29;
+  //   expectedTotalPrice = sumBy(selectedPlays, play =>
+  //     new Purchase(play, numParticipants).getPrice()
+  //   );
+  //   schedulePlanControlPageObject.setNumParticipants(numParticipants);
+  //   purchaseListPageObject.expectProducts(selectedPlays);
+  //   purchaseListPageObject.expectTotalPrice(expectedTotalPrice);
+  // });
+
+  it('should be able to create and update schedule-plan', () => {
+    createSchedulePlan(testSchedulePlan1).then(testSchedulePlan => {
+      mockDatabase.pushDocument({
+        path: `schedule-plans/${testSchedulePlan.id}`,
+        data: testSchedulePlan
+      });
+      // Goto my-schedules page, find the testSchedulePlan and check it out
+      siteNavigator.goto(['scheduler', 'schedule-plans', 'my']);
+      cy.log(`##### Find test schedule form in my schedule-plans #####`);
+      const mySchedulePlansPageObject = new SchedulePlanListPageObjectCypress();
+      mySchedulePlansPageObject.expectSchedulePlan(testSchedulePlan);
+      mySchedulePlansPageObject.viewSchedulePlan(testSchedulePlan);
+
+      // In view page of testSchedulePlan, click edit button and goto edit page
+      cy.location('pathname').should('include', testSchedulePlan.id);
+      cy.log(`##### Found test schedule form, go to its edit page #####`);
+      schedulePlanViewPagePageObject.gotoEdit();
+
+      // In edit page of testSchedulePlan, change data and submit
+      // The edit page is exactly the same as scheduler/new page,
+      // so we can reuse the same page object
+      cy.location('pathname').should('include', `${testSchedulePlan.id}/edit`);
+      cy.log(`##### Edit test schedule form, fill in different data #####`);
+      schedulePlanControlPageObject.clearValue(testSchedulePlan);
+      schedulePlanControlPageObject.setValue(testSchedulePlan2);
+      schedulePlanControlPageObject.submit();
+
+      // // Being redirected to view page again,
+      // // but this time we assert data with changedchangedSchedulePlan
+      cy.location('pathname')
+        .should('include', testSchedulePlan.id)
+        .then(() => {
+          mockDatabase.pushDocument({
+            path: `schedule-plans/${testSchedulePlan.id}`,
+            data: testSchedulePlan2
+          });
+        });
+      cy.log(
+        `##### Test schedule form updated, check if data is updated #####`
+      );
+      schedulePlanViewPageObject.expectValue(testSchedulePlan2);
+    });
+  });
 });

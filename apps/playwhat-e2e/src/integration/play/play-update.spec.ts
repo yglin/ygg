@@ -15,12 +15,15 @@ import { Equipment } from '@ygg/resource/core';
 describe('Update Play', () => {
   const siteNavigator = new SiteNavigator();
   const mockDatabase = new MockDatabase();
+  let testPlay: Play;
+  let changeData: Play;
 
   before(() => {
     cy.visit('/');
     login().then((user: any) => {
       const documents: Document[] = [];
-      const testPlay = Play.forge({
+      
+      testPlay = Play.forge({
         numEquipments: 3
       });
       testPlay.creatorId = user.id;
@@ -32,6 +35,15 @@ describe('Update Play', () => {
         path: `${Equipment.collection}/${equipment.id}`,
         data: equipment.toJSON()
       }));
+      
+      changeData = Play.forge({
+        numEquipments: 4
+      });
+      changeData.equipments.forEach(equipment => documents.push({
+        path: `${Equipment.collection}/${equipment.id}`,
+        data: equipment.toJSON()
+      }));
+
       mockDatabase.insertDocuments(documents);
       cy.wrap(testPlay).as('testPlay');
     });
@@ -49,14 +61,11 @@ describe('Update Play', () => {
       myPlayListPage.clickPlay(testPlay);
       const playViewPagePageObject = new PlayViewPagePageObjectCypress();
       playViewPagePageObject.gotoEdit();
-      const changedPlay = Play.forge({
-        numEquipments: 4
-      });
       const playFormPageObject = new PlayFormPageObject();
-      playFormPageObject.fillIn(changedPlay);
+      playFormPageObject.fillIn(changeData);
       playFormPageObject.submit();
       const playViewPage = new PlayViewPageObject();
-      playViewPage.checkData(changedPlay);
+      playViewPage.checkData(changeData);
     });
   });
 });

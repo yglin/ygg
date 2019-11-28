@@ -1,6 +1,7 @@
 import { isEmpty } from 'lodash';
 import { ShoppingCartPageObject } from '@ygg/shopping/ui';
 import { Purchase } from '@ygg/shopping/core';
+import { PurchaseControlPageObjectCypress } from './purchase';
 
 export class ShoppingCartPageObjectCypress extends ShoppingCartPageObject {
   clear() {
@@ -8,36 +9,51 @@ export class ShoppingCartPageObjectCypress extends ShoppingCartPageObject {
   }
 
   setPurchase(purchase: Purchase) {
-    cy.get(this.getSelectorForQuantityInput(purchase))
-      .clear()
-      .type(purchase.quantity.toString());
-    if (!isEmpty(purchase.children)) {
-      this.expandPurchase(purchase);
-      cy.wrap(purchase.children).each((childPurchase: Purchase) =>
-        this.setPurchase(childPurchase)
-      );
-    }
+    cy.get(this.getSelectorForPurchaseEditButton(purchase)).click();
+    const purchaseControlPageObject = new PurchaseControlPageObjectCypress(
+      '.ygg-dialog'
+    );
+    purchaseControlPageObject.setValue(purchase);
+    purchaseControlPageObject.submit();
+    this.expectPurchase(purchase);
   }
 
-  expandPurchase(purchase: Purchase) {
-    cy.get(this.getSelectorForExpandButton(purchase)).click();
+  submit() {
+    cy.get(this.getSelector('buttonSubmit')).click({ force: true });
+  }
+
+  // expandPurchase(purchase: Purchase) {
+  //   cy.get(this.getSelectorForExpandButton(purchase)).click();
+  //   cy.get(this.getSelectorForPurchase(purchase)).should(
+  //     'have.attr',
+  //     'expanded'
+  //   );
+  // }
+
+  expectPurchase(purchase: Purchase) {
     cy.get(this.getSelectorForPurchase(purchase)).should(
       'have.attr',
-      'expanded'
+      'product-id',
+      purchase.productId
+    );
+    cy.get(this.getSelectorForPurchaseQuantity(purchase)).should(
+      'include.text',
+      purchase.quantity.toString()
+    );
+    cy.get(this.getSelectorForPurchaseTotalPrice(purchase)).should(
+      'include.text',
+      purchase.totalPrice
     );
   }
 
   expectPurchases(purchases: Purchase[]) {
-    cy.wrap(purchases).each((purchase: Purchase) => {
-      cy.get(this.getSelectorForPurchase(purchase)).should(
-        'have.attr',
-        'product-id',
-        purchase.productId
-      );
-      cy.get(this.getSelectorForQuantityInput(purchase)).should(
-        'have.value',
-        purchase.quantity.toString()
-      );
-    });
+    cy.wrap(purchases).each((purchase: Purchase) => this.expectPurchase(purchase));
+  }
+
+  expectTotalPrice(totalPrice: number) {
+    cy.get(this.getSelector('totalPrice')).should(
+      'include.text',
+      totalPrice.toString()
+    );
   }
 }

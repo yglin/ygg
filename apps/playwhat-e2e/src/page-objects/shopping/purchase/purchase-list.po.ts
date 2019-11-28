@@ -17,7 +17,7 @@ export class PurchaseListPageObjectCypress extends PurchaseListPageObject {
           this.expectPurchases(purchase.children);
         }
     });
-    this.expectTotalPrice(sum(purchases.map(p => p.price)))
+    this.expectTotalPrice(sum(purchases.map(p => p.totalPrice)))
   }
 
   expectTotalPrice(totalPrice: number) {
