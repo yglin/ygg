@@ -23,6 +23,7 @@ import { AuthenticateService, User } from '@ygg/shared/user';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { Equipment } from '@ygg/resource/core';
 import { EquipmentEditDialogComponent } from '../equipment-edit-dialog/equipment-edit-dialog.component';
+import { PlayFormGroupModel } from '../play-form-model';
 
 @Component({
   selector: 'ygg-play-form',
@@ -49,7 +50,7 @@ export class PlayFormComponent implements OnInit, OnDestroy {
     private playFactory: PlayFactoryService,
     private yggDialog: YggDialogService
   ) {
-    this.formModel = this.playFactory.createModel();
+    this.formModel = PlayFormGroupModel;
     this.controlModels = values(this.formModel.controls);
     this.formGroup = this.playFactory.createFormGroup();
     this.subscriptions.push(

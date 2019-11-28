@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Resource, Equipment, ResourceType } from "@ygg/resource/core";
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { FormGroupModel } from '@ygg/shared/ui/dynamic-form';
-import { EquipmentFactoryService } from "@ygg/resource/factory";
+import { EquipmentFactoryService, EquipmentFormGroupModel } from "@ygg/resource/factory";
 
 @Component({
   selector: 'ygg-equipment-control',
@@ -15,7 +15,7 @@ export class EquipmentControlComponent implements OnInit {
   equipmentFormModel: FormGroupModel;
   
   constructor(private equipmentFactory: EquipmentFactoryService) {
-    this.equipmentFormModel = this.equipmentFactory.getFormGroupModel();
+    this.equipmentFormModel = EquipmentFormGroupModel;
   }
 
   ngOnInit() {

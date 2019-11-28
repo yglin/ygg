@@ -43,6 +43,12 @@
           [model]="this.formModel.controls['location']"
           id="form-control-location"
         ></ygg-form-control>
+        <ygg-title-divider>價格</ygg-title-divider>
+        <ygg-form-control
+          [formGroup]="formGroup"
+          [model]="this.formModel.controls['price']"
+          id="form-control-price"
+        ></ygg-form-control>
         <ygg-title-divider>類型標籤</ygg-title-divider>
         <ygg-tags-control
           formControlName="tags"

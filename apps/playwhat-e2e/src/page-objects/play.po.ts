@@ -1,5 +1,5 @@
 import { isEmpty } from 'lodash';
-import { Play } from '@ygg/playwhat/play';
+import { Play, PlayFormGroupModel } from '@ygg/playwhat/play';
 import { FormControlType } from '@ygg/shared/ui/dynamic-form';
 import { AlbumControlPageObject, AlbumViewPageObjectCypress } from './album.po';
 import {
@@ -60,7 +60,7 @@ export class PlayFormPageObject extends PageObject {
 
   fillIn(play: Play) {
     // const tester = new AngularCypressTester({});
-    const formModel = Play.getFormGroupModel();
+    const formModel = PlayFormGroupModel;
     for (const name in formModel.controls) {
       if (formModel.controls.hasOwnProperty(name)) {
         const controlModel = formModel.controls[name];
@@ -71,6 +71,12 @@ export class PlayFormPageObject extends PageObject {
             cy.get(`${this.selector} ${valueSelector}`)
               .clear()
               .type(play[controlModel.name]);
+            break;
+          case FormControlType.number:
+            valueSelector = `#${controlModel.name} input`;
+            cy.get(`${this.selector} ${valueSelector}`)
+              .clear()
+              .type(play[controlModel.name].toString());
             break;
           case FormControlType.textarea:
             valueSelector = `#${controlModel.name} textarea`;
@@ -172,7 +178,7 @@ export class PlayViewPageObject {
   }
 
   checkData(play: Play) {
-    const formModel = Play.getFormGroupModel();
+    const formModel = PlayFormGroupModel;
     // const tester = new AngularCypressTester({});
     for (const name in formModel.controls) {
       if (
@@ -183,6 +189,7 @@ export class PlayViewPageObject {
         let valueSelector = '';
         switch (controlModel.type) {
           case FormControlType.text:
+          case FormControlType.number:
           case FormControlType.textarea:
             valueSelector = `#${controlModel.name} .value`;
             cy.get(`${this.selector} ${valueSelector}`).contains(

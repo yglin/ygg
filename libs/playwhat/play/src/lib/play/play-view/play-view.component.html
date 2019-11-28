@@ -17,8 +17,11 @@
     <br />
     <ygg-location-view [location]="play.location"></ygg-location-view>
     <br />
-    <ygg-tags-view [tags]="play.tags"></ygg-tags-view>
+    <div id="price">
+      <h3>單價：<ygg-price class="value" [price]="play.price"></ygg-price></h3>
+    </div>
     <br />
+    <ygg-tags-view [tags]="play.tags"></ygg-tags-view>
     <div class="equipment-list">
       <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="20px">
         <div

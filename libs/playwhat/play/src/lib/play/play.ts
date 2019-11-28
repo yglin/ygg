@@ -59,55 +59,6 @@ export class Play implements DataItem, Taggable, Product {
     return play;
   }
 
-  static getFormGroupModel(): FormGroupModel {
-    const controls: { [key: string]: FormControlModel } = {
-      name: {
-        name: 'name',
-        type: FormControlType.text,
-        label: '名稱',
-        validators: [
-          {
-            type: 'required',
-            errorMessage: '請填入名稱'
-          }
-        ]
-      },
-      introduction: {
-        name: 'introduction',
-        type: FormControlType.textarea,
-        label: '簡介',
-        validators: [
-          {
-            type: 'required',
-            errorMessage: '請填入簡介'
-          }
-        ]
-      },
-      album: {
-        name: 'album',
-        type: FormControlType.album,
-        label: '相簿',
-        default: new Album()
-      },
-      businessHours: {
-        name: 'businessHours',
-        type: FormControlType.businessHours,
-        label: '服務時段',
-        default: new BusinessHours()
-      },
-      location: {
-        name: 'location',
-        type: FormControlType.location,
-        label: '地點',
-        default: new Location()
-      }
-    };
-
-    const formModel = { name: 'play-form', controls };
-    return formModel;
-  }
-
-
   constructor() {
     this.id = uuid();
     this.price = 0;
