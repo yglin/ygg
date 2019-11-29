@@ -295,6 +295,7 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
   createFormGroup(): FormGroup {
     const formGroup = this.formBuilder.group({
       dateRange: [null, Validators.required],
+      dayTimeRange: null,
       numParticipants: [null, Validators.required],
       numElders: 0,
       numKids: 0,

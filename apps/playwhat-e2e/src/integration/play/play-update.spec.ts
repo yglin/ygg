@@ -64,6 +64,7 @@ describe('Update Play', () => {
       const playFormPageObject = new PlayFormPageObject();
       playFormPageObject.fillIn(changeData);
       playFormPageObject.submit();
+      cy.url({timeout: 10000}).should('not.include', 'edit');
       const playViewPage = new PlayViewPageObject();
       playViewPage.checkData(changeData);
     });

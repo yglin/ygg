@@ -4,6 +4,7 @@ import { DateRange, NumberRange, Contact } from '@ygg/shared/types';
 import { Tags } from '@ygg/tags/core';
 import { SchedulePlan } from '@ygg/schedule/core';
 import { DateRangeControlPageObjectCypress } from '../shared-types/date-range';
+import { DayTimeRangeControlPageObjectCypress } from "../shared-types/day-time-range";
 import { NumberRangeControlPageObjectCypress } from '../shared-types/number-range';
 import { ContactControlPageObjectCypress } from '../shared-types/contact';
 import { TagsControlPageObjectCypress } from '../tags';
@@ -14,6 +15,7 @@ import { Purchase } from '@ygg/shopping/core';
 
 export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPageObject {
   dateRangePageObject: DateRangeControlPageObjectCypress;
+  dayTimeRangeControlPO: DayTimeRangeControlPageObjectCypress;
   totalBudgetPageObject: NumberRangeControlPageObjectCypress;
   singleBudgetPageObject: NumberRangeControlPageObjectCypress;
   tagsControlPageObject: TagsControlPageObjectCypress;
@@ -24,6 +26,9 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
     super(parentSelector);
     this.dateRangePageObject = new DateRangeControlPageObjectCypress(
       this.getSelector('dateRange')
+    );
+    this.dayTimeRangeControlPO = new DayTimeRangeControlPageObjectCypress(
+      this.getSelector('dayTimeRange')
     );
     this.totalBudgetPageObject = new NumberRangeControlPageObjectCypress(
       this.getSelector('totalBudget')
@@ -47,6 +52,7 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
       this.selectAgent(schedulePlan.agentId);
     }
     this.setDateRange(schedulePlan.dateRange);
+    this.dayTimeRangeControlPO.setValue(schedulePlan.dayTimeRange);
 
     this.setNumParticipants(schedulePlan.numParticipants);
     this.setNumElders(schedulePlan.numElders);

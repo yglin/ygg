@@ -33,15 +33,25 @@
     <div>
       <ygg-title-divider
         [style.color]="formGroup.get('dateRange').invalid ? 'red' : ''"
-        >預計日期範圍＊</ygg-title-divider
+        >日期時段＊</ygg-title-divider
       >
-      <div class="form-control date-range">
-        <ygg-date-range-control
-          formControlName="dateRange"
-        ></ygg-date-range-control>
-        <mat-error *ngIf="isError('dateRange', 'required')"
-          >請填日期範圍</mat-error
-        >
+      <div class="form-control">
+        <div class="date-range">
+          <ygg-date-range-control
+            label="預計出遊日期"
+            formControlName="dateRange"
+          ></ygg-date-range-control>
+          <mat-error *ngIf="isError('dateRange', 'required')"
+            >請填日期範圍</mat-error
+          >
+        </div>
+        <br />
+        <div class="day-time-range">
+          <ygg-day-time-range-control
+            label="預計出遊時段"
+            formControlName="dayTimeRange"
+          ></ygg-day-time-range-control>
+        </div>
       </div>
       <ygg-title-divider
         [style.color]="formGroup.get('numParticipants').invalid ? 'red' : ''"
@@ -83,10 +93,10 @@
             fxLayoutAlign="start center"
             fxLayoutGap="20px"
           >
-          <div class="single-budget">
-            <mat-radio-button [value]="'single'">單人</mat-radio-button>
-          </div>
-          <div class="total-budget">
+            <div class="single-budget">
+              <mat-radio-button [value]="'single'">單人</mat-radio-button>
+            </div>
+            <div class="total-budget">
               <mat-radio-button [value]="'total'">總和</mat-radio-button>
             </div>
             <!-- <h3 class="hint">{{ budgetHintMessage }}</h3> -->
@@ -163,7 +173,6 @@
                 </div>
               </div>
               <div yggActionBarredContent>
-                <h4>聯絡人{{ idx + 1 }}</h4>
                 <ygg-contact-control
                   [formControlName]="idx"
                 ></ygg-contact-control>
@@ -242,8 +251,15 @@
       </div>
       <ygg-title-divider> 體驗需求 </ygg-title-divider>
       <div class="form-control likes">
-        <ygg-play-selector class='play-selector' [plays]='playsAll' (clickPlay)='addPlayPurchase($event)'></ygg-play-selector>
-        <ygg-shopping-cart class='shopping-cart' [numShare]='formGroup.get("numParticipants").value'></ygg-shopping-cart>
+        <ygg-play-selector
+          class="play-selector"
+          [plays]="playsAll"
+          (clickPlay)="addPlayPurchase($event)"
+        ></ygg-play-selector>
+        <ygg-shopping-cart
+          class="shopping-cart"
+          [numShare]="formGroup.get('numParticipants').value"
+        ></ygg-shopping-cart>
         <!-- <ygg-tags-control
           formControlName="tags"
           taggableType="schedule-plan"

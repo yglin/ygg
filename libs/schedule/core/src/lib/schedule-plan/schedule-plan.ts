@@ -2,7 +2,7 @@ import { isEmpty, extend, defaults, sample, range, isArray } from 'lodash';
 import { v4 as uuid } from 'uuid';
 import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
 // import {BadValueError, BadValueErrorCode} from '@ygg/shared/infra/error';
-import { NumberRange, DateRange, Contact } from '@ygg/shared/types';
+import { NumberRange, DateRange, Contact, DayTimeRange } from '@ygg/shared/types';
 import { User } from '@ygg/shared/user';
 // import { PlayTag } from '@ygg/playwhat/play';
 import { Tags, Taggable } from '@ygg/tags/core';
@@ -14,6 +14,7 @@ export class SchedulePlan implements DataItem, Taggable {
   agentId: string;
   creatorId: string;
   dateRange: DateRange;
+  dayTimeRange: DayTimeRange;
   numParticipants: number;
   numElders: number;
   numKids: number;
@@ -39,6 +40,7 @@ export class SchedulePlan implements DataItem, Taggable {
   static forge(extData: any = {}): SchedulePlan {
     const forged: SchedulePlan = new SchedulePlan();
     forged.dateRange = DateRange.forge();
+    forged.dayTimeRange = DayTimeRange.forge();
     forged.numParticipants = Math.floor(50 + 50 * Math.random());
     forged.numElders = 1 + Math.floor(forged.numParticipants * Math.random() * 0.5);
     forged.numKids = 1 + Math.floor(forged.numParticipants * Math.random() * 0.5);
@@ -112,6 +114,9 @@ export class SchedulePlan implements DataItem, Taggable {
 
     if (data.dateRange) {
       this.dateRange = new DateRange().fromJSON(data.dateRange);
+    }
+    if (data.dayTimeRange) {
+      this.dayTimeRange = new DayTimeRange().fromJSON(data.dayTimeRange);
     }
     if (data.totalBudget) {
       this.totalBudget = new NumberRange().fromJSON(data.totalBudget);

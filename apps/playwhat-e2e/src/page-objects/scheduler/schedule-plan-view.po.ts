@@ -4,20 +4,24 @@ import { DateRange, NumberRange, Contact } from '@ygg/shared/types';
 import { DateRange as DateRangePageObjects } from '../shared-types';
 import { NumberRangeViewPageObjectCypress } from '../shared-types/number-range';
 import { ContactViewPageObjectCypress } from '../shared-types/contact';
+import { DayTimeRangeViewPageObjectCypress } from "../shared-types/day-time-range";
 import { TagsViewPageObjectCypress } from '../tags';
 import { Tags } from '@ygg/tags/core';
 import { PurchaseListPageObjectCypress } from '../shopping/purchase';
 
 export class SchedulePlanViewPageObjectCypress extends SchedulePlanViewPageObject {
   purchasesListPageObject: PurchaseListPageObjectCypress;
+  dayTimeRangePO: DayTimeRangeViewPageObjectCypress;
 
   constructor(parentSelector: string) {
     super(parentSelector);
     this.purchasesListPageObject = new PurchaseListPageObjectCypress(this.getSelector('purchaseList'));
+    this.dayTimeRangePO = new DayTimeRangeViewPageObjectCypress(this.getSelector('dayTimeRange'));
   }
 
   expectValue(schedulePlan: SchedulePlan) {
     this.expectDateRange(schedulePlan.dateRange);
+    this.dayTimeRangePO.expectValue(schedulePlan.dayTimeRange);
     this.expectNumParticipants(schedulePlan.numParticipants);
     this.expectNumElders(schedulePlan.numElders);
     this.expectNumKids(schedulePlan.numKids);

@@ -1,13 +1,22 @@
 <div class="ygg-schedule-plan-view" *ngIf="schedulePlan">
   <div>
     <table>
-      <tr class="date-range" id="dateRange">
-        <td>預定日期</td>
+      <tr id="dateRange">
+        <td>預定日期及時段</td>
         <td>
-          <ygg-date-range-view 
-            class="value"
-            [dateRange]="schedulePlan.dateRange"
-          ></ygg-date-range-view>
+          <div class="date-range">
+            <ygg-date-range-view
+              class="value"
+              [dateRange]="schedulePlan.dateRange"
+            ></ygg-date-range-view>
+          </div>
+          <br />
+          <div class="day-time-range">
+            <ygg-day-time-range
+              class="value"
+              [dayTimeRange]="schedulePlan.dayTimeRange"
+            ></ygg-day-time-range>
+          </div>
         </td>
       </tr>
       <tr class="numberPeople">
@@ -100,11 +109,16 @@
           </div>
         </td>
       </tr>
-      <tr class="likes" *ngIf="schedulePlan.hasPurchases() || schedulePlan.likesDescription">
+      <tr
+        class="likes"
+        *ngIf="schedulePlan.hasPurchases() || schedulePlan.likesDescription"
+      >
         <td>體驗需求</td>
         <td>
           <div class="purchases">
-            <ygg-purchase-list [purchases]="schedulePlan.purchases"></ygg-purchase-list>
+            <ygg-purchase-list
+              [purchases]="schedulePlan.purchases"
+            ></ygg-purchase-list>
           </div>
           <!-- <div *ngIf="schedulePlan.tags" class="tags">
             <ygg-tags-view [tags]="schedulePlan.tags"></ygg-tags-view>

@@ -6,6 +6,8 @@ import { SerializableJSON } from '@ygg/shared/infra/data-access';
  * Represent an absolute time in a day
  */
 export class DayTime implements SerializableJSON {
+  static DISPLAY_FORMAT = 'A h:mm';
+
   private _hour: number;
   get hour(): number {
     return this._hour;

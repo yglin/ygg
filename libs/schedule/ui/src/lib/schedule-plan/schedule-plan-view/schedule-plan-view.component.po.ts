@@ -5,6 +5,7 @@ export abstract class SchedulePlanViewPageObject extends PageObject {
   selectors = {
     main: '.ygg-schedule-plan-view',
     dateRange: '.date-range',
+    dayTimeRange: '.day-time-range',
     numParticipants: '.numberPeople .numParticipants',
     numElders: '.numberPeople .numElders',
     numKids: '.numberPeople .numKids',

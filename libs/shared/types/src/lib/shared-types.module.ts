@@ -47,6 +47,7 @@ import {
 import { AlbumComponent } from './album/album.component';
 // import { TagsControlComponent, TagsViewComponent } from './tags';
 import { ContactControlComponent, ContactViewComponent } from './contact';
+import { DayTimeViewComponent } from './datetime/day-time/day-time-view/day-time-view.component';
 
 @NgModule({
   imports: [
@@ -100,7 +101,8 @@ import { ContactControlComponent, ContactViewComponent } from './contact';
     // TagsControlComponent,
     // TagsViewComponent,
     ContactControlComponent,
-    ContactViewComponent
+    ContactViewComponent,
+    DayTimeViewComponent
   ],
   entryComponents: [/* DateRangeControlDialogComponent, */ImageUploaderComponent],
   exports: [
@@ -130,6 +132,7 @@ import { ContactControlComponent, ContactViewComponent } from './contact';
     GoogleMapComponent,
     ContactControlComponent,
     ContactViewComponent,
+    DayTimeViewComponent,
     // TagsControlComponent,
     // TagsViewComponent
   ]

@@ -1,6 +1,6 @@
 <div class="day-time-range" *ngIf="dayTimeRange">
   <mat-icon>access_time</mat-icon>
-  <span class='start'>{{ dayTimeRange.start.format('A h:mm') }}</span>
+  <ygg-day-time-view class='start' [dayTime]='dayTimeRange.start'></ygg-day-time-view>
   &mdash;
-  <span class='end'>{{ dayTimeRange.end.format('A h:mm') }}</span>
+  <ygg-day-time-view class='end' [dayTime]='dayTimeRange.end'></ygg-day-time-view>
 </div>

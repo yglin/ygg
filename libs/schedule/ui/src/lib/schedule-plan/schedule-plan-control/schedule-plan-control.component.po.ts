@@ -8,6 +8,7 @@ export abstract class SchedulePlanControlPageObject extends PageObject {
     submitButton: 'button.submit',
     agentSelector: '.agent .select',
     dateRange: '.date-range',
+    dayTimeRange: '.day-time-range',
     inputNumParticipants: '.num-participants input',
     inputNumKids: '.num-kids input',
     inputNumElders: '.num-elders input',
