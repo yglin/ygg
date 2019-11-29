@@ -1,5 +1,6 @@
-import { values } from "lodash";
+import { values, isEmpty } from "lodash";
 import { Tags } from '@ygg/tags/core';
+import { Equipment } from '@ygg/resource/core';
 
 export interface Document {
   path: string;
@@ -11,13 +12,21 @@ export class MockDatabase {
 
   pushDocument(doc: Document) {
     this.documents[doc.path] = doc;
-    if (doc.data && doc.data.tags) {
+    if (doc.data && !isEmpty(doc.data.tags)) {
       new Tags(doc.data.tags).forEach(tag => {
         const tagPath = `tags/${tag.id}`;
         this.documents[tagPath] = {
           path: tagPath,
           data: tag
         };
+      });
+    }
+    if (doc.data && !isEmpty(doc.data.equipments)) {
+      doc.data.equipments.forEach(eq => {
+        this.pushDocument({
+          path: `${Equipment.collection}/${eq.id}`,
+          data: eq
+        });
       });
     }
   }

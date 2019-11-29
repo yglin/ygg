@@ -3,7 +3,8 @@ import { Play } from '../play';
 
 export class PlaySelectorPageObject extends PageObject {
   selectors = {
-    main: '.play-selector'
+    main: '.play-selector',
+    buttonGotoCreatePlay: 'button.goto-create-play'
   };
 
   getSelectorForPlay(arg1: Play | string): string {

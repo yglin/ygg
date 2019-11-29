@@ -1,7 +1,26 @@
 <div class="play-selector" *ngIf="plays">
-  <div class='play-list' fxLayout="row" fxLayoutAlign='start center' fxLayoutGap='30px'>
-    <div *ngFor="let play of plays" [attr.play-id]='play.id' (click)='onClickPlay(play)'>
-      <ygg-play-thumbnail [id]='play.id'></ygg-play-thumbnail>
+  <div
+    class="play-list"
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    fxLayoutGap="30px"
+  >
+    <div
+      *ngFor="let play of plays"
+      [attr.play-id]="play.id"
+      (click)="onClickPlay(play)"
+    >
+      <ygg-play-thumbnail [id]="play.id"></ygg-play-thumbnail>
+    </div>
+    <div>
+      <button
+        class="goto-create-play"
+        mat-fab
+        [routerLink]="['/plays', 'new']"
+        matTooltip="增加新的體驗"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
     </div>
   </div>
 </div>

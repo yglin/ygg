@@ -110,190 +110,190 @@ describe('Scheduler - schedule-plan', () => {
     mockDatabase.clear();
   });
 
-  it('Should keep input data on leaving page', () => {
-    siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
-    schedulePlanControlPageObject.setValue(testSchedulePlan1);
-    cy.visit('/');
-    siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
-    schedulePlanControlPageObject.submit();
-    cy.url({ timeout: 10000 }).should('not.match', /scheduler\/schedule-plans\/new.*/);
-    cy.location('pathname').then((loc: any) => {
-      const pathname: string = loc as string;
-      const id = last(pathname.split('/'));
-      testSchedulePlan1.id = id;
-      mockDatabase.pushDocument({
-        path: `schedule-plans/${id}`,
-        data: testSchedulePlan1.toJSON()
-      });
-      schedulePlanViewPageObject.expectValue(testSchedulePlan1);
-    });
-  });
+  // it('Should keep input data on leaving page', () => {
+  //   siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+  //   schedulePlanControlPageObject.setValue(testSchedulePlan1);
+  //   cy.visit('/');
+  //   siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+  //   schedulePlanControlPageObject.submit();
+  //   cy.url({ timeout: 10000 }).should('not.match', /scheduler\/schedule-plans\/new.*/);
+  //   cy.location('pathname').then((loc: any) => {
+  //     const pathname: string = loc as string;
+  //     const id = last(pathname.split('/'));
+  //     testSchedulePlan1.id = id;
+  //     mockDatabase.pushDocument({
+  //       path: `schedule-plans/${id}`,
+  //       data: testSchedulePlan1.toJSON()
+  //     });
+  //     schedulePlanViewPageObject.expectValue(testSchedulePlan1);
+  //   });
+  // });
 
+  // it('should auto sync total budget and single budget', () => {
+  //   let testNumParticipants;
+  //   let testTotalBudget: NumberRange;
+  //   let testSingleBudget: NumberRange;
+  //   siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+  //   // Set total-budget, should update single-budget
+  //   testNumParticipants = 13;
+  //   testTotalBudget = new NumberRange(1000, 5000);
+  //   testSingleBudget = new NumberRange(
+  //     Math.floor(1000 / testNumParticipants),
+  //     Math.floor(5000 / testNumParticipants)
+  //   );
+  //   schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+  //   cy.wait(1000);
+  //   schedulePlanControlPageObject.setTotalBudget(testTotalBudget);
+  //   cy.wait(1000);
+  //   schedulePlanControlPageObject.expectSingleBudget(testSingleBudget);
+  //   testNumParticipants = 17;
+  //   testTotalBudget = new NumberRange(2343, 12345);
+  //   testSingleBudget = new NumberRange(
+  //     Math.floor(2343 / testNumParticipants),
+  //     Math.floor(12345 / testNumParticipants)
+  //   );
+  //   schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+  //   cy.wait(1000);
+  //   schedulePlanControlPageObject.setTotalBudget(testTotalBudget);
+  //   cy.wait(1000);
+  //   schedulePlanControlPageObject.expectSingleBudget(testSingleBudget);
+  //   testNumParticipants = 29;
+  //   testTotalBudget = new NumberRange(17854, 30678);
+  //   testSingleBudget = new NumberRange(
+  //     Math.floor(17854 / testNumParticipants),
+  //     Math.floor(30678 / testNumParticipants)
+  //   );
+  //   schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+  //   cy.wait(1000);
+  //   schedulePlanControlPageObject.setTotalBudget(testTotalBudget);
+  //   cy.wait(1000);
+  //   schedulePlanControlPageObject.expectSingleBudget(testSingleBudget);
 
-  it('should auto sync total budget and single budget', () => {
-    let testNumParticipants;
-    let testTotalBudget: NumberRange;
-    let testSingleBudget: NumberRange;
-    siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
-    // Set total-budget, should update single-budget
-    testNumParticipants = 13;
-    testTotalBudget = new NumberRange(1000, 5000);
-    testSingleBudget = new NumberRange(
-      Math.floor(1000 / testNumParticipants),
-      Math.floor(5000 / testNumParticipants)
-    );
-    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
-    cy.wait(1000);
-    schedulePlanControlPageObject.setTotalBudget(testTotalBudget);
-    cy.wait(1000);
-    schedulePlanControlPageObject.expectSingleBudget(testSingleBudget);
-    testNumParticipants = 17;
-    testTotalBudget = new NumberRange(2343, 12345);
-    testSingleBudget = new NumberRange(
-      Math.floor(2343 / testNumParticipants),
-      Math.floor(12345 / testNumParticipants)
-    );
-    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
-    cy.wait(1000);
-    schedulePlanControlPageObject.setTotalBudget(testTotalBudget);
-    cy.wait(1000);
-    schedulePlanControlPageObject.expectSingleBudget(testSingleBudget);
-    testNumParticipants = 29;
-    testTotalBudget = new NumberRange(17854, 30678);
-    testSingleBudget = new NumberRange(
-      Math.floor(17854 / testNumParticipants),
-      Math.floor(30678 / testNumParticipants)
-    );
-    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
-    cy.wait(1000);
-    schedulePlanControlPageObject.setTotalBudget(testTotalBudget);
-    cy.wait(1000);
-    schedulePlanControlPageObject.expectSingleBudget(testSingleBudget);
+  //   // Set single-budget, should update total-budget
+  //   testNumParticipants = 7;
+  //   testSingleBudget = new NumberRange(100, 700);
+  //   testTotalBudget = new NumberRange(
+  //     100 * testNumParticipants,
+  //     700 * testNumParticipants
+  //   );
+  //   schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+  //   cy.wait(1000);
+  //   schedulePlanControlPageObject.setSingleBudget(testSingleBudget);
+  //   cy.wait(1000);
+  //   schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
+  //   testNumParticipants = 17;
+  //   testSingleBudget = new NumberRange(333, 777);
+  //   testTotalBudget = new NumberRange(
+  //     333 * testNumParticipants,
+  //     777 * testNumParticipants
+  //   );
+  //   schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+  //   cy.wait(1000);
+  //   schedulePlanControlPageObject.setSingleBudget(testSingleBudget);
+  //   cy.wait(1000);
+  //   schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
+  //   testNumParticipants = 37;
+  //   testSingleBudget = new NumberRange(3, 12345);
+  //   testTotalBudget = new NumberRange(
+  //     3 * testNumParticipants,
+  //     12345 * testNumParticipants
+  //   );
+  //   schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+  //   cy.wait(1000);
+  //   schedulePlanControlPageObject.setSingleBudget(testSingleBudget);
+  //   cy.wait(1000);
+  //   schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
 
-    // Set single-budget, should update total-budget
-    testNumParticipants = 7;
-    testSingleBudget = new NumberRange(100, 700);
-    testTotalBudget = new NumberRange(
-      100 * testNumParticipants,
-      700 * testNumParticipants
-    );
-    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
-    cy.wait(1000);
-    schedulePlanControlPageObject.setSingleBudget(testSingleBudget);
-    cy.wait(1000);
-    schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
-    testNumParticipants = 17;
-    testSingleBudget = new NumberRange(333, 777);
-    testTotalBudget = new NumberRange(
-      333 * testNumParticipants,
-      777 * testNumParticipants
-    );
-    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
-    cy.wait(1000);
-    schedulePlanControlPageObject.setSingleBudget(testSingleBudget);
-    cy.wait(1000);
-    schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
-    testNumParticipants = 37;
-    testSingleBudget = new NumberRange(3, 12345);
-    testTotalBudget = new NumberRange(
-      3 * testNumParticipants,
-      12345 * testNumParticipants
-    );
-    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
-    cy.wait(1000);
-    schedulePlanControlPageObject.setSingleBudget(testSingleBudget);
-    cy.wait(1000);
-    schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
+  //   // change num-participants, should update total-budget from single-budget
+  //   testSingleBudget = new NumberRange(3, 52);
+  //   schedulePlanControlPageObject.setSingleBudget(testSingleBudget);
+  //   cy.wait(1000);
+  //   testNumParticipants = 13;
+  //   schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+  //   cy.wait(1000);
+  //   testTotalBudget = new NumberRange(
+  //     3 * testNumParticipants,
+  //     52 * testNumParticipants
+  //   );
+  //   schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
 
-    // change num-participants, should update total-budget from single-budget
-    testSingleBudget = new NumberRange(3, 52);
-    schedulePlanControlPageObject.setSingleBudget(testSingleBudget);
-    cy.wait(1000);
-    testNumParticipants = 13;
-    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
-    cy.wait(1000);
-    testTotalBudget = new NumberRange(
-      3 * testNumParticipants,
-      52 * testNumParticipants
-    );
-    schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
+  //   testNumParticipants = 31;
+  //   schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+  //   cy.wait(1000);
+  //   testTotalBudget = new NumberRange(
+  //     3 * testNumParticipants,
+  //     52 * testNumParticipants
+  //   );
+  //   schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
 
-    testNumParticipants = 31;
-    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
-    cy.wait(1000);
-    testTotalBudget = new NumberRange(
-      3 * testNumParticipants,
-      52 * testNumParticipants
-    );
-    schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
+  //   testNumParticipants = 47;
+  //   schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
+  //   cy.wait(1000);
+  //   testTotalBudget = new NumberRange(
+  //     3 * testNumParticipants,
+  //     52 * testNumParticipants
+  //   );
+  //   schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
+  // });
 
-    testNumParticipants = 47;
-    schedulePlanControlPageObject.setNumParticipants(testNumParticipants);
-    cy.wait(1000);
-    testTotalBudget = new NumberRange(
-      3 * testNumParticipants,
-      52 * testNumParticipants
-    );
-    schedulePlanControlPageObject.expectTotalBudget(testTotalBudget);
-  });
+  // it('should list all plays', () => {
+  //   siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+  //   const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
+  //   playSelectorPageObject.expectPlays(testPlays);
+  // });
 
-  it('should list all plays', () => {
-    siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+  // it('Click on play with no equipment should add purchase of it directly', () => {
+  //   const numParticipants = 13;
+  //   const play = sample(playsNoEquipments);
+  //   const purchase = new Purchase({ product: play, quantity: numParticipants });
+  //   siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+  //   schedulePlanControlPageObject.setNumParticipants(numParticipants);
+  //   const shoppingCartPageObject = new ShoppingCartPageObjectCypress('');
+  //   const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
+  //   shoppingCartPageObject.clear();
+  //   playSelectorPageObject.clickPlay(play);
+  //   shoppingCartPageObject.expectPurchase(purchase);
+  // });
+
+  // it('Click on play with equipments should pop purchase edit dialog', () => {
+  //   const numParticipants = 23;
+  //   const play = sample(playsWithEquipments);
+  //   const purchase = new Purchase({ product: play, quantity: numParticipants });
+  //   siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
+  //   schedulePlanControlPageObject.setNumParticipants(numParticipants);
+  //   const shoppingCartPageObject = new ShoppingCartPageObjectCypress('');
+  //   const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
+  //   shoppingCartPageObject.clear();
+  //   playSelectorPageObject.clickPlay(play);
+  //   const purchaseControlPageObject = new PurchaseControlPageObjectCypress(
+  //     '.ygg-dialog'
+  //   );
+  //   purchaseControlPageObject.setValue(purchase);
+  //   purchaseControlPageObject.submit();
+  //   shoppingCartPageObject.expectPurchase(purchase);
+  // });
+
+  it('Should be able to add play on the fly', () => {
     const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
-    playSelectorPageObject.expectPlays(testPlays);
-  });
-
-  it('Click on play with no equipment should add purchase of it directly', () => {
-    const numParticipants = 13;
-    const play = sample(playsNoEquipments);
-    const purchase = new Purchase({ product: play, quantity: numParticipants });
-    siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
-    schedulePlanControlPageObject.setNumParticipants(numParticipants);
-    const shoppingCartPageObject = new ShoppingCartPageObjectCypress('');
-    const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
-    shoppingCartPageObject.clear();
-    playSelectorPageObject.clickPlay(play);
-    shoppingCartPageObject.expectPurchase(purchase);
-  });
-
-  it('Click on play with equipments should pop purchase edit dialog', () => {
-    const numParticipants = 23;
-    const play = sample(playsWithEquipments);
-    const purchase = new Purchase({ product: play, quantity: numParticipants });
-    siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
-    schedulePlanControlPageObject.setNumParticipants(numParticipants);
-    const shoppingCartPageObject = new ShoppingCartPageObjectCypress('');
-    const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
-    shoppingCartPageObject.clear();
-    playSelectorPageObject.clickPlay(play);
-    const purchaseControlPageObject = new PurchaseControlPageObjectCypress(
-      '.ygg-dialog'
-    );
-    purchaseControlPageObject.setValue(purchase);
-    purchaseControlPageObject.submit();
-    shoppingCartPageObject.expectPurchase(purchase);
-  });
-
-
-/*   it('Should be able to add play on the fly', () => {
     siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
     const testPlay = Play.forge();
-    schedulePlanControlPageObject.setValue(testSchedulePlan1);
-    schedulePlanControlPageObject.gotoNewPlay();
+    playSelectorPageObject.gotoCreatePlay();
     const playFormPageObject = new PlayFormPageObject();
     playFormPageObject.fillIn(testPlay);
     playFormPageObject.submit();
-    cy.url().should('not.match', /\/plays\/new/);
+    cy.url({timeout: 10000}).should('not.match', /\/plays\/new/);
     cy.location('pathname').then((pathnames: any) => {
       const id = last((pathnames as string).split('/'));
       testPlay.id = id;
+      mockDatabase.pushDocument({
+        path: `plays/${id}`,
+        data: testPlay.toJSON()
+      });
       siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
-      const playSelectorPageObject = new PlaySelectorPageObjectCypress('');
       // The new play should show up
       playSelectorPageObject.expectPlay(testPlay);
     });
   });
- */  
 
   // Too thoughtful for user, rather not do it for now
   // it('Change numParticipants should refresh purchases and total price', () => {
@@ -320,47 +320,47 @@ describe('Scheduler - schedule-plan', () => {
   //   purchaseListPageObject.expectTotalPrice(expectedTotalPrice);
   // });
 
-  it('should be able to create and update schedule-plan', () => {
-    createSchedulePlan(testSchedulePlan1).then(testSchedulePlan => {
-      mockDatabase.pushDocument({
-        path: `schedule-plans/${testSchedulePlan.id}`,
-        data: testSchedulePlan
-      });
-      // Goto my-schedules page, find the testSchedulePlan and check it out
-      siteNavigator.goto(['scheduler', 'schedule-plans', 'my']);
-      cy.log(`##### Find test schedule form in my schedule-plans #####`);
-      const mySchedulePlansPageObject = new SchedulePlanListPageObjectCypress();
-      mySchedulePlansPageObject.expectSchedulePlan(testSchedulePlan);
-      mySchedulePlansPageObject.viewSchedulePlan(testSchedulePlan);
+  // it('should be able to create and update schedule-plan', () => {
+  //   createSchedulePlan(testSchedulePlan1).then(testSchedulePlan => {
+  //     mockDatabase.pushDocument({
+  //       path: `schedule-plans/${testSchedulePlan.id}`,
+  //       data: testSchedulePlan
+  //     });
+  //     // Goto my-schedules page, find the testSchedulePlan and check it out
+  //     siteNavigator.goto(['scheduler', 'schedule-plans', 'my']);
+  //     cy.log(`##### Find test schedule form in my schedule-plans #####`);
+  //     const mySchedulePlansPageObject = new SchedulePlanListPageObjectCypress();
+  //     mySchedulePlansPageObject.expectSchedulePlan(testSchedulePlan);
+  //     mySchedulePlansPageObject.viewSchedulePlan(testSchedulePlan);
 
-      // In view page of testSchedulePlan, click edit button and goto edit page
-      cy.location('pathname').should('include', testSchedulePlan.id);
-      cy.log(`##### Found test schedule form, go to its edit page #####`);
-      schedulePlanViewPagePageObject.gotoEdit();
+  //     // In view page of testSchedulePlan, click edit button and goto edit page
+  //     cy.location('pathname').should('include', testSchedulePlan.id);
+  //     cy.log(`##### Found test schedule form, go to its edit page #####`);
+  //     schedulePlanViewPagePageObject.gotoEdit();
 
-      // In edit page of testSchedulePlan, change data and submit
-      // The edit page is exactly the same as scheduler/new page,
-      // so we can reuse the same page object
-      cy.location('pathname').should('include', `${testSchedulePlan.id}/edit`);
-      cy.log(`##### Edit test schedule form, fill in different data #####`);
-      schedulePlanControlPageObject.clearValue(testSchedulePlan);
-      schedulePlanControlPageObject.setValue(testSchedulePlan2);
-      schedulePlanControlPageObject.submit();
+  //     // In edit page of testSchedulePlan, change data and submit
+  //     // The edit page is exactly the same as scheduler/new page,
+  //     // so we can reuse the same page object
+  //     cy.location('pathname').should('include', `${testSchedulePlan.id}/edit`);
+  //     cy.log(`##### Edit test schedule form, fill in different data #####`);
+  //     schedulePlanControlPageObject.clearValue(testSchedulePlan);
+  //     schedulePlanControlPageObject.setValue(testSchedulePlan2);
+  //     schedulePlanControlPageObject.submit();
 
-      // // Being redirected to view page again,
-      // // but this time we assert data with changedchangedSchedulePlan
-      cy.location('pathname')
-        .should('include', testSchedulePlan.id)
-        .then(() => {
-          mockDatabase.pushDocument({
-            path: `schedule-plans/${testSchedulePlan.id}`,
-            data: testSchedulePlan2
-          });
-        });
-      cy.log(
-        `##### Test schedule form updated, check if data is updated #####`
-      );
-      schedulePlanViewPageObject.expectValue(testSchedulePlan2);
-    });
-  });
+  //     // // Being redirected to view page again,
+  //     // // but this time we assert data with changedchangedSchedulePlan
+  //     cy.location('pathname')
+  //       .should('include', testSchedulePlan.id)
+  //       .then(() => {
+  //         mockDatabase.pushDocument({
+  //           path: `schedule-plans/${testSchedulePlan.id}`,
+  //           data: testSchedulePlan2
+  //         });
+  //       });
+  //     cy.log(
+  //       `##### Test schedule form updated, check if data is updated #####`
+  //     );
+  //     schedulePlanViewPageObject.expectValue(testSchedulePlan2);
+  //   });
+  // });
 });
