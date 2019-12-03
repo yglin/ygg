@@ -2,7 +2,7 @@ import { extend, isEmpty, sum } from 'lodash';
 import { v4 as uuid } from 'uuid';
 import { Product, ProductType } from './product';
 import { Duration } from '@ygg/shared/types';
-import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { SerializableJSON, toJSONDeep, generateID } from '@ygg/shared/infra/data-access';
 
 export enum PurchaseState {
   Unknown = -1,
@@ -39,7 +39,7 @@ export class Purchase implements SerializableJSON {
   }
 
   constructor(options?: PurchaseOptions) {
-    this.id = uuid();
+    this.id = generateID();
     this.productType = ProductType.Unknown;
     this.productId = '';
     this.quantity = 0;

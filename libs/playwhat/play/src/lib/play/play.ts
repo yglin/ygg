@@ -1,6 +1,6 @@
 import { range, random, extend, sample, isArray } from 'lodash';
 import { v4 as uuid } from 'uuid';
-import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { DataItem, toJSONDeep, generateID } from '@ygg/shared/infra/data-access';
 import {
   Album,
   BusinessHours,
@@ -60,7 +60,7 @@ export class Play implements DataItem, Taggable, Product {
   }
 
   constructor() {
-    this.id = uuid();
+    this.id = generateID();
     this.price = 0;
   }
 

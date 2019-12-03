@@ -1,6 +1,6 @@
 import { extend, toPlainObject } from 'lodash';
 import * as uuid from "uuid";
-import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { DataItem, toJSONDeep, generateID } from '@ygg/shared/infra/data-access';
 import { Album } from './album';
 
 export class Resource implements DataItem {
@@ -12,7 +12,7 @@ export class Resource implements DataItem {
   timeLength: number;
 
   constructor() {
-    this.id = uuid.v4();
+    this.id = generateID();
     this.color = getRandomColor();
   }
 

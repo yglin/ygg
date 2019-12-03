@@ -1,9 +1,8 @@
 import { PlaySelectorPageObject, Play } from '@ygg/playwhat/play';
 
 export class PlaySelectorPageObjectCypress extends PlaySelectorPageObject {
-
   expectPlay(play: Play) {
-    cy.get(this.getSelectorForPlay(play)).should('exist');
+    cy.get(this.getSelectorForPlay(play), { timeout: 10000 }).should('exist');
   }
 
   expectPlays(plays: Play[]) {
@@ -13,11 +12,15 @@ export class PlaySelectorPageObjectCypress extends PlaySelectorPageObject {
   }
 
   clickPlay(play: Play) {
-    cy.get(this.getSelectorForPlay(play)).click({ force: true });
+    cy.get(this.getSelectorForPlay(play), { timeout: 10000 }).click({
+      force: true
+    });
   }
 
   clickPlayById(playId: string) {
-    cy.get(this.getSelectorForPlay(playId)).click({ force: true });
+    cy.get(this.getSelectorForPlay(playId), { timeout: 10000 }).click({
+      force: true
+    });
   }
 
   clickPlays(plays: Play[]) {
@@ -27,6 +30,8 @@ export class PlaySelectorPageObjectCypress extends PlaySelectorPageObject {
   }
 
   gotoCreatePlay() {
-    cy.get(this.getSelector('buttonGotoCreatePlay')).click({ force: true });
+    cy.get(this.getSelector('buttonGotoCreatePlay'), { timeout: 10000 }).click({
+      force: true
+    });
   }
 }

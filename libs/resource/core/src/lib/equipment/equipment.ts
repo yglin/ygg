@@ -1,7 +1,7 @@
 import { sample, random, extend } from "lodash";
 import { Product, ProductType } from "@ygg/shopping/core";
 import { v4 as uuid } from "uuid";
-import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { SerializableJSON, toJSONDeep, generateID } from '@ygg/shared/infra/data-access';
 import { Album } from '@ygg/shared/types';
 import { FormGroupValue } from '@ygg/shared/ui/dynamic-form';
 import { EquipmentEditDialogComponent } from 'libs/playwhat/play/src/lib/play/equipment-edit-dialog/equipment-edit-dialog.component';
@@ -38,7 +38,7 @@ export class Equipment implements Product, SerializableJSON, FormGroupValue {
   }
 
   constructor() {
-    this.id = uuid();
+    this.id = generateID();
     this.price = 0;
     this.stock = 0;
   }

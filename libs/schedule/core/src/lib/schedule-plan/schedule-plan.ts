@@ -1,6 +1,6 @@
 import { isEmpty, extend, defaults, sample, range, isArray } from 'lodash';
 import { v4 as uuid } from 'uuid';
-import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { DataItem, toJSONDeep, generateID } from '@ygg/shared/infra/data-access';
 // import {BadValueError, BadValueErrorCode} from '@ygg/shared/infra/error';
 import { NumberRange, DateRange, Contact, DayTimeRange } from '@ygg/shared/types';
 import { User } from '@ygg/shared/user';
@@ -97,7 +97,7 @@ export class SchedulePlan implements DataItem, Taggable {
   }
 
   constructor() {
-    this.id = uuid();
+    this.id = generateID();
     this.purchases = [];
   }
 

@@ -1,5 +1,5 @@
 import { extend, isEmpty } from 'lodash';
-import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { DataItem, toJSONDeep, generateID } from '@ygg/shared/infra/data-access';
 import { Event } from './event';
 import * as uuid from 'uuid';
 
@@ -9,7 +9,7 @@ export class Schedule implements DataItem {
   events: Event[];
 
   constructor() {
-    this.id = uuid.v4();
+    this.id = generateID();
     this.events = [];
   }
 

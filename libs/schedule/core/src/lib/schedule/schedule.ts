@@ -1,12 +1,12 @@
 import { v4 as uuid } from "uuid";
 import { extend } from "lodash";
-import { DataItem, toJSONDeep } from "@ygg/shared/infra/data-access";
+import { DataItem, toJSONDeep, generateID } from "@ygg/shared/infra/data-access";
 
 export class Schedule implements DataItem {
   id: string;
 
   constructor() {
-    this.id = uuid();
+    this.id = generateID();
   }
 
   fromJSON(data: any): this {

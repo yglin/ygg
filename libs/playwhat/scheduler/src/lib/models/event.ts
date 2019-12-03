@@ -1,7 +1,7 @@
 import { extend } from 'lodash';
 import * as moment from 'moment';
 import * as uuid from 'uuid';
-import { DataItem, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { DataItem, toJSONDeep, generateID } from '@ygg/shared/infra/data-access';
 import { Album } from '@ygg/playwhat/resource';
 
 export class Event implements DataItem {
@@ -15,7 +15,7 @@ export class Event implements DataItem {
   resourceId: string;
 
   constructor() {
-    this.id = uuid.v4();
+    this.id = generateID();
   }
 
   fromJSON(data: any = {}): this {
