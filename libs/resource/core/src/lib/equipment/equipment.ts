@@ -5,14 +5,16 @@ import { SerializableJSON, toJSONDeep, generateID } from '@ygg/shared/infra/data
 import { Album } from '@ygg/shared/types';
 import { FormGroupValue } from '@ygg/shared/ui/dynamic-form';
 import { EquipmentEditDialogComponent } from 'libs/playwhat/play/src/lib/play/equipment-edit-dialog/equipment-edit-dialog.component';
+import { Resource, ResourceType } from '../resource';
 
-export class Equipment implements Product, SerializableJSON, FormGroupValue {
+export class Equipment implements Resource, Product, SerializableJSON, FormGroupValue {
   static collection = 'resources';
 
   id: string;
   name: string;
   price: number;
   stock: number;
+  resourceType: ResourceType = ResourceType.Equipment;
   productType: ProductType = ProductType.Equipment;
   album: Album;
 

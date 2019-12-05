@@ -45,6 +45,8 @@ import { ShoppingCartService } from '@ygg/shopping/factory';
 import { ShoppingCartComponent } from 'libs/shopping/ui/src/lib/cart/shopping-cart/shopping-cart.component';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { PurchaseControlComponent } from '@ygg/shopping/ui';
+import { Accommodation } from '@ygg/resource/core';
+import { AccommodationService } from '@ygg/resource/data-access';
 
 @Component({
   selector: 'ygg-schedule-plan-control',
@@ -67,6 +69,7 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
   playTags$: Observable<Tags>;
   transpotationTypes = TranspotationTypes;
   playsAll: Play[];
+  accommodations: Accommodation[];
   // purchases: Purchase[] = [];
 
   constructor(
@@ -78,7 +81,8 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private playService: PlayService,
     private shoppingCart: ShoppingCartService,
-    private dialog: YggDialogService
+    private dialog: YggDialogService,
+    private accommodationService: AccommodationService
   ) {
     this.subscriptions = [];
     this.subscriptions.push(
@@ -110,6 +114,12 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
           this.agentUsers = [];
         }
       });
+
+    this.subscriptions.push(
+      this.accommodationService
+        .list$()
+        .subscribe(accommodations => (this.accommodations = accommodations))
+    );
     // this.playTags$ = this.playTagService.playTags$.pipe(
     //   map(playTags => new Tags(playTags))
     // );

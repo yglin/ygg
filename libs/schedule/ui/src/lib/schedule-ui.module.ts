@@ -16,6 +16,7 @@ import { SharedTypesModule } from '@ygg/shared/types';
 import { TagsUiModule } from '@ygg/tags/ui';
 import { PlaywhatPlayModule } from '@ygg/playwhat/play';
 import { ShoppingUiModule } from "@ygg/shopping/ui";
+import { ResourceUiModule } from '@ygg/resource/ui';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { ShoppingUiModule } from "@ygg/shopping/ui";
     SharedTypesModule,
     TagsUiModule,
     PlaywhatPlayModule,
-    ShoppingUiModule
+    ShoppingUiModule,
+    ResourceUiModule
   ],
   exports: [
     SchedulePlanControlComponent,

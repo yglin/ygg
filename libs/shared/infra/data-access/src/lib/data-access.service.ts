@@ -164,7 +164,8 @@ export class DataAccessService {
     item: T,
     constructor?: new () => T
   ): Promise<T> {
-    const data = typeof item.toJSON === 'function' ? item.toJSON() : item;
+    const data: DataItem = typeof item.toJSON === 'function' ? item.toJSON() : item;
+    data.refPath = `${collection}/${item.id}`;
     return this.getCollection(collection)
       .doc(item.id)
       .set(data)

@@ -1,3 +1,4 @@
 export enum ResourceType {
-  Equipment = 'equipment'
+  Equipment = 'equipment',
+  Accommodation = 'accommodation'
 };

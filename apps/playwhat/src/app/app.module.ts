@@ -21,6 +21,7 @@ import { routes } from './routes';
 import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
 import { ScheduleFrontendModule } from "@ygg/schedule/frontend";
 import { ScheduleAdminModule } from '@ygg/schedule/admin';
+import { ResourceUiModule } from '@ygg/resource/ui';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ScheduleAdminModule } from '@ygg/schedule/admin';
     SharedUiWidgetsModule,
     SharedUiNavigationModule,
     RouterModule.forRoot(routes),
+    ResourceUiModule,
     ScheduleFrontendModule,
     ScheduleAdminModule,
     PlaywhatPlayFrontendModule,
