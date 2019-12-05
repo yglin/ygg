@@ -4,7 +4,8 @@ import {
   OnDestroy,
   AfterViewInit,
   ViewChild,
-  ElementRef
+  ElementRef,
+  NgZone
 } from '@angular/core';
 import { ViewportScroller } from '@angular/common';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
@@ -15,24 +16,29 @@ import {
   UserMenuItem,
   User
 } from '@ygg/shared/user';
-import { Subscription, of, fromEvent, BehaviorSubject } from 'rxjs';
-import { switchMap, filter, auditTime, tap, debounceTime, delay } from 'rxjs/operators';
-import { fadeOutAnimation } from "./animations";
+import { Subscription, of, fromEvent, BehaviorSubject, Subject } from 'rxjs';
+import {
+  switchMap,
+  filter,
+  auditTime,
+  tap,
+  debounceTime,
+  delay
+} from 'rxjs/operators';
+import { fadeOutAnimation } from './animations';
 
 @Component({
   selector: 'pw-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  animations: [
-    fadeOutAnimation
-  ]
+  animations: [fadeOutAnimation]
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   title = 'playwhat';
   loggedIn = false;
   subscriptions: Subscription[] = [];
   pageClass = 'pw-page';
-  showGoToTopButton$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  showGoToTopButton$: Subject<boolean> = new Subject();
   showGoToTopButton = false;
   @ViewChild('page', { static: false }) pageElement: ElementRef;
 
@@ -41,6 +47,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     private authorizeService: AuthorizeService,
     private userMenuService: UserMenuService,
     private router: Router,
+    private zone: NgZone,
     private route: ActivatedRoute,
     private viewportScroller: ViewportScroller
   ) {}
@@ -95,24 +102,30 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     if (this.pageElement) {
       this.subscriptions.push(
-      fromEvent(this.pageElement.nativeElement, 'scroll')
-        // .pipe(auditTime(500))
-        .subscribe(() => {
-          const isOnTop = this.pageElement.nativeElement.scrollTop <= 100;
-          if (!isOnTop && !this.showGoToTopButton) {
-            this.showGoToTopButton$.next(true);
-          }
-        }));
-      this.subscriptions.push(this.showGoToTopButton$.pipe(
-        tap(value => this.showGoToTopButton = true),
-        debounceTime(3000),
-        // switchMap(() => of(true)),
-        // delay(3000)
-      ).subscribe(() => {
-        if (this.showGoToTopButton) {
-          this.showGoToTopButton = false;
-        }
-      }));
+        fromEvent(this.pageElement.nativeElement, 'scroll')
+          // .pipe(debounceTime(300))
+          .subscribe(() => {
+            const isOnTop = this.pageElement.nativeElement.scrollTop <= 100;
+            if (!isOnTop && !this.showGoToTopButton) {
+              this.showGoToTopButton$.next(true);
+            }
+          })
+      );
+      this.subscriptions.push(
+        this.showGoToTopButton$
+          .pipe(
+            tap(() => this.showGoToTopButton = true),
+            debounceTime(3000)
+            // switchMap(() => of(true)),
+            // delay(3000)
+          )
+          .subscribe(() => {
+              if (this.showGoToTopButton) {
+                this.showGoToTopButton = false;
+              }
+            }
+          )
+      );
     }
   }
 
