@@ -15,6 +15,7 @@ import { routes } from "./routes";
 import { AccommodationDetailComponent } from './pages/accommodation-detail/accommodation-detail.component';
 import { AccommodationViewComponent } from './accommodation/accommodation-view/accommodation-view.component';
 import { SharedTypesModule } from '@ygg/shared/types';
+import { AngularFittextModule } from "angular-fittext";
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { SharedTypesModule } from '@ygg/shared/types';
     SharedUiWidgetsModule,
     SharedUiDynamicFormModule,
     SharedTypesModule,
+    AngularFittextModule,
     RouterModule.forChild(routes)
   ],
   declarations: [ResourceControlComponent, EquipmentControlComponent, EquipmentThumbnailComponent, AccommodationListComponent, AccommodationControlComponent, AccommodationThumbnailComponent, AccommodationEditComponent, AccommodationDetailComponent, AccommodationViewComponent],

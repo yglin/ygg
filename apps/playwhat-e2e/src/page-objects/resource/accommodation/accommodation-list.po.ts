@@ -8,6 +8,7 @@ export class AccommodationListPageObjectCypress extends AccommodationListPageObj
   }
 
   expectAccommodations(accommodations: Accommodation[]) {
+    cy.pause();
     cy.wrap(accommodations).each((acmd: Accommodation) => this.expectAccommodation(acmd));
   }
 

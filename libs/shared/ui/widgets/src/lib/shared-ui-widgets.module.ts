@@ -18,11 +18,12 @@ import { TitleDividerComponent } from './title-divider/title-divider.component';
 import { ReactiveTextInputComponent } from './reactive-text-input/reactive-text-input.component';
 import { ItemsGroupSwitcherComponent } from './items-group-switcher/items-group-switcher.component';
 import { TimeInputComponent } from './time-input/time-input.component';
-import { AmazingTimePickerModule } from "amazing-time-picker";
+import { AmazingTimePickerModule } from 'amazing-time-picker';
 import { ChipsControlComponent } from './chips-control/chips-control.component';
 import { ImageIconComponent } from './image-icon/image-icon.component';
 import { ActionBarLayoutComponent } from './action-bar-layout/action-bar-layout.component';
 import { PriceComponent } from './price/price.component';
+
 @NgModule({
   declarations: [
     ProgressSpinnerComponent,
@@ -39,7 +40,7 @@ import { PriceComponent } from './price/price.component';
     ChipsControlComponent,
     ImageIconComponent,
     ActionBarLayoutComponent,
-    PriceComponent,
+    PriceComponent
   ],
   imports: [
     CommonModule,
