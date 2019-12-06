@@ -1,0 +1,14 @@
+<div class="accommodation-view" *ngIf="accommodation">
+  <div>
+    <h2>{{ accommodation.name }}</h2>
+  </div>
+  <div>
+    <ygg-album-view [album]="accommodation.album"></ygg-album-view>
+  </div>
+  <div>
+    <p>{{ accommodation.introduction }}</p>
+  </div>
+  <div>
+    <ygg-location-view [location]="accommodation.location"></ygg-location-view>
+  </div>
+</div>

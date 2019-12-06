@@ -15,11 +15,12 @@ export abstract class SchedulePlanViewPageObject extends PageObject {
     contacts: '.contacts',
     transpotation: '.transpotation .transpotation-type',
     transpotationHelp: '.transpotation .transpotation-help',
-    accommodationHelp: '.miscellaneous .accommodation-help',
     likesTags: '.likes .tags',
     likesDescription: '.likes .description',
     buttonEdit: 'button.edit',
-    purchaseList: '.purchases'
+    purchaseList: '.purchases',
+    accommodations: '.accommodation-info',
+    accommodationHelp: '.accommodation-info .accommodation-help'
   };
 
   getSelectorForContactAt(index: number): string {
@@ -28,4 +29,3 @@ export abstract class SchedulePlanViewPageObject extends PageObject {
 
   abstract expectValue(schedulePlan: SchedulePlan): any;
 }
-

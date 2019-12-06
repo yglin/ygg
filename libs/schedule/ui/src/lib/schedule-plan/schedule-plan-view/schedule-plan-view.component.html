@@ -98,9 +98,10 @@
           </div>
         </td>
       </tr>
-      <tr class="miscellaneous" *ngIf="schedulePlan.accommodationHelp">
-        <td>住宿需求</td>
+      <tr class='accommodation-info'>
+        <td>住宿資訊</td>
         <td>
+          <ygg-accommodation-list [accommodations]="accommodations" readonly></ygg-accommodation-list>
           <div
             *ngIf="schedulePlan.accommodationHelp"
             class="accommodation-help"

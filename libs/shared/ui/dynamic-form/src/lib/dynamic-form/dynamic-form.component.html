@@ -15,7 +15,7 @@
       </div>
       <div ygg-action-bar-content>
         <div *ngFor="let name of controlModelNames">
-          <div *ngIf="model.controls[name] as controlModel">
+          <div *ngIf="model.controls[name] as controlModel" [attr.control-name]='controlModel.name'>
             <ygg-title-divider>{{ controlModel.label }}</ygg-title-divider>
             <ygg-form-control
               [formGroup]="formGroup"

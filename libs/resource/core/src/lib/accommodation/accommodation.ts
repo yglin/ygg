@@ -6,8 +6,9 @@ import {
   generateID
 } from '@ygg/shared/infra/data-access';
 import { Album, Image, Location } from '@ygg/shared/types';
+import { FormGroupValue } from '@ygg/shared/ui/dynamic-form';
 
-export class Accommodation implements Resource, DataItem {
+export class Accommodation implements Resource, DataItem, FormGroupValue {
   collection = 'resources';
   id: string;
   name: string;
@@ -51,10 +52,17 @@ export class Accommodation implements Resource, DataItem {
     if (data.album) {
       this.album = new Album().fromJSON(data.album);
     }
+    if (data.location) {
+      this.location = new Location().fromJSON(data.location);
+    }
     return this;
   }
 
   toJSON(): any {
     return toJSONDeep(this);
+  }
+
+  clone(): Accommodation {
+    return new Accommodation().fromJSON(this.toJSON());
   }
 }

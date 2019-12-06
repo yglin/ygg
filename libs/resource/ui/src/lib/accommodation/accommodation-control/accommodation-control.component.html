@@ -1,1 +1,3 @@
-<p>accommodation-control works!</p>
+<div class="accommodation-control" *ngIf='accommodation'>
+  <ygg-dynamic-form [model]="formGroupModel" [value]='accommodation' (submit)='onSubmit($event)'></ygg-dynamic-form>
+</div>

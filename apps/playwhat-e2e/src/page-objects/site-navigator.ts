@@ -1,3 +1,5 @@
+import { SchedulePlan } from '@ygg/schedule/core';
+
 export class SiteNavigator {
   goto(path: string[] = []): Cypress.Chainable<any> {
     const fullPathName = `/${path.join('/')}`;
@@ -17,6 +19,10 @@ export class SiteNavigator {
       }
     }
     return cy.location('pathname').should('eq', fullPathName);
+  }
+
+  gotoSchedulePlanView(schedulePlan: SchedulePlan) {
+    cy.visit(`/scheduler/schedule-plans/${schedulePlan.id}`);
   }
 
   private gotoPlays(path: string[] = []) {

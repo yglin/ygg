@@ -7,6 +7,10 @@ export class AccommodationListPageObjectCypress extends AccommodationListPageObj
     cy.get(this.getSelectorForAccommodation(accommodation)).should('exist');
   }
 
+  expectAccommodations(accommodations: Accommodation[]) {
+    cy.wrap(accommodations).each((acmd: Accommodation) => this.expectAccommodation(acmd));
+  }
+
   expectValue(accommodations: Accommodation[]) {
     accommodations.forEach(acmd => this.expectAccommodation(acmd));
   }

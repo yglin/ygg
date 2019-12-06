@@ -1,5 +1,5 @@
 <div class="accommodation-edit" *ngIf="accommodation">
   <ygg-accommodation-control
-    [accommodation]="accommodation"
+    [accommodation]="accommodation" (saved)="onSaved($event)"
   ></ygg-accommodation-control>
 </div>

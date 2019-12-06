@@ -8,6 +8,8 @@ import { DayTimeRangeViewPageObjectCypress } from "../shared-types/day-time-rang
 import { TagsViewPageObjectCypress } from '../tags';
 import { Tags } from '@ygg/tags/core';
 import { PurchaseListPageObjectCypress } from '../shopping/purchase';
+import { Accommodation } from '@ygg/resource/core';
+import { AccommodationListPageObjectCypress } from '../resource';
 
 export class SchedulePlanViewPageObjectCypress extends SchedulePlanViewPageObject {
   purchasesListPageObject: PurchaseListPageObjectCypress;
@@ -103,6 +105,11 @@ export class SchedulePlanViewPageObjectCypress extends SchedulePlanViewPageObjec
 
   expectLikesDescription(likesDescription: string) {
     cy.get(this.getSelector('likesDescription')).contains(likesDescription);
+  }
+
+  expectAccommodations(accommodations: Accommodation[]) {
+    const accommodationListPO = new AccommodationListPageObjectCypress(this.getSelector('accommodations'));
+    accommodationListPO.expectAccommodations(accommodations);
   }
 
   gotoEdit() {

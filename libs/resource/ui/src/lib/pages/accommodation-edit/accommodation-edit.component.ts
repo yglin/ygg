@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Accommodation } from '@ygg/resource/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { take, timeoutWith } from 'rxjs/operators';
 import { resolve } from 'dns';
 import { of } from 'rxjs';
@@ -13,7 +13,7 @@ import { of } from 'rxjs';
 export class AccommodationEditComponent implements OnInit {
   accommodation: Accommodation;
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private router: Router) {
     route.data
       .pipe(
         take(1),
@@ -29,4 +29,12 @@ export class AccommodationEditComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  onSaved(accommodation: Accommodation) {
+    // console.log('Accommodation update/saved!!!');
+    // console.log(accommodation);
+    if (accommodation) {
+      this.router.navigate(['/accommodations', accommodation.id]);
+    }
+  }
 }

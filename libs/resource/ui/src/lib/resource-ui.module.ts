@@ -12,6 +12,9 @@ import { AccommodationThumbnailComponent } from './accommodation/accommodation-t
 import { RouterModule } from '@angular/router';
 import { AccommodationEditComponent } from './pages/accommodation-edit/accommodation-edit.component';
 import { routes } from "./routes";
+import { AccommodationDetailComponent } from './pages/accommodation-detail/accommodation-detail.component';
+import { AccommodationViewComponent } from './accommodation/accommodation-view/accommodation-view.component';
+import { SharedTypesModule } from '@ygg/shared/types';
 
 @NgModule({
   imports: [
@@ -19,9 +22,10 @@ import { routes } from "./routes";
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
     SharedUiDynamicFormModule,
+    SharedTypesModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ResourceControlComponent, EquipmentControlComponent, EquipmentThumbnailComponent, AccommodationListComponent, AccommodationControlComponent, AccommodationThumbnailComponent, AccommodationEditComponent],
+  declarations: [ResourceControlComponent, EquipmentControlComponent, EquipmentThumbnailComponent, AccommodationListComponent, AccommodationControlComponent, AccommodationThumbnailComponent, AccommodationEditComponent, AccommodationDetailComponent, AccommodationViewComponent],
   exports: [ResourceControlComponent, EquipmentControlComponent, EquipmentThumbnailComponent, AccommodationListComponent]
 })
 export class ResourceUiModule {}

@@ -7,7 +7,7 @@ import {
 import { AngularFireDatabase } from '@angular/fire/database';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { LogService } from "@ygg/shared/infra/log";
+import { LogService } from '@ygg/shared/infra/log';
 import { DataItem } from './data-item';
 import { DataAccessError, DataAccessErrorCode } from './error';
 // import { DataAccessModule } from './data-access.module';
@@ -109,13 +109,17 @@ export class DataAccessService {
       return of([]);
     } else {
       const arrayGet$: Observable<T>[] = ids.map(id =>
-        this.get$(collection, id, constructor).pipe(catchError(error => {
-          console.error(error);
-          this.logService.error(error);
-          return of(null);
-        }))
+        this.get$(collection, id, constructor).pipe(
+          catchError(error => {
+            console.error(error);
+            this.logService.error(error);
+            return of(null);
+          })
+        )
       );
-      return combineLatest(arrayGet$).pipe(map(items => items.filter(item => item !== null)));
+      return combineLatest(arrayGet$).pipe(
+        map(items => items.filter(item => item !== null))
+      );
     }
   }
 
@@ -164,16 +168,19 @@ export class DataAccessService {
     item: T,
     constructor?: new () => T
   ): Promise<T> {
-    const data: DataItem = typeof item.toJSON === 'function' ? item.toJSON() : item;
+    const data: DataItem =
+      typeof item.toJSON === 'function' ? item.toJSON() : item;
     data.refPath = `${collection}/${item.id}`;
     return this.getCollection(collection)
       .doc(item.id)
       .set(data)
-      .then(() => item);
+      .then(() => item, error => this.logService.error(error.message));
   }
 
   async delete(collection: string, itemId: string) {
-    return this.getCollection(collection).doc(itemId).delete();
+    return this.getCollection(collection)
+      .doc(itemId)
+      .delete();
   }
 
   async setDataObject<T>(path: string, data: T) {

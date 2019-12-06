@@ -1,12 +1,20 @@
 import { AccommodationControlPageObject } from "@ygg/resource/ui";
-import { Accommodation } from '@ygg/resource/core';
+import { Accommodation, AccommodationFormGroupModel } from '@ygg/resource/core';
+import { DynamicFormPageObjectCypress } from "../../dynamic-form";
 
 export class AccommodationControlPageObjectCypress extends AccommodationControlPageObject {
+  dynamicFormPO: DynamicFormPageObjectCypress;
+
+  constructor(parentSelector: string) {
+    super(parentSelector);
+    this.dynamicFormPO = new DynamicFormPageObjectCypress(this.getSelector());
+  }
+
   setValue(accommodation: Accommodation) {
-    TODO: Implement
+    this.dynamicFormPO.setValue(AccommodationFormGroupModel, accommodation);
   }
 
   submit() {
-    TODO: Implement
+    this.dynamicFormPO.submit();
   }
 }

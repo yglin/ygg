@@ -8,10 +8,10 @@
         [accommodation]="accommodation"
       ></ygg-accommodation-thumbnail>
     </div>
-    <div>
+    <div [hidden]="readonly">
       <button
         type="button"
-        class=".goto-create"
+        class="goto-create"
         mat-fab
         [routerLink]="['/accommodations', 'new']"
       >

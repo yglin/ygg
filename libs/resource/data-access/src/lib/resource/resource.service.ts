@@ -15,4 +15,12 @@ export class ResourceService {
     const query = new Query('resourceType', '==', resourceType);
     return this.dataAccessService.find$<T>(this.collection, [query]);
   }
+
+  get$<T extends Resource & DataItem>(id: string): Observable<T> {
+    return this.dataAccessService.get$(this.collection, id);
+  }
+
+  async upsert<T extends Resource & DataItem>(resource: T) {
+    return this.dataAccessService.upsert(this.collection, resource.toJSON());
+  }
 }
