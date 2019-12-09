@@ -21,6 +21,7 @@ export class PurchaseListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() purchases: Purchase[];
   totalPrice = 0;
   subscriptions: Subscription[] = [];
+  flattenPurchases: { [id: string]: Purchase[] } = {};
   purchases$: BehaviorSubject<Purchase[]> = new BehaviorSubject([]);
 
   constructor(private shoppingCart: ShoppingCartService) {
@@ -32,7 +33,12 @@ export class PurchaseListComponent implements OnInit, OnChanges, OnDestroy {
         //   })
         // )
         .subscribe(purchases => {
-          this.purchases = purchases;
+          this.flattenPurchases = {};
+          if (!isEmpty(purchases)) {
+            purchases.forEach(p => {
+              this.flattenPurchases[p.id] = this.flatten(p);
+            });
+          }
           this.totalPrice = sum(purchases.map(p => p.totalPrice));
         })
     );
@@ -50,5 +56,16 @@ export class PurchaseListComponent implements OnInit, OnChanges, OnDestroy {
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
     }
+  }
+
+  flatten(purchase: Purchase): Purchase[] {
+    const result = [];
+    result.push(purchase);
+    if (!isEmpty(purchase.children)) {
+      purchase.children.forEach(c => {
+        result.push(...this.flatten(c));
+      });
+    }
+    return result;
   }
 }

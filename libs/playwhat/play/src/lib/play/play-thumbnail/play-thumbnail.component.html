@@ -1,3 +1,6 @@
-<div class="play-thumbnail" *ngIf="play" [matTooltip]='play.name'>
-  <ygg-image-icon [src]="play.album.cover.src"></ygg-image-icon>
+<div class="play-thumbnail" *ngIf="play" [matTooltip]="play.name">
+  <ygg-image-thumbnail
+    [image]="play.album?.cover.src || 'local_play'"
+    [title]="play.name"
+  ></ygg-image-thumbnail>
 </div>

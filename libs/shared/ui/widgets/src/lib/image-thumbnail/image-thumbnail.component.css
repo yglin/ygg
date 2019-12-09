@@ -1,0 +1,10 @@
+.image-thumbnail {
+  margin: 5px;
+  width: 12vw;
+  min-width: 100px;
+  overflow: hidden;
+}
+
+.title {
+  width: 100%;
+}

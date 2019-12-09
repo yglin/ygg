@@ -9,14 +9,19 @@ export class PurchaseListPageObjectCypress extends PurchaseListPageObject {
     });
   }
 
-  expectPurchases(purchases: Purchase[]) {
+  expectPurchasesRecursive(purchases: Purchase[]) {
     cy.wrap(purchases).each((purchase: Purchase) => {
       cy.get(this.getSelectorForPurchase(purchase))
         .should('exist');
         if (!isEmpty(purchase.children)) {
-          this.expectPurchases(purchase.children);
+          cy.log(`Expect ${purchase.children.length} children purchases`);
+          this.expectPurchasesRecursive(purchase.children);
         }
     });
+  }
+
+  expectPurchases(purchases: Purchase[]) {
+    this.expectPurchasesRecursive(purchases);
     this.expectTotalPrice(sum(purchases.map(p => p.totalPrice)))
   }
 

@@ -1,0 +1,8 @@
+.purchase-list {
+  width: 100%;
+  max-width: 80vw;
+}
+
+.purchase-line {
+  overflow-x: auto;
+}

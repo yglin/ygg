@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import validator from 'validator';
 
 @Component({
   selector: 'ygg-image-icon',
@@ -12,6 +13,10 @@ export class ImageIconComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    if (this.src && !validator.isURL(this.src)) {
+      this.icon = this.src;
+      this.src = undefined;
+    }
   }
 
 }

@@ -23,6 +23,8 @@ import { ChipsControlComponent } from './chips-control/chips-control.component';
 import { ImageIconComponent } from './image-icon/image-icon.component';
 import { ActionBarLayoutComponent } from './action-bar-layout/action-bar-layout.component';
 import { PriceComponent } from './price/price.component';
+import { ImageThumbnailComponent } from './image-thumbnail/image-thumbnail.component';
+import { AngularFittextModule } from "angular-fittext";
 
 @NgModule({
   declarations: [
@@ -40,7 +42,8 @@ import { PriceComponent } from './price/price.component';
     ChipsControlComponent,
     ImageIconComponent,
     ActionBarLayoutComponent,
-    PriceComponent
+    PriceComponent,
+    ImageThumbnailComponent
   ],
   imports: [
     CommonModule,
@@ -49,7 +52,8 @@ import { PriceComponent } from './price/price.component';
     ReactiveFormsModule,
     SharedUiNgMaterialModule,
     FlexLayoutModule,
-    AmazingTimePickerModule
+    AmazingTimePickerModule,
+    AngularFittextModule
   ],
   exports: [
     SharedUiNgMaterialModule,
@@ -65,7 +69,8 @@ import { PriceComponent } from './price/price.component';
     ChipsControlComponent,
     ImageIconComponent,
     ActionBarLayoutComponent,
-    PriceComponent
+    PriceComponent,
+    ImageThumbnailComponent
   ],
   entryComponents: [ProgressSpinnerComponent, YggDialogComponent]
 })

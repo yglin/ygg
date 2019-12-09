@@ -1,12 +1,14 @@
 .ygg-image-icon {
-  width: 70px;
-  height: 70px;
-  border-radius: 5px;
+  width: 10vw;
+  min-width: 70px;
+  height: 10vw;
+  min-height: 70px;
+  border-radius: 10%;
   overflow: hidden;
 }
 
 .mat-icon {
-  font-size: 70px;
+  font-size: 10vw;
 }
 
 .ygg-image-icon img {

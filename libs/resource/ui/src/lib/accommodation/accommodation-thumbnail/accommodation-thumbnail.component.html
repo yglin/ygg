@@ -1,13 +1,8 @@
 <div class="accommodation-thumbnail">
   <a [routerLink]="['/accommodations', accommodation.id]">
-    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
-      <ygg-image-icon
-        [src]="accommodation.album?.cover.src"
-        icon="hotel"
-      ></ygg-image-icon>
-      <div class='name'>
-        <div fittext>{{ accommodation.name }}</div>
-      </div>
-    </div>
+    <ygg-image-thumbnail
+      [image]="accommodation.album?.cover.src || 'hotel'"
+      [title]='accommodation.name'
+    ></ygg-image-thumbnail>
   </a>
 </div>
