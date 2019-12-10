@@ -31,6 +31,12 @@
           [model]="this.formModel.controls['album']"
           id="form-control-album"
         ></ygg-form-control>
+        <ygg-title-divider>體驗時長</ygg-title-divider>
+        <ygg-form-control
+          [formGroup]="formGroup"
+          [model]="this.formModel.controls['minuteLength']"
+          id="form-control-minuteLength"
+        ></ygg-form-control>
         <ygg-title-divider>服務時段</ygg-title-divider>
         <ygg-form-control
           [formGroup]="formGroup"

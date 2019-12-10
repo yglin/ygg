@@ -17,6 +17,7 @@ export class Play implements DataItem, Taggable, Product {
   introduction: string;
   album: Album;
   businessHours: BusinessHours;
+  minuteLength: number;
   location: Location;
   tags: Tags;
   creatorId: string;
@@ -53,6 +54,7 @@ export class Play implements DataItem, Taggable, Product {
     play.location = Location.forge();
     play.tags = Tags.forge();
     play.price = random(0, 1000);
+    play.minuteLength = random(30, 180);
 
     options.numEquipments = (typeof options.numEquipments === 'number') ? options.numEquipments : random(0, 5);
     play.equipments = range(options.numEquipments).map(() => Equipment.forge());

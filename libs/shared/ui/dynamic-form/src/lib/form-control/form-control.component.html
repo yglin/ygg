@@ -28,6 +28,8 @@
       <ygg-number-slider
         [formControlName]="model.name"
         [label]="model.label"
+        [min]="model.options?.min"
+        [max]="model.options?.max"
       ></ygg-number-slider>
     </div>
     <div *ngSwitchCase="formControlTypes.album">
