@@ -1,7 +1,7 @@
 import { SchedulePlan } from '@ygg/schedule/core';
 
 export class SiteNavigator {
-  goto(path: string[] = []): Cypress.Chainable<any> {
+  goto(path: string[] = ['home']): Cypress.Chainable<any> {
     const fullPathName = `/${path.join('/')}`;
     cy.log(`Go to ${fullPathName}`);
     cy.get('.pw-header #to-home').click({ force: true });

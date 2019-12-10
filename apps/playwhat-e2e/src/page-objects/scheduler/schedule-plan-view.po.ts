@@ -27,6 +27,7 @@ export class SchedulePlanViewPageObjectCypress extends SchedulePlanViewPageObjec
     this.expectNumParticipants(schedulePlan.numParticipants);
     this.expectNumElders(schedulePlan.numElders);
     this.expectNumKids(schedulePlan.numKids);
+    this.expectNumDriverOrLeader(schedulePlan.numDriverOrLeader);
     // this.expectTotalBudget(schedulePlan.totalBudget);
     this.expectSingleBudget(schedulePlan.singleBudget);
     this.expectGroupName(schedulePlan.groupName);
@@ -56,6 +57,10 @@ export class SchedulePlanViewPageObjectCypress extends SchedulePlanViewPageObjec
 
   expectNumKids(numKids: number) {
     cy.get(this.getSelector('numKids')).contains(numKids);
+  }
+
+  expectNumDriverOrLeader(numDriverOrLeader: number) {
+    cy.get(this.getSelector('numDriverOrLeader')).contains(numDriverOrLeader);
   }
 
   expectTotalBudget(budget: NumberRange) {

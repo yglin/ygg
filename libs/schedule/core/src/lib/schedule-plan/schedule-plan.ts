@@ -1,8 +1,25 @@
-import { isEmpty, extend, defaults, sample, range, isArray } from 'lodash';
+import {
+  isEmpty,
+  extend,
+  defaults,
+  sample,
+  range,
+  isArray,
+  random
+} from 'lodash';
 import { v4 as uuid } from 'uuid';
-import { DataItem, toJSONDeep, generateID } from '@ygg/shared/infra/data-access';
+import {
+  DataItem,
+  toJSONDeep,
+  generateID
+} from '@ygg/shared/infra/data-access';
 // import {BadValueError, BadValueErrorCode} from '@ygg/shared/infra/error';
-import { NumberRange, DateRange, Contact, DayTimeRange } from '@ygg/shared/types';
+import {
+  NumberRange,
+  DateRange,
+  Contact,
+  DayTimeRange
+} from '@ygg/shared/types';
 import { User } from '@ygg/shared/user';
 // import { PlayTag } from '@ygg/playwhat/play';
 import { Tags, Taggable } from '@ygg/tags/core';
@@ -18,6 +35,7 @@ export class SchedulePlan implements DataItem, Taggable {
   numParticipants: number;
   numElders: number;
   numKids: number;
+  numDriverOrLeader: number;
   totalBudget: NumberRange;
   singleBudget: NumberRange;
   groupName: string;
@@ -42,8 +60,11 @@ export class SchedulePlan implements DataItem, Taggable {
     forged.dateRange = DateRange.forge();
     forged.dayTimeRange = DayTimeRange.forge();
     forged.numParticipants = Math.floor(50 + 50 * Math.random());
-    forged.numElders = 1 + Math.floor(forged.numParticipants * Math.random() * 0.5);
-    forged.numKids = 1 + Math.floor(forged.numParticipants * Math.random() * 0.5);
+    forged.numElders =
+      1 + Math.floor(forged.numParticipants * Math.random() * 0.5);
+    forged.numKids =
+      1 + Math.floor(forged.numParticipants * Math.random() * 0.5);
+    forged.numDriverOrLeader = random(0, 5);
     forged.singleBudget = new NumberRange().fromJSON([
       Math.floor(0 + 500 * Math.random()),
       Math.floor(500 + 500 * Math.random())
@@ -89,7 +110,7 @@ export class SchedulePlan implements DataItem, Taggable {
       '希望有餵草泥馬吃草的體驗',
       '希望有摸小動物摸到爽的行程，兔子或天竺鼠之類的',
       '希望有淨灘行程，海灘或是河灘',
-      '希望有捉蟬或是蟋蟀的體驗',
+      '希望有捉蟬或是蟋蟀的體驗'
     ]);
     extend(forged, extData);
     // forged.agentId = User.forge().id;

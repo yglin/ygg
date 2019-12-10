@@ -57,6 +57,7 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
     this.setNumParticipants(schedulePlan.numParticipants);
     this.setNumElders(schedulePlan.numElders);
     this.setNumKids(schedulePlan.numKids);
+    this.setNumDriverOrLeader(schedulePlan.numDriverOrLeader);
 
     this.setSingleBudget(schedulePlan.singleBudget);
     // this.setTotalBudget(schedulePlan.totalBudget);
@@ -110,6 +111,12 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
     cy.get(this.getSelector('inputNumKids'))
       .clear()
       .type(numKids.toString());
+  }
+
+  setNumDriverOrLeader(numDriverOrLeader: number) {
+    cy.get(this.getSelector('inputNumDriverOrLeader'))
+      .clear()
+      .type(numDriverOrLeader.toString());
   }
 
   setSingleBudget(singleBudget: NumberRange) {

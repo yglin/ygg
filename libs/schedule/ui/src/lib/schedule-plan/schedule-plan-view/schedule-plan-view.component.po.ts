@@ -9,6 +9,7 @@ export abstract class SchedulePlanViewPageObject extends PageObject {
     numParticipants: '.numberPeople .numParticipants',
     numElders: '.numberPeople .numElders',
     numKids: '.numberPeople .numKids',
+    numDriverOrLeader: '.numberPeople .numDriverOrLeader',
     totalBudget: '.budget .total-budget',
     singleBudget: '.budget .single-budget',
     groupName: '.contacts .group-name',

@@ -12,6 +12,7 @@ export abstract class SchedulePlanControlPageObject extends PageObject {
     inputNumParticipants: '.num-participants input',
     inputNumKids: '.num-kids input',
     inputNumElders: '.num-elders input',
+    inputNumDriverOrLeader: '.num-driver-or-leader input',
     totalBudgetRadioButton:
       '.budget-radio-group .total-budget input[type="radio"]',
     singleBudgetRadioButton:

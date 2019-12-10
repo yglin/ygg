@@ -110,9 +110,9 @@ describe('Scheduler - schedule-plan', () => {
   }
 
   before(function() {
+    prepareTestData();
     cy.visit('/');
     login();
-    prepareTestData();
   });
 
   after(() => {
@@ -123,7 +123,7 @@ describe('Scheduler - schedule-plan', () => {
   it('Should keep input data on leaving page', () => {
     siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
     schedulePlanControlPageObject.setValue(testSchedulePlan1);
-    cy.visit('/');
+    siteNavigator.goto();
     siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
     schedulePlanControlPageObject.submit();
     cy.url({ timeout: 10000 }).should('not.match', /scheduler\/schedule-plans\/new.*/);

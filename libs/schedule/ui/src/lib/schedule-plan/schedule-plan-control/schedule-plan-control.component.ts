@@ -314,6 +314,7 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
       numParticipants: [null, Validators.required],
       numElders: 0,
       numKids: 0,
+      numDriverOrLeader: 0,
       totalBudget: null,
       singleBudget: null,
       groupName: '',
