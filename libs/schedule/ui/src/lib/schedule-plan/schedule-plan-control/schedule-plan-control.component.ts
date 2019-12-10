@@ -240,9 +240,14 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
     while (this.contactsFormArray.length > 0) {
       this.contactsFormArray.removeAt(this.contactsFormArray.length - 1);
     }
-    for (const contact of contacts) {
-      if (Contact.isContact(contact)) {
-        this.addContactControl(contact);
+    if (isEmpty(contacts)) {
+      // Add one initial blank contact control
+      this.addContactControl();
+    } else {
+      for (const contact of contacts) {
+        if (Contact.isContact(contact)) {
+          this.addContactControl(contact);
+        }
       }
     }
   }

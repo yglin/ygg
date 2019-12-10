@@ -145,6 +145,7 @@
             class="contact-control"
             [ngClass]="{ last: isLast }"
           >
+            <h4>聯絡人{{ idx + 1 }}</h4>
             <ygg-action-barred layout="row">
               <div yggActionBarredActions>
                 <div
@@ -283,8 +284,10 @@
       </div>
       <ygg-title-divider>住宿資訊</ygg-title-divider>
       <div class="form-control miscellaneous">
-        <div class='accommodation-list'>
-          <ygg-accommodation-list [accommodations]="accommodations"></ygg-accommodation-list>
+        <div class="accommodation-list">
+          <ygg-accommodation-list
+            [accommodations]="accommodations"
+          ></ygg-accommodation-list>
         </div>
         <div id="needAccommodationHelp" class="needAccommodationHelp">
           <h4>關於住宿需求</h4>
