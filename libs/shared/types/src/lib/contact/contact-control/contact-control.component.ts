@@ -1,3 +1,4 @@
+import { every, isEmpty } from 'lodash';
 import { Component, forwardRef, Input, OnDestroy } from '@angular/core';
 import { debounceTime } from 'rxjs/operators';
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -11,36 +12,46 @@ import {
   FormBuilder,
   AbstractControl,
   ControlValueAccessor,
-  Validator
+  Validator,
+  FormArray
 } from '@angular/forms';
 import { Contact } from '../contact';
 import { Subscription } from 'rxjs';
 
 class LeastRequireErrorMatcher implements ErrorStateMatcher {
   fields: string[];
+  errorMessage: string;
 
-  constructor(fields: string[]) {
+  constructor(fields: string[], errorMessage?: string) {
     this.fields = fields;
+    this.errorMessage =
+      errorMessage || `Please fill at least one of ${fields.join(', ')}`;
+  }
+
+  validator(formGroup: FormGroup | FormArray): any {
+    if (every(this.fields, field => isEmpty(formGroup.get(field).value))) {
+      return {
+        leastRequire: true
+      };
+    } else {
+      return null;
+    }
   }
 
   isErrorState(
     control: FormControl | null,
     form: FormGroupDirective | NgForm | null
   ): boolean {
+    if (!control) {
+      return false;
+    }
     if (!control.touched) {
       return false;
     } else {
       if (control.invalid) {
         return true;
       }
-      let noOneHasValue = true;
-      for (const field of this.fields) {
-        if (control.parent.get(field).value) {
-          noOneHasValue = false;
-          break;
-        }
-      }
-      return noOneHasValue;
+      return this.validator(control.parent);
     }
   }
 }
@@ -65,7 +76,10 @@ class LeastRequireErrorMatcher implements ErrorStateMatcher {
 export class ContactControlComponent
   implements OnDestroy, ControlValueAccessor, Validator {
   contactForm: FormGroup;
-  leastRequireErrorMatcher = new LeastRequireErrorMatcher(['email', 'phone']);
+  leastRequireErrorMatcher = new LeastRequireErrorMatcher(
+    ['email', 'phone', 'lineID'],
+    '請至少留下電話、Email、LINE ID其中一種聯絡方式'
+  );
   emitChange: (contact: Contact) => any;
   subscriptions: Subscription[] = [];
 
@@ -78,7 +92,8 @@ export class ContactControlComponent
         lineID: ''
       },
       {
-        validator: this.requireEmailOrPhoneValidator
+        validator: formGroup =>
+          this.leastRequireErrorMatcher.validator(formGroup)
       }
     );
   }
@@ -112,15 +127,15 @@ export class ContactControlComponent
 
   registerOnTouched(fn) {}
 
-  requireEmailOrPhoneValidator(formGroup: FormGroup): any {
-    if (formGroup.get('phone').value || formGroup.get('email').value) {
-      return null;
-    } else {
-      return {
-        requireEmailOrPhone: true
-      };
-    }
-  }
+  // requireEmailOrPhoneValidator(formGroup: FormGroup): any {
+  //   if (formGroup.get('phone').value || formGroup.get('email').value) {
+  //     return null;
+  //   } else {
+  //     return {
+  //       requireEmailOrPhone: true
+  //     };
+  //   }
+  // }
 
   public validate(c: AbstractControl): { [key: string]: any } {
     // console.log('I am called');
