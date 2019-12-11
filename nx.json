@@ -145,6 +145,15 @@
     },
     "resource-factory": {
       "tags": ["scope:resource", "type:factory"]
+    },
+    "shared-the-thing-core": {
+      "tags": ["scope:shared", "type:core"]
+    },
+    "the-thing-e2e": {
+      "tags": []
+    },
+    "the-thing": {
+      "tags": []
     }
   }
 }

@@ -68,7 +68,8 @@
       "@ygg/shared/ui/dynamic-form": [
         "libs/shared/ui/dynamic-form/src/index.ts"
       ],
-      "@ygg/resource/factory": ["libs/resource/factory/src/index.ts"]
+      "@ygg/resource/factory": ["libs/resource/factory/src/index.ts"],
+      "@ygg/shared/the-thing/core": ["libs/shared/the-thing/core/src/index.ts"]
     },
     "rootDir": "."
   },

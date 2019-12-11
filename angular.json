@@ -1521,6 +1521,147 @@
         }
       },
       "schematics": {}
+    },
+    "shared-the-thing-core": {
+      "projectType": "library",
+      "root": "libs/shared/the-thing/core",
+      "sourceRoot": "libs/shared/the-thing/core/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/the-thing/core/tsconfig.lib.json",
+              "libs/shared/the-thing/core/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/the-thing/core/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/the-thing/core/jest.config.js",
+            "tsConfig": "libs/shared/the-thing/core/tsconfig.spec.json",
+            "setupFile": "libs/shared/the-thing/core/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "the-thing": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "apps/the-thing",
+      "sourceRoot": "apps/the-thing/src",
+      "prefix": "ygg",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/the-thing",
+            "index": "apps/the-thing/src/index.html",
+            "main": "apps/the-thing/src/main.ts",
+            "polyfills": "apps/the-thing/src/polyfills.ts",
+            "tsConfig": "apps/the-thing/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "apps/the-thing/src/favicon.ico",
+              "apps/the-thing/src/assets"
+            ],
+            "styles": ["apps/the-thing/src/styles.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/the-thing/src/environments/environment.ts",
+                  "with": "apps/the-thing/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "the-thing:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "the-thing:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "the-thing:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/the-thing/tsconfig.app.json",
+              "apps/the-thing/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/the-thing/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/the-thing/jest.config.js",
+            "tsConfig": "apps/the-thing/tsconfig.spec.json",
+            "setupFile": "apps/the-thing/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "the-thing-e2e": {
+      "root": "apps/the-thing-e2e",
+      "sourceRoot": "apps/the-thing-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/the-thing-e2e/cypress.json",
+            "tsConfig": "apps/the-thing-e2e/tsconfig.e2e.json",
+            "devServerTarget": "the-thing:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "the-thing:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "apps/the-thing-e2e/tsconfig.e2e.json",
+            "exclude": ["**/node_modules/**", "!apps/the-thing-e2e/**"]
+          }
+        }
+      }
     }
   },
   "cli": {
