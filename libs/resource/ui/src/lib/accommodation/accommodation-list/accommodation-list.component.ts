@@ -13,12 +13,11 @@ export class AccommodationListComponent implements OnInit, OnDestroy {
   @Input() readonly;
   subscriptions: Subscription[] = [];
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute) {
+  }
 
   ngOnInit() {
-    console.log(this.readonly);
-    this.readonly = this.readonly !== 'undefined' && this.readonly !== false && this.readonly !== 'false';
-    console.log(this.readonly);
+    this.readonly = this.readonly !== undefined && this.readonly !== false && this.readonly !== 'false';
     if (!this.accommodations && this.route.data) {
       this.subscriptions.push(
         this.route.data.subscribe(data => {
