@@ -1,5 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { isEmpty, find } from "lodash";
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Play } from '../play';
+import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
+import { Router } from '@angular/router';
 // import { EventEmitter } from 'events';
 
 @Component({
@@ -7,16 +10,17 @@ import { Play } from '../play';
   templateUrl: './play-selector.component.html',
   styleUrls: ['./play-selector.component.css']
 })
-export class PlaySelectorComponent implements OnInit {
+export class PlaySelectorComponent {
   @Input() plays: Play[];
   @Output() clickPlay: EventEmitter<Play> = new EventEmitter();
   
-  constructor() { }
+  constructor(private router: Router) { }
 
-  ngOnInit() {
+  onClickItem(item: Play) {
+    this.clickPlay.emit(item);
   }
 
-  onClickPlay(play: Play) {
-    this.clickPlay.emit(play);
+  onClickAdd() {
+    this.router.navigate(['/plays', 'new']);
   }
 }

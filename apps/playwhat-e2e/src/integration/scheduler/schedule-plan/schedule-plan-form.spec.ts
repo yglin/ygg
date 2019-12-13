@@ -111,6 +111,7 @@ describe('Scheduler - schedule-plan', () => {
 
   before(function() {
     prepareTestData();
+    cy.clearLocalStorage();
     cy.visit('/');
     login();
   });

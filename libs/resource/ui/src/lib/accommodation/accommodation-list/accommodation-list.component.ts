@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Accommodation } from '@ygg/resource/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AccommodationService } from '@ygg/resource/data-access';
 
 @Component({
   selector: 'ygg-accommodation-list',
@@ -13,11 +14,13 @@ export class AccommodationListComponent implements OnInit, OnDestroy {
   @Input() readonly;
   subscriptions: Subscription[] = [];
 
-  constructor(private route: ActivatedRoute) {
-  }
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
-    this.readonly = this.readonly !== undefined && this.readonly !== false && this.readonly !== 'false';
+    this.readonly =
+      this.readonly !== undefined &&
+      this.readonly !== false &&
+      this.readonly !== 'false';
     if (!this.accommodations && this.route.data) {
       this.subscriptions.push(
         this.route.data.subscribe(data => {
@@ -33,5 +36,13 @@ export class AccommodationListComponent implements OnInit, OnDestroy {
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
     }
+  }
+
+  onClickItem(item: Accommodation) {
+    this.router.navigate(['/accommodations', item.id]);
+  }
+
+  onClickAdd() {
+    this.router.navigate(['/accommodations', 'new']);
   }
 }

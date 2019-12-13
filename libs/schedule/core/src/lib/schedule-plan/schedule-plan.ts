@@ -64,7 +64,7 @@ export class SchedulePlan implements DataItem, Taggable {
       1 + Math.floor(forged.numParticipants * Math.random() * 0.5);
     forged.numKids =
       1 + Math.floor(forged.numParticipants * Math.random() * 0.5);
-    forged.numDriverOrLeader = random(0, 5);
+    forged.numDriverOrLeader = random(1, 5);
     forged.singleBudget = new NumberRange().fromJSON([
       Math.floor(0 + 500 * Math.random()),
       Math.floor(500 + 500 * Math.random())

@@ -214,6 +214,7 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
     cy.wrap(purchases)
       .each((purchase: Purchase) => {
         this.playSelectorPageObject.clickPlayById(purchase.productId);
+        // cy.pause();
         this.shoppingCartPageObject.setPurchase(purchase);
       })
       .then(() => {

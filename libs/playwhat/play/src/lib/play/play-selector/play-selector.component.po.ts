@@ -4,11 +4,11 @@ import { Play } from '../play';
 export class PlaySelectorPageObject extends PageObject {
   selectors = {
     main: '.play-selector',
-    buttonGotoCreatePlay: 'button.goto-create-play'
+    buttonGotoCreatePlay: 'button.add-item'
   };
 
   getSelectorForPlay(arg1: Play | string): string {
     const id = typeof arg1 === 'string' ? arg1 : arg1.id;
-    return `${this.getSelector()} [play-id="${id}"]`;
+    return `${this.getSelector()} [item-id="${id}"]`;
   }
 }

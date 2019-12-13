@@ -1,8 +1,7 @@
 <div class="accommodation-thumbnail">
   <a [routerLink]="['/accommodations', accommodation.id]">
     <ygg-image-thumbnail
-      [image]="accommodation.album?.cover.src || 'hotel'"
-      [title]='accommodation.name'
+      [item]="accommodation"
     ></ygg-image-thumbnail>
   </a>
 </div>

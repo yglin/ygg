@@ -1,6 +1,5 @@
 <div class="play-thumbnail" *ngIf="play" [matTooltip]="play.name">
   <ygg-image-thumbnail
-    [image]="play.album?.cover.src || 'local_play'"
-    [title]="play.name"
+    [item]="play"
   ></ygg-image-thumbnail>
 </div>

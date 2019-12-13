@@ -1,0 +1,10 @@
+<div class="image-thumbnail" *ngIf="item">
+  <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+    <ygg-image-icon
+      [src]="imageSrc"
+    ></ygg-image-icon>
+    <div class="title" *ngIf="item.name">
+      <div fittext minFontSize='12' maxFontSize='32'>{{ item.name }}</div>
+    </div>
+  </div>
+</div>
