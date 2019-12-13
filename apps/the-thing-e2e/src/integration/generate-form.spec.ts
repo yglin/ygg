@@ -1,7 +1,7 @@
 import { keys } from 'lodash';
 import { PageObject } from '@ygg/shared/test/page-object';
 
-interface TheThingPropertyModel {
+interface TheThingCellModel {
   type: string;
   label: string;
   validators: Function[];
@@ -46,7 +46,7 @@ class TheThingModel {
   }
   type: string;
   label: string;
-  properties: { [name: string]: TheThingPropertyModel | TheThingPropertyModel[] };
+  cellModels: { [name: string]: TheThingCellModel };
   validators: Function[];
 
   forgeTheThing(): TheThing {
@@ -58,7 +58,7 @@ class TheThingModel {
 
 class TheThing {
   model: TheThingModel;
-  properties: { [name: string]: any };
+  cells: { [name: string]: any };
 }
 
 class TheThingFormPageObjectCypress extends PageObject {
@@ -69,14 +69,14 @@ class TheThingFormPageObjectCypress extends PageObject {
   };
 
   setValue(model: TheThingModel, value: TheThing) {
-    cy.wrap(keys(model.properties)).each((propertyName: string) => {
+    cy.wrap(keys(model.cellModels)).each((cellName: string) => {
       this.switchToForm();
-      const propertyModel = model.properties[propertyName];
+      const cellModel = model.cellModels[cellName];
       const controlPO = getControlPageObjectByType(
-        propertyModel.type,
-        this.getSelectorForPropertyControl(propertyName)
+        cellModel.type,
+        this.getSelectorForCellControl(cellName)
       );
-      controlPO.setValue(value.properties[propertyName]);
+      controlPO.setValue(value.cells[cellName]);
     });
   }
 
@@ -92,12 +92,12 @@ class TheThingFormPageObjectCypress extends PageObject {
     cy.get(this.getSelector('buttonSwitchPreview')).click();
   }
 
-  getSelectorForPropertyControl(propertyName: string): string {
-    return `${this.getSelector} form .control.${propertyName}`;
+  getSelectorForCellControl(cellName: string): string {
+    return `${this.getSelector} form .control.${cellName}`;
   }
 
-  getSelectorForPropertyView(propertyName: string): string {
-    return `${this.getSelector} .preview .value.${propertyName}`;
+  getSelectorForCellView(cellName: string): string {
+    return `${this.getSelector} .preview .value.${cellName}`;
   }
 }
 
@@ -106,18 +106,18 @@ class TheThingDisplayObjectCypress extends PageObject {
     main: '.the-thing-display'
   };
 
-  getSelectorForPropertyView(name: string): string {
+  getSelectorForCellView(name: string): string {
     return `${this.getSelector()} .${name}`;
   }
 
   expectValue(model: TheThingModel, value: TheThing) {
-    cy.wrap(keys(model.properties)).each((propertyName: string) => {
-      const propertyModel = model.properties[propertyName];
+    cy.wrap(keys(model.cellModels)).each((cellName: string) => {
+      const cellModel = model.cellModels[cellName];
       const viewPO = getViewPageObjectByType(
-        propertyModel.type,
-        this.getSelectorForPropertyView(propertyName)
+        cellModel.type,
+        this.getSelectorForCellView(cellName)
       );
-      viewPO.expectValue(value.properties[propertyName]);
+      viewPO.expectValue(value.cells[cellName]);
     });
   }
 }
@@ -144,12 +144,12 @@ describe('Generate form from the-thing model', () => {
     cy.get(theThingFormPO.getSelector('label')).contains(theThingModel.label);
   });
 
-  it('Should show control of corresponding type of each property', () => {
-    cy.wrap(keys(theThingModel.properties)).each((propertyName: string) => {
-      const propertyModel = theThingModel.properties[propertyName];
+  it('Should show control of corresponding type of each cell', () => {
+    cy.wrap(keys(theThingModel.cellModels)).each((cellName: string) => {
+      const cellModel = theThingModel.cellModels[cellName];
       const controlPO = getControlPageObjectByType(
-        propertyModel.type,
-        theThingFormPO.getSelectorForPropertyControl(propertyName)
+        cellModel.type,
+        theThingFormPO.getSelectorForCellControl(cellName)
       );
       controlPO.expectExist();
     });
@@ -157,20 +157,20 @@ describe('Generate form from the-thing model', () => {
 
   it('Should sync data in preview on every change', () => {
     const theThing = theThingModel.forgeTheThing();
-    cy.wrap(keys(theThingModel.properties)).each((propertyName: string) => {
+    cy.wrap(keys(theThingModel.cellModels)).each((cellName: string) => {
       theThingFormPO.switchToForm();
-      const propertyModel = theThingModel.properties[propertyName];
+      const cellModel = theThingModel.cellModels[cellName];
       const controlPO = getControlPageObjectByType(
-        propertyModel.type,
-        theThingFormPO.getSelectorForPropertyControl(propertyName)
+        cellModel.type,
+        theThingFormPO.getSelectorForCellControl(cellName)
       );
-      controlPO.setValue(theThing.properties[propertyName]);
+      controlPO.setValue(theThing.cells[cellName]);
       theThingFormPO.switchToPreview();
       const viewPO = getViewPageObjectByType(
-        propertyModel.type,
-        theThingFormPO.getSelectorForPropertyView(propertyName)
+        cellModel.type,
+        theThingFormPO.getSelectorForCellView(cellName)
       );
-      viewPO.expectValue(theThing.properties[propertyName]);
+      viewPO.expectValue(theThing.cells[cellName]);
     });
   });
 
