@@ -12,6 +12,7 @@ export class Accommodation implements Resource, DataItem, FormGroupValue {
   collection = 'resources';
   id: string;
   name: string;
+  link: string;
   resourceType: ResourceType = ResourceType.Accommodation;
   introduction: string;
   album: Album;

@@ -1,0 +1,8 @@
+.link-control {
+  width: 100%;
+  max-width: 600px;
+}
+
+.link-control .mat-form-field {
+  width: 100%;
+}

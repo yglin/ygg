@@ -18,12 +18,17 @@ export const AccommodationFormGroupModel: FormGroupModel = merge(
         label: '簡介',
         validators: [{ type: 'required', errorMessage: '請填入簡介' }]
       },
+      link: {
+        name: 'link',
+        type: FormControlType.link,
+        label: '外部連結'
+      },
       location: {
         name: 'location',
         type: FormControlType.location,
         label: '地址',
       }
     },
-    controlsOrder: ['name', 'introduction', 'album', 'location']
+    controlsOrder: ['name', 'introduction', 'link', 'album', 'location']
   }
 );

@@ -10,6 +10,7 @@ export enum FormControlType {
   address = 'address',
   geoPoint = 'geoPoint',
   location = 'location',
+  link = 'link'
   // tags = 'tags'
 }
 

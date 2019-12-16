@@ -62,6 +62,12 @@
         [formControlName]="model.name"
       ></ygg-location-control>
     </div>
+    <div *ngSwitchCase="formControlTypes.link">
+      <ygg-link-control
+        [label]="model.label"
+        [formControlName]="model.name"
+      ></ygg-link-control>
+    </div>
     <div *ngSwitchDefault></div>
   </div>
 </div>
