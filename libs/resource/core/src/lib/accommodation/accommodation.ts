@@ -12,7 +12,7 @@ export class Accommodation implements Resource, DataItem, FormGroupValue {
   collection = 'resources';
   id: string;
   name: string;
-  link: string;
+  links: string[];
   resourceType: ResourceType = ResourceType.Accommodation;
   introduction: string;
   album: Album;
@@ -41,6 +41,7 @@ export class Accommodation implements Resource, DataItem, FormGroupValue {
       ].map(imgUrl => new Image(imgUrl))
     });
     accommodation.location = Location.forge();
+    accommodation.links = ['https://playwhat-dev.ygg.tw'];
     return accommodation;
   }
 

@@ -18,6 +18,7 @@ export interface FormControlModel {
   name: string;
   type: FormControlType;
   label: string;
+  isArray?: boolean;
   default?: any;
   validators?: ValidatorModel[];
   options?: any;

@@ -11,6 +11,6 @@ export interface Resource {
   businessHours?: BusinessHours;
   album?: Album;
   location?: Location;
-  links?: URL[];
+  links?: string[];
   [key: string]: any;
 }
