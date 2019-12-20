@@ -4,6 +4,7 @@ import { FormGroupModel } from '../form-group';
 import { FormGroup } from '@angular/forms';
 import { FormFactoryService } from '../form-factory.service';
 import { FormGroupValue } from '../form-group';
+import { isRequired, FormControlModel } from '../form-control';
 
 @Component({
   selector: 'ygg-dynamic-form',
@@ -37,5 +38,9 @@ export class DynamicFormComponent implements OnInit {
 
   onSubmit() {
     this.submit.emit(this.formGroup.value);
+  }
+
+  isRequired(model: FormControlModel): boolean {
+    return isRequired(model);
   }
 }

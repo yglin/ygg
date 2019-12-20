@@ -24,6 +24,10 @@ export interface FormControlModel {
   options?: any;
 }
 
+export function isRequired(model: FormControlModel): boolean {
+  return hasValidator(model, 'required');
+}
+
 export function hasValidator(controlModel: FormControlModel, validator: ValidatorModel | string) {
   if (isEmpty(controlModel.validators)) {
     return false;

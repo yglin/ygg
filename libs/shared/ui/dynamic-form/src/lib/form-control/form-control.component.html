@@ -1,12 +1,13 @@
-<div
-  *ngIf="formGroup && model"
-  [formGroup]="formGroup"
-  class="dynamic-control"
->
+<div *ngIf="formGroup && model" [formGroup]="formGroup" class="dynamic-control">
   <div [ngSwitch]="model.type">
     <div *ngSwitchCase="formControlTypes.text">
       <mat-form-field>
-        <input matInput [placeholder]="label" [formControlName]="name" />
+        <input
+          matInput
+          [placeholder]="label"
+          [formControlName]="name"
+          [required]="isRequired(name)"
+        />
         <mat-error *ngFor="let error of formControl.errors | keyvalue">{{
           getErrorMessage(error.key)
         }}</mat-error>
@@ -18,6 +19,7 @@
           matInput
           [placeholder]="label"
           [formControlName]="name"
+          [required]="isRequired(name)"
         ></textarea>
         <mat-error *ngFor="let error of formControl.errors | keyvalue">{{
           getErrorMessage(error.key)

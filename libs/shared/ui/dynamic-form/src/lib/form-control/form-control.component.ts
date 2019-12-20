@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormControlType, FormControlModel } from './form-control-model';
+import { FormControlType, FormControlModel, isRequired } from './form-control-model';
 import { FormGroup, AbstractControl } from '@angular/forms';
 
 @Component({
@@ -34,4 +34,7 @@ export class FormControlComponent implements OnInit {
     return '';
   }
 
+  isRequired(name: string) {
+    return isRequired(this.model);
+  }
 }
