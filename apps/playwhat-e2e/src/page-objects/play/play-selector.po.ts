@@ -33,5 +33,6 @@ export class PlaySelectorPageObjectCypress extends PlaySelectorPageObject {
     cy.get(this.getSelector('buttonGotoCreatePlay'), { timeout: 10000 }).click({
       force: true
     });
+    cy.url({timeout: 10000}).should('match', /plays\/new/);
   }
 }

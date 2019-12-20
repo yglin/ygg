@@ -1,14 +1,22 @@
 <div class="accommodation-view" *ngIf="accommodation">
-  <div>
+  <div class="name">
     <h2>{{ accommodation.name }}</h2>
   </div>
-  <div>
+  <div class="album">
     <ygg-album-view [album]="accommodation.album"></ygg-album-view>
   </div>
-  <div>
+  <div class="introduction">
     <p>{{ accommodation.introduction }}</p>
   </div>
-  <div>
+  <div class="location">
     <ygg-location-view [location]="accommodation.location"></ygg-location-view>
+  </div>
+  <div class="links">
+    <div
+      *ngFor="let link of accommodation.links; let idx = index"
+      [attr.link-index]="idx"
+    >
+      <ygg-link-view [link]="link"></ygg-link-view>
+    </div>
   </div>
 </div>

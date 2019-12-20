@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedTypesModule } from '@ygg/shared/types';
-import { FormArrayComponent } from './form-array/form-array.component';
+import { FormArrayComponent } from './form-array';
 
 @NgModule({
   declarations: [FormControlComponent, DynamicFormComponent, FormArrayComponent],

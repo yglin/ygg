@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 import { Play, PlayFormGroupModel } from '@ygg/playwhat/play';
-import { FormControlType } from '@ygg/shared/ui/dynamic-form';
+import { FormControlType, FormControlModel } from '@ygg/shared/ui/dynamic-form';
 import { AlbumControlPageObject, AlbumViewPageObjectCypress } from './album.po';
 import {
   BusinessHoursControlPageObject,
@@ -40,6 +40,10 @@ export class PlayFormPageObject extends PageObject {
     equipmentList: '.equipment-list'
   };
 
+  getSelectorForControl(model: FormControlModel): string {
+    return `#form-control-${model.name}`;
+  }
+
   getSelectorForDeleteEquipments(): string {
     return `${this.getSelector('equipmentList')} button.delete`;
   }
@@ -67,19 +71,19 @@ export class PlayFormPageObject extends PageObject {
         let valueSelector = '';
         switch (controlModel.type) {
           case FormControlType.text:
-            valueSelector = `#${controlModel.name} input`;
+            valueSelector = `${this.getSelectorForControl(controlModel)} input`;
             cy.get(`${this.selector} ${valueSelector}`)
               .clear()
               .type(play[controlModel.name]);
             break;
           case FormControlType.number:
-            valueSelector = `#${controlModel.name} input`;
+            valueSelector = `${this.getSelectorForControl(controlModel)} input`;
             cy.get(`${this.selector} ${valueSelector}`)
               .clear()
               .type(play[controlModel.name].toString());
             break;
           case FormControlType.textarea:
-            valueSelector = `#${controlModel.name} textarea`;
+            valueSelector = `${this.getSelectorForControl(controlModel)} textarea`;
             cy.get(`${this.selector} ${valueSelector}`)
               .clear()
               .type(play[controlModel.name]);

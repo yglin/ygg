@@ -2,7 +2,8 @@
   <div
     [formArrayName]="model.name"
     *ngFor="let control of formArray.controls; let idx = index"
-    class="control-panel"
+    class="sub-control"
+    [attr.sub-control-index]='idx'
   >
     <ygg-action-bar-layout position="top">
       <div ygg-action-bar-content>
@@ -35,7 +36,7 @@
         mat-mini-fab
         (click)="clearAll()"
         class="clear-all"
-        [matTooltip]="'刪除所有' + model.name"
+        [matTooltip]="'刪除所有' + model.label"
       >
         <mat-icon>delete_sweep</mat-icon>
       </button>
@@ -46,7 +47,7 @@
         class="add"
         mat-mini-fab
         (click)="add()"
-        matTooltip="'增加' + model.name"
+        matTooltip="'增加' + model.label"
       >
         <mat-icon>add</mat-icon>
       </button>

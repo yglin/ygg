@@ -1,4 +1,4 @@
-import { range, random, sampleSize } from 'lodash';
+import { range, random, sample, sampleSize } from 'lodash';
 import { SchedulePlanViewPageObjectCypress } from '../../../page-objects/scheduler';
 import { Accommodation, Equipment } from '@ygg/resource/core';
 import { Document, MockDatabase } from '../../..//support/mock-database';
@@ -7,6 +7,7 @@ import { SchedulePlan } from '@ygg/schedule/core';
 import { SiteNavigator } from '../../../page-objects/site-navigator';
 import { Play } from '@ygg/playwhat/play';
 import { Purchase } from '@ygg/shopping/core';
+import { AccommodationListPageObjectCypress } from '../../../page-objects/resource/accommodation';
 
 describe('Schedule plan view', () => {
   const mockDatabase = new MockDatabase();
@@ -42,7 +43,6 @@ describe('Schedule plan view', () => {
       });
     });
 
-
     let purchases: Purchase[] = sampleSize(playsWithEquipments, 3).map(
       play =>
         new Purchase({
@@ -51,7 +51,7 @@ describe('Schedule plan view', () => {
         })
     );
 
-    testSchedulePlan = SchedulePlan.forge({purchases});
+    testSchedulePlan = SchedulePlan.forge({ purchases });
     documents.push({
       path: `schedule-plans/${testSchedulePlan.id}`,
       data: testSchedulePlan.toJSON()
@@ -83,9 +83,19 @@ describe('Schedule plan view', () => {
   it('Should show consist data', () => {
     schedulePlanViewPO.expectValue(testSchedulePlan);
   });
-  
 
   it('Should show accommodation infos', () => {
     schedulePlanViewPO.expectAccommodations(testAccommodations);
+  });
+
+  it('Shoud redirect to accommodation first link when click on one', () => {
+    const testAccommodation = sample(testAccommodations);
+    const accommodationListPO = new AccommodationListPageObjectCypress(
+      schedulePlanViewPO.getSelector('accommodations')
+    );
+    cy.get(
+      accommodationListPO.getSelectorForAccommodation(testAccommodation)
+    ).click({ force: true });
+    cy.url({ timeout: 10000 }).should('eq', testAccommodation.links[0]);
   });
 });

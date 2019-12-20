@@ -2,7 +2,6 @@
   *ngIf="formGroup && model"
   [formGroup]="formGroup"
   class="dynamic-control"
-  [attr.control-name]="name"
 >
   <div [ngSwitch]="model.type">
     <div *ngSwitchCase="formControlTypes.text">

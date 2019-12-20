@@ -8,3 +8,4 @@ export * from './lib/business-hours';
 export * from './lib/datetime';
 export * from './lib/location';
 // export * from './lib/tags';
+export * from './lib/link';

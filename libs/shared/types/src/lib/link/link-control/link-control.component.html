@@ -7,6 +7,7 @@
       [formControl]='formControl'
       (focus)='onFocus()'
       [required]='required'
+      class='link'
     />
     <mat-error *ngIf="formControl.hasError('required')">
       請填入網址

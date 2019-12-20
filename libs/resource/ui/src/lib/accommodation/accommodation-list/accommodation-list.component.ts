@@ -1,3 +1,4 @@
+import { isEmpty } from "lodash";
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Accommodation } from '@ygg/resource/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -38,8 +39,12 @@ export class AccommodationListComponent implements OnInit, OnDestroy {
     }
   }
 
-  onClickItem(item: Accommodation) {
-    this.router.navigate(['/accommodations', item.id]);
+  onClickItem(accommodation: Accommodation) {
+    if (!isEmpty(accommodation.links)) {
+      window.location.replace(accommodation.links[0]);
+    } else {
+      this.router.navigate(['/accommodations', accommodation.id]);
+    }
   }
 
   onClickAdd() {
