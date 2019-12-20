@@ -25,6 +25,12 @@
           [model]="this.formModel.controls['introduction']"
           id="form-control-introduction"
         ></ygg-form-control>
+        <ygg-title-divider>價格</ygg-title-divider>
+        <ygg-form-control
+          [formGroup]="formGroup"
+          [model]="this.formModel.controls['price']"
+          id="form-control-price"
+        ></ygg-form-control>
         <ygg-title-divider>相簿＆照片</ygg-title-divider>
         <ygg-form-control
           [formGroup]="formGroup"
@@ -48,12 +54,6 @@
           [formGroup]="formGroup"
           [model]="this.formModel.controls['location']"
           id="form-control-location"
-        ></ygg-form-control>
-        <ygg-title-divider>價格</ygg-title-divider>
-        <ygg-form-control
-          [formGroup]="formGroup"
-          [model]="this.formModel.controls['price']"
-          id="form-control-price"
         ></ygg-form-control>
         <ygg-title-divider>類型標籤</ygg-title-divider>
         <ygg-tags-control
