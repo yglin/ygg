@@ -20,6 +20,10 @@
           [placeholder]="label"
           [formControlName]="name"
           [required]="isRequired(name)"
+          cdkTextareaAutosize
+          #autosize="cdkTextareaAutosize"
+          cdkAutosizeMinRows="3"
+          cdkAutosizeMaxRows="10"
         ></textarea>
         <mat-error *ngFor="let error of formControl.errors | keyvalue">{{
           getErrorMessage(error.key)

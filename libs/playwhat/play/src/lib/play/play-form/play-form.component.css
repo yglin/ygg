@@ -17,6 +17,11 @@
   margin-bottom: 20px;
 }
 
+.mat-form-field {
+  width: 100%;
+  max-width: 600px;
+}
+
 /* .action-bar {
   height: 50px;
   width: 95%;

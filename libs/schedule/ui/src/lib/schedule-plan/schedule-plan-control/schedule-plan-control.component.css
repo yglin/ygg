@@ -36,3 +36,8 @@ button.submit {
 .mat-divider {
   margin: 20px 5px;
 }
+
+.mat-form-field {
+  width:100%;
+  max-width: 600px;
+}
