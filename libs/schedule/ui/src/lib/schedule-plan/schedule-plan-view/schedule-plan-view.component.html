@@ -36,7 +36,9 @@
             孩童人數：<span class="value">{{ schedulePlan.numKids }}</span>
           </div>
           <div *ngIf="schedulePlan.numDriverOrLeader" class="numDriverOrLeader">
-            司領人數：<span class="value">{{ schedulePlan.numDriverOrLeader }}</span>
+            司領人數：<span class="value">{{
+              schedulePlan.numDriverOrLeader
+            }}</span>
           </div>
         </td>
       </tr>
@@ -101,10 +103,13 @@
           </div>
         </td>
       </tr>
-      <tr class='accommodation-info'>
+      <tr class="accommodation-info">
         <td>住宿資訊</td>
         <td>
-          <ygg-accommodation-list [accommodations]="accommodations" readonly></ygg-accommodation-list>
+          <ygg-accommodation-list
+            [accommodations]="accommodations"
+            readonly
+          ></ygg-accommodation-list>
           <div
             *ngIf="schedulePlan.accommodationHelp"
             class="accommodation-help"
@@ -130,6 +135,17 @@
           <div *ngIf="schedulePlan.likesDescription" class="description">
             <h5>對於體驗行程的需求...</h5>
             <pre class="value">{{ schedulePlan.likesDescription }}</pre>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>用餐需求</td>
+        <td>
+          <div
+            *ngIf="schedulePlan.mealsRequest"
+            class="description meals-request"
+          >
+            <pre class="value">{{ schedulePlan.mealsRequest }}</pre>
           </div>
         </td>
       </tr>

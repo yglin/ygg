@@ -74,6 +74,7 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
 
     this.setLikesDescription(schedulePlan.likesDescription);
     this.setAccommodationHelp(schedulePlan.accommodationHelp);
+    this.setMealsRequest(schedulePlan.mealsRequest);
   }
 
   clearValue(schedulePlan: SchedulePlan) {
@@ -220,5 +221,9 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
       .then(() => {
         this.shoppingCartPageObject.expectPurchases(purchases);
       });
+  }
+
+  setMealsRequest(mealsRequest: string) {
+    cy.get(this.getSelector('mealsRequest')).clear().type(mealsRequest);
   }
 }

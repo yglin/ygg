@@ -289,6 +289,22 @@
           </mat-form-field>
         </div>
       </div>
+      <ygg-title-divider> 用餐需求 </ygg-title-divider>
+      <div class="form-control">
+        <div class="meals-request">
+          <mat-form-field>
+            <textarea
+              matInput
+              placeholder="用餐方面，特別需要注意的事項？"
+              formControlName="mealsRequest"
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="3"
+              cdkAutosizeMaxRows="10"
+            ></textarea>
+          </mat-form-field>
+        </div>
+      </div>
       <ygg-title-divider>住宿資訊</ygg-title-divider>
       <div class="form-control miscellaneous">
         <div class="accommodation-list">

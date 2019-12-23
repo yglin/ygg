@@ -324,6 +324,7 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
       accommodationHelp: '',
       tags: [],
       likesDescription: '',
+      mealsRequest: '',
       agentId: null
     });
     return formGroup;

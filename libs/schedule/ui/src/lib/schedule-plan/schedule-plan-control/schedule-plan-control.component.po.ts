@@ -30,7 +30,8 @@ export abstract class SchedulePlanControlPageObject extends PageObject {
       '.form-control.miscellaneous textarea.accommodation-help',
     totalPrice: '.price',
     playSelector: '.play-selector',
-    shoppingCart: '.shopping-cart'
+    shoppingCart: '.shopping-cart',
+    mealsRequest: '.meals-request textarea'
   };
 
   getSelectorForPanelHeader(panelSelector: string): string {

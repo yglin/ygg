@@ -38,6 +38,7 @@ export class SchedulePlanViewPageObjectCypress extends SchedulePlanViewPageObjec
     // this.expectLikesTags(schedulePlan.tags);
     this.expectLikesDescription(schedulePlan.likesDescription);
     this.purchasesListPageObject.expectPurchases(schedulePlan.purchases);
+    this.expectMealsRequest(schedulePlan.mealsRequest);
   }
 
   expectDateRange(dateRange: DateRange) {
@@ -115,6 +116,10 @@ export class SchedulePlanViewPageObjectCypress extends SchedulePlanViewPageObjec
   expectAccommodations(accommodations: Accommodation[]) {
     const accommodationListPO = new AccommodationListPageObjectCypress(this.getSelector('accommodations'));
     accommodationListPO.expectAccommodations(accommodations);
+  }
+
+  expectMealsRequest(mealsRequest: string) {
+    cy.get(this.getSelector('mealsRequest')).contains(mealsRequest);
   }
 
   gotoEdit() {

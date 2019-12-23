@@ -46,6 +46,7 @@ export class SchedulePlan implements DataItem, Taggable {
   tags: Tags;
   likesDescription: string;
   purchases: Purchase[];
+  mealsRequest: string;
 
   static isSchedulePlan(value: any): value is SchedulePlan {
     if (value && value.dateRange && value.numParticipants) {
@@ -112,6 +113,7 @@ export class SchedulePlan implements DataItem, Taggable {
       '希望有淨灘行程，海灘或是河灘',
       '希望有捉蟬或是蟋蟀的體驗'
     ]);
+    forged.mealsRequest = '龍蝦鮑魚魚翅魚子醬帝王蟹.....都太貴了不用';
     extend(forged, extData);
     // forged.agentId = User.forge().id;
     return forged;
