@@ -2,6 +2,6 @@ import { sample } from 'lodash';
 
 export class Link {
   static forge(): string {
-    return sample(['http://localhost:4200/home']);
+    return sample(['https://playwhat-dev.ygg.tw/home']);
   }
 }

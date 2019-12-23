@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { ResourceControlComponent } from './resource/resource-control/resource-control.component';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
-import { EquipmentControlComponent } from './equipment/equipment-control/equipment-control.component';
+import { AdditionControlComponent } from './addition/addition-control/addition-control.component';
 import { SharedUiDynamicFormModule } from '@ygg/shared/ui/dynamic-form';
-import { EquipmentThumbnailComponent } from './equipment/equipment-thumbnail/equipment-thumbnail.component';
+import { AdditionThumbnailComponent } from './addition/addition-thumbnail/addition-thumbnail.component';
 import { AccommodationListComponent } from './accommodation/accommodation-list/accommodation-list.component';
 import { AccommodationControlComponent } from './accommodation/accommodation-control/accommodation-control.component';
 import { AccommodationThumbnailComponent } from './accommodation/accommodation-thumbnail/accommodation-thumbnail.component';
@@ -25,7 +25,7 @@ import { SharedTypesModule } from '@ygg/shared/types';
     SharedTypesModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ResourceControlComponent, EquipmentControlComponent, EquipmentThumbnailComponent, AccommodationListComponent, AccommodationControlComponent, AccommodationThumbnailComponent, AccommodationEditComponent, AccommodationDetailComponent, AccommodationViewComponent],
-  exports: [ResourceControlComponent, EquipmentControlComponent, EquipmentThumbnailComponent, AccommodationListComponent]
+  declarations: [ResourceControlComponent, AdditionControlComponent, AdditionThumbnailComponent, AccommodationListComponent, AccommodationControlComponent, AccommodationThumbnailComponent, AccommodationEditComponent, AccommodationDetailComponent, AccommodationViewComponent],
+  exports: [ResourceControlComponent, AdditionControlComponent, AdditionThumbnailComponent, AccommodationListComponent]
 })
 export class ResourceUiModule {}

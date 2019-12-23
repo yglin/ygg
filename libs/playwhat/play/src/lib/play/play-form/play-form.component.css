@@ -4,16 +4,16 @@
   overflow: hidden;
 }
 
-.equipments-control {
+.additions-control {
   width: 90%;
   padding: 20px;
 }
 
-.equipments-control .equipment-list {
+.additions-control .addition-list {
   width: 80%;
 }
 
-.equipments-control .equipment-list > div {
+.additions-control .addition-list > div {
   margin-bottom: 20px;
 }
 

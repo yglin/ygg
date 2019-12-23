@@ -1,1 +1,0 @@
-export * from './equipment-thumbnail/equipment-thumbnail.component.po';

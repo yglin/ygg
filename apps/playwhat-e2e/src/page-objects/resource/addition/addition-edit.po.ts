@@ -1,12 +1,12 @@
 import { PageObject } from '@ygg/shared/test/page-object';
-import { Equipment,  } from '@ygg/resource/core';
+import { Addition,  } from '@ygg/resource/core';
 import { AlbumControlPageObject } from '../../album.po';
 import { DynamicFormPageObjectCypress } from "../../dynamic-form";
-import { EquipmentFormGroupModel } from "@ygg/resource/factory";
+import { AdditionFormGroupModel } from "@ygg/resource/factory";
 
-export class EquipmentEditPageObjectCypress extends PageObject {
+export class AdditionEditPageObjectCypress extends PageObject {
   selectors = {
-    main: '.equipment-control'
+    main: '.addition-control'
   }
   dynamicForm: DynamicFormPageObjectCypress;
 
@@ -19,8 +19,8 @@ export class EquipmentEditPageObjectCypress extends PageObject {
     cy.get(this.dynamicForm.getSelector('buttonSubmit')).should('be.visible');
   }
 
-  setValue(equipment: Equipment) {
-    this.dynamicForm.setValue(EquipmentFormGroupModel, equipment);
+  setValue(addition: Addition) {
+    this.dynamicForm.setValue(AdditionFormGroupModel, addition);
   }
 
   submit() {

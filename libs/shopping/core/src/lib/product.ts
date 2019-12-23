@@ -3,7 +3,7 @@ import { Album } from '@ygg/shared/types';
 export enum ProductType {
   Unknown = 'XXX',
   Play = 'play',
-  Equipment = 'equipment'
+  Addition = 'addition'
 }
 
 export interface Product {

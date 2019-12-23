@@ -1,0 +1,1 @@
+export * from './addition-thumbnail/addition-thumbnail.component.po';

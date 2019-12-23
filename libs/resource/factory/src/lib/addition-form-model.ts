@@ -1,13 +1,13 @@
 import { FormControlType } from '@ygg/shared/ui/dynamic-form';
 
-export const EquipmentFormGroupModel = {
-  name: 'equipment-form',
+export const AdditionFormGroupModel = {
+  name: 'addition-form',
   controls: {
     name: {
       name: 'name',
       type: FormControlType.text,
-      label: '設備名稱',
-      validators: [{ type: 'required', errorMessage: '請填入設備名稱' }]
+      label: '附屬品名稱',
+      validators: [{ type: 'required', errorMessage: '請填入附屬品名稱' }]
     },
     stock: {
       name: 'stock',

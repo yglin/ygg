@@ -15,10 +15,10 @@ import {
   TagsViewPageObjectCypress
 } from './tags';
 import { User } from '@ygg/shared/user';
-import { Equipment } from '@ygg/resource/core';
+import { Addition } from '@ygg/resource/core';
 import {
-  EquipmentEditPageObjectCypress,
-  EquipmentThumbnailPageObjectCypress
+  AdditionEditPageObjectCypress,
+  AdditionThumbnailPageObjectCypress
 } from './resource';
 
 export function deletePlay(play: Play) {
@@ -35,22 +35,22 @@ export class PlayFormPageObject extends PageObject {
   selector = '.ygg-play-form';
   selectors = {
     buttonSubmit: 'button#submit',
-    buttonAddEquipment: 'button.add-equipment',
-    buttonClearEquipments: 'button.clear-equipments',
-    equipmentList: '.equipment-list'
+    buttonAddAddition: 'button.add-addition',
+    buttonClearAdditions: 'button.clear-additions',
+    additionList: '.addition-list'
   };
 
   getSelectorForControl(model: FormControlModel): string {
     return `#form-control-${model.name}`;
   }
 
-  getSelectorForDeleteEquipments(): string {
-    return `${this.getSelector('equipmentList')} button.delete`;
+  getSelectorForDeleteAdditions(): string {
+    return `${this.getSelector('additionList')} button.delete`;
   }
 
-  getSelectorForDeleteEquipmentAt(index: number): string {
+  getSelectorForDeleteAdditionAt(index: number): string {
     return `${this.getSelector(
-      'equipmentList'
+      'additionList'
     )} [index="${index}"] button.delete`;
   }
 
@@ -121,35 +121,35 @@ export class PlayFormPageObject extends PageObject {
         }
       }
     }
-    this.clearEquipments(play.equipments);
-    cy.wrap(play.equipments).each((eq: Equipment, index: number) => {
-      this.addEquipment(eq);
-      this.expectEquipment(eq, index);
+    this.clearAdditions(play.additions);
+    cy.wrap(play.additions).each((eq: Addition, index: number) => {
+      this.addAddition(eq);
+      this.expectAddition(eq, index);
     });
     const tagsControlPO = new TagsControlPageObjectCypress();
     tagsControlPO.setValue(play.tags);
   }
 
-  clearEquipments(equipments: Equipment[]) {
-    cy.get(this.getSelector('buttonClearEquipments')).click({
+  clearAdditions(additions: Addition[]) {
+    cy.get(this.getSelector('buttonClearAdditions')).click({
       force: true
     });
-    cy.get(this.getSelector(`.equipment-list .equipment`)).should('not.exist');
+    cy.get(this.getSelector(`.addition-list .addition`)).should('not.exist');
   }
 
-  addEquipment(equipment: Equipment) {
-    cy.get(this.getSelector('buttonAddEquipment')).click();
-    const equipmentEditPO = new EquipmentEditPageObjectCypress('');
-    equipmentEditPO.expectVisible();
-    equipmentEditPO.setValue(equipment);
-    equipmentEditPO.submit();
+  addAddition(addition: Addition) {
+    cy.get(this.getSelector('buttonAddAddition')).click();
+    const additionEditPO = new AdditionEditPageObjectCypress('');
+    additionEditPO.expectVisible();
+    additionEditPO.setValue(addition);
+    additionEditPO.submit();
   }
 
-  expectEquipment(equipment: Equipment, index: number) {
-    const equipmentThumbnailPageObject = new EquipmentThumbnailPageObjectCypress(
-      this.getSelector(`.equipment-list [index="${index}"]`)
+  expectAddition(addition: Addition, index: number) {
+    const additionThumbnailPageObject = new AdditionThumbnailPageObjectCypress(
+      this.getSelector(`.addition-list [index="${index}"]`)
     );
-    equipmentThumbnailPageObject.expectValue(equipment);
+    additionThumbnailPageObject.expectValue(addition);
   }
 
   submit() {
@@ -168,8 +168,8 @@ export class PlayViewPageObject {
     this.businessHoursView = new BusinessHoursViewPageObject(this.selector);
   }
 
-  getSelectorForEquipmentAt(index: number): string {
-    return `${this.selector} .equipment-list [index="${index}"]`;
+  getSelectorForAdditionAt(index: number): string {
+    return `${this.selector} .addition-list [index="${index}"]`;
   }
 
   expectVisible() {
@@ -229,11 +229,11 @@ export class PlayViewPageObject {
     }
     // const tagsView = new TagsViewPageObjectCypress(`${this.selector}`);
     // tagsView.expectValue(play.tags);
-    cy.wrap(play.equipments).each((equipment: Equipment, index: number) => {
-      const equipmentThumbnailPageObject = new EquipmentThumbnailPageObjectCypress(
-        this.getSelectorForEquipmentAt(index)
+    cy.wrap(play.additions).each((addition: Addition, index: number) => {
+      const additionThumbnailPageObject = new AdditionThumbnailPageObjectCypress(
+        this.getSelectorForAdditionAt(index)
       );
-      equipmentThumbnailPageObject.expectValue(equipment);
+      additionThumbnailPageObject.expectValue(addition);
     });
   }
 }

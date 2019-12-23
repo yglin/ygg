@@ -4,23 +4,23 @@ import { v4 as uuid } from "uuid";
 import { SerializableJSON, toJSONDeep, generateID } from '@ygg/shared/infra/data-access';
 import { Album } from '@ygg/shared/types';
 import { FormGroupValue } from '@ygg/shared/ui/dynamic-form';
-import { EquipmentEditDialogComponent } from 'libs/playwhat/play/src/lib/play/equipment-edit-dialog/equipment-edit-dialog.component';
+import { AdditionEditDialogComponent } from 'libs/playwhat/play/src/lib/play/addition-edit-dialog/addition-edit-dialog.component';
 import { Resource, ResourceType } from '../resource';
 
-export class Equipment implements Resource, Product, SerializableJSON, FormGroupValue {
+export class Addition implements Resource, Product, SerializableJSON, FormGroupValue {
   static collection = 'resources';
 
   id: string;
   name: string;
   price: number;
   stock: number;
-  resourceType: ResourceType = ResourceType.Equipment;
-  productType: ProductType = ProductType.Equipment;
+  resourceType: ResourceType = ResourceType.Addition;
+  productType: ProductType = ProductType.Addition;
   album: Album;
 
-  static forge(): Equipment {
-    const equipment = new Equipment();
-    equipment.name = sample([
+  static forge(): Addition {
+    const addition = new Addition();
+    addition.name = sample([
       '協力車',
       '美術用具',
       '採茶裝',
@@ -33,10 +33,10 @@ export class Equipment implements Resource, Product, SerializableJSON, FormGroup
       '睡袋',
       '鴕鳥'
     ]);
-    equipment.price = random(1, 50) * 10;
-    equipment.stock = random(10, 300);
-    equipment.album = Album.forge();
-    return equipment;
+    addition.price = random(1, 50) * 10;
+    addition.stock = random(10, 300);
+    addition.album = Album.forge();
+    return addition;
   }
 
   constructor() {
@@ -45,8 +45,8 @@ export class Equipment implements Resource, Product, SerializableJSON, FormGroup
     this.stock = 0;
   }
 
-  clone(): Equipment {
-    return new Equipment().fromJSON(this);
+  clone(): Addition {
+    return new Addition().fromJSON(this);
   }
 
   fromJSON(data: any = {}): this {

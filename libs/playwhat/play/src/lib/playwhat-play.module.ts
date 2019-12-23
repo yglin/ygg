@@ -17,7 +17,7 @@ import { RouterModule } from '@angular/router';
 import { SharedUserModule } from '@ygg/shared/user';
 import { PlayViewPageComponent } from './play/pages/play-view-page/play-view-page.component';
 import { PlaySelectorComponent } from './play/play-selector/play-selector.component';
-import { EquipmentEditDialogComponent } from './play/equipment-edit-dialog/equipment-edit-dialog.component';
+import { AdditionEditDialogComponent } from './play/addition-edit-dialog/addition-edit-dialog.component';
 import { ResourceUiModule } from '@ygg/resource/ui';
 import { SharedUiDynamicFormModule } from '@ygg/shared/ui/dynamic-form';
 
@@ -44,10 +44,10 @@ import { SharedUiDynamicFormModule } from '@ygg/shared/ui/dynamic-form';
     PlayDashboardComponent,
     PlayViewPageComponent,
     PlaySelectorComponent,
-    EquipmentEditDialogComponent,
+    AdditionEditDialogComponent,
   ],
   entryComponents: [
-    EquipmentEditDialogComponent
+    AdditionEditDialogComponent
   ],
   exports: [PlayFormComponent, PlayViewComponent, PlaySelectorComponent]
 })

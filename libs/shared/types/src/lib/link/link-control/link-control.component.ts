@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 
 function urlValidator(control: AbstractControl): ValidationErrors {
   if (control.value && !validator.isURL(control.value)) {
+    console.warn(`${control.value} is not a valid url`);
     return {
       url: true
     };
@@ -47,7 +48,7 @@ export class LinkControlComponent
   formControl: FormControl;
   onChange: (value: string) => any = noop;
   onTouched: () => any = noop;
-  linkPattern = /(^|\s)((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
+  // linkPattern = /(^|\s)(((http|https):\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
   subscriptions: Subscription[] = [];
 
   constructor() {}

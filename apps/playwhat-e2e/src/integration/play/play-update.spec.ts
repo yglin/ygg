@@ -10,7 +10,7 @@ import {
   PlayFormPageObject,
   PlayViewPageObject
 } from '../../page-objects/play.po';
-import { Equipment } from '@ygg/resource/core';
+import { Addition } from '@ygg/resource/core';
 
 describe('Update Play', () => {
   const siteNavigator = new SiteNavigator();
@@ -24,24 +24,24 @@ describe('Update Play', () => {
       const documents: Document[] = [];
       
       testPlay = Play.forge({
-        numEquipments: 3
+        numAdditions: 3
       });
       testPlay.creatorId = user.id;
       documents.push({
         path: `plays/${testPlay.id}`,
         data: testPlay.toJSON()
       });
-      testPlay.equipments.forEach(equipment => documents.push({
-        path: `${Equipment.collection}/${equipment.id}`,
-        data: equipment.toJSON()
+      testPlay.additions.forEach(addition => documents.push({
+        path: `${Addition.collection}/${addition.id}`,
+        data: addition.toJSON()
       }));
       
       changeData = Play.forge({
-        numEquipments: 4
+        numAdditions: 4
       });
-      changeData.equipments.forEach(equipment => documents.push({
-        path: `${Equipment.collection}/${equipment.id}`,
-        data: equipment.toJSON()
+      changeData.additions.forEach(addition => documents.push({
+        path: `${Addition.collection}/${addition.id}`,
+        data: addition.toJSON()
       }));
 
       mockDatabase.insertDocuments(documents);

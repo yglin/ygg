@@ -1,8 +1,8 @@
 import { PageObject } from '@ygg/shared/test/page-object';
 
-export class EquipmentThumbnailPageObject extends PageObject {
+export class AdditionThumbnailPageObject extends PageObject {
   selectors = {
-    main: '.equipment-thumbnail',
+    main: '.addition-thumbnail',
     name: '.name',
     stock: '.stock',
     price: '.price'

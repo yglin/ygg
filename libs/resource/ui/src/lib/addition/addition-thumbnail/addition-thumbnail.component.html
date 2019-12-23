@@ -1,6 +1,6 @@
-<div class="equipment-thumbnail">
+<div class="addition-thumbnail">
   <div
-    *ngIf="equipment"
+    *ngIf="addition"
     fxLayout="row"
     fxLayoutAlign="start center"
     fxLayoutGap="20px"
@@ -9,11 +9,11 @@
       <ygg-image-icon [src]="iconSrc" icon='sports_tennis'></ygg-image-icon>
     </div>
     <div>
-      <div class="name">{{ equipment.name }}</div>
+      <div class="name">{{ addition.name }}</div>
       <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-        <div class="stock">X {{ equipment.stock }}</div>
+        <div class="stock">X {{ addition.stock }}</div>
         <div class="price">
-          <ygg-price [price]="equipment.price"></ygg-price>
+          <ygg-price [price]="addition.price"></ygg-price>
         </div>
       </div>
     </div>
