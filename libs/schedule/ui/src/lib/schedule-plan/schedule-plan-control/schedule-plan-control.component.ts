@@ -297,8 +297,6 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(purchase => {
           if (purchase) {
             this.shoppingCart.addPurchase(purchase);
-          } else {
-            this.shoppingCart.addPurchase(newPurchase);
           }
         })
       );
