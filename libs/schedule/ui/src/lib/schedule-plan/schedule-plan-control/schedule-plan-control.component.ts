@@ -285,8 +285,8 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
       quantity: this.formGroup.get('numParticipants').value
     });
     if (!isEmpty(newPurchase.children)) {
-      // console.log(`Play has ${play.equipments.length} equipments`);
-      // console.log(play.equipments);
+      // console.log(`Play has ${play.additions.length} additions`);
+      // console.log(play.additions);
       const dialogRef = this.dialog.open(PurchaseControlComponent, {
         title: '修改購買選項',
         data: {
@@ -297,8 +297,6 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(purchase => {
           if (purchase) {
             this.shoppingCart.addPurchase(purchase);
-          } else {
-            this.shoppingCart.addPurchase(newPurchase);
           }
         })
       );
@@ -324,6 +322,7 @@ export class SchedulePlanControlComponent implements OnInit, OnDestroy {
       accommodationHelp: '',
       tags: [],
       likesDescription: '',
+      mealsRequest: '',
       agentId: null
     });
     return formGroup;

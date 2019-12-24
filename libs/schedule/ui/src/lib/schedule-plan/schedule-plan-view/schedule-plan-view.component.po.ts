@@ -21,7 +21,8 @@ export abstract class SchedulePlanViewPageObject extends PageObject {
     buttonEdit: 'button.edit',
     purchaseList: '.purchases',
     accommodations: '.accommodation-info',
-    accommodationHelp: '.accommodation-info .accommodation-help'
+    accommodationHelp: '.accommodation-info .accommodation-help',
+    mealsRequest: '.meals-request .value'
   };
 
   getSelectorForContactAt(index: number): string {

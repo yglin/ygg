@@ -17,6 +17,8 @@ export class SiteNavigator {
       } else {
         this.gotoScheduler(path);
       }
+    } else {
+      cy.visit(fullPathName);
     }
     return cy.location('pathname').should('eq', fullPathName);
   }

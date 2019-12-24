@@ -74,6 +74,7 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
 
     this.setLikesDescription(schedulePlan.likesDescription);
     this.setAccommodationHelp(schedulePlan.accommodationHelp);
+    this.setMealsRequest(schedulePlan.mealsRequest);
   }
 
   clearValue(schedulePlan: SchedulePlan) {
@@ -214,10 +215,15 @@ export class SchedulePlanControlPageObjectCypress extends SchedulePlanControlPag
     cy.wrap(purchases)
       .each((purchase: Purchase) => {
         this.playSelectorPageObject.clickPlayById(purchase.productId);
+        // cy.pause();
         this.shoppingCartPageObject.setPurchase(purchase);
       })
       .then(() => {
         this.shoppingCartPageObject.expectPurchases(purchases);
       });
+  }
+
+  setMealsRequest(mealsRequest: string) {
+    cy.get(this.getSelector('mealsRequest')).clear().type(mealsRequest);
   }
 }

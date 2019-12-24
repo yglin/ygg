@@ -1,0 +1,21 @@
+<div class="addition-thumbnail">
+  <div
+    *ngIf="addition"
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    fxLayoutGap="20px"
+  >
+    <div class="icon">
+      <ygg-image-icon [src]="iconSrc" icon='sports_tennis'></ygg-image-icon>
+    </div>
+    <div>
+      <div class="name">{{ addition.name }}</div>
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+        <div class="stock">X {{ addition.stock }}</div>
+        <div class="price">
+          <ygg-price [price]="addition.price"></ygg-price>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

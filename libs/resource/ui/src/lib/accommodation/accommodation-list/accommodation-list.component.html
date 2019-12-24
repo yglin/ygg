@@ -1,22 +1,8 @@
 <div class="accommodation-list" *ngIf="accommodations">
-  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-    <div
-      *ngFor="let accommodation of accommodations"
-      [attr.accommodation-id]="accommodation.id"
-    >
-      <ygg-accommodation-thumbnail
-        [accommodation]="accommodation"
-      ></ygg-accommodation-thumbnail>
-    </div>
-    <div [hidden]="readonly">
-      <button
-        type="button"
-        class="goto-create"
-        mat-fab
-        [routerLink]="['/accommodations', 'new']"
-      >
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
-  </div>
+    <ygg-image-thumbnail-list
+    [items]="accommodations"
+    [readonly]='readonly'
+    (clickItem)="onClickItem($event)"
+    (clickAdd)="onClickAdd()"
+  ></ygg-image-thumbnail-list>
 </div>

@@ -1,0 +1,56 @@
+<div class="form-array" *ngIf="formArray" [formGroup]="formGroup">
+  <div
+    [formArrayName]="model.name"
+    *ngFor="let control of formArray.controls; let idx = index"
+    class="sub-control"
+    [attr.sub-control-index]='idx'
+  >
+    <ygg-action-bar-layout position="top">
+      <div ygg-action-bar-content>
+        <ygg-form-control
+          [formGroup]="formArray"
+          [model]="model"
+          [name]="idx.toString()"
+          [label]="model.label + ' .' + (idx + 1)"
+        ></ygg-form-control>
+      </div>
+      <div ygg-action-bar-button>
+        <div>
+          <button
+            type="button"
+            mat-mini-fab
+            (click)="delete(idx)"
+            matTooltip="刪除"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </ygg-action-bar-layout>
+    <br />
+  </div>
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
+    <div>
+      <button
+        type="button"
+        mat-mini-fab
+        (click)="clearAll()"
+        class="clear-all"
+        [matTooltip]="'刪除所有' + model.label"
+      >
+        <mat-icon>delete_sweep</mat-icon>
+      </button>
+    </div>
+    <div>
+      <button
+        type="button"
+        class="add"
+        mat-mini-fab
+        (click)="add()"
+        matTooltip="'增加' + model.label"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

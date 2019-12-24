@@ -1,17 +1,18 @@
-import { extend, sample } from 'lodash';
+import { extend, sample, sampleSize, random, range } from 'lodash';
 import { Resource, ResourceType } from '../resource';
 import {
   DataItem,
   toJSONDeep,
   generateID
 } from '@ygg/shared/infra/data-access';
-import { Album, Image, Location } from '@ygg/shared/types';
+import { Album, Image, Location, Link } from '@ygg/shared/types';
 import { FormGroupValue } from '@ygg/shared/ui/dynamic-form';
 
 export class Accommodation implements Resource, DataItem, FormGroupValue {
   collection = 'resources';
   id: string;
   name: string;
+  links: string[];
   resourceType: ResourceType = ResourceType.Accommodation;
   introduction: string;
   album: Album;
@@ -40,6 +41,9 @@ export class Accommodation implements Resource, DataItem, FormGroupValue {
       ].map(imgUrl => new Image(imgUrl))
     });
     accommodation.location = Location.forge();
+    accommodation.links = range(
+      random(3, 5)
+    ).map(() => Link.forge());
     return accommodation;
   }
 

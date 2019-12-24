@@ -13,7 +13,7 @@ export class ProductThumbnailComponent implements OnInit, OnDestroy {
   @Input() type: ProductType;
   product: Product;
   subscriptions: Subscription[] = [];
-  imgSrc: string;
+  // imgSrc: string;
 
   constructor(private productService: ProductService) {}
 
@@ -24,7 +24,7 @@ export class ProductThumbnailComponent implements OnInit, OnDestroy {
           .get$(this.type, this.id)
           .subscribe(product => {
             this.product = product;
-            this.imgSrc = this.product && this.product.album && this.product.album.cover.src;
+            // this.imgSrc = this.product && this.product.album && this.product.album.cover.src;
           })
       );
     }

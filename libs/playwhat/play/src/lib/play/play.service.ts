@@ -5,8 +5,8 @@ import { Play } from './play';
 import { Observable, of, combineLatest } from 'rxjs';
 import { User } from '@ygg/shared/user';
 import { map, switchMap, tap, catchError } from 'rxjs/operators';
-import { Equipment } from '@ygg/resource/core';
-import { EquipmentService } from '@ygg/resource/data-access';
+import { Addition } from '@ygg/resource/core';
+import { AdditionService } from '@ygg/resource/data-access';
 
 @Injectable({
   providedIn: 'root'
@@ -16,28 +16,28 @@ export class PlayService {
 
   constructor(
     private dataAccessService: DataAccessService,
-    private equipmentService: EquipmentService
+    private additionService: AdditionService
   ) {}
 
-  loadEquipments(equipmentIds: string[]): Observable<Equipment[]> {
-    if (isEmpty(equipmentIds)) {
+  loadAdditions(additionIds: string[]): Observable<Addition[]> {
+    if (isEmpty(additionIds)) {
       return of([]);
     } else {
       return combineLatest(
-        equipmentIds.map(id =>
-          this.equipmentService.get$(id).pipe(catchError(error => of(null)))
+        additionIds.map(id =>
+          this.additionService.get$(id).pipe(catchError(error => of(null)))
         )
       ).pipe(
-        map((equipments: Equipment[]) => equipments.filter(eq => !isEmpty(eq)))
+        map((additions: Addition[]) => additions.filter(eq => !isEmpty(eq)))
       );
     }
   }
 
   loadData(playData: any): Observable<Play> {
     const play = new Play().fromJSON(playData);
-    return this.loadEquipments(playData.equipments).pipe(
+    return this.loadAdditions(playData.additions).pipe(
       map(eqs => {
-        play.equipments = eqs;
+        play.additions = eqs;
         return play;
       })
     );
@@ -73,7 +73,7 @@ export class PlayService {
     try {
       await this.dataAccessService.upsert(this.collection, data);
       return Promise.all(
-        play.equipments.map(eq => this.equipmentService.upsert(eq))
+        play.additions.map(eq => this.additionService.upsert(eq))
       );
     } catch (error) {
       return Promise.reject(error);

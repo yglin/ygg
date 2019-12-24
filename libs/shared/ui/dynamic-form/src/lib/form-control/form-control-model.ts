@@ -10,6 +10,7 @@ export enum FormControlType {
   address = 'address',
   geoPoint = 'geoPoint',
   location = 'location',
+  link = 'link'
   // tags = 'tags'
 }
 
@@ -17,9 +18,14 @@ export interface FormControlModel {
   name: string;
   type: FormControlType;
   label: string;
+  isArray?: boolean;
   default?: any;
   validators?: ValidatorModel[];
   options?: any;
+}
+
+export function isRequired(model: FormControlModel): boolean {
+  return hasValidator(model, 'required');
 }
 
 export function hasValidator(controlModel: FormControlModel, validator: ValidatorModel | string) {

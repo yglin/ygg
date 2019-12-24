@@ -21,8 +21,8 @@ import { Subscription } from 'rxjs';
 import { PlayFactoryService } from '../play-factory.service';
 import { AuthenticateService, User } from '@ygg/shared/user';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
-import { Equipment } from '@ygg/resource/core';
-import { EquipmentEditDialogComponent } from '../equipment-edit-dialog/equipment-edit-dialog.component';
+import { Addition } from '@ygg/resource/core';
+import { AdditionEditDialogComponent } from '../addition-edit-dialog/addition-edit-dialog.component';
 import { PlayFormGroupModel } from '../play-form-model';
 
 @Component({
@@ -83,42 +83,42 @@ export class PlayFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  clearEquipments() {
-    if (confirm('移除所有的設備用具？')) {
-      this.play.equipments = [];
+  clearAdditions() {
+    if (confirm('移除所有的附屬品？')) {
+      this.play.additions = [];
     }
   }
 
-  addEquipment() {
-    const dialogRef = this.yggDialog.open(EquipmentEditDialogComponent, {
-      title: '新增設備'
+  addAddition() {
+    const dialogRef = this.yggDialog.open(AdditionEditDialogComponent, {
+      title: '新增附屬品'
     });
-    this.subscriptions.push(dialogRef.afterClosed().subscribe((equipment: Equipment) => {
-      if (equipment) {
-        this.play.equipments.push(equipment);
+    this.subscriptions.push(dialogRef.afterClosed().subscribe((addition: Addition) => {
+      if (addition) {
+        this.play.additions.push(addition);
         this.valueChanged.emit(this.play);
       }      
     }));
   }
 
-  editEquipment(index: number) {
-    const equipment = this.play.equipments[index];
-    const dialogRef = this.yggDialog.open(EquipmentEditDialogComponent, {
-      title: '修改設備',
+  editAddition(index: number) {
+    const addition = this.play.additions[index];
+    const dialogRef = this.yggDialog.open(AdditionEditDialogComponent, {
+      title: '修改附屬品',
       data: {
-        equipment
+        addition
       }
     });
-    this.subscriptions.push(dialogRef.afterClosed().subscribe((equipment: Equipment) => {
-      if (equipment) {
-        this.play.equipments[index] = equipment;
+    this.subscriptions.push(dialogRef.afterClosed().subscribe((addition: Addition) => {
+      if (addition) {
+        this.play.additions[index] = addition;
         this.valueChanged.emit(this.play);
       }      
     }));
   }
 
-  deleteEquipment(index: number) {
-    this.play.equipments.splice(index, 1);
+  deleteAddition(index: number) {
+    this.play.additions.splice(index, 1);
     this.valueChanged.emit(this.play);
   }
 

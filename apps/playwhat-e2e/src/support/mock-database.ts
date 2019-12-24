@@ -1,6 +1,6 @@
 import { values, isEmpty } from "lodash";
 import { Tags } from '@ygg/tags/core';
-import { Equipment } from '@ygg/resource/core';
+import { Addition } from '@ygg/resource/core';
 
 export interface Document {
   path: string;
@@ -21,10 +21,10 @@ export class MockDatabase {
         };
       });
     }
-    if (doc.data && !isEmpty(doc.data.equipments)) {
-      doc.data.equipments.forEach(eq => {
+    if (doc.data && !isEmpty(doc.data.additions)) {
+      doc.data.additions.forEach(eq => {
         this.pushDocument({
-          path: `${Equipment.collection}/${eq.id}`,
+          path: `${Addition.collection}/${eq.id}`,
           data: eq
         });
       });

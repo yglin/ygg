@@ -16,11 +16,13 @@ function toTaggable(data: any): Taggable {
 }
 
 export function createOnWriteTrigger(
-  collection: string
+  collection: string,
+  options: any = {}
 ): functions.CloudFunction<
   functions.Change<FirebaseFirestore.DocumentSnapshot>
 > {
-  return functions.firestore
+  options.region = options.region || 'us-central1';
+  return functions.region(options.region).firestore
     .document(`${collection}/{id}`)
     .onWrite(
       async (

@@ -10,7 +10,8 @@
           ></ygg-product-thumbnail>
         </td>
         <td mat-footer-cell *matFooterCellDef>
-          總價<span *ngIf="singlePrice">&nbsp;&#8725;&nbsp;每人</span>
+          總價
+          <!-- <span *ngIf="singlePrice">&nbsp;&#8725;&nbsp;每人</span> -->
         </td>
       </ng-container>
 
@@ -35,7 +36,7 @@
         </td>
         <td mat-footer-cell *matFooterCellDef>
           <ygg-price [price]="totalPrice" class='total-price'></ygg-price>
-          <span *ngIf="singlePrice">&nbsp;&#8725;&nbsp;<ygg-price [price]="singlePrice"></ygg-price></span>
+          <!-- <span *ngIf="singlePrice">&nbsp;&#8725;&nbsp;<ygg-price [price]="singlePrice"></ygg-price></span> -->
         </td>
       </ng-container>
 

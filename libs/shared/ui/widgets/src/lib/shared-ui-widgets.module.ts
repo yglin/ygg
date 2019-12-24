@@ -23,7 +23,7 @@ import { ChipsControlComponent } from './chips-control/chips-control.component';
 import { ImageIconComponent } from './image-icon/image-icon.component';
 import { ActionBarLayoutComponent } from './action-bar-layout/action-bar-layout.component';
 import { PriceComponent } from './price/price.component';
-import { ImageThumbnailComponent } from './image-thumbnail/image-thumbnail.component';
+import { ImageThumbnailComponent, ImageThumbnailListComponent } from './image-thumbnail';
 import { AngularFittextModule } from "angular-fittext";
 
 @NgModule({
@@ -43,7 +43,8 @@ import { AngularFittextModule } from "angular-fittext";
     ImageIconComponent,
     ActionBarLayoutComponent,
     PriceComponent,
-    ImageThumbnailComponent
+    ImageThumbnailComponent,
+    ImageThumbnailListComponent
   ],
   imports: [
     CommonModule,
@@ -70,7 +71,8 @@ import { AngularFittextModule } from "angular-fittext";
     ImageIconComponent,
     ActionBarLayoutComponent,
     PriceComponent,
-    ImageThumbnailComponent
+    ImageThumbnailComponent,
+    ImageThumbnailListComponent
   ],
   entryComponents: [ProgressSpinnerComponent, YggDialogComponent]
 })

@@ -8,7 +8,7 @@ import { Play } from '@ygg/playwhat/play';
 import { MockDatabase } from '../../support/mock-database';
 import { User } from '@ygg/shared/user';
 import { login } from '../../page-objects/app.po';
-import { Equipment } from '@ygg/resource/core';
+import { Addition } from '@ygg/resource/core';
 
 describe('Create Play', () => {
   const siteNavigator = new SiteNavigator();
@@ -44,7 +44,7 @@ describe('Create Play', () => {
       cy.wrap(testPlay.tags.toTagsArray()).each((tag: any) =>
         mockDatabase.delete(`tags/${tag.id}`)
       );
-      cy.wrap(testPlay.equipments).each((eq: Equipment) =>
+      cy.wrap(testPlay.additions).each((eq: Addition) =>
         mockDatabase.delete(`resources/${eq.id}`)
       );
     });

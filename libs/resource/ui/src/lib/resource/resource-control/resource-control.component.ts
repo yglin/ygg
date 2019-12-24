@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { Resource, Equipment, ResourceType } from "@ygg/resource/core";
+import { Resource, Addition, ResourceType } from "@ygg/resource/core";
 import { FormGroup, FormBuilder } from '@angular/forms';
 @Component({
   selector: 'ygg-resource-control',
@@ -21,6 +21,6 @@ export class ResourceControlComponent implements OnInit {
   }
 
   onSubmit() {
-    this.submit.emit(Equipment.forge());
+    this.submit.emit(Addition.forge());
   }
 }

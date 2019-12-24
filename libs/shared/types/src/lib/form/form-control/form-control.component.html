@@ -18,6 +18,10 @@
           matInput
           [placeholder]="model.label"
           [formControlName]="model.name"
+          cdkTextareaAutosize
+          #autosize="cdkTextareaAutosize"
+          cdkAutosizeMinRows="3"
+          cdkAutosizeMaxRows="10"
         ></textarea>
         <mat-error *ngFor="let error of formControl.errors | keyvalue">{{
           getErrorMessage(error.key)

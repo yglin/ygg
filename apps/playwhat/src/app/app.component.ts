@@ -114,17 +114,16 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       this.subscriptions.push(
         this.showGoToTopButton$
           .pipe(
-            tap(() => this.showGoToTopButton = true),
+            tap(() => (this.showGoToTopButton = true)),
             debounceTime(3000)
             // switchMap(() => of(true)),
             // delay(3000)
           )
           .subscribe(() => {
-              if (this.showGoToTopButton) {
-                this.showGoToTopButton = false;
-              }
+            if (this.showGoToTopButton) {
+              this.showGoToTopButton = false;
             }
-          )
+          })
       );
     }
   }
@@ -137,7 +136,20 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   scrollToTop() {
     if (this.pageElement) {
-      this.pageElement.nativeElement.scrollTop = 0;
+      let scrollToTop = window.setInterval(() => {
+        const pos = this.pageElement.nativeElement.scrollTop;
+        const step = Math.max(pos / 10, 5);
+        // console.log(`FUCK~!!! ${pos}`);
+        if (pos > 0) {
+          this.pageElement.nativeElement.scrollTop = pos - step; // how far to scroll on each step
+        } else {
+          clearInterval(scrollToTop);
+        }
+      }, 10);
     }
+  }
+
+  onActivate(event) {
+    this.scrollToTop();
   }
 }

@@ -1,4 +1,4 @@
-<div class="dynamic-form" [attr.form-name]='model.name'>
+<div class="dynamic-form" [attr.form-name]="model.name">
   <form [formGroup]="formGroup" *ngIf="formGroup">
     <ygg-action-bar-layout position="top">
       <div ygg-action-bar-button>
@@ -15,12 +15,22 @@
       </div>
       <div ygg-action-bar-content>
         <div *ngFor="let name of controlModelNames">
-          <div *ngIf="model.controls[name] as controlModel" [attr.control-name]='controlModel.name'>
-            <ygg-title-divider>{{ controlModel.label }}</ygg-title-divider>
-            <ygg-form-control
-              [formGroup]="formGroup"
-              [model]="controlModel"
-            ></ygg-form-control>
+          <div
+            *ngIf="model.controls[name] as controlModel"
+            [attr.control-name]="controlModel.name"
+          >
+            <ygg-title-divider>{{ controlModel.label }}<span *ngIf="isRequired(controlModel)">
+              ＊
+            </span></ygg-title-divider>
+            <div *ngIf="controlModel.isArray">
+              <ygg-form-array [formGroup]="formGroup" [model]='controlModel'></ygg-form-array>
+            </div>
+            <div *ngIf="!controlModel.isArray">
+              <ygg-form-control
+                [formGroup]="formGroup"
+                [model]="controlModel"
+              ></ygg-form-control>
+            </div>
           </div>
         </div>
       </div>

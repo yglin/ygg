@@ -29,7 +29,7 @@ import {
   PurchaseListPageObjectCypress,
   PurchaseControlPageObjectCypress
 } from '../../../page-objects/shopping/purchase';
-import { Equipment, Accommodation } from '@ygg/resource/core';
+import { Addition, Accommodation } from '@ygg/resource/core';
 import { ShoppingCartPageObjectCypress } from '../../../page-objects/shopping';
 import { PlayFormPageObject } from '../../../page-objects/play.po';
 import { AccommodationListPageObjectCypress, AccommodationControlPageObjectCypress } from "../../../page-objects/resource";
@@ -37,8 +37,8 @@ import { AccommodationListPageObject } from '@ygg/resource/ui';
 
 describe('Scheduler - schedule-plan', () => {
   let testPlays: Play[];
-  let playsNoEquipments: Play[];
-  let playsWithEquipments: Play[];
+  let playsNoAdditions: Play[];
+  let playsWithAdditions: Play[];
   let testAccommodations: Accommodation[];
   let testSchedulePlan1;
   let testSchedulePlan2;
@@ -58,21 +58,21 @@ describe('Scheduler - schedule-plan', () => {
   function prepareTestData() {
     const documents: Document[] = [];
     testPlays = [];
-    playsNoEquipments = range(random(2, 5)).map(() =>
+    playsNoAdditions = range(random(2, 5)).map(() =>
       Play.forge({
-        numEquipments: 0
+        numAdditions: 0
       })
     );
-    testPlays.push(...playsNoEquipments);
-    playsWithEquipments = range(random(1, 3)).map(() =>
+    testPlays.push(...playsNoAdditions);
+    playsWithAdditions = range(random(1, 3)).map(() =>
       Play.forge({
-        numEquipments: random(1, 4)
+        numAdditions: random(1, 4)
       })
     );
-    testPlays.push(...playsWithEquipments);
+    testPlays.push(...playsWithAdditions);
 
     let numParticipants = 53;
-    let purchases: Purchase[] = sampleSize(playsNoEquipments, 3).map(
+    let purchases: Purchase[] = sampleSize(playsNoAdditions, 3).map(
       play =>
         new Purchase({
           product: play,
@@ -81,7 +81,7 @@ describe('Scheduler - schedule-plan', () => {
     );
     testSchedulePlan1 = SchedulePlan.forge({ numParticipants, purchases });
     numParticipants = 67;
-    purchases = sampleSize(playsNoEquipments, 3).map(
+    purchases = sampleSize(playsNoAdditions, 3).map(
       play =>
         new Purchase({
           product: play,
@@ -91,9 +91,9 @@ describe('Scheduler - schedule-plan', () => {
     testSchedulePlan2 = SchedulePlan.forge({ numParticipants, purchases });
     testPlays.forEach(play => {
       documents.push({ path: `plays/${play.id}`, data: play.toJSON() });
-      play.equipments.forEach(eq => {
+      play.additions.forEach(eq => {
         documents.push({
-          path: `${Equipment.collection}/${eq.id}`,
+          path: `${Addition.collection}/${eq.id}`,
           data: eq.toJSON()
         });
       });
@@ -111,6 +111,7 @@ describe('Scheduler - schedule-plan', () => {
 
   before(function() {
     prepareTestData();
+    cy.clearLocalStorage();
     cy.visit('/');
     login();
   });
@@ -252,9 +253,9 @@ describe('Scheduler - schedule-plan', () => {
     playSelectorPageObject.expectPlays(testPlays);
   });
 
-  it('Click on play with no equipment should add purchase of it directly', () => {
+  it('Click on play with no addition should add purchase of it directly', () => {
     const numParticipants = 13;
-    const play = sample(playsNoEquipments);
+    const play = sample(playsNoAdditions);
     const purchase = new Purchase({ product: play, quantity: numParticipants });
     siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
     schedulePlanControlPageObject.setNumParticipants(numParticipants);
@@ -265,9 +266,9 @@ describe('Scheduler - schedule-plan', () => {
     shoppingCartPageObject.expectPurchase(purchase);
   });
 
-  it('Click on play with equipments should pop purchase edit dialog', () => {
+  it('Click on play with additions should pop purchase edit dialog', () => {
     const numParticipants = 23;
-    const play = sample(playsWithEquipments);
+    const play = sample(playsWithAdditions);
     const purchase = new Purchase({ product: play, quantity: numParticipants });
     siteNavigator.goto(['scheduler', 'schedule-plans', 'new']);
     schedulePlanControlPageObject.setNumParticipants(numParticipants);

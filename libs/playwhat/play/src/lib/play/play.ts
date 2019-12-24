@@ -9,7 +9,7 @@ import {
 import { FormGroupModel, FormControlModel, FormControlType } from "@ygg/shared/ui/dynamic-form";
 import { Tags, Taggable } from '@ygg/tags/core';
 import { Product, ProductType } from '@ygg/shopping/core';
-import { Equipment } from '@ygg/resource/core';
+import { Addition } from '@ygg/resource/core';
 
 export class Play implements DataItem, Taggable, Product {
   id: string;
@@ -24,10 +24,10 @@ export class Play implements DataItem, Taggable, Product {
   price: number;
   productType: ProductType = ProductType.Play;
   // products: Product[] = [];
-  equipments: Equipment[] = [];
+  additions: Addition[] = [];
 
   get products(): Product[] {
-    return this.equipments;
+    return this.additions;
   }
 
   static forge(options: any = {}): Play {
@@ -56,8 +56,8 @@ export class Play implements DataItem, Taggable, Product {
     play.price = random(0, 1000);
     play.minuteLength = random(30, 180);
 
-    options.numEquipments = (typeof options.numEquipments === 'number') ? options.numEquipments : random(0, 5);
-    play.equipments = range(options.numEquipments).map(() => Equipment.forge());
+    options.numAdditions = (typeof options.numAdditions === 'number') ? options.numAdditions : random(0, 5);
+    play.additions = range(options.numAdditions).map(() => Addition.forge());
     return play;
   }
 
@@ -85,13 +85,13 @@ export class Play implements DataItem, Taggable, Product {
 
   toJSON(): any {
     const data = toJSONDeep(this);
-    data.equipments = this.equipments.map(eq => eq.id);
+    data.additions = this.additions.map(eq => eq.id);
     return data;
   }
 
   clone(): Play {
     const cloned = new Play().fromJSON(this.toJSON());
-    cloned.equipments = this.equipments;
+    cloned.additions = this.additions;
     return cloned;
   }
 }

@@ -4,3 +4,4 @@ export * from './lib/dialog/ygg-dialog.service';
 export * from './lib/page-title/page-title.component';
 export * from './lib/items-group-switcher/items-group-switcher.component';
 export * from './lib/chips-control/chips-control.component';
+export * from './lib/image-thumbnail';

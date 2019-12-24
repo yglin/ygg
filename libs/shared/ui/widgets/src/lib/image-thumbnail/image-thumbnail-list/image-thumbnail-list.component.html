@@ -1,0 +1,17 @@
+<div class="image-thumbnail-list" *ngIf="items">
+  <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="20px">
+    <div
+      *ngFor="let item of items"
+      [attr.item-id]="item.id"
+      class="item"
+      (click)="onClickItem(item)"
+    >
+      <ygg-image-thumbnail [item]="item"></ygg-image-thumbnail>
+    </div>
+    <div class="item" [hidden]="readonly">
+      <button class="add-item" type="button" mat-fab (click)="onAdd()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

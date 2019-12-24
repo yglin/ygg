@@ -1,0 +1,19 @@
+<div class="link-control">
+  <mat-form-field>
+    <input
+      matInput
+      type="url"
+      [placeholder]="label"
+      [formControl]='formControl'
+      (focus)='onFocus()'
+      [required]='required'
+      class='link'
+    />
+    <mat-error *ngIf="formControl.hasError('required')">
+      請填入網址
+    </mat-error>
+    <mat-error *ngIf="formControl.hasError('url')">
+      不是正確的網址格式
+    </mat-error>
+  </mat-form-field>
+</div>

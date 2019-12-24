@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 import { Injectable } from '@angular/core';
-import { FormControlModel } from './form-control';
+import { FormControlModel, FormControlType } from './form-control';
 import { FormGroupModel } from './form-group';
 import {
   FormGroup,
@@ -22,15 +22,15 @@ export class FormFactoryService {
     for (const name in formModel.controls) {
       if (formModel.controls.hasOwnProperty(name)) {
         const controlModel = formModel.controls[name];
-        controlConfigs[name] = this.buildControlConfig(controlModel);
+        controlConfigs[name] = this.buildControl(controlModel);
       }
     }
     const formGroup = this.formBuilder.group(controlConfigs);
     return formGroup;
   }
 
-  buildControlConfig(controlModel: FormControlModel): any {
-    let config: any = {};
+  buildControl(controlModel: FormControlModel): any {
+    // let config: any = {};
     // set validators
     const validators: ValidatorFn[] = [];
     if (!isEmpty(controlModel.validators)) {
@@ -42,11 +42,15 @@ export class FormFactoryService {
     }
     const defaultValue = controlModel.default || null;
     // const control = new FormControl(defaultValue, validators);
+    let newControl: AbstractControl;
     if (isEmpty(validators)) {
-      config = defaultValue;
+      newControl = new FormControl(defaultValue);
     } else {
-      config = [defaultValue, ...validators];
+      newControl = new FormControl(defaultValue, validators);
     }
-    return config;
+    if (controlModel.isArray) {
+      newControl = this.formBuilder.array([newControl]);
+    }
+    return newControl;
   }
 }

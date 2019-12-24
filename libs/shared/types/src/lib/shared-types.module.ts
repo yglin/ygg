@@ -48,6 +48,8 @@ import { AlbumComponent } from './album/album.component';
 // import { TagsControlComponent, TagsViewComponent } from './tags';
 import { ContactControlComponent, ContactViewComponent } from './contact';
 import { DayTimeViewComponent } from './datetime/day-time/day-time-view/day-time-view.component';
+import { LinkControlComponent } from './link/link-control/link-control.component';
+import { LinkViewComponent } from './link/link-view/link-view.component';
 
 @NgModule({
   imports: [
@@ -102,7 +104,9 @@ import { DayTimeViewComponent } from './datetime/day-time/day-time-view/day-time
     // TagsViewComponent,
     ContactControlComponent,
     ContactViewComponent,
-    DayTimeViewComponent
+    DayTimeViewComponent,
+    LinkControlComponent,
+    LinkViewComponent
   ],
   entryComponents: [/* DateRangeControlDialogComponent, */ImageUploaderComponent],
   exports: [
@@ -133,6 +137,8 @@ import { DayTimeViewComponent } from './datetime/day-time/day-time-view/day-time
     ContactControlComponent,
     ContactViewComponent,
     DayTimeViewComponent,
+    LinkControlComponent,
+    LinkViewComponent,
     // TagsControlComponent,
     // TagsViewComponent
   ]

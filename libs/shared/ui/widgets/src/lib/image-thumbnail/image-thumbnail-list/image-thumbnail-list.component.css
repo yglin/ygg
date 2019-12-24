@@ -1,0 +1,8 @@
+.image-thumbnail-list {
+  width: 100%;
+}
+
+.item {
+  margin-bottom: 5vh;
+  cursor: pointer;
+}

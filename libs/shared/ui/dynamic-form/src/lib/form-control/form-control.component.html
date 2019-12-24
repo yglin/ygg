@@ -1,11 +1,12 @@
-<div *ngIf="formGroup && model" [formGroup]="formGroup" [id]="model.name" class='dynamic-control' [attr.control-name]='model.name'>
+<div *ngIf="formGroup && model" [formGroup]="formGroup" class="dynamic-control">
   <div [ngSwitch]="model.type">
     <div *ngSwitchCase="formControlTypes.text">
       <mat-form-field>
         <input
           matInput
-          [placeholder]="model.label"
-          [formControlName]="model.name"
+          [placeholder]="label"
+          [formControlName]="name"
+          [required]="isRequired(name)"
         />
         <mat-error *ngFor="let error of formControl.errors | keyvalue">{{
           getErrorMessage(error.key)
@@ -16,8 +17,13 @@
       <mat-form-field>
         <textarea
           matInput
-          [placeholder]="model.label"
-          [formControlName]="model.name"
+          [placeholder]="label"
+          [formControlName]="name"
+          [required]="isRequired(name)"
+          cdkTextareaAutosize
+          #autosize="cdkTextareaAutosize"
+          cdkAutosizeMinRows="3"
+          cdkAutosizeMaxRows="10"
         ></textarea>
         <mat-error *ngFor="let error of formControl.errors | keyvalue">{{
           getErrorMessage(error.key)
@@ -26,41 +32,47 @@
     </div>
     <div *ngSwitchCase="formControlTypes.number">
       <ygg-number-slider
-        [formControlName]="model.name"
-        [label]="model.label"
+        [formControlName]="name"
+        [label]="label"
         [min]="model.options?.min"
         [max]="model.options?.max"
       ></ygg-number-slider>
     </div>
     <div *ngSwitchCase="formControlTypes.album">
       <ygg-album-control
-        [label]="model.label"
-        [formControlName]="model.name"
+        [label]="label"
+        [formControlName]="name"
       ></ygg-album-control>
     </div>
     <div *ngSwitchCase="formControlTypes.businessHours">
       <ygg-business-hours-control
-        [label]="model.label"
-        [formControlName]="model.name"
+        [label]="label"
+        [formControlName]="name"
       ></ygg-business-hours-control>
     </div>
     <div *ngSwitchCase="formControlTypes.address">
       <ygg-address-control
-        [label]="model.label"
-        [formControlName]="model.name"
+        [label]="label"
+        [formControlName]="name"
       ></ygg-address-control>
     </div>
     <div *ngSwitchCase="formControlTypes.geoPoint">
       <ygg-geo-point-control
-        [label]="model.label"
-        [formControlName]="model.name"
+        [label]="label"
+        [formControlName]="name"
       ></ygg-geo-point-control>
     </div>
     <div *ngSwitchCase="formControlTypes.location">
       <ygg-location-control
-        [label]="model.label"
-        [formControlName]="model.name"
+        [label]="label"
+        [formControlName]="name"
       ></ygg-location-control>
+    </div>
+    <div *ngSwitchCase="formControlTypes.link">
+      <ygg-link-control
+        [label]="label"
+        [formControlName]="name"
+      ></ygg-link-control>
     </div>
     <div *ngSwitchDefault></div>
   </div>

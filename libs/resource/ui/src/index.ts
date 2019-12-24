@@ -1,3 +1,3 @@
 export * from './lib/resource-ui.module';
-export * from './lib/equipment';
+export * from './lib/addition';
 export * from './lib/accommodation'
