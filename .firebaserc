@@ -1,7 +1,7 @@
 {
   "projects": {
     "default": "localhost-146909",
-    "deeptravel": "deeptravel-e815d",
-    "develop": "localhost-146909"
+    "develop": "localhost-146909",
+    "product": "playwhat-415b9"
   }
 }
