@@ -10,5 +10,7 @@
   "chromeWebSecurity": false,
   "numTestsKeptInMemory": 0,
   "testFiles": "**/*.spec.*",
-  "ignoreTestFiles": []
+  "ignoreTestFiles": [
+    "**/playground/**/*"
+  ]
 }
