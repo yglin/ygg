@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/auth';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 import {sample} from 'lodash';
 import {BehaviorSubject, from, Observable, of, Subscription, throwError} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
