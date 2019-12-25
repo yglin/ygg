@@ -1,6 +1,6 @@
 import {DataItem, toJSONDeep} from '@ygg/shared/infra/data-access';
 import {extend, sample} from 'lodash';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 
 export enum UserState {
   Unknown = 0,
