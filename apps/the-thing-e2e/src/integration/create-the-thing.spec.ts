@@ -1,15 +1,19 @@
+import { siteNavigator } from "../support/site-navigator";
+import { TheThingCell } from "@ygg/shared/the-thing/core";
+
 describe('Create a new the-thing', () => {
-  const siteNavigator = new SiteNavigator();
 
   it('Create cell, with the derived form create a new the-thing', () => {
     // Forge test data
-    const cellWhole = Cell.forge({
+    const cellWhole = TheThingCell.forge({
       DNAs: 'all'
     });
-    const theThing = cellWhole.imitate();
+    const theThing = cellWhole.forgeTheThing();
 
     // Navigate to Cell creation page
-    siteNavigator.goto(['admin', 'the-thing', 'cells', 'new']);
+    siteNavigator.goto(['admin', 'the-thing', 'cells']);
+    const theThingCellListPO = new TheThingCellListPageObjectCypress();
+    theThingCellListPO.gotoCreatePage();
 
     // Create a Cell with all DNAs, as Cell-whole
     theThingCellEditPO = new TheThingCellEditPageObjectCypress();
@@ -20,7 +24,6 @@ describe('Create a new the-thing', () => {
 
     // Navigate to form of Cell-whole
     siteNavigator.goto(['admin', 'the-thing', 'cells']);
-    const theThingCellListPO = new TheThingCellListPageObjectCypress();
     theThingCellListPO.clickOnCell(cellWhole);
     const theThingCellViewPO = new TheThingCellViewPageObjectCypress();
     theThingCellViewPO.gotoCreatePage();

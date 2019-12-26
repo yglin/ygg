@@ -1,23 +1,34 @@
-class SiteNavigator {
-  goto(path: string[] = ['home']): Cypress.Chainable<any> {
-    const fullPathName = `/${path.join('/')}`;
-    cy.log(`Go to ${fullPathName}`);
+import { SiteNavigator } from '@ygg/shared/test/cypress';
+
+export const siteNavigator = new SiteNavigator({
+  path: '/',
+  routeMethod: () => {
     cy.get('.pw-header #to-home').click({ force: true });
-    cy.location('pathname').should('eq', '/home');
-    const route = path.shift();
-    if (route === 'plays') {
-      this.gotoPlays(path);
-    } else if (route === 'admin') {
-      this.gotoAdmin(path);
-    } else if (route === 'scheduler') {
-      if (path[0] === 'schedule-plans' && path[1] === 'new') {
-        cy.get('a#new-schedule').click({force: true});
-      } else {
-        this.gotoScheduler(path);
-      }
-    } else {
-      cy.visit(fullPathName);
+  },
+  children: [
+    {
+      path: 'admin',
+      routeMethod: () => {
+        cy.get('#account-widget .menu-trigger').click({ force: true });
+        cy.get('#user-menu button#admin').click({ force: true });
+      },
+      children: [
+        {
+          path: 'the-thing',
+          routeMethod: () => {
+            cy.get('#the-thing').click({ force: true });
+          },
+          children: [
+            {
+              path: 'cells',
+              routeMethod: () => {
+                cy.get('#cell-list').click({ force: true });
+              },
+              children: []
+            }
+          ]
+        }
+      ]
     }
-    return cy.location('pathname').should('eq', fullPathName);
-  }
-}
+  ]
+});

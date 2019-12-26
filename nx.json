@@ -150,10 +150,13 @@
       "tags": ["scope:shared", "type:core"]
     },
     "the-thing-e2e": {
-      "tags": []
+      "tags": ["scope:the-thing", "type:test"]
     },
     "the-thing": {
-      "tags": []
+      "tags": ["scope:the-thing", "type:app"]
+    },
+    "shared-test-cypress": {
+      "tags": ["scope:shared", "type:test"]
     }
   }
 }
