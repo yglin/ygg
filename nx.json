@@ -146,9 +146,6 @@
     "resource-factory": {
       "tags": ["scope:resource", "type:factory"]
     },
-    "shared-the-thing-core": {
-      "tags": ["scope:shared", "type:core"]
-    },
     "the-thing-e2e": {
       "tags": ["scope:the-thing", "type:test"]
     },
@@ -157,6 +154,18 @@
     },
     "shared-test-cypress": {
       "tags": ["scope:shared", "type:test"]
+    },
+    "the-thing-core": {
+      "tags": ["scope:the-thing", "type:core"]
+    },
+    "the-thing-admin": {
+      "tags": ["scope:the-thing", "type:frontend"]
+    },
+    "the-thing-data-access": {
+      "tags": ["scope:the-thing", "type:data-access"]
+    },
+    "the-thing-ui": {
+      "tags": ["scope:the-thing", "type:ui"]
     }
   }
 }

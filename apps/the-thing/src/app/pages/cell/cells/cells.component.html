@@ -1,0 +1,12 @@
+<div class="cells">
+  <ygg-action-bar-layout>
+    <div ygg-action-bar-content>
+      <the-thing-cell-list [cells]="cells"></the-thing-cell-list>
+    </div>
+    <div ygg-action-bar-button>
+      <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+        <button mat-fab [routerLink]="['new']" class='to-create'><mat-icon>add</mat-icon></button>
+      </div>
+    </div>
+  </ygg-action-bar-layout>
+</div>

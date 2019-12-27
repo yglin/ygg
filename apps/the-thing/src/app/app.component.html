@@ -1,27 +1,23 @@
-<div style="text-align:center">
-  <h1>Welcome to {{ title }}!</h1>
-  <img
-    width="450"
-    src="https://raw.githubusercontent.com/nrwl/nx/master/nx-logo.png"
-  />
+<div class="app-root">
+  <div
+    class="main-layout"
+    fxLayout="column"
+    fxLayoutAlign="stretch stretch"
+    fxLayoutGap="10px"
+  >
+    <div fxFlex="60px" class="pw-header"><pw-header></pw-header></div>
+    <div fxFlex class="pw-page" #page>
+      <router-outlet (activate)="onActivate($event)"></router-outlet>
+    </div>
+    <div fxFlex="10px" class="pw-footer"></div>
+    <!-- <div [ngClass]="pageClass"><router-outlet></router-outlet></div> -->
+  </div>
+  <div
+    class="button-to-top"
+    [@fadeOutAnimation]="showGoToTopButton ? 'show' : 'hide'"
+  >
+    <button mat-fab (click)="scrollToTop()" matTooltip="回到頁首">
+      <mat-icon>publish</mat-icon>
+    </button>
+  </div>
 </div>
-
-<p>This is an Angular app built with <a href="https://nx.dev">Nx</a>.</p>
-<p>🔎 **Nx is a set of Angular CLI power-ups for modern development.**</p>
-
-<h2>Quick Start & Documentation</h2>
-
-<ul>
-  <li>
-    <a href="https://nx.dev/getting-started/what-is-nx"
-      >30-minute video showing all Nx features</a
-    >
-  </li>
-  <li>
-    <a href="https://nx.dev/tutorial/01-create-application"
-      >Interactive tutorial</a
-    >
-  </li>
-</ul>
-
-<router-outlet></router-outlet>

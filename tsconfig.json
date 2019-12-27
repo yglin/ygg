@@ -69,8 +69,11 @@
         "libs/shared/ui/dynamic-form/src/index.ts"
       ],
       "@ygg/resource/factory": ["libs/resource/factory/src/index.ts"],
-      "@ygg/shared/the-thing/core": ["libs/shared/the-thing/core/src/index.ts"],
-      "@ygg/shared/test/cypress": ["libs/shared/test/cypress/src/index.ts"]
+      "@ygg/shared/test/cypress": ["libs/shared/test/cypress/src/index.ts"],
+      "@ygg/the-thing/core": ["libs/the-thing/core/src/index.ts"],
+      "@ygg/the-thing/admin": ["libs/the-thing/admin/src/index.ts"],
+      "@ygg/the-thing/data-access": ["libs/the-thing/data-access/src/index.ts"],
+      "@ygg/the-thing/ui": ["libs/the-thing/ui/src/index.ts"]
     },
     "rootDir": "."
   },
