@@ -1,0 +1,29 @@
+<div class="the-thing-cell-control" [formGroup]="formGroup">
+  <div [ngSwitch]="cell.type">
+    <div *ngSwitchCase="'text'">
+      <mat-form-field>
+        <input
+          matInput
+          [placeholder]="cell.name"
+          [formControlName]="cell.name"
+        />
+      </mat-form-field>
+    </div>
+    <div *ngSwitchCase="'longtext'">
+      <mat-form-field>
+        <textarea
+          matInput
+          [placeholder]="cell.name"
+          [formControlName]="cell.name"
+          cdkTextareaAutosize
+          #autosize="cdkTextareaAutosize"
+          cdkAutosizeMinRows="3"
+          cdkAutosizeMaxRows="10"
+        ></textarea>
+      </mat-form-field>
+    </div>
+    <div *ngSwitchDefault>
+      <h3>未支援的資料型態：{{ cell.type }}</h3>
+    </div>
+  </div>
+</div>

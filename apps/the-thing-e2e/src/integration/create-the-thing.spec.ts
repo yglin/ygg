@@ -1,13 +1,4 @@
-enum TheThingCellType {
-  text = 'text',
-  longtext = 'longtext'
-}
-
-interface TheThingCell {
-  name: string;
-  type: string;
-  value: any;
-}
+import { TheThingCell, TheThingCellType } from "@ygg/the-thing/core";
 
 function setValueText(value: string) {
   cy.get('.new-cell .value input')

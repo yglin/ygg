@@ -1,12 +1,23 @@
 <div class="chips-control">
-  <div class='action-bar' fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
-    <div [hidden]='!showButtonClearAll'>
+  <div
+    class="action-bar"
+    fxLayout="row"
+    fxLayoutAlign="end center"
+    fxLayoutGap="10px"
+  >
+    <div [hidden]="!showButtonClearAll">
       <button type="button" id="clear-all" mat-mini-fab (click)="clearAll()">
         <mat-icon>delete_sweep</mat-icon>
       </button>
     </div>
-    <div [hidden]='!showButtonAdd'>
-      <button type="button" id="add-chip" mat-mini-fab (click)="addChip()">
+    <div [hidden]="!showButtonAdd">
+      <button
+        type="button"
+        id="add-chip"
+        class="add"
+        mat-mini-fab
+        (click)="addChip()"
+      >
         <mat-icon>add</mat-icon>
       </button>
     </div>
@@ -17,13 +28,13 @@
         <mat-chip
           *ngFor="let chip of chips"
           [value]="chip"
-          [attr.chipName]='chip'
+          [attr.chipName]="chip"
           removable
           (removed)="removeChip($event)"
-          class='chip'
+          class="chip"
         >
           {{ chip }}
-          <mat-icon matChipRemove class='delete'>cancel</mat-icon>
+          <mat-icon matChipRemove class="delete">cancel</mat-icon>
         </mat-chip>
         <input
           id="chip"
@@ -40,14 +51,18 @@
         #auto="matAutocomplete"
         (optionSelected)="addSelected($event)"
       >
-        <mat-option *ngFor="let name of autocompleteOptionsFiltered" [value]="name" [attr.optionName]='name'>
+        <mat-option
+          *ngFor="let name of autocompleteOptionsFiltered"
+          [value]="name"
+          [attr.optionName]="name"
+        >
           {{ name }}
         </mat-option>
       </mat-autocomplete>
       <mat-icon
         class="toggle-button"
         matSuffix
-        (click)="toggleAutoComplete();$event.stopPropagation();"
+        (click)="toggleAutoComplete(); $event.stopPropagation()"
         >{{ auto.isOpen ? 'arrow_drop_up' : 'arrow_drop_down' }}</mat-icon
       >
     </mat-form-field>
