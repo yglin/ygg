@@ -6,15 +6,35 @@ import { CellControlComponent } from './cell/cell-control/cell-control.component
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
+import { CellViewComponent } from './cell/cell-view/cell-view.component';
+import { TheThingCreatorComponent, TheThingViewComponent } from './the-thing';
+import { TagsUiModule } from "@ygg/tags/ui";
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedUiNgMaterialModule
+    SharedUiNgMaterialModule,
+    SharedUiWidgetsModule,
+    TagsUiModule
   ],
-  declarations: [CellListComponent, CellFormComponent, CellControlComponent],
-  exports: [CellListComponent, CellFormComponent, CellControlComponent]
+  declarations: [
+    CellListComponent,
+    CellFormComponent,
+    CellControlComponent,
+    CellViewComponent,
+    TheThingCreatorComponent,
+    TheThingViewComponent
+  ],
+  exports: [
+    CellListComponent,
+    CellFormComponent,
+    CellControlComponent,
+    CellViewComponent,
+    TheThingCreatorComponent,
+    TheThingViewComponent
+  ]
 })
 export class TheThingUiModule {}

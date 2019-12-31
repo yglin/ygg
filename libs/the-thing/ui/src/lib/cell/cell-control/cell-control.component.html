@@ -1,4 +1,4 @@
-<div class="the-thing-cell-control" [formGroup]="formGroup">
+<div class="the-thing-cell-control" [formGroup]="formGroup" *ngIf="cell && formGroup">
   <div [ngSwitch]="cell.type">
     <div *ngSwitchCase="'text'">
       <mat-form-field>

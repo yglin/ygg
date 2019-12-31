@@ -1,0 +1,17 @@
+<div class="the-thing-cell-view">
+  <h3>{{ cell.name }}</h3>
+  <div class="value">
+    <div [ngSwitch]="cell.type">
+      <div *ngSwitchCase="'text'">
+        <h5>{{ cell.value }}</h5>
+      </div>
+      <div *ngSwitchCase="'longtext'">
+        <pre>{{ cell.value }}</pre>
+      </div>
+      <div *ngSwitchDefault>
+        <h3>未支援的資料型態：{{ cell.type }}</h3>
+        {{ cell.value | json }}
+      </div>
+    </div>
+  </div>
+</div>

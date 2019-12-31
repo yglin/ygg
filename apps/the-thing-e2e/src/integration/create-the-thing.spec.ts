@@ -1,22 +1,23 @@
-import { TheThingCell, TheThingCellType } from "@ygg/the-thing/core";
+import { TheThingCell, TheThingCellTypes } from "@ygg/the-thing/core";
 
 function setValueText(value: string) {
-  cy.get('.new-cell .value input')
+  cy.get('.last-cell input')
     .clear()
     .type(value);
 }
 
 function setValueLongtext(value: string) {
-  cy.get('.new-cell .value textarea')
+  cy.get('.last-cell textarea')
     .clear()
     .type(value);
 }
 
 function addCell(cell: TheThingCell) {
-  cy.get('.new-cell .name input')
+  cy.get('.add-cell .name input')
     .clear()
     .type(cell.name);
-  cy.get('.new-cell .type-select').select(cell.type);
+  cy.get('.add-cell .types select').select(cell.type);
+  cy.get('.add-cell button').click();
   switch (cell.type) {
     case 'text':
       setValueText(cell.value);
@@ -27,22 +28,21 @@ function addCell(cell: TheThingCell) {
     default:
       break;
   }
-  cy.get('button.add-cell').click();
 }
 
 function expectCellText(cell: TheThingCell) {
-  cy.get(`.cell[name="${cell.name}"] .value`).contains(cell.value);
+  cy.get(`.cell[cell-name="${cell.name}"]`).contains(cell.value);
 }
 
 const expectCelllongtext = expectCellText;
 
 function expectCell(cell: TheThingCell) {
   switch (cell.type) {
-    case TheThingCellType.text:
+    case 'text':
       expectCellText(cell);
       break;
 
-    case TheThingCellType.longtext:
+    case 'longtext':
       expectCelllongtext(cell);
       break;
 
@@ -72,18 +72,18 @@ describe('Create a new the-thing', () => {
 
   it('Create a new the-thing, confirm data consistency', () => {
     // Navigate to the-thing creation page
-    cy.visit('/the-thing/create');
+    cy.visit('/the-things/create');
 
     // Choose type tags of the-thing
     cy.wrap(theThing.types).each((type: string) => {
-      cy.get('.types input')
+      cy.get('.meta .types input')
         .clear()
         .type(type);
       cy.get('.types button.add').click();
     });
 
     // Input name of the thing
-    cy.get('.name input')
+    cy.get('.meta .name input')
       .clear()
       .type(theThing.name);
 
@@ -96,7 +96,7 @@ describe('Create a new the-thing', () => {
     cy.get('button.submit').click();
 
     // Wait for navigating to view page
-    cy.location({ timeout: 10000 }).should('match', /.*\/the-thing\/.+/);
+    cy.location({ timeout: 10000 }).should('not.match', /.*\/the-things\/create/);
 
     // Expect types
     cy.wrap(theThing.types).each((type: string) => {

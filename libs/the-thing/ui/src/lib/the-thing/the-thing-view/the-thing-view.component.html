@@ -1,0 +1,20 @@
+<div class="the-thing-view" *ngIf="theThing">
+  <div class="name">
+    <h2>{{ theThing.name }}</h2>
+  </div>
+  <div class="types">
+    <ygg-tags-view [tags]="theThing.types"></ygg-tags-view>
+  </div>
+  <br />
+  <div
+    *ngFor="let cell of theThing.cells"
+    class="cell"
+    [attr.cell-name]="cell.name"
+  >
+    <mat-card>
+      <mat-card-content>
+        <the-thing-cell-view [cell]="cell"></the-thing-cell-view>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

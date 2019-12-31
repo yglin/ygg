@@ -1,0 +1,79 @@
+<div class="the-thing-creator">
+  <form [formGroup]="formGroup">
+    <ygg-action-bar-layout
+      ><div ygg-action-bar-button>
+        <button type="button" mat-fab class="submit" (click)="onSubmit()">
+          <mat-icon>save</mat-icon>
+        </button>
+      </div>
+      <div ygg-action-bar-content>
+        <div class="meta">
+          <br />
+          <ygg-tags-control
+            label="這東東是個..."
+            taggableType="the-thing"
+            class="types"
+            formControlName="types"
+          ></ygg-tags-control>
+          <br />
+          <mat-form-field class="name">
+            <input matInput placeholder="這東東叫..." formControlName="name" />
+          </mat-form-field>
+          <br />
+        </div>
+        <div class="add-cell">
+          <ygg-title-divider>新增資料欄位</ygg-title-divider>
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <div class="types">
+              <mat-form-field>
+                <select
+                  matNativeControl
+                  placeholder="資料欄位型態"
+                  [formControl]="formControlNewCellType"
+                  required
+                >
+                  <option
+                    *ngFor="let cellType of cellTypes | keyvalue"
+                    [value]="cellType.key"
+                  >
+                    {{ cellType.value.label }}
+                  </option>
+                </select>
+              </mat-form-field>
+            </div>
+            <div class="name">
+              <mat-form-field>
+                <input
+                  matInput
+                  placeholder="資料欄位名稱"
+                  [formControl]="formControlNewCellName"
+                  required
+                />
+              </mat-form-field>
+            </div>
+            <div>
+              <button
+                mat-mini-fab
+                matTooltip="新增資料欄位"
+                (click)="addCell()"
+                [disabled]="
+                  !(
+                    formControlNewCellName.valid && formControlNewCellType.valid
+                  )
+                "
+              >
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div *ngFor="let cell of cells; let isLast = last;">
+          <the-thing-cell-control
+            [cell]="cell"
+            [formGroup]="cellsFormGroup"
+            [ngClass]="{'last-cell': isLast}"
+          ></the-thing-cell-control>
+        </div></div
+    ></ygg-action-bar-layout>
+  </form>
+</div>
