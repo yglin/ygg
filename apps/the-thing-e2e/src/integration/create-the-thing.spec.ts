@@ -1,4 +1,6 @@
-import { TheThingCell, TheThingCellTypes } from "@ygg/the-thing/core";
+import { last } from 'lodash';
+import { TheThingCell, TheThing } from '@ygg/the-thing/core';
+import { login, MockDatabase } from '@ygg/shared/test/cypress';
 
 function setValueText(value: string) {
   cy.get('.last-cell input')
@@ -52,23 +54,17 @@ function expectCell(cell: TheThingCell) {
 }
 
 describe('Create a new the-thing', () => {
-  const theThing: any = {
-    types: ['play', 'lesson', 'travel', 'food'],
-    name: 'The Thing 1982',
+  const mockDatabase = new MockDatabase();
+  const theThing: TheThing = TheThing.forge({
     cells: [
-      {
-        name: 'title',
-        type: 'text',
-        value: 'John Carpenter\'s The Thing'
-      },
-      {
-        name: 'introduction',
-        type: 'longtext',
-        value:
-          'A US research station, Antarctica, early-winter 1982. The base is suddenly buzzed by a helicopter from the nearby Norwegian research station. They are trying to kill a dog that has escaped from their base. After the destruction of the Norwegian chopper the members of the US team fly to the Norwegian base, only to discover them all dead or missing. They do find the remains of a strange creature the Norwegians burned. The Americans take it to their base and deduce that it is an alien life form. After a while it is apparent that the alien can take over and assimilate into other life forms, including humans, and can spread like a virus. This means that anyone at the base could be inhabited by The Thing, and tensions escalate.'
-      }
+      TheThingCell.forge({ type: 'text' }),
+      TheThingCell.forge({ type: 'longtext' })
     ]
-  };
+  });
+
+  before(function() {
+    login();
+  });
 
   it('Create a new the-thing, confirm data consistency', () => {
     // Navigate to the-thing creation page
@@ -88,27 +84,34 @@ describe('Create a new the-thing', () => {
       .type(theThing.name);
 
     // Add cells
-    cy.wrap(theThing.cells).each((cell: any) =>
-      addCell(cell)
-    );
+    cy.wrap(theThing.cells).each((cell: any) => addCell(cell));
 
     // Submit
     cy.get('button.submit').click();
 
     // Wait for navigating to view page
-    cy.location({ timeout: 10000 }).should('not.match', /.*\/the-things\/create/);
+    cy.location({ timeout: 10000 }).should(
+      'not.match',
+      /.*\/the-things\/create/
+    );
+    cy.location('pathname').then((pathname: any) => {
+      const id = last((pathname as string).split('/'));
 
-    // Expect types
-    cy.wrap(theThing.types).each((type: string) => {
-      cy.get('.types').contains(type);
-    });
+      // Expect types
+      cy.wrap(theThing.types).each((type: string) => {
+        cy.get('.types').contains(type);
+      });
 
-    // Expect name
-    cy.get('.name').contains(theThing.name);
+      // Expect name
+      cy.get('.name').contains(theThing.name);
 
-    // Expect cells
-    cy.wrap(theThing.cells).each((cell: any) => {
-      expectCell(cell);
+      // Expect cells
+      cy.wrap(theThing.cells).each((cell: any) => {
+        expectCell(cell);
+      });
+
+      // clear data
+      mockDatabase.delete(`${theThing.collection}/${id}`);
     });
   });
 });
