@@ -1,3 +1,4 @@
+import { find } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -35,16 +36,26 @@ export class TheThingCreatorComponent implements OnInit {
   ngOnInit() {}
 
   addCell() {
-    const cell = new TheThingCell().fromJSON({
-      name: this.formControlNewCellName.value,
-      type: this.formControlNewCellType.value,
-      value: null
-    });
-    this.cells.push(cell);
-    this.cellsFormGroup.addControl(
-      this.formControlNewCellName.value,
-      new FormControl()
+    const newCellName = this.formControlNewCellName.value;
+    const newCellType = this.formControlNewCellType.value;
+    const nameAlreadyExists = !!find(
+      this.cells,
+      _cell => _cell.name === newCellName
     );
+    if (nameAlreadyExists) {
+      alert(`資料欄位 ${newCellName} 已存在了喔`);
+    } else {
+      const cell = new TheThingCell().fromJSON({
+        name: newCellName,
+        type: newCellType,
+        value: null
+      });
+      this.cells.push(cell);
+      this.cellsFormGroup.addControl(
+        this.formControlNewCellName.value,
+        new FormControl()
+      );
+    }
   }
 
   async onSubmit() {

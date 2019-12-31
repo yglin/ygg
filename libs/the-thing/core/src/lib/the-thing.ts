@@ -1,4 +1,12 @@
-import { extend, isArray, sampleSize, sample, random, range } from 'lodash';
+import {
+  extend,
+  isArray,
+  sampleSize,
+  sample,
+  random,
+  range,
+  keyBy
+} from 'lodash';
 import { TheThingCell } from './cell';
 import { generateID, toJSONDeep } from '@ygg/shared/infra/data-access';
 
@@ -22,13 +30,16 @@ export class TheThing {
   /** Last modified time */
   modifyAt: number;
 
-  cells: TheThingCell[];
+  cells: { [name: string]: TheThingCell };
 
-  static from(meta: any, cells: TheThingCell[] = []): TheThing {
+  static from(
+    meta: any,
+    cells: TheThingCell[] = []
+  ): TheThing {
     const theThing = new TheThing();
     theThing.name = meta.name;
     theThing.types = meta.types;
-    theThing.cells = cells;
+    theThing.cells = keyBy(cells, cell => cell.name);
     return theThing;
   }
 
@@ -69,10 +80,29 @@ export class TheThing {
       ],
       3
     );
-    if (isArray(options.cells)) {
+    if (options.cells) {
       thing.cells = options.cells;
     } else {
-      thing.cells = range(random(2,6)).map(() => TheThingCell.forge());
+      thing.cells = keyBy(
+        sampleSize(
+          [
+            [
+              '身高',
+              '體重',
+              '性別',
+              '血型',
+              '售價',
+              '棲息地',
+              '主食',
+              '喜歡',
+              '天敵',
+              '討厭'
+            ]
+          ],
+          random(3, 6)
+        ).map(name => TheThingCell.forge({ name })),
+        cell => cell.name
+      );
     }
     return thing;
   }
@@ -83,7 +113,7 @@ export class TheThing {
     this.createAt = new Date().valueOf();
     this.modifyAt = this.createAt;
     this.types = [];
-    this.cells = [];
+    this.cells = {};
   }
 
   fromJSON(data: any): this {

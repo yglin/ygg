@@ -8,6 +8,9 @@
       <div *ngSwitchCase="'longtext'">
         <pre>{{ cell.value }}</pre>
       </div>
+      <div *ngSwitchCase="'number'">
+        <h5>{{ cell.value }}</h5>
+      </div>
       <div *ngSwitchDefault>
         <h3>未支援的資料型態：{{ cell.type }}</h3>
         {{ cell.value | json }}

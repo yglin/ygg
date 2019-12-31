@@ -1,4 +1,4 @@
-import { extend, sample, keys } from 'lodash';
+import { extend, sample, random, keys } from 'lodash';
 
 interface TheThingCellType {
   id: string;
@@ -50,6 +50,13 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
         '性侵沒抓到就合法'
       ]);
     }
+  },
+  number: {
+    id: 'number',
+    label: '數字',
+    forge: (options: any = {}) => {
+      return random(0, 1000);
+    }
   }
 };
 
@@ -60,24 +67,34 @@ export class TheThingCell {
 
   static forge(options: any = {}): TheThingCell {
     const cell = new TheThingCell();
-    cell.name = sample([
-      '身高',
-      '體重',
-      '性別',
-      '血型',
-      '售價',
-      '棲息地',
-      '主食',
-      '喜歡',
-      '天敵',
-      '討厭'
-    ]);
+    if (options.name) {
+      cell.name = options.name;
+    } else {
+      cell.name = sample([
+        '身高',
+        '體重',
+        '性別',
+        '血型',
+        '售價',
+        '棲息地',
+        '主食',
+        '喜歡',
+        '天敵',
+        '討厭'
+      ]);
+    }
+
     if (options.type) {
       cell.type = options.type;
     } else {
       cell.type = sample(keys(TheThingCellTypes));
     }
-    cell.value = TheThingCellTypes[cell.type].forge();
+
+    if (options.value) {
+      cell.value = options.value;
+    } else {
+      cell.value = TheThingCellTypes[cell.type].forge();
+    }
     return cell;
   }
 

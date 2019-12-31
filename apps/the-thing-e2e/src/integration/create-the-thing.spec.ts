@@ -1,4 +1,4 @@
-import { last } from 'lodash';
+import { last, values } from 'lodash';
 import { TheThingCell, TheThing } from '@ygg/the-thing/core';
 import { login, MockDatabase } from '@ygg/shared/test/cypress';
 
@@ -14,6 +14,12 @@ function setValueLongtext(value: string) {
     .type(value);
 }
 
+function setValueNumber(value: number) {
+  cy.get('.last-cell input')
+    .clear()
+    .type(value.toString());
+}
+
 function addCell(cell: TheThingCell) {
   cy.get('.add-cell .name input')
     .clear()
@@ -27,6 +33,9 @@ function addCell(cell: TheThingCell) {
     case 'longtext':
       setValueLongtext(cell.value);
       break;
+    case 'number':
+      setValueNumber(cell.value);
+      break;
     default:
       break;
   }
@@ -38,6 +47,10 @@ function expectCellText(cell: TheThingCell) {
 
 const expectCelllongtext = expectCellText;
 
+function expectCellNumber(cell: TheThingCell) {
+  cy.get(`.cell[cell-name="${cell.name}"]`).contains(cell.value.toString());
+}
+
 function expectCell(cell: TheThingCell) {
   switch (cell.type) {
     case 'text':
@@ -48,6 +61,10 @@ function expectCell(cell: TheThingCell) {
       expectCelllongtext(cell);
       break;
 
+    case 'number':
+      expectCellNumber(cell);
+      break;
+
     default:
       break;
   }
@@ -56,14 +73,22 @@ function expectCell(cell: TheThingCell) {
 describe('Create a new the-thing', () => {
   const mockDatabase = new MockDatabase();
   const theThing: TheThing = TheThing.forge({
-    cells: [
-      TheThingCell.forge({ type: 'text' }),
-      TheThingCell.forge({ type: 'longtext' })
-    ]
+    cells: {
+      綽號: TheThingCell.forge({ name: '綽號', type: 'text' }),
+      興趣: TheThingCell.forge({ name: '興趣', type: 'longtext' }),
+      售價: TheThingCell.forge({ name: '售價', type: 'number' })
+    }
   });
 
   before(function() {
     login();
+  });
+
+  after(function() {
+    cy.get('@newTheThingId').then(id => {
+      // clear data
+      mockDatabase.delete(`${TheThing.collection}/${id}`);
+    });
   });
 
   it('Create a new the-thing, confirm data consistency', () => {
@@ -84,7 +109,7 @@ describe('Create a new the-thing', () => {
       .type(theThing.name);
 
     // Add cells
-    cy.wrap(theThing.cells).each((cell: any) => addCell(cell));
+    cy.wrap(values(theThing.cells)).each((cell: any) => addCell(cell));
 
     // Submit
     cy.get('button.submit').click();
@@ -96,22 +121,20 @@ describe('Create a new the-thing', () => {
     );
     cy.location('pathname').then((pathname: any) => {
       const id = last((pathname as string).split('/'));
+      cy.wrap(id).as('newTheThingId');
+    });
 
-      // Expect types
-      cy.wrap(theThing.types).each((type: string) => {
-        cy.get('.types').contains(type);
-      });
+    // Expect types
+    cy.wrap(theThing.types).each((type: string) => {
+      cy.get('.types').contains(type);
+    });
 
-      // Expect name
-      cy.get('.name').contains(theThing.name);
+    // Expect name
+    cy.get('.name').contains(theThing.name);
 
-      // Expect cells
-      cy.wrap(theThing.cells).each((cell: any) => {
-        expectCell(cell);
-      });
-
-      // clear data
-      mockDatabase.delete(`${theThing.collection}/${id}`);
+    // Expect cells
+    cy.wrap(values(theThing.cells)).each((cell: any) => {
+      expectCell(cell);
     });
   });
 });

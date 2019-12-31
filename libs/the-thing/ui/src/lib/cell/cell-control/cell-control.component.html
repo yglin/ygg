@@ -1,4 +1,8 @@
-<div class="the-thing-cell-control" [formGroup]="formGroup" *ngIf="cell && formGroup">
+<div
+  class="the-thing-cell-control"
+  [formGroup]="formGroup"
+  *ngIf="cell && formGroup"
+>
   <div [ngSwitch]="cell.type">
     <div *ngSwitchCase="'text'">
       <mat-form-field>
@@ -21,6 +25,12 @@
           cdkAutosizeMaxRows="10"
         ></textarea>
       </mat-form-field>
+    </div>
+    <div *ngSwitchCase="'number'">
+      <ygg-number-slider
+        [label]="cell.name"
+        [formControlName]="cell.name"
+      ></ygg-number-slider>
     </div>
     <div *ngSwitchDefault>
       <h3>未支援的資料型態：{{ cell.type }}</h3>

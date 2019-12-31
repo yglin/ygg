@@ -7,13 +7,13 @@
   </div>
   <br />
   <div
-    *ngFor="let cell of theThing.cells"
+    *ngFor="let cellItem of theThing.cells | keyvalue"
     class="cell"
-    [attr.cell-name]="cell.name"
+    [attr.cell-name]="cellItem.value.name"
   >
     <mat-card>
       <mat-card-content>
-        <the-thing-cell-view [cell]="cell"></the-thing-cell-view>
+        <the-thing-cell-view [cell]="cellItem.value"></the-thing-cell-view>
       </mat-card-content>
     </mat-card>
   </div>
