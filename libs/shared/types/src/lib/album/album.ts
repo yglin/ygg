@@ -8,6 +8,7 @@ export class Album implements SerializableJSON {
   cover: Image;
   photos: Image[];
 
+  // TODO: Deprecated
   static fromAlbum(album: Album): Album {
     return new Album().fromJSON(album.toJSON());
   }
@@ -31,6 +32,10 @@ export class Album implements SerializableJSON {
   clear() {
     this.cover = new Image();
     this.photos = [];
+  }
+
+  clone(): Album {
+    return new Album().fromJSON(this.toJSON());
   }
 
   fromJSON(data: any): this {

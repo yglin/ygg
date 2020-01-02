@@ -11,6 +11,9 @@
       <div *ngSwitchCase="'number'">
         <h5>{{ cell.value }}</h5>
       </div>
+      <div *ngSwitchCase="'album'">
+        <ygg-album-view [album]="cell.value"></ygg-album-view>
+      </div>
       <div *ngSwitchDefault>
         <h3>未支援的資料型態：{{ cell.type }}</h3>
         {{ cell.value | json }}

@@ -5,7 +5,9 @@ import {
   sample,
   random,
   range,
-  keyBy
+  keyBy,
+  isEmpty,
+  mapValues
 } from 'lodash';
 import { TheThingCell } from './cell';
 import { generateID, toJSONDeep } from '@ygg/shared/infra/data-access';
@@ -32,10 +34,7 @@ export class TheThing {
 
   cells: { [name: string]: TheThingCell };
 
-  static from(
-    meta: any,
-    cells: TheThingCell[] = []
-  ): TheThing {
+  static from(meta: any, cells: TheThingCell[] = []): TheThing {
     const theThing = new TheThing();
     theThing.name = meta.name;
     theThing.types = meta.types;
@@ -80,24 +79,23 @@ export class TheThing {
       ],
       3
     );
+
     if (options.cells) {
       thing.cells = options.cells;
     } else {
       thing.cells = keyBy(
         sampleSize(
           [
-            [
-              '身高',
-              '體重',
-              '性別',
-              '血型',
-              '售價',
-              '棲息地',
-              '主食',
-              '喜歡',
-              '天敵',
-              '討厭'
-            ]
+            '身高',
+            '體重',
+            '性別',
+            '血型',
+            '售價',
+            '棲息地',
+            '主食',
+            '喜歡',
+            '天敵',
+            '討厭'
           ],
           random(3, 6)
         ).map(name => TheThingCell.forge({ name })),
@@ -118,8 +116,8 @@ export class TheThing {
 
   fromJSON(data: any): this {
     extend(this, data);
-    if (data && isArray(data.cells)) {
-      this.cells = data.cells.map(cellData =>
+    if (data && !isEmpty(data.cells)) {
+      this.cells = mapValues(data.cells, cellData =>
         new TheThingCell().fromJSON(cellData)
       );
     }

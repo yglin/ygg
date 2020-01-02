@@ -67,6 +67,7 @@ export class TheThingCreatorComponent implements OnInit {
     if (confirm(`新增 ${theThing.name} ？`)) {
       try {
         theThing = await this.theThingAccessService.upsert(theThing);
+        alert(`新增 ${theThing.name} 成功`);
         this.router.navigate(['/', 'the-things', theThing.id]);
       } catch (error) {
         alert(`新增失敗，錯誤訊息 ${error.message}`);

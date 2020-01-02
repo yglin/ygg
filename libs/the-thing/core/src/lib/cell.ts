@@ -1,4 +1,5 @@
 import { extend, sample, random, keys } from 'lodash';
+import { Album } from "@ygg/shared/types";
 
 interface TheThingCellType {
   id: string;
@@ -57,6 +58,13 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
     forge: (options: any = {}) => {
       return random(0, 1000);
     }
+  },
+  album: {
+    id: 'album',
+    label: '照片，相簿',
+    forge: (options: any = {}): Album => {
+      return Album.forge();
+    }
   }
 };
 
@@ -100,6 +108,13 @@ export class TheThingCell {
 
   fromJSON(data: any): this {
     extend(this, data);
+    switch (data.type) {
+      case 'album':
+        this.value = new Album().fromJSON(data.value);
+        break;
+      default:
+        break;
+    }
     return this;
   }
 

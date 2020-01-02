@@ -19,7 +19,7 @@ export class AlbumComponent implements OnInit {
       // console.log('Album control changed~!!!');
       // console.log(value);
       if (Album.isAlbum(value)) {
-        this.album = Album.clone(value);
+        this.album = value.clone();
       }
     });
   }

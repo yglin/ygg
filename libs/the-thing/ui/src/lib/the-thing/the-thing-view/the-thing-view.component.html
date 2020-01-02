@@ -6,15 +6,17 @@
     <ygg-tags-view [tags]="theThing.types"></ygg-tags-view>
   </div>
   <br />
-  <div
-    *ngFor="let cellItem of theThing.cells | keyvalue"
-    class="cell"
-    [attr.cell-name]="cellItem.value.name"
-  >
-    <mat-card>
-      <mat-card-content>
-        <the-thing-cell-view [cell]="cellItem.value"></the-thing-cell-view>
-      </mat-card-content>
-    </mat-card>
+  <div class="cells">
+    <div
+      *ngFor="let cellItem of theThing.cells | keyvalue"
+      class="cell"
+      [attr.cell-name]="cellItem.value.name"
+    >
+      <mat-card>
+        <mat-card-content>
+          <the-thing-cell-view [cell]="cellItem.value"></the-thing-cell-view>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
 </div>

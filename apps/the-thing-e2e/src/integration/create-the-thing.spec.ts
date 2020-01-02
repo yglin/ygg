@@ -9,7 +9,8 @@ describe('Create a new the-thing', () => {
     cells: {
       綽號: TheThingCell.forge({ name: '綽號', type: 'text' }),
       興趣: TheThingCell.forge({ name: '興趣', type: 'longtext' }),
-      售價: TheThingCell.forge({ name: '售價', type: 'number' })
+      售價: TheThingCell.forge({ name: '售價', type: 'number' }),
+      照片: TheThingCell.forge({ name: '照片', type: 'album' })
     }
   });
 
@@ -18,7 +19,7 @@ describe('Create a new the-thing', () => {
   });
 
   after(function() {
-    cy.get('@newTheThingId').then(id => {
+    cy.get('@newTheThingId', {timeout: 20000}).then(id => {
       // clear data
       mockDatabase.delete(`${TheThing.collection}/${id}`);
     });
@@ -44,6 +45,5 @@ describe('Create a new the-thing', () => {
 
     const theThingViewPO = new TheThingViewPageObjectCypress();
     theThingViewPO.expectValue(theThing);
-
   });
 });

@@ -1,32 +1,29 @@
 import { values } from "lodash";
 import { TheThing, TheThingCell } from "@ygg/the-thing/core";
+import { TheThingViewPageObject } from "@ygg/the-thing/ui";
+import { AlbumViewPageObjectCypress } from "../cell-types";
 
-export class TheThingViewPageObjectCypress {
+export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
 
-  expectCellText(cell: TheThingCell) {
-    cy.get(`.cell[cell-name="${cell.name}"]`).contains(cell.value);
-  }
-  
-  expectCelllongtext = this.expectCellText;
-  
-  expectCellNumber(cell: TheThingCell) {
-    cy.get(`.cell[cell-name="${cell.name}"]`).contains(cell.value.toString());
-  }
-  
   expectCell(cell: TheThingCell) {
     switch (cell.type) {
       case 'text':
-        this.expectCellText(cell);
+        cy.get(this.getSelectorForCell(cell)).contains(cell.value);
         break;
   
       case 'longtext':
-        this.expectCelllongtext(cell);
+        cy.get(this.getSelectorForCell(cell)).contains(cell.value);
         break;
   
       case 'number':
-        this.expectCellNumber(cell);
+        cy.get(this.getSelectorForCell(cell)).contains(cell.value.toString());
         break;
-  
+
+      case 'album':
+        const albumViewPO = new AlbumViewPageObjectCypress(this.getSelectorForCell(cell));
+        albumViewPO.expectValue(cell.value);
+        break;
+
       default:
         break;
     }

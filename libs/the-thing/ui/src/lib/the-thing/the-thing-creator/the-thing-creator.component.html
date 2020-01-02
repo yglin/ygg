@@ -67,12 +67,14 @@
             </div>
           </div>
         </div>
-        <div *ngFor="let cell of cells; let isLast = last;">
-          <the-thing-cell-control
-            [cell]="cell"
-            [formGroup]="cellsFormGroup"
-            [ngClass]="{'last-cell': isLast}"
-          ></the-thing-cell-control>
+        <div class="cells">
+          <div *ngFor="let cell of cells; let isLast = last">
+            <the-thing-cell-control
+              [cell]="cell"
+              [formGroup]="cellsFormGroup"
+              [ngClass]="{ 'last-cell': isLast }"
+            ></the-thing-cell-control>
+          </div>
         </div></div
     ></ygg-action-bar-layout>
   </form>

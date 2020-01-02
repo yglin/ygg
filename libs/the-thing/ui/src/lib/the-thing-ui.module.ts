@@ -10,6 +10,7 @@ import { CellViewComponent } from './cell/cell-view/cell-view.component';
 import { TheThingCreatorComponent, TheThingViewComponent } from './the-thing';
 import { TagsUiModule } from "@ygg/tags/ui";
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
+import { SharedTypesModule } from '@ygg/shared/types';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
     ReactiveFormsModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
+    SharedTypesModule,
     TagsUiModule
   ],
   declarations: [

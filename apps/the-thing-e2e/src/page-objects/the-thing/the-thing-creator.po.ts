@@ -1,7 +1,9 @@
 import { values } from 'lodash';
 import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import { TheThingCreatorPageObject } from "@ygg/the-thing/ui";
+import { AlbumControlPageObjectCypress } from "../cell-types";
 
-export class TheThingCreatorPageObjectCypress {
+export class TheThingCreatorPageObjectCypress extends TheThingCreatorPageObject {
   setValueText(value: string) {
     cy.get('.last-cell input')
       .clear({ force: true })
@@ -22,7 +24,7 @@ export class TheThingCreatorPageObjectCypress {
 
   addCell(cell: TheThingCell) {
     cy.get('.add-cell .name input')
-      .clear()
+      .clear({force: true})
       .type(cell.name);
     cy.get('.add-cell .types select').select(cell.type);
     cy.get('.add-cell button').click({ force: true });
@@ -36,6 +38,10 @@ export class TheThingCreatorPageObjectCypress {
       case 'number':
         this.setValueNumber(cell.value);
         break;
+      case 'album': 
+        const albumControlPO = new AlbumControlPageObjectCypress(this.getSelector('lastCellControl'));
+        albumControlPO.setValue(cell.value);
+        break;
       default:
         break;
     }
@@ -45,14 +51,14 @@ export class TheThingCreatorPageObjectCypress {
     // Choose type tags of the-thing
     cy.wrap(theThing.types).each((type: string) => {
       cy.get('.meta .types input')
-        .clear()
+        .clear({force: true})
         .type(type);
-      cy.get('.types button.add').click();
+      cy.get('.types button.add').click({force: true});
     });
 
     // Input name of the thing
     cy.get('.meta .name input')
-      .clear()
+      .clear({force: true})
       .type(theThing.name);
 
     // Add cells

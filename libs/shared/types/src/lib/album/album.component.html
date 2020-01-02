@@ -14,6 +14,7 @@
         class="photo"
         (click)="setCover(idx)"
         [id]="'photo-' + idx"
+        [attr.photo-index]="idx"
       >
         <div class="img-wrapper mat-elevation-z6">
           <img [src]="photo.src" />

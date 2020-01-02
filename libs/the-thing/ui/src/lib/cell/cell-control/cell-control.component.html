@@ -32,6 +32,12 @@
         [formControlName]="cell.name"
       ></ygg-number-slider>
     </div>
+    <div *ngSwitchCase="'album'">
+      <ygg-album-control  
+        [label]="cell.name"
+        [formControlName]="cell.name"
+      ></ygg-album-control>
+    </div>
     <div *ngSwitchDefault>
       <h3>未支援的資料型態：{{ cell.type }}</h3>
     </div>

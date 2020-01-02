@@ -37,7 +37,7 @@ export class AlbumComponent implements OnInit, OnDestroy, OnChanges {
   ngOnInit() {
     this.readonly = (this.readonly !== undefined && this.readonly !== false);
     if (this.album && this.readonly) {
-      this.album = Album.clone(this.album);
+      this.album = this.album.clone();
     }
   }
 
@@ -46,7 +46,7 @@ export class AlbumComponent implements OnInit, OnDestroy, OnChanges {
     if (changes.album.currentValue) {
       const newAlbum: Album = changes.album.currentValue;
       if (this.readonly) {
-        this.album = Album.clone(newAlbum);
+        this.album = newAlbum.clone();
       } else {
         this.album = newAlbum;
       }
