@@ -10,7 +10,8 @@ describe('Create a new the-thing', () => {
       綽號: TheThingCell.forge({ name: '綽號', type: 'text' }),
       興趣: TheThingCell.forge({ name: '興趣', type: 'longtext' }),
       售價: TheThingCell.forge({ name: '售價', type: 'number' }),
-      照片: TheThingCell.forge({ name: '照片', type: 'album' })
+      照片: TheThingCell.forge({ name: '照片', type: 'album' }),
+      地址: TheThingCell.forge({ name: '地址', type: 'address' })
     }
   });
 

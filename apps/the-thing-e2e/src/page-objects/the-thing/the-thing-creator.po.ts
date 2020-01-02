@@ -1,7 +1,7 @@
 import { values } from 'lodash';
 import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 import { TheThingCreatorPageObject } from "@ygg/the-thing/ui";
-import { AlbumControlPageObjectCypress } from "../cell-types";
+import { AlbumControlPageObjectCypress, AddressControlPageObjectCypress } from "../cell-types";
 
 export class TheThingCreatorPageObjectCypress extends TheThingCreatorPageObject {
   setValueText(value: string) {
@@ -41,6 +41,10 @@ export class TheThingCreatorPageObjectCypress extends TheThingCreatorPageObject 
       case 'album': 
         const albumControlPO = new AlbumControlPageObjectCypress(this.getSelector('lastCellControl'));
         albumControlPO.setValue(cell.value);
+        break;
+      case 'address':
+        const addressControlPO = new AddressControlPageObjectCypress(this.getSelector('lastCellControl'));
+        addressControlPO.setValue(cell.value);
         break;
       default:
         break;

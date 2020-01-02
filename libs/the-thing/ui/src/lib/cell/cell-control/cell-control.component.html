@@ -38,6 +38,12 @@
         [formControlName]="cell.name"
       ></ygg-album-control>
     </div>
+    <div *ngSwitchCase="'address'">
+      <ygg-address-control
+        [label]="cell.name"
+        [formControlName]="cell.name"
+      ></ygg-address-control>
+    </div>
     <div *ngSwitchDefault>
       <h3>未支援的資料型態：{{ cell.type }}</h3>
     </div>
