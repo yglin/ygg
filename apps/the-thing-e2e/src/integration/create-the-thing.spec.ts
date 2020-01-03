@@ -1,7 +1,10 @@
 import { last, values } from 'lodash';
 import { TheThingCell, TheThing } from '@ygg/the-thing/core';
 import { login, MockDatabase } from '@ygg/shared/test/cypress';
-import { TheThingCreatorPageObjectCypress, TheThingViewPageObjectCypress } from "../page-objects";
+import {
+  TheThingCreatorPageObjectCypress,
+  TheThingViewPageObjectCypress
+} from '../page-objects';
 
 describe('Create a new the-thing', () => {
   const mockDatabase = new MockDatabase();
@@ -14,15 +17,33 @@ describe('Create a new the-thing', () => {
       地址: TheThingCell.forge({ name: '地址', type: 'address' })
     }
   });
+  const testTheThingIds: string[] = [];
+
+  // Wait for navigating to view page
+  function waitForViewPage() {
+    cy.location({ timeout: 10000 }).should(
+      'not.match',
+      /.*\/the-things\/create/
+    );
+    cy.location('pathname').then((pathname: any) => {
+      const id = last((pathname as string).split('/'));
+      cy.get('@testTheThingIds').then((ids: any) => {
+        (ids as string[]).push(id);
+      });
+    });
+  }
 
   before(function() {
+    cy.wrap(testTheThingIds).as('testTheThingIds');
     login();
   });
 
   after(function() {
-    cy.get('@newTheThingId', {timeout: 20000}).then(id => {
+    cy.get('@testTheThingIds', { timeout: 20000 }).then((ids: any) => {
       // clear data
-      mockDatabase.delete(`${TheThing.collection}/${id}`);
+      for (const id of ids as string[]) {
+        mockDatabase.delete(`${TheThing.collection}/${id}`);
+      }
     });
   });
 
@@ -33,18 +54,17 @@ describe('Create a new the-thing', () => {
     const theThingCreatorPO = new TheThingCreatorPageObjectCypress();
     theThingCreatorPO.setValue(theThing);
     theThingCreatorPO.submit();
-
-    // Wait for navigating to view page
-    cy.location({ timeout: 10000 }).should(
-      'not.match',
-      /.*\/the-things\/create/
-    );
-    cy.location('pathname').then((pathname: any) => {
-      const id = last((pathname as string).split('/'));
-      cy.wrap(id).as('newTheThingId');
-    });
+    waitForViewPage();
 
     const theThingViewPO = new TheThingViewPageObjectCypress();
     theThingViewPO.expectValue(theThing);
   });
+
+  // it('Create a relation, link to another the-thing', () => {
+
+  // });
+
+  // it('Create a relation, link to another the-thing, which is also created on the fly', () => {
+
+  // });
 });
