@@ -1,12 +1,17 @@
 import { PageObject } from "@ygg/shared/test/page-object";
-import { TheThingCell } from '@ygg/the-thing/core';
+import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 
 export class TheThingViewPageObject extends PageObject {
   selectors = {
     main: '.the-thing-view',
+    relationList: '.relation-list'
   }
 
   getSelectorForCell(cell: TheThingCell): string {
     return `${this.getSelector()} .cells [cell-name="${cell.name}"]`;
+  }
+
+  getSelectorForRelation(relationName: string, objectThing: TheThing): string {
+    return `${this.getSelector('relationList')} [relation-name="${relationName}"] [the-thing-id="${objectThing.id}"]`;
   }
 }

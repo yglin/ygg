@@ -7,10 +7,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { CellViewComponent } from './cell/cell-view/cell-view.component';
-import { TheThingCreatorComponent, TheThingViewComponent } from './the-thing';
-import { TagsUiModule } from "@ygg/tags/ui";
+import {
+  TheThingCreatorComponent,
+  TheThingViewComponent,
+  TheThingFinderComponent,
+  TheThingListComponent
+} from './the-thing';
+import { TagsUiModule } from '@ygg/tags/ui';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { SharedTypesModule } from '@ygg/shared/types';
+import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-thing-thumbnail.component';
 
 @NgModule({
   imports: [
@@ -28,7 +34,10 @@ import { SharedTypesModule } from '@ygg/shared/types';
     CellControlComponent,
     CellViewComponent,
     TheThingCreatorComponent,
-    TheThingViewComponent
+    TheThingViewComponent,
+    TheThingFinderComponent,
+    TheThingListComponent,
+    TheThingThumbnailComponent
   ],
   exports: [
     CellListComponent,
@@ -36,7 +45,9 @@ import { SharedTypesModule } from '@ygg/shared/types';
     CellControlComponent,
     CellViewComponent,
     TheThingCreatorComponent,
-    TheThingViewComponent
-  ]
+    TheThingViewComponent,
+    TheThingFinderComponent
+  ],
+  entryComponents: [TheThingFinderComponent]
 })
 export class TheThingUiModule {}

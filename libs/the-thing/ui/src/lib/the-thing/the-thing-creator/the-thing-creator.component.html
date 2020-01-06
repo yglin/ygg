@@ -76,6 +76,62 @@
               [ngClass]="{ 'last-cell': isLast }"
             ></the-thing-cell-control>
           </div>
+        </div>
+        <div class="relations">
+          <ygg-title-divider>關聯其他東東</ygg-title-divider>
+          <div class="add-relation">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+              <div>
+                <mat-form-field>
+                  <input
+                    type="text"
+                    matInput
+                    [formControl]="formControlNewRelationName"
+                    class="relation-name"
+                  />
+                </mat-form-field>
+                <!-- <mat-autocomplete>
+        <mat-option *ngFor="let name of relationNames" [value]="name">
+        {{ name }}
+        </mat-option>
+        </mat-autocomplete> -->
+              </div>
+              <div>
+                <div *ngIf="newRelationObject">
+                  <the-thing-thumbnail
+                    [theThing]="newRelationObject"
+                  ></the-thing-thumbnail>
+                </div>
+                <div *ngIf="!newRelationObject">
+                  <button
+                    type="button"
+                    mat-mini-fab
+                    [disabled]="isNewRelationNameEmpty"
+                  >
+                    <mat-icon>post_add</mat-icon>
+                  </button>
+                  <button
+                    type="button"
+                    mat-mini-fab
+                    class="the-thing-finder"
+                    (click)="openTheThingFinder()"
+                    [disabled]="isNewRelationNameEmpty"
+                  >
+                    <mat-icon>search</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="relation-list">
+            <div
+              *ngFor="let relation of theThing.relations | keyvalue"
+              [attr.relation-name]="relation.key"
+            >
+              <h3>{{ relation.key }}</h3>
+              <the-thing-list [ids]="relation.value"></the-thing-list>
+            </div>
+          </div>
         </div></div
     ></ygg-action-bar-layout>
   </form>

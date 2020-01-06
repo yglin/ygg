@@ -20,6 +20,7 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
         this.theThing = this.route.snapshot.data.theThing;
       }
     }
+    console.log(this.theThing);
   }
 
   ngOnDestroy() {

@@ -1,0 +1,17 @@
+<div class="the-thing-list">
+  <div
+    fxLayout="row wrap"
+    fxLayoutAlign="space-around center"
+    fxLayoutGap="20px"
+  >
+    <div
+      *ngFor="let theThing of theThings"
+      class="the-thing"
+      [ngClass]="{ selected: isSelected(theThing) }"
+      [attr.the-thing-id]="theThing.id"
+      (click)="select(theThing)"
+    >
+      <the-thing-thumbnail [theThing]="theThing"></the-thing-thumbnail>
+    </div>
+  </div>
+</div>

@@ -7,7 +7,8 @@ import {
   range,
   keyBy,
   isEmpty,
-  mapValues
+  mapValues,
+  uniq
 } from 'lodash';
 import { TheThingCell } from './cell';
 import { generateID, toJSONDeep } from '@ygg/shared/infra/data-access';
@@ -32,7 +33,14 @@ export class TheThing {
   /** Last modified time */
   modifyAt: number;
 
+  /** TheThingCells, define its own properties, attributes */
   cells: { [name: string]: TheThingCell };
+
+  /**
+   * External relations, linked to other the-things.
+   * Store mappings from relation name to ids of objects
+   **/
+  relations: { [name: string]: string[] };
 
   static from(meta: any, cells: TheThingCell[] = []): TheThing {
     const theThing = new TheThing();
@@ -112,6 +120,15 @@ export class TheThing {
     this.modifyAt = this.createAt;
     this.types = [];
     this.cells = {};
+    this.relations = {};
+  }
+
+  addRelations(relationName: string, objectThings: TheThing[]) {
+    this.relations[relationName] = uniq(
+      (this.relations[relationName] || []).concat(
+        objectThings.map(thing => thing.id)
+      )
+    );
   }
 
   fromJSON(data: any): this {

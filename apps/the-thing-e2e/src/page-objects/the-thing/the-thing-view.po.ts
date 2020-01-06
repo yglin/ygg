@@ -3,6 +3,13 @@ import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 import { TheThingViewPageObject } from '@ygg/the-thing/ui';
 import { AlbumViewPageObjectCypress, AddressViewPageObjectCypress } from '../cell-types';
 
+class Relation {
+  name: string;
+  description: string;
+  subjectId: string;
+  objectId: string;  
+}
+
 export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
   expectCell(cell: TheThingCell) {
     switch (cell.type) {
@@ -50,5 +57,9 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
     cy.wrap(values(theThing.cells)).each((cell: any) => {
       this.expectCell(cell);
     });
+  }
+
+  expectRelation(relationName: string, objectThing: TheThing) {
+    cy.get(this.getSelectorForRelation(relationName, objectThing)).contains(objectThing.name);
   }
 }

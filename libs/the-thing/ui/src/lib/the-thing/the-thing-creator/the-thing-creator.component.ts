@@ -1,10 +1,13 @@
-import { find } from 'lodash';
-import { Component, OnInit } from '@angular/core';
+import { find, isEmpty, extend, keyBy } from 'lodash';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TheThing, TheThingCell, TheThingCellTypes } from '@ygg/the-thing/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { Tags } from '@ygg/tags/core';
+import { YggDialogService } from '@ygg/shared/ui/widgets';
+import { TheThingFinderComponent } from '../the-thing-finder/the-thing-finder.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'the-thing-the-thing-creator',
@@ -12,17 +15,22 @@ import { Tags } from '@ygg/tags/core';
   styleUrls: ['./the-thing-creator.component.css']
 })
 export class TheThingCreatorComponent implements OnInit {
+  @Input() theThing: TheThing;
   formGroup: FormGroup;
   cellsFormGroup: FormGroup;
   formControlNewCellType: FormControl;
   cellTypes = TheThingCellTypes;
   formControlNewCellName: FormControl;
   cells: TheThingCell[] = [];
+  formControlNewRelationName: FormControl;
+  isNewRelationNameEmpty = true;
+  subscriptions: Subscription[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private theThingAccessService: TheThingAccessService,
-    private router: Router
+    private router: Router,
+    private dialog: YggDialogService
   ) {
     this.formGroup = formBuilder.group({
       types: [],
@@ -31,9 +39,27 @@ export class TheThingCreatorComponent implements OnInit {
     this.cellsFormGroup = formBuilder.group({});
     this.formControlNewCellType = new FormControl();
     this.formControlNewCellName = new FormControl();
+    this.formControlNewRelationName = new FormControl();
+    this.subscriptions.push(
+      this.formControlNewRelationName.valueChanges.subscribe(value => {
+        this.isNewRelationNameEmpty = !value;
+      })
+    );
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (!this.theThing) {
+      this.theThing = new TheThing();
+    }
+  }
+
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
 
   addCell() {
     const newCellName = this.formControlNewCellName.value;
@@ -58,17 +84,29 @@ export class TheThingCreatorComponent implements OnInit {
     }
   }
 
+  openTheThingFinder() {
+    const dialogRef = this.dialog.open(TheThingFinderComponent, {
+      title: '從既有的物件中選取'
+    });
+    dialogRef.afterClosed().subscribe((theThings: TheThing[]) => {
+      if (!isEmpty(theThings)) {
+        this.theThing.addRelations(this.formControlNewRelationName.value, theThings);
+      }
+    });
+  }
+
   async onSubmit() {
     const meta = {
       name: this.formGroup.get('name').value,
       types: (this.formGroup.get('types').value as Tags).toIDArray()
     };
-    let theThing = TheThing.from(meta, this.cells);
-    if (confirm(`新增 ${theThing.name} ？`)) {
+    extend(this.theThing, meta);
+    this.theThing.cells = keyBy(this.cells, cell => cell.name);
+    if (confirm(`新增 ${this.theThing.name} ？`)) {
       try {
-        theThing = await this.theThingAccessService.upsert(theThing);
-        alert(`新增 ${theThing.name} 成功`);
-        this.router.navigate(['/', 'the-things', theThing.id]);
+        this.theThing = await this.theThingAccessService.upsert(this.theThing);
+        alert(`新增 ${this.theThing.name} 成功`);
+        this.router.navigate(['/', 'the-things', this.theThing.id]);
       } catch (error) {
         alert(`新增失敗，錯誤訊息 ${error.message}`);
       }

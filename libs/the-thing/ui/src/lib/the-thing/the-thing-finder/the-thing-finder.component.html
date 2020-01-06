@@ -1,0 +1,55 @@
+<div class="the-thing-finder">
+  <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="20px">
+    <div class="types-filter">
+      <ygg-chips-control
+        label="增加類型標籤"
+        [formControl]="formControlTypesFilter"
+      ></ygg-chips-control>
+    </div>
+    <div class="search-name">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="搜尋名稱"
+          [formControl]="formControlSearchName"
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+  <br />
+  <div class="the-thing-list">
+    <the-thing-list
+      [theThings]="filteredTheThings"
+      (selectChange)="onSelect($event)"
+    ></the-thing-list>
+  </div>
+  <!-- <div class="the-thing-list">
+      <div
+        fxLayout="row wrap"
+        fxLayoutAlign="space-around center"
+        fxLayoutGap="20px"
+      >
+        <div
+          *ngFor="let theThing of filteredTheThings"
+          class="the-thing"
+          [ngClass]="{ selected: isSelected(theThing) }"
+          [attr.the-thing-id]="theThing.id"
+          (click)="select(theThing)"
+        >
+          <the-thing-thumbnail [theThing]="theThing"></the-thing-thumbnail>
+        </div>
+      </div>
+    </div> -->
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
+    <button
+      type="button"
+      class="submit"
+      mat-fab
+      [disabled]="!selection || selection.length <= 0"
+      (click)="onSubmit()"
+    >
+      <mat-icon>check</mat-icon>
+    </button>
+  </div>
+</div>

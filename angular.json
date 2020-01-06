@@ -1517,7 +1517,8 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
-              "apps/the-thing/src/styles.css"
+              "apps/the-thing/src/styles.css",
+              "libs/shared/ui/widgets/src/shared-ui-widgets.module.css"
             ],
             "scripts": []
           },

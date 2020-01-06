@@ -1,0 +1,9 @@
+.the-thing {
+  border-radius: 5%;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.the-thing.selected {
+  background-color: darkseagreen;
+}

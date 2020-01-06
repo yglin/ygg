@@ -18,5 +18,15 @@
         </mat-card-content>
       </mat-card>
     </div>
+    <br>
+    <div class="relation-list">
+      <div
+        *ngFor="let relation of theThing.relations | keyvalue"
+        [attr.relation-name]="relation.key"
+      >
+        <h3>{{ relation.key }}</h3>
+        <the-thing-list [ids]="relation.value"></the-thing-list>
+      </div>
+    </div>
   </div>
 </div>
