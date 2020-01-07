@@ -4,13 +4,17 @@ import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 export abstract class TheThingCreatorPageObject extends PageObject {
   selectors = {
     main: '.the-thing-creator',
-    lastCellControl: '.cells .last-cell',
     inputRelationName: '.add-relation input.relation-name',
     buttonFindRelationObject: '.add-relation button.the-thing-finder',
     buttonCreateRelationObject: '.add-relation button.the-thing-create',
     // buttonAddRelation: '.add-relation button.add',
+    cellControls: '.cell-controls',
     relationList: '.relation-list'
   };
+
+  getSelectorForCellControl(cell: TheThingCell): string {
+    return `${this.getSelector('cellControls')} [cell-name="${cell.name}"]`;
+  }
 
   getSelectorForRelation(relationName: string, objectThing: TheThing): string {
     return `${this.getSelector(

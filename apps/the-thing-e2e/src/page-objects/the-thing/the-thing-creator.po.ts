@@ -17,33 +17,33 @@ export class TheThingCreatorPageObjectCypress extends TheThingCreatorPageObject 
     cy.get('.add-cell .name input')
       .clear({ force: true })
       .type(cell.name);
-    cy.get('.add-cell .types select').select(cell.type);
+    cy.get('.add-cell .tags select').select(cell.type);
     cy.get('.add-cell button').click({ force: true });
     switch (cell.type) {
       case 'text':
-        cy.get('.last-cell input')
+        cy.get(`${this.getSelectorForCellControl(cell)} input`)
           .clear({ force: true })
           .type(cell.value);
         break;
       case 'longtext':
-        cy.get('.last-cell textarea')
+        cy.get(`${this.getSelectorForCellControl(cell)} textarea`)
           .clear({ force: true })
           .type(cell.value);
         break;
       case 'number':
-        cy.get('.last-cell input')
+        cy.get(`${this.getSelectorForCellControl(cell)} input`)
           .clear({ force: true })
           .type(cell.value.toString());
         break;
       case 'album':
         const albumControlPO = new AlbumControlPageObjectCypress(
-          this.getSelector('lastCellControl')
+          this.getSelectorForCellControl(cell)
         );
         albumControlPO.setValue(cell.value);
         break;
       case 'address':
         const addressControlPO = new AddressControlPageObjectCypress(
-          this.getSelector('lastCellControl')
+          this.getSelectorForCellControl(cell)
         );
         addressControlPO.setValue(cell.value);
         break;
@@ -57,12 +57,12 @@ export class TheThingCreatorPageObjectCypress extends TheThingCreatorPageObject 
     const chipsControlPO = new ChipsControlPageObjectCypress(
       this.getSelector()
     );
-    chipsControlPO.setValue(theThing.types);
-    // cy.wrap(theThing.types).each((type: string) => {
-    //   cy.get('.meta .types input')
+    chipsControlPO.setValue(theThing.tags.toNameArray());
+    // cy.wrap(theThing.tags).each((type: string) => {
+    //   cy.get('.meta .tags input')
     //     .clear({ force: true })
     //     .type(type);
-    //   cy.get('.types button.add').click({ force: true });
+    //   cy.get('.tags button.add').click({ force: true });
     // });
 
     // Input name of the thing

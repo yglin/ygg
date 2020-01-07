@@ -71,17 +71,17 @@ describe('Create a new the-thing', () => {
   });
 
   it('Create a relation, link to another the-thing', () => {
-    // Stub the-thing "Samwise Gamgee" with type "Hobbit"
+    // Stub the-thing "Samwise Gamgee" with tag "Hobbit"
     // and save it into mock database in advance
     const Sam = TheThing.forge();
     Sam.name = 'Samwise Gamgee';
-    Sam.types.push('Hobbit');
+    Sam.tags.push('Hobbit');
     mockDatabase.insert(`${TheThing.collection}/${Sam.id}`, Sam.toJSON());
-    // Stub another the-thing "Frodo Baggins" with same type "Hobbit"
+    // Stub another the-thing "Frodo Baggins" with same tag "Hobbit"
     // We are going to use "Frodo Baggins" to fill in creator form,
     // and find/select "Samwise Gamgee" to add the realtion "dirty thief covet my preasuuuuuress"
     const Frodo = TheThing.forge();
-    Frodo.types.push('Hobbit');
+    Frodo.tags.push('Hobbit');
     Frodo.name = 'Frodo Baggins';
     const relationName = 'dirty thief covet my preasuuuuuress';
     const theThingCreatorPO = new TheThingCreatorPageObjectCypress();
@@ -99,8 +99,8 @@ describe('Create a new the-thing', () => {
   it('Create a relation, link to another the-thing which is also created on the fly', () => {
     // Stub 2 the-things "Nobita" with type "Loser", and "Doraemon" with type "Savior"
     // The test relation is "Save my sorry ass" from "Nobita" to "Doraemon"
-    const nobita = TheThing.forge({ name: 'Nobita', types: ['loser'] });
-    const doraemon = TheThing.forge({ name: 'Doraemon', types: ['savior'] });
+    const nobita = TheThing.forge({ name: 'Nobita', tags: ['loser'] });
+    const doraemon = TheThing.forge({ name: 'Doraemon', tags: ['savior'] });
     const relationName = 'Save my sorry ass';
 
     // Fill in data of "Nobita"

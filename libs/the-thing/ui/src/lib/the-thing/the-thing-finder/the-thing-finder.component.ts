@@ -33,7 +33,7 @@ export class TheThingFinderComponent implements OnInit, OnDestroy {
             if (isEmpty(filterTypes)) {
               return this.theThingAccessService.list$();
             } else {
-              return this.theThingAccessService.findByTypes$(filterTypes);
+              return this.theThingAccessService.findByTags$(filterTypes);
             }
           })
         ),

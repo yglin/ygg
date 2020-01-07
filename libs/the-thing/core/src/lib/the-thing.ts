@@ -10,6 +10,7 @@ import {
   mapValues,
   uniq
 } from 'lodash';
+import { Tags } from '@ygg/tags/core';
 import { TheThingCell } from './cell';
 import { generateID, toJSONDeep } from '@ygg/shared/infra/data-access';
 
@@ -25,7 +26,7 @@ export class TheThing {
   name: string;
 
   //** Type tags for query and search */
-  types: string[];
+  tags: Tags;
 
   /** Create time */
   createAt: number;
@@ -41,14 +42,6 @@ export class TheThing {
    * Store mappings from relation name to ids of objects
    **/
   relations: { [name: string]: string[] };
-
-  static from(meta: any, cells: TheThingCell[] = []): TheThing {
-    const theThing = new TheThing();
-    theThing.name = meta.name;
-    theThing.types = meta.types;
-    theThing.cells = keyBy(cells, cell => cell.name);
-    return theThing;
-  }
 
   static forge(options: any = {}): TheThing {
     const thing = new TheThing();
@@ -66,31 +59,7 @@ export class TheThing {
         '肉雞',
         '便便'
       ]);
-    thing.types =
-      options.types ||
-      sampleSize(
-        [
-          'play',
-          'lesson',
-          'travel',
-          'food',
-          'movie',
-          'game',
-          'sport',
-          'gift',
-          'groceries',
-          '鳥鳥',
-          '犬犬',
-          '喵喵',
-          '畜牲',
-          '早上5點就該該叫',
-          '可以配飯吃',
-          '高雄迪士尼',
-          '鏟屎官',
-          '打飯奴'
-        ],
-        3
-      );
+    thing.tags = !!(options.tags) ? new Tags(options.tags) : Tags.forge();
 
     if (options.cells) {
       thing.cells = options.cells;
@@ -123,9 +92,17 @@ export class TheThing {
     this.name = '';
     this.createAt = new Date().valueOf();
     this.modifyAt = this.createAt;
-    this.types = [];
+    this.tags = new Tags();
     this.cells = {};
     this.relations = {};
+  }
+
+  hasCell(cell: TheThingCell): boolean {
+    return cell.name in this.cells;
+  }
+
+  addCell(cell: TheThingCell) {
+    this.cells[cell.name] = cell;
   }
 
   addRelations(relationName: string, objectThings: TheThing[] | string[]) {
@@ -142,10 +119,15 @@ export class TheThing {
 
   fromJSON(data: any): this {
     extend(this, data);
-    if (data && !isEmpty(data.cells)) {
-      this.cells = mapValues(data.cells, cellData =>
-        new TheThingCell().fromJSON(cellData)
-      );
+    if (data) {
+      if (data.tags) {
+        this.tags = Tags.fromJSON(data.tags);
+      }
+      if (!isEmpty(data.cells)) {
+        this.cells = mapValues(data.cells, cellData =>
+          new TheThingCell().fromJSON(cellData)
+        );
+      }
     }
     return this;
   }

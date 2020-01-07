@@ -5,9 +5,9 @@ import { ChipsControlPageObjectCypress } from '@ygg/shared/test/cypress';
 export class TheThingFinderPageObjectCypress extends TheThingFinderPageObject {
   find(theThing: TheThing) {
     const chipsControlPO = new ChipsControlPageObjectCypress(
-      this.getSelector('typesFilter')
+      this.getSelector('tagsFilter')
     );
-    chipsControlPO.setValue(theThing.types);
+    chipsControlPO.setValue(theThing.tags.toNameArray());
     cy.get(this.getSelector('inputSearchName'))
       .clear({ force: true })
       .type(theThing.name);

@@ -48,9 +48,9 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
   }
 
   expectValue(theThing: TheThing) {
-    // Expect types
-    cy.wrap(theThing.types).each((type: string) => {
-      cy.get('.types').contains(type);
+    // Expect tags
+    cy.wrap(theThing.tags.toNameArray()).each((tag: string) => {
+      cy.get('.tags').contains(tag);
     });
 
     // Expect name

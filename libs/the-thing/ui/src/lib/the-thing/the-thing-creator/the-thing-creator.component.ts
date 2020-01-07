@@ -25,7 +25,6 @@ export class TheThingCreatorComponent implements OnInit {
   formControlNewCellType: FormControl;
   cellTypes = TheThingCellTypes;
   formControlNewCellName: FormControl;
-  cells: TheThingCell[] = [];
   formControlNewRelationName: FormControl;
   isNewRelationNameEmpty = true;
   subscriptions: Subscription[] = [];
@@ -38,7 +37,7 @@ export class TheThingCreatorComponent implements OnInit {
     private pageStashService: PageStashService
   ) {
     this.formGroup = formBuilder.group({
-      types: null,
+      tags: null,
       name: '東東'
     });
     this.cellsFormGroup = formBuilder.group({});
@@ -76,11 +75,10 @@ export class TheThingCreatorComponent implements OnInit {
     // console.log(this.theThing);
     this.formGroup.patchValue(this.theThing);
     // console.log(this.formGroup.value);
-    this.cells = [];
     for (const name in this.theThing.cells) {
       if (this.theThing.cells.hasOwnProperty(name)) {
         const cell = this.theThing.cells[name];
-        this.addCell(cell);
+        this.cellsFormGroup.addControl(cell.name, new FormControl(cell.value));
       }
     }
     this.formControlNewCellName.setValue(null);
@@ -106,14 +104,10 @@ export class TheThingCreatorComponent implements OnInit {
         value: null
       });
     }
-    const nameAlreadyExists = !!find(
-      this.cells,
-      _cell => _cell.name === cell.name
-    );
-    if (nameAlreadyExists) {
+    if (this.theThing.hasCell(cell)) {
       alert(`資料欄位 ${cell.name} 已存在了喔`);
     } else {
-      this.cells.push(cell);
+      this.theThing.addCell(cell);
       this.cellsFormGroup.addControl(
         cell.name,
         new FormControl(cell.value)
@@ -136,19 +130,7 @@ export class TheThingCreatorComponent implements OnInit {
   }
 
   updateTheThing() {
-    let types = this.formGroup.get('types').value;
-    if (Tags.isTags(types)) {
-      types = types.toIDArray();
-    } else if(isEmpty(types)) {
-      types = [];
-    }
-    
-    const meta = {
-      name: this.formGroup.get('name').value,
-      types: types
-    };
-    extend(this.theThing, meta);
-    this.theThing.cells = keyBy(this.cells, cell => cell.name);
+    extend(this.theThing, this.formGroup.value);
   }
 
   gotoCreateRelationObject() {

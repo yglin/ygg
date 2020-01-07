@@ -12,8 +12,8 @@
           <ygg-tags-control
             label="這東東是個..."
             taggableType="the-thing"
-            class="types"
-            formControlName="types"
+            class="tags"
+            formControlName="tags"
           ></ygg-tags-control>
           <br />
           <mat-form-field class="name">
@@ -24,7 +24,7 @@
         <div class="add-cell">
           <ygg-title-divider>新增資料欄位</ygg-title-divider>
           <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-            <div class="types">
+            <div class="tags">
               <mat-form-field>
                 <select
                   matNativeControl
@@ -68,12 +68,12 @@
             </div>
           </div>
         </div>
-        <div class="cells">
-          <div *ngFor="let cell of cells; let isLast = last">
+        <div class="cell-controls">
+          <div *ngFor="let cellItem of theThing.cells | keyvalue">
             <the-thing-cell-control
-              [cell]="cell"
+              [cell]="cellItem.value"
               [formGroup]="cellsFormGroup"
-              [ngClass]="{ 'last-cell': isLast }"
+              [attr.cell-name]="cellItem.key"
             ></the-thing-cell-control>
           </div>
         </div>
