@@ -5,7 +5,7 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import {
   TheThingUiModule,
-  TheThingCreatorComponent,
+  TheThingEditorComponent,
   TheThingViewComponent
 } from '@ygg/the-thing/ui';
 
@@ -26,7 +26,7 @@ const routes: Route[] = [
     children: [
       {
         path: 'create',
-        component: TheThingCreatorComponent
+        component: TheThingEditorComponent
       },
       {
         path: ':id',
@@ -46,7 +46,7 @@ const routes: Route[] = [
     HomeComponent
     // CellsComponent,
     // CellEditComponent,
-    // TheThingCreatorComponent,
+    // TheThingEditorComponent,
     // TheThingViewComponent
   ],
   imports: [

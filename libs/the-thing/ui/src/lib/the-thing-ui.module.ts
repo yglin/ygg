@@ -8,7 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { CellViewComponent } from './cell/cell-view/cell-view.component';
 import {
-  TheThingCreatorComponent,
+  TheThingEditorComponent,
   TheThingViewComponent,
   TheThingFinderComponent,
   TheThingListComponent
@@ -33,7 +33,7 @@ import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-
     CellFormComponent,
     CellControlComponent,
     CellViewComponent,
-    TheThingCreatorComponent,
+    TheThingEditorComponent,
     TheThingViewComponent,
     TheThingFinderComponent,
     TheThingListComponent,
@@ -44,7 +44,7 @@ import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-
     CellFormComponent,
     CellControlComponent,
     CellViewComponent,
-    TheThingCreatorComponent,
+    TheThingEditorComponent,
     TheThingViewComponent,
     TheThingFinderComponent
   ],

@@ -1,9 +1,9 @@
 import { PageObject } from '@ygg/shared/test/page-object';
 import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 
-export abstract class TheThingCreatorPageObject extends PageObject {
+export abstract class TheThingEditorPageObject extends PageObject {
   selectors = {
-    main: '.the-thing-creator',
+    main: '.the-thing-editor',
     inputRelationName: '.add-relation input.relation-name',
     buttonFindRelationObject: '.add-relation button.the-thing-finder',
     buttonCreateRelationObject: '.add-relation button.the-thing-create',

@@ -14,11 +14,11 @@ import {
 } from '@ygg/shared/infra/data-access';
 
 @Component({
-  selector: 'the-thing-the-thing-creator',
-  templateUrl: './the-thing-creator.component.html',
-  styleUrls: ['./the-thing-creator.component.css']
+  selector: 'the-thing-the-thing-editor',
+  templateUrl: './the-thing-editor.component.html',
+  styleUrls: ['./the-thing-editor.component.css']
 })
-export class TheThingCreatorComponent implements OnInit {
+export class TheThingEditorComponent implements OnInit {
   @Input() theThing: TheThing;
   formGroup: FormGroup;
   cellsFormGroup: FormGroup;

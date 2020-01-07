@@ -2,13 +2,20 @@ import { last, values } from 'lodash';
 import { TheThingCell, TheThing } from '@ygg/the-thing/core';
 import { login, MockDatabase } from '@ygg/shared/test/cypress';
 import {
-  TheThingCreatorPageObjectCypress,
+  TheThingEditorPageObjectCypress,
   TheThingViewPageObjectCypress
 } from '../page-objects';
 
 describe('Create a new the-thing', () => {
   const mockDatabase = new MockDatabase();
   const testTheThingIds: string[] = [];
+  const forgedCells = {
+    綽號: TheThingCell.forge({ name: '綽號', type: 'text' }),
+    興趣: TheThingCell.forge({ name: '興趣', type: 'longtext' }),
+    售價: TheThingCell.forge({ name: '售價', type: 'number' }),
+    照片: TheThingCell.forge({ name: '照片', type: 'album' }),
+    地址: TheThingCell.forge({ name: '地址', type: 'address' })
+  }
 
   // Wait for navigating to view page
   function waitForViewPage(
@@ -53,17 +60,11 @@ describe('Create a new the-thing', () => {
 
   it('Create a new the-thing with all cell-types, then confirm data consistency', () => {
     const theThing: TheThing = TheThing.forge({
-      cells: {
-        綽號: TheThingCell.forge({ name: '綽號', type: 'text' }),
-        興趣: TheThingCell.forge({ name: '興趣', type: 'longtext' }),
-        售價: TheThingCell.forge({ name: '售價', type: 'number' }),
-        照片: TheThingCell.forge({ name: '照片', type: 'album' }),
-        地址: TheThingCell.forge({ name: '地址', type: 'address' })
-      }
+      cells: forgedCells
     });
-    const theThingCreatorPO = new TheThingCreatorPageObjectCypress();
-    theThingCreatorPO.setValue(theThing);
-    theThingCreatorPO.submit();
+    const theThingEditorPO = new TheThingEditorPageObjectCypress();
+    theThingEditorPO.setValue(theThing);
+    theThingEditorPO.submit();
     waitForViewPage();
 
     const theThingViewPO = new TheThingViewPageObjectCypress();
@@ -73,21 +74,23 @@ describe('Create a new the-thing', () => {
   it('Create a relation, link to another the-thing', () => {
     // Stub the-thing "Samwise Gamgee" with tag "Hobbit"
     // and save it into mock database in advance
-    const Sam = TheThing.forge();
-    Sam.name = 'Samwise Gamgee';
-    Sam.tags.push('Hobbit');
+    const Sam = TheThing.forge({
+      name: 'Samwise Gamgee',
+      tags: ['hobbit']
+    });
     mockDatabase.insert(`${TheThing.collection}/${Sam.id}`, Sam.toJSON());
     // Stub another the-thing "Frodo Baggins" with same tag "Hobbit"
     // We are going to use "Frodo Baggins" to fill in creator form,
     // and find/select "Samwise Gamgee" to add the realtion "dirty thief covet my preasuuuuuress"
-    const Frodo = TheThing.forge();
-    Frodo.tags.push('Hobbit');
-    Frodo.name = 'Frodo Baggins';
+    const Frodo = TheThing.forge({
+      name: 'Frodo Baggins',
+      tags: ['hobbit']
+    });
     const relationName = 'dirty thief covet my preasuuuuuress';
-    const theThingCreatorPO = new TheThingCreatorPageObjectCypress();
-    theThingCreatorPO.setValue(Frodo);
-    theThingCreatorPO.addRelationExist(relationName, Sam);
-    theThingCreatorPO.submit();
+    const theThingEditorPO = new TheThingEditorPageObjectCypress();
+    theThingEditorPO.setValue(Frodo);
+    theThingEditorPO.addRelationExist(relationName, Sam);
+    theThingEditorPO.submit();
     waitForViewPage();
 
     // In the view page of "Frodo Baggins",
@@ -104,14 +107,14 @@ describe('Create a new the-thing', () => {
     const relationName = 'Save my sorry ass';
 
     // Fill in data of "Nobita"
-    const theThingCreatorPO = new TheThingCreatorPageObjectCypress();
-    theThingCreatorPO.setValue(nobita);
+    const theThingEditorPO = new TheThingEditorPageObjectCypress();
+    theThingEditorPO.setValue(nobita);
 
     // Set relation name "Save my sorry ass", and go-to creation of "Doraemon"
-    theThingCreatorPO.addRelationAndGotoCreate(relationName);
+    theThingEditorPO.addRelationAndGotoCreate(relationName);
     // Now should be the second-level creation page
-    theThingCreatorPO.setValue(doraemon);
-    theThingCreatorPO.submit();
+    theThingEditorPO.setValue(doraemon);
+    theThingEditorPO.submit();
     waitForViewPage('doraemonId').then(doraemonId => {
       doraemon.id = doraemonId;
       const theThingViewPO = new TheThingViewPageObjectCypress();
@@ -119,11 +122,11 @@ describe('Create a new the-thing', () => {
 
       // Now link relation back to the creation of "Nobita", should see the test relation
       theThingViewPO.linkRelationBack();
-      theThingCreatorPO.expectVisible();
-      theThingCreatorPO.expectRelation(relationName, doraemon);
+      theThingEditorPO.expectVisible();
+      theThingEditorPO.expectRelation(relationName, doraemon);
 
       // Submit and redirect to view page of "Nobita", should see the test relation
-      theThingCreatorPO.submit();
+      theThingEditorPO.submit();
       waitForViewPage('nobitaId').then(nobitaId => {
         nobita.id = nobitaId;
         theThingViewPO.expectValue(nobita);

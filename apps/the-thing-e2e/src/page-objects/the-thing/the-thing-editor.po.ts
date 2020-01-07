@@ -1,6 +1,6 @@
 import { values } from 'lodash';
 import { TheThing, TheThingCell } from '@ygg/the-thing/core';
-import { TheThingCreatorPageObject } from '@ygg/the-thing/ui';
+import { TheThingEditorPageObject } from '@ygg/the-thing/ui';
 import {
   AlbumControlPageObjectCypress,
   AddressControlPageObjectCypress
@@ -8,7 +8,7 @@ import {
 import { TheThingFinderPageObjectCypress } from './the-thing-finder.po';
 import { ChipsControlPageObjectCypress } from '@ygg/shared/test/cypress';
 
-export class TheThingCreatorPageObjectCypress extends TheThingCreatorPageObject {
+export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
   expectVisible() {
     cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
   }
