@@ -7,6 +7,7 @@ export abstract class TheThingCreatorPageObject extends PageObject {
     lastCellControl: '.cells .last-cell',
     inputRelationName: '.add-relation input.relation-name',
     buttonFindRelationObject: '.add-relation button.the-thing-finder',
+    buttonCreateRelationObject: '.add-relation button.the-thing-create',
     // buttonAddRelation: '.add-relation button.add',
     relationList: '.relation-list'
   };

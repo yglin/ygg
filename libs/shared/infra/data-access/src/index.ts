@@ -7,4 +7,5 @@ export * from './lib/data-access.service';
 export * from './lib/fire-storage.service';
 export * from './lib/cache.service';
 export * from './lib/site-config.service';
+export * from './lib/page-stash.service';
 export * from './lib/shared-infra-data-access.module';

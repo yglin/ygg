@@ -5,9 +5,14 @@ import {
   AlbumControlPageObjectCypress,
   AddressControlPageObjectCypress
 } from '../cell-types';
-import { TheThingFinderPageObjectCypress } from "./the-thing-finder.po";
+import { TheThingFinderPageObjectCypress } from './the-thing-finder.po';
+import { ChipsControlPageObjectCypress } from '@ygg/shared/test/cypress';
 
 export class TheThingCreatorPageObjectCypress extends TheThingCreatorPageObject {
+  expectVisible() {
+    cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
+  }
+
   addCell(cell: TheThingCell) {
     cy.get('.add-cell .name input')
       .clear({ force: true })
@@ -49,12 +54,16 @@ export class TheThingCreatorPageObjectCypress extends TheThingCreatorPageObject 
 
   setValue(theThing: TheThing) {
     // Choose type tags of the-thing
-    cy.wrap(theThing.types).each((type: string) => {
-      cy.get('.meta .types input')
-        .clear({ force: true })
-        .type(type);
-      cy.get('.types button.add').click({ force: true });
-    });
+    const chipsControlPO = new ChipsControlPageObjectCypress(
+      this.getSelector()
+    );
+    chipsControlPO.setValue(theThing.types);
+    // cy.wrap(theThing.types).each((type: string) => {
+    //   cy.get('.meta .types input')
+    //     .clear({ force: true })
+    //     .type(type);
+    //   cy.get('.types button.add').click({ force: true });
+    // });
 
     // Input name of the thing
     cy.get('.meta .name input')
@@ -74,7 +83,22 @@ export class TheThingCreatorPageObjectCypress extends TheThingCreatorPageObject 
     theThingFinderPO.select(objectThing);
     theThingFinderPO.submit();
     // cy.get(this.getSelector('buttonAddRelation')).click({ force: true });
-    cy.get(this.getSelectorForRelation(relationName, objectThing)).should('be.exist');
+    this.expectRelation(relationName, objectThing);
+  }
+
+  expectRelation(relationName: string, objectThing: TheThing) {
+    cy.get(this.getSelectorForRelation(relationName, objectThing)).should(
+      'be.exist'
+    );
+  }
+
+  addRelationAndGotoCreate(relationName: string) {
+    cy.get(this.getSelector('inputRelationName'))
+      .clear({ force: true })
+      .type(relationName);
+    cy.get(this.getSelector('buttonCreateRelationObject')).click({
+      force: true
+    });
   }
 
   submit() {

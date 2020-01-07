@@ -3,7 +3,11 @@ import { NgModule, Injector, APP_INITIALIZER } from '@angular/core';
 
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
-import { TheThingUiModule, TheThingCreatorComponent, TheThingViewComponent } from '@ygg/the-thing/ui';
+import {
+  TheThingUiModule,
+  TheThingCreatorComponent,
+  TheThingViewComponent
+} from '@ygg/the-thing/ui';
 
 import { RouterModule, Route } from '@angular/router';
 import { AppComponent } from './app.component';
@@ -13,7 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // import { CellsComponent } from './pages/cell/cells/cells.component';
 // import { CellEditComponent } from './pages/cell/cell-edit/cell-edit.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedInfraDataAccessModule } from "@ygg/shared/infra/data-access";
+import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
 import { TheThingResolver } from './the-thing-resolver.service';
 
 const routes: Route[] = [
@@ -39,7 +43,7 @@ const routes: Route[] = [
   declarations: [
     AppComponent,
     HeaderComponent,
-    HomeComponent,
+    HomeComponent
     // CellsComponent,
     // CellEditComponent,
     // TheThingCreatorComponent,

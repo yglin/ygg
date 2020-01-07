@@ -1,5 +1,5 @@
 import { Image } from '@ygg/shared/types';
-import { ImageUploaderPageObject } from "@ygg/shared/types";
+import { ImageUploaderPageObject } from '@ygg/shared/types';
 
 export class ImageUploaderPageObjectCypress extends ImageUploaderPageObject {
   selector: string;
@@ -15,15 +15,17 @@ export class ImageUploaderPageObjectCypress extends ImageUploaderPageObject {
   expectClose() {
     cy.get(this.getSelector('buttonSubmit')).should('not.be.visible');
   }
-  
+
   addImagesByUrl(images: Image[]) {
     cy.wrap(images).each((image: Image) => {
-      cy.get(this.getSelector('inputImageUrl')).type(image.src);
-      cy.get(this.getSelector('buttonAddImageUrl')).click({force: true});
+      cy.get(this.getSelector('inputImageUrl'))
+        .clear({ force: true })
+        .type(image.src);
+      cy.get(this.getSelector('buttonAddImageUrl'), { timeout: 10000 }).click();
     });
   }
 
   submit() {
-    cy.get(this.getSelector('buttonSubmit')).click();
+    cy.get(this.getSelector('buttonSubmit'), { timeout: 10000 }).click();
   }
 }

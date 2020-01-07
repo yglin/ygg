@@ -1,13 +1,16 @@
 import { values } from 'lodash';
 import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 import { TheThingViewPageObject } from '@ygg/the-thing/ui';
-import { AlbumViewPageObjectCypress, AddressViewPageObjectCypress } from '../cell-types';
+import {
+  AlbumViewPageObjectCypress,
+  AddressViewPageObjectCypress
+} from '../cell-types';
 
 class Relation {
   name: string;
   description: string;
   subjectId: string;
-  objectId: string;  
+  objectId: string;
 }
 
 export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
@@ -60,6 +63,16 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
   }
 
   expectRelation(relationName: string, objectThing: TheThing) {
-    cy.get(this.getSelectorForRelation(relationName, objectThing)).contains(objectThing.name);
+    cy.get(this.getSelectorForRelation(relationName, objectThing)).contains(
+      objectThing.name
+    );
+  }
+
+  linkRelationBack() {
+    cy.get(this.getSelector('buttonLinkRelationBack')).click({ force: true });
+  }
+
+  expectNotLinkRelationBack() {
+    cy.get(this.getSelector('buttonLinkRelationBack')).should('not.exist');
   }
 }

@@ -4,7 +4,8 @@ import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 export class TheThingViewPageObject extends PageObject {
   selectors = {
     main: '.the-thing-view',
-    relationList: '.relation-list'
+    relationList: '.relation-list',
+    buttonLinkRelationBack: 'button.link-relation-back'
   }
 
   getSelectorForCell(cell: TheThingCell): string {

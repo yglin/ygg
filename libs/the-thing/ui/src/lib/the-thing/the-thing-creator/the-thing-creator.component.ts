@@ -1,13 +1,17 @@
 import { find, isEmpty, extend, keyBy } from 'lodash';
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { TheThing, TheThingCell, TheThingCellTypes } from '@ygg/the-thing/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { Tags } from '@ygg/tags/core';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { TheThingFinderComponent } from '../the-thing-finder/the-thing-finder.component';
 import { Subscription } from 'rxjs';
+import {
+  PageStashService,
+  PageStashPromise
+} from '@ygg/shared/infra/data-access';
 
 @Component({
   selector: 'the-thing-the-thing-creator',
@@ -30,10 +34,11 @@ export class TheThingCreatorComponent implements OnInit {
     private formBuilder: FormBuilder,
     private theThingAccessService: TheThingAccessService,
     private router: Router,
-    private dialog: YggDialogService
+    private dialog: YggDialogService,
+    private pageStashService: PageStashService
   ) {
     this.formGroup = formBuilder.group({
-      types: [],
+      types: null,
       name: '東東'
     });
     this.cellsFormGroup = formBuilder.group({});
@@ -49,8 +54,38 @@ export class TheThingCreatorComponent implements OnInit {
 
   ngOnInit() {
     if (!this.theThing) {
+      if (this.pageStashService.isMatchPageResolved(this.router.url)) {
+        const pageData = this.pageStashService.pop();
+        this.theThing = new TheThing().fromJSON(pageData.data.theThing);
+        for (const key in pageData.promises) {
+          if (pageData.promises.hasOwnProperty(key)) {
+            const promise = pageData.promises[key];
+            if (key === 'relation') {
+              this.theThing.addRelations(promise.data.name, [
+                promise.data.objectId
+              ]);
+            }
+          }
+        }
+      }
+    }
+    if (!this.theThing) {
       this.theThing = new TheThing();
     }
+    // console.log('PatchValue~!!!');
+    // console.log(this.theThing);
+    this.formGroup.patchValue(this.theThing);
+    // console.log(this.formGroup.value);
+    this.cells = [];
+    for (const name in this.theThing.cells) {
+      if (this.theThing.cells.hasOwnProperty(name)) {
+        const cell = this.theThing.cells[name];
+        this.addCell(cell);
+      }
+    }
+    this.formControlNewCellName.setValue(null);
+    this.formControlNewCellType.setValue(null);
+    this.formControlNewRelationName.setValue(null);
   }
 
   ngOnDestroy(): void {
@@ -61,25 +96,27 @@ export class TheThingCreatorComponent implements OnInit {
     }
   }
 
-  addCell() {
-    const newCellName = this.formControlNewCellName.value;
-    const newCellType = this.formControlNewCellType.value;
-    const nameAlreadyExists = !!find(
-      this.cells,
-      _cell => _cell.name === newCellName
-    );
-    if (nameAlreadyExists) {
-      alert(`資料欄位 ${newCellName} 已存在了喔`);
-    } else {
-      const cell = new TheThingCell().fromJSON({
+  addCell(cell: TheThingCell) {
+    if (!cell) {
+      const newCellName = this.formControlNewCellName.value;
+      const newCellType = this.formControlNewCellType.value;
+      cell = new TheThingCell().fromJSON({
         name: newCellName,
         type: newCellType,
         value: null
       });
+    }
+    const nameAlreadyExists = !!find(
+      this.cells,
+      _cell => _cell.name === cell.name
+    );
+    if (nameAlreadyExists) {
+      alert(`資料欄位 ${cell.name} 已存在了喔`);
+    } else {
       this.cells.push(cell);
       this.cellsFormGroup.addControl(
-        this.formControlNewCellName.value,
-        new FormControl()
+        cell.name,
+        new FormControl(cell.value)
       );
     }
   }
@@ -90,18 +127,48 @@ export class TheThingCreatorComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((theThings: TheThing[]) => {
       if (!isEmpty(theThings)) {
-        this.theThing.addRelations(this.formControlNewRelationName.value, theThings);
+        this.theThing.addRelations(
+          this.formControlNewRelationName.value,
+          theThings
+        );
       }
     });
   }
 
-  async onSubmit() {
+  updateTheThing() {
+    let types = this.formGroup.get('types').value;
+    if (Tags.isTags(types)) {
+      types = types.toIDArray();
+    } else if(isEmpty(types)) {
+      types = [];
+    }
+    
     const meta = {
       name: this.formGroup.get('name').value,
-      types: (this.formGroup.get('types').value as Tags).toIDArray()
+      types: types
     };
     extend(this.theThing, meta);
     this.theThing.cells = keyBy(this.cells, cell => cell.name);
+  }
+
+  gotoCreateRelationObject() {
+    this.updateTheThing();
+    this.pageStashService.push({
+      path: this.router.url,
+      data: {
+        id: this.theThing.id,
+        theThing: this.theThing.toJSON()
+      },
+      promises: {
+        relation: new PageStashPromise(this.formControlNewRelationName.value)
+      }
+    });
+    this.theThing = new TheThing();
+    this.ngOnInit();
+  }
+
+  async onSubmit() {
+    this.updateTheThing();
     if (confirm(`新增 ${this.theThing.name} ？`)) {
       try {
         this.theThing = await this.theThingAccessService.upsert(this.theThing);

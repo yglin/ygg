@@ -1,4 +1,11 @@
 <div class="the-thing-view" *ngIf="theThing">
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+    <div *ngIf="isPendingRelation">
+      <button mat-fab class="link-relation-back" (click)="linkRelationBack()">
+        <mat-icon>call_merge</mat-icon>
+      </button>
+    </div>
+  </div>
   <div class="name">
     <h2>{{ theThing.name }}</h2>
   </div>
@@ -18,7 +25,7 @@
         </mat-card-content>
       </mat-card>
     </div>
-    <br>
+    <br />
     <div class="relation-list">
       <div
         *ngFor="let relation of theThing.relations | keyvalue"

@@ -77,9 +77,11 @@ export class TagsControlComponent
     }
   }
 
-  writeValue(value: Tags) {
+  writeValue(value: Tags | string[]) {
     if (Tags.isTags(value)) {
       this.chipsControl.setValue(value.toNameArray());
+    } else {
+      this.chipsControl.setValue(value);
     }
   }
 

@@ -12,6 +12,6 @@ export class ChipsControlPageObjectCypress extends ChipsControlPageObject {
     cy.get(this.getSelector('inputChip'))
       .clear({ force: true })
       .type(chip);
-    cy.get(this.getSelector('buttonAdd')).click({ force: true });
+    cy.get(this.getSelector('buttonAdd')).click();
   }
 }

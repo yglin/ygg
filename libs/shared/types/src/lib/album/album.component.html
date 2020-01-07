@@ -1,7 +1,7 @@
 <div class="album" *ngIf="album">
   <div [fxLayout]="fxLayout" fxLayoutAlign="start start">
     <div class="mat-elevation-z12 cover">
-      <img [src]="album.cover.src" />
+      <img [src]="album.cover?.src" />
     </div>
     <div
       fxFlex
@@ -21,6 +21,7 @@
         </div>
         <div class="delete-button" *ngIf="!readonly">
           <button
+            type="button"
             mat-mini-fab
             (click)="deletePhoto(idx); $event.stopPropagation()"
           >

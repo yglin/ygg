@@ -11,7 +11,9 @@ describe('Create a new the-thing', () => {
   const testTheThingIds: string[] = [];
 
   // Wait for navigating to view page
-  function waitForViewPage() {
+  function waitForViewPage(
+    newIdAlias: string = 'newTheThingId'
+  ): Cypress.Chainable<any> {
     cy.location({ timeout: 10000 }).should(
       'not.match',
       /.*\/the-things\/create/
@@ -21,7 +23,9 @@ describe('Create a new the-thing', () => {
       cy.get('@testTheThingIds').then((ids: any) => {
         (ids as string[]).push(id);
       });
+      cy.wrap(id).as(newIdAlias);
     });
+    return cy.get(`@${newIdAlias}`, { timeout: 10000 });
   }
 
   before(() => {
@@ -67,7 +71,7 @@ describe('Create a new the-thing', () => {
   });
 
   it('Create a relation, link to another the-thing', () => {
-    // Stub one the-thing "Samwise Gamgee" with type "Hobbit"
+    // Stub the-thing "Samwise Gamgee" with type "Hobbit"
     // and save it into mock database in advance
     const Sam = TheThing.forge();
     Sam.name = 'Samwise Gamgee';
@@ -92,7 +96,42 @@ describe('Create a new the-thing', () => {
     FrodoViewPO.expectRelation(relationName, Sam);
   });
 
-  // it('Create a relation, link to another the-thing, which is also created on the fly', () => {
+  it('Create a relation, link to another the-thing which is also created on the fly', () => {
+    // Stub 2 the-things "Nobita" with type "Loser", and "Doraemon" with type "Savior"
+    // The test relation is "Save my sorry ass" from "Nobita" to "Doraemon"
+    const nobita = TheThing.forge({ name: 'Nobita', types: ['loser'] });
+    const doraemon = TheThing.forge({ name: 'Doraemon', types: ['savior'] });
+    const relationName = 'Save my sorry ass';
 
-  // });
+    // Fill in data of "Nobita"
+    const theThingCreatorPO = new TheThingCreatorPageObjectCypress();
+    theThingCreatorPO.setValue(nobita);
+
+    // Set relation name "Save my sorry ass", and go-to creation of "Doraemon"
+    theThingCreatorPO.addRelationAndGotoCreate(relationName);
+    // Now should be the second-level creation page
+    theThingCreatorPO.setValue(doraemon);
+    theThingCreatorPO.submit();
+    waitForViewPage('doraemonId').then(doraemonId => {
+      doraemon.id = doraemonId;
+      const theThingViewPO = new TheThingViewPageObjectCypress();
+      theThingViewPO.expectValue(doraemon);
+
+      // Now link relation back to the creation of "Nobita", should see the test relation
+      theThingViewPO.linkRelationBack();
+      theThingCreatorPO.expectVisible();
+      theThingCreatorPO.expectRelation(relationName, doraemon);
+
+      // Submit and redirect to view page of "Nobita", should see the test relation
+      theThingCreatorPO.submit();
+      waitForViewPage('nobitaId').then(nobitaId => {
+        nobita.id = nobitaId;
+        theThingViewPO.expectValue(nobita);
+        theThingViewPO.expectRelation(relationName, doraemon);
+
+        // Now there should not be button of linkRelationBack() any more
+        theThingViewPO.expectNotLinkRelationBack();
+      });
+    });
+  });
 });

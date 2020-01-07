@@ -52,41 +52,45 @@ export class TheThing {
 
   static forge(options: any = {}): TheThing {
     const thing = new TheThing();
-    thing.name = sample([
-      'The Thing(1982)',
-      'The Thing(2011)',
-      '痔瘡',
-      'Jim Carry',
-      '兩津',
-      '會心的一擊',
-      '咕嚕咕嚕',
-      '屁股毛',
-      '肉雞',
-      '便便'
-    ]);
-    thing.types = sampleSize(
-      [
-        'play',
-        'lesson',
-        'travel',
-        'food',
-        'movie',
-        'game',
-        'sport',
-        'gift',
-        'groceries',
-        '鳥鳥',
-        '犬犬',
-        '喵喵',
-        '畜牲',
-        '早上5點就該該叫',
-        '可以配飯吃',
-        '高雄迪士尼',
-        '鏟屎官',
-        '打飯奴'
-      ],
-      3
-    );
+    thing.name =
+      options.name ||
+      sample([
+        'The Thing(1982)',
+        'The Thing(2011)',
+        '痔瘡',
+        'Jim Carry',
+        '兩津',
+        '會心的一擊',
+        '咕嚕咕嚕',
+        '屁股毛',
+        '肉雞',
+        '便便'
+      ]);
+    thing.types =
+      options.types ||
+      sampleSize(
+        [
+          'play',
+          'lesson',
+          'travel',
+          'food',
+          'movie',
+          'game',
+          'sport',
+          'gift',
+          'groceries',
+          '鳥鳥',
+          '犬犬',
+          '喵喵',
+          '畜牲',
+          '早上5點就該該叫',
+          '可以配飯吃',
+          '高雄迪士尼',
+          '鏟屎官',
+          '打飯奴'
+        ],
+        3
+      );
 
     if (options.cells) {
       thing.cells = options.cells;
@@ -116,6 +120,7 @@ export class TheThing {
   constructor() {
     this.collection = TheThing.collection;
     this.id = generateID();
+    this.name = '';
     this.createAt = new Date().valueOf();
     this.modifyAt = this.createAt;
     this.types = [];
@@ -123,11 +128,15 @@ export class TheThing {
     this.relations = {};
   }
 
-  addRelations(relationName: string, objectThings: TheThing[]) {
+  addRelations(relationName: string, objectThings: TheThing[] | string[]) {
+    let ids: string[] = [];
+    if (typeof objectThings[0] === 'string') {
+      ids = objectThings as string[];
+    } else {
+      ids = (objectThings as TheThing[]).map(thing => thing.id);
+    }
     this.relations[relationName] = uniq(
-      (this.relations[relationName] || []).concat(
-        objectThings.map(thing => thing.id)
-      )
+      (this.relations[relationName] || []).concat(ids)
     );
   }
 

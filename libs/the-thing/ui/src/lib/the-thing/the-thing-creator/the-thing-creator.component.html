@@ -97,29 +97,24 @@
         </mat-autocomplete> -->
               </div>
               <div>
-                <div *ngIf="newRelationObject">
-                  <the-thing-thumbnail
-                    [theThing]="newRelationObject"
-                  ></the-thing-thumbnail>
-                </div>
-                <div *ngIf="!newRelationObject">
-                  <button
-                    type="button"
-                    mat-mini-fab
-                    [disabled]="isNewRelationNameEmpty"
-                  >
-                    <mat-icon>post_add</mat-icon>
-                  </button>
-                  <button
-                    type="button"
-                    mat-mini-fab
-                    class="the-thing-finder"
-                    (click)="openTheThingFinder()"
-                    [disabled]="isNewRelationNameEmpty"
-                  >
-                    <mat-icon>search</mat-icon>
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  mat-mini-fab
+                  class="the-thing-create"
+                  (click)="gotoCreateRelationObject()"
+                  [disabled]="isNewRelationNameEmpty"
+                >
+                  <mat-icon>post_add</mat-icon>
+                </button>
+                <button
+                  type="button"
+                  mat-mini-fab
+                  class="the-thing-finder"
+                  (click)="openTheThingFinder()"
+                  [disabled]="isNewRelationNameEmpty"
+                >
+                  <mat-icon>search</mat-icon>
+                </button>
               </div>
             </div>
           </div>
