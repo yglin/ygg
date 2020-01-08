@@ -30,27 +30,31 @@ export class TheThingAccessService {
       .pipe(map(items => items.map(item => new TheThing().fromJSON(item))));
   }
 
-  findByTags$(tags: Tags): Observable<TheThing[]> {
+  findByTags$(tags: Tags | string[]): Observable<TheThing[]> {
     if (!isEmpty(tags)) {
       // XXX yglin 2020/01/06 "array-contains" can be applied only once in compound query
       // So we use array-contains for the first type, i.e. tags[0].
       // Then filter the result in client side with rest tags, i.e. tags[1-].
       // Ugly I know, Elasticsearch could be a better alternative
       // https://firebase.google.com/docs/firestore/query-data/queries
-      const [firstTag, ...restTags] = tags.toTagsArray();
+      const [firstTag, ...restTags] = Tags.isTags(tags)
+        ? tags.toNameArray()
+        : tags;
       const queries: Query[] = [];
       queries.push(new Query('tags', 'array-contains', firstTag));
       return this.dataAccessService.find$(TheThing.collection, queries).pipe(
-        map(items =>
-          items
-            .map(item => new TheThing().fromJSON(item))
-            .filter(theThing => {
+        map(items => {
+          let theThings = items.map(item => new TheThing().fromJSON(item));
+          if (!isEmpty(restTags)) {
+            theThings = theThings.filter(theThing => {
               if (isEmpty(theThing.tags) || theThing.tags.isEmpty()) {
                 return false;
               }
               return every(restTags, restTag => theThing.tags.has(restTag));
-            })
-        )
+            });
+          }
+          return theThings;
+        })
       );
     } else {
       return throwError(new Error(`Require arguments tags, but get ${tags}`));

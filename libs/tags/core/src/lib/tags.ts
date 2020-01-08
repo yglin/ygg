@@ -96,6 +96,6 @@ export class Tags implements SerializableJSON {
   }
 
   toJSON(): any {
-    return this.tags.map(tag => tag.toJSON());
+    return this.toIDArray();
   }
 }

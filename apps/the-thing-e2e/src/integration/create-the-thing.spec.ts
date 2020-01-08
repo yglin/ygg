@@ -15,7 +15,7 @@ describe('Create a new the-thing', () => {
     售價: TheThingCell.forge({ name: '售價', type: 'number' }),
     照片: TheThingCell.forge({ name: '照片', type: 'album' }),
     地址: TheThingCell.forge({ name: '地址', type: 'address' })
-  }
+  };
 
   // Wait for navigating to view page
   function waitForViewPage(
@@ -76,7 +76,7 @@ describe('Create a new the-thing', () => {
     // and save it into mock database in advance
     const Sam = TheThing.forge({
       name: 'Samwise Gamgee',
-      tags: ['hobbit']
+      tags: ['hobbit', 'gay', 'fat', 'drama queen']
     });
     mockDatabase.insert(`${TheThing.collection}/${Sam.id}`, Sam.toJSON());
     // Stub another the-thing "Frodo Baggins" with same tag "Hobbit"
@@ -84,7 +84,7 @@ describe('Create a new the-thing', () => {
     // and find/select "Samwise Gamgee" to add the realtion "dirty thief covet my preasuuuuuress"
     const Frodo = TheThing.forge({
       name: 'Frodo Baggins',
-      tags: ['hobbit']
+      tags: ['hobbit', 'master', 'possess some others\' weapons']
     });
     const relationName = 'dirty thief covet my preasuuuuuress';
     const theThingEditorPO = new TheThingEditorPageObjectCypress();
