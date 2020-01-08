@@ -1,4 +1,4 @@
-import { find, isEmpty, extend, keyBy } from 'lodash';
+import { find, isEmpty, extend, get } from 'lodash';
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -33,6 +33,7 @@ export class TheThingEditorComponent implements OnInit {
     private formBuilder: FormBuilder,
     private theThingAccessService: TheThingAccessService,
     private router: Router,
+    private route: ActivatedRoute,
     private dialog: YggDialogService,
     private pageStashService: PageStashService
   ) {
@@ -53,28 +54,34 @@ export class TheThingEditorComponent implements OnInit {
 
   ngOnInit() {
     if (!this.theThing) {
-      if (this.pageStashService.isMatchPageResolved(this.router.url)) {
-        const pageData = this.pageStashService.pop();
-        this.theThing = new TheThing().fromJSON(pageData.data.theThing);
-        for (const key in pageData.promises) {
-          if (pageData.promises.hasOwnProperty(key)) {
-            const promise = pageData.promises[key];
-            if (key === 'relation') {
-              this.theThing.addRelations(promise.data.name, [
-                promise.data.objectId
-              ]);
-            }
+      // Fetch the-thing from route resolver
+      this.theThing = get(this.route.snapshot, 'data.theThing', null);
+    }
+    if (
+      !this.theThing &&
+      this.pageStashService.isMatchPageResolved(this.router.url)
+    ) {
+      // Fetch the-thing from local temporary storage
+      const pageData = this.pageStashService.pop();
+      this.theThing = new TheThing().fromJSON(pageData.data.theThing);
+      for (const key in pageData.promises) {
+        if (pageData.promises.hasOwnProperty(key)) {
+          const promise = pageData.promises[key];
+          if (key === 'relation') {
+            this.theThing.addRelations(promise.data.name, [
+              promise.data.objectId
+            ]);
           }
         }
       }
     }
+
     if (!this.theThing) {
+      // Not found any source of the-thing, create a new one
       this.theThing = new TheThing();
     }
-    // console.log('PatchValue~!!!');
-    // console.log(this.theThing);
+
     this.formGroup.patchValue(this.theThing);
-    // console.log(this.formGroup.value);
     for (const name in this.theThing.cells) {
       if (this.theThing.cells.hasOwnProperty(name)) {
         const cell = this.theThing.cells[name];
@@ -108,10 +115,14 @@ export class TheThingEditorComponent implements OnInit {
       alert(`資料欄位 ${cell.name} 已存在了喔`);
     } else {
       this.theThing.addCell(cell);
-      this.cellsFormGroup.addControl(
-        cell.name,
-        new FormControl(cell.value)
-      );
+      this.cellsFormGroup.addControl(cell.name, new FormControl(cell.value));
+    }
+  }
+
+  deleteCell(cell: TheThingCell) {
+    if (cell && confirm(`移除資料欄位 ${cell.name}`)) {
+      this.theThing.deleteCell(cell);
+      this.cellsFormGroup.removeControl(cell.name);
     }
   }
 

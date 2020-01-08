@@ -14,6 +14,10 @@ class Relation {
 }
 
 export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
+  expectVisible() {
+    cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
+  }
+
   expectCell(cell: TheThingCell) {
     switch (cell.type) {
       case 'text':
@@ -47,14 +51,24 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
     }
   }
 
-  expectValue(theThing: TheThing) {
-    // Expect tags
-    cy.wrap(theThing.tags.toNameArray()).each((tag: string) => {
-      cy.get('.tags').contains(tag);
-    });
+  expectNoCell(cell: TheThingCell) {
+    cy.get(this.getSelectorForCell(cell)).should('not.exist');
+  }
 
-    // Expect name
-    cy.get('.name').contains(theThing.name);
+  expectTags(tags: string[]) {
+    cy.wrap(tags).each((tag: string) => {
+      cy.get(this.getSelector('tags')).contains(tag);
+    });
+  }
+
+  expectName(name: string) {
+    cy.get(this.getSelector('name')).contains(name);
+  }
+
+  expectValue(theThing: TheThing) {
+    this.expectTags(theThing.tags.toIDArray());
+
+    this.expectName(theThing.name);
 
     // Expect cells
     cy.wrap(values(theThing.cells)).each((cell: any) => {

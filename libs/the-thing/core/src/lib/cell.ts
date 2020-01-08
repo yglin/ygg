@@ -1,8 +1,15 @@
 import { extend, sample, random, keys } from 'lodash';
-import { Album, Address } from "@ygg/shared/types";
+import { Album, Address } from '@ygg/shared/types';
+
+export type TheThingCellTypeID =
+  | 'text'
+  | 'longtext'
+  | 'number'
+  | 'album'
+  | 'address';
 
 interface TheThingCellType {
-  id: string;
+  id: TheThingCellTypeID;
   label: string;
   forge: (options?: any) => any;
 }
@@ -77,7 +84,7 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
 
 export class TheThingCell {
   name: string;
-  type: string;
+  type: TheThingCellTypeID;
   value: any;
 
   static forge(options: any = {}): TheThingCell {
@@ -102,7 +109,7 @@ export class TheThingCell {
     if (options.type) {
       cell.type = options.type;
     } else {
-      cell.type = sample(keys(TheThingCellTypes));
+      cell.type = sample(TheThingCellTypes).id;
     }
 
     if (options.value) {

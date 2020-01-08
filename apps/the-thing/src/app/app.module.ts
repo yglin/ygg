@@ -30,7 +30,17 @@ const routes: Route[] = [
       },
       {
         path: ':id',
-        component: TheThingViewComponent,
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            component: TheThingViewComponent
+          },
+          {
+            path: 'edit',
+            component: TheThingEditorComponent
+          }
+        ],
         resolve: {
           theThing: TheThingResolver
         }

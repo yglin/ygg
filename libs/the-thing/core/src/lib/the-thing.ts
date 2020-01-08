@@ -59,7 +59,7 @@ export class TheThing {
         '肉雞',
         '便便'
       ]);
-    thing.tags = !!(options.tags) ? new Tags(options.tags) : Tags.forge();
+    thing.tags = !!options.tags ? new Tags(options.tags) : Tags.forge();
 
     if (options.cells) {
       thing.cells = options.cells;
@@ -103,6 +103,12 @@ export class TheThing {
 
   addCell(cell: TheThingCell) {
     this.cells[cell.name] = cell;
+  }
+
+  deleteCell(cell: TheThingCell) {
+    if (this.hasCell(cell)) {
+      delete this.cells[cell.name];
+    }
   }
 
   addRelations(relationName: string, objectThings: TheThing[] | string[]) {

@@ -16,6 +16,10 @@ export abstract class TheThingEditorPageObject extends PageObject {
     return `${this.getSelector('cellControls')} [cell-name="${cell.name}"]`;
   }
 
+  getSelectorForCellControlDelete(cell: TheThingCell): string {
+    return `${this.getSelectorForCellControl(cell)} button.delete`;
+  }
+
   getSelectorForRelation(relationName: string, objectThing: TheThing): string {
     return `${this.getSelector(
       'relationList'

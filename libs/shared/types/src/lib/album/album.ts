@@ -20,7 +20,7 @@ export class Album implements SerializableJSON {
   static forge(options: any = {}): Album {
     const forged = new Album();
     forged.photos = isEmpty(options.photos) ? range(random(3,10)).map(() => Image.forge()): options.photos;
-    forged.cover = sample(forged.photos);
+    forged.cover = !!options.cover ? options.cover : sample(forged.photos);
     return forged;
   }
 

@@ -52,23 +52,27 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
     }
   }
 
-  setValue(theThing: TheThing) {
-    // Choose type tags of the-thing
+  setTags(tags: string[]) {
     const chipsControlPO = new ChipsControlPageObjectCypress(
       this.getSelector()
     );
-    chipsControlPO.setValue(theThing.tags.toNameArray());
-    // cy.wrap(theThing.tags).each((type: string) => {
-    //   cy.get('.meta .tags input')
-    //     .clear({ force: true })
-    //     .type(type);
-    //   cy.get('.tags button.add').click({ force: true });
-    // });
+    chipsControlPO.setValue(tags);
+  }
 
-    // Input name of the thing
+  setName(name: string) {
     cy.get('.meta .name input')
       .clear({ force: true })
-      .type(theThing.name);
+      .type(name);
+  }
+
+  deleteCell(cell: TheThingCell) {
+    cy.get(this.getSelectorForCellControlDelete(cell)).click({ force: true });
+  }
+
+  setValue(theThing: TheThing) {
+    this.setTags(theThing.tags.toNameArray());
+
+    this.setName(theThing.name);
 
     // Add cells
     cy.wrap(values(theThing.cells)).each((cell: any) => this.addCell(cell));

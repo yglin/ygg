@@ -70,11 +70,17 @@
         </div>
         <div class="cell-controls">
           <div *ngFor="let cellItem of theThing.cells | keyvalue">
-            <the-thing-cell-control
-              [cell]="cellItem.value"
-              [formGroup]="cellsFormGroup"
-              [attr.cell-name]="cellItem.key"
-            ></the-thing-cell-control>
+            <div [attr.cell-name]="cellItem.key">
+              <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+                <button class='delete' mat-fab (click)="deleteCell(cellItem.value)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+              <the-thing-cell-control
+                [cell]="cellItem.value"
+                [formGroup]="cellsFormGroup"
+              ></the-thing-cell-control>
+            </div>
           </div>
         </div>
         <div class="relations">
