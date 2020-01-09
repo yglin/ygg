@@ -7,6 +7,7 @@ import {
 } from '../cell-types';
 import { TheThingFinderPageObjectCypress } from './the-thing-finder.po';
 import { ChipsControlPageObjectCypress } from '@ygg/shared/test/cypress';
+import { TheThingListPageObjectCypress } from './the-thing-list.po';
 
 export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
   expectVisible() {
@@ -99,10 +100,14 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
     this.expectRelation(relationName, objectThing);
   }
 
+  removeRelation(relationName: string, objectThing: TheThing) {
+    const theThingListPO = new TheThingListPageObjectCypress(this.getSelectorForRelationObjects(relationName));
+    theThingListPO.deleteTheThing(objectThing);
+  }
+
   expectRelation(relationName: string, objectThing: TheThing) {
-    cy.get(this.getSelectorForRelation(relationName, objectThing)).should(
-      'be.exist'
-    );
+    const theThingListPO = new TheThingListPageObjectCypress(this.getSelectorForRelationObjects(relationName));
+    theThingListPO.expectTheThing(objectThing);
   }
 
   addRelationAndGotoCreate(relationName: string) {

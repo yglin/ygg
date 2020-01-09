@@ -21,14 +21,17 @@ export class TheThingListComponent implements OnInit, OnChanges {
   @Input() ids: string[];
   @Input() theThings: TheThing[];
   @Output() selectChange: EventEmitter<TheThing[]> = new EventEmitter();
+  @Output() delete: EventEmitter<TheThing> = new EventEmitter();
   subscriptionFetchTheThings: Subscription;
   selection: Set<string> = new Set([]);
   isSelectable = false;
+  isDeletable = false;
 
   constructor(private theThingAccessService: TheThingAccessService) {}
 
   ngOnInit() {
     this.isSelectable = this.selectChange.observers.length > 0;
+    this.isDeletable = this.delete.observers.length > 0 ;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -58,6 +61,12 @@ export class TheThingListComponent implements OnInit, OnChanges {
         this.isSelected(thing)
       );
       this.selectChange.emit(selectedThings);
+    }
+  }
+
+  onDelete(theThing: TheThing) {
+    if (theThing) {
+      this.delete.emit(theThing);
     }
   }
 }

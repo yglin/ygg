@@ -5,6 +5,7 @@ import {
   sample,
   random,
   range,
+  remove,
   keyBy,
   isEmpty,
   mapValues,
@@ -83,6 +84,11 @@ export class TheThing {
         cell => cell.name
       );
     }
+
+    if (!isEmpty(options.relations)) {
+      thing.relations = options.relations;
+    }
+
     return thing;
   }
 
@@ -125,6 +131,18 @@ export class TheThing {
     this.relations[relationName] = uniq(
       (this.relations[relationName] || []).concat(ids)
     );
+  }
+
+  removeRelation(relationName, objectThing: TheThing) {
+    if (this.relations && relationName in this.relations) {
+      remove(
+        this.relations[relationName],
+        objectId => objectId === objectThing.id
+      );
+      if (isEmpty(this.relations[relationName])) {
+        delete this.relations[relationName];
+      }
+    }
   }
 
   fromJSON(data: any): this {

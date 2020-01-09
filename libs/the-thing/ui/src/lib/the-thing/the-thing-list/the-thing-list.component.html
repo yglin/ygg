@@ -12,6 +12,9 @@
       (click)="select(theThing)"
     >
       <the-thing-thumbnail [theThing]="theThing"></the-thing-thumbnail>
+      <div class='delete' *ngIf="isDeletable">
+        <button mat-mini-fab (click)="onDelete(theThing)"><mat-icon>delete</mat-icon></button>
+      </div>
     </div>
   </div>
 </div>

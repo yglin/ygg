@@ -27,6 +27,22 @@ export abstract class TheThingEditorPageObject extends PageObject {
     )} [relation-name="${relationName}"] [the-thing-id="${objectThing.id}"]`;
   }
 
+  getSelectorForRelationObjects(relationName: string): string {
+    return `${this.getSelector(
+      'relationList'
+    )} [relation-name="${relationName}"]`;
+  }
+
+  getSelectorForRelationDelete(
+    relationName: string,
+    objectThing: TheThing
+  ): string {
+    return `${this.getSelectorForRelation(
+      relationName,
+      objectThing
+    )} button.delete`;
+  }
+
   abstract setValue(value: TheThing): void;
   abstract addRelationExist(relationName: string, objectThing: TheThing): void;
   abstract submit(): void;

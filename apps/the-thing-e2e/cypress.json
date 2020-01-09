@@ -7,5 +7,6 @@
   "video": true,
   "videosFolder": "../../dist/cypress/apps/the-thing-e2e/videos",
   "screenshotsFolder": "../../dist/cypress/apps/the-thing-e2e/screenshots",
-  "chromeWebSecurity": false
+  "chromeWebSecurity": false,
+  "testFiles": "**/*.spec.*"
 }

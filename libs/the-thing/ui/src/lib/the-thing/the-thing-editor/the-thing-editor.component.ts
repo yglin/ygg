@@ -81,6 +81,8 @@ export class TheThingEditorComponent implements OnInit {
       this.theThing = new TheThing();
     }
 
+    // console.log(this.theThing);
+
     this.formGroup.patchValue(this.theThing);
     for (const name in this.theThing.cells) {
       if (this.theThing.cells.hasOwnProperty(name)) {
@@ -167,6 +169,12 @@ export class TheThingEditorComponent implements OnInit {
     });
     this.theThing = new TheThing();
     this.ngOnInit();
+  }
+
+  onDeleteRelation(relationName: string, objectThing: TheThing) {
+    if (confirm(`確定要移除連結關係 ${relationName} - ${objectThing.name} ？`)) {
+      this.theThing.removeRelation(relationName, objectThing);
+    }
   }
 
   async onSubmit() {

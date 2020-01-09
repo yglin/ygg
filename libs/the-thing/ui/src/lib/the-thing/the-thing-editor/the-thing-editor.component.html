@@ -133,7 +133,7 @@
               [attr.relation-name]="relation.key"
             >
               <h3>{{ relation.key }}</h3>
-              <the-thing-list [ids]="relation.value"></the-thing-list>
+              <the-thing-list [ids]="relation.value" (delete)='onDeleteRelation(relation.key, $event)'></the-thing-list>
             </div>
           </div>
         </div></div

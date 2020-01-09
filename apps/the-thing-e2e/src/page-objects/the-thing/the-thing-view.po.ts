@@ -5,6 +5,7 @@ import {
   AlbumViewPageObjectCypress,
   AddressViewPageObjectCypress
 } from '../cell-types';
+import { TheThingListPageObjectCypress } from './the-thing-list.po';
 
 class Relation {
   name: string;
@@ -81,9 +82,17 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
   }
 
   expectRelation(relationName: string, objectThing: TheThing) {
-    cy.get(this.getSelectorForRelation(relationName, objectThing)).contains(
-      objectThing.name
-    );
+    const theThingListPO = new TheThingListPageObjectCypress(this.getSelectorForRelation(relationName));
+    theThingListPO.expectTheThing(objectThing);
+  }
+
+  expectNoRelation(relationName: string) {
+    cy.get(this.getSelectorForRelation(relationName)).should('not.exist');
+  }
+
+  expectNoRelationObject(relationName: string, objectThing: TheThing) {
+    const theThingListPO = new TheThingListPageObjectCypress(this.getSelectorForRelation(relationName));
+    theThingListPO.expectNoTheThing(objectThing);
   }
 
   linkRelationBack() {
