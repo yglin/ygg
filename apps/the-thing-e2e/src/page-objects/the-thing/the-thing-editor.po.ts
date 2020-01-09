@@ -13,12 +13,7 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
     cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
   }
 
-  addCell(cell: TheThingCell) {
-    cy.get('.add-cell .name input')
-      .clear({ force: true })
-      .type(cell.name);
-    cy.get('.add-cell .tags select').select(cell.type);
-    cy.get('.add-cell button').click({ force: true });
+  setCell(cell: TheThingCell) {
     switch (cell.type) {
       case 'text':
         cy.get(`${this.getSelectorForCellControl(cell)} input`)
@@ -52,6 +47,16 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
     }
   }
 
+  addCell(cell: TheThingCell) {
+    cy.get('.add-cell .name input')
+      .clear({ force: true })
+      .type(cell.name);
+    cy.get('.add-cell .tags select').select(cell.type);
+    cy.get('.add-cell button').click({ force: true });
+    cy.get(this.getSelectorForCellControl(cell)).should('be.exist');
+    this.setCell(cell);
+  }
+
   setTags(tags: string[]) {
     const chipsControlPO = new ChipsControlPageObjectCypress(
       this.getSelector()
@@ -67,6 +72,10 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
 
   deleteCell(cell: TheThingCell) {
     cy.get(this.getSelectorForCellControlDelete(cell)).click({ force: true });
+  }
+
+  deleteAllCells() {
+    cy.get(this.getSelector('buttonDeleteAllCells')).click({ force: true });
   }
 
   setValue(theThing: TheThing) {

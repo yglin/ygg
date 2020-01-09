@@ -55,6 +55,10 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
     cy.get(this.getSelectorForCell(cell)).should('not.exist');
   }
 
+  expectNoCellAtAll() {
+    cy.get(this.getSelectorForCell()).should('not.exist');
+  }
+
   expectTags(tags: string[]) {
     cy.wrap(tags).each((tag: string) => {
       cy.get(this.getSelector('tags')).contains(tag);

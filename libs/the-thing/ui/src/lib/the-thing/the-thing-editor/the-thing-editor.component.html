@@ -82,6 +82,9 @@
               ></the-thing-cell-control>
             </div>
           </div>
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+            <button class='delete-all' mat-fab (click)="deleteAllCells()"><mat-icon>delete_sweep</mat-icon></button>
+          </div>
         </div>
         <div class="relations">
           <ygg-title-divider>關聯其他東東</ygg-title-divider>

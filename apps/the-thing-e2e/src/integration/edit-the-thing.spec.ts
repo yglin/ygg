@@ -50,7 +50,6 @@ describe('Edit exist the-thing', () => {
 
   before(() => {
     login();
-    mockDatabase.insert(`${TheThing.collection}/${kakapo.id}`, kakapo.toJSON());
   });
 
   after(() => {
@@ -58,6 +57,7 @@ describe('Edit exist the-thing', () => {
   });
 
   beforeEach(function() {
+    mockDatabase.insert(`${TheThing.collection}/${kakapo.id}`, kakapo.toJSON());
     cy.visit(`the-things/${kakapo.id}/edit`);
   });
 
@@ -93,6 +93,42 @@ describe('Edit exist the-thing', () => {
     theThingViewPO.expectVisible();
     theThingViewPO.expectNoCell(theCell);
   });
+
+  it('Can remove all cells', () => {
+    const theThingEditorPO = new TheThingEditorPageObjectCypress();
+    theThingEditorPO.expectVisible();
+    theThingEditorPO.deleteAllCells();
+    theThingEditorPO.submit();
+    const theThingViewPO = new TheThingViewPageObjectCypress();
+    theThingViewPO.expectVisible();
+    theThingViewPO.expectNoCellAtAll();
+  });
+
+  it('Can add a cell', () => {
+    const newCell = TheThingCell.forge({
+      name: '興趣'
+    });
+    const theThingEditorPO = new TheThingEditorPageObjectCypress();
+    theThingEditorPO.expectVisible();
+    theThingEditorPO.addCell(newCell);
+    theThingEditorPO.submit();
+    const theThingViewPO = new TheThingViewPageObjectCypress();
+    theThingViewPO.expectVisible();
+    theThingViewPO.expectCell(newCell);
+  });
   
-  
+  it('Can change any cell value', () => {
+    kakapo.cells['圖片'].value = Album.forge();
+    kakapo.cells['棲地'].value = '反正不是台灣';
+    kakapo.cells['習性'].value = '吃喝拉撒看到攝影師就上https://www.youtube.com/watch?v=9T1vfsHYiKY';
+    const theThingEditorPO = new TheThingEditorPageObjectCypress();
+    theThingEditorPO.expectVisible();
+    theThingEditorPO.setCell(kakapo.cells['圖片']);
+    theThingEditorPO.setCell(kakapo.cells['棲地']);
+    theThingEditorPO.setCell(kakapo.cells['習性']);
+    theThingEditorPO.submit();
+    const theThingViewPO = new TheThingViewPageObjectCypress();
+    theThingViewPO.expectVisible();
+    theThingViewPO.expectValue(kakapo);
+  });
 });

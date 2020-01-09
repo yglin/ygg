@@ -126,6 +126,15 @@ export class TheThingEditorComponent implements OnInit {
     }
   }
 
+  deleteAllCells() {
+    for (const cellName in this.theThing.cells) {
+      if (this.theThing.cells.hasOwnProperty(cellName)) {
+        this.cellsFormGroup.removeControl(cellName);
+      }
+    }
+    this.theThing.clearCells();
+  }
+
   openTheThingFinder() {
     const dialogRef = this.dialog.open(TheThingFinderComponent, {
       title: '從既有的物件中選取'

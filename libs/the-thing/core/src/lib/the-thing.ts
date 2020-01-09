@@ -111,6 +111,10 @@ export class TheThing {
     }
   }
 
+  clearCells() {
+    this.cells = {};
+  }
+
   addRelations(relationName: string, objectThings: TheThing[] | string[]) {
     let ids: string[] = [];
     if (typeof objectThings[0] === 'string') {

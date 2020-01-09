@@ -9,6 +9,7 @@ export abstract class TheThingEditorPageObject extends PageObject {
     buttonCreateRelationObject: '.add-relation button.the-thing-create',
     // buttonAddRelation: '.add-relation button.add',
     cellControls: '.cell-controls',
+    buttonDeleteAllCells: '.cell-controls button.delete-all',
     relationList: '.relation-list'
   };
 
