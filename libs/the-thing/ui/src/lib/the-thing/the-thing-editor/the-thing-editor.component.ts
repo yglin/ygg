@@ -7,7 +7,8 @@ import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { Tags } from '@ygg/tags/core';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { TheThingFinderComponent } from '../the-thing-finder/the-thing-finder.component';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   PageStashService,
   PageStashPromise
@@ -52,38 +53,55 @@ export class TheThingEditorComponent implements OnInit {
     );
   }
 
-  ngOnInit() {
-    if (!this.theThing) {
-      // Fetch the-thing from route resolver
-      this.theThing = get(this.route.snapshot, 'data.theThing', null);
+  resolveTheThing$(): Observable<TheThing> {
+    if (this.theThing) {
+      return of(this.theThing);
     }
-    if (
-      !this.theThing &&
-      this.pageStashService.isMatchPageResolved(this.router.url)
-    ) {
+
+    // Fetch the-thing from route resolver
+    const fromResolver = get(this.route.snapshot, 'data.theThing', null);
+    if (fromResolver) {
+      return of(fromResolver);
+    }
+
+    // Fetch the-thing from clone origin
+    const cloneId = this.route.snapshot.queryParamMap.get('clone');
+    if (cloneId) {
+      return this.theThingAccessService
+        .get$(cloneId)
+        .pipe(map(origin => origin.clone()));
+    }
+
+    if (this.pageStashService.isMatchPageResolved(this.router.url)) {
       // Fetch the-thing from local temporary storage
       const pageData = this.pageStashService.pop();
-      this.theThing = new TheThing().fromJSON(pageData.data.theThing);
+      const theThing = new TheThing().fromJSON(pageData.data.theThing);
       for (const key in pageData.promises) {
         if (pageData.promises.hasOwnProperty(key)) {
           const promise = pageData.promises[key];
           if (key === 'relation') {
-            this.theThing.addRelations(promise.data.name, [
+            theThing.addRelations(promise.data.name, [
               promise.data.objectId
             ]);
           }
         }
       }
+      return of(theThing);
     }
 
-    if (!this.theThing) {
-      // Not found any source of the-thing, create a new one
-      this.theThing = new TheThing();
-    }
+    // Not found any source of the-thing, create a new one
+    return of(new TheThing());
+  }
 
-    // console.log(this.theThing);
-
+  reset() {
+    this.formGroup.reset();
     this.formGroup.patchValue(this.theThing);
+
+    for (const controlName in this.cellsFormGroup.controls) {
+      if (this.cellsFormGroup.controls.hasOwnProperty(controlName)) {
+        this.cellsFormGroup.removeControl(controlName);
+      }
+    }
     for (const name in this.theThing.cells) {
       if (this.theThing.cells.hasOwnProperty(name)) {
         const cell = this.theThing.cells[name];
@@ -93,6 +111,15 @@ export class TheThingEditorComponent implements OnInit {
     this.formControlNewCellName.setValue(null);
     this.formControlNewCellType.setValue(null);
     this.formControlNewRelationName.setValue(null);
+  }
+
+  ngOnInit() {
+    this.subscriptions.push(
+      this.resolveTheThing$().subscribe(theThing => {
+        this.theThing = theThing;
+        this.reset();
+      })
+    );
   }
 
   ngOnDestroy(): void {
@@ -172,7 +199,9 @@ export class TheThingEditorComponent implements OnInit {
   }
 
   onDeleteRelation(relationName: string, objectThing: TheThing) {
-    if (confirm(`確定要移除連結關係 ${relationName} - ${objectThing.name} ？`)) {
+    if (
+      confirm(`確定要移除連結關係 ${relationName} - ${objectThing.name} ？`)
+    ) {
       this.theThing.removeRelation(relationName, objectThing);
     }
   }

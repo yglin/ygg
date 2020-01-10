@@ -9,7 +9,8 @@ import {
   keyBy,
   isEmpty,
   mapValues,
-  uniq
+  uniq,
+  omit
 } from 'lodash';
 import { Tags } from '@ygg/tags/core';
 import { TheThingCell } from './cell';
@@ -143,6 +144,10 @@ export class TheThing {
         delete this.relations[relationName];
       }
     }
+  }
+
+  clone(): TheThing {
+    return new TheThing().fromJSON(omit(this.toJSON(), 'id'));
   }
 
   fromJSON(data: any): this {

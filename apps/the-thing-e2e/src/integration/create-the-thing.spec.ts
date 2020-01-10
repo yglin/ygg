@@ -21,10 +21,8 @@ describe('Create a new the-thing', () => {
   function waitForViewPage(
     newIdAlias: string = 'newTheThingId'
   ): Cypress.Chainable<any> {
-    cy.location({ timeout: 10000 }).should(
-      'not.match',
-      /.*\/the-things\/create/
-    );
+    const theThingViewPO = new TheThingViewPageObjectCypress();
+    theThingViewPO.expectVisible();
     cy.location('pathname').then((pathname: any) => {
       const id = last((pathname as string).split('/'));
       cy.get('@testTheThingIds').then((ids: any) => {
@@ -84,7 +82,7 @@ describe('Create a new the-thing', () => {
     // and find/select "Samwise Gamgee" to add the realtion "dirty thief covet my preasuuuuuress"
     const Frodo = TheThing.forge({
       name: 'Frodo Baggins',
-      tags: ['hobbit', 'master', 'possess some others\' weapons']
+      tags: ['hobbit', 'master', "possess some others' weapons"]
     });
     const relationName = 'dirty thief covet my preasuuuuuress';
     const theThingEditorPO = new TheThingEditorPageObjectCypress();
@@ -136,5 +134,23 @@ describe('Create a new the-thing', () => {
         theThingViewPO.expectNotLinkRelationBack();
       });
     });
+  });
+
+  it('Clone from other the-thing', () => {
+    const DollyOrigin = TheThing.forge({
+      name: 'Dolly (Origin)',
+      tags: ['sheep', 'cell donor']
+    });
+    mockDatabase.insert(`${TheThing.collection}/${DollyOrigin.id}`, DollyOrigin.toJSON());
+    cy.visit(`/the-things/${DollyOrigin.id}`);
+    const theThingViewPO = new TheThingViewPageObjectCypress();
+    theThingViewPO.gotoCreateByClone();
+    const theThingEditorPO = new TheThingEditorPageObjectCypress();
+    theThingEditorPO.expectVisible();
+    theThingEditorPO.submit();
+    waitForViewPage().then(dollyCloneId => {
+      cy.wrap(dollyCloneId).should('not.eq', DollyOrigin.id);
+    });
+    theThingViewPO.expectValue(DollyOrigin);
   });
 });

@@ -9,7 +9,8 @@ export class TheThingViewPageObject extends PageObject {
     name: '.name',
     cells: '.cells',
     relationList: '.relation-list',
-    buttonLinkRelationBack: 'button.link-relation-back'
+    buttonLinkRelationBack: 'button.link-relation-back',
+    buttonCreateByClone: 'button.create-clone'
   };
 
   getSelectorForCell(cell?: TheThingCell): string {

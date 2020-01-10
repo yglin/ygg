@@ -1,8 +1,9 @@
+import { get } from "lodash";
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { TheThing } from '@ygg/the-thing/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { PageStashService } from '@ygg/shared/infra/data-access';
+import { PageStashService, PageData } from '@ygg/shared/infra/data-access';
 
 @Component({
   selector: 'the-thing-the-thing-view',
@@ -28,9 +29,7 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
     }
     // console.log(this.theThing);
     const pageData = this.pageStashService.peepTop();
-    if (pageData.promises && pageData.promises.relation) {
-      this.isPendingRelation = true;
-    }
+    this.isPendingRelation = !get(pageData, 'promises.relation.resolved', true);
   }
 
   ngOnDestroy() {
@@ -50,5 +49,10 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
     }
     this.pageStashService.push(pageData);
     this.router.navigateByUrl(pageData.path);
+  }
+
+  createClone() {
+    const urlCreate = `/the-things/create?clone=${this.theThing.id}`;
+    this.router.navigateByUrl(urlCreate);
   }
 }

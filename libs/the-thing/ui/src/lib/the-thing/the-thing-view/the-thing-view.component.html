@@ -1,5 +1,8 @@
 <div class="the-thing-view" *ngIf="theThing">
-  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+    <div>
+      <button mat-fab class='create-clone' (click)="createClone()"><mat-icon>file_copy</mat-icon></button>
+    </div>
     <div *ngIf="isPendingRelation">
       <button mat-fab class="link-relation-back" (click)="linkRelationBack()">
         <mat-icon>call_merge</mat-icon>

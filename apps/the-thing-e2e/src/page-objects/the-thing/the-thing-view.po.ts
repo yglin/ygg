@@ -82,7 +82,9 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
   }
 
   expectRelation(relationName: string, objectThing: TheThing) {
-    const theThingListPO = new TheThingListPageObjectCypress(this.getSelectorForRelation(relationName));
+    const theThingListPO = new TheThingListPageObjectCypress(
+      this.getSelectorForRelation(relationName)
+    );
     theThingListPO.expectTheThing(objectThing);
   }
 
@@ -91,7 +93,9 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
   }
 
   expectNoRelationObject(relationName: string, objectThing: TheThing) {
-    const theThingListPO = new TheThingListPageObjectCypress(this.getSelectorForRelation(relationName));
+    const theThingListPO = new TheThingListPageObjectCypress(
+      this.getSelectorForRelation(relationName)
+    );
     theThingListPO.expectNoTheThing(objectThing);
   }
 
@@ -101,5 +105,9 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
 
   expectNotLinkRelationBack() {
     cy.get(this.getSelector('buttonLinkRelationBack')).should('not.exist');
+  }
+
+  gotoCreateByClone() {
+    cy.get(this.getSelector('buttonCreateByClone')).click({ force: true });
   }
 }

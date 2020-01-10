@@ -11,7 +11,7 @@ export class PageStashPromise {
   }
 }
 
-interface PageData {
+export interface PageData {
   path: string;
   data: any;
   promises?: { [name: string]: PageStashPromise };

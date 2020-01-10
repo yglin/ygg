@@ -18,7 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // import { CellEditComponent } from './pages/cell/cell-edit/cell-edit.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
-import { TheThingResolver } from './the-thing-resolver.service';
+import { TheThingResolver } from '@ygg/the-thing/ui';
 
 const routes: Route[] = [
   {
