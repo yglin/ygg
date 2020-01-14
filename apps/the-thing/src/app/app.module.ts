@@ -34,16 +34,19 @@ const routes: Route[] = [
           {
             path: '',
             pathMatch: 'full',
-            component: TheThingViewComponent
+            component: TheThingViewComponent,
+            resolve: {
+              theThing: TheThingResolver
+            }
           },
           {
             path: 'edit',
-            component: TheThingEditorComponent
+            component: TheThingEditorComponent,
+            resolve: {
+              theThing: TheThingResolver
+            }
           }
-        ],
-        resolve: {
-          theThing: TheThingResolver
-        }
+        ]
       }
     ]
   }

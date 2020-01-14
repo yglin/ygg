@@ -7,6 +7,7 @@ export interface Document {
 
 export class MockDatabase {
   documents: { [path: string]: Document } = {};
+  upsert = this.insert;
 
   pushDocument(path: string, data?: any) {
     this.documents[path] = { path, data };

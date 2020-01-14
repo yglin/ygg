@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import { get } from 'lodash';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { TheThing } from '@ygg/the-thing/core';
 import { ActivatedRoute, Router } from '@angular/router';

@@ -171,6 +171,7 @@ export class DataAccessService {
     const data: DataItem =
       typeof item.toJSON === 'function' ? item.toJSON() : item;
     data.refPath = `${collection}/${item.id}`;
+    data.modifyAt = Date().valueOf();
     return this.getCollection(collection)
       .doc(item.id)
       .set(data)

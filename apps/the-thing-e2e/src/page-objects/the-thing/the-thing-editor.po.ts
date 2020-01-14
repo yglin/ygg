@@ -117,6 +117,7 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
     cy.get(this.getSelector('buttonCreateRelationObject')).click({
       force: true
     });
+    cy.location().should('match', /the-things\/create\/?/);
   }
 
   submit() {

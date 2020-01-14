@@ -58,6 +58,23 @@ export class TheThingEditorComponent implements OnInit {
       return of(this.theThing);
     }
 
+    if (this.pageStashService.isMatchPageResolved(this.router.url)) {
+      // Fetch the-thing from local temporary storage
+      const pageData = this.pageStashService.pop();
+      // console.log(pageData);
+      const theThing = new TheThing().fromJSON(pageData.data.theThing);
+      for (const key in pageData.promises) {
+        if (pageData.promises.hasOwnProperty(key)) {
+          const promise = pageData.promises[key];
+          if (key === 'relation') {
+            theThing.addRelations(promise.data.name, [promise.data.objectId]);
+          }
+        }
+      }
+      // console.log(theThing);
+      return of(theThing);
+    }
+
     // Fetch the-thing from route resolver
     const fromResolver = get(this.route.snapshot, 'data.theThing', null);
     if (fromResolver) {
@@ -70,23 +87,6 @@ export class TheThingEditorComponent implements OnInit {
       return this.theThingAccessService
         .get$(cloneId)
         .pipe(map(origin => origin.clone()));
-    }
-
-    if (this.pageStashService.isMatchPageResolved(this.router.url)) {
-      // Fetch the-thing from local temporary storage
-      const pageData = this.pageStashService.pop();
-      const theThing = new TheThing().fromJSON(pageData.data.theThing);
-      for (const key in pageData.promises) {
-        if (pageData.promises.hasOwnProperty(key)) {
-          const promise = pageData.promises[key];
-          if (key === 'relation') {
-            theThing.addRelations(promise.data.name, [
-              promise.data.objectId
-            ]);
-          }
-        }
-      }
-      return of(theThing);
     }
 
     // Not found any source of the-thing, create a new one
@@ -194,8 +194,12 @@ export class TheThingEditorComponent implements OnInit {
         relation: new PageStashPromise(this.formControlNewRelationName.value)
       }
     });
-    this.theThing = new TheThing();
-    this.ngOnInit();
+    if (this.router.url.match(/the-things\/create\/?/)) {
+      this.theThing = new TheThing();
+      this.ngOnInit();
+    } else {
+      this.router.navigate(['/', 'the-things', 'create']);
+    }
   }
 
   onDeleteRelation(relationName: string, objectThing: TheThing) {
@@ -208,13 +212,14 @@ export class TheThingEditorComponent implements OnInit {
 
   async onSubmit() {
     this.updateTheThing();
-    if (confirm(`新增 ${this.theThing.name} ？`)) {
+    // console.log(this.theThing);
+    if (confirm(`新增/修改 ${this.theThing.name} ？`)) {
       try {
         this.theThing = await this.theThingAccessService.upsert(this.theThing);
-        alert(`新增 ${this.theThing.name} 成功`);
+        alert(`新增/修改 ${this.theThing.name} 成功`);
         this.router.navigate(['/', 'the-things', this.theThing.id]);
       } catch (error) {
-        alert(`新增失敗，錯誤訊息 ${error.message}`);
+        alert(`新增/修改失敗，錯誤訊息 ${error.message}`);
       }
     }
   }

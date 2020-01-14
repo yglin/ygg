@@ -52,7 +52,7 @@ export class PageStashService {
     if (!pageData || pageData.path !== routePath) {
       return false;
     } else if (isEmpty(pageData.promises)) {
-      return true;
+      return false;
     } else {
       return every(pageData.promises, promise => promise.resolved);
     }

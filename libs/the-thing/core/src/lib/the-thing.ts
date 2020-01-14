@@ -151,7 +151,9 @@ export class TheThing {
   }
 
   fromJSON(data: any): this {
+    // console.dir(data);
     extend(this, data);
+    // console.dir(this);
     if (data) {
       if (data.tags) {
         this.tags = Tags.fromJSON(data.tags);
