@@ -24,6 +24,9 @@ export class TheThing {
   /** Category, group, table, or collection name */
   collection: string;
 
+  /** Owner's user id */
+  ownerId: string;
+
   /** Display name */
   name: string;
 
@@ -102,6 +105,10 @@ export class TheThing {
     this.tags = new Tags();
     this.cells = {};
     this.relations = {};
+  }
+
+  hasTags(tags: string[]): boolean {
+    return this.tags.include(tags);
   }
 
   hasCell(cell: TheThingCell): boolean {

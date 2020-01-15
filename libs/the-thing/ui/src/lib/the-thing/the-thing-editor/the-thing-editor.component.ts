@@ -13,6 +13,7 @@ import {
   PageStashService,
   PageStashPromise
 } from '@ygg/shared/infra/data-access';
+import { User, AuthenticateService } from '@ygg/shared/user';
 
 @Component({
   selector: 'the-thing-the-thing-editor',
@@ -29,6 +30,7 @@ export class TheThingEditorComponent implements OnInit {
   formControlNewRelationName: FormControl;
   isNewRelationNameEmpty = true;
   subscriptions: Subscription[] = [];
+  currentUser: User;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -36,7 +38,8 @@ export class TheThingEditorComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private dialog: YggDialogService,
-    private pageStashService: PageStashService
+    private pageStashService: PageStashService,
+    private authenticateService: AuthenticateService
   ) {
     this.formGroup = formBuilder.group({
       tags: null,
@@ -50,6 +53,11 @@ export class TheThingEditorComponent implements OnInit {
       this.formControlNewRelationName.valueChanges.subscribe(value => {
         this.isNewRelationNameEmpty = !value;
       })
+    );
+    this.subscriptions.push(
+      this.authenticateService.currentUser$.subscribe(
+        user => (this.currentUser = user)
+      )
     );
   }
 
@@ -180,6 +188,9 @@ export class TheThingEditorComponent implements OnInit {
 
   updateTheThing() {
     extend(this.theThing, this.formGroup.value);
+    if (this.currentUser && !(this.theThing.ownerId)) {
+      this.theThing.ownerId = this.currentUser.id;
+    }
   }
 
   gotoCreateRelationObject() {

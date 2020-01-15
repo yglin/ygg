@@ -16,6 +16,10 @@
     <ygg-tags-view [tags]="theThing.tags"></ygg-tags-view>
   </div>
   <br />
+  <div class="owner">
+    <ygg-user-thumbnail [id]="theThing.ownerId"></ygg-user-thumbnail>
+  </div>
+  <br>
   <div class="cells">
     <div
       *ngFor="let cellItem of theThing.cells | keyvalue"

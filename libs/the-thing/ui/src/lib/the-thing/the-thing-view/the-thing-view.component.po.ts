@@ -7,6 +7,7 @@ export class TheThingViewPageObject extends PageObject {
     main: '.the-thing-view',
     tags: '.tags',
     name: '.name',
+    owner: '.owner',
     cells: '.cells',
     relationList: '.relation-list',
     buttonLinkRelationBack: 'button.link-relation-back',

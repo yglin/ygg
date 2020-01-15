@@ -1,6 +1,6 @@
 import { SerializableJSON } from '@ygg/shared/infra/data-access';
-import { isArray, isEmpty, range, random, find, remove } from 'lodash';
-import { Tag } from "./tag";
+import { isArray, isEmpty, range, random, find, remove, every } from 'lodash';
+import { Tag } from './tag';
 
 export class Tags implements SerializableJSON {
   private tags: Tag[];
@@ -17,7 +17,9 @@ export class Tags implements SerializableJSON {
     if (isArray(data)) {
       return new Tags(data);
     } else {
-      throw new Error(`Tags.fromJSON(): JSON Data error, need Array, received ${typeof data}`);
+      throw new Error(
+        `Tags.fromJSON(): JSON Data error, need Array, received ${typeof data}`
+      );
     }
   }
 
@@ -49,6 +51,14 @@ export class Tags implements SerializableJSON {
 
   has(tag: Tag | string): boolean {
     return !!find(this.tags, _tag => _tag.name === Tag.toName(tag));
+  }
+
+  include(tags: string[]): boolean {
+    if (isEmpty(tags)) {
+      return true;
+    } else {
+      return every(tags, tag => this.has(tag));
+    }
   }
 
   toTagsArray(): Tag[] {

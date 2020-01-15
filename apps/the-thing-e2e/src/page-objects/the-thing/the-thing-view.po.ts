@@ -6,6 +6,7 @@ import {
   AddressViewPageObjectCypress
 } from '../cell-types';
 import { TheThingListPageObjectCypress } from './the-thing-list.po';
+import { User } from '@ygg/shared/user';
 
 class Relation {
   name: string;
@@ -68,6 +69,10 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
 
   expectName(name: string) {
     cy.get(this.getSelector('name')).contains(name);
+  }
+
+  expectOwner(user: User) {
+    cy.get(this.getSelector('owner')).contains(user.name);
   }
 
   expectValue(theThing: TheThing) {

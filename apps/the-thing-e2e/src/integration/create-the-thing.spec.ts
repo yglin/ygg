@@ -1,6 +1,6 @@
 import { last, values } from 'lodash';
 import { TheThingCell, TheThing } from '@ygg/the-thing/core';
-import { login, MockDatabase } from '@ygg/shared/test/cypress';
+import { login, getCurrentUser, MockDatabase } from '@ygg/shared/test/cypress';
 import {
   TheThingEditorPageObjectCypress,
   TheThingViewPageObjectCypress
@@ -33,6 +33,23 @@ describe('Create a new the-thing', () => {
   it('Create a new the-thing with all cell-types, then confirm data consistency', () => {
     const theThing: TheThing = TheThing.forge({
       cells: forgedCells
+    });
+    const theThingEditorPO = new TheThingEditorPageObjectCypress();
+    theThingEditorPO.setValue(theThing);
+    theThingEditorPO.submit();
+    waitForTheThingCreated().then(newId => {
+      mockDatabase.pushDocument(`${TheThing.collection}/${newId}`);
+    });
+
+    const theThingViewPO = new TheThingViewPageObjectCypress();
+    getCurrentUser().then(user => {
+      theThingViewPO.expectOwner(user);
+    })
+  });
+
+  it('Created the-thing should show owner\'s name', () => {
+    const theThing: TheThing = TheThing.forge({
+      cells: {}
     });
     const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.setValue(theThing);

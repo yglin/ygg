@@ -17,6 +17,9 @@ import { TagsUiModule } from '@ygg/tags/ui';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { SharedTypesModule } from '@ygg/shared/types';
 import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-thing-thumbnail.component';
+import { MyThingsComponent } from './the-thing/my-things/my-things.component';
+import { SharedUserModule } from "@ygg/shared/user";
+import { TheThingFilterComponent } from './the-thing/the-thing-filter/the-thing-filter.component';
 
 @NgModule({
   imports: [
@@ -26,6 +29,7 @@ import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
     SharedTypesModule,
+    SharedUserModule,
     TagsUiModule
   ],
   declarations: [
@@ -37,7 +41,9 @@ import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-
     TheThingViewComponent,
     TheThingFinderComponent,
     TheThingListComponent,
-    TheThingThumbnailComponent
+    TheThingThumbnailComponent,
+    MyThingsComponent,
+    TheThingFilterComponent
   ],
   exports: [
     CellListComponent,
@@ -46,7 +52,8 @@ import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-
     CellViewComponent,
     TheThingEditorComponent,
     TheThingViewComponent,
-    TheThingFinderComponent
+    TheThingFinderComponent,
+    MyThingsComponent
   ],
   entryComponents: [TheThingFinderComponent]
 })

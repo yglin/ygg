@@ -6,7 +6,8 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import {
   TheThingUiModule,
   TheThingEditorComponent,
-  TheThingViewComponent
+  TheThingViewComponent,
+  MyThingsComponent
 } from '@ygg/the-thing/ui';
 
 import { RouterModule, Route } from '@angular/router';
@@ -19,6 +20,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
 import { TheThingResolver } from '@ygg/the-thing/ui';
+import { LoggedInGuard } from "@ygg/shared/user";
 
 const routes: Route[] = [
   {
@@ -27,6 +29,11 @@ const routes: Route[] = [
       {
         path: 'create',
         component: TheThingEditorComponent
+      },
+      {
+        path: 'my',
+        component: MyThingsComponent,
+        canActivate: [LoggedInGuard]
       },
       {
         path: ':id',

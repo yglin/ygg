@@ -24,6 +24,13 @@ export class TheThingAccessService {
       .pipe(map(items => items.map(item => new TheThing().fromJSON(item))));
   }
 
+  listByOwner$(ownerId: string): Observable<TheThing[]> {
+    const query = new Query('ownerId', '==', ownerId);
+    return this.dataAccessService
+      .find$(TheThing.collection, query)
+      .pipe(map(items => items.map(item => new TheThing().fromJSON(item))));
+  }
+
   listByIds$(ids: string[]): Observable<TheThing[]> {
     return this.dataAccessService
       .listByIds$(TheThing.collection, ids)
