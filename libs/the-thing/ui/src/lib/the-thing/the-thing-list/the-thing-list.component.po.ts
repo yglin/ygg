@@ -6,8 +6,11 @@ export class TheThingListPageObject extends PageObject {
     main: '.the-thing-list'
   };
 
-  getSelectorForTheThing(theThing: TheThing): string {
-    return `${this.getSelector()} [the-thing-id="${theThing.id}"]`;
+  getSelectorForTheThing(theThing?: TheThing): string {
+    const attrSelector = !!theThing
+      ? `[the-thing-id="${theThing.id}"]`
+      : '[the-thing-id]';
+    return `${this.getSelector()} ${attrSelector}`;
   }
 
   getSelectorForTheThingDelete(theThing: TheThing): string {

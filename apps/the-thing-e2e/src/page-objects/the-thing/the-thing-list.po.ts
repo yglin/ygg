@@ -10,6 +10,11 @@ export class TheThingListPageObjectCypress extends TheThingListPageObject {
     cy.get(this.getSelectorForTheThing(theThing)).should('exist');
   }
 
+  expectCount(count: number) {
+    cy.get(this.getSelectorForTheThing())
+      .should('have.length', count);
+  }
+
   expectNoTheThing(theThing: TheThing) {
     cy.get(this.getSelectorForTheThing(theThing)).should('not.exist');
   }

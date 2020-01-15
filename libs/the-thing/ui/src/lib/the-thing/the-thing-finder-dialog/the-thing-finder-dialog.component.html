@@ -1,0 +1,14 @@
+<div class="the-thing-finder-dialog">
+  <the-thing-finder (selectChange)='onSelectChange($event)'></the-thing-finder>
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
+    <button
+      type="button"
+      class="submit"
+      mat-fab
+      [disabled]="!selection || selection.length <= 0"
+      (click)="onSubmit()"
+    >
+      <mat-icon>check</mat-icon>
+    </button>
+  </div>
+</div>

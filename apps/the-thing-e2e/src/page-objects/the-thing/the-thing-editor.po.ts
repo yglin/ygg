@@ -8,6 +8,7 @@ import {
 import { TheThingFinderPageObjectCypress } from './the-thing-finder.po';
 import { ChipsControlPageObjectCypress } from '@ygg/shared/test/cypress';
 import { TheThingListPageObjectCypress } from './the-thing-list.po';
+import { TheThingFinderDialogPageObjectCypress } from './the-thing-finder-dialog.po';
 
 export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
   expectVisible() {
@@ -93,9 +94,9 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
       .clear({ force: true })
       .type(relationName);
     cy.get(this.getSelector('buttonFindRelationObject')).click({ force: true });
-    const theThingFinderPO = new TheThingFinderPageObjectCypress();
-    theThingFinderPO.select(objectThing);
-    theThingFinderPO.submit();
+    const theThingFinderDialogPO = new TheThingFinderDialogPageObjectCypress();
+    theThingFinderDialogPO.select(objectThing);
+    theThingFinderDialogPO.submit();
     // cy.get(this.getSelector('buttonAddRelation')).click({ force: true });
     this.expectRelation(relationName, objectThing);
   }

@@ -20,6 +20,7 @@ import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-
 import { MyThingsComponent } from './the-thing/my-things/my-things.component';
 import { SharedUserModule } from "@ygg/shared/user";
 import { TheThingFilterComponent } from './the-thing/the-thing-filter/the-thing-filter.component';
+import { TheThingFinderDialogComponent } from './the-thing/the-thing-finder-dialog/the-thing-finder-dialog.component';
 
 @NgModule({
   imports: [
@@ -43,7 +44,8 @@ import { TheThingFilterComponent } from './the-thing/the-thing-filter/the-thing-
     TheThingListComponent,
     TheThingThumbnailComponent,
     MyThingsComponent,
-    TheThingFilterComponent
+    TheThingFilterComponent,
+    TheThingFinderDialogComponent
   ],
   exports: [
     CellListComponent,
@@ -55,6 +57,6 @@ import { TheThingFilterComponent } from './the-thing/the-thing-filter/the-thing-
     TheThingFinderComponent,
     MyThingsComponent
   ],
-  entryComponents: [TheThingFinderComponent]
+  entryComponents: [TheThingFinderDialogComponent]
 })
 export class TheThingUiModule {}

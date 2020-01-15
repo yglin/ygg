@@ -6,6 +6,7 @@ import {
   of,
   BehaviorSubject,
   combineLatest,
+  Observable,
   throwError
 } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -18,9 +19,9 @@ import { AuthenticateService } from '@ygg/shared/user';
   styleUrls: ['./my-things.component.css']
 })
 export class MyThingsComponent implements OnInit {
-  theThings: TheThing[];
-  filterChange$: BehaviorSubject<TheThingFilter> = new BehaviorSubject(new TheThingFilter());
-  subscriptions: Subscription[] = [];
+  myThings$: Observable<TheThing[]>;
+  // filterChange$: BehaviorSubject<TheThingFilter> = new BehaviorSubject(new TheThingFilter());
+  // subscriptions: Subscription[] = [];
 
   constructor(
     private theThingAccessService: TheThingAccessService,
@@ -28,32 +29,15 @@ export class MyThingsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.subscriptions.push(
-      this.authenticateService.currentUser$
-        .pipe(
-          switchMap(user => {
-            if (user) {
-              return combineLatest([
-                this.theThingAccessService.listByOwner$(user.id),
-                this.filterChange$
-              ]);
-            } else {
-              alert('找不到登入用戶，尚未登入？');
-              return of([[], null]);
-            }
-          })
-        )
-        .subscribe(([theThings, filter]) => {
-          if (filter) {
-            this.theThings = (filter as TheThingFilter).filter(theThings)
-          } else {
-            this.theThings = theThings;
-          }
-        })
+    this.myThings$ = this.authenticateService.currentUser$.pipe(
+      switchMap(user => {
+        if (user) {
+          return this.theThingAccessService.listByOwner$(user.id);
+        } else {
+          alert('找不到登入用戶，尚未登入？');
+          return of([]);
+        }
+      })
     );
-  }
-
-  onFilterChanged(filter: TheThingFilter) {
-    this.filterChange$.next(filter);
   }
 }

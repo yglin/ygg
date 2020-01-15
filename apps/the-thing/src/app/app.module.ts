@@ -7,7 +7,8 @@ import {
   TheThingUiModule,
   TheThingEditorComponent,
   TheThingViewComponent,
-  MyThingsComponent
+  MyThingsComponent,
+  TheThingFinderComponent
 } from '@ygg/the-thing/ui';
 
 import { RouterModule, Route } from '@angular/router';
@@ -26,6 +27,11 @@ const routes: Route[] = [
   {
     path: 'the-things',
     children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: TheThingFinderComponent
+      },
       {
         path: 'create',
         component: TheThingEditorComponent

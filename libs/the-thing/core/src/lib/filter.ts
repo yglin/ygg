@@ -17,8 +17,12 @@ export class TheThingFilter {
     if (!isEmpty(this.tags) && !theThing.tags.include(this.tags)) {
       return false;
     }
-    if (!!this.keywordName && !theThing.name.includes(this.keywordName)) {
-      return false;
+    if (!!this.keywordName) {
+      const keyword = this.keywordName.toLowerCase();
+      const name = theThing.name.toLowerCase();
+      if (!name.includes(keyword)) {
+        return false;
+      }
     }
     return true;
   }

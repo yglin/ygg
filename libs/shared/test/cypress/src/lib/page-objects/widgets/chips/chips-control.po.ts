@@ -1,8 +1,12 @@
 import { ChipsControlPageObject } from '@ygg/shared/ui/widgets';
 
 export class ChipsControlPageObjectCypress extends ChipsControlPageObject {
-  setValue(chips: string[]) {
+  clear() {
     cy.get(this.getSelector('buttonClear')).click({ force: true });
+  }
+
+  setValue(chips: string[]) {
+    this.clear();
     cy.wrap(chips).each((chip: any) => {
       this.addChip(chip as string);
     });

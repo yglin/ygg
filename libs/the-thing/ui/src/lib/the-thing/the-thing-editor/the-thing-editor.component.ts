@@ -6,7 +6,7 @@ import { TheThing, TheThingCell, TheThingCellTypes } from '@ygg/the-thing/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { Tags } from '@ygg/tags/core';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
-import { TheThingFinderComponent } from '../the-thing-finder/the-thing-finder.component';
+import { TheThingFinderDialogComponent } from '../the-thing-finder-dialog/the-thing-finder-dialog.component';
 import { Observable, Subscription, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
@@ -173,7 +173,7 @@ export class TheThingEditorComponent implements OnInit {
   }
 
   openTheThingFinder() {
-    const dialogRef = this.dialog.open(TheThingFinderComponent, {
+    const dialogRef = this.dialog.open(TheThingFinderDialogComponent, {
       title: '從既有的物件中選取'
     });
     dialogRef.afterClosed().subscribe((theThings: TheThing[]) => {
