@@ -1,12 +1,23 @@
 import { extend, isEmpty } from 'lodash';
 import { TheThing } from './the-thing';
+import { SerializableJSON, toJSONDeep } from "@ygg/shared/infra/data-access";
 
-export class TheThingFilter {
+export class TheThingFilter implements SerializableJSON {
+  name: string;
   tags: string[] = [];
   keywordName: string = '';
 
-  constructor(options: any = {}) {
-    extend(this, options);
+  constructor(...args: any[]) {
+    if (!isEmpty(args)) {
+      if (typeof args[0] === 'string') {
+        this.name = args[0];
+        if (args.length >= 2 && typeof args[1] === 'object') {
+          extend(this, args[1]);
+        }
+      } else if (typeof args[0] === 'object') {
+        extend(this, args[0]);
+      }
+    }
   }
 
   filter(theThings: TheThing[]): TheThing[] {
@@ -26,4 +37,13 @@ export class TheThingFilter {
     }
     return true;
   }
-}
+
+  fromJSON(data: any): this {
+    extend(this, data);
+    return this;
+  }
+
+  toJSON(): any {
+    return toJSONDeep(this);
+  }
+ }

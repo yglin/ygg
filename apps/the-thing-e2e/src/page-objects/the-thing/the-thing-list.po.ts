@@ -6,13 +6,19 @@ export class TheThingListPageObjectCypress extends TheThingListPageObject {
     cy.get(this.getSelector(), { timeout: 10000 }).should('exist');
   }
 
+  expectTheThings(theThings: TheThing[]) {
+    cy.wrap(theThings).each((theThing: any) => {
+      this.expectTheThing(theThing);
+    });
+    this.expectCount(theThings.length);
+  }
+
   expectTheThing(theThing: TheThing) {
     cy.get(this.getSelectorForTheThing(theThing)).should('exist');
   }
 
   expectCount(count: number) {
-    cy.get(this.getSelectorForTheThing())
-      .should('have.length', count);
+    cy.get(this.getSelectorForTheThing()).should('have.length', count);
   }
 
   expectNoTheThing(theThing: TheThing) {

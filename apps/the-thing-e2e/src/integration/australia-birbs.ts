@@ -61,7 +61,7 @@ export const kiwi: TheThing = TheThing.forge({
 
 export const kakapo: TheThing = TheThing.forge({
   name: 'KAKAPO',
-  tags: ['parrot', 'terrestrial', 'round', 'green', 'dumbdumb'],
+  tags: ['birb', 'parrot', 'terrestrial', 'round', 'green', 'dumbdumb'],
   cells: {
     圖片: TheThingCell.forge({
       name: '圖片',

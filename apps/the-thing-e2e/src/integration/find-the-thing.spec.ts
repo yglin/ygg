@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { kakapo, kiwi, littlePenguin } from './australia-birbs';
 import { Frodo, Sam, Gollum } from './hobbits';
 import { MockDatabase, login, getCurrentUser } from '@ygg/shared/test/cypress';
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
 import {
   TheThingListPageObjectCypress,
   TheThingFilterPageObjectCypress
@@ -27,6 +27,7 @@ before(() => {
     mockDatabase.insert(`${TheThing.collection}/${Sam.id}`, Sam.toJSON());
     mockDatabase.insert(`${TheThing.collection}/${Gollum.id}`, Gollum.toJSON());
   });
+  cy.visit('/');
 });
 
 after(() => {
@@ -73,5 +74,30 @@ describe('Find the-things by query conditions', () => {
     theThingListPO.expectTheThing(Frodo);
     theThingListPO.expectTheThing(Sam);
     theThingListPO.expectCount(2);
+  });
+
+  it('Can save filter and load it back', () => {
+    const filter = new TheThingFilter({
+      name: 'Chubby Dumb-Ass Birbs',
+      tags: ['dumb', 'fat-ass'],
+      keywordName: 'the chubby'
+    });
+    kakapo.tags.push(...filter.tags);
+    kakapo.name += `(${filter.keywordName})`;
+    mockDatabase.insert(`${TheThing.collection}/${kakapo.id}`, kakapo.toJSON());
+    kiwi.tags.push(...filter.tags);
+    kiwi.name += `(${filter.keywordName})`;
+    mockDatabase.insert(`${TheThing.collection}/${kiwi.id}`, kiwi.toJSON());
+
+    cy.visit('/the-things/');
+    const theThingFilterPO = new TheThingFilterPageObjectCypress();
+    theThingFilterPO.setFilter(filter);
+    const theThingListPO = new TheThingListPageObjectCypress();
+    theThingListPO.expectTheThings([kakapo, kiwi]);
+    theThingFilterPO.saveFilter(filter.name);
+
+    cy.visit('/the-things/');
+    theThingFilterPO.loadFilter(filter.name);
+    theThingListPO.expectTheThings([kakapo, kiwi]);
   });
 });
