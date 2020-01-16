@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from "@angular/router";
 import { CellListComponent } from './cell/cell-list/cell-list.component';
 import { CellFormComponent } from './cell/cell-form/cell-form.component';
 import { CellControlComponent } from './cell/cell-control/cell-control.component';
@@ -21,6 +22,7 @@ import { MyThingsComponent } from './the-thing/my-things/my-things.component';
 import { SharedUserModule } from "@ygg/shared/user";
 import { TheThingFilterComponent } from './the-thing/the-thing-filter/the-thing-filter.component';
 import { TheThingFinderDialogComponent } from './the-thing/the-thing-finder-dialog/the-thing-finder-dialog.component';
+import { routes } from "./routes";
 
 @NgModule({
   imports: [
@@ -31,7 +33,8 @@ import { TheThingFinderDialogComponent } from './the-thing/the-thing-finder-dial
     SharedUiWidgetsModule,
     SharedTypesModule,
     SharedUserModule,
-    TagsUiModule
+    TagsUiModule,
+    RouterModule.forChild(routes)
   ],
   declarations: [
     CellListComponent,

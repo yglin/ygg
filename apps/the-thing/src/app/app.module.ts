@@ -11,7 +11,7 @@ import {
   TheThingFinderComponent
 } from '@ygg/the-thing/ui';
 
-import { RouterModule, Route } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './layout/header/header.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -22,48 +22,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
 import { TheThingResolver } from '@ygg/the-thing/ui';
 import { LoggedInGuard } from "@ygg/shared/user";
-
-const routes: Route[] = [
-  {
-    path: 'the-things',
-    children: [
-      {
-        path: '',
-        pathMatch: 'full',
-        component: TheThingFinderComponent
-      },
-      {
-        path: 'create',
-        component: TheThingEditorComponent
-      },
-      {
-        path: 'my',
-        component: MyThingsComponent,
-        canActivate: [LoggedInGuard]
-      },
-      {
-        path: ':id',
-        children: [
-          {
-            path: '',
-            pathMatch: 'full',
-            component: TheThingViewComponent,
-            resolve: {
-              theThing: TheThingResolver
-            }
-          },
-          {
-            path: 'edit',
-            component: TheThingEditorComponent,
-            resolve: {
-              theThing: TheThingResolver
-            }
-          }
-        ]
-      }
-    ]
-  }
-];
 
 @NgModule({
   declarations: [
@@ -83,7 +41,7 @@ const routes: Route[] = [
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
     TheThingUiModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot([]),
     BrowserAnimationsModule
   ],
   providers: [],
