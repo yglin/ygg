@@ -1,8 +1,7 @@
 import { last } from "lodash";
-import { TheThingViewPageObjectCypress } from "../page-objects/the-thing";
+import { TheThingViewPageObjectCypress } from "./the-thing-view.po";
 
-// Wait for navigating to view page
-export function waitForTheThingCreated(
+export function getCreatedTheThingId(
   newIdAlias: string = 'newTheThingId'
 ): Cypress.Chainable<any> {
   const theThingViewPO = new TheThingViewPageObjectCypress();
@@ -13,4 +12,3 @@ export function waitForTheThingCreated(
   });
   return cy.get(`@${newIdAlias}`, { timeout: 10000 });
 }
-

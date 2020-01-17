@@ -105,7 +105,16 @@
             "sourceTag": "scope:playwhat",
             "onlyDependOnLibsWithTags": [
               "scope:playwhat",
+              "scope:the-thing",
               "scope:schedule",
+              "scope:tags",
+              "scope:shared"
+            ]
+          },
+          {
+            "sourceTag": "scope:the-thing",
+            "onlyDependOnLibsWithTags": [
+              "scope:the-thing",
               "scope:tags",
               "scope:shared"
             ]

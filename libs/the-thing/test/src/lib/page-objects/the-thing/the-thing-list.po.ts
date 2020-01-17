@@ -3,7 +3,7 @@ import { TheThingListPageObject } from '@ygg/the-thing/ui';
 
 export class TheThingListPageObjectCypress extends TheThingListPageObject {
   expectVisible() {
-    cy.get(this.getSelector(), { timeout: 10000 }).should('exist');
+    cy.get(this.getSelector(), { timeout: 20000 }).should('exist');
   }
 
   expectTheThings(theThings: TheThing[]) {

@@ -12,7 +12,7 @@ import { TheThingFinderDialogPageObjectCypress } from './the-thing-finder-dialog
 
 export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
   expectVisible() {
-    cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
+    cy.get(this.getSelector(), { timeout: 20000 }).should('be.visible');
   }
 
   setCell(cell: TheThingCell) {

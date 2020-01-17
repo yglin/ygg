@@ -166,6 +166,9 @@
     },
     "the-thing-ui": {
       "tags": ["scope:the-thing", "type:ui"]
+    },
+    "the-thing-test": {
+      "tags": ["scope:the-thing", "type:test"]
     }
   }
 }

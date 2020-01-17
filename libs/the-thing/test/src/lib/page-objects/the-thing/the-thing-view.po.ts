@@ -17,7 +17,7 @@ class Relation {
 
 export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
   expectVisible() {
-    cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
+    cy.get(this.getSelector(), { timeout: 20000 }).should('be.visible');
   }
 
   expectCell(cell: TheThingCell) {
@@ -91,6 +91,10 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
       this.getSelectorForRelation(relationName)
     );
     theThingListPO.expectTheThing(objectThing);
+  }
+
+  expectRelations(relationName: string, objectThings: TheThing[]) {
+    cy.wrap(objectThings).each((objectThing: any) => this.expectRelation(relationName, objectThing))
   }
 
   expectNoRelation(relationName: string) {

@@ -1743,6 +1743,31 @@
         }
       },
       "schematics": {}
+    },
+    "the-thing-test": {
+      "root": "libs/the-thing/test",
+      "sourceRoot": "libs/the-thing/test/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/the-thing/test/tsconfig.lib.json",
+              "libs/the-thing/test/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/the-thing/test/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/the-thing/test/jest.config.js",
+            "tsConfig": "libs/the-thing/test/tsconfig.spec.json"
+          }
+        }
+      }
     }
   },
   "cli": {

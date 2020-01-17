@@ -3,9 +3,9 @@ import { TheThingCell, TheThing } from '@ygg/the-thing/core';
 import { login, getCurrentUser, MockDatabase } from '@ygg/shared/test/cypress';
 import {
   TheThingEditorPageObjectCypress,
-  TheThingViewPageObjectCypress
-} from '../page-objects';
-import { waitForTheThingCreated } from "./utils";
+  TheThingViewPageObjectCypress,
+  getCreatedTheThingId
+} from '@ygg/the-thing/test';
 
 describe('Create a new the-thing', () => {
   const mockDatabase = new MockDatabase();
@@ -14,7 +14,8 @@ describe('Create a new the-thing', () => {
     興趣: TheThingCell.forge({ name: '興趣', type: 'longtext' }),
     售價: TheThingCell.forge({ name: '售價', type: 'number' }),
     照片: TheThingCell.forge({ name: '照片', type: 'album' }),
-    地址: TheThingCell.forge({ name: '地址', type: 'address' })
+    地址: TheThingCell.forge({ name: '地址', type: 'address' }),
+    簡介: TheThingCell.forge({ name: '簡介', type: 'html' }),
   };
 
   before(() => {
@@ -37,7 +38,7 @@ describe('Create a new the-thing', () => {
     const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.setValue(theThing);
     theThingEditorPO.submit();
-    waitForTheThingCreated().then(newId => {
+    getCreatedTheThingId().then(newId => {
       mockDatabase.pushDocument(`${TheThing.collection}/${newId}`);
     });
 
@@ -54,7 +55,7 @@ describe('Create a new the-thing', () => {
     const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.setValue(theThing);
     theThingEditorPO.submit();
-    waitForTheThingCreated().then(newId => {
+    getCreatedTheThingId().then(newId => {
       mockDatabase.pushDocument(`${TheThing.collection}/${newId}`);
     });
 
@@ -77,7 +78,7 @@ describe('Create a new the-thing', () => {
     const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.expectVisible();
     theThingEditorPO.submit();
-    waitForTheThingCreated().then(dollyCloneId => {
+    getCreatedTheThingId().then(dollyCloneId => {
       mockDatabase.pushDocument(`${TheThing.collection}/${dollyCloneId}`);
       cy.wrap(dollyCloneId).should('not.eq', DollyOrigin.id);
     });

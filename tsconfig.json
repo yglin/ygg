@@ -73,7 +73,8 @@
       "@ygg/the-thing/core": ["libs/the-thing/core/src/index.ts"],
       "@ygg/the-thing/admin": ["libs/the-thing/admin/src/index.ts"],
       "@ygg/the-thing/data-access": ["libs/the-thing/data-access/src/index.ts"],
-      "@ygg/the-thing/ui": ["libs/the-thing/ui/src/index.ts"]
+      "@ygg/the-thing/ui": ["libs/the-thing/ui/src/index.ts"],
+      "@ygg/the-thing/test": ["libs/the-thing/test/src/index.ts"]
     },
     "rootDir": "."
   },

@@ -7,7 +7,7 @@ import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
 import {
   TheThingListPageObjectCypress,
   TheThingFilterPageObjectCypress
-} from '../page-objects/the-thing';
+} from '@ygg/the-thing/test';
 
 const mockDatabase = new MockDatabase();
 
