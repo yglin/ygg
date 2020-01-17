@@ -5,6 +5,7 @@ import {
   AlbumViewPageObjectCypress,
   AddressViewPageObjectCypress
 } from '../cell-types';
+import { HtmlViewPageObjectCypress } from "@ygg/shared/omni-types/test";
 import { TheThingListPageObjectCypress } from './the-thing-list.po';
 import { User } from '@ygg/shared/user';
 
@@ -39,6 +40,13 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
           this.getSelectorForCell(cell)
         );
         albumViewPO.expectValue(cell.value);
+        break;
+
+      case 'html':
+        const htmlViewPO = new HtmlViewPageObjectCypress(
+          this.getSelectorForCell(cell)
+        );
+        htmlViewPO.expectValue(cell.value);
         break;
 
       case 'address':
@@ -94,7 +102,9 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
   }
 
   expectRelations(relationName: string, objectThings: TheThing[]) {
-    cy.wrap(objectThings).each((objectThing: any) => this.expectRelation(relationName, objectThing))
+    cy.wrap(objectThings).each((objectThing: any) =>
+      this.expectRelation(relationName, objectThing)
+    );
   }
 
   expectNoRelation(relationName: string) {

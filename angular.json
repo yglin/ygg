@@ -1768,6 +1768,83 @@
           }
         }
       }
+    },
+    "shared-omni-types-ui": {
+      "projectType": "library",
+      "root": "libs/shared/omni-types/ui",
+      "sourceRoot": "libs/shared/omni-types/ui/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/omni-types/ui/tsconfig.lib.json",
+              "libs/shared/omni-types/ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/omni-types/ui/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/omni-types/ui/jest.config.js",
+            "tsConfig": "libs/shared/omni-types/ui/tsconfig.spec.json",
+            "setupFile": "libs/shared/omni-types/ui/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shared-omni-types-core": {
+      "root": "libs/shared/omni-types/core",
+      "sourceRoot": "libs/shared/omni-types/core/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/omni-types/core/tsconfig.lib.json",
+              "libs/shared/omni-types/core/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/omni-types/core/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/omni-types/core/jest.config.js",
+            "tsConfig": "libs/shared/omni-types/core/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "shared-omni-types-test": {
+      "root": "libs/shared/omni-types/test",
+      "sourceRoot": "libs/shared/omni-types/test/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/omni-types/test/tsconfig.lib.json",
+              "libs/shared/omni-types/test/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/omni-types/test/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/omni-types/test/jest.config.js",
+            "tsConfig": "libs/shared/omni-types/test/tsconfig.spec.json"
+          }
+        }
+      }
     }
   },
   "cli": {

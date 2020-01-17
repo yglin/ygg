@@ -169,6 +169,15 @@
     },
     "the-thing-test": {
       "tags": ["scope:the-thing", "type:test"]
+    },
+    "shared-omni-types-ui": {
+      "tags": ["scope:shared", "type:ui"]
+    },
+    "shared-omni-types-core": {
+      "tags": ["scope:shared", "type:core", "package:omni-types"]
+    },
+    "shared-omni-types-test": {
+      "tags": ["scope:shared", "type:test", "package:omni-types"]
     }
   }
 }

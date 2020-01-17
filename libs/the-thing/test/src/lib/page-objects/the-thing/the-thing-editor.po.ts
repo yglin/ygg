@@ -5,6 +5,7 @@ import {
   AlbumControlPageObjectCypress,
   AddressControlPageObjectCypress
 } from '../cell-types';
+import { HtmlControlPageObjectCypress } from "@ygg/shared/omni-types/test";
 import { TheThingFinderPageObjectCypress } from './the-thing-finder.po';
 import { ChipsControlPageObjectCypress } from '@ygg/shared/test/cypress';
 import { TheThingListPageObjectCypress } from './the-thing-list.po';
@@ -37,6 +38,12 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
           this.getSelectorForCellControl(cell)
         );
         albumControlPO.setValue(cell.value);
+        break;
+      case 'html':
+        const htmlControlPO = new HtmlControlPageObjectCypress(
+          this.getSelectorForCellControl(cell)
+        );
+        htmlControlPO.setValue(cell.value);
         break;
       case 'address':
         const addressControlPO = new AddressControlPageObjectCypress(
@@ -102,12 +109,16 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
   }
 
   removeRelation(relationName: string, objectThing: TheThing) {
-    const theThingListPO = new TheThingListPageObjectCypress(this.getSelectorForRelationObjects(relationName));
+    const theThingListPO = new TheThingListPageObjectCypress(
+      this.getSelectorForRelationObjects(relationName)
+    );
     theThingListPO.deleteTheThing(objectThing);
   }
 
   expectRelation(relationName: string, objectThing: TheThing) {
-    const theThingListPO = new TheThingListPageObjectCypress(this.getSelectorForRelationObjects(relationName));
+    const theThingListPO = new TheThingListPageObjectCypress(
+      this.getSelectorForRelationObjects(relationName)
+    );
     theThingListPO.expectTheThing(objectThing);
   }
 

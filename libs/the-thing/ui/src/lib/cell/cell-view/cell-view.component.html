@@ -14,6 +14,9 @@
       <div *ngSwitchCase="'album'">
         <ygg-album-view [album]="cell.value"></ygg-album-view>
       </div>
+      <div *ngSwitchCase="'html'">
+        <ygg-html-view [html]="cell.value"></ygg-html-view>
+      </div>
       <div *ngSwitchCase="'address'">
         <ygg-address-view [address]="cell.value"></ygg-address-view>
       </div>

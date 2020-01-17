@@ -22,6 +22,7 @@ import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
 import { ScheduleFrontendModule } from "@ygg/schedule/frontend";
 import { ScheduleAdminModule } from '@ygg/schedule/admin';
 import { ResourceUiModule } from '@ygg/resource/ui';
+import { TheThingUiModule } from "@ygg/the-thing/ui";
 
 @NgModule({
   declarations: [
@@ -39,7 +40,7 @@ import { ResourceUiModule } from '@ygg/resource/ui';
     SharedUserModule,
     SharedUiWidgetsModule,
     SharedUiNavigationModule,
-    RouterModule.forRoot(routes),
+    TheThingUiModule,
     ResourceUiModule,
     ScheduleFrontendModule,
     ScheduleAdminModule,
@@ -47,6 +48,7 @@ import { ResourceUiModule } from '@ygg/resource/ui';
     PlaywhatPlayAdminModule,
     TagsAdminModule,
     PlaywhatAdminModule,
+    RouterModule.forRoot(routes),
   ],
   providers: [],
   bootstrap: [AppComponent]

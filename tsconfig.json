@@ -74,7 +74,14 @@
       "@ygg/the-thing/admin": ["libs/the-thing/admin/src/index.ts"],
       "@ygg/the-thing/data-access": ["libs/the-thing/data-access/src/index.ts"],
       "@ygg/the-thing/ui": ["libs/the-thing/ui/src/index.ts"],
-      "@ygg/the-thing/test": ["libs/the-thing/test/src/index.ts"]
+      "@ygg/the-thing/test": ["libs/the-thing/test/src/index.ts"],
+      "@ygg/shared/omni-types/ui": ["libs/shared/omni-types/ui/src/index.ts"],
+      "@ygg/shared/omni-types/core": [
+        "libs/shared/omni-types/core/src/index.ts"
+      ],
+      "@ygg/shared/omni-types/test": [
+        "libs/shared/omni-types/test/src/index.ts"
+      ]
     },
     "rootDir": "."
   },

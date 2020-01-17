@@ -38,6 +38,12 @@
         [formControlName]="cell.name"
       ></ygg-album-control>
     </div>
+    <div *ngSwitchCase="'html'">
+      <ygg-html-control  
+        [label]="cell.name"
+        [formControlName]="cell.name"
+      ></ygg-html-control>
+    </div>
     <div *ngSwitchCase="'address'">
       <ygg-address-control
         [label]="cell.name"

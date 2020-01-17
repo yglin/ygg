@@ -7,6 +7,8 @@ import { CellControlComponent } from './cell/cell-control/cell-control.component
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
+import { SharedOmniTypesUiModule } from "@ygg/shared/omni-types/ui";
+
 import { CellViewComponent } from './cell/cell-view/cell-view.component';
 import {
   TheThingEditorComponent,
@@ -34,6 +36,7 @@ import { routes } from "./routes";
     SharedTypesModule,
     SharedUserModule,
     TagsUiModule,
+    SharedOmniTypesUiModule,
     RouterModule.forChild(routes)
   ],
   declarations: [

@@ -1,11 +1,13 @@
 import { extend, sample, random, keys } from 'lodash';
 import { Album, Address } from '@ygg/shared/types';
+import { Html } from "@ygg/shared/omni-types/core";
 
 export type TheThingCellTypeID =
   | 'text'
   | 'longtext'
   | 'number'
   | 'album'
+  | 'html'
   | 'address';
 
 interface TheThingCellType {
@@ -71,6 +73,13 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
     label: '照片，相簿',
     forge: (options: any = {}): Album => {
       return Album.forge();
+    }
+  },
+  html: {
+    id: 'html',
+    label: 'HTML網頁內容',
+    forge: (options: any = {}): Html => {
+      return Html.forge(options);
     }
   },
   address: {

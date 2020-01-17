@@ -37,6 +37,7 @@ describe('Create a new the-thing', () => {
     });
     const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.setValue(theThing);
+    // cy.pause();
     theThingEditorPO.submit();
     getCreatedTheThingId().then(newId => {
       mockDatabase.pushDocument(`${TheThing.collection}/${newId}`);
