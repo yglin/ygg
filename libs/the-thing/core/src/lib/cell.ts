@@ -1,6 +1,6 @@
 import { extend, sample, random, keys } from 'lodash';
 import { Album, Address } from '@ygg/shared/types';
-import { Html } from "@ygg/shared/omni-types/core";
+import { Html } from '@ygg/shared/omni-types/core';
 
 export type TheThingCellTypeID =
   | 'text'
@@ -134,6 +134,9 @@ export class TheThingCell {
     switch (data.type) {
       case 'album':
         this.value = new Album().fromJSON(data.value);
+        break;
+      case 'html':
+        this.value = new Html().fromJSON(data.value);
         break;
       case 'address':
         this.value = new Address().fromJSON(data.value);
