@@ -1,0 +1,16 @@
+<div class="tour-view">
+  <h2>{{ tour.name }}</h2>
+  <div class="plays">
+    <div *ngFor="let play of plays" [attr.play-id]="play.id">
+      <ygg-play-card [play]='play'></ygg-play-card>
+      <br /><br />
+    </div>
+  </div>
+  <div class="note">
+    <ygg-html-view [html]="noteHtml"></ygg-html-view>
+  </div>
+  <br />
+  <div class="contacts">
+    <ygg-html-view [html]="contactsHtml"></ygg-html-view>
+  </div>
+</div>

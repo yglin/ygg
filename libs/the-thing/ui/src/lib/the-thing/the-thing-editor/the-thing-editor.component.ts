@@ -2,7 +2,12 @@ import { find, isEmpty, extend, get } from 'lodash';
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { TheThing, TheThingCell, TheThingCellTypes } from '@ygg/the-thing/core';
+import {
+  TheThing,
+  TheThingCell,
+  TheThingCellTypes,
+  TheThingImitation
+} from '@ygg/the-thing/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { Tags } from '@ygg/tags/core';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
@@ -14,6 +19,7 @@ import {
   PageStashPromise
 } from '@ygg/shared/infra/data-access';
 import { User, AuthenticateService } from '@ygg/shared/user';
+import { ImitationService } from '../../imitation.service';
 
 @Component({
   selector: 'the-thing-the-thing-editor',
@@ -31,6 +37,8 @@ export class TheThingEditorComponent implements OnInit {
   isNewRelationNameEmpty = true;
   subscriptions: Subscription[] = [];
   currentUser: User;
+  imitations: { [id: string]: TheThingImitation } = {};
+  formControlImitation: FormControl;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -39,7 +47,8 @@ export class TheThingEditorComponent implements OnInit {
     private route: ActivatedRoute,
     private dialog: YggDialogService,
     private pageStashService: PageStashService,
-    private authenticateService: AuthenticateService
+    private authenticateService: AuthenticateService,
+    private imitationService: ImitationService
   ) {
     this.formGroup = formBuilder.group({
       tags: null,
@@ -49,6 +58,9 @@ export class TheThingEditorComponent implements OnInit {
     this.formControlNewCellType = new FormControl();
     this.formControlNewCellName = new FormControl();
     this.formControlNewRelationName = new FormControl();
+    this.formControlImitation = new FormControl();
+    this.imitations = this.imitationService.imitations;
+
     this.subscriptions.push(
       this.formControlNewRelationName.valueChanges.subscribe(value => {
         this.isNewRelationNameEmpty = !value;
@@ -58,6 +70,13 @@ export class TheThingEditorComponent implements OnInit {
       this.authenticateService.currentUser$.subscribe(
         user => (this.currentUser = user)
       )
+    );
+    this.subscriptions.push(
+      this.formControlImitation.valueChanges.subscribe(imitationId => {
+        if (imitationId in this.imitations) {
+          this.theThing.imitation = imitationId;
+        }
+      })
     );
   }
 
@@ -188,7 +207,7 @@ export class TheThingEditorComponent implements OnInit {
 
   updateTheThing() {
     extend(this.theThing, this.formGroup.value);
-    if (this.currentUser && !(this.theThing.ownerId)) {
+    if (this.currentUser && !this.theThing.ownerId) {
       this.theThing.ownerId = this.currentUser.id;
     }
   }

@@ -39,6 +39,9 @@ export class TheThing {
   /** Last modified time */
   modifyAt: number;
 
+  /** Imitation id */
+  imitation: string;
+
   /** TheThingCells, define its own properties, attributes */
   cells: { [name: string]: TheThingCell };
 

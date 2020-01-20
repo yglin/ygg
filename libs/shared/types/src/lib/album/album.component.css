@@ -21,9 +21,9 @@
 .photo {
   margin: 5px 5px;
   position: relative;
-  width: 40vw;
+  width: 10vw;
   max-width: 150px;
-  height: 40vw;
+  height: 10vw;
   max-height: 150px;
 }
 

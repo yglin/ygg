@@ -4,6 +4,7 @@ import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 export abstract class TheThingEditorPageObject extends PageObject {
   selectors = {
     main: '.the-thing-editor',
+    selectImitation: '.meta .imitation select',
     inputRelationName: '.add-relation input.relation-name',
     buttonFindRelationObject: '.add-relation button.the-thing-finder',
     buttonCreateRelationObject: '.add-relation button.the-thing-create',

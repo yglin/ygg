@@ -178,6 +178,9 @@
     },
     "shared-omni-types-test": {
       "tags": ["scope:shared", "type:test", "package:omni-types"]
+    },
+    "playwhat-tour": {
+      "tags": ["scope:playwhat", "type:feature"]
     }
   }
 }

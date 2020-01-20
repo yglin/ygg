@@ -1,45 +1,65 @@
 <div class="the-thing-view" *ngIf="theThing">
   <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
     <div>
-      <button mat-fab class='create-clone' (click)="createClone()"><mat-icon>file_copy</mat-icon></button>
+      <button
+        mat-fab
+        class="create-clone"
+        (click)="createClone()"
+        matTooltip="複製"
+      >
+        <mat-icon>file_copy</mat-icon>
+      </button>
     </div>
     <div *ngIf="isPendingRelation">
-      <button mat-fab class="link-relation-back" (click)="linkRelationBack()">
+      <button
+        mat-fab
+        class="link-relation-back"
+        (click)="linkRelationBack()"
+        matTooltip="回到前一個編輯的關係連結"
+      >
         <mat-icon>call_merge</mat-icon>
       </button>
     </div>
   </div>
-  <div class="name">
-    <h2>{{ theThing.name }}</h2>
+  <div *ngIf="useImitationView">
+    <the-thing-imitation-view
+      [theThing]="theThing"
+      [imitation]="imitation"
+    ></the-thing-imitation-view>
   </div>
-  <div class="tags">
-    <ygg-tags-view [tags]="theThing.tags"></ygg-tags-view>
-  </div>
-  <br />
-  <div class="owner">
-    <ygg-user-thumbnail [id]="theThing.ownerId"></ygg-user-thumbnail>
-  </div>
-  <br>
-  <div class="cells">
-    <div
-      *ngFor="let cellItem of theThing.cells | keyvalue"
-      class="cell"
-      [attr.cell-name]="cellItem.value.name"
-    >
-      <mat-card>
-        <mat-card-content>
-          <the-thing-cell-view [cell]="cellItem.value"></the-thing-cell-view>
-        </mat-card-content>
-      </mat-card>
+  <div *ngIf="!useImitationView">
+    <div class="name">
+      <h2>{{ theThing.name }}</h2>
+    </div>
+    <div class="tags">
+      <ygg-tags-view [tags]="theThing.tags"></ygg-tags-view>
     </div>
     <br />
-    <div class="relation-list">
+    <div class="owner">
+      <ygg-user-thumbnail [id]="theThing.ownerId"></ygg-user-thumbnail>
+    </div>
+    <br />
+    <div class="cells">
       <div
-        *ngFor="let relation of theThing.relations | keyvalue"
-        [attr.relation-name]="relation.key"
+        *ngFor="let cellItem of theThing.cells | keyvalue"
+        class="cell"
+        [attr.cell-name]="cellItem.value.name"
       >
-        <h3>{{ relation.key }}</h3>
-        <the-thing-list [ids]="relation.value"></the-thing-list>
+        <mat-card>
+          <mat-card-content>
+            <the-thing-cell-view [cell]="cellItem.value"></the-thing-cell-view>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <br />
+      <div class="relation-list">
+        <div
+          *ngFor="let relation of theThing.relations | keyvalue"
+          [attr.relation-name]="relation.key"
+        >
+          <h3>{{ relation.key }}</h3>
+          <the-thing-list [ids]="relation.value"></the-thing-list>
+        </div>
       </div>
     </div>
   </div>

@@ -1,0 +1,33 @@
+<div class="play-card" *ngIf="play">
+  <table>
+    <tr>
+      <th colspan="2" class='name'>
+        <h3>{{ play.name }}</h3>
+      </th>
+    </tr>
+    <tr>
+      <td colspan="2" align='center'>
+        費用：每人
+        <span class="price">{{ price }}</span>
+        元，（約 <span>{{ timeLength }}</span
+        >）
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <h4>{{ subtitle }}</h4>
+        <p>{{ introduction }}</p>
+      </td>
+      <td>
+        <div *ngIf="album">
+          <ygg-album-view [album]="album"></ygg-album-view>
+        </div>
+        <br />
+        <div class='notice'>
+          (接團人數最少 <span>{{ minParticipants }}</span> 人/最多
+          <span>{{ maxParticipants }}</span> 人)
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>

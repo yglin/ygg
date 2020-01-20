@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from "@angular/router";
 import { CellListComponent } from './cell/cell-list/cell-list.component';
@@ -14,7 +14,8 @@ import {
   TheThingEditorComponent,
   TheThingViewComponent,
   TheThingFinderComponent,
-  TheThingListComponent
+  TheThingListComponent,
+  ImitationViewHostDirective
 } from './the-thing';
 import { TagsUiModule } from '@ygg/tags/ui';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
@@ -24,7 +25,13 @@ import { MyThingsComponent } from './the-thing/my-things/my-things.component';
 import { SharedUserModule } from "@ygg/shared/user";
 import { TheThingFilterComponent } from './the-thing/the-thing-filter/the-thing-filter.component';
 import { TheThingFinderDialogComponent } from './the-thing/the-thing-finder-dialog/the-thing-finder-dialog.component';
+import { TheThingImitation } from "@ygg/the-thing/core";
 import { routes } from "./routes";
+import { TheThingImitationViewComponent } from './the-thing/the-thing-imitation-view/the-thing-imitation-view.component';
+
+interface TheThingUiModuleConfig {
+  imitations: TheThingImitation[]
+}
 
 @NgModule({
   imports: [
@@ -51,7 +58,9 @@ import { routes } from "./routes";
     TheThingThumbnailComponent,
     MyThingsComponent,
     TheThingFilterComponent,
-    TheThingFinderDialogComponent
+    TheThingFinderDialogComponent,
+    ImitationViewHostDirective,
+    TheThingImitationViewComponent,
   ],
   exports: [
     CellListComponent,

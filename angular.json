@@ -1845,6 +1845,33 @@
           }
         }
       }
+    },
+    "playwhat-tour": {
+      "projectType": "library",
+      "root": "libs/playwhat/tour",
+      "sourceRoot": "libs/playwhat/tour/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/playwhat/tour/tsconfig.lib.json",
+              "libs/playwhat/tour/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/playwhat/tour/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/playwhat/tour/jest.config.js",
+            "tsConfig": "libs/playwhat/tour/tsconfig.spec.json",
+            "setupFile": "libs/playwhat/tour/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

@@ -1,11 +1,12 @@
-import * as SampleTourJSON from './sample-tour.json';
+import * as SampleTourJSON from './sample-tour-birb.json';
 import { TheThing } from '@ygg/the-thing/core';
-import { MockDatabase, login } from '@ygg/shared/test/cypress';
+import { MockDatabase, login, getCurrentUser } from '@ygg/shared/test/cypress';
 import {
   TheThingEditorPageObjectCypress,
   getCreatedTheThingId,
   TheThingViewPageObjectCypress
 } from '@ygg/the-thing/test';
+import { TourViewPageObjectCypress } from '../../page-objects/tour';
 
 const mockDatabase = new MockDatabase();
 const sampleTour = new TheThing().fromJSON(SampleTourJSON.tour);
@@ -34,10 +35,13 @@ describe('Create a tour composed of plays', () => {
       theThingEditorPO.submit();
       getCreatedTheThingId(play.id).then(playId => {
         play.id = playId;
-        mockDatabase.pushDocument(`${TheThing.collection}/${playId}`, play.toJSON());
+        mockDatabase.pushDocument(
+          `${TheThing.collection}/${playId}`,
+          play.toJSON()
+        );
         const theThingViewPO = new TheThingViewPageObjectCypress();
         theThingViewPO.expectValue(play);
-  
+
         theThingViewPO.linkRelationBack();
         theThingEditorPO.expectVisible();
       });
@@ -45,9 +49,12 @@ describe('Create a tour composed of plays', () => {
     theThingEditorPO.submit();
     getCreatedTheThingId().then(id => {
       mockDatabase.pushDocument(`${TheThing.collection}/${id}`, SampleTourJSON);
-      const theThingViewPO = new TheThingViewPageObjectCypress();
-      theThingViewPO.expectValue(sampleTour);
-      theThingViewPO.expectRelations(relationPlay, plays);
+      const tourViewPO = new TourViewPageObjectCypress();
+      tourViewPO.expectVisible();
+      tourViewPO.expectValue(sampleTour);
+      getCurrentUser().then(user => tourViewPO.expectOwner(user));
+      tourViewPO.expectPlays(plays);
+      cy.pause();
     });
   });
 });

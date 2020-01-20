@@ -10,16 +10,30 @@
         <div class="meta">
           <br />
           <ygg-tags-control
-            label="這東東是個..."
+            label="這東東是...（標籤）"
             taggableType="the-thing"
             class="tags"
             formControlName="tags"
           ></ygg-tags-control>
           <br />
           <mat-form-field class="name">
-            <input matInput placeholder="這東東叫..." formControlName="name" />
+            <input matInput placeholder="這東東叫做...（名稱）" formControlName="name" />
           </mat-form-field>
           <br />
+          <mat-form-field class='imitation'>
+            <select
+              matNativeControl
+              placeholder="這東東是個...（類型）"
+              [formControl]="formControlImitation"
+            >
+              <option
+                *ngFor="let imitation of imitations | keyvalue"
+                [value]="imitation.key"
+              >
+                {{ imitation.value.name }}
+              </option>
+            </select>
+          </mat-form-field>
         </div>
         <div class="add-cell">
           <ygg-title-divider>新增資料欄位</ygg-title-divider>
@@ -72,7 +86,11 @@
           <div *ngFor="let cellItem of theThing.cells | keyvalue">
             <div [attr.cell-name]="cellItem.key">
               <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
-                <button class='delete' mat-fab (click)="deleteCell(cellItem.value)">
+                <button
+                  class="delete"
+                  mat-fab
+                  (click)="deleteCell(cellItem.value)"
+                >
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
@@ -83,7 +101,9 @@
             </div>
           </div>
           <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
-            <button class='delete-all' mat-fab (click)="deleteAllCells()"><mat-icon>delete_sweep</mat-icon></button>
+            <button class="delete-all" mat-fab (click)="deleteAllCells()">
+              <mat-icon>delete_sweep</mat-icon>
+            </button>
           </div>
         </div>
         <div class="relations">
@@ -133,7 +153,10 @@
               [attr.relation-name]="relation.key"
             >
               <h3>{{ relation.key }}</h3>
-              <the-thing-list [ids]="relation.value" (delete)='onDeleteRelation(relation.key, $event)'></the-thing-list>
+              <the-thing-list
+                [ids]="relation.value"
+                (delete)="onDeleteRelation(relation.key, $event)"
+              ></the-thing-list>
             </div>
           </div>
         </div></div

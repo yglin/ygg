@@ -23,6 +23,7 @@ import { ScheduleFrontendModule } from "@ygg/schedule/frontend";
 import { ScheduleAdminModule } from '@ygg/schedule/admin';
 import { ResourceUiModule } from '@ygg/resource/ui';
 import { TheThingUiModule } from "@ygg/the-thing/ui";
+import { PlaywhatTourModule } from "@ygg/playwhat/tour";
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { TheThingUiModule } from "@ygg/the-thing/ui";
     PlaywhatPlayAdminModule,
     TagsAdminModule,
     PlaywhatAdminModule,
+    PlaywhatTourModule,
     RouterModule.forRoot(routes),
   ],
   providers: [],

@@ -5,7 +5,7 @@ import {
   AlbumControlPageObjectCypress,
   AddressControlPageObjectCypress
 } from '../cell-types';
-import { HtmlControlPageObjectCypress } from "@ygg/shared/omni-types/test";
+import { HtmlControlPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { TheThingFinderPageObjectCypress } from './the-thing-finder.po';
 import { ChipsControlPageObjectCypress } from '@ygg/shared/test/cypress';
 import { TheThingListPageObjectCypress } from './the-thing-list.po';
@@ -79,6 +79,10 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
       .type(name);
   }
 
+  setImitation(imitationId: string) {
+    cy.get(this.getSelector('selectImitation')).select(imitationId);
+  }
+
   deleteCell(cell: TheThingCell) {
     cy.get(this.getSelectorForCellControlDelete(cell)).click({ force: true });
   }
@@ -91,6 +95,10 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
     this.setTags(theThing.tags.toNameArray());
 
     this.setName(theThing.name);
+
+    if (theThing.imitation) {
+      this.setImitation(theThing.imitation);
+    }
 
     // Add cells
     cy.wrap(values(theThing.cells)).each((cell: any) => this.addCell(cell));

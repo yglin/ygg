@@ -1,9 +1,21 @@
 import { get } from 'lodash';
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { TheThing } from '@ygg/the-thing/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnDestroy,
+  Directive,
+  ViewContainerRef,
+  ViewChild,
+  ComponentFactoryResolver,
+  Type,
+  AfterViewInit
+} from '@angular/core';
+import { TheThing, TheThingImitation } from '@ygg/the-thing/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PageStashService, PageData } from '@ygg/shared/infra/data-access';
+import { ImitationService } from '../../imitation.service';
 
 @Component({
   selector: 'the-thing-the-thing-view',
@@ -15,10 +27,15 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   isPendingRelation = false;
 
+  imitation: TheThingImitation;
+  useImitationView = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private pageStashService: PageStashService
+    private pageStashService: PageStashService,
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private imitationService: ImitationService
   ) {}
 
   ngOnInit() {
@@ -27,7 +44,12 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
         this.theThing = this.route.snapshot.data.theThing;
       }
     }
-    console.log(this.theThing);
+    if (this.theThing && this.theThing.imitation) {
+      this.imitation = this.imitationService.get(this.theThing.imitation);
+      const component = get(this.imitation, 'view.component');
+      this.useImitationView = !!component;
+    }
+
     const pageData = this.pageStashService.peepTop();
     this.isPendingRelation = !get(pageData, 'promises.relation.resolved', true);
   }
@@ -37,6 +59,7 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
       subscription.unsubscribe();
     }
   }
+
 
   linkRelationBack() {
     const pageData = this.pageStashService.pop();
