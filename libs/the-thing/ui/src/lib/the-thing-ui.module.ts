@@ -1,13 +1,13 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule, ModuleWithProviders, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from "@angular/router";
+import { RouterModule } from '@angular/router';
 import { CellListComponent } from './cell/cell-list/cell-list.component';
 import { CellFormComponent } from './cell/cell-form/cell-form.component';
 import { CellControlComponent } from './cell/cell-control/cell-control.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-import { SharedOmniTypesUiModule } from "@ygg/shared/omni-types/ui";
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 
 import { CellViewComponent } from './cell/cell-view/cell-view.component';
 import {
@@ -22,15 +22,16 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { SharedTypesModule } from '@ygg/shared/types';
 import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-thing-thumbnail.component';
 import { MyThingsComponent } from './the-thing/my-things/my-things.component';
-import { SharedUserModule } from "@ygg/shared/user";
+import { SharedUserModule } from '@ygg/shared/user';
 import { TheThingFilterComponent } from './the-thing/the-thing-filter/the-thing-filter.component';
 import { TheThingFinderDialogComponent } from './the-thing/the-thing-finder-dialog/the-thing-finder-dialog.component';
-import { TheThingImitation } from "@ygg/the-thing/core";
-import { routes } from "./routes";
+import { TheThingImitation } from '@ygg/the-thing/core';
+import { routes } from './routes';
 import { TheThingImitationViewComponent } from './the-thing/the-thing-imitation-view/the-thing-imitation-view.component';
+import { UserMenuService } from '@ygg/shared/user';
 
 interface TheThingUiModuleConfig {
-  imitations: TheThingImitation[]
+  imitations: TheThingImitation[];
 }
 
 @NgModule({
@@ -60,7 +61,7 @@ interface TheThingUiModuleConfig {
     TheThingFilterComponent,
     TheThingFinderDialogComponent,
     ImitationViewHostDirective,
-    TheThingImitationViewComponent,
+    TheThingImitationViewComponent
   ],
   exports: [
     CellListComponent,
@@ -72,6 +73,25 @@ interface TheThingUiModuleConfig {
     TheThingFinderComponent,
     MyThingsComponent
   ],
-  entryComponents: [TheThingFinderDialogComponent]
+  entryComponents: [TheThingFinderDialogComponent],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: configUserMenu,
+      deps: [UserMenuService],
+      multi: true
+    }
+  ]
 })
 export class TheThingUiModule {}
+
+export function configUserMenu(userMenuService: UserMenuService) {
+  return () => {
+    userMenuService.addItem({
+      id: 'my-things',
+      label: '我的東東',
+      link: 'the-things/my',
+      icon: 'extension'
+    });
+  };
+}

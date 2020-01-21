@@ -13,6 +13,10 @@ export class TheThingListPageObjectCypress extends TheThingListPageObject {
     this.expectCount(theThings.length);
   }
 
+  clickTheThing(theThing: TheThing) {
+    cy.get(this.getSelectorForTheThing(theThing)).click({ force: true });
+  }
+
   expectTheThing(theThing: TheThing) {
     cy.get(this.getSelectorForTheThing(theThing)).should('exist');
   }

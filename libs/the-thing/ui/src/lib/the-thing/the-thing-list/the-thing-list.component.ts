@@ -20,6 +20,7 @@ import { TheThingAccessService } from '@ygg/the-thing/data-access';
 export class TheThingListComponent implements OnInit, OnChanges {
   @Input() ids: string[];
   @Input() theThings: TheThing[];
+  @Output() clickTheThing: EventEmitter<TheThing> = new EventEmitter();
   @Output() selectChange: EventEmitter<TheThing[]> = new EventEmitter();
   @Output() delete: EventEmitter<TheThing> = new EventEmitter();
   subscriptionFetchTheThings: Subscription;
@@ -31,7 +32,7 @@ export class TheThingListComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.isSelectable = this.selectChange.observers.length > 0;
-    this.isDeletable = this.delete.observers.length > 0 ;
+    this.isDeletable = this.delete.observers.length > 0;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -50,7 +51,7 @@ export class TheThingListComponent implements OnInit, OnChanges {
     return this.selection.has(theThing.id);
   }
 
-  select(theThing: TheThing) {
+  onClickTheThing(theThing: TheThing) {
     if (this.isSelectable) {
       if (this.selection.has(theThing.id)) {
         this.selection.delete(theThing.id);
@@ -62,6 +63,7 @@ export class TheThingListComponent implements OnInit, OnChanges {
       );
       this.selectChange.emit(selectedThings);
     }
+    this.clickTheThing.emit(theThing);
   }
 
   onDelete(theThing: TheThing) {

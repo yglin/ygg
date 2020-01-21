@@ -29,6 +29,7 @@ export class TheThingFinderComponent implements OnInit, OnDestroy {
   @Input() theThings: TheThing[];
   @Input() theThings$: Observable<TheThing[]>;
   @Output() selectChange = new EventEmitter<TheThing[]>();
+  @Output() clickTheThing: EventEmitter<TheThing> = new EventEmitter();
   filter$: BehaviorSubject<TheThingFilter> = new BehaviorSubject(null);
   filteredTheThings: TheThing[] = [];
   formControlTypesFilter: FormControl;
@@ -109,6 +110,10 @@ export class TheThingFinderComponent implements OnInit, OnDestroy {
 
   onSelect(selected: TheThing[]) {
     this.selectChange.emit(selected);
+  }
+
+  onClickTheThing(theThing: TheThing) {
+    this.clickTheThing.emit(theThing);
   }
 
 }

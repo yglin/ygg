@@ -1,8 +1,21 @@
 <div class="tour-view">
-  <h2>{{ tour.name }}</h2>
+  <div class="main-title">
+    <div class="title-background" [ngStyle]="titleStyle"></div>
+    <div
+      class="title-text"
+      fxLayout="row"
+      fxLayoutAlign="center center"
+      fxLayoutGap="10px"
+    >
+      <div class="name">
+        <h1>{{ tour.name }}</h1>
+      </div>
+    </div>
+  </div>
+  <br><br><br>
   <div class="plays">
     <div *ngFor="let play of plays" [attr.play-id]="play.id">
-      <ygg-play-card [play]='play'></ygg-play-card>
+      <ygg-play-card [play]="play"></ygg-play-card>
       <br /><br />
     </div>
   </div>

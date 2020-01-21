@@ -9,7 +9,7 @@
       class="the-thing"
       [ngClass]="{ selected: isSelected(theThing) }"
       [attr.the-thing-id]="theThing.id"
-      (click)="select(theThing)"
+      (click)="onClickTheThing(theThing)"
     >
       <the-thing-thumbnail [theThing]="theThing"></the-thing-thumbnail>
       <div class='delete' *ngIf="isDeletable">

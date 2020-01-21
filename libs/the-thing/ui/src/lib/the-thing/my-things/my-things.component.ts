@@ -12,6 +12,7 @@ import {
 import { switchMap } from 'rxjs/operators';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { AuthenticateService } from '@ygg/shared/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'the-thing-my-things',
@@ -25,7 +26,8 @@ export class MyThingsComponent implements OnInit {
 
   constructor(
     private theThingAccessService: TheThingAccessService,
-    private authenticateService: AuthenticateService
+    private authenticateService: AuthenticateService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -39,5 +41,11 @@ export class MyThingsComponent implements OnInit {
         }
       })
     );
+  }
+
+  onClickTheThing(theThing: TheThing) {
+    if (theThing) {
+      this.router.navigate(['/the-things', theThing.id]);
+    }
   }
 }

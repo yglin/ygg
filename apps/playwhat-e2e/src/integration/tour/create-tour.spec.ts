@@ -52,9 +52,8 @@ describe('Create a tour composed of plays', () => {
       const tourViewPO = new TourViewPageObjectCypress();
       tourViewPO.expectVisible();
       tourViewPO.expectValue(sampleTour);
-      getCurrentUser().then(user => tourViewPO.expectOwner(user));
+      // getCurrentUser().then(user => tourViewPO.expectOwner(user));
       tourViewPO.expectPlays(plays);
-      cy.pause();
     });
   });
 });

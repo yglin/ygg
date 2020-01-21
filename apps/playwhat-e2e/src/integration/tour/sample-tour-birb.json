@@ -19,8 +19,21 @@
         "name": "聯絡資訊",
         "type": "html",
         "value": "聯絡人:YGG(yglin@ygmail.com)"
+      },
+      "照片": {
+        "name": "照片",
+        "type": "album",
+        "value": {
+          "cover": "https://farm3.staticflickr.com/2729/4427873040_4f847bc62e_b.jpg",
+          "photos": [
+            "https://i.pinimg.com/474x/82/84/f4/8284f4113f8c77c860a2223a4a5008c5.jpg",
+            "https://i.imgflip.com/295f2w.jpg",
+            "https://p1.pxfuel.com/preview/706/209/286/animal-nature-park-cute-parrot.jpg",
+            "https://farm3.staticflickr.com/2729/4427873040_4f847bc62e_b.jpg"
+          ]
+        }
       }
-    }
+  }
   },
   "plays": [
     {

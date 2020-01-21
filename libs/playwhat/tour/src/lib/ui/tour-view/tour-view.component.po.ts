@@ -1,12 +1,6 @@
 import { PageObject } from '@ygg/shared/test/page-object';
 import { TheThing } from '@ygg/the-thing/core';
 
-export class PlayCardPageObject extends PageObject {
-  selectors = {
-    main: '.play-card',
-  };
-}
-
 export class TourViewPageObject extends PageObject {
   selectors = {
     main: '.tour-view',
@@ -17,6 +11,6 @@ export class TourViewPageObject extends PageObject {
   };
 
   getSelectorForPlay(play: TheThing): string {
-    return `${this.getSelector()} [play-id=${play.id}]`;
+    return `${this.getSelector()} [play-id="${play.id}"]`;
   }
 }

@@ -9,23 +9,23 @@
       <td colspan="2" align='center'>
         費用：每人
         <span class="price">{{ price }}</span>
-        元，（約 <span>{{ timeLength }}</span
+        元，（約 <span class='time-length'>{{ timeLength }}</span
         >）
       </td>
     </tr>
     <tr>
       <td>
-        <h4>{{ subtitle }}</h4>
-        <p>{{ introduction }}</p>
+        <h4 class='subtitle'>{{ subtitle }}</h4>
+        <p class='intro'>{{ introduction }}</p>
       </td>
       <td>
-        <div *ngIf="album">
+        <div *ngIf="album" class='album'>
           <ygg-album-view [album]="album"></ygg-album-view>
         </div>
         <br />
         <div class='notice'>
-          (接團人數最少 <span>{{ minParticipants }}</span> 人/最多
-          <span>{{ maxParticipants }}</span> 人)
+          (接團人數最少 <span class='min-participants'>{{ minParticipants }}</span> 人/最多
+          <span class='max-participants'>{{ maxParticipants }}</span> 人)
         </div>
       </td>
     </tr>
