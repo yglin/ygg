@@ -22,7 +22,9 @@ export class SiteNavigator {
     } else {
       cy.visit(fullPathName);
     }
-    return cy.location('pathname').should('eq', fullPathName);
+    return cy
+      .location('pathname', { timeout: 10000 })
+      .should('eq', fullPathName);
   }
 
   gotoSchedulePlanView(schedulePlan: SchedulePlan) {
@@ -72,6 +74,8 @@ export class SiteNavigator {
       this.gotoAdminTags(path);
     } else if (route === 'scheduler') {
       this.gotoAdminScheduler(path);
+    } else if (route === 'homepage') {
+      cy.get('#homepage-manage a').click({ force: true });
     }
   }
 

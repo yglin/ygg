@@ -1,0 +1,11 @@
+<div class="homepage-manage">
+  <div class="exhibit-things">
+    <ygg-title-divider>展示在首頁的東東</ygg-title-divider>
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+      <button class='add' mat-mini-fab (click)="addExhibitThing()"><mat-icon>add</mat-icon></button>
+    </div>
+    <div class='exhibit-things-list'>
+      <the-thing-list [theThings]="exhibitThings" (delete)='removeExhibitThing($event)'></the-thing-list>
+    </div>
+  </div>
+</div>

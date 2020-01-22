@@ -18,12 +18,13 @@ import { PageStashService, PageData } from '@ygg/shared/infra/data-access';
 import { ImitationService } from '../../imitation.service';
 
 @Component({
-  selector: 'the-thing-the-thing-view',
+  selector: 'the-thing-view',
   templateUrl: './the-thing-view.component.html',
   styleUrls: ['./the-thing-view.component.css']
 })
 export class TheThingViewComponent implements OnInit, OnDestroy {
   @Input() theThing: TheThing;
+  @Input() readonly = false;
   subscriptions: Subscription[] = [];
   isPendingRelation = false;
 
@@ -39,6 +40,8 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.readonly = this.readonly !== undefined && this.readonly !== false;
+    
     if (!this.theThing) {
       if (this.route.snapshot.data && this.route.snapshot.data.theThing) {
         this.theThing = this.route.snapshot.data.theThing;

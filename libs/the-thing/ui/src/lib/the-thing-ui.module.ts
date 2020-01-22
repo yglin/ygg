@@ -71,6 +71,7 @@ interface TheThingUiModuleConfig {
     TheThingEditorComponent,
     TheThingViewComponent,
     TheThingFinderComponent,
+    TheThingListComponent,
     MyThingsComponent
   ],
   entryComponents: [TheThingFinderDialogComponent],

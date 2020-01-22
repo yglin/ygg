@@ -6,28 +6,53 @@ import { Router } from '@angular/router';
 
 // import { routes } from './routes';
 import { MenuTree } from '@ygg/shared/ui/navigation';
-import { Image } from "@ygg/shared/types";
+import { Image } from '@ygg/shared/types';
 import { LoggedInGuard, AdminGuard } from '@ygg/shared/user';
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
+import { TheThingUiModule } from '@ygg/the-thing/ui';
+
 import { PlaywhatAdminService } from './playwhat-admin.service';
+import { HomepageManageComponent } from './homepage-manage/homepage-manage.component';
 
 @NgModule({
   imports: [
     CommonModule,
+    SharedUiWidgetsModule,
+    TheThingUiModule
     // SchedulerAdminRoutingModule,
     // RouterModule.forChild(routes)
   ],
-  declarations: [],
+  declarations: [HomepageManageComponent],
   providers: [
-    {provide: APP_INITIALIZER, useFactory: configRouting, deps: [Injector, PlaywhatAdminService], multi: true}
+    {
+      provide: APP_INITIALIZER,
+      useFactory: configRouting,
+      deps: [Injector, PlaywhatAdminService],
+      multi: true
+    }
   ],
-  exports: []
+  exports: [],
+  entryComponents: [HomepageManageComponent]
 })
 export class PlaywhatAdminModule {}
 
-export function configRouting(injector: Injector, playwhatAdminService: PlaywhatAdminService): Function {
-    return () => {
+export function configRouting(
+  injector: Injector,
+  playwhatAdminService: PlaywhatAdminService
+): Function {
+  return () => {
     // console.log('Init module PlaywhatAdminModule');
     const router = injector.get(Router);
+    playwhatAdminService.menu.addItem({
+      id: 'homepage-manage',
+      link: 'homepage',
+      label: '首頁管理',
+      icon: new Image('/assets/images/admin/homepage-manage.png'),
+      tooltip: '管理首頁展示的物件',
+      routeConfig: {
+        component: HomepageManageComponent
+      }
+    });
     const adminRoute = playwhatAdminService.menu.toRoute();
     // console.dir(adminRoute);
     router.config.unshift(adminRoute);

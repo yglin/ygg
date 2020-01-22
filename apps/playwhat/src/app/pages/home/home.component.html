@@ -1,25 +1,31 @@
-<h2 id="greeting">歡迎造訪 Play What</h2>
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>我想要...</mat-card-title>
-    <!-- <mat-card-subtitle>subtitle</mat-card-subtitle> -->
-  </mat-card-header>
-  <mat-card-content class="quick-start">
-    <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
-      <a
-        class="page-link"
-        id="new-schedule"
-        [routerLink]="['/scheduler', 'schedule-plans', 'new']"
-        mat-raised-button
-        >規劃遊程</a
-      >
-      <a
-        class="page-link"
-        id="add-my-play"
-        [routerLink]="['/plays', 'new']"
-        mat-raised-button
-        >新增我的體驗</a
-      >
+<div class="homepage">
+  <div class="exhibits">
+    <div *ngFor="let thing of exhibitThings">
+      <the-thing-view [theThing]="thing" readonly></the-thing-view>
     </div>
-  </mat-card-content>
-</mat-card>
+  </div>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>我想要...</mat-card-title>
+      <!-- <mat-card-subtitle>subtitle</mat-card-subtitle> -->
+    </mat-card-header>
+    <mat-card-content class="quick-start">
+      <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
+        <a
+          class="page-link"
+          id="new-schedule"
+          [routerLink]="['/scheduler', 'schedule-plans', 'new']"
+          mat-raised-button
+          >規劃遊程</a
+        >
+        <a
+          class="page-link"
+          id="add-my-play"
+          [routerLink]="['/plays', 'new']"
+          mat-raised-button
+          >新增我的體驗</a
+        >
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
