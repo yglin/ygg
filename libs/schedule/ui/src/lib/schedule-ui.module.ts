@@ -13,9 +13,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUserModule } from '@ygg/shared/user';
 import { SharedTypesModule } from '@ygg/shared/types';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { TagsUiModule } from '@ygg/tags/ui';
 import { PlaywhatPlayModule } from '@ygg/playwhat/play';
-import { ShoppingUiModule } from "@ygg/shopping/ui";
+import { ShoppingUiModule } from '@ygg/shopping/ui';
 import { ResourceUiModule } from '@ygg/resource/ui';
 
 @NgModule({
@@ -35,6 +36,7 @@ import { ResourceUiModule } from '@ygg/resource/ui';
     SharedUiWidgetsModule,
     SharedUserModule,
     SharedTypesModule,
+    SharedOmniTypesUiModule,
     TagsUiModule,
     PlaywhatPlayModule,
     ShoppingUiModule,
@@ -45,8 +47,7 @@ import { ResourceUiModule } from '@ygg/resource/ui';
     SchedulePlanListComponent,
     SchedulePlanTableComponent,
     SchedulePlanThumbnailComponent,
-    SchedulePlanViewComponent,
+    SchedulePlanViewComponent
   ]
 })
 export class ScheduleUiModule {}
-

@@ -169,7 +169,10 @@ export class TheThing {
         this.tags = Tags.fromJSON(data.tags);
       }
       if (!isEmpty(data.cells)) {
-        this.cells = mapValues(data.cells, cellData =>
+        if (isArray(data.cells)) {
+          this.cells = keyBy(data.cells, 'name');
+        }
+        this.cells = mapValues(this.cells, cellData =>
           new TheThingCell().fromJSON(cellData)
         );
       }

@@ -5,13 +5,24 @@ import {
   AlbumControlPageObjectCypress,
   AddressControlPageObjectCypress
 } from '../cell-types';
-import { HtmlControlPageObjectCypress } from '@ygg/shared/omni-types/test';
-import { TheThingFinderPageObjectCypress } from './the-thing-finder.po';
+import { HtmlControlPageObjectCypress, DateRangeControlPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { ChipsControlPageObjectCypress } from '@ygg/shared/test/cypress';
 import { TheThingListPageObjectCypress } from './the-thing-list.po';
 import { TheThingFinderDialogPageObjectCypress } from './the-thing-finder-dialog.po';
 
 export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
+  extendValue(theThing: TheThing) {
+    this.setTags(theThing.tags.toNameArray());
+    this.setName(theThing.name);
+
+    // Set cells value, here is the difference from setValue().
+    // Each cell control should already be there
+    cy.wrap(values(theThing.cells)).each((cell: any) => {
+      cy.get(this.getSelectorForCellControl(cell)).should('be.exist');
+      this.setCell(cell);
+    });
+  }
+
   expectVisible() {
     cy.get(this.getSelector(), { timeout: 20000 }).should('be.visible');
   }
@@ -50,6 +61,13 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
           this.getSelectorForCellControl(cell)
         );
         addressControlPO.setValue(cell.value);
+        break;
+      case 'date-range':
+        const dateRangeControlPO = new DateRangeControlPageObjectCypress(
+          this.getSelectorForCellControl(cell)
+        );
+        cy.log(cell.value);
+        dateRangeControlPO.setValue(cell.value);
         break;
       default:
         break;

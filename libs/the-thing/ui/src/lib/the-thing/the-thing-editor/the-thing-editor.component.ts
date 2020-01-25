@@ -19,7 +19,7 @@ import {
   PageStashPromise
 } from '@ygg/shared/infra/data-access';
 import { User, AuthenticateService } from '@ygg/shared/user';
-import { ImitationService } from '../../imitation.service';
+import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 
 @Component({
   selector: 'the-thing-the-thing-editor',
@@ -38,7 +38,6 @@ export class TheThingEditorComponent implements OnInit {
   subscriptions: Subscription[] = [];
   currentUser: User;
   imitations: { [id: string]: TheThingImitation } = {};
-  formControlImitation: FormControl;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -48,17 +47,17 @@ export class TheThingEditorComponent implements OnInit {
     private dialog: YggDialogService,
     private pageStashService: PageStashService,
     private authenticateService: AuthenticateService,
-    private imitationService: ImitationService
+    private imitationService: TheThingImitationAccessService
   ) {
     this.formGroup = formBuilder.group({
       tags: null,
-      name: '東東'
+      name: '東東',
+      imitation: '類型'
     });
     this.cellsFormGroup = formBuilder.group({});
     this.formControlNewCellType = new FormControl();
     this.formControlNewCellName = new FormControl();
     this.formControlNewRelationName = new FormControl();
-    this.formControlImitation = new FormControl();
     this.imitations = this.imitationService.imitations;
 
     this.subscriptions.push(
@@ -70,13 +69,6 @@ export class TheThingEditorComponent implements OnInit {
       this.authenticateService.currentUser$.subscribe(
         user => (this.currentUser = user)
       )
-    );
-    this.subscriptions.push(
-      this.formControlImitation.valueChanges.subscribe(imitationId => {
-        if (imitationId in this.imitations) {
-          this.theThing.imitation = imitationId;
-        }
-      })
     );
   }
 
@@ -102,10 +94,10 @@ export class TheThingEditorComponent implements OnInit {
       return of(theThing);
     }
 
-    // Fetch the-thing from route resolver
-    const fromResolver = get(this.route.snapshot, 'data.theThing', null);
-    if (fromResolver) {
-      return of(fromResolver);
+    // Fetch the-thing from id in route path
+    const fromId = get(this.route.snapshot, 'data.theThing', null);
+    if (fromId) {
+      return of(fromId);
     }
 
     // Fetch the-thing from clone origin
@@ -114,6 +106,17 @@ export class TheThingEditorComponent implements OnInit {
       return this.theThingAccessService
         .get$(cloneId)
         .pipe(map(origin => origin.clone()));
+    }
+
+    // Fetch the-thing from imitation template
+    console.log(this.route.snapshot.data);
+    const fromImitationTemplate = get(
+      this.route.snapshot,
+      'data.imitationTemplate',
+      null
+    );
+    if (fromImitationTemplate) {
+      return of(fromImitationTemplate);
     }
 
     // Not found any source of the-thing, create a new one

@@ -50,6 +50,12 @@
         [formControlName]="cell.name"
       ></ygg-address-control>
     </div>
+    <div *ngSwitchCase="'date-range'">
+      <ygg-date-range-control
+        [label]="cell.name"
+        [formControlName]="cell.name"
+      ></ygg-date-range-control>
+    </div>
     <div *ngSwitchDefault>
       <h3>未支援的資料型態：{{ cell.type }}</h3>
     </div>

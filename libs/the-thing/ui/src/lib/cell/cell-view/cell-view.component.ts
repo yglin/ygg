@@ -12,6 +12,7 @@ export class CellViewComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    console.log(this.cell.value);
   }
 
 }

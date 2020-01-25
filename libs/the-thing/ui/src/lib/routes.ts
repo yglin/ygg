@@ -1,6 +1,14 @@
 import { Route } from '@angular/router';
-import { TheThingFinderComponent, TheThingEditorComponent, MyThingsComponent, TheThingViewComponent, TheThingResolver } from './the-thing';
+import {
+  TheThingFinderComponent,
+  TheThingEditorComponent,
+  MyThingsComponent,
+  TheThingViewComponent,
+  TheThingResolver,
+  TheThingEditorPageObject
+} from './the-thing';
 import { LoggedInGuard } from '@ygg/shared/user';
+import { ImitationTemplateResolver } from "./imitation-template-resolver.service";
 
 export const routes: Route[] = [
   {
@@ -13,7 +21,14 @@ export const routes: Route[] = [
       },
       {
         path: 'create',
-        component: TheThingEditorComponent
+        children: [
+          { path: '', pathMatch: 'full', component: TheThingEditorComponent },
+          {
+            path: ':imitation',
+            component: TheThingEditorComponent,
+            resolve: { imitationTemplate: ImitationTemplateResolver }
+          }
+        ]
       },
       {
         path: 'my',

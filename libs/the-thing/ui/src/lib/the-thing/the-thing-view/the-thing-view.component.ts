@@ -15,7 +15,7 @@ import { TheThing, TheThingImitation } from '@ygg/the-thing/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PageStashService, PageData } from '@ygg/shared/infra/data-access';
-import { ImitationService } from '../../imitation.service';
+import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 
 @Component({
   selector: 'the-thing-view',
@@ -36,7 +36,7 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
     private router: Router,
     private pageStashService: PageStashService,
     private componentFactoryResolver: ComponentFactoryResolver,
-    private imitationService: ImitationService
+    private imitationService: TheThingImitationAccessService
   ) {}
 
   ngOnInit() {

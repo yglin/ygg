@@ -112,8 +112,8 @@ import { LinkViewComponent } from './link/link-view/link-view.component';
   exports: [
     NumberRangeComponent,
     NumberRangeControlComponent,
-    DateRangeViewComponent,
-    DateRangeControlComponent,
+    // DateRangeViewComponent,
+    // DateRangeControlComponent,
     AlbumViewComponent,
     ImageComponent,
     // FormControlComponent,

@@ -24,7 +24,7 @@
             <select
               matNativeControl
               placeholder="這東東是個...（類型）"
-              [formControl]="formControlImitation"
+              formControlName="imitation"
             >
               <option
                 *ngFor="let imitation of imitations | keyvalue"

@@ -3,3 +3,5 @@ export interface TheThingImitation {
   name: string;
   view: any;
 };
+
+export const ImitationTemplatesPath = 'the-thing/imitation/templates';

@@ -6,7 +6,7 @@ import {
 } from '@angular/fire/firestore';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, filter, tap } from 'rxjs/operators';
 import { LogService } from '@ygg/shared/infra/log';
 import { DataItem } from './data-item';
 import { DataAccessError, DataAccessErrorCode } from './error';
@@ -189,6 +189,12 @@ export class DataAccessService {
   }
 
   getDataObject$<T>(path: string): Observable<T> {
-    return this.fireRealDB.object<T>(path).valueChanges();
+    return this.fireRealDB
+      .object<T>(path)
+      .valueChanges()
+      .pipe(
+        // tap(data => console.dir(data)),
+        filter(data => !!data)
+      );
   }
 }

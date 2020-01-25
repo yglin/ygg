@@ -1,0 +1,7 @@
+<div class="tour-plan-view" *ngIf="tourPlan">
+  <h1 class="name">{{ tourPlan.name }}</h1>
+  <div class="date-range">
+    <h4>預計出遊日期</h4>
+    <ygg-date-range-view [dateRange]="dateRange"></ygg-date-range-view>
+  </div>
+</div>
