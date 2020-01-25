@@ -9,7 +9,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import {
   DateRangeControlComponent,
-  DateRangeViewComponent
+  DateRangeViewComponent,
+  DayTimeControlComponent,
+  DayTimeViewComponent,
+  DayTimeRangeControlComponent,
+  DayTimeRangeViewComponent
 } from './types/datetime';
 
 @NgModule({
@@ -25,13 +29,18 @@ import {
     HtmlControlComponent,
     HtmlViewComponent,
     DateRangeControlComponent,
-    DateRangeViewComponent
+    DateRangeViewComponent,
+    DayTimeControlComponent,
+    DayTimeViewComponent,
+    DayTimeRangeControlComponent,
+    DayTimeRangeViewComponent
   ],
   exports: [
     HtmlControlComponent,
     HtmlViewComponent,
     DateRangeControlComponent,
-    DateRangeViewComponent
+    DateRangeViewComponent,
+    DayTimeRangeViewComponent
   ]
 })
 export class SharedOmniTypesUiModule {}

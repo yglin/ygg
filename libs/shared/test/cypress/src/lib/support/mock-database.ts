@@ -26,7 +26,7 @@ export class MockDatabase {
 
   insertRTDB(path: string, data: any): Cypress.Chainable<any> {
     const now = new Date().valueOf();
-    const aliasId = now.toString();//`${path.replace(/\//g, '_')}_${now}`;
+    const aliasId = `${path.replace(/\//g, '_')}_${now}`;
     cy.log(aliasId);
     // @ts-ignore
     cy.callRtdb('set', path, data).then(() => {

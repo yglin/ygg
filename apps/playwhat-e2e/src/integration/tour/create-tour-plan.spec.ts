@@ -30,6 +30,7 @@ describe('Create tour-plan', () => {
   it("Create a tour-plan from copy template", () => {
     // siteNavigator.goto(['the-things', 'create', 'tour-plan']);
     cy.visit('/the-things/create/tour-plan');
+    // cy.pause();
     const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.expectVisible();
     // cy.pause();

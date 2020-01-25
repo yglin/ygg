@@ -5,7 +5,11 @@ import {
   AlbumControlPageObjectCypress,
   AddressControlPageObjectCypress
 } from '../cell-types';
-import { HtmlControlPageObjectCypress, DateRangeControlPageObjectCypress } from '@ygg/shared/omni-types/test';
+import {
+  HtmlControlPageObjectCypress,
+  DateRangeControlPageObjectCypress,
+  DayTimeRangeControlPageObjectCypress
+} from '@ygg/shared/omni-types/test';
 import { ChipsControlPageObjectCypress } from '@ygg/shared/test/cypress';
 import { TheThingListPageObjectCypress } from './the-thing-list.po';
 import { TheThingFinderDialogPageObjectCypress } from './the-thing-finder-dialog.po';
@@ -66,8 +70,14 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
         const dateRangeControlPO = new DateRangeControlPageObjectCypress(
           this.getSelectorForCellControl(cell)
         );
-        cy.log(cell.value);
+        // cy.log(cell.value);
         dateRangeControlPO.setValue(cell.value);
+        break;
+      case 'day-time-range':
+        const dayTimeRangeControlPO = new DayTimeRangeControlPageObjectCypress(
+          this.getSelectorForCellControl(cell)
+        );
+        dayTimeRangeControlPO.setValue(cell.value);
         break;
       default:
         break;

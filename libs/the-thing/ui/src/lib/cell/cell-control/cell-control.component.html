@@ -56,6 +56,12 @@
         [formControlName]="cell.name"
       ></ygg-date-range-control>
     </div>
+    <div *ngSwitchCase="'day-time-range'">
+      <ygg-day-time-range-control
+        [label]="cell.name"
+        [formControlName]="cell.name"
+      ></ygg-day-time-range-control>
+    </div>
     <div *ngSwitchDefault>
       <h3>未支援的資料型態：{{ cell.type }}</h3>
     </div>

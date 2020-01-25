@@ -23,6 +23,9 @@
       <div *ngSwitchCase="'date-range'">
         <ygg-date-range-view [dateRange]="cell.value"></ygg-date-range-view>
       </div>
+      <div *ngSwitchCase="'day-time-range'">
+        <ygg-day-time-range-view [dayTimeRange]="cell.value"></ygg-day-time-range-view>
+      </div>
       <div *ngSwitchDefault>
         <h3>未支援的資料型態：{{ cell.type }}</h3>
         {{ cell.value | json }}

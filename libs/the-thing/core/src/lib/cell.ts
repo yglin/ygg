@@ -1,6 +1,6 @@
 import { extend, sample, random, keys } from 'lodash';
-import { Album, Address } from '@ygg/shared/types';
-import { Html, DateRange } from '@ygg/shared/omni-types/core';
+import { Album, Address, DayTime } from '@ygg/shared/types';
+import { Html, DateRange, DayTimeRange } from '@ygg/shared/omni-types/core';
 
 export type TheThingCellTypeID =
   | 'text'
@@ -9,7 +9,8 @@ export type TheThingCellTypeID =
   | 'album'
   | 'html'
   | 'address'
-  | 'date-range';
+  | 'date-range'
+  | 'day-time-range';
 
 interface TheThingCellType {
   id: TheThingCellTypeID;
@@ -96,6 +97,13 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
     forge: (options: any = {}): DateRange => {
       return DateRange.forge();
     }
+  },
+  'day-time-range': {
+    id: 'day-time-range',
+    label: '日時間區段（24小時）',
+    forge: (options: any = {}): DayTimeRange => {
+      return DayTimeRange.forge();
+    }
   }
 };
 
@@ -151,6 +159,9 @@ export class TheThingCell {
         break;
       case 'date-range':
         this.value = new DateRange().fromJSON(data.value);
+        break;
+      case 'day-time-range':
+        this.value = new DayTimeRange().fromJSON(data.value);
         break;
       default:
         // throw new Error(`Not supported cell type: ${data.type}`);

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TheThing } from '@ygg/the-thing/core';
-import { DateRange } from '@ygg/shared/omni-types/core';
+import { DateRange, DayTimeRange } from '@ygg/shared/omni-types/core';
 import { TheThingImitationViewInterface } from '@ygg/the-thing/ui';
 
 @Component({
@@ -12,6 +12,7 @@ export class TourPlanViewComponent implements OnInit, TheThingImitationViewInter
   @Input() theThing: TheThing;
   tourPlan: TheThing;
   dateRange: DateRange;
+  dayTimeRange: DayTimeRange;
   
   constructor() { }
 
@@ -21,6 +22,7 @@ export class TourPlanViewComponent implements OnInit, TheThingImitationViewInter
     }
     if (this.tourPlan) {
       this.dateRange = this.tourPlan.cells['預計出遊日期'].value;
+      this.dayTimeRange = this.tourPlan.cells['預計遊玩時間'].value;
     }
   }
 
