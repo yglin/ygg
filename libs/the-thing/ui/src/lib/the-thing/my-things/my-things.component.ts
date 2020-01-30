@@ -48,4 +48,8 @@ export class MyThingsComponent implements OnInit {
       this.router.navigate(['/the-things', theThing.id]);
     }
   }
+
+  addTheThing(theThing: TheThing) {
+    this.router.navigate(['/', 'the-things', 'create']);
+  }
 }
