@@ -10,6 +10,16 @@
         <mat-icon>file_copy</mat-icon>
       </button>
     </div>
+    <div *ngIf="!readonly && isOwner">
+      <button
+        mat-fab
+        class="edit"
+        (click)="gotoEdit()"
+        matTooltip="修改這個東東"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+    </div>
     <div *ngIf="isPendingRelation">
       <button
         mat-fab

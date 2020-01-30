@@ -16,6 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PageStashService, PageData } from '@ygg/shared/infra/data-access';
 import { ImitationService } from '../../imitation.service';
+import { AuthenticateService } from '@ygg/shared/user';
 
 @Component({
   selector: 'the-thing-view',
@@ -25,6 +26,7 @@ import { ImitationService } from '../../imitation.service';
 export class TheThingViewComponent implements OnInit, OnDestroy {
   @Input() theThing: TheThing;
   @Input() readonly = false;
+  isOwner = false;
   subscriptions: Subscription[] = [];
   isPendingRelation = false;
 
@@ -36,12 +38,13 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
     private router: Router,
     private pageStashService: PageStashService,
     private componentFactoryResolver: ComponentFactoryResolver,
-    private imitationService: ImitationService
+    private imitationService: ImitationService,
+    private authenticateService: AuthenticateService
   ) {}
 
   ngOnInit() {
     this.readonly = this.readonly !== undefined && this.readonly !== false;
-    
+
     if (!this.theThing) {
       if (this.route.snapshot.data && this.route.snapshot.data.theThing) {
         this.theThing = this.route.snapshot.data.theThing;
@@ -53,6 +56,22 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
       this.useImitationView = !!component;
     }
 
+    this.subscriptions.push(
+      this.authenticateService.currentUser$.subscribe(user => {
+        if (
+          user &&
+          user.id &&
+          this.theThing &&
+          this.theThing.ownerId &&
+          user.id === this.theThing.ownerId
+        ) {
+          this.isOwner = true;
+        } else {
+          this.isOwner = false;
+        }
+      })
+    );
+
     const pageData = this.pageStashService.peepTop();
     this.isPendingRelation = !get(pageData, 'promises.relation.resolved', true);
   }
@@ -62,7 +81,6 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
       subscription.unsubscribe();
     }
   }
-
 
   linkRelationBack() {
     const pageData = this.pageStashService.pop();
@@ -80,5 +98,9 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
   createClone() {
     const urlCreate = `/the-things/create?clone=${this.theThing.id}`;
     this.router.navigateByUrl(urlCreate);
+  }
+
+  gotoEdit() {
+    this.router.navigate(['/', 'the-things', this.theThing.id, 'edit']);
   }
 }
