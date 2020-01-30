@@ -43,7 +43,7 @@ export class TourViewComponent
             height: "75vh",
             "background-image": `url("${album.cover.src}")`,
             "background-size": '100% 100%',
-            "-webkit-mask": "radial-gradient(ellipse at 30% 70%, #fff 50%, transparent 80%)",
+            "-webkit-mask": "radial-gradient(ellipse at 40% 60%, #fff 30%, transparent 60%)",
             "mask": "radial-gradient(circle at center, #222, transparent)"
           }
         }
