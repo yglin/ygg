@@ -6,6 +6,15 @@
   </div>
   <div class="day-time-range">
     <h4>預計出遊時段</h4>
-    <ygg-day-time-range-view [dayTimeRange]="dayTimeRange"></ygg-day-time-range-view>
+    <ygg-day-time-range-view
+      [dayTimeRange]="dayTimeRange"
+    ></ygg-day-time-range-view>
+  </div>
+  <div class="num-participants">
+    <h4>預計參加人數</h4>
+    <div>
+      <mat-icon>people</mat-icon>
+      <span class='number'>{{ numParticipants }}</span>
+    </div>
   </div>
 </div>

@@ -5,6 +5,7 @@ export class TourPlanViewPageObject extends PageObject {
     main: '.tour-plan-view',
     name: '.name',
     dateRange: '.date-range',
-    dayTimeRange: '.day-time-range'
+    dayTimeRange: '.day-time-range',
+    numParticipants: '.num-participants .number'
   };
 }

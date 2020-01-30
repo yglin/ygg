@@ -15,6 +15,11 @@ export const TourPlanTemplate = new TheThing().fromJSON({
       name: '預計遊玩時間',
       type: 'day-time-range',
       value: DayTimeRange.forge().toJSON()
-    }
+    },
+    {
+      name: '預計參加人數',
+      type: 'number',
+      value: 100
+    }    
   ]
 });

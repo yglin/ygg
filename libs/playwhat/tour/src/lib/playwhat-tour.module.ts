@@ -10,6 +10,7 @@ import { PlayCardComponent } from './ui/play-card/play-card.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { TourPlanViewComponent } from './ui/tour-plan-view/tour-plan-view.component';
 import { TheThingConfig } from './the-thing-config';
+import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 
 export const playwhatTourRoutes: Route[] = [];
 
@@ -18,6 +19,7 @@ export const playwhatTourRoutes: Route[] = [];
     CommonModule,
     RouterModule,
     FlexLayoutModule,
+    SharedUiNgMaterialModule,
     SharedTypesModule,
     SharedOmniTypesUiModule,
     TheThingUiModule
