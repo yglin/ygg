@@ -7,6 +7,28 @@
         </button>
       </div>
       <div ygg-action-bar-content>
+        <div
+          *ngIf="pendingRelation"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          fxLayoutGap="10px"
+        >
+          <h4>
+            <mat-icon>call_merge</mat-icon>
+            正在新增關聯<span style="color:blue">{{
+              pendingRelation.data
+            }}</span
+            >的物件
+          </h4>
+          <button
+            type="button"
+            mat-mini-fab
+            (click)="cancelPendingRelation()"
+            matTooltip="取消關聯"
+          >
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </div>
         <div class="meta">
           <br />
           <ygg-tags-control
@@ -129,7 +151,7 @@
         </mat-option>
         </mat-autocomplete> -->
               </div>
-              <!-- <div>
+              <div>
                 <button
                   type="button"
                   mat-mini-fab
@@ -139,7 +161,7 @@
                 >
                   <mat-icon>post_add</mat-icon>
                 </button>
-              </div> -->
+              </div>
               <div>
                 <button
                   type="button"

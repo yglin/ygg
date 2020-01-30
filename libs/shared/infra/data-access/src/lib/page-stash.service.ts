@@ -47,6 +47,36 @@ export class PageStashService {
     return pageData;
   }
 
+  cancelPendingPromise(promiseName: string) {
+    const pageData = this.peepTop();
+    if (
+      pageData &&
+      pageData.promises &&
+      promiseName in pageData.promises &&
+      !pageData.promises[promiseName].resolved
+    ) {
+      this.pop();
+    } else {
+      return null;
+    }
+  }
+
+  getPendingPromise(promiseName: string): any {
+    const pageData = this.peepTop();
+    // console.dir(pageData);
+    // console.dir(promiseName);
+    if (
+      pageData &&
+      pageData.promises &&
+      promiseName in pageData.promises &&
+      !pageData.promises[promiseName].resolved
+    ) {
+      return pageData.promises[promiseName];
+    } else {
+      return null;
+    }
+  }
+
   isMatchPageResolved(routePath: string): boolean {
     const pageData = this.peepTop();
     if (!pageData || pageData.path !== routePath) {
