@@ -5,9 +5,23 @@
     fxLayout="row"
     fxLayoutAlign="space-between center"
   >
-    <div>
-      <button [routerLink]="[ '/home' ]" id='to-home' mat-mini-fab><mat-icon>home</mat-icon></button>
-      <!-- <a mat-icon-button [routerLink]="[ '/home' ]" id='to-home'><mat-icon>home</mat-icon></a> -->
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <div>
+        <button [routerLink]="['/home']" id="to-home" mat-mini-fab matTooltip="回首頁">
+          <mat-icon>home</mat-icon>
+        </button>
+      </div>
+      <div>
+        <button
+          class="page-link"
+          id="new-schedule"
+          [routerLink]="['/scheduler', 'schedule-plans', 'new']"
+          mat-mini-fab
+          matTooltip="規劃遊程"
+        >
+          <mat-icon>directions_bike</mat-icon>
+        </button>
+      </div>
     </div>
     <div>
       <ygg-account-widget></ygg-account-widget>
