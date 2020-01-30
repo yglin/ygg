@@ -49,7 +49,7 @@ export class MyThingsComponent implements OnInit {
     }
   }
 
-  addTheThing(theThing: TheThing) {
+  addTheThing() {
     this.router.navigate(['/', 'the-things', 'create']);
   }
 }

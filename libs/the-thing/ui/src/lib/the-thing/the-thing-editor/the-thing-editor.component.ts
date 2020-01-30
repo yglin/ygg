@@ -135,6 +135,7 @@ export class TheThingEditorComponent implements OnInit {
         this.cellsFormGroup.addControl(cell.name, new FormControl(cell.value));
       }
     }
+    this.formControlImitation.setValue(null);
     this.formControlNewCellName.setValue(null);
     this.formControlNewCellType.setValue(null);
     this.formControlNewRelationName.setValue(null);

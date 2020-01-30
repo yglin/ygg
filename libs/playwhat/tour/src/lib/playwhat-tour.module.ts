@@ -33,7 +33,7 @@ export const playwhatTourRoutes: Route[] = [];
 })
 export class PlaywhatTourModule {}
 
-function configTheThingImitation(imitationService: ImitationService) {
+export function configTheThingImitation(imitationService: ImitationService) {
   return () => {
     imitationService.add({
       id: 'tour',
