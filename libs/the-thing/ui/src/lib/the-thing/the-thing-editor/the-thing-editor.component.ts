@@ -38,6 +38,7 @@ export class TheThingEditorComponent implements OnInit {
   subscriptions: Subscription[] = [];
   currentUser: User;
   imitations: { [id: string]: TheThingImitation } = {};
+  pendingRelation: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -85,7 +86,7 @@ export class TheThingEditorComponent implements OnInit {
       for (const key in pageData.promises) {
         if (pageData.promises.hasOwnProperty(key)) {
           const promise = pageData.promises[key];
-          if (key === 'relation') {
+          if (key === 'relation' && promise.data) {
             theThing.addRelations(promise.data.name, [promise.data.objectId]);
           }
         }
@@ -150,6 +151,9 @@ export class TheThingEditorComponent implements OnInit {
         this.reset();
       })
     );
+
+    this.pendingRelation = this.pageStashService.getPendingPromise('relation');
+    // console.dir(this.pendingRelation);
   }
 
   ngOnDestroy(): void {
@@ -216,6 +220,7 @@ export class TheThingEditorComponent implements OnInit {
   }
 
   gotoCreateRelationObject() {
+    const relationName = this.formControlNewRelationName.value;
     this.updateTheThing();
     this.pageStashService.push({
       path: this.router.url,
@@ -224,7 +229,7 @@ export class TheThingEditorComponent implements OnInit {
         theThing: this.theThing.toJSON()
       },
       promises: {
-        relation: new PageStashPromise(this.formControlNewRelationName.value)
+        relation: new PageStashPromise(relationName)
       }
     });
     if (this.router.url.match(/the-things\/create\/?/)) {
@@ -232,6 +237,13 @@ export class TheThingEditorComponent implements OnInit {
       this.ngOnInit();
     } else {
       this.router.navigate(['/', 'the-things', 'create']);
+    }
+  }
+
+  cancelPendingRelation() {
+    if (confirm(`取消與前一物件的關聯：${this.pendingRelation.data} ?`)) {
+      this.pageStashService.cancelPendingPromise('relation');
+      this.pendingRelation = null;
     }
   }
 

@@ -1,3 +1,8 @@
 <div>
+  <div class='action-bar' fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px">
+    <div>
+      <button mat-fab (click)="addTheThing()" matTooltip="新增我的東東"><mat-icon>add</mat-icon></button>
+    </div>
+  </div>
   <the-thing-finder [theThings$]="myThings$" (clickTheThing)="onClickTheThing($event)"></the-thing-finder>
 </div>

@@ -11,6 +11,7 @@
   "numTestsKeptInMemory": 0,
   "testFiles": "**/*.spec.*",
   "ignoreTestFiles": [
-    "**/playground/**/*"
+    "**/playground/**/*",
+    "**/scheduler/schedule/*"
   ]
 }
