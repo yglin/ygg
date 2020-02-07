@@ -11,7 +11,8 @@ export abstract class TheThingEditorPageObject extends PageObject {
     // buttonAddRelation: '.add-relation button.add',
     cellControls: '.cell-controls',
     buttonDeleteAllCells: '.cell-controls button.delete-all',
-    relationList: '.relation-list'
+    relationList: '.relation-list',
+    buttonOpenImitations: 'button.open-imitations'
   };
 
   getSelectorForCellControl(cell: TheThingCell): string {

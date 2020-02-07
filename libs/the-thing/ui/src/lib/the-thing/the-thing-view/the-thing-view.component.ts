@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
 import { PageStashService, PageData } from '@ygg/shared/infra/data-access';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { AuthenticateService } from '@ygg/shared/user';
+import { TheThingViewsService } from '../../the-thing-views.service';
 
 @Component({
   selector: 'the-thing-view',
@@ -30,8 +31,7 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   isPendingRelation = false;
 
-  imitation: TheThingImitation;
-  useImitationView = false;
+  theThingViewComponent: Type<any>;  
 
   constructor(
     private route: ActivatedRoute,
@@ -39,7 +39,8 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
     private pageStashService: PageStashService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private imitationService: TheThingImitationAccessService,
-    private authenticateService: AuthenticateService
+    private authenticateService: AuthenticateService,
+    private theThingViewsService: TheThingViewsService
   ) {}
 
   ngOnInit() {
@@ -50,10 +51,8 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
         this.theThing = this.route.snapshot.data.theThing;
       }
     }
-    if (this.theThing && this.theThing.imitation) {
-      this.imitation = this.imitationService.get(this.theThing.imitation);
-      const component = get(this.imitation, 'view.component');
-      this.useImitationView = !!component;
+    if (this.theThing) {
+      this.theThingViewComponent = this.theThingViewsService.getComponent(this.theThing.view);
     }
 
     this.subscriptions.push(
@@ -96,8 +95,7 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
   }
 
   createClone() {
-    const urlCreate = `/the-things/create?clone=${this.theThing.id}`;
-    this.router.navigateByUrl(urlCreate);
+    this.router.navigate(['/', 'the-things', this.theThing.id, 'clone']);
   }
 
   gotoEdit() {

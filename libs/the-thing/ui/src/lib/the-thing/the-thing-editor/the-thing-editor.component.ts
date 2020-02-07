@@ -1,6 +1,6 @@
-import { find, isEmpty, extend, get } from 'lodash';
+import { find, isEmpty, extend, get, mapValues } from 'lodash';
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   TheThing,
@@ -10,16 +10,19 @@ import {
 } from '@ygg/the-thing/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { Tags } from '@ygg/tags/core';
-import { YggDialogService } from '@ygg/shared/ui/widgets';
-import { TheThingFinderDialogComponent } from '../the-thing-finder-dialog/the-thing-finder-dialog.component';
-import { Observable, Subscription, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  YggDialogService,
+  ImageThumbnailListComponent
+} from '@ygg/shared/ui/widgets';
+import { Observable, Subscription, of, combineLatest, Subject } from 'rxjs';
+import { map, switchMap, take, catchError, timeout } from 'rxjs/operators';
 import {
   PageStashService,
   PageStashPromise
 } from '@ygg/shared/infra/data-access';
 import { User, AuthenticateService } from '@ygg/shared/user';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
+import { TheThingFinderComponent } from '../the-thing-finder/the-thing-finder.component';
 
 @Component({
   selector: 'the-thing-the-thing-editor',
@@ -28,6 +31,7 @@ import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 })
 export class TheThingEditorComponent implements OnInit {
   @Input() theThing: TheThing;
+  theThing$: Subject<TheThing> = new Subject();
   formGroup: FormGroup;
   cellsFormGroup: FormGroup;
   formControlNewCellType: FormControl;
@@ -37,8 +41,13 @@ export class TheThingEditorComponent implements OnInit {
   isNewRelationNameEmpty = true;
   subscriptions: Subscription[] = [];
   currentUser: User;
-  imitations: { [id: string]: TheThingImitation } = {};
+  imitations: TheThingImitation[] = [];
+  hasImitations: boolean = false;
   pendingRelation: any;
+  relations: {
+    [relationName: string]: { objects$: Observable<TheThing[]> };
+  } = {};
+  inProgressing: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -48,18 +57,23 @@ export class TheThingEditorComponent implements OnInit {
     private dialog: YggDialogService,
     private pageStashService: PageStashService,
     private authenticateService: AuthenticateService,
-    private imitationService: TheThingImitationAccessService
+    private imitationAccessService: TheThingImitationAccessService
   ) {
     this.formGroup = formBuilder.group({
       tags: null,
-      name: '東東',
-      imitation: '類型'
+      name: ['東東', Validators.required]
     });
     this.cellsFormGroup = formBuilder.group({});
     this.formControlNewCellType = new FormControl();
     this.formControlNewCellName = new FormControl();
     this.formControlNewRelationName = new FormControl();
-    this.imitations = this.imitationService.imitations;
+
+    this.subscriptions.push(
+      this.imitationAccessService.list$().subscribe(imitations => {
+        this.imitations = imitations;
+        this.hasImitations = !isEmpty(this.imitations);
+      })
+    );
 
     this.subscriptions.push(
       this.formControlNewRelationName.valueChanges.subscribe(value => {
@@ -71,11 +85,17 @@ export class TheThingEditorComponent implements OnInit {
         user => (this.currentUser = user)
       )
     );
+    this.subscriptions.push(
+      this.theThing$.subscribe(theThing => {
+        this.theThing = theThing;
+        this.reset();
+      })
+    );
   }
 
-  resolveTheThing$(): Observable<TheThing> {
+  initResolveTheThing(): TheThing {
     if (this.theThing) {
-      return of(this.theThing);
+      return this.theThing;
     }
 
     if (this.pageStashService.isMatchPageResolved(this.router.url)) {
@@ -92,68 +112,80 @@ export class TheThingEditorComponent implements OnInit {
         }
       }
       // console.log(theThing);
-      return of(theThing);
+      return theThing;
     }
 
-    // Fetch the-thing from id in route path
-    const fromId = get(this.route.snapshot, 'data.theThing', null);
-    if (fromId) {
-      return of(fromId);
+    // Fetch the-thing from route resolver
+    const fromResolve = get(this.route.snapshot, 'data.theThing', null);
+    if (fromResolve) {
+      return fromResolve;
     }
 
-    // Fetch the-thing from clone origin
-    const cloneId = this.route.snapshot.queryParamMap.get('clone');
-    if (cloneId) {
-      return this.theThingAccessService
-        .get$(cloneId)
-        .pipe(map(origin => origin.clone()));
+    // Fetch the-thing from clone
+    const cloneSource: TheThing = get(this.route.snapshot, 'data.clone', null);
+    if (cloneSource) {
+      return cloneSource.clone();
     }
 
-    // Fetch the-thing from imitation template
-    console.log(this.route.snapshot.data);
-    const fromImitationTemplate = get(
-      this.route.snapshot,
-      'data.imitationTemplate',
-      null
-    );
-    if (fromImitationTemplate) {
-      return of(fromImitationTemplate);
-    }
+    // // Fetch the-thing from clone origin
+    // const cloneId = this.route.snapshot.queryParamMap.get('clone');
+    // if (cloneId) {
+    //   return this.theThingAccessService
+    //     .get$(cloneId)
+    //     .pipe(map(origin => origin.clone()));
+    // }
+
+    // // Fetch the-thing from imitation template
+    // console.log(this.route.snapshot.data);
+    // const fromImitationTemplate = get(
+    //   this.route.snapshot,
+    //   'data.imitationTemplate',
+    //   null
+    // );
+    // if (fromImitationTemplate) {
+    //   return of(fromImitationTemplate);
+    // }
 
     // Not found any source of the-thing, create a new one
-    return of(new TheThing());
+    return new TheThing();
   }
 
   reset() {
+    // Reset meta data
     this.formGroup.reset();
-    this.formGroup.patchValue(this.theThing);
-
+    // Cear cell controls
     for (const controlName in this.cellsFormGroup.controls) {
       if (this.cellsFormGroup.controls.hasOwnProperty(controlName)) {
         this.cellsFormGroup.removeControl(controlName);
       }
     }
-    for (const name in this.theThing.cells) {
-      if (this.theThing.cells.hasOwnProperty(name)) {
-        const cell = this.theThing.cells[name];
-        this.cellsFormGroup.addControl(cell.name, new FormControl(cell.value));
-      }
-    }
+    // Reset cell adder controls
     this.formControlNewCellName.setValue(null);
     this.formControlNewCellType.setValue(null);
     this.formControlNewRelationName.setValue(null);
+
+    if (this.theThing) {
+      // Patch meta data
+      this.formGroup.patchValue(this.theThing);
+      // Add cell controls for theThing
+      for (const name in this.theThing.cells) {
+        if (this.theThing.cells.hasOwnProperty(name)) {
+          const cell = this.theThing.cells[name];
+          this.cellsFormGroup.addControl(
+            cell.name,
+            new FormControl(cell.value)
+          );
+        }
+      }
+      // Relation controls
+      this.fetchRelations();
+    }
+    this.inProgressing = false;
   }
 
   ngOnInit() {
-    this.subscriptions.push(
-      this.resolveTheThing$().subscribe(theThing => {
-        this.theThing = theThing;
-        this.reset();
-      })
-    );
-
+    this.theThing$.next(this.initResolveTheThing());
     this.pendingRelation = this.pageStashService.getPendingPromise('relation');
-    // console.dir(this.pendingRelation);
   }
 
   ngOnDestroy(): void {
@@ -199,7 +231,7 @@ export class TheThingEditorComponent implements OnInit {
   }
 
   openTheThingFinder() {
-    const dialogRef = this.dialog.open(TheThingFinderDialogComponent, {
+    const dialogRef = this.dialog.open(TheThingFinderComponent, {
       title: '從既有的物件中選取'
     });
     dialogRef.afterClosed().subscribe((theThings: TheThing[]) => {
@@ -208,6 +240,7 @@ export class TheThingEditorComponent implements OnInit {
           this.formControlNewRelationName.value,
           theThings
         );
+        this.fetchRelations();
       }
     });
   }
@@ -216,6 +249,16 @@ export class TheThingEditorComponent implements OnInit {
     extend(this.theThing, this.formGroup.value);
     if (this.currentUser && !this.theThing.ownerId) {
       this.theThing.ownerId = this.currentUser.id;
+    }
+  }
+
+  fetchRelations() {
+    if (this.theThing && !isEmpty(this.theThing.relations)) {
+      this.relations = mapValues(this.theThing.relations, objectIds => {
+        return { objects$: this.theThingAccessService.listByIds$(objectIds) };
+      });
+    } else {
+      this.relations = {};
     }
   }
 
@@ -252,7 +295,49 @@ export class TheThingEditorComponent implements OnInit {
       confirm(`確定要移除連結關係 ${relationName} - ${objectThing.name} ？`)
     ) {
       this.theThing.removeRelation(relationName, objectThing);
+      this.fetchRelations();
     }
+  }
+
+  applyTemplate() {
+    this.inProgressing = true;
+    const dialogRef = this.dialog.open(ImageThumbnailListComponent, {
+      title: '選取範本並套用',
+      data: {
+        items: this.imitations,
+        singleSelect: true
+      }
+    });
+    let selectedImitation: TheThingImitation;
+    return dialogRef
+      .afterClosed()
+      .pipe(
+        switchMap((imitation: TheThingImitation) => {
+          // console.dir(imitation);
+          if (!imitation) {
+            return of(null);
+          } else {
+            selectedImitation = imitation;
+            return this.theThingAccessService
+              .get$(imitation.templateId)
+              .pipe(take(1));
+          }
+        })
+      )
+      .subscribe(template => {
+        if (
+          selectedImitation &&
+          template &&
+          confirm(
+            `套用範本 ${selectedImitation.name}，目前編輯資料將會遺失，確定繼續？`
+          )
+        ) {
+          this.theThing.applyTemplate(template);
+          this.theThing$.next(this.theThing);
+        } else {
+          this.inProgressing = false;
+        }
+      });
   }
 
   async onSubmit() {

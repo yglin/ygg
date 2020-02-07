@@ -1,11 +1,27 @@
 <div class="the-thing-finder">
-  <the-thing-filter (filterChanged)='onFilterChanged($event)'></the-thing-filter>
-  <br />
-  <div class="the-thing-list">
-    <the-thing-list
-      [theThings]="filteredTheThings"
-      (selectChange)="onSelect($event)"
-      (clickTheThing)="onClickTheThing($event)"
-    ></the-thing-list>
-  </div>
+  <ygg-action-bar-layout>
+    <div ygg-action-bar-button *ngIf="dialogSubmit$.observers.length > 0">
+      <button
+        class="submit"
+        mat-fab
+        [disabled]="selection.length <= 0"
+        (click)="onSubmit()"
+      >
+        <mat-icon>check</mat-icon>
+      </button>
+    </div>
+    <div ygg-action-bar-content>
+      <the-thing-filter
+        (filterChanged)="onFilterChanged($event)"
+      ></the-thing-filter>
+      <br />
+      <div class="the-thing-list">
+        <ygg-image-thumbnail-list
+          [items]="filteredTheThings"
+          [selection]="selection"
+          (selectionChanged)="onSelectTheThings($event)"
+        ></ygg-image-thumbnail-list>
+      </div>
+    </div>
+  </ygg-action-bar-layout>
 </div>

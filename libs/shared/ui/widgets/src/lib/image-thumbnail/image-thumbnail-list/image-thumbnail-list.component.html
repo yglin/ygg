@@ -1,17 +1,43 @@
 <div class="image-thumbnail-list" *ngIf="items">
-  <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="20px">
-    <div
-      *ngFor="let item of items"
-      [attr.item-id]="item.id"
-      class="item"
-      (click)="onClickItem(item)"
-    >
-      <ygg-image-thumbnail [item]="item"></ygg-image-thumbnail>
-    </div>
-    <div class="item" [hidden]="readonly">
-      <button class="add-item" type="button" mat-fab (click)="onAdd()">
-        <mat-icon>add</mat-icon>
+  <ygg-action-bar-layout>
+    <div ygg-action-bar-button *ngIf="dialogSubmit$.observers.length > 0">
+      <button
+        type="button"
+        class="submit"
+        mat-fab
+        [disabled]="!selection || selection.length <= 0"
+        (click)="onSubmit()"
+      >
+        <mat-icon>check</mat-icon>
       </button>
     </div>
-  </div>
+    <div ygg-action-bar-content>
+      <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="20px">
+        <div
+          *ngFor="let item of items; let isLast = last; let isFirst = first"
+          [attr.item-id]="item.id"
+          [attr.item-name]="item.name"
+          class="item"
+          [ngClass]="{
+            'last-item': isLast,
+            'first-item': isFirst,
+            selected: isSelected(item)
+          }"
+          (click)="onClickItem(item)"
+        >
+          <ygg-image-thumbnail [item]="item"></ygg-image-thumbnail>
+          <div class="delete-item" [hidden]="!isItemDeletable">
+            <button type="button" mat-mini-fab (click)="onDeleteItem(item)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="item" [hidden]="readonly">
+          <button class="add add-item" type="button" mat-fab (click)="onAdd()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div></ygg-action-bar-layout
+  >
 </div>

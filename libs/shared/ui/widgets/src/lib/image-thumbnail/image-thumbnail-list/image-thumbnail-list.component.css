@@ -5,4 +5,17 @@
 .item {
   margin-bottom: 5vh;
   cursor: pointer;
+  position: relative;
 }
+
+.delete-item {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  cursor: pointer;
+}
+
+.selected {
+  box-shadow: rgb(0, 53, 0) 8px 8px 16px;
+}
+

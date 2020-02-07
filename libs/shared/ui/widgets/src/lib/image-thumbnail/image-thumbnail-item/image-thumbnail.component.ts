@@ -9,17 +9,10 @@ import { ImageThumbnailItem } from '../image-thumbnail';
 })
 export class ImageThumbnailComponent implements OnInit {
   @Input() item: ImageThumbnailItem;
-  @Input() imageSrc: string;
-  // @Output() clicked: EventEmitter<ImageThumbnailItem> = new EventEmitter();
 
   constructor() {}
 
-  ngOnInit() {
-    if (this.item) {
-      this.imageSrc =
-        (this.item.album && this.item.album.cover.src) || this.item.image || this.imageSrc;
-    }
-  }
+  ngOnInit() {}
 
   // onClick(event: MouseEvent) {
   //   if (!isEmpty(this.clicked.observers)) {

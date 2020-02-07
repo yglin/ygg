@@ -9,7 +9,7 @@ import { ActionBarredComponent } from './action-barred/action-barred.component';
 import {
   YggDialogComponent,
   YggDialogContentHostDirective
-} from './dialog/ygg-dialog.component';
+} from './dialog';
 import { IMaybeALinkDirective } from './i-maybe-a-link/i-maybe-a-link.directive';
 import { NumberSliderComponent } from './number-slider/number-slider.component';
 import { PageTitleComponent } from './page-title/page-title.component';
@@ -23,8 +23,12 @@ import { ChipsControlComponent } from './chips-control/chips-control.component';
 import { ImageIconComponent } from './image-icon/image-icon.component';
 import { ActionBarLayoutComponent } from './action-bar-layout/action-bar-layout.component';
 import { PriceComponent } from './price/price.component';
-import { ImageThumbnailComponent, ImageThumbnailListComponent } from './image-thumbnail';
-import { AngularFittextModule } from "angular-fittext";
+import {
+  ImageThumbnailComponent,
+  ImageThumbnailListComponent,
+  // ImageThumbnailSelectorComponent
+} from './image-thumbnail';
+import { AngularFittextModule } from 'angular-fittext';
 
 @NgModule({
   declarations: [
@@ -44,7 +48,8 @@ import { AngularFittextModule } from "angular-fittext";
     ActionBarLayoutComponent,
     PriceComponent,
     ImageThumbnailComponent,
-    ImageThumbnailListComponent
+    ImageThumbnailListComponent,
+    // ImageThumbnailSelectorComponent
   ],
   imports: [
     CommonModule,
@@ -72,8 +77,14 @@ import { AngularFittextModule } from "angular-fittext";
     ActionBarLayoutComponent,
     PriceComponent,
     ImageThumbnailComponent,
-    ImageThumbnailListComponent
+    ImageThumbnailListComponent,
+    // ImageThumbnailSelectorComponent
   ],
-  entryComponents: [ProgressSpinnerComponent, YggDialogComponent]
+  entryComponents: [
+    ProgressSpinnerComponent,
+    YggDialogComponent,
+    ImageThumbnailListComponent,
+    // ImageThumbnailSelectorComponent
+  ]
 })
 export class SharedUiWidgetsModule {}

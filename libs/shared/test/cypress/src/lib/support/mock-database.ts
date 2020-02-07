@@ -7,8 +7,9 @@ export interface Document {
 
 export class MockDatabase {
   documents: { [path: string]: Document } = {};
-  documentsRTDB: { [path: string]: Document } = {};
+  // documentsRTDB: { [path: string]: Document } = {};
   upsert = this.insert;
+  RTDBBackup: { [path: string]: any } = {};
 
   pushDocument(path: string, data?: any) {
     this.documents[path] = { path, data };
@@ -31,7 +32,7 @@ export class MockDatabase {
     // @ts-ignore
     cy.callRtdb('set', path, data).then(() => {
       cy.log(`Insert test data at ${path} in firebase realtime DB`);
-      this.documentsRTDB[path] = { path, data };
+      // this.documentsRTDB[path] = { path, data };
       cy.wrap(data).as(aliasId);
     });
     // return cy.wait(10000);
@@ -50,12 +51,31 @@ export class MockDatabase {
     cy.log(`Delete data at ${path} in firebase realtime DB`);
   }
 
+  backupRTDB(path: string): Cypress.Chainable<any> {
+    const aliasName = `backup-RTDB-${path}`;
+    // @ts-ignore
+    cy.callRtdb('get', path).then(data => {
+      this.RTDBBackup[path] = data;
+      cy.wrap(data).as(aliasName);
+    });
+    return cy.get(`@${aliasName}`);
+  }
+
+  restoreRTDB(path: string) {
+    if (path in this.RTDBBackup) {
+      // @ts-ignore
+      cy.callRtdb('set', path, this.RTDBBackup[path]).then(() => {
+        cy.log(`Restore backup data at ${path} in firebase realtime DB`);
+      });
+    }
+  }
+
   clear() {
     cy.wrap<Document[]>(values(this.documents)).each((document: any) => {
       this.delete(document.path);
     });
-    cy.wrap(values(this.documentsRTDB)).each((document: any) => {
-      this.deleteRTDB(document.path);
-    });
+    // cy.wrap(values(this.documentsRTDB)).each((document: any) => {
+    //   this.deleteRTDB(document.path);
+    // });
   }
 }

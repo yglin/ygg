@@ -7,8 +7,9 @@ import {
   TheThingResolver,
   TheThingEditorPageObject
 } from './the-thing';
-import { LoggedInGuard } from '@ygg/shared/user';
+import { LoggedInGuard, AdminGuard } from '@ygg/shared/user';
 import { ImitationTemplateResolver } from "./imitation-template-resolver.service";
+import { ImitationManagerComponent } from './imitation';
 
 export const routes: Route[] = [
   {
@@ -36,6 +37,11 @@ export const routes: Route[] = [
         canActivate: [LoggedInGuard]
       },
       {
+        path: 'imitations',
+        component: ImitationManagerComponent,
+        // canActivate: [LoggedInGuard, AdminGuard]
+      },
+      {
         path: ':id',
         children: [
           {
@@ -52,7 +58,15 @@ export const routes: Route[] = [
             resolve: {
               theThing: TheThingResolver
             }
+          },
+          {
+            path: 'clone',
+            component: TheThingEditorComponent,
+            resolve: {
+              clone: TheThingResolver
+            }
           }
+
         ]
       }
     ]

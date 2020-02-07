@@ -181,6 +181,9 @@
     },
     "playwhat-tour": {
       "tags": ["scope:playwhat", "type:feature"]
+    },
+    "shared-ui-test": {
+      "tags": ["scope:shared", "type:test", "type:ui"]
     }
   }
 }

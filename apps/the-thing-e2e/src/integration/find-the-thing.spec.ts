@@ -4,10 +4,8 @@ import { kakapo, kiwi, littlePenguin } from './australia-birbs';
 import { Frodo, Sam, Gollum } from './hobbits';
 import { MockDatabase, login, getCurrentUser } from '@ygg/shared/test/cypress';
 import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
-import {
-  TheThingListPageObjectCypress,
-  TheThingFilterPageObjectCypress
-} from '@ygg/the-thing/test';
+import { TheThingFilterPageObjectCypress, TheThingFinderPageObjectCypress } from '@ygg/the-thing/test';
+import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
 
 const mockDatabase = new MockDatabase();
 
@@ -37,11 +35,13 @@ after(() => {
 describe('Find the-things by query conditions', () => {
   it('Find my the-things', () => {
     cy.visit('/the-things/my');
-    const theThingListPO = new TheThingListPageObjectCypress();
+    const theThingListPO = new ImageThumbnailListPageObjectCypress(
+      '.the-thing-list'
+    );
     theThingListPO.expectVisible();
-    theThingListPO.expectTheThing(kakapo);
-    theThingListPO.expectTheThing(kiwi);
-    theThingListPO.expectNoTheThing(littlePenguin);
+    theThingListPO.expectItem(kakapo);
+    theThingListPO.expectItem(kiwi);
+    theThingListPO.expectNoItem(littlePenguin);
   });
 
   it('Find the-things by query tags', () => {
@@ -54,10 +54,8 @@ describe('Find the-things by query conditions', () => {
     const theThingFilterPO = new TheThingFilterPageObjectCypress();
     theThingFilterPO.clear();
     theThingFilterPO.setTags(testTags);
-    const theThingListPO = new TheThingListPageObjectCypress();
-    theThingListPO.expectTheThing(Frodo);
-    theThingListPO.expectTheThing(Sam);
-    theThingListPO.expectCount(2);
+    const theThingFinderPO = new TheThingFinderPageObjectCypress();
+    theThingFinderPO.expectTheThings([Frodo, Sam]);
   });
 
   it('Find the-things by search keyword in name', () => {
@@ -70,10 +68,8 @@ describe('Find the-things by query conditions', () => {
     const theThingFilterPO = new TheThingFilterPageObjectCypress();
     theThingFilterPO.clear();
     theThingFilterPO.searchName(testKeyword);
-    const theThingListPO = new TheThingListPageObjectCypress();
-    theThingListPO.expectTheThing(Frodo);
-    theThingListPO.expectTheThing(Sam);
-    theThingListPO.expectCount(2);
+    const theThingListPO = new ImageThumbnailListPageObjectCypress();
+    theThingListPO.expectItems([Frodo, Sam]);
   });
 
   it('Can save filter and load it back', () => {
@@ -92,12 +88,12 @@ describe('Find the-things by query conditions', () => {
     cy.visit('/the-things/');
     const theThingFilterPO = new TheThingFilterPageObjectCypress();
     theThingFilterPO.setFilter(filter);
-    const theThingListPO = new TheThingListPageObjectCypress();
-    theThingListPO.expectTheThings([kakapo, kiwi]);
+    const theThingListPO = new ImageThumbnailListPageObjectCypress();
+    theThingListPO.expectItems([kakapo, kiwi]);
     theThingFilterPO.saveFilter(filter.name);
 
     cy.visit('/the-things/');
     theThingFilterPO.loadFilter(filter.name);
-    theThingListPO.expectTheThings([kakapo, kiwi]);
+    theThingListPO.expectItems([kakapo, kiwi]);
   });
 });

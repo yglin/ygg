@@ -1,7 +1,19 @@
-<div class="ygg-action-bar-layout" [fxLayout]="layoutMain" fxLayoutAlign="start stretch" fxLayoutGap="0px">
-  <div [fxLayout]="layoutButtons" [fxLayoutAlign]="layoutAlignButtons" fxLayoutGap="10px" [ngStyle]="actionBarStyle">
+<div
+  class="ygg-action-bar-layout"
+  [fxLayout]="layoutMain"
+  fxLayoutAlign="start stretch"
+  fxLayoutGap="0px"
+>
+  <div
+    [fxLayout]="layoutButtons"
+    [fxLayoutAlign]="layoutAlignButtons"
+    fxLayoutGap="10px"
+    [ngStyle]="actionBarStyle"
+  >
     <ng-content select="[ygg-action-bar-button]"></ng-content>
   </div>
+  <hr>
+  <br>
   <div class="content">
     <ng-content select="[ygg-action-bar-content]"></ng-content>
   </div>

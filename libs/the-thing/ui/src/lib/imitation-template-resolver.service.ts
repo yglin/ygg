@@ -25,8 +25,8 @@ export class ImitationTemplateResolver implements Resolve<TheThing> {
   ): Observable<any> | Promise<any> | any {
     const imitationId = route.paramMap.get('imitation');
     return this.imitationAccessService.getTemplate$(imitationId).pipe(
-      timeout(10000),
       take(1),
+      timeout(10000),
       catchError(error => {
         alert(`找不到 "${imitationId}" 的範本, 錯誤訊息： ${error.message}`);
         this.router.navigate(['/the-things/create']);

@@ -2,7 +2,7 @@ import { NgModule, APP_INITIALIZER, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Route } from '@angular/router';
 import { TourViewComponent } from './ui/tour-view/tour-view.component';
-import { TheThingUiModule } from '@ygg/the-thing/ui';
+import { TheThingUiModule, TheThingViewsService } from '@ygg/the-thing/ui';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { SharedTypesModule } from '@ygg/shared/types';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
@@ -30,7 +30,7 @@ export const playwhatTourRoutes: Route[] = [];
     {
       provide: APP_INITIALIZER,
       useFactory: configTheThingImitation,
-      deps: [TheThingImitationAccessService],
+      deps: [TheThingViewsService],
       multi: true
     }
   ],
@@ -38,8 +38,13 @@ export const playwhatTourRoutes: Route[] = [];
 })
 export class PlaywhatTourModule {}
 
-export function configTheThingImitation(imitationService: TheThingImitationAccessService) {
+export function configTheThingImitation(
+  theThingViewsService: TheThingViewsService
+) {
   return () => {
-    imitationService.add(TheThingConfig.imitations);
+    theThingViewsService.addView('tour', { component: TourViewComponent });
+    theThingViewsService.addView('tour-plan', {
+      component: TourPlanViewComponent
+    });
   };
 }

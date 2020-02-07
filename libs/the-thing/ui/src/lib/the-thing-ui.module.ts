@@ -24,11 +24,12 @@ import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-
 import { MyThingsComponent } from './the-thing/my-things/my-things.component';
 import { SharedUserModule } from '@ygg/shared/user';
 import { TheThingFilterComponent } from './the-thing/the-thing-filter/the-thing-filter.component';
-import { TheThingFinderDialogComponent } from './the-thing/the-thing-finder-dialog/the-thing-finder-dialog.component';
 import { TheThingImitation } from '@ygg/the-thing/core';
 import { routes } from './routes';
 import { TheThingImitationViewComponent } from './the-thing/the-thing-imitation-view/the-thing-imitation-view.component';
 import { UserMenuService } from '@ygg/shared/user';
+import { ImitationEditorComponent } from './imitation/imitation-editor/imitation-editor.component';
+import { ImitationManagerComponent } from './imitation/imitation-manager/imitation-manager.component';
 
 interface TheThingUiModuleConfig {
   imitations: TheThingImitation[];
@@ -59,9 +60,10 @@ interface TheThingUiModuleConfig {
     TheThingThumbnailComponent,
     MyThingsComponent,
     TheThingFilterComponent,
-    TheThingFinderDialogComponent,
     ImitationViewHostDirective,
-    TheThingImitationViewComponent
+    TheThingImitationViewComponent,
+    ImitationEditorComponent,
+    ImitationManagerComponent
   ],
   exports: [
     CellListComponent,
@@ -74,7 +76,7 @@ interface TheThingUiModuleConfig {
     TheThingListComponent,
     MyThingsComponent
   ],
-  entryComponents: [TheThingFinderDialogComponent],
+  entryComponents: [ImitationEditorComponent, TheThingFinderComponent],
   providers: [
     {
       provide: APP_INITIALIZER,

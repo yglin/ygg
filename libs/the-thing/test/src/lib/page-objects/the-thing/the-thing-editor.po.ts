@@ -1,5 +1,5 @@
 import { values } from 'lodash';
-import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import { TheThing, TheThingCell, TheThingImitation } from '@ygg/the-thing/core';
 import { TheThingEditorPageObject } from '@ygg/the-thing/ui';
 import {
   AlbumControlPageObjectCypress,
@@ -12,7 +12,9 @@ import {
 } from '@ygg/shared/omni-types/test';
 import { ChipsControlPageObjectCypress } from '@ygg/shared/test/cypress';
 import { TheThingListPageObjectCypress } from './the-thing-list.po';
-import { TheThingFinderDialogPageObjectCypress } from './the-thing-finder-dialog.po';
+import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
+import { ImageThumbnailListPageObject } from '@ygg/shared/ui/widgets';
+import { TheThingFinderPageObjectCypress } from './the-thing-finder.po';
 
 export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
   extendValue(theThing: TheThing) {
@@ -124,9 +126,9 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
 
     this.setName(theThing.name);
 
-    if (theThing.imitation) {
-      this.setImitation(theThing.imitation);
-    }
+    // if (theThing.imitation) {
+    //   this.setImitation(theThing.imitation);
+    // }
 
     // Add cells
     cy.wrap(values(theThing.cells)).each((cell: any) => this.addCell(cell));
@@ -137,7 +139,7 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
       .clear({ force: true })
       .type(relationName);
     cy.get(this.getSelector('buttonFindRelationObject')).click({ force: true });
-    const theThingFinderDialogPO = new TheThingFinderDialogPageObjectCypress();
+    const theThingFinderDialogPO = new TheThingFinderPageObjectCypress();
     theThingFinderDialogPO.select(objectThing);
     theThingFinderDialogPO.submit();
     // cy.get(this.getSelector('buttonAddRelation')).click({ force: true });
@@ -145,17 +147,17 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
   }
 
   removeRelation(relationName: string, objectThing: TheThing) {
-    const theThingListPO = new TheThingListPageObjectCypress(
+    const relationObjectListPO = new ImageThumbnailListPageObjectCypress(
       this.getSelectorForRelationObjects(relationName)
     );
-    theThingListPO.deleteTheThing(objectThing);
+    relationObjectListPO.deleteItem(objectThing);
   }
 
   expectRelation(relationName: string, objectThing: TheThing) {
-    const theThingListPO = new TheThingListPageObjectCypress(
+    const relationObjectListPO = new ImageThumbnailListPageObjectCypress(
       this.getSelectorForRelationObjects(relationName)
     );
-    theThingListPO.expectTheThing(objectThing);
+    relationObjectListPO.expectItem(objectThing);
   }
 
   addRelationAndGotoCreate(relationName: string) {
@@ -166,6 +168,26 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
       force: true
     });
     cy.location().should('match', /the-things\/create\/?/);
+  }
+
+  expectImitaion(imitation: TheThingImitation) {
+    cy.get(this.getSelector('buttonOpenImitations'), {
+      timeout: 10000
+    }).click();
+    const imitationSelectorDialogPO = new ImageThumbnailListPageObjectCypress();
+    imitationSelectorDialogPO.expectVisible();
+    imitationSelectorDialogPO.expectItemByNameAndImage(imitation);
+  }
+
+  applyImitation(imitation: TheThingImitation) {
+    cy.get(this.getSelector('buttonOpenImitations'), {
+      timeout: 10000
+    }).click();
+    const imitationSelectorDialogPO = new ImageThumbnailListPageObjectCypress();
+    imitationSelectorDialogPO.expectVisible();
+    imitationSelectorDialogPO.selectItem(imitation);
+    imitationSelectorDialogPO.submit();
+    imitationSelectorDialogPO.expectVisible(false);
   }
 
   submit() {

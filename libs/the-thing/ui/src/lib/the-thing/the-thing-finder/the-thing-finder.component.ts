@@ -1,13 +1,18 @@
-import { isEmpty } from 'lodash';
+import { isEmpty, noop, find, remove } from 'lodash';
 import {
   Component,
   OnInit,
   OnDestroy,
   Input,
   Output,
-  EventEmitter
+  EventEmitter,
+  forwardRef
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import {
+  FormControl,
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR
+} from '@angular/forms';
 import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 // import { MatDialogRef } from '@angular/material/dialog';
@@ -16,64 +21,64 @@ import {
   combineLatest,
   Subscription,
   BehaviorSubject,
-  Observable
+  Observable,
+  Subject
 } from 'rxjs';
 import { debounceTime, switchMap, startWith } from 'rxjs/operators';
+import { YggDialogContentComponent } from '@ygg/shared/ui/widgets';
 
 @Component({
   selector: 'the-thing-finder',
   templateUrl: './the-thing-finder.component.html',
-  styleUrls: ['./the-thing-finder.component.css']
+  styleUrls: ['./the-thing-finder.component.css'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => TheThingFinderComponent),
+      multi: true
+    }
+  ]
 })
-export class TheThingFinderComponent implements OnInit, OnDestroy {
+export class TheThingFinderComponent
+  implements
+    OnInit,
+    OnDestroy,
+    ControlValueAccessor,
+    YggDialogContentComponent {
   @Input() theThings: TheThing[];
   @Input() theThings$: Observable<TheThing[]>;
+  @Input() singleSelect: boolean;
   @Output() selectChange = new EventEmitter<TheThing[]>();
-  @Output() clickTheThing: EventEmitter<TheThing> = new EventEmitter();
+  emitChange: (changes: TheThing[]) => any = noop;
   filter$: BehaviorSubject<TheThingFilter> = new BehaviorSubject(null);
   filteredTheThings: TheThing[] = [];
   formControlTypesFilter: FormControl;
   formControlSearchName: FormControl;
   subscriptions: Subscription[] = [];
-  selection: TheThing[];
+  selection: TheThing[] = [];
   isDialog = false;
+  dialogData: any;
+  dialogSubmit$: Subject<TheThing[]> = new Subject();
 
-  constructor(private theThingAccessService: TheThingAccessService) {
-    // this.subscriptions.push(
-    //   combineLatest([
-    //     this.formControlTypesFilter.valueChanges.pipe(
-    //       startWith([]),
-    //       switchMap(filterTypes => {
-    //         if (isEmpty(filterTypes)) {
-    //           return this.theThingAccessService.list$();
-    //         } else {
-    //           return this.theThingAccessService.findByTags$(filterTypes);
-    //         }
-    //       })
-    //     ),
-    //     this.formControlSearchName.valueChanges.pipe(
-    //       debounceTime(1000),
-    //       startWith('')
-    //     )
-    //   ]).subscribe(([theThings, searchName]) => {
-    //     // console.log(theThings);
-    //     if (isEmpty(theThings)) {
-    //       this.filteredTheThings = [];
-    //     } else {
-    //       if (!searchName) {
-    //         this.filteredTheThings = theThings;
-    //       } else {
-    //         this.filteredTheThings = theThings.filter(thing =>
-    //           thing.name.includes(searchName)
-    //         );
-    //       }
-    //     }
-    //     // console.log(this.filteredTheThings);
-    //   })
-    // );
+  constructor(private theThingAccessService: TheThingAccessService) {}
+
+  writeValue(value: TheThing[]) {
+    if (isEmpty(value)) {
+      this.selection = [];
+    } else {
+      this.selection = value;
+    }
   }
 
+  registerOnChange(fn) {
+    this.emitChange = fn;
+  }
+
+  registerOnTouched(fn) {}
+
   ngOnInit() {
+    this.singleSelect =
+      this.singleSelect !== undefined && this.singleSelect !== false;
     if (!this.theThings$) {
       if (this.theThings) {
         this.theThings$ = of(this.theThings);
@@ -108,12 +113,12 @@ export class TheThingFinderComponent implements OnInit, OnDestroy {
     this.filter$.next(filter);
   }
 
-  onSelect(selected: TheThing[]) {
-    this.selectChange.emit(selected);
+  onSelectTheThings(selection: TheThing[]) {
+    this.selection = selection;
+    this.emitChange(selection);
   }
 
-  onClickTheThing(theThing: TheThing) {
-    this.clickTheThing.emit(theThing);
+  onSubmit() {
+    this.dialogSubmit$.next(this.selection);
   }
-
 }

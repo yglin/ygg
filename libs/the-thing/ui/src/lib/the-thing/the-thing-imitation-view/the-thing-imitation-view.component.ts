@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import { get } from 'lodash';
 import {
   Component,
   OnInit,
@@ -24,17 +24,18 @@ export class ImitationViewHostDirective {
   styleUrls: ['./the-thing-imitation-view.component.css']
 })
 export class TheThingImitationViewComponent implements OnInit {
-  @Input() imitation: TheThingImitation;
+  @Input() component: Type<any>;
   @Input() theThing: TheThing;
   @ViewChild(ImitationViewHostDirective, { static: true })
   imitationViewHost: ImitationViewHostDirective;
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
+  constructor(
+    private componentFactoryResolver: ComponentFactoryResolver
+  ) {}
 
   ngOnInit() {
-    const component = get(this.imitation, 'view.component');
-    if (component) {
-      this.loadImitationComponent(component);
+    if (this.component) {
+      this.loadImitationComponent(this.component);
     }
   }
 

@@ -1,4 +1,4 @@
-@import './lib/dialog/ygg-dialog.css';
+/* @import './lib/dialog/ygg-dialog.css'; */
 
 .ygg-transparent-background .mat-dialog-container {
   background: rgba(1.0, 1.0, 1.0, 0.0);

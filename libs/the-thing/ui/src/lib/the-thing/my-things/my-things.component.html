@@ -4,5 +4,13 @@
       <button mat-fab (click)="addTheThing()" matTooltip="新增我的東東"><mat-icon>add</mat-icon></button>
     </div>
   </div>
-  <the-thing-finder [theThings$]="myThings$" (clickTheThing)="onClickTheThing($event)"></the-thing-finder>
+  <the-thing-filter (filterChanged)='onFilterChanged($event)'></the-thing-filter>
+  <br />
+  <div class="the-thing-list">
+    <ygg-image-thumbnail-list
+      [items]="filteredTheThings"
+      (clickAdd)="addTheThing()"
+      (clickItem)="onClickTheThing($event)"
+    ></ygg-image-thumbnail-list>
+  </div>
 </div>

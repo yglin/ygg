@@ -1,8 +1,26 @@
 <div class="the-thing-editor" *ngIf="theThing">
   <form [formGroup]="formGroup">
     <ygg-action-bar-layout
-      ><div ygg-action-bar-button>
-        <button type="button" mat-fab class="submit" (click)="onSubmit()">
+      ><div ygg-action-bar-button [hidden]='!hasImitations'>
+        <button
+          type="button"
+          mat-fab
+          class="open-imitations"
+          (click)="applyTemplate()"
+          matTooltip="套用範本"
+        >
+          <mat-icon>library_books</mat-icon>
+        </button>
+      </div>
+      <div ygg-action-bar-button>
+        <button
+          type="button"
+          mat-fab
+          class="submit"
+          (click)="onSubmit()"
+          [disabled]='formGroup.invalid || inProgressing'
+          matTooltip="新增/修改"
+        >
           <mat-icon>save</mat-icon>
         </button>
       </div>
@@ -44,21 +62,6 @@
               placeholder="這東東叫做...（名稱）"
               formControlName="name"
             />
-          </mat-form-field>
-          <br />
-          <mat-form-field class="imitation">
-            <select
-              matNativeControl
-              placeholder="這東東是個...（類型）"
-              formControlName="imitation"
-            >
-              <option
-                *ngFor="let imitation of imitations | keyvalue"
-                [value]="imitation.key"
-              >
-                {{ imitation.value.name }}
-              </option>
-            </select>
           </mat-form-field>
         </div>
         <div class="add-cell">
@@ -170,21 +173,21 @@
                   (click)="openTheThingFinder()"
                   [disabled]="isNewRelationNameEmpty"
                 >
-                  <mat-icon>search</mat-icon>
+                  <mat-icon>zoom_in</mat-icon>
                 </button>
               </div>
             </div>
           </div>
           <div class="relation-list">
             <div
-              *ngFor="let relation of theThing.relations | keyvalue"
+              *ngFor="let relation of relations | keyvalue"
               [attr.relation-name]="relation.key"
             >
               <h3>{{ relation.key }}</h3>
-              <the-thing-list
-                [ids]="relation.value"
-                (delete)="onDeleteRelation(relation.key, $event)"
-              ></the-thing-list>
+              <ygg-image-thumbnail-list
+                [items$]='relation.value.objects$'
+                (deleteItem)="onDeleteRelation(relation.key, $event)"
+              ></ygg-image-thumbnail-list>
             </div>
           </div>
         </div></div

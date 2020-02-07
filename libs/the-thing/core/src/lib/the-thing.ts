@@ -15,8 +15,9 @@ import {
 import { Tags } from '@ygg/tags/core';
 import { TheThingCell } from './cell';
 import { generateID, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 
-export class TheThing {
+export class TheThing implements ImageThumbnailItem {
   static collection = 'the-things';
 
   id: string;
@@ -39,8 +40,11 @@ export class TheThing {
   /** Last modified time */
   modifyAt: number;
 
-  /** Imitation id */
-  imitation: string;
+  // /** Imitation id */
+  // imitation: string;
+
+  /** View options */
+  view: any;
 
   /** TheThingCells, define its own properties, attributes */
   cells: { [name: string]: TheThingCell };
@@ -50,6 +54,11 @@ export class TheThing {
    * Store mappings from relation name to ids of objects
    **/
   relations: { [name: string]: string[] };
+
+  /**
+   * For ImageThumbnailItem interface
+   */
+  image: string;
 
   static forge(options: any = {}): TheThing {
     const thing = new TheThing();
@@ -160,6 +169,32 @@ export class TheThing {
     return new TheThing().fromJSON(omit(this.toJSON(), 'id'));
   }
 
+  /**
+   * Try to resolve image src from cells data
+   */
+  resolveImage(): string {
+    let imageSrc: string;
+    for (const key in this.cells) {
+      if (this.cells.hasOwnProperty(key)) {
+        const cell = this.cells[key];
+        if (
+          cell.type === 'album' &&
+          cell.value &&
+          cell.value.cover &&
+          cell.value.cover.src
+        ) {
+          imageSrc = cell.value.cover.src;
+          break;
+        }
+      }
+    }
+    return imageSrc;
+  }
+
+  applyTemplate(template: TheThing) {
+    this.fromJSON(template.toJSON());
+  }
+
   fromJSON(data: any): this {
     // console.dir(data);
     extend(this, data);
@@ -175,6 +210,9 @@ export class TheThing {
         this.cells = mapValues(this.cells, cellData =>
           new TheThingCell().fromJSON(cellData)
         );
+      }
+      if (!this.image) {
+        this.image = this.resolveImage();
       }
     }
     return this;

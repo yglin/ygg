@@ -3,8 +3,25 @@
   max-height: 75vh;
 } */
 
-.content {
-  max-width: 80vw;
-  max-height: 60vh;
+::ng-deep .ygg-dialog .content {
+  width: 75vw;
+  max-width: 800px;
+  max-height: 65vh;
   overflow: auto;
+  padding: 30px 15px;
+}
+
+::ng-deep .ygg-dialog .mat-dialog-container {
+  overflow: visible;
+  padding: 0;
+}
+
+::ng-deep .ygg-dialog {
+  position: relative;
+}
+
+::ng-deep .close-button {
+  position: absolute;
+  top: -10px;
+  right: -10px;
 }

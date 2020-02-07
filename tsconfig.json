@@ -82,7 +82,8 @@
       "@ygg/shared/omni-types/test": [
         "libs/shared/omni-types/test/src/index.ts"
       ],
-      "@ygg/playwhat/tour": ["libs/playwhat/tour/src/index.ts"]
+      "@ygg/playwhat/tour": ["libs/playwhat/tour/src/index.ts"],
+      "@ygg/shared/ui/test": ["libs/shared/ui/test/src/index.ts"]
     },
     "rootDir": "."
   },

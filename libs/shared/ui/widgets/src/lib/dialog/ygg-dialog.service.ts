@@ -1,11 +1,8 @@
 import {Injectable, TemplateRef, Type} from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
 import { MatDialog } from '@angular/material/dialog';
-import { YggDialogComponent, YggDialogComponentData } from './ygg-dialog.component';
-
-export interface YggDialogContentComponent {
-  dialogData: any;
-}
+import { YggDialogComponentData } from './ygg-dialog';
+import { YggDialogComponent } from "./ygg-dialog.component";
 
 @Injectable({providedIn: 'root'})
 export class YggDialogService {

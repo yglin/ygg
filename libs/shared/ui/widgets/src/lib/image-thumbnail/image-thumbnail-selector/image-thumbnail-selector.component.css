@@ -1,0 +1,12 @@
+.image-thumbnail-selector {
+  width: 100%;
+}
+
+.item {
+  margin-bottom: 5vh;
+  cursor: pointer;
+}
+
+.selected {
+  box-shadow: rgb(0, 53, 0) 8px 8px 16px;
+}

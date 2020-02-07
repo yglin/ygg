@@ -31,13 +31,13 @@
       </button>
     </div>
   </div>
-  <div *ngIf="useImitationView">
+  <div *ngIf="theThingViewComponent">
     <the-thing-imitation-view
       [theThing]="theThing"
-      [imitation]="imitation"
+      [component]="theThingViewComponent"
     ></the-thing-imitation-view>
   </div>
-  <div *ngIf="!useImitationView">
+  <div *ngIf="!theThingViewComponent">
     <div class="name">
       <h2>{{ theThing.name }}</h2>
     </div>
