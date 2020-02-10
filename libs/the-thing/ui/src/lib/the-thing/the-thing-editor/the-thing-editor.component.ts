@@ -1,6 +1,11 @@
-import { find, isEmpty, extend, get, mapValues } from 'lodash';
+import { size, isEmpty, extend, get, mapValues } from 'lodash';
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  FormControl,
+  Validators
+} from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   TheThing,
@@ -48,6 +53,7 @@ export class TheThingEditorComponent implements OnInit {
     [relationName: string]: { objects$: Observable<TheThing[]> };
   } = {};
   inProgressing: boolean = false;
+  canDeleteAllCells: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -181,6 +187,7 @@ export class TheThingEditorComponent implements OnInit {
       this.fetchRelations();
     }
     this.inProgressing = false;
+    this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
   }
 
   ngOnInit() {
@@ -211,6 +218,7 @@ export class TheThingEditorComponent implements OnInit {
     } else {
       this.theThing.addCell(cell);
       this.cellsFormGroup.addControl(cell.name, new FormControl(cell.value));
+      this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
     }
   }
 
@@ -218,16 +226,20 @@ export class TheThingEditorComponent implements OnInit {
     if (cell && confirm(`移除資料欄位 ${cell.name}`)) {
       this.theThing.deleteCell(cell);
       this.cellsFormGroup.removeControl(cell.name);
+      this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
     }
   }
 
   deleteAllCells() {
-    for (const cellName in this.theThing.cells) {
-      if (this.theThing.cells.hasOwnProperty(cellName)) {
-        this.cellsFormGroup.removeControl(cellName);
+    if (confirm(`清除所有的資料欄位？`)) {
+      for (const cellName in this.theThing.cells) {
+        if (this.theThing.cells.hasOwnProperty(cellName)) {
+          this.cellsFormGroup.removeControl(cellName);
+        }
       }
+      this.theThing.clearCells();
+      this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
     }
-    this.theThing.clearCells();
   }
 
   openTheThingFinder() {

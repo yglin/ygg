@@ -111,7 +111,7 @@
             </div>
             <div fxFlex></div>
             <div>
-              <button class="delete-all" mat-fab (click)="deleteAllCells()">
+              <button [disabled]='!canDeleteAllCells' class="delete-all" mat-fab (click)="deleteAllCells()" matTooltip="刪除所有資料欄位">
                 <mat-icon>delete_sweep</mat-icon>
               </button>
             </div>
