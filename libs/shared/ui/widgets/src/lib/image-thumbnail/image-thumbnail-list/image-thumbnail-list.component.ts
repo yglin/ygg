@@ -51,7 +51,7 @@ export class ImageThumbnailListComponent
       );
     }
     this.isItemDeletable = this.deleteItem.observers.length > 0;
-    this.isSelectable = this.selectionChanged.observers.length > 0;
+    this.isSelectable = this.selectionChanged.observers.length > 0 || this.dialogSubmit$.observers.length > 0;
   }
 
   ngOnDestroy() {
