@@ -1,11 +1,15 @@
-<div
-  class="ygg-title-divider"
-  [ngStyle]="styles"
->
-  <mat-divider></mat-divider>
-  <div class='title'>
-    <div fittext [minFontSize]="minFontSize" [maxFontSize]="maxFontSize">
-      <ng-content></ng-content>
+<div class="ygg-title-divider" [ngStyle]="styles">
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+    <div fxFlex='100px'>
+      <mat-divider></mat-divider>
+    </div>
+    <div class="title" fxFlex='150px'>
+      <div fittext [minFontSize]="minFontSize" [maxFontSize]="maxFontSize">
+        <ng-content></ng-content>
+      </div>
+    </div>
+    <div fxFlex>
+      <mat-divider></mat-divider>
     </div>
   </div>
 </div>

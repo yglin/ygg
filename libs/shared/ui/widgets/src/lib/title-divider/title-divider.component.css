@@ -1,15 +1,10 @@
 .ygg-title-divider {
   margin: 30px 10px;
-  position: relative;
 }
 
 .ygg-title-divider .title {
-  position: absolute;
-  top: -15px;
-  left: 100px;
   padding: 5px;
   min-width: 100px;
-  background-color: white;
   text-align: center;
 }
 
