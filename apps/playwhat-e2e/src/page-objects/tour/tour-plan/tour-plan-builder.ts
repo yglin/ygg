@@ -1,0 +1,7 @@
+export class TourPlanBuilderStep1PageObjectCypress extends TourPlanBuilderStep1PageObject {}
+
+export class TourPlanBuilderStep2PageObjectCypress extends TourPlanBuilderStep2PageObject {}
+
+export class TourPlanBuilderStep3PageObjectCypress extends TourPlanBuilderStep3PageObject {}
+
+export class TourPlanBuilderStep4PageObjectCypress extends TourPlanBuilderStep4PageObject {}

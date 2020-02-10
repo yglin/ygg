@@ -25,6 +25,33 @@ export const TourPlanTemplate = new TheThing().fromJSON({
   ]
 });
 
+export const MinimalTourPlan = new TheThing().fromJSON({
+  tags: ['tour', 'plan', 'scheudle', '遊程規劃'],
+  name: '八卦山二日遊',
+  view: 'tour-plan',
+  cells: [
+    {
+      name: '預計出遊日期',
+      type: 'date-range',
+      value: DateRange.forge().toJSON()
+    },
+    {
+      name: '預計參加人數',
+      type: 'number',
+      value: 100
+    },
+    {
+      name: '聯絡人',
+      type: 'contact',
+      value: {
+        name: 'Y大GG',
+        mail: 'ygg@ygmail.com',
+        lineID: 'YGGY'
+      }
+    }
+  ]
+});
+
 export const SampleTourPlan = new TheThing().fromJSON({
   tags: ['tour', 'plan', 'scheudle', '遊程規劃'],
   name: '八卦山二日遊',

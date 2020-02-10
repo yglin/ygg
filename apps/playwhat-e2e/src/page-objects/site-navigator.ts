@@ -1,7 +1,12 @@
 import { SchedulePlan } from '@ygg/schedule/core';
 
+const expectPageTrivial = () => cy.get('body').should('be.visible');
+
 export class SiteNavigator {
-  goto(path: string[] = ['home']): Cypress.Chainable<any> {
+  goto(path: string[] = ['home'], expectPage?: () => Cypress.Chainable<any> ): Cypress.Chainable<any> {
+    if (typeof expectPage !== 'function') {
+      expectPage = expectPageTrivial;
+    }
     const fullPathName = `/${path.join('/')}`;
     cy.log(`Go to ${fullPathName}`);
     cy.get('.pw-header #to-home').click({ force: true });
@@ -19,16 +24,23 @@ export class SiteNavigator {
       }
     } else if (route === 'the-things') {
       this.gotoTheThings(path);
+    } else if (route === 'tour-plans') {
+      this.gotoTourPlans(path);
     } else {
       cy.visit(fullPathName);
     }
-    return cy
-      .location('pathname', { timeout: 10000 })
-      .should('eq', fullPathName);
+    return expectPage();
   }
 
   gotoSchedulePlanView(schedulePlan: SchedulePlan) {
     cy.visit(`/scheduler/schedule-plans/${schedulePlan.id}`);
+  }
+
+  private gotoTourPlans(path: string[] = []) {
+    const route = path.shift();
+    if (route === 'builder') {
+      // Do nothing, we just put TourPlanBuilder at home page
+    }
   }
 
   private gotoTheThings(path: string[] = []) {

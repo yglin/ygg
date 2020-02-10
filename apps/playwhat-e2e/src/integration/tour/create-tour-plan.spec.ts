@@ -7,7 +7,7 @@ import { SiteNavigator } from '../../page-objects/site-navigator';
 import { MockDatabase, login } from '@ygg/shared/test/cypress';
 import { TourPlanViewPageObjectCypress } from '../../page-objects/tour';
 import { TheThingEditorPageObjectCypress } from '@ygg/the-thing/test';
-import { TourPlanTemplate, SampleTourPlan } from './tour-plan-template';
+import { TourPlanTemplate, SampleTourPlan } from './sample-tour-plan';
 
 const tourPlanImitation = new TheThingImitation(TourPlanTemplate, {
   name: '遊程規劃單',
