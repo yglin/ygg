@@ -28,6 +28,7 @@ describe('Create a tour composed of plays', () => {
   it('Create sample tour and check data consistency', () => {
     cy.visit('/the-things/create');
     const theThingEditorPO = new TheThingEditorPageObjectCypress();
+    cy.log(sampleTour.view);
     theThingEditorPO.setValue(sampleTour);
     cy.wrap(plays).each((play: any) => {
       theThingEditorPO.addRelationAndGotoCreate(relationPlay);

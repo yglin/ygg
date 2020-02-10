@@ -41,9 +41,16 @@ export class PlaywhatTourModule {}
 export function configTheThingImitation(
   theThingViewsService: TheThingViewsService
 ) {
+  // console.log('WTF~!!!');
   return () => {
-    theThingViewsService.addView('tour', { component: TourViewComponent });
+    theThingViewsService.addView('tour', {
+      id: 'tour',
+      label: '體驗組合',
+      component: TourViewComponent
+    });
     theThingViewsService.addView('tour-plan', {
+      id: 'tour-plan',
+      label: '遊程規劃',
       component: TourPlanViewComponent
     });
   };

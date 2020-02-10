@@ -11,7 +11,8 @@ import {
   TheThing,
   TheThingCell,
   TheThingCellTypes,
-  TheThingImitation
+  TheThingImitation,
+  TheThingView
 } from '@ygg/the-thing/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { Tags } from '@ygg/tags/core';
@@ -28,6 +29,7 @@ import {
 import { User, AuthenticateService } from '@ygg/shared/user';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { TheThingFinderComponent } from '../the-thing-finder/the-thing-finder.component';
+import { TheThingViewsService } from '../../the-thing-views.service';
 
 @Component({
   selector: 'the-thing-the-thing-editor',
@@ -54,6 +56,7 @@ export class TheThingEditorComponent implements OnInit {
   } = {};
   inProgressing: boolean = false;
   canDeleteAllCells: boolean = false;
+  views: { [id: string]: TheThingView } = {};
 
   constructor(
     private formBuilder: FormBuilder,
@@ -63,11 +66,13 @@ export class TheThingEditorComponent implements OnInit {
     private dialog: YggDialogService,
     private pageStashService: PageStashService,
     private authenticateService: AuthenticateService,
-    private imitationAccessService: TheThingImitationAccessService
+    private imitationAccessService: TheThingImitationAccessService,
+    private theThingViewsService: TheThingViewsService
   ) {
     this.formGroup = formBuilder.group({
       tags: null,
-      name: ['東東', Validators.required]
+      name: ['東東', Validators.required],
+      view: null
     });
     this.cellsFormGroup = formBuilder.group({});
     this.formControlNewCellType = new FormControl();
@@ -97,6 +102,8 @@ export class TheThingEditorComponent implements OnInit {
         this.reset();
       })
     );
+    this.views = this.theThingViewsService.views;
+    // console.dir(this.theThingViewsService.views);
   }
 
   initResolveTheThing(): TheThing {
@@ -141,16 +148,16 @@ export class TheThingEditorComponent implements OnInit {
     //     .pipe(map(origin => origin.clone()));
     // }
 
-    // // Fetch the-thing from imitation template
+    // Fetch the-thing from imitation template
     // console.log(this.route.snapshot.data);
-    // const fromImitationTemplate = get(
-    //   this.route.snapshot,
-    //   'data.imitationTemplate',
-    //   null
-    // );
-    // if (fromImitationTemplate) {
-    //   return of(fromImitationTemplate);
-    // }
+    const fromImitationTemplate = get(
+      this.route.snapshot,
+      'data.imitationTemplate',
+      null
+    );
+    if (fromImitationTemplate) {
+      return fromImitationTemplate;
+    }
 
     // Not found any source of the-thing, create a new one
     return new TheThing();

@@ -12,6 +12,10 @@ export class TheThingFinderPageObjectCypress extends TheThingFinderPageObject {
     );
   }
 
+  expectVisible() {
+    cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
+  }
+
   find(theThing: TheThing) {
     const chipsControlPO = new ChipsControlPageObjectCypress(
       this.getSelector('tagsFilter')

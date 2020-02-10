@@ -1,35 +1,49 @@
-import { ImitationTemplatesPath } from '@ygg/the-thing/core';
+import {
+  TheThingImitation,
+  ImitationsDataPath,
+  TheThing
+} from '@ygg/the-thing/core';
 import { SiteNavigator } from '../../page-objects/site-navigator';
 import { MockDatabase, login } from '@ygg/shared/test/cypress';
 import { TourPlanViewPageObjectCypress } from '../../page-objects/tour';
 import { TheThingEditorPageObjectCypress } from '@ygg/the-thing/test';
-import { SampleTourPlan } from './sample-tour-plan';
-import { TourPlanTemplate } from './tour-plan-template';
+import { TourPlanTemplate, SampleTourPlan } from './tour-plan-template';
+
+const tourPlanImitation = new TheThingImitation(TourPlanTemplate, {
+  name: '遊程規劃單',
+  description: '體驗組合的遊程規格，預定日期、時間、以及參加人數'
+});
 
 const siteNavigator = new SiteNavigator();
 const mockDatabase = new MockDatabase();
-const imitationId = 'tour-plan';
 
 describe('Create tour-plan', () => {
   before(() => {
     login().then(() => {
-      mockDatabase.insertRTDB(
-        `${ImitationTemplatesPath}/${imitationId}`,
+      mockDatabase.insert(
+        `${TheThing.collection}/${TourPlanTemplate.id}`,
         TourPlanTemplate.toJSON()
-      )
-      .then(() => {
-        cy.visit('/');
-      });
+      );
+      mockDatabase.backupRTDB(ImitationsDataPath);
+      mockDatabase
+        .insertRTDB(
+          `${ImitationsDataPath}/${tourPlanImitation.id}`,
+          tourPlanImitation.toJSON()
+        )
+        .then(() => {
+          cy.visit('/');
+        });
     });
   });
 
   after(() => {
     mockDatabase.clear();
+    mockDatabase.restoreRTDB();
   });
 
-  it("Create a tour-plan from copy template", () => {
+  it('Create a tour-plan from copy template', () => {
     // siteNavigator.goto(['the-things', 'create', 'tour-plan']);
-    cy.visit('/the-things/create/tour-plan');
+    cy.visit(`/the-things/create/${tourPlanImitation.id}`);
     // cy.pause();
     const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.expectVisible();
@@ -40,6 +54,4 @@ describe('Create tour-plan', () => {
     tourPlanViewPO.expectVisible();
     tourPlanViewPO.expectValue(SampleTourPlan);
   });
-
-
 });

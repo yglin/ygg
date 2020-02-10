@@ -43,8 +43,8 @@ export class TheThing implements ImageThumbnailItem {
   // /** Imitation id */
   // imitation: string;
 
-  /** View options */
-  view: any;
+  /** TheThingView id */
+  view: string;
 
   /** TheThingCells, define its own properties, attributes */
   cells: { [name: string]: TheThingCell };

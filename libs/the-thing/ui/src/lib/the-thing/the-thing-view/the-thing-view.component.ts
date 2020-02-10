@@ -31,7 +31,7 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   isPendingRelation = false;
 
-  theThingViewComponent: Type<any>;  
+  theThingViewComponent: Type<any>;
 
   constructor(
     private route: ActivatedRoute,
@@ -50,9 +50,11 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
       if (this.route.snapshot.data && this.route.snapshot.data.theThing) {
         this.theThing = this.route.snapshot.data.theThing;
       }
-    }
-    if (this.theThing) {
-      this.theThingViewComponent = this.theThingViewsService.getComponent(this.theThing.view);
+      if (this.theThing.view) {
+        this.theThingViewComponent = this.theThingViewsService.getComponent(
+          this.theThing.view
+        );
+      }
     }
 
     this.subscriptions.push(

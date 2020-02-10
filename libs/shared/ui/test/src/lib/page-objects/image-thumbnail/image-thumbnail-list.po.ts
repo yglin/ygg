@@ -56,6 +56,10 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
     cy.get(this.getSelectorForItem(item)).click({ force: true });
   }
 
+  clickItem(item: ImageThumbnailItem) {
+    cy.get(this.getSelectorForItem(item)).click({ force: true });
+  }
+
   selectLastItem(item: ImageThumbnailItem) {
     cy.get(this.getSelector('lastItem')).click({ force: true });
   }

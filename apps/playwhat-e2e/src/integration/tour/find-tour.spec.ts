@@ -7,6 +7,7 @@ import {
 } from '@ygg/the-thing/test';
 import { TourViewPageObjectCypress } from '../../page-objects/tour';
 import { SiteNavigator } from '../../page-objects/site-navigator';
+import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
 
 const siteNavigator = new SiteNavigator();
 const mockDatabase = new MockDatabase();
@@ -46,9 +47,9 @@ describe('Find tours in my things', () => {
       keywordName: sampleTour.name
     });
     theThingFilterPO.setFilter(filter);
-    const theThingListPO = new TheThingListPageObjectCypress();
-    theThingListPO.expectTheThing(sampleTour);
-    theThingListPO.clickTheThing(sampleTour);
+    const theThingListPO = new ImageThumbnailListPageObjectCypress();
+    theThingListPO.expectItem(sampleTour);
+    theThingListPO.clickItem(sampleTour);
     const tourViewPO = new TourViewPageObjectCypress();
     tourViewPO.expectVisible();
     tourViewPO.expectValue(sampleTour);

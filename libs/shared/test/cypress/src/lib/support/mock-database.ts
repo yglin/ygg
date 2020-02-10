@@ -1,4 +1,4 @@
-import { values } from 'lodash';
+import { values, entries } from 'lodash';
 
 export interface Document {
   path: string;
@@ -61,11 +61,22 @@ export class MockDatabase {
     return cy.get(`@${aliasName}`);
   }
 
-  restoreRTDB(path: string) {
-    if (path in this.RTDBBackup) {
-      // @ts-ignore
-      cy.callRtdb('set', path, this.RTDBBackup[path]).then(() => {
-        cy.log(`Restore backup data at ${path} in firebase realtime DB`);
+  restoreRTDB(path?: string) {
+    if (path) {
+      if (path in this.RTDBBackup) {
+        // @ts-ignore
+        cy.callRtdb('set', path, this.RTDBBackup[path]).then(() => {
+          cy.log(`Restore backup data at ${path} in firebase realtime DB`);
+        });
+      }
+    } else {
+      cy.wrap(entries(this.RTDBBackup)).each((entry: any) => {
+        const path = entry[0];
+        const data = entry[1];
+        // @ts-ignore
+        cy.callRtdb('set', path, data).then(() => {
+          cy.log(`Restore backup data at ${path} in firebase realtime DB`);
+        });
       });
     }
   }

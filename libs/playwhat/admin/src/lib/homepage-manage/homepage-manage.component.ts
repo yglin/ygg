@@ -2,7 +2,7 @@ import { isEmpty, uniqBy, remove } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { TheThing } from '@ygg/the-thing/core';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
-import { TheThingFinderDialogComponent } from '@ygg/the-thing/ui';
+import { TheThingFinderComponent } from '@ygg/the-thing/ui';
 import { Subscription, of } from 'rxjs';
 import { HomepageManageService } from './homepage-manage.service';
 
@@ -31,7 +31,7 @@ export class HomepageManageComponent implements OnInit {
   }
 
   addExhibitThing() {
-    const dialogRef = this.dialog.open(TheThingFinderDialogComponent, {
+    const dialogRef = this.dialog.open(TheThingFinderComponent, {
       title: '選取作為首頁展示用的物件'
     });
     dialogRef.afterClosed().subscribe(async (things: TheThing[]) => {

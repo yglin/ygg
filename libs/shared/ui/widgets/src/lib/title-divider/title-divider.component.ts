@@ -32,7 +32,7 @@ export class TitleDividerComponent implements OnInit {
       width: width + '%',
       'min-width': '300px'
     };
-    console.dir(this.level);
-    console.dir(this.styles);
+    // console.dir(this.level);
+    // console.dir(this.styles);
   }
 }

@@ -63,6 +63,19 @@
               formControlName="name"
             />
           </mat-form-field>
+          <br />
+          <mat-form-field>
+            <select
+              class='view'
+              matNativeControl
+              placeholder="資料顯示為...（樣版）"
+              formControlName="view"
+            >
+              <option *ngFor="let view of views | keyvalue" [value]="view.key">
+                {{ view.value.label }}
+              </option>
+            </select>
+          </mat-form-field>
         </div>
         <div class="add-cell">
           <ygg-title-divider>新增資料欄位</ygg-title-divider>
@@ -70,6 +83,7 @@
             <div class="tags">
               <mat-form-field>
                 <select
+                  class='cell-type'
                   matNativeControl
                   placeholder="資料欄位型態"
                   [formControl]="formControlNewCellType"
@@ -84,9 +98,10 @@
                 </select>
               </mat-form-field>
             </div>
-            <div class="name">
+            <div>
               <mat-form-field>
                 <input
+                  class='name'
                   matInput
                   placeholder="資料欄位名稱"
                   [formControl]="formControlNewCellName"
@@ -97,6 +112,7 @@
             <div>
               <button
                 type="button"
+                class='add'
                 mat-mini-fab
                 matTooltip="新增資料欄位"
                 (click)="addCell()"
@@ -111,7 +127,13 @@
             </div>
             <div fxFlex></div>
             <div>
-              <button [disabled]='!canDeleteAllCells' class="delete-all" mat-fab (click)="deleteAllCells()" matTooltip="刪除所有資料欄位">
+              <button
+                [disabled]="!canDeleteAllCells"
+                class="delete-all"
+                mat-fab
+                (click)="deleteAllCells()"
+                matTooltip="刪除所有資料欄位"
+              >
                 <mat-icon>delete_sweep</mat-icon>
               </button>
             </div>

@@ -1,7 +1,7 @@
 import { SiteNavigator } from '../../page-objects/site-navigator';
 import {
   TheThingFilterPageObjectCypress,
-  TheThingFinderDialogPageObjectCypress,
+  TheThingFinderPageObjectCypress,
   TheThingListPageObjectCypress
 } from '@ygg/the-thing/test';
 import { TheThing } from "@ygg/the-thing/core";
@@ -27,9 +27,9 @@ describe('Manage content in home page', () => {
   it('Specify a tour to be exhibited in home page', () => {
     siteNavigator.goto(['admin', 'homepage']);
     cy.get('.exhibit-things button.add').click({ force: true });
-    const theThingFinderDialogPO = new TheThingFinderDialogPageObjectCypress();
+    const theThingFinderDialogPO = new TheThingFinderPageObjectCypress();
     theThingFinderDialogPO.expectVisible();
-    theThingFinderDialogPO.theThingFinder.select(sampleTour);
+    theThingFinderDialogPO.select(sampleTour);
     theThingFinderDialogPO.submit();
     const theThingListPO = new TheThingListPageObjectCypress();
     theThingListPO.expectTheThing(sampleTour);

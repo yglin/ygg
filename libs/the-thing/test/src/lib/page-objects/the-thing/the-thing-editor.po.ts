@@ -20,6 +20,7 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
   extendValue(theThing: TheThing) {
     this.setTags(theThing.tags.toNameArray());
     this.setName(theThing.name);
+    this.setView(theThing.view);
 
     // Set cells value, here is the difference from setValue().
     // Each cell control should already be there
@@ -87,11 +88,11 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
   }
 
   addCell(cell: TheThingCell) {
-    cy.get('.add-cell .name input')
+    cy.get(this.getSelector('inputCellName'))
       .clear({ force: true })
       .type(cell.name);
-    cy.get('.add-cell .tags select').select(cell.type);
-    cy.get('.add-cell button').click({ force: true });
+    cy.get(this.getSelector('selectCellType')).select(cell.type);
+    cy.get(this.getSelector('buttonAddCell')).click();
     cy.get(this.getSelectorForCellControl(cell)).should('be.exist');
     this.setCell(cell);
   }
@@ -109,6 +110,12 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
       .type(name);
   }
 
+  setView(view: string) {
+    if (!!view) {
+      cy.get(this.getSelector('selectView')).select(view);
+    }
+  }
+
   setImitation(imitationId: string) {
     cy.get(this.getSelector('selectImitation')).select(imitationId);
   }
@@ -123,8 +130,8 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
 
   setValue(theThing: TheThing) {
     this.setTags(theThing.tags.toNameArray());
-
     this.setName(theThing.name);
+    this.setView(theThing.view);
 
     // if (theThing.imitation) {
     //   this.setImitation(theThing.imitation);
