@@ -28,37 +28,31 @@
     </div>
     <div *ngSwitchCase="'number'">
       <ygg-number-slider
-        [label]="cell.name"
         [formControlName]="cell.name"
       ></ygg-number-slider>
     </div>
     <div *ngSwitchCase="'album'">
       <ygg-album-control  
-        [label]="cell.name"
         [formControlName]="cell.name"
       ></ygg-album-control>
     </div>
     <div *ngSwitchCase="'html'">
       <ygg-html-control  
-        [label]="cell.name"
         [formControlName]="cell.name"
       ></ygg-html-control>
     </div>
     <div *ngSwitchCase="'address'">
       <ygg-address-control
-        [label]="cell.name"
         [formControlName]="cell.name"
       ></ygg-address-control>
     </div>
     <div *ngSwitchCase="'date-range'">
       <ygg-date-range-control
-        [label]="cell.name"
         [formControlName]="cell.name"
       ></ygg-date-range-control>
     </div>
     <div *ngSwitchCase="'day-time-range'">
       <ygg-day-time-range-control
-        [label]="cell.name"
         [formControlName]="cell.name"
       ></ygg-day-time-range-control>
     </div>

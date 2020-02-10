@@ -1,14 +1,19 @@
 .ygg-title-divider {
   margin: 30px 10px;
+  position: relative;
 }
 
 .ygg-title-divider .title {
-  font-style: italic;
-  font-size: 150%;
-  font-weight: 700;
+  position: absolute;
+  top: -15px;
+  left: 100px;
+  padding: 5px;
+  min-width: 100px;
+  background-color: white;
+  text-align: center;
 }
 
 .ygg-title-divider .mat-divider {
   border-width: 2px;
-  border-color: black;
+  border-color: rgb(90, 90, 90);
 }
