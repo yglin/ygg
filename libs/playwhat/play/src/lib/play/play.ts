@@ -2,10 +2,10 @@ import { range, random, extend, sample, isArray } from 'lodash';
 import { v4 as uuid } from 'uuid';
 import { DataItem, toJSONDeep, generateID } from '@ygg/shared/infra/data-access';
 import {
-  Album,
   BusinessHours,
   Location,
 } from '@ygg/shared/types';
+import { Album } from '@ygg/shared/omni-types/core'
 import { FormGroupModel, FormControlModel, FormControlType } from "@ygg/shared/ui/dynamic-form";
 import { Tags, Taggable } from '@ygg/tags/core';
 import { Product, ProductType } from '@ygg/shopping/core';

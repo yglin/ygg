@@ -1,6 +1,13 @@
 import { extend, sample, random, keys } from 'lodash';
 import { Album, Address, DayTime } from '@ygg/shared/types';
-import { Html, DateRange, DayTimeRange } from '@ygg/shared/omni-types/core';
+import {
+  Html,
+  DateRange,
+  DayTimeRange,
+  Contact
+} from '@ygg/shared/omni-types/core';
+
+export type TheThingCellComparator = (a: any, b: any, isAsc: boolean) => number;
 
 export type TheThingCellTypeID =
   | 'text'
@@ -10,12 +17,14 @@ export type TheThingCellTypeID =
   | 'html'
   | 'address'
   | 'date-range'
-  | 'day-time-range';
+  | 'day-time-range'
+  | 'contact';
 
 interface TheThingCellType {
   id: TheThingCellTypeID;
   label: string;
-  forge: (options?: any) => any;
+  forge?: (options?: any) => any;
+  comparator?: TheThingCellComparator;
 }
 
 export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
@@ -34,6 +43,9 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
         '北斗神拳',
         '有那魔炎粽嗎幹'
       ]);
+    },
+    comparator: (a: string, b: string, isAsc: boolean) => {
+      return (+a < +b ? -1 : 1) * (isAsc ? 1 : -1);
     }
   },
   longtext: {
@@ -61,6 +73,9 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
         '不想擴大才挖深，挖深後儲水可以養魚',
         '性侵沒抓到就合法'
       ]);
+    },
+    comparator: (a: string, b: string, isAsc: boolean) => {
+      return (+a < +b ? -1 : 1) * (isAsc ? 1 : -1);
     }
   },
   number: {
@@ -68,6 +83,9 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
     label: '數字',
     forge: (options: any = {}) => {
       return random(0, 1000);
+    },
+    comparator: (a: number, b: number, isAsc: boolean) => {
+      return (a - b) * (isAsc ? 1 : -1);
     }
   },
   album: {
@@ -96,13 +114,22 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
     label: '日期期間',
     forge: (options: any = {}): DateRange => {
       return DateRange.forge();
-    }
+    },
+    comparator: DateRange.compare
   },
   'day-time-range': {
     id: 'day-time-range',
     label: '日時間區段（24小時）',
     forge: (options: any = {}): DayTimeRange => {
       return DayTimeRange.forge();
+    },
+    comparator: DayTimeRange.compare
+  },
+  contact: {
+    id: 'contact',
+    label: '聯絡資料',
+    forge: (options: any = {}): Contact => {
+      return Contact.forge();
     }
   }
 };
@@ -162,6 +189,9 @@ export class TheThingCell {
         break;
       case 'day-time-range':
         this.value = new DayTimeRange().fromJSON(data.value);
+        break;
+      case 'contact':
+        this.value = new Contact().fromJSON(data.value);
         break;
       default:
         // throw new Error(`Not supported cell type: ${data.type}`);

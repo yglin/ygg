@@ -1,20 +1,28 @@
-<div class="tour-plan-view" *ngIf="tourPlan">
-  <h1 class="name">{{ tourPlan.name }}</h1>
+<div class="tour-plan-view" *ngIf="theThing">
+  <h1 class="name">{{ theThing.name }}</h1>
   <div class="date-range">
     <h4>預計出遊日期</h4>
     <ygg-date-range-view [dateRange]="dateRange"></ygg-date-range-view>
   </div>
-  <div class="day-time-range">
+  <!-- <div class="day-time-range">
     <h4>預計出遊時段</h4>
     <ygg-day-time-range-view
       [dayTimeRange]="dayTimeRange"
     ></ygg-day-time-range-view>
-  </div>
+  </div> -->
   <div class="num-participants">
     <h4>預計參加人數</h4>
     <div>
       <mat-icon>people</mat-icon>
       <span class='number'>{{ numParticipants }}</span>
     </div>
+  </div>
+  <div class="contact">
+    <h4>聯絡資訊</h4>
+    <ygg-contact-view [contact]="contact"></ygg-contact-view>
+  </div>
+  <br>
+  <div class="play-list">
+    <ygg-image-thumbnail-list [items]='plays' readonly></ygg-image-thumbnail-list>
   </div>
 </div>

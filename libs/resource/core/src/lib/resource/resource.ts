@@ -1,4 +1,5 @@
-import { Album, BusinessHours, Location } from '@ygg/shared/types';
+import { BusinessHours, Location } from '@ygg/shared/types';
+import { Album } from '@ygg/shared/omni-types/core';
 import { ResourceType } from './resource-type';
 import { DataItem } from '@ygg/shared/infra/data-access';
 

@@ -1,0 +1,8 @@
+<div class="album-control">
+  <div class="control-label" *ngIf="label">
+    <h4>
+      <span>{{ label }}</span>
+    </h4>
+  </div>
+  <ygg-album [album]="album" (albumChanged)='onAlbumChanged($event)'></ygg-album>
+</div>

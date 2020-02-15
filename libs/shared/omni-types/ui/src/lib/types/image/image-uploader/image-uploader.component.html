@@ -1,0 +1,52 @@
+<div class="image-uploader">
+  <div class="previews">
+    <image-upload
+      buttonCaption="選擇圖片"
+      dropBoxMessage="或將圖片拖曳至此"
+      clearButtonCaption="全部清空"
+      [uploadedFiles]="imagesAddByUrl"
+      (uploadFinished)="onSelectImage($event.file)"
+    ></image-upload>
+  </div>
+  <br />
+  <div class="url-input">
+    <mat-form-field>
+      <input
+        [formControl]="imageUrlInputControl"
+        matInput
+        placeholder="貼上圖片網址"
+      />
+      <span matPrefix><mat-icon>link</mat-icon></span>
+      <button
+        type="button"
+        [disabled]="imageUrlInputControl.invalid"
+        mat-mini-fab
+        matSuffix
+        (click)="addImageByUrl()"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+      <mat-error *ngIf="imageUrlInputControl.invalid"
+        >請輸入有效的網址，圖檔格式目前僅支援
+        {{ supportedImageExts.join(',') }}</mat-error
+      >
+    </mat-form-field>
+  </div>
+  <div>
+    <br />
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+      <button mat-button mat-dialog-close>取消</button>
+      <button
+        id="submit"
+        [hidden]="isUploading"
+        mat-button
+        (click)="onSubmit()"
+      >
+        確定上傳
+      </button>
+      <div [hidden]="!isUploading">
+        <mat-spinner [diameter]="30"></mat-spinner>
+      </div>
+    </div>
+  </div>
+</div>

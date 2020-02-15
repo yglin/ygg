@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TheThing } from '@ygg/the-thing/core';
-import { Album } from "@ygg/shared/types";
+import { Album } from '@ygg/shared/omni-types/core';
 
 @Component({
   selector: 'the-thing-thumbnail',

@@ -5,6 +5,7 @@ import { GridMenuComponent } from './menu/grid-menu/grid-menu.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedTypesModule } from '@ygg/shared/types';
+import { SharedOmniTypesUiModule } from "@ygg/shared/omni-types/ui";
 
 @NgModule({
   declarations: [GridMenuComponent],
@@ -13,7 +14,8 @@ import { SharedTypesModule } from '@ygg/shared/types';
     RouterModule,
     FlexLayoutModule,
     SharedUiNgMaterialModule,
-    SharedTypesModule
+    SharedTypesModule,
+    SharedOmniTypesUiModule
   ],
   entryComponents: [GridMenuComponent],
   exports: [GridMenuComponent]

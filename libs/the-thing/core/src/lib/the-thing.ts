@@ -141,6 +141,23 @@ export class TheThing implements ImageThumbnailItem {
     this.cells = {};
   }
 
+  getCellValue(cellName: string): any {
+    try {
+      return this.cells[cellName].value;
+    } catch (error) {
+      console.warn(
+        `Failed to get cell value from ${cellName}: ${error.message}`
+      );
+      return null;
+    }
+  }
+
+  hasRelation(relationName: string) {
+    return (
+      relationName in this.relations && !isEmpty(this.relations[relationName])
+    );
+  }
+
   addRelations(relationName: string, objectThings: TheThing[] | string[]) {
     let ids: string[] = [];
     if (typeof objectThings[0] === 'string') {

@@ -1,4 +1,4 @@
-import { Image } from '@ygg/shared/types';
+import { Image } from '@ygg/shared/omni-types/core';
 import { ImageUploaderPageObject } from '@ygg/shared/types';
 
 export class ImageUploaderPageObjectCypress extends ImageUploaderPageObject {

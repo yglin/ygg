@@ -12,7 +12,7 @@ export class ActionBarLayoutComponent implements OnInit {
   layoutAlignButtons = 'end center';
   actionBarStyle = {
     width: '50px',
-    height: '50px',
+    'max-height': '50px',
     overflow: 'visible',
     padding: '5px',
   };
@@ -25,13 +25,13 @@ export class ActionBarLayoutComponent implements OnInit {
       this.layoutButtons = 'row';
       this.layoutAlignButtons = 'end start';
       this.actionBarStyle.width = '100%';
-      this.actionBarStyle.height = '50px';
+      this.actionBarStyle['max-height'] = '50px';
     } else if (this.position === 'right') {
       this.layoutMain = 'row-reverse';
       this.layoutButtons = 'column';
       this.layoutAlignButtons = 'start center';
       this.actionBarStyle.width = '50px';
-      this.actionBarStyle.height = '100%';
+      this.actionBarStyle['max-height'] = '100%';
     }
   }
 

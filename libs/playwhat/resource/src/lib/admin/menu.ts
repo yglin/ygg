@@ -1,4 +1,4 @@
-import { Image } from '@ygg/shared/types';
+import { Image } from '@ygg/shared/omni-types/core';
 import { MenuTree } from '@ygg/shared/ui/navigation';
 import { AdminAgentComponent } from './admin-agent/admin-agent.component';
 import { AdminSchedulePlansComponent } from './admin-schedule-plans/admin-schedule-plans.component';

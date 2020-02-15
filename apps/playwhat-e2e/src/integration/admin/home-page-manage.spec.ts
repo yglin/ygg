@@ -4,26 +4,36 @@ import {
   TheThingFinderPageObjectCypress,
   TheThingListPageObjectCypress
 } from '@ygg/the-thing/test';
-import { TheThing } from "@ygg/the-thing/core";
-import { login, MockDatabase } from "@ygg/shared/test/cypress";
+import { TheThing } from '@ygg/the-thing/core';
+import { login, MockDatabase } from '@ygg/shared/test/cypress';
 import { TourViewPageObjectCypress } from '../../page-objects/tour';
-import { sampleTour, samplePlays, insertDatabase } from "../tour/sample-tour-birb";
+import { samplePlays, insertDatabase } from '../tour/sample-tour-birb';
+import { TemplateTour } from '@ygg/playwhat/core';
 
 const siteNavigator = new SiteNavigator();
 const mockDatabase = new MockDatabase();
+let sampleTour: TheThing;
 
 describe('Manage content in home page', () => {
   before(() => {
     login().then(user => {
-      insertDatabase(mockDatabase, user);
+      cy.wrap(samplePlays).each((play: any) => {
+        mockDatabase.insert(`${TheThing.collection}/${play.id}`, play.toJSON());
+      });
+      sampleTour = TemplateTour.clone();
+      sampleTour.addRelations('體驗', samplePlays);
+      mockDatabase.insert(
+        `${TheThing.collection}/${sampleTour.id}`,
+        sampleTour.toJSON()
+      );
       cy.visit('/');
     });
   });
 
   after(() => {
     mockDatabase.clear();
-  })
-  
+  });
+
   it('Specify a tour to be exhibited in home page', () => {
     siteNavigator.goto(['admin', 'homepage']);
     cy.get('.exhibit-things button.add').click({ force: true });

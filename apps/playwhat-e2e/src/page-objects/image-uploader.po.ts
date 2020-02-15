@@ -1,4 +1,4 @@
-import { Image } from '@ygg/shared/types';
+import { Image } from '@ygg/shared/omni-types/core';
 
 export class ImageUploaderPageObject {
   selector: string;

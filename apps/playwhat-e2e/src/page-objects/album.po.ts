@@ -1,4 +1,4 @@
-import { Album } from '@ygg/shared/types';
+import { Album } from '@ygg/shared/omni-types/core';
 import { ImageUploaderPageObject } from './image-uploader.po';
 
 export class AlbumControlPageObject {

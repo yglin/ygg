@@ -1,5 +1,5 @@
-<div class="the-thing-cell-view">
-  <h3>{{ cell.name }}</h3>
+<div class="the-thing-cell-view" *ngIf="cell">
+  <!-- <h3>{{ cell.name }}</h3> -->
   <div class="value">
     <div [ngSwitch]="cell.type">
       <div *ngSwitchCase="'text'">
@@ -25,6 +25,9 @@
       </div>
       <div *ngSwitchCase="'day-time-range'">
         <ygg-day-time-range-view [dayTimeRange]="cell.value"></ygg-day-time-range-view>
+      </div>
+      <div *ngSwitchCase="'contact'">
+        <ygg-contact-view [contact]="cell.value"></ygg-contact-view>
       </div>
       <div *ngSwitchDefault>
         <h3>未支援的資料型態：{{ cell.type }}</h3>

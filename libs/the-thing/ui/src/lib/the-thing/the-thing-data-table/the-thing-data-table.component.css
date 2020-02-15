@@ -1,0 +1,9 @@
+.the-thing-data-table table {
+  width: 100%;
+}
+
+tr.mat-row:hover {
+  cursor: pointer;
+  background-color: #fff5e6;
+  overflow: auto;
+}

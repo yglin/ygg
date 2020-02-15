@@ -2,7 +2,7 @@ import { NgModule, APP_INITIALIZER, InjectionToken } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlaywhatAdminService } from '@ygg/playwhat/admin';
 import { ScheduleAdminService } from '@ygg/schedule/admin';// import { MenuTree } from '@ygg/shared/ui/navigation';
-// import { Image } from '@ygg/shared/types';
+// import { Image } from '@ygg/shared/omni-types/core';
 import { AdminAgentComponent } from '../../../../schedule/admin/src/lib/admin-agent/admin-agent.component';
 import { SharedUserModule } from '@ygg/shared/user';
 import { adminMenu } from "../../../../schedule/admin/src/lib";

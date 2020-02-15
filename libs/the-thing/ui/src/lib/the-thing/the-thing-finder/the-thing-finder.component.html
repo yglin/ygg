@@ -11,15 +11,18 @@
       </button>
     </div>
     <div ygg-action-bar-content>
-      <the-thing-filter
-        (filterChanged)="onFilterChanged($event)"
-      ></the-thing-filter>
-      <br />
+      <div [hidden]="hideFilter">
+        <the-thing-filter
+          (filterChanged)="onFilterChanged($event)"
+        ></the-thing-filter>
+        <br />
+      </div>
       <div class="the-thing-list">
         <ygg-image-thumbnail-list
           [items]="filteredTheThings"
           [selection]="selection"
           (selectionChanged)="onSelectTheThings($event)"
+          hideAddButton
         ></ygg-image-thumbnail-list>
       </div>
     </div>

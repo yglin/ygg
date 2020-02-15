@@ -8,15 +8,24 @@ import validator from 'validator';
 })
 export class ImageIconComponent implements OnInit {
   @Input() src: string;
-  @Input() icon: string;
-  
-  constructor() { }
+  isSrcUrl: boolean;
+
+  constructor() {}
 
   ngOnInit() {
-    if (this.src && !validator.isURL(this.src)) {
-      this.icon = this.src;
-      this.src = undefined;
+    // console.dir(this.src);
+    if (!this.src) {
+      this.src = '/assets/images/no-image.jpg';
+    }
+    if (
+      validator.isURL(this.src, {
+        require_protocol: false,
+        require_host: false
+      })
+    ) {
+      this.isSrcUrl = true;
+    } else {
+      this.isSrcUrl = false;
     }
   }
-
 }

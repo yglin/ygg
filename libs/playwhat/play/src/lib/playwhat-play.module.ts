@@ -20,6 +20,7 @@ import { PlaySelectorComponent } from './play/play-selector/play-selector.compon
 import { AdditionEditDialogComponent } from './play/addition-edit-dialog/addition-edit-dialog.component';
 import { ResourceUiModule } from '@ygg/resource/ui';
 import { SharedUiDynamicFormModule } from '@ygg/shared/ui/dynamic-form';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { SharedUiDynamicFormModule } from '@ygg/shared/ui/dynamic-form';
     SharedUiNgMaterialModule,
     TagsUiModule,
     ResourceUiModule,
-    SharedUiDynamicFormModule
+    SharedUiDynamicFormModule,
+    SharedOmniTypesUiModule
   ],
   declarations: [
     PlayFormComponent,
@@ -44,11 +46,9 @@ import { SharedUiDynamicFormModule } from '@ygg/shared/ui/dynamic-form';
     PlayDashboardComponent,
     PlayViewPageComponent,
     PlaySelectorComponent,
-    AdditionEditDialogComponent,
-  ],
-  entryComponents: [
     AdditionEditDialogComponent
   ],
+  entryComponents: [AdditionEditDialogComponent],
   exports: [PlayFormComponent, PlayViewComponent, PlaySelectorComponent]
 })
 export class PlaywhatPlayModule {}

@@ -2,7 +2,7 @@ import { sample, random, extend } from "lodash";
 import { Product, ProductType } from "@ygg/shopping/core";
 import { v4 as uuid } from "uuid";
 import { SerializableJSON, toJSONDeep, generateID } from '@ygg/shared/infra/data-access';
-import { Album } from '@ygg/shared/types';
+import { Album } from '@ygg/shared/omni-types/core';
 import { FormGroupValue } from '@ygg/shared/ui/dynamic-form';
 import { AdditionEditDialogComponent } from 'libs/playwhat/play/src/lib/play/addition-edit-dialog/addition-edit-dialog.component';
 import { Resource, ResourceType } from '../resource';

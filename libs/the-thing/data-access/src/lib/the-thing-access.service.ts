@@ -1,6 +1,6 @@
 import { isEmpty, every } from 'lodash';
 import { Injectable } from '@angular/core';
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
 import { DataAccessService, Query } from '@ygg/shared/infra/data-access';
 import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -22,6 +22,11 @@ export class TheThingAccessService {
     return this.dataAccessService
       .list$(TheThing.collection)
       .pipe(map(items => items.map(item => new TheThing().fromJSON(item))));
+  }
+
+  listByFilter$(filter: TheThingFilter): Observable<TheThing[]> {
+    // TODO: Apply more efficient query on server side
+    return this.list$().pipe(map(theThings => filter.filter(theThings)));
   }
 
   listByOwner$(ownerId: string): Observable<TheThing[]> {
@@ -69,6 +74,8 @@ export class TheThingAccessService {
   }
 
   async upsert(theThing: TheThing): Promise<TheThing> {
+    console.log('Upsert the-thing');
+    console.dir(theThing);
     await this.dataAccessService.upsert(theThing.collection, theThing.toJSON());
     return Promise.resolve(theThing);
   }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MenuTree } from '@ygg/shared/ui/navigation';
-import { Image } from '@ygg/shared/types';
+import { Image } from '@ygg/shared/omni-types/core';
 import { LoggedInGuard, AdminGuard } from '@ygg/shared/user';
 import { Observable } from 'rxjs';
 import { DataAccessService } from '@ygg/shared/infra/data-access';

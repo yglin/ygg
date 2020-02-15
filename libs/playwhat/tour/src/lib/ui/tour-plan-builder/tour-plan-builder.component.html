@@ -1,0 +1,148 @@
+<div class="tour-plan-builder">
+  <mat-horizontal-stepper linear #stepper>
+    <mat-step [stepControl]="firstFormGroup">
+      <div step="1" class="step1">
+        <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+          <button
+            mat-fab
+            class="next"
+            matStepperNext
+            [disabled]="firstFormGroup.invalid"
+            matTooltip="下一步"
+          >
+            <mat-icon>navigate_next</mat-icon>
+          </button>
+        </div>
+        <form [formGroup]="firstFormGroup">
+          <div
+            fxLayout="row wrap"
+            fxLayoutAlign="start start"
+            fxLayoutGap="50px"
+          >
+            <div class="date-range">
+              <ygg-date-range-control
+                label="預計出遊日期"
+                formControlName="dateRange"
+              ></ygg-date-range-control>
+              <br />
+            </div>
+            <div class="num-participants">
+              <ygg-number-control
+                label="預計參加人數"
+                formControlName="numParticipants"
+              ></ygg-number-control>
+            </div>
+          </div>
+          <br />
+          <div class="play-list">
+            <h4>選擇想要參加的體驗</h4>
+            <the-thing-finder
+              [filter]="filterPlays"
+              hideFilter
+              formControlName="selectedPlays"
+            ></the-thing-finder>
+          </div>
+        </form>
+      </div>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup">
+      <div step="2" class="step2">
+        <div
+          fxLayout="row"
+          fxLayoutAlign="space-between center"
+          fxLayoutGap="10px"
+        >
+          <button
+            type="button"
+            mat-fab
+            class="previous"
+            matStepperPrevious
+            matTooltip="上一步"
+          >
+            <mat-icon>navigate_before</mat-icon>
+          </button>
+          <button
+            type="button"
+            mat-fab
+            class="next"
+            matStepperNext
+            [disabled]="secondFormGroup.invalid"
+            matTooltip="下一步"
+          >
+            <mat-icon>navigate_next</mat-icon>
+          </button>
+        </div>
+        <form [formGroup]="secondFormGroup">
+          <div class="contact-control">
+            <h4>請留下您的聯絡資料</h4>
+            <ygg-contact-control
+              formControlName="contact"
+            ></ygg-contact-control>
+          </div>
+        </form>
+      </div>
+    </mat-step>
+    <mat-step [stepControl]="thirdFormGroup">
+      <div step="3" class="step3">
+        <div
+          fxLayout="row"
+          fxLayoutAlign="space-between center"
+          fxLayoutGap="10px"
+        >
+          <button
+            type="button"
+            mat-fab
+            class="previous"
+            matStepperPrevious
+            matTooltip="上一步"
+          >
+            <mat-icon>navigate_before</mat-icon>
+          </button>
+          <button
+            type="button"
+            mat-fab
+            class="next"
+            matStepperNext
+            matTooltip="下一步"
+            (click)="buildTourPlan()"
+          >
+            <mat-icon>navigate_next</mat-icon>
+          </button>
+        </div>
+        <form [formGroup]="thirdFormGroup"></form>
+      </div>
+    </mat-step>
+    <mat-step>
+      <div step="4" class="step4">
+        <div
+          fxLayout="row"
+          fxLayoutAlign="space-between center"
+          fxLayoutGap="10px"
+        >
+          <button
+            type="button"
+            mat-fab
+            class="previous"
+            matStepperPrevious
+            matTooltip="上一步"
+          >
+            <mat-icon>navigate_before</mat-icon>
+          </button>
+          <button
+            type="button"
+            mat-fab
+            class="submit"
+            matTooltip="送出遊程規劃"
+            [disabled]='!isValidTourPlan()'
+            (click)="submitTourPlan()"
+          >
+            <mat-icon>send</mat-icon>
+          </button>
+        </div>
+        <div>
+          <ygg-tour-plan-view [theThing]="tourPlan"></ygg-tour-plan-view>
+        </div>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>

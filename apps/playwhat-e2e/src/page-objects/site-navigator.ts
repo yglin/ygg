@@ -1,11 +1,17 @@
 import { SchedulePlan } from '@ygg/schedule/core';
+import { PageObjectCypress } from '@ygg/shared/test/cypress';
 
 const expectPageTrivial = () => cy.get('body').should('be.visible');
 
 export class SiteNavigator {
-  goto(path: string[] = ['home'], expectPage?: () => Cypress.Chainable<any> ): Cypress.Chainable<any> {
-    if (typeof expectPage !== 'function') {
-      expectPage = expectPageTrivial;
+  goto(
+    path: string[] = ['home'],
+    targetPage?: PageObjectCypress
+  ): Cypress.Chainable<any> {
+    if (!targetPage) {
+      targetPage = {
+        expectVisible: () => cy.get('body').should('exist')
+      };
     }
     const fullPathName = `/${path.join('/')}`;
     cy.log(`Go to ${fullPathName}`);
@@ -29,7 +35,7 @@ export class SiteNavigator {
     } else {
       cy.visit(fullPathName);
     }
-    return expectPage();
+    return targetPage.expectVisible();
   }
 
   gotoSchedulePlanView(schedulePlan: SchedulePlan) {
@@ -86,6 +92,8 @@ export class SiteNavigator {
       this.gotoAdminTags(path);
     } else if (route === 'scheduler') {
       this.gotoAdminScheduler(path);
+    } else if (route === 'tour-plans') {
+      cy.get('#tour-plans').click();
     } else if (route === 'homepage') {
       cy.get('#homepage-manage a').click({ force: true });
     }

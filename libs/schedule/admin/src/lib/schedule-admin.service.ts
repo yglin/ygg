@@ -6,7 +6,7 @@ import { switchMap } from 'rxjs/operators';
 // import { adminMenu } from './menu';
 import { MenuTree } from '@ygg/shared/ui/navigation';
 import { PlaywhatAdminService } from '@ygg/playwhat/admin';
-import { Image } from '@ygg/shared/types';
+import { Image } from '@ygg/shared/omni-types/core';
 
 @Injectable({
   providedIn: 'root'

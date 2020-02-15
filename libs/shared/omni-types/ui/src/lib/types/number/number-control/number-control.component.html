@@ -1,0 +1,46 @@
+<div class="ygg-number-control">
+  <div *ngIf="label">
+    <h4>{{ label }}</h4>
+  </div>
+  <div
+    [fxLayout]="vertical ? 'row' : 'column-reverse'"
+    fxLayoutAlign="start center"
+    fxLayoutGap="10px"
+  >
+    <div class="number-input">
+      <mat-form-field *ngIf="!zeroIsNoLimit || value != 0">
+        <input
+          matInput
+          [placeholder]="label"
+          type="number"
+          [(ngModel)]="value"
+          [required]="required"
+        />
+        <span matPrefix *ngIf="icon"
+          ><mat-icon *ngIf="iconType === 'font'">{{ icon }}</mat-icon>
+          <img *ngIf="iconType === 'url'" [src]="icon" />
+        </span>
+        <mat-error *ngIf="value <= 0">請填入{{ label }}</mat-error>
+      </mat-form-field>
+      <h6 *ngIf="zeroIsNoLimit && value == 0">無上限</h6>
+    </div>
+    <div
+      class="slider"
+      [fxLayout]="vertical ? 'column-reverse' : 'row'"
+      fxLayoutAlign="start center"
+      fxLayoutGap="2px"
+    >
+      <div class="indicator">{{ min }}</div>
+      <mat-slider
+        [thumbLabel]="true"
+        tickInterval="auto"
+        [vertical]="vertical"
+        [min]="min"
+        [max]="max"
+        [step]="step"
+        [(value)]="value"
+      ></mat-slider>
+      <div class="indicator">{{ max }}</div>
+    </div>
+  </div>
+</div>

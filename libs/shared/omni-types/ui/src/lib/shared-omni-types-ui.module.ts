@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HtmlControlComponent } from './types/html/html-control/html-control.component';
-import { HtmlViewComponent } from './types/html/html-view/html-view.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ImageUploadModule } from 'angular2-image-upload';
 
 import {
   DateRangeControlComponent,
@@ -13,8 +12,16 @@ import {
   DayTimeControlComponent,
   DayTimeViewComponent,
   DayTimeRangeControlComponent,
-  DayTimeRangeViewComponent
-} from './types/datetime';
+  DayTimeRangeViewComponent,
+  NumberControlComponent,
+  HtmlControlComponent,
+  HtmlViewComponent,
+  ImageComponent,
+  ImageUploaderComponent,
+  AlbumControlComponent,
+  AlbumViewComponent,
+  AlbumComponent
+} from './types';
 
 @NgModule({
   imports: [
@@ -23,6 +30,7 @@ import {
     ReactiveFormsModule,
     FlexLayoutModule,
     CKEditorModule,
+    ImageUploadModule,
     SharedUiNgMaterialModule
   ],
   declarations: [
@@ -33,14 +41,27 @@ import {
     DayTimeControlComponent,
     DayTimeViewComponent,
     DayTimeRangeControlComponent,
-    DayTimeRangeViewComponent
+    DayTimeRangeViewComponent,
+    NumberControlComponent,
+    ImageComponent,
+    ImageUploaderComponent,
+    AlbumComponent,
+    AlbumControlComponent,
+    AlbumViewComponent
   ],
   exports: [
     HtmlControlComponent,
     HtmlViewComponent,
     DateRangeControlComponent,
     DateRangeViewComponent,
-    DayTimeRangeViewComponent
-  ]
+    DayTimeRangeControlComponent,
+    DayTimeRangeViewComponent,
+    NumberControlComponent,
+    ImageComponent,
+    ImageUploaderComponent,
+    AlbumControlComponent,
+    AlbumViewComponent
+  ],
+  entryComponents: [ImageUploaderComponent]
 })
 export class SharedOmniTypesUiModule {}

@@ -11,37 +11,63 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TourPlanViewComponent } from './ui/tour-plan-view/tour-plan-view.component';
 import { TheThingConfig } from './the-thing-config';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
+import { TourPlanBuilderPageObject } from './ui';
+import { TourPlanBuilderComponent } from './ui/tour-plan-builder/tour-plan-builder.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PlaywhatAdminService } from '@ygg/playwhat/admin';
+import { MenuTree } from '@ygg/shared/ui/navigation';
+import { Image } from '@ygg/shared/omni-types/core';
+import { TourPlanAdminComponent } from './ui/tour-plan-admin/tour-plan-admin.component';
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 export const playwhatTourRoutes: Route[] = [];
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     RouterModule,
     FlexLayoutModule,
     SharedUiNgMaterialModule,
+    SharedUiWidgetsModule,
     SharedTypesModule,
     SharedOmniTypesUiModule,
     TheThingUiModule
   ],
-  declarations: [TourViewComponent, PlayCardComponent, TourPlanViewComponent],
-  entryComponents: [TourViewComponent, TourPlanViewComponent],
+  declarations: [
+    TourViewComponent,
+    PlayCardComponent,
+    TourPlanViewComponent,
+    TourPlanBuilderComponent,
+    TourPlanAdminComponent
+  ],
+  entryComponents: [
+    TourViewComponent,
+    TourPlanViewComponent,
+    TourPlanAdminComponent
+  ],
   providers: [
     {
       provide: APP_INITIALIZER,
       useFactory: configTheThingImitation,
       deps: [TheThingViewsService],
       multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: configAdminMenu,
+      deps: [PlaywhatAdminService],
+      multi: true
     }
   ],
-  exports: [TourViewComponent]
+  exports: [TourViewComponent, TourPlanBuilderComponent, TourPlanAdminComponent]
 })
 export class PlaywhatTourModule {}
 
 export function configTheThingImitation(
   theThingViewsService: TheThingViewsService
 ) {
-  // console.log('WTF~!!!');
   return () => {
     theThingViewsService.addView('tour', {
       id: 'tour',
@@ -53,5 +79,21 @@ export function configTheThingImitation(
       label: '遊程規劃',
       component: TourPlanViewComponent
     });
+  };
+}
+
+export function configAdminMenu(
+  playwhatAdminService: PlaywhatAdminService
+): Function {
+  const adminMenu = new MenuTree({
+    id: 'tour-plans',
+    link: 'tour-plans',
+    label: '遊程規劃清單',
+    icon: new Image('/assets/images/tour/tour-plans.svg'),
+    tooltip: '遊程規劃清單管理頁面',
+    component: TourPlanAdminComponent
+  });
+  return () => {
+    playwhatAdminService.menu.addMenu(adminMenu);
   };
 }

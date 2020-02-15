@@ -1,4 +1,4 @@
-import { Image } from '@ygg/shared/types';
+import { Image } from '@ygg/shared/omni-types/core';
 import { MenuTree } from '@ygg/shared/ui/navigation';
 import { TagsAdminListComponent } from './tags-admin-list/tags-admin-list.component';
 import { TagsAdminUserOptionsComponent } from './tags-admin-user-options/tags-admin-user-options.component';

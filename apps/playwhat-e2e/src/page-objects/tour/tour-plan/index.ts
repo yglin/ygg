@@ -1,1 +1,1 @@
-export * from './tour-plan-builder';
+export * from './tour-plan-builder.po';

@@ -20,6 +20,8 @@ export class TheThingViewsService {
   }
 
   getComponent(id: string): Type<any> {
+    // console.log(id);
+    // console.dir(this.views);
     return get(this.views, `${id}.component`, null);
   }
 }

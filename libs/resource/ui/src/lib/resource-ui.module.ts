@@ -15,6 +15,7 @@ import { routes } from "./routes";
 import { AccommodationDetailComponent } from './pages/accommodation-detail/accommodation-detail.component';
 import { AccommodationViewComponent } from './accommodation/accommodation-view/accommodation-view.component';
 import { SharedTypesModule } from '@ygg/shared/types';
+import { SharedOmniTypesUiModule } from "@ygg/shared/omni-types/ui";
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { SharedTypesModule } from '@ygg/shared/types';
     SharedUiWidgetsModule,
     SharedUiDynamicFormModule,
     SharedTypesModule,
+    SharedOmniTypesUiModule,
     RouterModule.forChild(routes)
   ],
   declarations: [ResourceControlComponent, AdditionControlComponent, AdditionThumbnailComponent, AccommodationListComponent, AccommodationControlComponent, AccommodationThumbnailComponent, AccommodationEditComponent, AccommodationDetailComponent, AccommodationViewComponent],

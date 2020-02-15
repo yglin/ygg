@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Album } from '@ygg/shared/types';
+import { Album } from '@ygg/shared/omni-types/core';
 
 @Component({
   selector: 'ygg-album',

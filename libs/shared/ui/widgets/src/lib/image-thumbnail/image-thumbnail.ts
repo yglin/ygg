@@ -1,4 +1,4 @@
-import { Album } from "@ygg/shared/types";
+import { Album } from '@ygg/shared/omni-types/core';
 
 export interface ImageThumbnailItem {
   id: string;

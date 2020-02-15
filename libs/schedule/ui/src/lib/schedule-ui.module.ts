@@ -40,7 +40,8 @@ import { ResourceUiModule } from '@ygg/resource/ui';
     TagsUiModule,
     PlaywhatPlayModule,
     ShoppingUiModule,
-    ResourceUiModule
+    ResourceUiModule,
+    SharedOmniTypesUiModule
   ],
   exports: [
     SchedulePlanControlComponent,

@@ -1,5 +1,5 @@
 import { isEmpty, values, extend } from 'lodash';
-import { Image } from '@ygg/shared/types';
+import { Image } from '@ygg/shared/omni-types/core';
 import { Type } from '@angular/core';
 import { Route } from '@angular/router';
 import { throwError } from 'rxjs';

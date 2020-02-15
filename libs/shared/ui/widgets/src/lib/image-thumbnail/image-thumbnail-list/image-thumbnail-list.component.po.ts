@@ -6,7 +6,9 @@ export abstract class ImageThumbnailListPageObject extends PageObject {
     main: '.image-thumbnail-list',
     firstItem: '.first-item',
     lastItem: '.last-item',
-    buttonSubmit: 'button.submit'
+    buttonSubmit: 'button.submit',
+    buttonClearSelection: 'button.clear-selection',
+    selection: '.selection'
   };
 
   getSelectorForItem(item: ImageThumbnailItem): string {
@@ -20,4 +22,5 @@ export abstract class ImageThumbnailListPageObject extends PageObject {
   abstract expectItem(item: ImageThumbnailItem): void;
   abstract expectItems(items: ImageThumbnailItem[]): void;
   abstract selectItem(item: ImageThumbnailItem): void;
+  abstract clearSelection(): void;
 }

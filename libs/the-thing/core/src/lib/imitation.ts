@@ -5,10 +5,26 @@ import {
   toJSONDeep
 } from '@ygg/shared/infra/data-access';
 import { TheThing } from './the-thing';
-import { Album } from '@ygg/shared/types';
+import { Album } from '@ygg/shared/omni-types/core';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
+import { TheThingCellTypeID } from './cell';
+import { TheThingFilter } from './filter';
 
 export const ImitationsDataPath = 'the-thing/imitations';
+
+export interface DataTableConfig {
+  columns: {
+    [key: string]: {
+      label: string;
+    };
+  };
+}
+
+interface TheThingCellDefine {
+  name: string;
+  label: string;
+  comparator: string;
+}
 
 export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   id: string;
@@ -16,6 +32,9 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   image: string;
   description: string;
   templateId: string;
+  filter: TheThingFilter;
+  cellsDef: { [name: string]: TheThingCellTypeID } = {};
+  dataTableConfig?: DataTableConfig;
 
   /** Create time */
   createAt: number;
@@ -50,6 +69,9 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
 
   fromJSON(data: any = {}): this {
     extend(this, data);
+    if (data.filter) {
+      this.filter = new TheThingFilter().fromJSON(data.filter);
+    }
     return this;
   }
 

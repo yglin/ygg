@@ -1,4 +1,5 @@
-import { Album, AlbumControlPageObject } from "@ygg/shared/types";
+import { Album } from "@ygg/shared/omni-types/core";
+import { AlbumControlPageObject } from "@ygg/shared/omni-types/ui";
 import { ImageUploaderPageObjectCypress } from "../../utils";
 
 export class AlbumControlPageObjectCypress extends AlbumControlPageObject {

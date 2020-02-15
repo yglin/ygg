@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { Album } from '@ygg/shared/types';
+import { Album } from '@ygg/shared/omni-types/core';
 import { User } from '@ygg/shared/user';
 import { TheThing } from '@ygg/the-thing/core';
 import { TourViewPageObject, PlayCardPageObject } from '@ygg/playwhat/tour';
@@ -49,6 +49,7 @@ class PlayCardPageObjectCypress extends PlayCardPageObject {
 
 export class TourViewPageObjectCypress extends TourViewPageObject {
   expectVisible() {
+    cy.get(this.getSelector()).scrollIntoView();
     cy.get(this.getSelector(), { timeout: 20000 }).should('be.visible');
   }
 

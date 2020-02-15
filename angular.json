@@ -1897,6 +1897,31 @@
           }
         }
       }
+    },
+    "playwhat-core": {
+      "root": "libs/playwhat/core",
+      "sourceRoot": "libs/playwhat/core/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/playwhat/core/tsconfig.lib.json",
+              "libs/playwhat/core/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/playwhat/core/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/playwhat/core/jest.config.js",
+            "tsConfig": "libs/playwhat/core/tsconfig.spec.json"
+          }
+        }
+      }
     }
   },
   "cli": {

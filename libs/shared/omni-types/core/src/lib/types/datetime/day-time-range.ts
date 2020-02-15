@@ -29,8 +29,11 @@ export class DayTimeRange implements SerializableJSON {
     );
   }
 
-  static compare(tr1: DayTimeRange, tr2: DayTimeRange): number {
-    return tr1.start.isAfter(tr2.start) ? 1 : -1;
+  static compare(tr1: DayTimeRange, tr2: DayTimeRange, isAsc: boolean): number {
+    if (!(DayTimeRange.isDayTimeRange(tr1) && DayTimeRange.isDayTimeRange(tr2))) {
+      return 0;
+    }
+    return (tr1.start.isAfter(tr2.start) ? 1 : -1) * (isAsc ? 1 : -1);
   }
 
   constructor(...args: any[]) {

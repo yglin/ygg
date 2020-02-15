@@ -5,7 +5,8 @@ import {
   toJSONDeep,
   generateID
 } from '@ygg/shared/infra/data-access';
-import { Album, Image, Location, Link } from '@ygg/shared/types';
+import { Location, Link } from '@ygg/shared/types';
+import { Album, Image } from "@ygg/shared/omni-types/core";
 import { FormGroupValue } from '@ygg/shared/ui/dynamic-form';
 
 export class Accommodation implements Resource, DataItem, FormGroupValue {

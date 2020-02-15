@@ -31,7 +31,7 @@
       </button>
     </div>
   </div>
-  <div *ngIf="theThingViewComponent">
+  <div *ngIf="!!theThingViewComponent">
     <the-thing-imitation-view
       [theThing]="theThing"
       [component]="theThingViewComponent"

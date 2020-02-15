@@ -48,6 +48,8 @@ export class TheThingFinderComponent
   @Input() theThings: TheThing[];
   @Input() theThings$: Observable<TheThing[]>;
   @Input() singleSelect: boolean;
+  @Input() filter: TheThingFilter;
+  @Input() hideFilter: boolean;
   @Output() selectChange = new EventEmitter<TheThing[]>();
   emitChange: (changes: TheThing[]) => any = noop;
   filter$: BehaviorSubject<TheThingFilter> = new BehaviorSubject(null);
@@ -79,6 +81,8 @@ export class TheThingFinderComponent
   ngOnInit() {
     this.singleSelect =
       this.singleSelect !== undefined && this.singleSelect !== false;
+    this.hideFilter =
+      this.hideFilter !== undefined && this.hideFilter !== false;
     if (!this.theThings$) {
       if (this.theThings) {
         this.theThings$ = of(this.theThings);
@@ -99,6 +103,9 @@ export class TheThingFinderComponent
         }
       )
     );
+    if (this.filter) {
+      this.filter$.next(this.filter);
+    }
   }
 
   ngOnDestroy(): void {

@@ -24,8 +24,12 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
   }
 
   expectItemByNameAndImage(item: ImageThumbnailItem) {
-    cy.get(`${this.getSelector()} [item-id]`).contains(item.name).should('be.exist');
-    cy.get(`${this.getSelector()} [item-id]`).find(`img[src="${item.image}"]`).should('be.exist');
+    cy.get(`${this.getSelector()} [item-id]`)
+      .contains(item.name)
+      .should('be.exist');
+    cy.get(`${this.getSelector()} [item-id]`)
+      .find(`img[src="${item.image}"]`)
+      .should('be.exist');
   }
 
   expectNoItem(item: ImageThumbnailItem) {
@@ -54,6 +58,15 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
 
   selectItem(item: ImageThumbnailItem) {
     cy.get(this.getSelectorForItem(item)).click({ force: true });
+    this.expectSelectedItem(item);
+  }
+
+  expectSelectedItem(item: ImageThumbnailItem) {
+    cy.get(this.getSelector('selection')).find(`[item-id="${item.id}"]`).should('exist');
+  }
+
+  clearSelection() {
+    cy.get(this.getSelector('buttonClearSelection')).click({ force: true });
   }
 
   clickItem(item: ImageThumbnailItem) {

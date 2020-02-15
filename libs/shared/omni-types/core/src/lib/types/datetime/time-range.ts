@@ -101,4 +101,9 @@ export class TimeRange implements SerializableJSON {
       this.end
     ).format(tokenString)}`;
   }
+
+  days(): number {
+    return moment(this.end).diff(moment(this.start), 'day');
+  }
+
 }

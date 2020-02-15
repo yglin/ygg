@@ -71,12 +71,14 @@ export class MockDatabase {
       }
     } else {
       cy.wrap(entries(this.RTDBBackup)).each((entry: any) => {
-        const path = entry[0];
-        const data = entry[1];
-        // @ts-ignore
-        cy.callRtdb('set', path, data).then(() => {
-          cy.log(`Restore backup data at ${path} in firebase realtime DB`);
-        });
+        if (entry && entry.length >= 2) {
+          const path = entry[0];
+          const data = entry[1];
+          // @ts-ignore
+          cy.callRtdb('set', path, data).then(() => {
+            cy.log(`Restore backup data at ${path} in firebase realtime DB`);
+          });
+        }
       });
     }
   }

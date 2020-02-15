@@ -1,4 +1,5 @@
-import { Album, Image, AlbumViewPageObject } from '@ygg/shared/types';
+import { Album, Image } from '@ygg/shared/omni-types/core';
+import { AlbumViewPageObject } from '@ygg/shared/omni-types/ui';
 
 export class AlbumViewPageObjectCypress extends AlbumViewPageObject {
   expectValue(album: Album) {
@@ -6,7 +7,9 @@ export class AlbumViewPageObjectCypress extends AlbumViewPageObject {
       .invoke('attr', 'src')
       .should('eq', album.cover.src);
     cy.wrap(album.photos).each((photo: Image, index: number) => {
-      cy.get(this.getSelectorForPhotoAt(index)).invoke('attr', 'src').should('eq', photo.src);
+      cy.get(this.getSelectorForPhotoAt(index))
+        .invoke('attr', 'src')
+        .should('eq', photo.src);
     });
   }
 }

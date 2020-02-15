@@ -1,5 +1,7 @@
 import { TheThing } from '@ygg/the-thing/core';
-import { DateRange, DayTimeRange } from '@ygg/shared/omni-types/core';
+import { DateRange, DayTimeRange, Contact } from '@ygg/shared/omni-types/core';
+import { randomBytes } from 'crypto';
+import { random } from 'lodash';
 
 export const TourPlanTemplate = new TheThing().fromJSON({
   tags: ['tour', 'tour-plan', 'schedule', '遊程計畫'],
@@ -25,29 +27,26 @@ export const TourPlanTemplate = new TheThing().fromJSON({
   ]
 });
 
+const dateRange = DateRange.forge();
 export const MinimalTourPlan = new TheThing().fromJSON({
-  tags: ['tour', 'plan', 'scheudle', '遊程規劃'],
-  name: '八卦山二日遊',
+  tags: ['tour-plan', '遊程規劃'],
+  name: `深度遊趣${dateRange.days()}日遊`,
   view: 'tour-plan',
   cells: [
     {
       name: '預計出遊日期',
       type: 'date-range',
-      value: DateRange.forge().toJSON()
+      value: dateRange.toJSON()
     },
     {
       name: '預計參加人數',
       type: 'number',
-      value: 100
+      value: random(3, 100)
     },
     {
-      name: '聯絡人',
+      name: '聯絡資訊',
       type: 'contact',
-      value: {
-        name: 'Y大GG',
-        mail: 'ygg@ygmail.com',
-        lineID: 'YGGY'
-      }
+      value: Contact.forge()
     }
   ]
 });

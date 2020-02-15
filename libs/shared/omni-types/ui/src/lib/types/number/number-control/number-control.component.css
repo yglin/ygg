@@ -1,0 +1,36 @@
+.ygg-number-control {
+  /* font-size: 150%; */
+}
+
+/* .ygg-number-control .slider {
+  width: 100%
+}
+
+.ygg-number-control .number-input {
+  width: 100%
+}
+
+.ygg-number-control .mat-form-field {
+  width: 100%;
+} */
+
+.ygg-number-control .indicator {
+  font-style: italic;
+  /* font-size: 14px; */
+  padding: 2px 2px;
+  color: rgb(92, 12, 36);
+}
+
+.number-input {
+  min-height: 100px;
+}
+
+.number-input .mat-form-field {
+  width: 100%;
+}
+
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {  
+  opacity: 1;
+}

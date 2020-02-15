@@ -15,7 +15,8 @@ import {
   TheThingViewComponent,
   TheThingFinderComponent,
   TheThingListComponent,
-  ImitationViewHostDirective
+  ImitationViewHostDirective,
+  TheThingDataTableComponent
 } from './the-thing';
 import { TagsUiModule } from '@ygg/tags/ui';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
@@ -63,7 +64,8 @@ interface TheThingUiModuleConfig {
     ImitationViewHostDirective,
     TheThingImitationViewComponent,
     ImitationEditorComponent,
-    ImitationManagerComponent
+    ImitationManagerComponent,
+    TheThingDataTableComponent
   ],
   exports: [
     CellListComponent,
@@ -74,7 +76,8 @@ interface TheThingUiModuleConfig {
     TheThingViewComponent,
     TheThingFinderComponent,
     TheThingListComponent,
-    MyThingsComponent
+    MyThingsComponent,
+    TheThingDataTableComponent
   ],
   entryComponents: [ImitationEditorComponent, TheThingFinderComponent],
   providers: [

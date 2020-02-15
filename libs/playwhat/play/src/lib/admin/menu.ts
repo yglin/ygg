@@ -1,4 +1,4 @@
-import { Image } from '@ygg/shared/types';
+import { Image } from '@ygg/shared/omni-types/core';
 import { MenuTree } from '@ygg/shared/ui/navigation';
 
 export const adminMenu: MenuTree = new MenuTree({
