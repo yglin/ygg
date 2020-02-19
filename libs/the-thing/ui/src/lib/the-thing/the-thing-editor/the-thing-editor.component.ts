@@ -1,5 +1,5 @@
-import { size, isEmpty, extend, get, mapValues } from 'lodash';
-import { Component, OnInit, Input } from '@angular/core';
+import { size, isEmpty, extend, get, mapValues, isArray, find } from 'lodash';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -20,7 +20,14 @@ import {
   YggDialogService,
   ImageThumbnailListComponent
 } from '@ygg/shared/ui/widgets';
-import { Observable, Subscription, of, combineLatest, Subject } from 'rxjs';
+import {
+  Observable,
+  Subscription,
+  of,
+  combineLatest,
+  Subject,
+  merge
+} from 'rxjs';
 import { map, switchMap, take, catchError, timeout } from 'rxjs/operators';
 import {
   PageStashService,
@@ -32,18 +39,22 @@ import { TheThingFinderComponent } from '../the-thing-finder/the-thing-finder.co
 import { TheThingViewsService } from '../../the-thing-views.service';
 
 @Component({
-  selector: 'the-thing-the-thing-editor',
+  selector: 'the-thing-editor',
   templateUrl: './the-thing-editor.component.html',
   styleUrls: ['./the-thing-editor.component.css']
 })
 export class TheThingEditorComponent implements OnInit {
   @Input() theThing: TheThing;
-  theThing$: Subject<TheThing> = new Subject();
+  @Input() theThing$: Subject<TheThing>;
+  @Output() theThingChanged: EventEmitter<TheThing> = new EventEmitter();
+  @Input() embed: boolean;
+  // @Input() onlyCells: string[] | boolean;
   formGroup: FormGroup;
-  cellsFormGroup: FormGroup;
-  formControlNewCellType: FormControl;
-  cellTypes = TheThingCellTypes;
-  formControlNewCellName: FormControl;
+  formControlCells: FormControl;
+  // cellsFormGroup: FormGroup;
+  // formControlNewCellType: FormControl;
+  // cellTypes = TheThingCellTypes;
+  // formControlNewCellName: FormControl;
   formControlNewRelationName: FormControl;
   isNewRelationNameEmpty = true;
   subscriptions: Subscription[] = [];
@@ -55,7 +66,7 @@ export class TheThingEditorComponent implements OnInit {
     [relationName: string]: { objects$: Observable<TheThing[]> };
   } = {};
   inProgressing: boolean = false;
-  canDeleteAllCells: boolean = false;
+  // canDeleteAllCells: boolean = false;
   views: { [id: string]: TheThingView } = {};
 
   constructor(
@@ -74,9 +85,10 @@ export class TheThingEditorComponent implements OnInit {
       name: ['東東', Validators.required],
       view: null
     });
-    this.cellsFormGroup = formBuilder.group({});
-    this.formControlNewCellType = new FormControl();
-    this.formControlNewCellName = new FormControl();
+    this.formControlCells = new FormControl({});
+    // this.cellsFormGroup = formBuilder.group({});
+    // this.formControlNewCellType = new FormControl();
+    // this.formControlNewCellName = new FormControl();
     this.formControlNewRelationName = new FormControl();
 
     this.subscriptions.push(
@@ -96,10 +108,14 @@ export class TheThingEditorComponent implements OnInit {
         user => (this.currentUser = user)
       )
     );
+
     this.subscriptions.push(
-      this.theThing$.subscribe(theThing => {
-        this.theThing = theThing;
-        this.reset();
+      merge(
+        this.formGroup.valueChanges,
+        this.formControlCells.valueChanges
+      ).subscribe(() => {
+        this.updateTheThing();
+        this.theThingChanged.emit(this.theThing);
       })
     );
     this.views = this.theThingViewsService.views;
@@ -166,40 +182,62 @@ export class TheThingEditorComponent implements OnInit {
   reset() {
     // Reset meta data
     this.formGroup.reset();
-    // Cear cell controls
-    for (const controlName in this.cellsFormGroup.controls) {
-      if (this.cellsFormGroup.controls.hasOwnProperty(controlName)) {
-        this.cellsFormGroup.removeControl(controlName);
-      }
-    }
-    // Reset cell adder controls
-    this.formControlNewCellName.setValue(null);
-    this.formControlNewCellType.setValue(null);
-    this.formControlNewRelationName.setValue(null);
+    // // Cear cell controls
+    // for (const controlName in this.cellsFormGroup.controls) {
+    //   if (this.cellsFormGroup.controls.hasOwnProperty(controlName)) {
+    //     this.cellsFormGroup.removeControl(controlName);
+    //   }
+    // }
+    // // Reset cell adder controls
+    // this.formControlNewCellName.setValue(null);
+    // this.formControlNewCellType.setValue(null);
+    // this.formControlNewRelationName.setValue(null);
 
     if (this.theThing) {
       // Patch meta data
+      console.log('reset');
+      console.dir(this.theThing.cells);
       this.formGroup.patchValue(this.theThing);
-      // Add cell controls for theThing
-      for (const name in this.theThing.cells) {
-        if (this.theThing.cells.hasOwnProperty(name)) {
-          const cell = this.theThing.cells[name];
-          this.cellsFormGroup.addControl(
-            cell.name,
-            new FormControl(cell.value)
-          );
-        }
-      }
+      this.formControlCells.setValue(this.theThing.cells);
+      // // Add cell controls for theThing
+      // for (const name in this.theThing.cells) {
+      //   if (this.theThing.cells.hasOwnProperty(name)) {
+      //     const cell = this.theThing.cells[name];
+      //     this.cellsFormGroup.addControl(
+      //       cell.name,
+      //       new FormControl(cell.value)
+      //     );
+      //   }
+      // }
       // Relation controls
       this.fetchRelations();
+    } else {
+      this.formControlCells.setValue({});
     }
+    this.pendingRelation = this.pageStashService.getPendingPromise('relation');
     this.inProgressing = false;
-    this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
+    // this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
   }
 
   ngOnInit() {
+    // if (!isArray(this.onlyCells)) {
+    //   this.onlyCells = this.onlyCells !== undefined && this.onlyCells !== false;
+    // }
+    // console.dir(this.onlyCells);
+    this.embed = this.embed !== undefined && this.embed !== false;
+    // console.dir(this.theThing$);
+    if (!this.theThing$) {
+      this.theThing$ = new Subject();
+    }
+    this.subscriptions.push(
+      this.theThing$.subscribe(theThing => {
+        console.log('Update theThing');
+        console.dir(theThing);
+        this.theThing = theThing;
+        this.reset();
+      })
+    );
     this.theThing$.next(this.initResolveTheThing());
-    this.pendingRelation = this.pageStashService.getPendingPromise('relation');
   }
 
   ngOnDestroy(): void {
@@ -210,44 +248,44 @@ export class TheThingEditorComponent implements OnInit {
     }
   }
 
-  addCell(cell: TheThingCell) {
-    if (!cell) {
-      const newCellName = this.formControlNewCellName.value;
-      const newCellType = this.formControlNewCellType.value;
-      cell = new TheThingCell().fromJSON({
-        name: newCellName,
-        type: newCellType,
-        value: null
-      });
-    }
-    if (this.theThing.hasCell(cell)) {
-      alert(`資料欄位 ${cell.name} 已存在了喔`);
-    } else {
-      this.theThing.addCell(cell);
-      this.cellsFormGroup.addControl(cell.name, new FormControl(cell.value));
-      this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
-    }
-  }
+  // addCell(cell: TheThingCell) {
+  //   if (!cell) {
+  //     const newCellName = this.formControlNewCellName.value;
+  //     const newCellType = this.formControlNewCellType.value;
+  //     cell = new TheThingCell().fromJSON({
+  //       name: newCellName,
+  //       type: newCellType,
+  //       value: null
+  //     });
+  //   }
+  //   if (this.theThing.hasCell(cell)) {
+  //     alert(`資料欄位 ${cell.name} 已存在了喔`);
+  //   } else {
+  //     this.theThing.addCell(cell);
+  //     this.cellsFormGroup.addControl(cell.name, new FormControl(cell.value));
+  //     this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
+  //   }
+  // }
 
-  deleteCell(cell: TheThingCell) {
-    if (cell && confirm(`移除資料欄位 ${cell.name}`)) {
-      this.theThing.deleteCell(cell);
-      this.cellsFormGroup.removeControl(cell.name);
-      this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
-    }
-  }
+  // deleteCell(cell: TheThingCell) {
+  //   if (cell && confirm(`移除資料欄位 ${cell.name}`)) {
+  //     this.theThing.deleteCell(cell);
+  //     this.cellsFormGroup.removeControl(cell.name);
+  //     this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
+  //   }
+  // }
 
-  deleteAllCells() {
-    if (confirm(`清除所有的資料欄位？`)) {
-      for (const cellName in this.theThing.cells) {
-        if (this.theThing.cells.hasOwnProperty(cellName)) {
-          this.cellsFormGroup.removeControl(cellName);
-        }
-      }
-      this.theThing.clearCells();
-      this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
-    }
-  }
+  // deleteAllCells() {
+  //   if (confirm(`清除所有的資料欄位？`)) {
+  //     for (const cellName in this.theThing.cells) {
+  //       if (this.theThing.cells.hasOwnProperty(cellName)) {
+  //         this.cellsFormGroup.removeControl(cellName);
+  //       }
+  //     }
+  //     this.theThing.clearCells();
+  //     this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
+  //   }
+  // }
 
   openTheThingFinder() {
     const dialogRef = this.dialog.open(TheThingFinderComponent, {
@@ -259,6 +297,7 @@ export class TheThingEditorComponent implements OnInit {
           this.formControlNewRelationName.value,
           theThings
         );
+        this.theThingChanged.emit(this.theThing);
         this.fetchRelations();
       }
     });
@@ -266,6 +305,7 @@ export class TheThingEditorComponent implements OnInit {
 
   updateTheThing() {
     extend(this.theThing, this.formGroup.value);
+    this.theThing.cells = this.formControlCells.value;
     if (this.currentUser && !this.theThing.ownerId) {
       this.theThing.ownerId = this.currentUser.id;
     }
@@ -295,8 +335,8 @@ export class TheThingEditorComponent implements OnInit {
       }
     });
     if (this.router.url.match(/the-things\/create\/?/)) {
-      this.theThing = new TheThing();
-      this.ngOnInit();
+      console.log('Create new relation object');
+      this.theThing$.next(new TheThing());
     } else {
       this.router.navigate(['/', 'the-things', 'create']);
     }
@@ -314,6 +354,7 @@ export class TheThingEditorComponent implements OnInit {
       confirm(`確定要移除連結關係 ${relationName} - ${objectThing.name} ？`)
     ) {
       this.theThing.removeRelation(relationName, objectThing);
+      this.theThingChanged.emit(this.theThing);
       this.fetchRelations();
     }
   }
@@ -358,6 +399,16 @@ export class TheThingEditorComponent implements OnInit {
         }
       });
   }
+
+  // isCellHidden(cellName: string) {
+  //   if (isArray(this.onlyCells) && !isEmpty(this.onlyCells)) {
+  //     // console.log(cellName);
+  //     // console.log(this.onlyCells);
+  //     return this.onlyCells.indexOf(cellName) < 0;
+  //   } else {
+  //     return true;
+  //   }
+  // }
 
   async onSubmit() {
     this.updateTheThing();

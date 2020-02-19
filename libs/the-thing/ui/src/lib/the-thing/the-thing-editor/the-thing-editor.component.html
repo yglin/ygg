@@ -1,28 +1,30 @@
 <div class="the-thing-editor" *ngIf="theThing">
   <form [formGroup]="formGroup">
-    <ygg-action-bar-layout
-      ><div ygg-action-bar-button [hidden]="!hasImitations">
-        <button
-          type="button"
-          mat-fab
-          class="open-imitations"
-          (click)="applyTemplate()"
-          matTooltip="套用範本"
-        >
-          <mat-icon>library_books</mat-icon>
-        </button>
-      </div>
-      <div ygg-action-bar-button>
-        <button
-          type="button"
-          mat-fab
-          class="submit"
-          (click)="onSubmit()"
-          [disabled]="formGroup.invalid || inProgressing"
-          matTooltip="新增/修改"
-        >
-          <mat-icon>save</mat-icon>
-        </button>
+    <ygg-action-bar-layout>
+      <div *ngIf="!embed">
+        <div ygg-action-bar-button [hidden]="!hasImitations">
+          <button
+            type="button"
+            mat-fab
+            class="open-imitations"
+            (click)="applyTemplate()"
+            matTooltip="套用範本"
+          >
+            <mat-icon>library_books</mat-icon>
+          </button>
+        </div>
+        <div ygg-action-bar-button>
+          <button
+            type="button"
+            mat-fab
+            class="submit"
+            (click)="onSubmit()"
+            [disabled]="formGroup.invalid || inProgressing"
+            matTooltip="新增/修改"
+          >
+            <mat-icon>save</mat-icon>
+          </button>
+        </div>
       </div>
       <div ygg-action-bar-content>
         <div
@@ -66,7 +68,7 @@
           <br />
           <mat-form-field>
             <select
-              class='view'
+              class="view"
               matNativeControl
               placeholder="資料顯示為...（樣版）"
               formControlName="view"
@@ -77,99 +79,10 @@
             </select>
           </mat-form-field>
         </div>
-        <div class="add-cell">
-          <ygg-title-divider>新增資料欄位</ygg-title-divider>
-          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-            <div class="tags">
-              <mat-form-field>
-                <select
-                  class='cell-type'
-                  matNativeControl
-                  placeholder="資料欄位型態"
-                  [formControl]="formControlNewCellType"
-                  required
-                >
-                  <option
-                    *ngFor="let cellType of cellTypes | keyvalue"
-                    [value]="cellType.key"
-                  >
-                    {{ cellType.value.label }}
-                  </option>
-                </select>
-              </mat-form-field>
-            </div>
-            <div>
-              <mat-form-field>
-                <input
-                  class='name'
-                  matInput
-                  placeholder="資料欄位名稱"
-                  [formControl]="formControlNewCellName"
-                  required
-                />
-              </mat-form-field>
-            </div>
-            <div>
-              <button
-                type="button"
-                class='add'
-                mat-mini-fab
-                matTooltip="新增資料欄位"
-                (click)="addCell()"
-                [disabled]="
-                  !(
-                    formControlNewCellName.valid && formControlNewCellType.valid
-                  )
-                "
-              >
-                <mat-icon>add</mat-icon>
-              </button>
-            </div>
-            <div fxFlex></div>
-            <div>
-              <button
-                [disabled]="!canDeleteAllCells"
-                class="delete-all"
-                mat-fab
-                (click)="deleteAllCells()"
-                matTooltip="刪除所有資料欄位"
-              >
-                <mat-icon>delete_sweep</mat-icon>
-              </button>
-            </div>
-          </div>
-        </div>
-        <br />
-        <div class="cell-controls">
-          <div *ngFor="let cellItem of theThing.cells | keyvalue">
-            <div [attr.cell-name]="cellItem.key">
-              <div
-                fxLayout="row"
-                fxLayoutAlign="start center"
-                fxLayoutGap="10px"
-              >
-                <div fxFlex>
-                  <ygg-title-divider [level]="3">{{
-                    cellItem.key
-                  }}</ygg-title-divider>
-                </div>
-                <div fxFlex="50px">
-                  <button
-                    class="delete"
-                    mat-mini-fab
-                    (click)="deleteCell(cellItem.value)"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </div>
-              </div>
-              <the-thing-cell-control
-                [cell]="cellItem.value"
-                [formGroup]="cellsFormGroup"
-              ></the-thing-cell-control>
-            </div>
-            <br />
-          </div>
+        <div class="cells-editor">
+          <the-thing-cells-editor
+            [formControl]="formControlCells"
+          ></the-thing-cells-editor>
         </div>
         <div class="relations">
           <ygg-title-divider>關聯其他東東</ygg-title-divider>

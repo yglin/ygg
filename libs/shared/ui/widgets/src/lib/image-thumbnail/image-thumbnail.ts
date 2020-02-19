@@ -4,4 +4,5 @@ export interface ImageThumbnailItem {
   id: string;
   name: string;
   image: string;
+  link?: string;
 }

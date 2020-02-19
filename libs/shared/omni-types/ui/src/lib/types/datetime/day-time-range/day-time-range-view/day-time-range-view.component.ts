@@ -12,6 +12,7 @@ export class DayTimeRangeViewComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    // console.log(this.dayTimeRange);
   }
 
 }

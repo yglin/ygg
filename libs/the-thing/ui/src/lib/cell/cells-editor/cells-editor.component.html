@@ -1,0 +1,90 @@
+<div class="the-thing-cells-editor">
+  <div class="cell-controls">
+    <div *ngFor="let cellItem of cells | keyvalue">
+      <div [attr.cell-name]="cellItem.key">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+          <div fxFlex>
+            <ygg-title-divider [level]="5">{{
+              cellItem.key
+            }}</ygg-title-divider>
+          </div>
+          <div fxFlex="50px">
+            <button
+              type="button"
+              class="delete"
+              mat-mini-fab
+              (click)="onClickDeleteCell(cellItem.key)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          <div fxFlex></div>
+        </div>
+        <the-thing-cell-control
+          [cell]="cellItem.value"
+          [formGroup]="formGroup"
+        ></the-thing-cell-control>
+      </div>
+      <br />
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+      <button
+        type="button"
+        [disabled]="!canDeleteAllCells"
+        class="delete-all"
+        mat-fab
+        (click)="deleteAllCells()"
+        matTooltip="刪除所有資料欄位"
+      >
+        <mat-icon>delete_sweep</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="add-cell">
+    <form [formGroup]="formGroupAddCell">
+      <h4>新增資料欄位</h4>
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <div class="tags">
+          <mat-form-field>
+            <select
+              class="cell-type"
+              matNativeControl
+              placeholder="資料欄位型態"
+              formControlName="type"
+            >
+              <option
+                *ngFor="let cellType of cellTypes | keyvalue"
+                [value]="cellType.key"
+              >
+                {{ cellType.value.label }}
+              </option>
+            </select>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <input
+              class="name"
+              matInput
+              placeholder="資料欄位名稱"
+              formControlName="name"
+              required
+            />
+          </mat-form-field>
+        </div>
+        <div>
+          <button
+            type="button"
+            class="add-cell"
+            mat-mini-fab
+            matTooltip="新增資料欄位"
+            (click)="onClickAddCell()"
+            [disabled]="!formGroupAddCell.valid"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

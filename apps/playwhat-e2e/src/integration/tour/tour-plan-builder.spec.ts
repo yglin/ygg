@@ -1,6 +1,6 @@
-import { sampleSize } from 'lodash';
+import { sampleSize, values, pick } from 'lodash';
 import { MockDatabase, login } from '@ygg/shared/test/cypress';
-import { MinimalTourPlan } from './sample-tour-plan';
+import { MinimalTourPlan, TourPlanFull } from './sample-tour-plan';
 import { SamplePlays } from './sample-plays';
 import {
   TheThingEditorPageObjectCypress,
@@ -13,11 +13,13 @@ import {
 import { SiteNavigator } from '../../page-objects/site-navigator';
 import { TheThing } from '@ygg/the-thing/core';
 import { Contact } from '@ygg/shared/omni-types/core';
+import { ImitationTourPlan } from '@ygg/playwhat/core';
 
 const mockDatabase = new MockDatabase();
 const siteNavigator = new SiteNavigator();
 const selectPlays = sampleSize(SamplePlays, 2);
 let tourPlanWithPlays: TheThing;
+const tourPlanFull: TheThing = TourPlanFull;
 const tourPlanBuilderPO = new TourPlanBuilderPageObjectCypress();
 
 describe('What can we do in home page ?', () => {
@@ -114,5 +116,43 @@ describe('What can we do in home page ?', () => {
     tourPlanViewPO.expectVisible();
     tourPlanViewPO.expectValue(tourPlanWithPlays);
     tourPlanViewPO.expectPlays(selectPlays);
+  });
+
+  it('Build a tour-plan plus includes all optional data fields', () => {
+    // Set date and number of participants
+    tourPlanBuilderPO.expectStep(1);
+    const dateRange = TourPlanFull.cells['預計出遊日期'].value;
+    tourPlanBuilderPO.setDateRange(dateRange);
+    const numParticipants = TourPlanFull.cells['預計參加人數'].value;
+    tourPlanBuilderPO.setNumParticipants(numParticipants);
+    tourPlanBuilderPO.next();
+
+    // Fill in contact info
+    tourPlanBuilderPO.expectStep(2);
+    tourPlanBuilderPO.setContact(TourPlanFull.cells['聯絡資訊'].value);
+    tourPlanBuilderPO.next();
+
+    // Set optional data fields
+    tourPlanBuilderPO.expectStep(3);
+    const optionalCells = ImitationTourPlan.getOptionalCellNames();
+    tourPlanBuilderPO.theThingCellsEditorPO.updateValue(values(pick(TourPlanFull.cells, optionalCells)));
+    tourPlanBuilderPO.next();
+
+    // Review final tour-plan and submit it
+    tourPlanBuilderPO.expectStep(4);
+    const tourPlanViewPO = new TourPlanViewPageObjectCypress();
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectValue(TourPlanFull);
+    tourPlanBuilderPO.submit();
+
+    // Expect the submitted tour-plan show up in administrator's list
+    const tourPlanDataTablePO = new TheThingDataTablePageObjectCypress();
+    siteNavigator.goto(['admin', 'tour-plans'], tourPlanDataTablePO);
+    // tourPlanDataTablePO.expectTheThing(TourPlanFull);
+    tourPlanDataTablePO.clickFirst();
+
+    // Click the tour-plan to review it
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectValue(TourPlanFull);
   });
 });

@@ -10,6 +10,7 @@ import {
 import { ImageThumbnailItem } from '../image-thumbnail';
 import { Observable, Subscription, Subject } from 'rxjs';
 import { YggDialogContentComponent } from '../../dialog';
+import { ImageThumbnailListPageObject } from './image-thumbnail-list.component.po';
 
 @Component({
   selector: 'ygg-image-thumbnail-list',
@@ -77,6 +78,12 @@ export class ImageThumbnailListComponent
       this.selection.push(item);
     }
     this.selectionChanged.emit(this.selection);
+  }
+
+  onClickLink(item: ImageThumbnailItem) {
+    if (item.link) {
+      window.open(item.link, item.id);
+    }
   }
 
   isSelected(item: ImageThumbnailItem) {

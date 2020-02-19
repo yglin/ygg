@@ -3,6 +3,7 @@ import { TheThing } from '@ygg/the-thing/core';
 import { ImageThumbnailListPageObject } from '@ygg/shared/ui/widgets';
 import { DateRangeControlPageObject, ContactControlPageObject, NumberControlPageObject} from '@ygg/shared/omni-types/ui';
 import { DateRange, Contact } from '@ygg/shared/omni-types/core';
+import { TheThingCellsEditorPageObject } from '@ygg/the-thing/ui';
 
 export class TourPlanBuilderPageObject extends PageObject {
   selectors = {
@@ -11,6 +12,7 @@ export class TourPlanBuilderPageObject extends PageObject {
     dateRangeControl: '.step1 .date-range',
     numParticipantsControl: '.step1 .num-participants',
     contactControl: '.step2 .contact-control',
+    optionalCellsEditor: '.optional-editor',
     buttonSubmit: 'button.submit'
   };
 
@@ -20,6 +22,7 @@ export class TourPlanBuilderPageObject extends PageObject {
   dateRangeControl: DateRangeControlPageObject;
   numParticipantsControl: NumberControlPageObject;
   contactControlPO: ContactControlPageObject;
+  theThingCellsEditorPO: TheThingCellsEditorPageObject;
 
   getSelectorForStep(step: number): string {
     return `${this.getSelector()} [step="${step}"]`;

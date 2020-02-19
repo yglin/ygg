@@ -1,0 +1,8 @@
+.address-control {
+  width: 90vw;
+  max-width: 640px;
+}
+
+.address-control .mat-form-field {
+  width: 100%;
+}

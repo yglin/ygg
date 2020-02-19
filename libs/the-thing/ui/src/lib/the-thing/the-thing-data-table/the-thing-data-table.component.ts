@@ -36,15 +36,15 @@ export class TheThingDataTableComponent implements OnInit {
   ngOnInit() {
     if (this.imitation) {
       // console.dir(this.imitation);
-      let compareFunctions: { [key: string]: TheThingCellComparator } = {};
-      if (!isEmpty(this.imitation.cellsDef)) {
-        compareFunctions = pickBy(
-          mapValues(this.imitation.cellsDef, cellType =>
-            get(TheThingCellTypes, `${cellType}.comparator`, null)
-          ),
-          cf => typeof cf === 'function'
-        );
-      }
+      let compareFunctions: { [key: string]: TheThingCellComparator } = this.imitation.getComparators();
+      // if (!isEmpty(this.imitation.cellsDef)) {
+      //   compareFunctions = pickBy(
+      //     mapValues(this.imitation.cellsDef, cellType =>
+      //       get(TheThingCellTypes, `${cellType}.comparator`, null)
+      //     ),
+      //     cf => typeof cf === 'function'
+      //   );
+      // }
 
       this.dataSource = new TheThingDataSource(
         this.theThingAccessService.listByFilter$(this.imitation.filter),

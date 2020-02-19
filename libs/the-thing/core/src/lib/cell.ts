@@ -1,4 +1,4 @@
-import { extend, sample, random, keys } from 'lodash';
+import { extend, sample, random, keys, omit } from 'lodash';
 import { Album, Address, DayTime } from '@ygg/shared/types';
 import {
   Html,
@@ -8,6 +8,12 @@ import {
 } from '@ygg/shared/omni-types/core';
 
 export type TheThingCellComparator = (a: any, b: any, isAsc: boolean) => number;
+
+export interface TheThingCellDefine {
+  name: string;
+  type: TheThingCellTypeID;
+  required?: boolean;
+}
 
 export type TheThingCellTypeID =
   | 'text'
@@ -139,6 +145,14 @@ export class TheThingCell {
   type: TheThingCellTypeID;
   value: any;
 
+  static fromDef(cellDef: TheThingCellDefine): TheThingCell {
+    return new TheThingCell().fromJSON({
+      name: cellDef.name,
+      type: cellDef.type,
+      value: null
+    });
+  }
+
   static forge(options: any = {}): TheThingCell {
     const cell = new TheThingCell();
     if (options.name) {
@@ -170,6 +184,10 @@ export class TheThingCell {
       cell.value = TheThingCellTypes[cell.type].forge();
     }
     return cell;
+  }
+
+  clone(): TheThingCell {
+    return new TheThingCell().fromJSON(omit(this.toJSON(), 'id'));
   }
 
   fromJSON(data: any): this {

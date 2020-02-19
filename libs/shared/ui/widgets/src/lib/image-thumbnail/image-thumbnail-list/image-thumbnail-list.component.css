@@ -8,9 +8,16 @@
   position: relative;
 }
 
-.delete-item {
+.open-link {
   position: absolute;
   top: -5px;
+  right: -5px;
+  cursor: pointer;
+}
+
+.delete-item {
+  position: absolute;
+  bottom: -5px;
   right: -5px;
   cursor: pointer;
 }

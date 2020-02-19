@@ -8,8 +8,10 @@ import {
   ContactControlPageObjectCypress
 } from '@ygg/shared/omni-types/test';
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
+import { TheThingCellsEditorPageObjectCypress } from '@ygg/the-thing/test';
 
-export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject implements PageObjectCypress {
+export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
+  implements PageObjectCypress {
   constructor(parentSelector?: string) {
     super(parentSelector);
     this.playListPO = new ImageThumbnailListPageObjectCypress(
@@ -23,6 +25,9 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject 
     );
     this.contactControlPO = new ContactControlPageObjectCypress(
       this.getSelector('contactControl')
+    );
+    this.theThingCellsEditorPO = new TheThingCellsEditorPageObjectCypress(
+      this.getSelector('optionalCellsEditor')
     );
   }
 

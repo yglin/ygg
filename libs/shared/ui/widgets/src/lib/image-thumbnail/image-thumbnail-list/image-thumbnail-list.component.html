@@ -28,13 +28,13 @@
           fxLayout="row wrap"
           fxLayoutAlign="start center"
           fxLayoutGap="10px"
-          class='selection'
+          class="selection"
         >
           <div
-            *ngFor="let item of selection;"
+            *ngFor="let item of selection"
             class="item"
             (click)="onClickItem(item)"
-            [attr.item-id]='item.id'
+            [attr.item-id]="item.id"
           >
             <ygg-image-thumbnail [item]="item"></ygg-image-thumbnail>
           </div>
@@ -43,7 +43,7 @@
       </div>
       <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="20px">
         <div
-          *ngFor="let item of items; let isLast = last; let isFirst = first"
+          *ngFor="let item of items; let isLast = last; let isFirst = first;"
           [attr.item-id]="item.id"
           [attr.item-name]="item.name"
           class="item"
@@ -55,6 +55,11 @@
           (click)="onClickItem(item)"
         >
           <ygg-image-thumbnail [item]="item"></ygg-image-thumbnail>
+          <div class="open-link" [hidden]="!item.link">
+            <button type="button" mat-mini-fab (click)="onClickLink(item);$event.stopPropagation();">
+              <mat-icon>open_in_new</mat-icon>
+            </button>
+          </div>
           <div class="delete-item" [hidden]="!isItemDeletable">
             <button type="button" mat-mini-fab (click)="onDeleteItem(item)">
               <mat-icon>delete</mat-icon>

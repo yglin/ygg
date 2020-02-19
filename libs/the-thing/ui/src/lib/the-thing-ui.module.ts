@@ -31,6 +31,7 @@ import { TheThingImitationViewComponent } from './the-thing/the-thing-imitation-
 import { UserMenuService } from '@ygg/shared/user';
 import { ImitationEditorComponent } from './imitation/imitation-editor/imitation-editor.component';
 import { ImitationManagerComponent } from './imitation/imitation-manager/imitation-manager.component';
+import { TheThingCellsEditorComponent } from './cell/cells-editor/cells-editor.component';
 
 interface TheThingUiModuleConfig {
   imitations: TheThingImitation[];
@@ -65,7 +66,8 @@ interface TheThingUiModuleConfig {
     TheThingImitationViewComponent,
     ImitationEditorComponent,
     ImitationManagerComponent,
-    TheThingDataTableComponent
+    TheThingDataTableComponent,
+    TheThingCellsEditorComponent
   ],
   exports: [
     CellListComponent,
@@ -77,7 +79,8 @@ interface TheThingUiModuleConfig {
     TheThingFinderComponent,
     TheThingListComponent,
     MyThingsComponent,
-    TheThingDataTableComponent
+    TheThingDataTableComponent,
+    TheThingCellsEditorComponent
   ],
   entryComponents: [ImitationEditorComponent, TheThingFinderComponent],
   providers: [

@@ -10,7 +10,10 @@ import {
   isEmpty,
   mapValues,
   uniq,
-  omit
+  omit,
+  assign,
+  pick,
+  values
 } from 'lodash';
 import { Tags } from '@ygg/tags/core';
 import { TheThingCell } from './cell';
@@ -59,6 +62,11 @@ export class TheThing implements ImageThumbnailItem {
    * For ImageThumbnailItem interface
    */
   image: string;
+
+  /**
+   * Link for detail page or external reference
+   */
+  link: string;
 
   static forge(options: any = {}): TheThing {
     const thing = new TheThing();
@@ -123,12 +131,32 @@ export class TheThing implements ImageThumbnailItem {
     return this.tags.include(tags);
   }
 
-  hasCell(cell: TheThingCell): boolean {
-    return cell.name in this.cells;
+  hasCell(cell: TheThingCell | string): boolean {
+    let cellName: string;
+    if (typeof cell === 'string') {
+      cellName = cell;
+    } else {
+      cellName = cell.name;
+    }
+    return cellName in this.cells;
+  }
+
+  getCellsByNames(names: string[]): TheThingCell[] {
+    return values(pick(this.cells, names));
   }
 
   addCell(cell: TheThingCell) {
     this.cells[cell.name] = cell;
+  }
+
+  addCells(cells: TheThingCell[]) {
+    for (const cell of cells) {
+      this.addCell(cell);
+    }
+  }
+
+  updateCells(cells: { [key: string]: TheThingCell }) {
+    assign(this.cells, cells);
   }
 
   deleteCell(cell: TheThingCell) {
@@ -183,7 +211,9 @@ export class TheThing implements ImageThumbnailItem {
   }
 
   clone(): TheThing {
-    return new TheThing().fromJSON(omit(this.toJSON(), 'id'));
+    return new TheThing().fromJSON(
+      omit(this.toJSON(), ['id', 'createAt', 'modifyAt'])
+    );
   }
 
   /**
@@ -231,6 +261,9 @@ export class TheThing implements ImageThumbnailItem {
       if (!this.image) {
         this.image = this.resolveImage();
       }
+    }
+    if (!this.link) {
+      this.link = `/the-things/${this.id}`;
     }
     return this;
   }
