@@ -169,6 +169,15 @@ export class TheThing implements ImageThumbnailItem {
     this.cells = {};
   }
 
+  getCell(cellName: string): TheThingCell {
+    try {
+      return this.cells[cellName];
+    } catch (error) {
+      console.warn(`Failed to get cell from ${cellName}: ${error.message}`);
+      return null;
+    }
+  }
+
   getCellValue(cellName: string): any {
     try {
       return this.cells[cellName].value;
@@ -212,7 +221,7 @@ export class TheThing implements ImageThumbnailItem {
 
   clone(): TheThing {
     return new TheThing().fromJSON(
-      omit(this.toJSON(), ['id', 'createAt', 'modifyAt'])
+      omit(this.toJSON(), ['id', 'createAt', 'modifyAt', 'ownerId', 'link'])
     );
   }
 

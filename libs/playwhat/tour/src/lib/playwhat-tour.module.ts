@@ -19,6 +19,8 @@ import { MenuTree } from '@ygg/shared/ui/navigation';
 import { Image } from '@ygg/shared/omni-types/core';
 import { TourPlanAdminComponent } from './ui/tour-plan-admin/tour-plan-admin.component';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
+import { PlayViewComponent } from './ui/play-view/play-view.component';
+import { SharedUserModule } from '@ygg/shared/user';
 
 export const playwhatTourRoutes: Route[] = [];
 
@@ -33,6 +35,7 @@ export const playwhatTourRoutes: Route[] = [];
     SharedUiWidgetsModule,
     SharedTypesModule,
     SharedOmniTypesUiModule,
+    SharedUserModule,
     TheThingUiModule
   ],
   declarations: [
@@ -40,12 +43,14 @@ export const playwhatTourRoutes: Route[] = [];
     PlayCardComponent,
     TourPlanViewComponent,
     TourPlanBuilderComponent,
-    TourPlanAdminComponent
+    TourPlanAdminComponent,
+    PlayViewComponent
   ],
   entryComponents: [
     TourViewComponent,
     TourPlanViewComponent,
-    TourPlanAdminComponent
+    TourPlanAdminComponent,
+    PlayViewComponent
   ],
   providers: [
     {
@@ -69,6 +74,11 @@ export function configTheThingImitation(
   theThingViewsService: TheThingViewsService
 ) {
   return () => {
+    theThingViewsService.addView('play', {
+      id: 'play',
+      label: '體驗',
+      component: PlayViewComponent
+    });
     theThingViewsService.addView('tour', {
       id: 'tour',
       label: '體驗組合',

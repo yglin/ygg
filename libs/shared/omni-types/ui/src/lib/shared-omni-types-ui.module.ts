@@ -20,7 +20,11 @@ import {
   ImageUploaderComponent,
   AlbumControlComponent,
   AlbumViewComponent,
-  AlbumComponent
+  AlbumComponent,
+  ContactControlComponent,
+  ContactViewComponent,
+  AddressControlComponent,
+  AddressViewComponent
 } from './types';
 
 @NgModule({
@@ -47,7 +51,11 @@ import {
     ImageUploaderComponent,
     AlbumComponent,
     AlbumControlComponent,
-    AlbumViewComponent
+    AlbumViewComponent,
+    ContactControlComponent,
+    ContactViewComponent,
+    AddressControlComponent,
+    AddressViewComponent
   ],
   exports: [
     HtmlControlComponent,

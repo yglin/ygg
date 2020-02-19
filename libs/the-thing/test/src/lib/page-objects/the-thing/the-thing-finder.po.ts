@@ -24,6 +24,7 @@ export class TheThingFinderPageObjectCypress extends TheThingFinderPageObject {
     cy.get(this.getSelector('inputSearchName'))
       .clear({ force: true })
       .type(theThing.name);
+    // cy.pause();
     this.imageThumbnailList.expectItem(theThing);
   }
 

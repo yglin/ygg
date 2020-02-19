@@ -11,7 +11,7 @@ import {
   TheThingAccessService
 } from '@ygg/the-thing/data-access';
 // import { take } from 'rxjs/operators';
-import { TemplateTourPlan, ImitationTourPlan } from '@ygg/playwhat/core';
+import { TemplateTourPlan, ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import { isEmpty, keyBy } from 'lodash';
 import { Subject, Subscription } from 'rxjs';
@@ -37,10 +37,7 @@ export class TourPlanBuilderComponent implements OnInit, OnDestroy {
     private theThingAccessService: TheThingAccessService,
     private imitationAccessService: TheThingImitationAccessService
   ) {
-    this.filterPlays = new TheThingFilter({
-      name: '體驗',
-      tags: ['體驗']
-    });
+    this.filterPlays = ImitationPlay.filter;
     this.firstFormGroup = this.formBuilder.group({
       dateRange: [null, Validators.required],
       numParticipants: [null, Validators.required],

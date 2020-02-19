@@ -30,7 +30,7 @@ export const TourPlanTemplate = new TheThing().fromJSON({
 const dateRange = DateRange.forge();
 export const MinimalTourPlan = new TheThing().fromJSON({
   tags: ['tour-plan', '遊程規劃'],
-  name: `深度遊趣${dateRange.days()}日遊`,
+  name: `深度遊趣${dateRange.days() + 1}日遊`,
   view: 'tour-plan',
   cells: [
     {

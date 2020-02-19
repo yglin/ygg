@@ -59,12 +59,13 @@ export class TheThingCellsEditorComponent
   }
 
   writeValue(cells: TheThingCell[] | { [key: string]: TheThingCell }): void {
-    // console.dir(cells);
+    console.log(JSON.stringify(cells));
     if (isArray(cells)) {
       cells = keyBy(cells, 'name');
     } else {
       cells = isEmpty(cells) ? {} : cells;
     }
+    console.log(cells);
     this.deleteAllCells();
     for (const name in cells) {
       if (cells.hasOwnProperty(name)) {
@@ -72,6 +73,7 @@ export class TheThingCellsEditorComponent
         this.addCell(cell);
       }
     }
+
   }
 
   registerOnChange(fn: any): void {
@@ -95,6 +97,7 @@ export class TheThingCellsEditorComponent
   addCell(cell: TheThingCell) {
     this.cells[cell.name] = cell;
     this.formGroup.addControl(cell.name, new FormControl(cell.value));
+    this.canDeleteAllCells = size(this.formGroup.controls) >= 3;
   }
 
   onClickDeleteCell(cellName: string) {
@@ -123,7 +126,6 @@ export class TheThingCellsEditorComponent
       });
       this.addCell(cell);
       this.onChange(this.cells);
-      this.canDeleteAllCells = size(this.formGroup.controls) >= 3;
     }
   }
 

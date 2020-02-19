@@ -163,15 +163,15 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
     relationObjectListPO.expectItem(objectThing);
   }
 
-  addRelationAndGotoCreate(relationName: string) {
-    cy.get(this.getSelector('inputRelationName'))
-      .clear({ force: true })
-      .type(relationName);
-    cy.get(this.getSelector('buttonCreateRelationObject')).click({
-      force: true
-    });
-    cy.location().should('match', /the-things\/create\/?/);
-  }
+  // addRelationAndGotoCreate(relationName: string) {
+  //   cy.get(this.getSelector('inputRelationName'))
+  //     .clear({ force: true })
+  //     .type(relationName);
+  //   cy.get(this.getSelector('buttonCreateRelationObject')).click({
+  //     force: true
+  //   });
+  //   cy.location().should('match', /the-things\/create\/?/);
+  // }
 
   expectImitaion(imitation: TheThingImitation) {
     cy.get(this.getSelector('buttonOpenImitations'), {

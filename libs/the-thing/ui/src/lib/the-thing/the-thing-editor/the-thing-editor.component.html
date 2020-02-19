@@ -1,30 +1,28 @@
 <div class="the-thing-editor" *ngIf="theThing">
   <form [formGroup]="formGroup">
     <ygg-action-bar-layout>
-      <div *ngIf="!embed">
-        <div ygg-action-bar-button [hidden]="!hasImitations">
-          <button
-            type="button"
-            mat-fab
-            class="open-imitations"
-            (click)="applyTemplate()"
-            matTooltip="套用範本"
-          >
-            <mat-icon>library_books</mat-icon>
-          </button>
-        </div>
-        <div ygg-action-bar-button>
-          <button
-            type="button"
-            mat-fab
-            class="submit"
-            (click)="onSubmit()"
-            [disabled]="formGroup.invalid || inProgressing"
-            matTooltip="新增/修改"
-          >
-            <mat-icon>save</mat-icon>
-          </button>
-        </div>
+      <div ygg-action-bar-button [hidden]="!hasImitations">
+        <button
+          type="button"
+          mat-fab
+          class="open-imitations"
+          (click)="applyTemplate()"
+          matTooltip="套用範本"
+        >
+          <mat-icon>library_books</mat-icon>
+        </button>
+      </div>
+      <div ygg-action-bar-button>
+        <button
+          type="button"
+          mat-fab
+          class="submit"
+          (click)="onSubmit()"
+          [disabled]="formGroup.invalid || inProgressing"
+          matTooltip="新增/修改"
+        >
+          <mat-icon>save</mat-icon>
+        </button>
       </div>
       <div ygg-action-bar-content>
         <div
@@ -103,7 +101,7 @@
         </mat-option>
         </mat-autocomplete> -->
               </div>
-              <div>
+              <!-- <div>
                 <button
                   type="button"
                   mat-mini-fab
@@ -113,7 +111,7 @@
                 >
                   <mat-icon>post_add</mat-icon>
                 </button>
-              </div>
+              </div> -->
               <div>
                 <button
                   type="button"

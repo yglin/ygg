@@ -3,7 +3,7 @@ import { TheThing } from '@ygg/the-thing/core';
 export const SamplePlays = [
   {
     name: '巷弄騎乘派對',
-    tags: ['體驗', '深度遊趣', '省府日常散策', '協力車'],
+    tags: ['體驗', 'play', '深度遊趣', '省府日常散策', '協力車'],
     cells: {
       副標題: {
         name: '副標題',
@@ -40,7 +40,7 @@ export const SamplePlays = [
   },
   {
     name: '省府苔球風景體驗',
-    tags: ['體驗', '深度遊趣', '省府日常散策', '苔球'],
+    tags: ['體驗', 'play', '深度遊趣', '省府日常散策', '苔球'],
     cells: {
       副標題: {
         name: '副標題',
@@ -77,7 +77,7 @@ export const SamplePlays = [
   },
   {
     name: '職人手沖咖啡評鑑體驗',
-    tags: ['體驗', '深度遊趣', '省府日常散策', '咖啡'],
+    tags: ['體驗', 'play', '深度遊趣', '省府日常散策', '咖啡'],
     cells: {
       副標題: {
         name: '副標題',

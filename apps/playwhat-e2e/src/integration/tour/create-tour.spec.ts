@@ -17,8 +17,16 @@ const relationPlay = '體驗';
 
 describe('Create a tour composed of plays', () => {
   before(() => {
-    login();
-    cy.visit('/');
+    login().then(user => {
+      cy.wrap(plays).each((play: any) => {
+        play.ownerId = user.id;
+        mockDatabase.insert(`${TheThing.collection}/${play.id}`, play.toJSON());
+      });
+      cy.visit('/');
+    });
+  });
+
+  before(() => {
   });
 
   after(() => {
@@ -31,21 +39,26 @@ describe('Create a tour composed of plays', () => {
     // cy.log(sampleTour.view);
     theThingEditorPO.setValue(sampleTour);
     cy.wrap(plays).each((play: any) => {
-      theThingEditorPO.addRelationAndGotoCreate(relationPlay);
-      theThingEditorPO.setValue(play);
-      theThingEditorPO.submit();
-      getCreatedTheThingId(play.id).then(playId => {
-        play.id = playId;
-        mockDatabase.pushDocument(
-          `${TheThing.collection}/${playId}`,
-          play.toJSON()
-        );
-        const theThingViewPO = new TheThingViewPageObjectCypress();
-        theThingViewPO.expectValue(play);
+      theThingEditorPO.addRelationExist(relationPlay, play);
 
-        theThingViewPO.linkRelationBack();
-        theThingEditorPO.expectVisible();
-      });
+      // 2020/02/19 yglin: Allow creating relation object on-the-fly
+      // adds too much responsibility to the-thing-editor and mess it all up.
+      // Deprecate it for now
+      //
+      // theThingEditorPO.setValue(play);
+      // theThingEditorPO.submit();
+      // getCreatedTheThingId(play.id).then(playId => {
+      //   play.id = playId;
+      //   mockDatabase.pushDocument(
+      //     `${TheThing.collection}/${playId}`,
+      //     play.toJSON()
+      //   );
+      //   const theThingViewPO = new TheThingViewPageObjectCypress();
+      //   theThingViewPO.expectValue(play);
+
+      //   theThingViewPO.linkRelationBack();
+      //   theThingEditorPO.expectVisible();
+      // });
     });
     theThingEditorPO.submit();
     getCreatedTheThingId().then(id => {

@@ -124,6 +124,7 @@ export class TheThingEditorComponent implements OnInit {
 
   initResolveTheThing(): TheThing {
     if (this.theThing) {
+      console.info('Resolve from component input');
       return this.theThing;
     }
 
@@ -140,19 +141,22 @@ export class TheThingEditorComponent implements OnInit {
           }
         }
       }
-      // console.log(theThing);
+      console.info('Resolve from pending relation');
       return theThing;
     }
 
     // Fetch the-thing from route resolver
     const fromResolve = get(this.route.snapshot, 'data.theThing', null);
     if (fromResolve) {
+      console.info('Resolve from id in route path');
+      console.info(fromResolve.toJSON());
       return fromResolve;
     }
 
     // Fetch the-thing from clone
     const cloneSource: TheThing = get(this.route.snapshot, 'data.clone', null);
     if (cloneSource) {
+      console.info(`Resolve from clone: ${cloneSource.id}`);
       return cloneSource.clone();
     }
 
@@ -172,16 +176,18 @@ export class TheThingEditorComponent implements OnInit {
       null
     );
     if (fromImitationTemplate) {
+      console.info('Resolve from imitation template');
       return fromImitationTemplate;
     }
 
     // Not found any source of the-thing, create a new one
+    console.info('Resolve from nothing, create a brand new one');
     return new TheThing();
   }
 
   reset() {
     // Reset meta data
-    this.formGroup.reset();
+    // this.formGroup.reset();
     // // Cear cell controls
     // for (const controlName in this.cellsFormGroup.controls) {
     //   if (this.cellsFormGroup.controls.hasOwnProperty(controlName)) {
@@ -196,9 +202,9 @@ export class TheThingEditorComponent implements OnInit {
     if (this.theThing) {
       // Patch meta data
       console.log('reset');
-      console.dir(this.theThing.cells);
-      this.formGroup.patchValue(this.theThing);
-      this.formControlCells.setValue(this.theThing.cells);
+      console.dir(this.theThing.toJSON());
+      this.formGroup.patchValue(this.theThing, { emitEvent: false });
+      this.formControlCells.setValue(this.theThing.cells, { emitEvent: false });
       // // Add cell controls for theThing
       // for (const name in this.theThing.cells) {
       //   if (this.theThing.cells.hasOwnProperty(name)) {
@@ -212,6 +218,7 @@ export class TheThingEditorComponent implements OnInit {
       // Relation controls
       this.fetchRelations();
     } else {
+      this.formGroup.reset();
       this.formControlCells.setValue({});
     }
     this.pendingRelation = this.pageStashService.getPendingPromise('relation');
@@ -232,7 +239,7 @@ export class TheThingEditorComponent implements OnInit {
     this.subscriptions.push(
       this.theThing$.subscribe(theThing => {
         console.log('Update theThing');
-        console.dir(theThing);
+        console.dir(theThing.toJSON());
         this.theThing = theThing;
         this.reset();
       })
