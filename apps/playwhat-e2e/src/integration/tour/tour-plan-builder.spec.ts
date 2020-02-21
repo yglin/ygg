@@ -44,7 +44,7 @@ describe('What can we do in home page ?', () => {
     mockDatabase.restoreRTDB();
   });
 
-  it('Build a tour-plan with minimal required data fields: dateRange, numParticipants, contact', () => {
+  it('Build a tour-plan and check it out in admin page', () => {
     // Set date and number of participants
     tourPlanBuilderPO.expectStep(1);
     const dateRange = MinimalTourPlan.cells['預計出遊日期'].value;
@@ -79,6 +79,36 @@ describe('What can we do in home page ?', () => {
     tourPlanViewPO.expectVisible();
     tourPlanViewPO.expectValue(MinimalTourPlan);
   });
+  
+  it('Build a tour-plan with minimal required data fields: dateRange, numParticipants, contact', () => {
+    // Set date and number of participants
+    tourPlanBuilderPO.expectStep(1);
+    const dateRange = MinimalTourPlan.cells['預計出遊日期'].value;
+    tourPlanBuilderPO.setDateRange(dateRange);
+    const numParticipants = MinimalTourPlan.cells['預計參加人數'].value;
+    tourPlanBuilderPO.setNumParticipants(numParticipants);
+    tourPlanBuilderPO.next();
+
+    // Fill in contact info
+    tourPlanBuilderPO.expectStep(2);
+    tourPlanBuilderPO.setContact(MinimalTourPlan.cells['聯絡資訊'].value);
+    tourPlanBuilderPO.next();
+
+    // Show optional data fields of a tour-plan, here we just skip it
+    tourPlanBuilderPO.expectStep(3);
+    tourPlanBuilderPO.next();
+
+    // Review final tour-plan and submit it
+    tourPlanBuilderPO.expectStep(4);
+    const tourPlanViewPO = new TourPlanViewPageObjectCypress();
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectValue(MinimalTourPlan);
+    tourPlanBuilderPO.submit();
+
+    // Expect redirect to tour-plan view page, and check required data fields
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectValue(MinimalTourPlan);
+  });
 
   it('Build a tour-plan with a few plays selected', () => {
     // Select plays, set date and number of participants
@@ -106,13 +136,7 @@ describe('What can we do in home page ?', () => {
     tourPlanViewPO.expectValue(tourPlanWithPlays);
     tourPlanBuilderPO.submit();
 
-    // Expect the submitted tour-plan show up in administrator's list
-    const tourPlanDataTablePO = new TheThingDataTablePageObjectCypress();
-    siteNavigator.goto(['admin', 'tour-plans'], tourPlanDataTablePO);
-    // tourPlanDataTablePO.expectTheThing(tourPlanWithPlays);
-    tourPlanDataTablePO.clickFirst();
-
-    // Click the tour-plan to review it
+    // Expect redirect to tour-plan view page, and check selected plays
     tourPlanViewPO.expectVisible();
     tourPlanViewPO.expectValue(tourPlanWithPlays);
     tourPlanViewPO.expectPlays(selectPlays);
@@ -135,7 +159,7 @@ describe('What can we do in home page ?', () => {
     // Set optional data fields
     tourPlanBuilderPO.expectStep(3);
     const optionalCells = ImitationTourPlan.getOptionalCellNames();
-    tourPlanBuilderPO.theThingCellsEditorPO.updateValue(values(pick(TourPlanFull.cells, optionalCells)));
+    tourPlanBuilderPO.theThingCellsEditorPO.updateValue(TourPlanFull.getCellsByNames(optionalCells));
     tourPlanBuilderPO.next();
 
     // Review final tour-plan and submit it
@@ -145,13 +169,7 @@ describe('What can we do in home page ?', () => {
     tourPlanViewPO.expectValue(TourPlanFull);
     tourPlanBuilderPO.submit();
 
-    // Expect the submitted tour-plan show up in administrator's list
-    const tourPlanDataTablePO = new TheThingDataTablePageObjectCypress();
-    siteNavigator.goto(['admin', 'tour-plans'], tourPlanDataTablePO);
-    // tourPlanDataTablePO.expectTheThing(TourPlanFull);
-    tourPlanDataTablePO.clickFirst();
-
-    // Click the tour-plan to review it
+    // Expect redirect to tour-plan view page, and check required data fields
     tourPlanViewPO.expectVisible();
     tourPlanViewPO.expectValue(TourPlanFull);
   });

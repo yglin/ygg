@@ -52,8 +52,42 @@ export const MinimalTourPlan = new TheThing().fromJSON({
 });
 
 export const TourPlanFull = MinimalTourPlan.clone();
-TourPlanFull.addCells([{
-  name: '預計遊玩時間',
-  type: 'day-time-range',
-  value: DayTimeRange.forge().toJSON()
-}].map(cellData => new TheThingCell().fromJSON(cellData)));
+TourPlanFull.addCells(
+  [
+    {
+      name: '預計遊玩時間',
+      type: 'day-time-range',
+      value: DayTimeRange.forge().toJSON()
+    },
+    {
+      name: '用餐需求',
+      type: 'longtext',
+      value: '本團吃全素'
+    },
+    {
+      name: '交通需求',
+      type: 'longtext',
+      value: '請幫忙代租一台十人的小巴士'
+    },
+    {
+      name: '長輩人數',
+      type: 'number',
+      value: 7
+    },
+    {
+      name: '孩童人數',
+      type: 'number',
+      value: 5
+    },
+    {
+      name: '司領人數',
+      type: 'number',
+      value: 2
+    },
+    {
+      name: '其他注意事項',
+      type: 'longtext',
+      value: '團員都有自帶環保杯'
+    }
+  ].map(cellData => new TheThingCell().fromJSON(cellData))
+);

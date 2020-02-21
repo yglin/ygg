@@ -11,10 +11,15 @@ import {
   TheThingAccessService
 } from '@ygg/the-thing/data-access';
 // import { take } from 'rxjs/operators';
-import { TemplateTourPlan, ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
+import {
+  TemplateTourPlan,
+  ImitationTourPlan,
+  ImitationPlay
+} from '@ygg/playwhat/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import { isEmpty, keyBy } from 'lodash';
 import { Subject, Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ygg-tour-plan-builder',
@@ -35,7 +40,8 @@ export class TourPlanBuilderComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private theThingAccessService: TheThingAccessService,
-    private imitationAccessService: TheThingImitationAccessService
+    private imitationAccessService: TheThingImitationAccessService,
+    private router: Router
   ) {
     this.filterPlays = ImitationPlay.filter;
     this.firstFormGroup = this.formBuilder.group({
@@ -111,6 +117,7 @@ export class TourPlanBuilderComponent implements OnInit, OnDestroy {
       try {
         await this.theThingAccessService.upsert(this.tourPlan);
         alert(`已成功送出遊程規劃${this.tourPlan.name}`);
+        this.router.navigate(['/', 'the-things', this.tourPlan.id]);
       } catch (error) {
         alert(`送出失敗，錯誤原因：${error.message}`);
       }

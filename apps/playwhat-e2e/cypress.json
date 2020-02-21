@@ -9,7 +9,7 @@
   "screenshotsFolder": "../../dist/out-tsc/apps/playwhat-e2e/screenshots",
   "chromeWebSecurity": false,
   "numTestsKeptInMemory": 0,
-  "testFiles": "**/tour/*.spec.*",
+  "testFiles": "**/tour-plan-builder.spec.*",
   "ignoreTestFiles": [
     "**/playground/**/*",
     "**/scheduler/schedule/*"
