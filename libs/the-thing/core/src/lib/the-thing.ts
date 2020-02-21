@@ -16,7 +16,7 @@ import {
   values
 } from 'lodash';
 import { Tags } from '@ygg/tags/core';
-import { TheThingCell } from './cell';
+import { TheThingCell, TheThingCellTypeID } from './cell';
 import { generateID, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 
@@ -131,14 +131,20 @@ export class TheThing implements ImageThumbnailItem {
     return this.tags.include(tags);
   }
 
-  hasCell(cell: TheThingCell | string): boolean {
+  hasCell(cell: TheThingCell | string, type?: TheThingCellTypeID): boolean {
     let cellName: string;
     if (typeof cell === 'string') {
       cellName = cell;
     } else {
       cellName = cell.name;
     }
-    return cellName in this.cells;
+    if (!(cellName in this.cells)) {
+      return false;
+    }
+    if (type && this.cells[cellName].type !== type) {
+      return false;
+    }
+    return true;
   }
 
   getCellsByNames(names: string[]): TheThingCell[] {
@@ -249,6 +255,24 @@ export class TheThing implements ImageThumbnailItem {
 
   applyTemplate(template: TheThing) {
     this.fromJSON(template.toJSON());
+  }
+
+  imitate(victim: TheThing) {
+    if (!victim) {
+      throw new Error(`No imitate victim, @#$%&^%~!!!`);
+    }
+    this.tags = this.tags.merge(victim.tags);
+    if (victim.view) {
+      this.view = victim.view;
+    }
+    for (const key in victim.cells) {
+      if (victim.cells.hasOwnProperty(key)) {
+        const victimCell = victim.cells[key];
+        if (!this.hasCell(victimCell)) {
+          this.addCell(victimCell.clone());
+        }
+      }
+    }
   }
 
   fromJSON(data: any): this {

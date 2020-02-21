@@ -42,16 +42,16 @@ export class ImitationEditorComponent
           tap(imitation => {
             this.formGroup.patchValue(imitation);
           }),
-          switchMap((imitation: TheThingImitation) => {
-            return this.theThingAccessService.get$(imitation.templateId);
-          }),
-          tap((template: TheThing) => {
-            const selected = [];
-            if (template) {
-              selected.push(template);
-            }
-            this.formGroup.get('template').setValue(selected);
-          })
+          // switchMap((imitation: TheThingImitation) => {
+          //   return this.theThingAccessService.get$(imitation.templateId);
+          // }),
+          // tap((template: TheThing) => {
+          //   const selected = [];
+          //   if (template) {
+          //     selected.push(template);
+          //   }
+          //   this.formGroup.get('template').setValue(selected);
+          // })
         )
         .subscribe()
     );
@@ -94,7 +94,7 @@ export class ImitationEditorComponent
       confirm(`確定要新增/修改範本 ${name} ?`)
     ) {
       this.imitation.fromJSON(this.formGroup.value);
-      this.imitation.setTemplate(this.selectedTemplate);
+      // this.imitation.setTemplate(this.selectedTemplate);
       try {
         await this.imitationAccessService.upsert(this.imitation);
         alert(`新增/修改範本 ${name} 成功`);

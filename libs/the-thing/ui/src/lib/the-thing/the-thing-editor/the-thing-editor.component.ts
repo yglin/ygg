@@ -375,31 +375,17 @@ export class TheThingEditorComponent implements OnInit {
         singleSelect: true
       }
     });
-    let selectedImitation: TheThingImitation;
+    // let selectedImitation: TheThingImitation;
     return dialogRef
       .afterClosed()
-      .pipe(
-        switchMap((imitation: TheThingImitation) => {
-          // console.dir(imitation);
-          if (!imitation) {
-            return of(null);
-          } else {
-            selectedImitation = imitation;
-            return this.theThingAccessService
-              .get$(imitation.templateId)
-              .pipe(take(1));
-          }
-        })
-      )
-      .subscribe(template => {
+      .subscribe((imitation: TheThingImitation) => {
         if (
-          selectedImitation &&
-          template &&
+          imitation &&
           confirm(
-            `套用範本 ${selectedImitation.name}，目前編輯資料將會遺失，確定繼續？`
+            `套用範本 ${imitation.name} 將修改目前資料，確定繼續？`
           )
         ) {
-          this.theThing.applyTemplate(template);
+          this.theThing.imitate(imitation.createTheThing())
           this.theThing$.next(this.theThing);
         } else {
           this.inProgressing = false;

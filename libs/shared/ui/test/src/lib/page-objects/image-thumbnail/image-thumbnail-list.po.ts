@@ -57,12 +57,20 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
   }
 
   selectItem(item: ImageThumbnailItem) {
-    cy.get(this.getSelectorForItem(item)).click({ force: true });
+    cy.get(this.getSelectorForItem(item), { timeout: 10000 }).click({
+      force: true
+    });
     this.expectSelectedItem(item);
   }
 
+  selectItems(items: ImageThumbnailItem[]) {
+    cy.wrap(items).each((item: any) => this.selectItem(item));
+  }
+
   expectSelectedItem(item: ImageThumbnailItem) {
-    cy.get(this.getSelector('selection')).find(`[item-id="${item.id}"]`).should('exist');
+    cy.get(this.getSelector('selection'))
+      .find(`[item-id="${item.id}"]`)
+      .should('exist');
   }
 
   clearSelection() {

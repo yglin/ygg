@@ -1,12 +1,19 @@
 import { merge, get } from 'lodash';
 import { Injectable, Type } from '@angular/core';
 import { TheThingView } from '@ygg/the-thing/core';
+import { ImitationViewDogComponent } from './imitation';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TheThingViewsService {
-  views: { [id: string]: TheThingView } = {};
+  views: { [id: string]: TheThingView } = {
+    'dog': {
+      id: 'dog',
+      label: '狗狗',
+      component: ImitationViewDogComponent
+    }
+  };
 
   constructor() {}
 

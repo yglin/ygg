@@ -1,16 +1,35 @@
-<div>
-  <div class='action-bar' fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px">
+<div class="my-things">
+  <div
+    class="action-bar"
+    fxLayout="row"
+    fxLayoutAlign="end start"
+    fxLayoutGap="10px"
+  >
     <div>
-      <button mat-fab (click)="addTheThing()" matTooltip="新增我的東東"><mat-icon>add</mat-icon></button>
+      <button mat-fab (click)="addTheThing()" matTooltip="新增我的東東">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div>
+      <button
+        mat-fab
+        class="apply-imitation"
+        (click)="applyImitation()"
+        matTooltip="套用範本"
+        [disabled]="!hasImitations || !(selection && selection.length > 0)"
+      >
+        <mat-icon>library_books</mat-icon>
+      </button>
     </div>
   </div>
-  <the-thing-filter (filterChanged)='onFilterChanged($event)'></the-thing-filter>
+  <the-thing-filter
+    (filterChanged)="onFilterChanged($event)"
+  ></the-thing-filter>
   <br />
   <div class="the-thing-list">
     <ygg-image-thumbnail-list
       [items]="filteredTheThings"
-      (clickAdd)="addTheThing()"
-      (clickItem)="onClickTheThing($event)"
+      [(selection)]="selection"
     ></ygg-image-thumbnail-list>
   </div>
 </div>

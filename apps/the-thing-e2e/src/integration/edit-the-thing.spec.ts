@@ -12,6 +12,7 @@ import {
 const mockDatabase = new MockDatabase();
 
 describe('Edit exist the-thing', () => {
+  const theThingEditorPO = new TheThingEditorPageObjectCypress();
 
   before(() => {
     login();
@@ -33,7 +34,6 @@ describe('Edit exist the-thing', () => {
   it('Can change tags', () => {
     cy.visit(`the-things/${kakapo.id}/edit`);
     const newTags = ['horny', 'cute', 'clumsy', 'shag camera man'];
-    const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.expectVisible();
     theThingEditorPO.setTags(newTags);
     theThingEditorPO.submit();
@@ -45,7 +45,6 @@ describe('Edit exist the-thing', () => {
   it('Can change name', () => {
     cy.visit(`the-things/${kakapo.id}/edit`);
     const newName = '鴞鸚鵡';
-    const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.expectVisible();
     theThingEditorPO.setName(newName);
     theThingEditorPO.submit();
@@ -57,9 +56,8 @@ describe('Edit exist the-thing', () => {
   it('Can remove a cell', () => {
     cy.visit(`the-things/${kakapo.id}/edit`);
     const theCell = kakapo.cells['數量'];
-    const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.expectVisible();
-    theThingEditorPO.deleteCell(theCell);
+    theThingEditorPO.theThingCellsEditorPO.deleteCell(theCell);
     theThingEditorPO.submit();
     const theThingViewPO = new TheThingViewPageObjectCypress();
     theThingViewPO.expectVisible();
@@ -68,9 +66,8 @@ describe('Edit exist the-thing', () => {
 
   it('Can remove all cells', () => {
     cy.visit(`the-things/${kakapo.id}/edit`);
-    const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.expectVisible();
-    theThingEditorPO.deleteAllCells();
+    theThingEditorPO.theThingCellsEditorPO.clearAll();
     theThingEditorPO.submit();
     const theThingViewPO = new TheThingViewPageObjectCypress();
     theThingViewPO.expectVisible();
@@ -82,9 +79,10 @@ describe('Edit exist the-thing', () => {
     const newCell = TheThingCell.forge({
       name: '興趣'
     });
-    const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.expectVisible();
-    theThingEditorPO.addCell(newCell);
+    theThingEditorPO.theThingCellsEditorPO.addCell(newCell);
+    theThingEditorPO.theThingCellsEditorPO.setCellValue(newCell);
+    // cy.pause();
     theThingEditorPO.submit();
     const theThingViewPO = new TheThingViewPageObjectCypress();
     theThingViewPO.expectVisible();
@@ -97,15 +95,13 @@ describe('Edit exist the-thing', () => {
     kakapo.cells['棲地'].value = '反正不是台灣';
     kakapo.cells['習性'].value =
       '吃喝拉撒看到攝影師就上https://www.youtube.com/watch?v=9T1vfsHYiKY';
-    const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.expectVisible();
-    theThingEditorPO.setCell(kakapo.cells['圖片']);
-    theThingEditorPO.setCell(kakapo.cells['棲地']);
-    theThingEditorPO.setCell(kakapo.cells['習性']);
+    theThingEditorPO.theThingCellsEditorPO.updateValue(
+      kakapo.getCellsByNames(['圖片', '棲地', '習性'])
+    );
     theThingEditorPO.submit();
     const theThingViewPO = new TheThingViewPageObjectCypress();
     theThingViewPO.expectVisible();
     theThingViewPO.expectValue(kakapo);
   });
 });
-

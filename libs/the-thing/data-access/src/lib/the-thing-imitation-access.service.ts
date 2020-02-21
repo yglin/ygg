@@ -1,13 +1,13 @@
-import { get, castArray, isEmpty, values } from 'lodash';
+import { get, castArray, isEmpty, values, uniqBy } from 'lodash';
 import { Injectable } from '@angular/core';
 import {
   TheThingImitation,
   ImitationsDataPath,
   TheThing
 } from '@ygg/the-thing/core';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of, combineLatest } from 'rxjs';
 import { DataAccessService } from '@ygg/shared/infra/data-access';
-import { map, switchMap, catchError, filter, timeout } from 'rxjs/operators';
+import { map, startWith, catchError, filter, timeout } from 'rxjs/operators';
 import { TheThingAccessService } from './the-thing-access.service';
 import { LogService } from '@ygg/shared/infra/log';
 
@@ -21,10 +21,17 @@ export class TheThingImitationAccessService {
     private theThingAccessService: TheThingAccessService
   ) {}
 
+  localList: { [id: string]: TheThingImitation } = {};
+
+  addLocal(imitation: TheThingImitation) {
+    this.localList[imitation.id] = imitation;
+  }
+
   list$(): Observable<TheThingImitation[]> {
-    return this.dataAccessService
+    const remote$ = this.dataAccessService
       .getDataObject$<TheThingImitation[]>(ImitationsDataPath)
       .pipe(
+        startWith([]),
         map(items =>
           values(items).map(item => new TheThingImitation().fromJSON(item))
         ),
@@ -33,28 +40,42 @@ export class TheThingImitationAccessService {
           return [];
         })
       );
-  }
-
-  async upsert(imitation: TheThingImitation) {
-    return this.dataAccessService.setDataObject(
-      `${ImitationsDataPath}/${imitation.id}`,
-      imitation.toJSON()
-    );
-  }
-
-  get$(id: string): Observable<TheThingImitation> {
-    return this.dataAccessService
-      .getDataObject$(`${ImitationsDataPath}/${id}`)
-      .pipe(map(item => new TheThingImitation().fromJSON(item)));
-  }
-
-  getTemplate$(id: string): Observable<TheThing> {
-    return this.get$(id).pipe(
-      switchMap((imitation: TheThingImitation) =>
-        this.theThingAccessService.get$(imitation.templateId)
+    const local$ = of(values(this.localList));
+    return combineLatest([remote$, local$]).pipe(
+      map(([remote, local]) =>
+        uniqBy<TheThingImitation>(remote.concat(local), 'id')
       )
     );
   }
+
+  async upsert(imitation: TheThingImitation) {
+    await this.dataAccessService.setDataObject(
+      `${ImitationsDataPath}/${imitation.id}`,
+      imitation.toJSON()
+    );
+    if (imitation.id in this.localList) {
+      delete this.localList[imitation.id];
+    }
+    return imitation;
+  }
+
+  get$(id: string): Observable<TheThingImitation> {
+    if (id in this.localList) {
+      return of(this.localList[id]);
+    } else {
+      return this.dataAccessService
+        .getDataObject$(`${ImitationsDataPath}/${id}`)
+        .pipe(map(item => new TheThingImitation().fromJSON(item)));
+    }
+  }
+
+  // getTemplate$(id: string): Observable<TheThing> {
+  //   return this.get$(id).pipe(
+  //     switchMap((imitation: TheThingImitation) =>
+  //       this.theThingAccessService.get$(imitation.templateId)
+  //     )
+  //   );
+  // }
 
   // getTemplate$(imitationId: string): Observable<TheThing> {
   //   if (!(imitationId in this.imitations)) {

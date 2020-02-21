@@ -11,9 +11,7 @@ import {
 
 const mockDatabase = new MockDatabase();
 
-
 describe('Edit relations to other the-things', () => {
-
   before(() => {
     login();
     mockDatabase.insert(`${TheThing.collection}/${Sam.id}`, Sam.toJSON());
@@ -28,7 +26,6 @@ describe('Edit relations to other the-things', () => {
     mockDatabase.insert(`${TheThing.collection}/${Frodo.id}`, Frodo.toJSON());
   });
 
-  
   it('Can remove certain relation', () => {
     const relationName = 'Dumb ass followers';
     Frodo.addRelations(relationName, [Sam, Gollum]);
@@ -66,31 +63,35 @@ describe('Edit relations to other the-things', () => {
     FrodoViewPO.expectRelation(relationToSam, Sam);
   });
 
-  it('Create a relation, link to another the-thing which is also created on the fly', () => {
-    cy.visit(`/the-things/${Frodo.id}/edit`);
+  // 2020/02/20 yglin: Allow creating relation object on-the-fly
+  // adds too much responsibility to the-thing-editor and mess it all up.
+  // Deprecate it for now
 
-    const theThingEditorPO = new TheThingEditorPageObjectCypress();
-    const relationToGollum = 'Psychopath keeps calling me master';
-    // Set relation name "Save my sorry ass", and go-to creation of "Doraemon"
-    theThingEditorPO.addRelationAndGotoCreate(relationToGollum);
-    // Now should be the second-level creation page
-    theThingEditorPO.setValue(Gollum);
-    theThingEditorPO.submit();
-    getCreatedTheThingId('GollumId').then(GollumId => {
-      Gollum.id = GollumId;
-      mockDatabase.pushDocument(`${TheThing.collection}/${GollumId}`, Gollum.toJSON());
-      const theThingViewPO = new TheThingViewPageObjectCypress();
-      theThingViewPO.expectValue(Gollum);
+  // it('Create a relation, link to another the-thing which is also created on the fly', () => {
+  //   cy.visit(`/the-things/${Frodo.id}/edit`);
 
-      theThingViewPO.linkRelationBack();
-      theThingEditorPO.expectVisible();
-      theThingEditorPO.expectRelation(relationToGollum, Gollum);
-      theThingEditorPO.submit();
+  //   const theThingEditorPO = new TheThingEditorPageObjectCypress();
+  //   const relationToGollum = 'Psychopath keeps calling me master';
+  //   // Set relation name "Save my sorry ass", and go-to creation of "Doraemon"
+  //   theThingEditorPO.addRelationAndGotoCreate(relationToGollum);
+  //   // Now should be the second-level creation page
+  //   theThingEditorPO.setValue(Gollum);
+  //   theThingEditorPO.submit();
+  //   getCreatedTheThingId('GollumId').then(GollumId => {
+  //     Gollum.id = GollumId;
+  //     mockDatabase.pushDocument(`${TheThing.collection}/${GollumId}`, Gollum.toJSON());
+  //     const theThingViewPO = new TheThingViewPageObjectCypress();
+  //     theThingViewPO.expectValue(Gollum);
 
-      theThingViewPO.expectVisible();
-      theThingViewPO.expectValue(Frodo);
-      theThingViewPO.expectRelation(relationToGollum, Gollum);
-      theThingViewPO.expectNotLinkRelationBack();
-    });
-  });
+  //     theThingViewPO.linkRelationBack();
+  //     theThingEditorPO.expectVisible();
+  //     theThingEditorPO.expectRelation(relationToGollum, Gollum);
+  //     theThingEditorPO.submit();
+
+  //     theThingViewPO.expectVisible();
+  //     theThingViewPO.expectValue(Frodo);
+  //     theThingViewPO.expectRelation(relationToGollum, Gollum);
+  //     theThingViewPO.expectNotLinkRelationBack();
+  //   });
+  // });
 });

@@ -111,9 +111,9 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
     }
   }
 
-  setImitation(imitationId: string) {
-    cy.get(this.getSelector('selectImitation')).select(imitationId);
-  }
+  // setImitation(imitationId: string) {
+  //   cy.get(this.getSelector('selectImitation')).select(imitationId);
+  // }
 
   // deleteCell(cell: TheThingCell) {
   //   cy.get(this.getSelectorForCellControlDelete(cell)).click({ force: true });
@@ -142,7 +142,7 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
       .clear({ force: true })
       .type(relationName);
     cy.get(this.getSelector('buttonFindRelationObject')).click({ force: true });
-    const theThingFinderDialogPO = new TheThingFinderPageObjectCypress();
+    const theThingFinderDialogPO = new TheThingFinderPageObjectCypress('.ygg-dialog');
     theThingFinderDialogPO.select(objectThing);
     theThingFinderDialogPO.submit();
     // cy.get(this.getSelector('buttonAddRelation')).click({ force: true });

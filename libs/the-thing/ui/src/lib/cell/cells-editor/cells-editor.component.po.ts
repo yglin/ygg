@@ -18,6 +18,14 @@ export abstract class TheThingCellsEditorPageObject extends PageObject {
     }
   }
 
+  getSelectorForCellDeleteButton(cell: TheThingCell): string {
+    return `${this.getSelectorForCellControl(cell)} button.delete`;
+  }
+
+  abstract addCell(cell: TheThingCell): void;
+  abstract setCellValue(cell: TheThingCell): void;
   abstract updateValue(cells: TheThingCell[]): void;
   abstract setValue(cells: TheThingCell[]): void;
+  abstract deleteCell(cell: TheThingCell): void;
+  abstract clearAll(): void;
 }

@@ -97,7 +97,7 @@ export class TheThingCellsEditorComponent
   addCell(cell: TheThingCell) {
     this.cells[cell.name] = cell;
     this.formGroup.addControl(cell.name, new FormControl(cell.value));
-    this.canDeleteAllCells = size(this.formGroup.controls) >= 3;
+    this.canDeleteAllCells = size(this.formGroup.controls) >= 1;
   }
 
   onClickDeleteCell(cellName: string) {
@@ -108,7 +108,7 @@ export class TheThingCellsEditorComponent
       this.formGroup.removeControl(cellName);
     }
     this.onChange(this.cells);
-    this.canDeleteAllCells = size(this.formGroup.controls) >= 3;
+    this.canDeleteAllCells = size(this.formGroup.controls) >= 1;
   }
 
   onClickAddCell() {
@@ -138,6 +138,6 @@ export class TheThingCellsEditorComponent
       }
     }
     this.onChange(this.cells);
-    this.canDeleteAllCells = size(this.formGroup.controls) >= 3;
+    this.canDeleteAllCells = size(this.formGroup.controls) >= 1;
   }
 }

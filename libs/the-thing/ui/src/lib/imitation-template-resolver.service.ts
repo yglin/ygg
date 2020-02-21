@@ -9,7 +9,7 @@ import {
 import { Observable, of } from 'rxjs';
 import { TheThing } from '@ygg/the-thing/core';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
-import { take, catchError, timeout } from 'rxjs/operators';
+import { take, catchError, timeout, map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class ImitationTemplateResolver implements Resolve<TheThing> {
@@ -24,7 +24,8 @@ export class ImitationTemplateResolver implements Resolve<TheThing> {
     state: RouterStateSnapshot
   ): Observable<any> | Promise<any> | any {
     const imitationId = route.paramMap.get('imitation');
-    return this.imitationAccessService.getTemplate$(imitationId).pipe(
+    return this.imitationAccessService.get$(imitationId).pipe(
+      map(imitation => imitation.createTheThing()),
       take(1),
       timeout(10000),
       catchError(error => {

@@ -1,5 +1,5 @@
 import { TheThingCellsEditorPageObject } from '@ygg/the-thing/ui';
-import { TheThingCell } from '@ygg/the-thing/core';
+import { TheThingCell, TheThing } from '@ygg/the-thing/core';
 import {
   AlbumControlPageObjectCypress,
   HtmlControlPageObjectCypress,
@@ -74,6 +74,10 @@ export class TheThingCellsEditorPageObjectCypress extends TheThingCellsEditorPag
     cy.get(this.getSelector('selectCellType')).select(cell.type);
     cy.get(this.getSelector('buttonAddCell')).click();
     cy.get(this.getSelectorForCellControl(cell)).should('be.exist');
+  }
+
+  deleteCell(cell: TheThingCell) {
+    cy.get(this.getSelectorForCellDeleteButton(cell)).click();
   }
 
   setValue(cells: TheThingCell[]) {

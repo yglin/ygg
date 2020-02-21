@@ -1,5 +1,37 @@
-import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import { TheThing, TheThingCell, TheThingImitation } from '@ygg/the-thing/core';
 import { Album, Image } from '@ygg/shared/types';
+
+export const imitationAustralianBirb = new TheThingImitation().fromJSON(
+  {
+    name: 'Australian Birb',
+    image: 'https://nextstateprint.com/wp-content/uploads/Native-07-450x450.jpg',
+    description: 'Birbs live in Australia',
+    filter: {
+      tags: ['birb', 'australia']
+    },
+    cellsDef: {
+      'Hobitat': {
+        name: 'Hobitat',
+        type: 'text',
+        required: true
+      },
+      'Height': {
+        name: 'Height',
+        type: 'number',
+        required: true
+      },
+      'Photos': {
+        name: 'Photos',
+        type: 'album',
+        required: true
+      },
+      'Life span': {
+        name: 'Life span',
+        type: 'number'
+      }
+    }
+  }
+);
 
 export const littlePenguin = TheThing.forge({
   name: 'Little Penguin',
