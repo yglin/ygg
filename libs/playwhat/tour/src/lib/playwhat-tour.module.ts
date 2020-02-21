@@ -21,6 +21,11 @@ import { TourPlanAdminComponent } from './ui/tour-plan-admin/tour-plan-admin.com
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { PlayViewComponent } from './ui/play-view/play-view.component';
 import { SharedUserModule } from '@ygg/shared/user';
+import {
+  ImitationPlay,
+  ImitationTour,
+  ImitationTourPlan
+} from '@ygg/playwhat/core';
 
 export const playwhatTourRoutes: Route[] = [];
 
@@ -56,7 +61,7 @@ export const playwhatTourRoutes: Route[] = [];
     {
       provide: APP_INITIALIZER,
       useFactory: configTheThingImitation,
-      deps: [TheThingViewsService],
+      deps: [TheThingImitationAccessService, TheThingViewsService],
       multi: true
     },
     {
@@ -71,9 +76,15 @@ export const playwhatTourRoutes: Route[] = [];
 export class PlaywhatTourModule {}
 
 export function configTheThingImitation(
+  imitationAccessService: TheThingImitationAccessService,
   theThingViewsService: TheThingViewsService
 ) {
   return () => {
+    imitationAccessService.addLocal([
+      ImitationPlay,
+      ImitationTour,
+      ImitationTourPlan
+    ]);
     theThingViewsService.addView('play', {
       id: 'play',
       label: '體驗',

@@ -23,8 +23,11 @@ export class TheThingImitationAccessService {
 
   localList: { [id: string]: TheThingImitation } = {};
 
-  addLocal(imitation: TheThingImitation) {
-    this.localList[imitation.id] = imitation;
+  addLocal(imitations: TheThingImitation | TheThingImitation[]) {
+    imitations = castArray(imitations);
+    for (const imitation of imitations) {
+      this.localList[imitation.id] = imitation;
+    }
   }
 
   list$(): Observable<TheThingImitation[]> {
