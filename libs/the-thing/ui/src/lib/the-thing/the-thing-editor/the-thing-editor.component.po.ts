@@ -6,6 +6,7 @@ export abstract class TheThingEditorPageObject extends PageObject {
   selectors = {
     main: '.the-thing-editor',
     // selectImitation: '.meta .imitation select',
+    inputMetaName: '.meta .name input',
     cellsEditor: '.cells-editor',
     inputRelationName: '.add-relation input.relation-name',
     buttonFindRelationObject: '.add-relation button.the-thing-finder',
@@ -18,7 +19,9 @@ export abstract class TheThingEditorPageObject extends PageObject {
     // buttonDeleteAllCells: '.cell-controls button.delete-all',
     relationList: '.relation-list',
     buttonOpenImitations: 'button.open-imitations',
-    selectView: 'select.view'
+    selectView: 'select.view',
+    relationCreateHint: '.relation-create-hint',
+    buttonCancelCreateRelation: '.relation-create-hint button.cancel'
   };
   theThingCellsEditorPO: TheThingCellsEditorPageObject;
 

@@ -8,4 +8,9 @@ export class DayTimeRangeControlPageObjectCypress extends DayTimeRangeControlPag
     this.startDayTimeControl = new DayTimeControlPageObjectCypress(this.getSelector('start'));
     this.endDayTimeControl = new DayTimeControlPageObjectCypress(this.getSelector('end'));
   }
+
+  expectValue(dayTimeRange: DayTimeRange) {
+    this.startDayTimeControl.expectValue(dayTimeRange.start);
+    this.endDayTimeControl.expectValue(dayTimeRange.end);
+  }
 }

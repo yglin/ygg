@@ -62,6 +62,53 @@ export class TheThingCellsEditorPageObjectCypress extends TheThingCellsEditorPag
     }
   }
 
+  expectCellValue(cell: TheThingCell) {
+    switch (cell.type) {
+      case 'text':
+        cy.get(`${this.getSelectorForCellControl(cell)} input`).invoke('val').should('equal', cell.value);
+        break;
+      case 'longtext':
+        cy.get(`${this.getSelectorForCellControl(cell)} textarea`).invoke('val').should('equal', cell.value);
+        break;
+      case 'number':
+        cy.get(`${this.getSelectorForCellControl(cell)} input`).invoke('val').should('equal', cell.value);
+        break;
+      case 'album':
+        const albumControlPO = new AlbumControlPageObjectCypress(
+          this.getSelectorForCellControl(cell)
+        );
+        albumControlPO.expectValue(cell.value);
+        break;
+      case 'html':
+        const htmlControlPO = new HtmlControlPageObjectCypress(
+          this.getSelectorForCellControl(cell)
+        );
+        htmlControlPO.expectValue(cell.value);
+        break;
+      case 'address':
+        const addressControlPO = new AddressControlPageObjectCypress(
+          this.getSelectorForCellControl(cell)
+        );
+        addressControlPO.expectValue(cell.value);
+        break;
+      case 'date-range':
+        const dateRangeControlPO = new DateRangeControlPageObjectCypress(
+          this.getSelectorForCellControl(cell)
+        );
+        // cy.log(cell.value);
+        dateRangeControlPO.expectValue(cell.value);
+        break;
+      case 'day-time-range':
+        const dayTimeRangeControlPO = new DayTimeRangeControlPageObjectCypress(
+          this.getSelectorForCellControl(cell)
+        );
+        dayTimeRangeControlPO.expectValue(cell.value);
+        break;
+      default:
+        break;
+    }
+  }
+
   clearAll() {
     cy.get(this.getSelector('deleteAll')).click({ force: true });
     cy.get(this.getSelectorForCellControl()).should('not.exist');
@@ -78,6 +125,12 @@ export class TheThingCellsEditorPageObjectCypress extends TheThingCellsEditorPag
 
   deleteCell(cell: TheThingCell) {
     cy.get(this.getSelectorForCellDeleteButton(cell)).click();
+  }
+
+  expectValue(cells: TheThingCell[]) {
+    cy.wrap(cells).each((cell: any) => {
+      this.expectCellValue(cell);
+    });
   }
 
   setValue(cells: TheThingCell[]) {

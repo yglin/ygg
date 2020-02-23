@@ -8,6 +8,7 @@ import {
 import { HtmlViewPageObjectCypress } from "@ygg/shared/omni-types/test";
 import { TheThingListPageObjectCypress } from './the-thing-list.po';
 import { User } from '@ygg/shared/user';
+import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
 
 class Relation {
   name: string;
@@ -95,10 +96,10 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
   }
 
   expectRelation(relationName: string, objectThing: TheThing) {
-    const theThingListPO = new TheThingListPageObjectCypress(
+    const theThingListPO = new ImageThumbnailListPageObjectCypress(
       this.getSelectorForRelation(relationName)
     );
-    theThingListPO.expectTheThing(objectThing);
+    theThingListPO.expectItemByNameAndImage(objectThing);
   }
 
   expectRelations(relationName: string, objectThings: TheThing[]) {

@@ -1,4 +1,13 @@
-import { size, isEmpty, extend, get, mapValues, isArray, find } from 'lodash';
+import {
+  size,
+  isEmpty,
+  extend,
+  get,
+  mapValues,
+  isArray,
+  find,
+  last
+} from 'lodash';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {
   FormGroup,
@@ -37,6 +46,12 @@ import { User, AuthenticateService } from '@ygg/shared/user';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { TheThingFinderComponent } from '../the-thing-finder/the-thing-finder.component';
 import { TheThingViewsService } from '../../the-thing-views.service';
+import { TheThingBuilderService } from '../../the-thing-builder.service';
+
+interface RelationSubject {
+  relationName: string;
+  subject: TheThing;
+}
 
 @Component({
   selector: 'the-thing-editor',
@@ -68,9 +83,12 @@ export class TheThingEditorComponent implements OnInit {
   inProgressing: boolean = false;
   // canDeleteAllCells: boolean = false;
   views: { [id: string]: TheThingView } = {};
+  relationSubject: RelationSubject;
+  relationSubjectsStack: RelationSubject[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
+    private theThingBuilder: TheThingBuilderService,
     private theThingAccessService: TheThingAccessService,
     private router: Router,
     private route: ActivatedRoute,
@@ -109,54 +127,54 @@ export class TheThingEditorComponent implements OnInit {
       )
     );
 
-    this.subscriptions.push(
-      merge(
-        this.formGroup.valueChanges,
-        this.formControlCells.valueChanges
-      ).subscribe(() => {
-        this.updateTheThing();
-        this.theThingChanged.emit(this.theThing);
-      })
-    );
+    // this.subscriptions.push(
+    //   merge(
+    //     this.formGroup.valueChanges,
+    //     this.formControlCells.valueChanges
+    //   ).subscribe(() => {
+    //     this.updateTheThing();
+    //     this.theThingChanged.emit(this.theThing);
+    //   })
+    // );
     this.views = this.theThingViewsService.views;
     // console.dir(this.theThingViewsService.views);
   }
 
   initResolveTheThing(): TheThing {
     if (this.theThing) {
-      console.info('Resolve from component input');
+      // console.info('Resolve from component input');
       return this.theThing;
     }
 
-    if (this.pageStashService.isMatchPageResolved(this.router.url)) {
-      // Fetch the-thing from local temporary storage
-      const pageData = this.pageStashService.pop();
-      // console.log(pageData);
-      const theThing = new TheThing().fromJSON(pageData.data.theThing);
-      for (const key in pageData.promises) {
-        if (pageData.promises.hasOwnProperty(key)) {
-          const promise = pageData.promises[key];
-          if (key === 'relation' && promise.data) {
-            theThing.addRelations(promise.data.name, [promise.data.objectId]);
-          }
-        }
-      }
-      console.info('Resolve from pending relation');
-      return theThing;
-    }
+    // if (this.pageStashService.isMatchPageResolved(this.router.url)) {
+    //   // Fetch the-thing from local temporary storage
+    //   const pageData = this.pageStashService.pop();
+    //   // console.log(pageData);
+    //   const theThing = new TheThing().fromJSON(pageData.data.theThing);
+    //   for (const key in pageData.promises) {
+    //     if (pageData.promises.hasOwnProperty(key)) {
+    //       const promise = pageData.promises[key];
+    //       if (key === 'relation' && promise.data) {
+    //         theThing.addRelations(promise.data.name, [promise.data.objectId]);
+    //       }
+    //     }
+    //   }
+    //   console.info('Resolve from pending relation');
+    //   return theThing;
+    // }
 
     // Fetch the-thing from route resolver
     const fromResolve = get(this.route.snapshot, 'data.theThing', null);
     if (fromResolve) {
-      console.info('Resolve from id in route path');
-      console.info(fromResolve.toJSON());
+      // console.info('Resolve from id in route path');
+      // console.info(fromResolve.toJSON());
       return fromResolve;
     }
 
     // Fetch the-thing from clone
     const cloneSource: TheThing = get(this.route.snapshot, 'data.clone', null);
     if (cloneSource) {
-      console.info(`Resolve from clone: ${cloneSource.id}`);
+      // console.info(`Resolve from clone: ${cloneSource.id}`);
       return cloneSource.clone();
     }
 
@@ -176,12 +194,12 @@ export class TheThingEditorComponent implements OnInit {
       null
     );
     if (fromImitationTemplate) {
-      console.info('Resolve from imitation template');
+      // console.info('Resolve from imitation template');
       return fromImitationTemplate;
     }
 
     // Not found any source of the-thing, create a new one
-    console.info('Resolve from nothing, create a brand new one');
+    // console.info('Resolve from nothing, create a brand new one');
     return new TheThing();
   }
 
@@ -201,9 +219,10 @@ export class TheThingEditorComponent implements OnInit {
 
     if (this.theThing) {
       // Patch meta data
-      console.log('reset');
-      console.dir(this.theThing.toJSON());
+      // console.log('reset');
+      // console.dir(this.theThing.toJSON());
       this.formGroup.patchValue(this.theThing, { emitEvent: false });
+      // console.log(this.theThing.cells);
       this.formControlCells.setValue(this.theThing.cells, { emitEvent: false });
       // // Add cell controls for theThing
       // for (const name in this.theThing.cells) {
@@ -219,9 +238,10 @@ export class TheThingEditorComponent implements OnInit {
       this.fetchRelations();
     } else {
       this.formGroup.reset();
-      this.formControlCells.setValue({});
+      this.formControlCells.setValue({}, { emitEvent: false });
     }
-    this.pendingRelation = this.pageStashService.getPendingPromise('relation');
+    this.relationSubject = last(this.relationSubjectsStack);
+    // this.pendingRelation = this.pageStashService.getPendingPromise('relation');
     this.inProgressing = false;
     // this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
   }
@@ -238,8 +258,8 @@ export class TheThingEditorComponent implements OnInit {
     }
     this.subscriptions.push(
       this.theThing$.subscribe(theThing => {
-        console.log('Update theThing');
-        console.dir(theThing.toJSON());
+        // console.log('emit next theThing');
+        // console.dir(theThing.toJSON());
         this.theThing = theThing;
         this.reset();
       })
@@ -331,28 +351,18 @@ export class TheThingEditorComponent implements OnInit {
   gotoCreateRelationObject() {
     const relationName = this.formControlNewRelationName.value;
     this.updateTheThing();
-    this.pageStashService.push({
-      path: this.router.url,
-      data: {
-        id: this.theThing.id,
-        theThing: this.theThing.toJSON()
-      },
-      promises: {
-        relation: new PageStashPromise(relationName)
-      }
-    });
-    if (this.router.url.match(/the-things\/create\/?/)) {
-      console.log('Create new relation object');
-      this.theThing$.next(new TheThing());
-    } else {
-      this.router.navigate(['/', 'the-things', 'create']);
-    }
+    this.relationSubjectsStack.push({ relationName, subject: this.theThing });
+    // console.log('Create new relation object');
+    this.theThing$.next(new TheThing());
   }
 
-  cancelPendingRelation() {
-    if (confirm(`取消與前一物件的關聯：${this.pendingRelation.data} ?`)) {
-      this.pageStashService.cancelPendingPromise('relation');
-      this.pendingRelation = null;
+  cancelCreateRelation() {
+    if (!isEmpty(this.relationSubjectsStack)) {
+      const subject = last(this.relationSubjectsStack).subject;
+      if (confirm(`取消關聯，回到前一物件 ${subject.name} 的編輯?`)) {
+        this.relationSubjectsStack.pop();
+        this.theThing$.next(subject);
+      }
     }
   }
 
@@ -376,21 +386,17 @@ export class TheThingEditorComponent implements OnInit {
       }
     });
     // let selectedImitation: TheThingImitation;
-    return dialogRef
-      .afterClosed()
-      .subscribe((imitation: TheThingImitation) => {
-        if (
-          imitation &&
-          confirm(
-            `套用範本 ${imitation.name} 將修改目前資料，確定繼續？`
-          )
-        ) {
-          this.theThing.imitate(imitation.createTheThing())
-          this.theThing$.next(this.theThing);
-        } else {
-          this.inProgressing = false;
-        }
-      });
+    return dialogRef.afterClosed().subscribe((imitation: TheThingImitation) => {
+      if (
+        imitation &&
+        confirm(`套用範本 ${imitation.name} 將修改目前資料，確定繼續？`)
+      ) {
+        this.theThing.imitate(imitation.createTheThing());
+        this.theThing$.next(this.theThing);
+      } else {
+        this.inProgressing = false;
+      }
+    });
   }
 
   // isCellHidden(cellName: string) {
@@ -410,7 +416,18 @@ export class TheThingEditorComponent implements OnInit {
       try {
         this.theThing = await this.theThingAccessService.upsert(this.theThing);
         alert(`新增/修改 ${this.theThing.name} 成功`);
-        this.router.navigate(['/', 'the-things', this.theThing.id]);
+        if (!isEmpty(this.relationSubjectsStack)) {
+          const relationSubject = this.relationSubjectsStack.pop();
+          const subject = relationSubject.subject;
+          subject.addRelations(relationSubject.relationName, [
+            this.theThing
+          ]);
+          // console.log('Reload relation subject');
+          // console.dir(subject.toJSON());
+          this.theThing$.next(subject);
+        } else {
+          this.router.navigate(['/', 'the-things', this.theThing.id]);
+        }
       } catch (error) {
         alert(`新增/修改失敗，錯誤訊息 ${error.message}`);
       }

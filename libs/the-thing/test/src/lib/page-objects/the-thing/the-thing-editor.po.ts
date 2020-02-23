@@ -29,69 +29,6 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
     cy.get(this.getSelector(), { timeout: 20000 }).should('be.visible');
   }
 
-  // setCell(cell: TheThingCell) {
-  //   switch (cell.type) {
-  //     case 'text':
-  //       cy.get(`${this.getSelectorForCellControl(cell)} input`)
-  //         .clear({ force: true })
-  //         .type(cell.value);
-  //       break;
-  //     case 'longtext':
-  //       cy.get(`${this.getSelectorForCellControl(cell)} textarea`)
-  //         .clear({ force: true })
-  //         .type(cell.value);
-  //       break;
-  //     case 'number':
-  //       cy.get(`${this.getSelectorForCellControl(cell)} input`)
-  //         .clear({ force: true })
-  //         .type(cell.value.toString());
-  //       break;
-  //     case 'album':
-  //       const albumControlPO = new AlbumControlPageObjectCypress(
-  //         this.getSelectorForCellControl(cell)
-  //       );
-  //       albumControlPO.setValue(cell.value);
-  //       break;
-  //     case 'html':
-  //       const htmlControlPO = new HtmlControlPageObjectCypress(
-  //         this.getSelectorForCellControl(cell)
-  //       );
-  //       htmlControlPO.setValue(cell.value);
-  //       break;
-  //     case 'address':
-  //       const addressControlPO = new AddressControlPageObjectCypress(
-  //         this.getSelectorForCellControl(cell)
-  //       );
-  //       addressControlPO.setValue(cell.value);
-  //       break;
-  //     case 'date-range':
-  //       const dateRangeControlPO = new DateRangeControlPageObjectCypress(
-  //         this.getSelectorForCellControl(cell)
-  //       );
-  //       // cy.log(cell.value);
-  //       dateRangeControlPO.setValue(cell.value);
-  //       break;
-  //     case 'day-time-range':
-  //       const dayTimeRangeControlPO = new DayTimeRangeControlPageObjectCypress(
-  //         this.getSelectorForCellControl(cell)
-  //       );
-  //       dayTimeRangeControlPO.setValue(cell.value);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
-
-  // addCell(cell: TheThingCell) {
-  //   cy.get(this.getSelector('inputCellName'))
-  //     .clear({ force: true })
-  //     .type(cell.name);
-  //   cy.get(this.getSelector('selectCellType')).select(cell.type);
-  //   cy.get(this.getSelector('buttonAddCell')).click();
-  //   cy.get(this.getSelectorForCellControl(cell)).should('be.exist');
-  //   this.setCell(cell);
-  // }
-
   setTags(tags: string[]) {
     const chipsControlPO = new ChipsControlPageObjectCypress(
       this.getSelector()
@@ -100,7 +37,7 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
   }
 
   setName(name: string) {
-    cy.get('.meta .name input')
+    cy.get(this.getSelector('inputMetaName'))
       .clear({ force: true })
       .type(name);
   }
@@ -123,6 +60,17 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
   //   cy.get(this.getSelector('buttonDeleteAllCells')).click({ force: true });
   // }
 
+  expectValue(theThing: TheThing) {
+    const chipsControlPO = new ChipsControlPageObjectCypress(
+      this.getSelector()
+    );
+    chipsControlPO.expectValue(theThing.tags.toNameArray());
+    cy.get(this.getSelector('inputMetaName'))
+      .invoke('val')
+      .should('equal', theThing.name);
+    this.theThingCellsEditorPO.expectValue(values(theThing.cells));
+  }
+
   setValue(theThing: TheThing) {
     this.setTags(theThing.tags.toNameArray());
     this.setName(theThing.name);
@@ -142,7 +90,9 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
       .clear({ force: true })
       .type(relationName);
     cy.get(this.getSelector('buttonFindRelationObject')).click({ force: true });
-    const theThingFinderDialogPO = new TheThingFinderPageObjectCypress('.ygg-dialog');
+    const theThingFinderDialogPO = new TheThingFinderPageObjectCypress(
+      '.ygg-dialog'
+    );
     theThingFinderDialogPO.select(objectThing);
     theThingFinderDialogPO.submit();
     // cy.get(this.getSelector('buttonAddRelation')).click({ force: true });
@@ -160,18 +110,33 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
     const relationObjectListPO = new ImageThumbnailListPageObjectCypress(
       this.getSelectorForRelationObjects(relationName)
     );
-    relationObjectListPO.expectItem(objectThing);
+    // relationObjectListPO.expectItem(objectThing);
+    relationObjectListPO.expectItemByNameAndImage(objectThing);
   }
 
-  // addRelationAndGotoCreate(relationName: string) {
-  //   cy.get(this.getSelector('inputRelationName'))
-  //     .clear({ force: true })
-  //     .type(relationName);
-  //   cy.get(this.getSelector('buttonCreateRelationObject')).click({
-  //     force: true
-  //   });
-  //   cy.location().should('match', /the-things\/create\/?/);
-  // }
+  addRelationAndGotoCreate(relationName: string) {
+    cy.get(this.getSelector('inputMetaName'))
+      .invoke('val')
+      .as('relationSubjectName');
+    cy.get(this.getSelector('inputRelationName'))
+      .clear({ force: true })
+      .type(relationName);
+    cy.get(this.getSelector('buttonCreateRelationObject')).click();
+    cy.get('@relationSubjectName').then((relationSubjectName: any) => {
+      this.expectRelationHint(relationName, relationSubjectName);
+    });
+  }
+
+  cancelRelationCreate() {
+    cy.get(this.getSelector('buttonCancelCreateRelation')).click();
+  }
+
+  expectRelationHint(relationName: string, subjectName: string) {
+    cy.get(this.getSelector('relationCreateHint'), { timeout: 10000 }).should(
+      'include.text',
+      `關聯物件：${relationName} → ${subjectName}`
+    );
+  }
 
   expectImitaion(imitation: TheThingImitation) {
     cy.get(this.getSelector('buttonOpenImitations'), {

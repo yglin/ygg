@@ -26,23 +26,23 @@
       </div>
       <div ygg-action-bar-content>
         <div
-          *ngIf="pendingRelation"
+          *ngIf="relationSubject"
+          class='relation-create-hint'
           fxLayout="row"
           fxLayoutAlign="start center"
           fxLayoutGap="10px"
         >
           <h4>
             <mat-icon>call_merge</mat-icon>
-            正在新增關聯<span style="color:blue">{{
-              pendingRelation.data
-            }}</span
-            >的物件
+            關聯物件：{{ relationSubject.relationName }} →
+            {{ relationSubject.subject.name }}
           </h4>
           <button
             type="button"
+            class="cancel"
             mat-mini-fab
-            (click)="cancelPendingRelation()"
-            matTooltip="取消關聯"
+            (click)="cancelCreateRelation()"
+            matTooltip="取消關聯，回前一物件"
           >
             <mat-icon>cancel</mat-icon>
           </button>
@@ -101,7 +101,7 @@
         </mat-option>
         </mat-autocomplete> -->
               </div>
-              <!-- <div>
+              <div>
                 <button
                   type="button"
                   mat-mini-fab
@@ -111,7 +111,7 @@
                 >
                   <mat-icon>post_add</mat-icon>
                 </button>
-              </div> -->
+              </div>
               <div>
                 <button
                   type="button"

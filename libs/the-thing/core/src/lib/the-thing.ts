@@ -13,7 +13,8 @@ import {
   omit,
   assign,
   pick,
-  values
+  values,
+  defaults
 } from 'lodash';
 import { Tags } from '@ygg/tags/core';
 import { TheThingCell, TheThingCellTypeID } from './cell';
@@ -85,6 +86,7 @@ export class TheThing implements ImageThumbnailItem {
         '便便'
       ]);
     thing.tags = !!options.tags ? new Tags(options.tags) : Tags.forge();
+    thing.image = options.image || 'https://live.staticflickr.com/6130/6019458291_4e512065fd.jpg';
 
     if (options.cells) {
       thing.cells = options.cells;
@@ -291,6 +293,7 @@ export class TheThing implements ImageThumbnailItem {
           new TheThingCell().fromJSON(cellData)
         );
       }
+      // console.log(`TheThing.fromJSON: ${this.image}`);
       if (!this.image) {
         this.image = this.resolveImage();
       }

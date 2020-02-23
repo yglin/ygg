@@ -11,6 +11,10 @@ export class ChipsControlPageObject extends PageObject {
     autocompleteDropdown: '.autocomplete-panel'
   };
 
+  getSelectorForChip(chip: string): string {
+    return `${this.getSelector('chip')}[chipName="${chip}"]`;
+  }
+
   getSelectorForChipDeleteButton(chip: string): string {
     return `${this.getSelector('chip')}[chipName="${chip}"] .delete`;
   }

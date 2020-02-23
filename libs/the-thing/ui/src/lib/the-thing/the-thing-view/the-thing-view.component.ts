@@ -13,9 +13,12 @@ import {
 } from '@angular/core';
 import { TheThing, TheThingImitation } from '@ygg/the-thing/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { PageStashService, PageData } from '@ygg/shared/infra/data-access';
-import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
+import {
+  TheThingImitationAccessService,
+  TheThingAccessService
+} from '@ygg/the-thing/data-access';
 import { AuthenticateService } from '@ygg/shared/user';
 import { TheThingViewsService } from '../../the-thing-views.service';
 
@@ -28,8 +31,8 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
   @Input() theThing: TheThing;
   @Input() readonly = false;
   isOwner = false;
+  relationObjects: { [relationName: string]: Observable<TheThing[]> } = {};
   subscriptions: Subscription[] = [];
-  isPendingRelation = false;
 
   theThingViewComponent: Type<any>;
 
@@ -40,7 +43,8 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
     private componentFactoryResolver: ComponentFactoryResolver,
     private imitationService: TheThingImitationAccessService,
     private authenticateService: AuthenticateService,
-    private theThingViewsService: TheThingViewsService
+    private theThingViewsService: TheThingViewsService,
+    private theThingAccessService: TheThingAccessService
   ) {}
 
   ngOnInit() {
@@ -74,10 +78,18 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
       })
     );
 
+    for (const relationName in this.theThing.relations) {
+      if (this.theThing.relations.hasOwnProperty(relationName)) {
+        const objectIds = this.theThing.relations[relationName];
+        this.relationObjects[
+          relationName
+        ] = this.theThingAccessService.listByIds$(objectIds);
+      }
+    }
     // console.dir(this.theThing);
     // console.dir(this.theThingViewComponent);
     const pageData = this.pageStashService.peepTop();
-    this.isPendingRelation = !get(pageData, 'promises.relation.resolved', true);
+    // this.isPendingRelation = !get(pageData, 'promises.relation.resolved', true);
   }
 
   ngOnDestroy() {
@@ -86,18 +98,18 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  linkRelationBack() {
-    const pageData = this.pageStashService.pop();
-    if (pageData.promises && pageData.promises.relation) {
-      pageData.promises.relation.resolved = true;
-      pageData.promises.relation.data = {
-        name: pageData.promises.relation.data,
-        objectId: this.theThing.id
-      };
-    }
-    this.pageStashService.push(pageData);
-    this.router.navigateByUrl(pageData.path);
-  }
+  // linkRelationBack() {
+  //   const pageData = this.pageStashService.pop();
+  //   if (pageData.promises && pageData.promises.relation) {
+  //     pageData.promises.relation.resolved = true;
+  //     pageData.promises.relation.data = {
+  //       name: pageData.promises.relation.data,
+  //       objectId: this.theThing.id
+  //     };
+  //   }
+  //   this.pageStashService.push(pageData);
+  //   this.router.navigateByUrl(pageData.path);
+  // }
 
   createClone() {
     this.router.navigate(['/', 'the-things', this.theThing.id, 'clone']);

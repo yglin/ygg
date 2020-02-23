@@ -8,4 +8,5 @@ export abstract class DayTimeControlPageObject extends PageObject {
   };
 
   abstract setValue(dayTime: DayTime): void;
+  abstract expectValue(dayTime: DayTime): void;
 }

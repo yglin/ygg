@@ -5,6 +5,13 @@ import { ImageUploaderPageObjectCypress } from "../image-uploader";
 export class AlbumControlPageObjectCypress extends AlbumControlPageObject {
   selector: string;
 
+  expectValue(album: Album) {
+    cy.get(this.getSelectorForCover(album.cover.src)).should('exist');
+    cy.wrap(album.photos).each((photo: any) => {
+      cy.get(this.getSelectorForPhoto(photo.src)).should('exist');
+    })
+  }
+
   setValue(album: Album) {
     cy.get(this.getSelector('buttonClearAll')).click();
     cy.get(this.getSelector('addPhotots')).click();

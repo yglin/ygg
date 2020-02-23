@@ -1,5 +1,10 @@
 <div class="the-thing-view" *ngIf="theThing">
-  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px" *ngIf="!readonly">
+  <div
+    fxLayout="row"
+    fxLayoutAlign="end center"
+    fxLayoutGap="10px"
+    *ngIf="!readonly"
+  >
     <div>
       <button
         mat-fab
@@ -20,7 +25,7 @@
         <mat-icon>edit</mat-icon>
       </button>
     </div>
-    <div *ngIf="isPendingRelation">
+    <!-- <div *ngIf="isPendingRelation">
       <button
         mat-fab
         class="link-relation-back"
@@ -29,7 +34,7 @@
       >
         <mat-icon>call_merge</mat-icon>
       </button>
-    </div>
+    </div> -->
   </div>
   <div *ngIf="!!theThingViewComponent">
     <the-thing-imitation-view
@@ -64,11 +69,13 @@
       <br />
       <div class="relation-list">
         <div
-          *ngFor="let relation of theThing.relations | keyvalue"
+          *ngFor="let relation of relationObjects | keyvalue"
           [attr.relation-name]="relation.key"
         >
-          <h3>{{ relation.key }}</h3>
-          <the-thing-list [ids]="relation.value"></the-thing-list>
+          <div >
+            <h3>{{ relation.key }}</h3>
+            <ygg-image-thumbnail-list [items$]="relation.value"></ygg-image-thumbnail-list>
+          </div>
         </div>
       </div>
     </div>

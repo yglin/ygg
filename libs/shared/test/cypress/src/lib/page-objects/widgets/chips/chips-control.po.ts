@@ -12,6 +12,12 @@ export class ChipsControlPageObjectCypress extends ChipsControlPageObject {
     });
   }
 
+  expectValue(chips: string[]) {
+    cy.wrap(chips).each((chip: any) => {
+      cy.get(this.getSelectorForChip(chip)).should('exist');
+    });
+  }
+
   addChip(chip: string) {
     cy.get(this.getSelector('inputChip'))
       .clear({ force: true })

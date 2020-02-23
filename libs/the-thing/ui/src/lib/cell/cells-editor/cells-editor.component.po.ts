@@ -28,4 +28,5 @@ export abstract class TheThingCellsEditorPageObject extends PageObject {
   abstract setValue(cells: TheThingCell[]): void;
   abstract deleteCell(cell: TheThingCell): void;
   abstract clearAll(): void;
+  abstract expectValue(cells: TheThingCell[]): void;
 }

@@ -47,6 +47,9 @@ export class Album implements SerializableJSON {
         this.photos = data.photos.map(photo => new Image().fromJSON(photo));
       }
     }
+    if (!this.cover && !isEmpty(this.photos)) {
+      this.cover = this.photos[0];
+    }
     return this;
   }
 
