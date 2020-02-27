@@ -1,19 +1,8 @@
 import { values } from 'lodash';
 import { TheThing, TheThingCell, TheThingImitation } from '@ygg/the-thing/core';
 import { TheThingEditorPageObject } from '@ygg/the-thing/ui';
-import {
-  AlbumControlPageObjectCypress,
-  AddressControlPageObjectCypress
-} from '../cell-types';
-import {
-  HtmlControlPageObjectCypress,
-  DateRangeControlPageObjectCypress,
-  DayTimeRangeControlPageObjectCypress
-} from '@ygg/shared/omni-types/test';
 import { ChipsControlPageObjectCypress } from '@ygg/shared/test/cypress';
-import { TheThingListPageObjectCypress } from './the-thing-list.po';
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
-import { ImageThumbnailListPageObject } from '@ygg/shared/ui/widgets';
 import { TheThingFinderPageObjectCypress } from './the-thing-finder.po';
 import { TheThingCellsEditorPageObjectCypress } from '../cell';
 
@@ -100,10 +89,10 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
   }
 
   removeRelation(relationName: string, objectThing: TheThing) {
-    const relationObjectListPO = new ImageThumbnailListPageObjectCypress(
+    const relationListControlPO = new ImageThumbnailListPageObjectCypress(
       this.getSelectorForRelationObjects(relationName)
     );
-    relationObjectListPO.deleteItem(objectThing);
+    relationListControlPO.deleteItem(objectThing);
   }
 
   expectRelation(relationName: string, objectThing: TheThing) {

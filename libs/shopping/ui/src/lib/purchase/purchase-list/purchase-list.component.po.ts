@@ -1,18 +1,26 @@
 import { PageObject } from '@ygg/shared/test/page-object';
-import { Product, Purchase } from '@ygg/shopping/core';
+import { Purchase } from '@ygg/shopping/core';
+import { TheThing } from '@ygg/the-thing/core';
 
-export class PurchaseListPageObject extends PageObject {
+export abstract class PurchaseListPageObject extends PageObject {
   selectors = {
     main: '.purchase-list',
     list: '.list',
-    totalPrice: '.total-price'
+    totalCharge: '.total-charge'
   };
 
-  getSelectorForProduct(product: Product): string {
-    return `${this.getSelector('list')} [product-id="${product.id}"]`;
+  getSelectorForProduct(productId: TheThing | string): string {
+    if (typeof productId !== 'string') {
+      productId = productId.id;
+    }
+    return `${this.getSelector('list')} [product-id="${productId}"]`;
   }
 
-  getSelectorForPurchase(purchase: Purchase): string {
-    return `${this.getSelector('list')} [product-id="${purchase.productId}"]`;
-  }
+  abstract expectPurchases(
+    purchases: { productId: string; quantity: number }[]
+  ): void;
+  abstract expectTotalCharge(totalPrice: number): void;
+  // getSelectorForPurchase(purchase: Purchase): string {
+  //   return `${this.getSelector('list')} [product-id="${purchase.productId}"]`;
+  // }
 }

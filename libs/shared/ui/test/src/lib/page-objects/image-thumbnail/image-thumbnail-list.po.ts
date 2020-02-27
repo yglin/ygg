@@ -2,18 +2,18 @@ import {
   ImageThumbnailListPageObject,
   ImageThumbnailItem
 } from '@ygg/shared/ui/widgets';
-import { ImageThumbnailPageObjectCypress } from './image-thumbnail.po';
+import { ImageThumbnailItemPageObjectCypress } from './image-thumbnail-item.po';
 
 export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageObject {
   expectFirstItem(item: ImageThumbnailItem) {
-    const imageThumbnailPO = new ImageThumbnailPageObjectCypress(
+    const imageThumbnailPO = new ImageThumbnailItemPageObjectCypress(
       this.getSelector('firstItem')
     );
     imageThumbnailPO.expectValue(item);
   }
 
   expectLastItem(item: ImageThumbnailItem) {
-    const imageThumbnailPO = new ImageThumbnailPageObjectCypress(
+    const imageThumbnailPO = new ImageThumbnailItemPageObjectCypress(
       this.getSelector('lastItem')
     );
     imageThumbnailPO.expectValue(item);
@@ -24,12 +24,12 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
   }
 
   expectItemByNameAndImage(item: ImageThumbnailItem) {
-    cy.get(`${this.getSelector()} [item-id]`)
-      .contains(item.name)
-      .should('be.exist');
-    cy.get(`${this.getSelector()} [item-id]`)
-      .find(`img[src="${item.image}"]`)
-      .should('be.exist');
+    cy.get(`${this.getSelector()} [item-name="${item.name}"]`).should(
+      'be.exist'
+    );
+    cy.get(`${this.getSelector()} [item-image="${item.image}"]`).should(
+      'be.exist'
+    );
   }
 
   expectNoItem(item: ImageThumbnailItem) {
@@ -79,6 +79,10 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
 
   clickItem(item: ImageThumbnailItem) {
     cy.get(this.getSelectorForItem(item)).click({ force: true });
+  }
+
+  clickItemLink(item: ImageThumbnailItem) {
+    cy.get(this.getSelectorForItemLink(item)).click({ force: true });
   }
 
   selectLastItem(item: ImageThumbnailItem) {

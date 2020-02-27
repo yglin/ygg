@@ -13,7 +13,7 @@ import { LogService } from '@ygg/shared/infra/log';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-import { SharedTypesModule } from '@ygg/shared/types';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { MockComponent } from "ng-mocks";
 import { PlayViewComponent } from '../play-view/play-view.component';
 import { TagsUiModule } from '@ygg/tags/ui';

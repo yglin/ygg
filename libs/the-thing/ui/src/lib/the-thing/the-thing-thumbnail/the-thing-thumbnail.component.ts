@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TheThing } from '@ygg/the-thing/core';
 import { Album } from '@ygg/shared/omni-types/core';
+import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'the-thing-thumbnail',
@@ -9,20 +11,17 @@ import { Album } from '@ygg/shared/omni-types/core';
 })
 export class TheThingThumbnailComponent implements OnInit {
   @Input() theThing: TheThing;
-  imageSrc = 'help';
+  @Input() id: string;
 
-  constructor() {}
+  constructor(private theThingAccessServcie: TheThingAccessService) {}
 
   ngOnInit() {
-    if (this.theThing) {
-      for (const cellName in this.theThing.cells) {
-        if (this.theThing.cells.hasOwnProperty(cellName)) {
-          const cell = this.theThing.cells[cellName];
-          if (cell.type === 'album') {
-            this.imageSrc = (cell.value as Album).cover.src;
-            break;
-          }
-        }
+    if (!this.theThing) {
+      if (this.id) {
+        this.theThingAccessServcie
+          .get$(this.id)
+          .pipe(take(1))
+          .subscribe(theThing => (this.theThing = theThing));
       }
     }
   }

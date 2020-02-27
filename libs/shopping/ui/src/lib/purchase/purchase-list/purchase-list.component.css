@@ -1,8 +1,15 @@
 .purchase-list {
-  width: 100%;
-  max-width: 80vw;
+  width: 50vw;
+  max-width: 600px;
 }
 
 .purchase-line {
   overflow-x: auto;
+  margin: 20px 10px;
+}
+
+.quantity {
+  font-size: x-large;
+  font-style: italic;
+  color: darkred;
 }

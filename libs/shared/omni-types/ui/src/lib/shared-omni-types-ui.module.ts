@@ -26,6 +26,7 @@ import {
   AddressControlComponent,
   AddressViewComponent
 } from './types';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ import {
     ReactiveFormsModule,
     FlexLayoutModule,
     CKEditorModule,
-    ImageUploadModule,
+    HttpClientModule,
+    ImageUploadModule.forRoot(),
     SharedUiNgMaterialModule
   ],
   declarations: [
@@ -68,7 +70,11 @@ import {
     ImageComponent,
     ImageUploaderComponent,
     AlbumControlComponent,
-    AlbumViewComponent
+    AlbumViewComponent,
+    ContactControlComponent,
+    ContactViewComponent,
+    AddressControlComponent,
+    AddressViewComponent
   ],
   entryComponents: [ImageUploaderComponent]
 })

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // import { PlayTagsInputComponent } from './tag/play-tags-input/play-tags-input.component';
-import { SharedTypesModule } from '@ygg/shared/types';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { PlayFormComponent } from './play/play-form/play-form.component';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';

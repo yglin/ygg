@@ -1,4 +1,5 @@
 import { TheThing } from '@ygg/the-thing/core';
+import { RelationAddition } from '@ygg/shopping/core';
 
 export const SamplePlays = [
   {
@@ -113,3 +114,30 @@ export const SamplePlays = [
     }
   }
 ].map(jsonItem => new TheThing().fromJSON(jsonItem));
+
+export const SampleAdditions = [
+  {
+    name: '四人協力車',
+    tags: ['addition', '設備'],
+    cells: {
+      費用: {
+        name: '費用',
+        type: 'number',
+        value: 100
+      }
+    }
+  },
+  {
+    name: '二人協力車',
+    tags: ['addition', '設備'],
+    cells: {
+      費用: {
+        name: '費用',
+        type: 'number',
+        value: 75
+      }
+    }
+  }
+].map(jsonItem => new TheThing().fromJSON(jsonItem));
+
+SamplePlays[0].addRelations(RelationAddition, SampleAdditions);

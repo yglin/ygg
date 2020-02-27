@@ -1,4 +1,4 @@
-import { SiteNavigator } from '../../page-objects/site-navigator';
+import { SiteNavigator } from '../../support/site-navigator';
 import {
   TheThingFilterPageObjectCypress,
   TheThingFinderPageObjectCypress,
@@ -6,7 +6,7 @@ import {
 } from '@ygg/the-thing/test';
 import { TheThing } from '@ygg/the-thing/core';
 import { login, MockDatabase } from '@ygg/shared/test/cypress';
-import { TourViewPageObjectCypress } from '../../page-objects/tour';
+import { TourViewPageObjectCypress } from '@ygg/playwhat/test';
 import { samplePlays, insertDatabase } from '../tour/sample-tour-birb';
 import { TemplateTour } from '@ygg/playwhat/core';
 

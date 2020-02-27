@@ -20,7 +20,6 @@ import {
 } from './the-thing';
 import { TagsUiModule } from '@ygg/tags/ui';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
-import { SharedTypesModule } from '@ygg/shared/types';
 import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-thing-thumbnail.component';
 import { MyThingsComponent } from './the-thing/my-things/my-things.component';
 import { SharedUserModule } from '@ygg/shared/user';
@@ -46,7 +45,6 @@ interface TheThingUiModuleConfig {
     ReactiveFormsModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
-    SharedTypesModule,
     SharedUserModule,
     TagsUiModule,
     SharedOmniTypesUiModule,
@@ -70,13 +68,14 @@ interface TheThingUiModuleConfig {
     ImitationManagerComponent,
     TheThingDataTableComponent,
     TheThingCellsEditorComponent,
-    ImitationViewDogComponent
+    ImitationViewDogComponent,
   ],
   exports: [
     CellListComponent,
     CellFormComponent,
     CellControlComponent,
     CellViewComponent,
+    TheThingThumbnailComponent,
     TheThingEditorComponent,
     TheThingViewComponent,
     TheThingFinderComponent,

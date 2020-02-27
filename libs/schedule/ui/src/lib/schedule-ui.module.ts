@@ -12,7 +12,7 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUserModule } from '@ygg/shared/user';
-import { SharedTypesModule } from '@ygg/shared/types';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { TagsUiModule } from '@ygg/tags/ui';
 import { PlaywhatPlayModule } from '@ygg/playwhat/play';

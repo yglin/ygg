@@ -9,7 +9,7 @@ import { SharedUserModule } from '@ygg/shared/user';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 import { PlaywhatAdminModule } from '@ygg/playwhat/admin';
-import { PlaywhatPlayAdminModule, PlaywhatPlayFrontendModule } from "@ygg/playwhat/play";
+// import { PlaywhatPlayAdminModule, PlaywhatPlayFrontendModule } from "@ygg/playwhat/play";
 import { TagsAdminModule } from "@ygg/tags/admin";
 
 import { AppComponent } from './app.component';
@@ -19,11 +19,11 @@ import { routes } from './routes';
 // import { SchedulerNewComponent } from './pages/scheduler/new/scheduler-new.component';
 // import { SchedulerFormViewComponent } from './pages/scheduler/form/scheduler-form-view/scheduler-form-view.component';
 import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
-import { ScheduleFrontendModule } from "@ygg/schedule/frontend";
-import { ScheduleAdminModule } from '@ygg/schedule/admin';
-import { ResourceUiModule } from '@ygg/resource/ui';
+// import { ScheduleFrontendModule } from "@ygg/schedule/frontend";
+// import { ScheduleAdminModule } from '@ygg/schedule/admin';
+// import { ResourceUiModule } from '@ygg/resource/ui';
 import { TheThingUiModule } from "@ygg/the-thing/ui";
-import { PlaywhatTourModule } from "@ygg/playwhat/tour";
+import { PlaywhatUiModule } from "@ygg/playwhat/ui";
 
 @NgModule({
   declarations: [
@@ -42,13 +42,13 @@ import { PlaywhatTourModule } from "@ygg/playwhat/tour";
     SharedUiWidgetsModule,
     SharedUiNavigationModule,
     TheThingUiModule,
-    ResourceUiModule,
-    ScheduleFrontendModule,
-    ScheduleAdminModule,
-    PlaywhatPlayFrontendModule,
-    PlaywhatPlayAdminModule,
+    // ResourceUiModule,
+    // ScheduleFrontendModule,
+    // ScheduleAdminModule,
+    // PlaywhatPlayFrontendModule,
+    // PlaywhatPlayAdminModule,
     TagsAdminModule,
-    PlaywhatTourModule,
+    PlaywhatUiModule,
     PlaywhatAdminModule,
     RouterModule.forRoot(routes),
   ],

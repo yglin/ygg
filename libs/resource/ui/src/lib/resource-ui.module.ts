@@ -14,7 +14,7 @@ import { AccommodationEditComponent } from './pages/accommodation-edit/accommoda
 import { routes } from "./routes";
 import { AccommodationDetailComponent } from './pages/accommodation-detail/accommodation-detail.component';
 import { AccommodationViewComponent } from './accommodation/accommodation-view/accommodation-view.component';
-import { SharedTypesModule } from '@ygg/shared/types';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { SharedOmniTypesUiModule } from "@ygg/shared/omni-types/ui";
 
 @NgModule({

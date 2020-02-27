@@ -1,20 +1,34 @@
 <div class="purchase-list">
   <div class="list">
-    <div *ngFor="let item of flattenPurchases | keyvalue; let isFirst = first; let isLast = last">
+    <div
+      *ngFor="let purchase of purchases; let isFirst = first; let isLast = last"
+    >
       <div
         class="purchase-line"
         fxLayout="row"
-        fxLayoutAlign="start end"
-        fxLayoutGap="10px"
+        fxLayoutAlign="space-around center"
+        fxLayoutGap="30px"
+        [attr.product-id]="purchase.objectId"
       >
-        <div *ngFor="let p of item.value" [fxFlexAlign]='isFirst ? "start" : "end"'>
-          <ygg-purchase-thumbnail [purchase]="p"></ygg-purchase-thumbnail>
+        <div>
+          <ygg-image-thumbnail
+            [item$]="theThingAccessService.get$(purchase.objectId)"
+          ></ygg-image-thumbnail>
+        </div>
+        <div>
+          {{ CellNameQuantity }} x <span class="quantity">{{ purchase.getCellValue(CellNameQuantity) }}</span>
         </div>
       </div>
       <div *ngIf="!isLast">
-        <hr>
+        <mat-divider></mat-divider>
       </div>
     </div>
   </div>
-  <h3 class='total-price'>總價：<ygg-price [price]="totalPrice"></ygg-price></h3>
+  <div fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
+    <div>
+      <h3 class="total-charge">
+        總價：<ygg-price [price]="totalPrice"></ygg-price>
+      </h3>
+    </div>
+  </div>
 </div>

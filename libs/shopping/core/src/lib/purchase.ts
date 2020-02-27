@@ -1,8 +1,19 @@
 import { extend, isEmpty, sum } from 'lodash';
 import { v4 as uuid } from 'uuid';
-import { Product, ProductType } from './product';
-import { Duration } from '@ygg/shared/types';
-import { SerializableJSON, toJSONDeep, generateID } from '@ygg/shared/infra/data-access';
+// import { Product, ProductType } from './product';
+import { Duration } from '@ygg/shared/omni-types/core';
+import {
+  SerializableJSON,
+  toJSONDeep,
+  generateID
+} from '@ygg/shared/infra/data-access';
+import { TheThing } from '@ygg/the-thing/core';
+
+export const RelationNamePurchase = '訂購';
+
+export const CellNameQuantity = '數量/人數';
+
+export const CellNameCharge = '費用';
 
 export enum PurchaseState {
   Unknown = -1,
@@ -12,52 +23,35 @@ export enum PurchaseState {
 }
 
 interface PurchaseOptions {
-  product: Product;
+  product: TheThing;
   quantity: number;
   [key: string]: any;
 }
 
 export class Purchase implements SerializableJSON {
   id: string;
-  productType: ProductType;
   productId: string;
   quantity: number;
   duration: Duration;
-  unitPrice: number;
+  price: number;
   state: PurchaseState;
-  children: Purchase[] = [];
+  childPurchaseIds: string[];
+
+  get charge(): number {
+    return this.price * this.quantity;
+  }
 
   static isPurchase(value: any): value is Purchase {
-    return !!(value && value.productType && value.productId);
+    return !!(value && value.productId);
   }
 
-  get totalPrice(): number {
-    return (
-      this.unitPrice * this.quantity +
-      sum(this.children.map(child => child.totalPrice))
-    );
-  }
-
-  constructor(options?: PurchaseOptions) {
+  constructor(options: any = {}) {
     this.id = generateID();
-    this.productType = ProductType.Unknown;
+    // this.productType = ProductType.Unknown;
     this.productId = '';
+    this.price = 0;
     this.quantity = 0;
-    if (options) {
-      this.productType = options.product.productType || ProductType.Unknown;
-      this.productId = options.product.id || '';
-      this.quantity = options.quantity || 0;
-      this.unitPrice = options.product.price;
-      this.duration = options.duration || null;
-      this.state = PurchaseState.New;
-
-      if (!isEmpty(options.product.products)) {
-        this.children = options.product.products.map(childProduct => {
-          options.product = childProduct;
-          return new Purchase(options);
-        });
-      }
-    }
+    this.fromJSON(options);
   }
 
   clone(): Purchase {
@@ -71,15 +65,12 @@ export class Purchase implements SerializableJSON {
     if (data.duration) {
       this.duration = new Duration().fromJSON(data.duration);
     }
-    if (!isEmpty(data.children)) {
-      this.children = data.children.map(child =>
-        new Purchase().fromJSON(child)
-      );
-    }
     return this;
   }
 
   toJSON(): any {
-    return toJSONDeep(this);
+    const data = toJSONDeep(this);
+    delete data['charge'];
+    return data;
   }
 }

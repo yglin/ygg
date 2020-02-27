@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PlayViewComponent } from './play-view.component';
-import { SharedTypesModule } from '@ygg/shared/types';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { TagsUiModule } from '@ygg/tags/ui';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { Injectable } from '@angular/core';

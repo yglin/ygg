@@ -20,6 +20,7 @@ import { Tags } from '@ygg/tags/core';
 import { TheThingCell, TheThingCellTypeID } from './cell';
 import { generateID, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
+import { TheThingRelation } from './relation';
 
 export class TheThing implements ImageThumbnailItem {
   static collection = 'the-things';
@@ -57,7 +58,7 @@ export class TheThing implements ImageThumbnailItem {
    * External relations, linked to other the-things.
    * Store mappings from relation name to ids of objects
    **/
-  relations: { [name: string]: string[] };
+  relations: { [name: string]: TheThingRelation[] };
 
   /**
    * For ImageThumbnailItem interface
@@ -86,7 +87,9 @@ export class TheThing implements ImageThumbnailItem {
         '便便'
       ]);
     thing.tags = !!options.tags ? new Tags(options.tags) : Tags.forge();
-    thing.image = options.image || 'https://live.staticflickr.com/6130/6019458291_4e512065fd.jpg';
+    thing.image =
+      options.image ||
+      'https://live.staticflickr.com/6130/6019458291_4e512065fd.jpg';
 
     if (options.cells) {
       thing.cells = options.cells;
@@ -203,28 +206,92 @@ export class TheThing implements ImageThumbnailItem {
     );
   }
 
-  addRelations(relationName: string, objectThings: TheThing[] | string[]) {
-    let ids: string[] = [];
-    if (typeof objectThings[0] === 'string') {
-      ids = objectThings as string[];
-    } else {
-      ids = (objectThings as TheThing[]).map(thing => thing.id);
+  addRelation(
+    relationName: string,
+    objectId: TheThing | string,
+    cells: TheThingCell[] = []
+  ) {
+    if (typeof objectId !== 'string') {
+      objectId = objectId.id;
     }
-    this.relations[relationName] = uniq(
-      (this.relations[relationName] || []).concat(ids)
-    );
+    const newRelation = new TheThingRelation({
+      name: relationName,
+      subjectId: this.id,
+      objectId: objectId,
+      cells: keyBy(cells, 'name')
+    });
+    if (!(relationName in this.relations)) {
+      this.relations[relationName] = [];
+    }
+    this.relations[relationName].push(newRelation);
   }
 
-  removeRelation(relationName, objectThing: TheThing) {
-    if (this.relations && relationName in this.relations) {
-      remove(
-        this.relations[relationName],
-        objectId => objectId === objectThing.id
-      );
-      if (isEmpty(this.relations[relationName])) {
-        delete this.relations[relationName];
+  addRelations(relationName: string, objects: TheThing[] | string[]) {
+    for (const object of objects) {
+      this.addRelation(relationName, object);
+    }
+    // let ids: string[] = [];
+    // if (typeof objectThings[0] === 'string') {
+    //   ids = objectThings as string[];
+    // } else {
+    //   ids = (objectThings as TheThing[]).map(thing => thing.id);
+    // }
+    // this.relations[relationName] = uniq(
+    //   (this.relations[relationName] || []).concat(ids)
+    // );
+  }
+
+  removeRelation(relationName, objectId?: TheThing | string) {
+    if (!objectId) {
+      delete this.relations[relationName];
+    } else {
+      if (typeof objectId !== 'string') {
+        objectId = objectId.id;
+      }
+      if (this.relations && relationName in this.relations) {
+        remove(
+          this.relations[relationName],
+          relation => relation.objectId === objectId
+        );
+        if (isEmpty(this.relations[relationName])) {
+          delete this.relations[relationName];
+        }
       }
     }
+  }
+
+  getRelations(relationName: string): TheThingRelation[] {
+    return this.hasRelation(relationName) ? this.relations[relationName] : [];
+  }
+
+  /**
+   * Get the object ids of specified relation name
+   *
+   * @param relationName relation name
+   */
+  getRelationObjectIds(relationName: string): string[] {
+    if (this.hasRelation(relationName)) {
+      return this.relations[relationName].map(relation => relation.objectId);
+    } else {
+      return [];
+    }
+  }
+
+  /**
+   * Get the only one relation object's id
+   */
+  getRelationObjectId(): string {
+    for (const key in this.relations) {
+      if (this.relations.hasOwnProperty(key)) {
+        const relationObjectIds = this.relations[key].map(
+          relation => relation.objectId
+        );
+        if (!isEmpty(relationObjectIds)) {
+          return relationObjectIds[0];
+        }
+      }
+    }
+    return null;
   }
 
   clone(): TheThing {
@@ -287,10 +354,15 @@ export class TheThing implements ImageThumbnailItem {
       }
       if (!isEmpty(data.cells)) {
         if (isArray(data.cells)) {
-          this.cells = keyBy(data.cells, 'name');
+          data.cells = keyBy(data.cells, 'name');
         }
-        this.cells = mapValues(this.cells, cellData =>
+        this.cells = mapValues(data.cells, cellData =>
           new TheThingCell().fromJSON(cellData)
+        );
+      }
+      if (data.relations) {
+        this.relations = mapValues(data.relations, relations =>
+          relations.map(relation => new TheThingRelation(relation))
         );
       }
       // console.log(`TheThing.fromJSON: ${this.image}`);

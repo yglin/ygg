@@ -83,7 +83,9 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
         const objectIds = this.theThing.relations[relationName];
         this.relationObjects[
           relationName
-        ] = this.theThingAccessService.listByIds$(objectIds);
+        ] = this.theThingAccessService.listByIds$(
+          this.theThing.getRelationObjectIds(relationName)
+        );
       }
     }
     // console.dir(this.theThing);

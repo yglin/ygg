@@ -5,7 +5,7 @@ import { DynamicFormComponent } from './dynamic-form/dynamic-form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-import { SharedTypesModule } from '@ygg/shared/types';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { SharedOmniTypesUiModule } from "@ygg/shared/omni-types/ui";
 import { FormArrayComponent } from './form-array';
 

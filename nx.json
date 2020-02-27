@@ -57,7 +57,7 @@
       "tags": ["scope:shared", "type:utils"]
     },
     "playwhat-admin": {
-      "tags": ["scope:admin", "type:feature", "platform:mobile"]
+      "tags": ["scope:playwhat", "type:feature", "platform:mobile"]
     },
     "shared-ui-navigation": {
       "tags": ["scope:shared", "type:ui", "platform:mobile"]
@@ -179,7 +179,7 @@
     "shared-omni-types-test": {
       "tags": ["scope:shared", "type:test", "package:omni-types"]
     },
-    "playwhat-tour": {
+    "playwhat-ui": {
       "tags": ["scope:playwhat", "type:feature"]
     },
     "shared-ui-test": {
@@ -187,6 +187,12 @@
     },
     "playwhat-core": {
       "tags": ["scope:playwhat", "type:core"]
+    },
+    "shopping-test": {
+      "tags": ["scope:shopping"]
+    },
+    "playwhat-test": {
+      "tags": ["scope:playwhat", "type:test"]
     }
   }
 }

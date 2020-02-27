@@ -1,4 +1,13 @@
-import { extend, isEmpty, filter, pickBy, mapValues, get } from 'lodash';
+import {
+  extend,
+  isEmpty,
+  filter,
+  pickBy,
+  mapValues,
+  get,
+  isArray,
+  keyBy
+} from 'lodash';
 import {
   generateID,
   SerializableJSON,
@@ -60,7 +69,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     //     options = args[1];
     //   }
     // }
-    extend(this, options);
+    this.fromJSON(options);
     // if (template) {
     //   this.setTemplate(template);
     // }
@@ -126,6 +135,9 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
 
   fromJSON(data: any = {}): this {
     extend(this, data);
+    if (isArray(data.cellsDef)) {
+      this.cellsDef = keyBy(data.cellsDef, 'name');
+    }
     if (data.filter) {
       this.filter = new TheThingFilter().fromJSON(data.filter);
     }

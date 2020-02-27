@@ -1,4 +1,5 @@
-import { ContactViewPageObject, Contact } from "@ygg/shared/types";
+import { Contact } from "@ygg/shared/omni-types/core";
+import { ContactViewPageObject } from "@ygg/shared/omni-types/ui";
 
 export class ContactViewPageObjectCypress extends ContactViewPageObject {
   expectValue(value: Contact) {

@@ -7,10 +7,12 @@ import {
   SimpleChanges,
   OnDestroy
 } from '@angular/core';
-import { Purchase } from '@ygg/shopping/core';
-import { ShoppingCartService } from '@ygg/shopping/factory';
+import { Purchase, CellNameQuantity, CellNameCharge } from '@ygg/shopping/core';
+// import { ShoppingCartService } from '@ygg/shopping/factory';
 import { Subscription, Observable, of, BehaviorSubject } from 'rxjs';
 import { tap, switchMap } from 'rxjs/operators';
+import { TheThingRelation } from '@ygg/the-thing/core';
+import { TheThingAccessService } from '@ygg/the-thing/data-access';
 
 @Component({
   selector: 'ygg-purchase-list',
@@ -18,54 +20,29 @@ import { tap, switchMap } from 'rxjs/operators';
   styleUrls: ['./purchase-list.component.css']
 })
 export class PurchaseListComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() purchases: Purchase[];
+  @Input() purchases: TheThingRelation[];
   totalPrice = 0;
+  CellNameQuantity = CellNameQuantity;
   subscriptions: Subscription[] = [];
-  flattenPurchases: { [id: string]: Purchase[] } = {};
-  purchases$: BehaviorSubject<Purchase[]> = new BehaviorSubject([]);
 
-  constructor(private shoppingCart: ShoppingCartService) {
-    this.subscriptions.push(
-      this.purchases$
-        // .pipe(
-        //   switchMap(purchases => {
-        //     return this.shoppingCart.evaluateTotalPrice$(purchases);
-        //   })
-        // )
-        .subscribe(purchases => {
-          this.flattenPurchases = {};
-          if (!isEmpty(purchases)) {
-            purchases.forEach(p => {
-              this.flattenPurchases[p.id] = this.flatten(p);
-            });
-          }
-          this.totalPrice = sum(purchases.map(p => p.totalPrice));
-        })
+  constructor(private theThingAccessService: TheThingAccessService) {}
+
+  ngOnInit() {}
+
+  evalTotalPrice() {
+    this.totalPrice = sumBy(
+      this.purchases,
+      purchase => purchase.getCellValue(CellNameCharge, 0)
     );
   }
 
-  ngOnInit() {
-    this.purchases$.next(this.purchases);
-  }
-
   ngOnChanges(changes: SimpleChanges) {
-    this.purchases$.next(changes.purchases.currentValue);
+    this.evalTotalPrice();
   }
 
   ngOnDestroy() {
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
     }
-  }
-
-  flatten(purchase: Purchase): Purchase[] {
-    const result = [];
-    result.push(purchase);
-    if (!isEmpty(purchase.children)) {
-      purchase.children.forEach(c => {
-        result.push(...this.flatten(c));
-      });
-    }
-    return result;
   }
 }

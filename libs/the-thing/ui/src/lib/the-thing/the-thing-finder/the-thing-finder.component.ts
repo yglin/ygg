@@ -51,6 +51,8 @@ export class TheThingFinderComponent
   @Input() filter: TheThingFilter;
   @Input() hideFilter: boolean;
   @Output() selectChange = new EventEmitter<TheThing[]>();
+  @Output() selectTheThing = new EventEmitter<TheThing>();
+  @Output() deselectTheThing = new EventEmitter<TheThing>();
   emitChange: (changes: TheThing[]) => any = noop;
   filter$: BehaviorSubject<TheThingFilter> = new BehaviorSubject(null);
   filteredTheThings: TheThing[] = [];

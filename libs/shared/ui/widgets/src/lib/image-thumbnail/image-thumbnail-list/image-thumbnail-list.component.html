@@ -46,6 +46,7 @@
           *ngFor="let item of items; let isLast = last; let isFirst = first;"
           [attr.item-id]="item.id"
           [attr.item-name]="item.name"
+          [attr.item-image]="item.image"
           class="item"
           [ngClass]="{
             'last-item': isLast,

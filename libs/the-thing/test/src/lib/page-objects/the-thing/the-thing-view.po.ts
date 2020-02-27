@@ -4,8 +4,8 @@ import { TheThingViewPageObject } from '@ygg/the-thing/ui';
 import {
   AlbumViewPageObjectCypress,
   AddressViewPageObjectCypress
-} from '../cell-types';
-import { HtmlViewPageObjectCypress } from "@ygg/shared/omni-types/test";
+} from '@ygg/shared/omni-types/test';
+import { HtmlViewPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { TheThingListPageObjectCypress } from './the-thing-list.po';
 import { User } from '@ygg/shared/user';
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';

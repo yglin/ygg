@@ -126,10 +126,10 @@
             ]
           },
           {
-            "sourceTag": "scope:schedule",
+            "sourceTag": "scope:shopping",
             "onlyDependOnLibsWithTags": [
-              "scope:schedule",
-              "scope:tags",
+              "scope:shopping",
+              "scope:the-thing",
               "scope:shared"
             ]
           }

@@ -30,6 +30,8 @@ export class ImageThumbnailListComponent
   @Output() selectionChanged: EventEmitter<
     ImageThumbnailItem[]
   > = new EventEmitter();
+  @Output() selectItem: EventEmitter<ImageThumbnailItem> = new EventEmitter();
+  @Output() deselectItem: EventEmitter<ImageThumbnailItem> = new EventEmitter();
   @Input() hideAddButton: boolean;
   isSelectable: boolean = false;
   isItemDeletable: boolean = false;
@@ -55,7 +57,9 @@ export class ImageThumbnailListComponent
     this.isItemDeletable = this.deleteItem.observers.length > 0;
     this.isSelectable =
       this.selectionChanged.observers.length > 0 ||
-      this.dialogSubmit$.observers.length > 0;
+      this.dialogSubmit$.observers.length > 0 ||
+      this.selectItem.observers.length > 0 ||
+      this.deselectItem.observers.length > 0;
     this.hideAddButton =
       this.readonly ||
       (this.hideAddButton !== undefined && this.hideAddButton !== false);
@@ -71,11 +75,13 @@ export class ImageThumbnailListComponent
     this.clickItem.emit(item);
     if (find(this.selection, selected => selected.id === item.id)) {
       remove(this.selection, selected => selected.id === item.id);
+      this.deselectItem.emit(item);
     } else {
       if (this.singleSelect) {
         this.selection.length = 0;
       }
       this.selection.push(item);
+      this.selectItem.emit(item);
     }
     this.selectionChanged.emit(this.selection);
   }

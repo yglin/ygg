@@ -1,0 +1,41 @@
+<div class="tour-plan-view" *ngIf="theThing">
+  <h1 class="tour-plan-name">{{ theThing.name }}</h1>
+  <div *ngFor="let cell of requiredCells">
+    <div [attr.cell-name]="cell.name">
+      <h4>{{ cell.name }}</h4>
+      <the-thing-cell-view [cell]="cell"></the-thing-cell-view>
+    </div>
+  </div>
+  <!-- <div class="date-range">
+    <h4>預計出遊日期</h4>
+    <ygg-date-range-view [dateRange]="dateRange"></ygg-date-range-view>
+  </div> -->
+  <!-- <div class="day-time-range">
+    <h4>預計出遊時段</h4>
+    <ygg-day-time-range-view
+      [dayTimeRange]="dayTimeRange"
+    ></ygg-day-time-range-view>
+  </div> -->
+  <!-- <div class="num-participants">
+    <h4>預計參加人數</h4>
+    <div>
+      <mat-icon>people</mat-icon>
+      <span class="number">{{ numParticipants }}</span>
+    </div>
+  </div> -->
+  <!-- <div class="contact">
+    <h4>聯絡資訊</h4>
+    <ygg-contact-view [contact]="contact"></ygg-contact-view>
+  </div> -->
+  <br><br>
+  <h2>預訂品項</h2>
+  <div class="purchases">
+    <ygg-purchase-list [purchases]='purchases'></ygg-purchase-list>
+  </div>
+  <div *ngFor="let cell of optionalCells">
+    <div [attr.cell-name]="cell.name">
+      <h4>{{ cell.name }}</h4>
+      <the-thing-cell-view [cell]="cell"></the-thing-cell-view>
+    </div>
+  </div>
+</div>

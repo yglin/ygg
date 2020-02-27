@@ -1,5 +1,5 @@
 import { extend, sample, random, keys, omit } from 'lodash';
-import { Album, Address, DayTime } from '@ygg/shared/types';
+import { Album, Address } from '@ygg/shared/omni-types/core';
 import {
   Html,
   DateRange,
@@ -184,6 +184,12 @@ export class TheThingCell {
       cell.value = TheThingCellTypes[cell.type].forge();
     }
     return cell;
+  }
+
+  constructor(options?: any) {
+    if (options) {
+      this.fromJSON(options);
+    }
   }
 
   clone(): TheThingCell {

@@ -25,6 +25,7 @@ export const TemplateTourPlan: TheThing = new TheThing().fromJSON({
   ]
 });
 
+
 export const ImitationTourPlan: TheThingImitation = new TheThingImitation().fromJSON(
   {
     id: 'BvyVkzRIxEuYoPjxIjHVOA',

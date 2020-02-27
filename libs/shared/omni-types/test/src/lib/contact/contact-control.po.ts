@@ -1,4 +1,5 @@
-import { ContactControlPageObject, Contact } from "@ygg/shared/types";
+import { Contact } from "@ygg/shared/omni-types/core";
+import { ContactControlPageObject } from "@ygg/shared/omni-types/ui";
 
 export class ContactControlPageObjectCypress extends ContactControlPageObject {
 

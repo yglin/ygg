@@ -14,7 +14,7 @@ import { DebugElement, Injectable } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, of } from 'rxjs';
 import { SchedulePlanService } from '@ygg/schedule/data-access';
-import { SharedTypesModule } from '@ygg/shared/types';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { SharedUserModule } from '@ygg/shared/user';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';

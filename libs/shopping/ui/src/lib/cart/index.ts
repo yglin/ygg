@@ -1,1 +1,1 @@
-export * from './shopping-cart/shopping-cart.component.po';
+export * from './shopping-cart-editor/shopping-cart-editor.component.po';

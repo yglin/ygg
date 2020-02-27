@@ -340,9 +340,16 @@ export class TheThingEditorComponent implements OnInit {
 
   fetchRelations() {
     if (this.theThing && !isEmpty(this.theThing.relations)) {
-      this.relations = mapValues(this.theThing.relations, objectIds => {
-        return { objects$: this.theThingAccessService.listByIds$(objectIds) };
-      });
+      this.relations = {};
+      for (const name in this.theThing.relations) {
+        if (this.theThing.relations.hasOwnProperty(name)) {
+          this.relations[name] = {
+            objects$: this.theThingAccessService.listByIds$(
+              this.theThing.getRelationObjectIds(name)
+            )
+          };
+        }
+      }
     } else {
       this.relations = {};
     }
@@ -419,9 +426,7 @@ export class TheThingEditorComponent implements OnInit {
         if (!isEmpty(this.relationSubjectsStack)) {
           const relationSubject = this.relationSubjectsStack.pop();
           const subject = relationSubject.subject;
-          subject.addRelations(relationSubject.relationName, [
-            this.theThing
-          ]);
+          subject.addRelations(relationSubject.relationName, [this.theThing]);
           // console.log('Reload relation subject');
           // console.dir(subject.toJSON());
           this.theThing$.next(subject);

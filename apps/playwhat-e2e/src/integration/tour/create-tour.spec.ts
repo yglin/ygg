@@ -6,7 +6,7 @@ import {
   getCreatedTheThingId,
   TheThingViewPageObjectCypress
 } from '@ygg/the-thing/test';
-import { TourViewPageObjectCypress } from '../../page-objects/tour';
+import { TourViewPageObjectCypress } from '@ygg/playwhat/test';
 
 const mockDatabase = new MockDatabase();
 const sampleTour = new TheThing().fromJSON(SampleTourJSON.tour);

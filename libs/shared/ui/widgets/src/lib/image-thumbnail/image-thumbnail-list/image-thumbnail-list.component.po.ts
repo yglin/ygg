@@ -15,6 +15,10 @@ export abstract class ImageThumbnailListPageObject extends PageObject {
     return `${this.getSelector()} [item-id=${item.id}]`;
   }
 
+  getSelectorForItemLink(item: ImageThumbnailItem): string {
+    return `${this.getSelector()} [item-id=${item.id}] .open-link`;
+  }
+
   getSelectorForDeleteItem(item: ImageThumbnailItem): string {
     return `${this.getSelectorForItem(item)} .delete-item button`;
   }

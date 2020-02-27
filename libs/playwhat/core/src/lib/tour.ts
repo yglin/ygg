@@ -1,5 +1,7 @@
 import { TheThingImitation, TheThing } from '@ygg/the-thing/core';
 
+export const RelationNamePlay = '體驗';
+
 export const TemplateTour: TheThing = new TheThing().fromJSON({
   id: 'nZCfXLG3Z06TYcchlpfMxw',
   tags: ['tour', '體驗組合'],
