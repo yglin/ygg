@@ -27,6 +27,7 @@ export class TheThingDataSource extends DataSource<TheThing> {
   data: TheThing[] = [];
   updateEvent$: BehaviorSubject<any>;
   compareFunctions: { [key: string]: TheThingCellComparator } = {};
+  _filter: string;
 
   constructor(
     dataSource: Observable<TheThing[]> | TheThing[],
@@ -52,6 +53,11 @@ export class TheThingDataSource extends DataSource<TheThing> {
     if (!isEmpty(compareFunctions)) {
       this.compareFunctions = compareFunctions;
     }
+  }
+
+  set filter(value: string) {
+    this._filter = value;
+    this.updateEvent$.next(true);
   }
 
   set paginator(paginator: MatPaginator) {
@@ -112,6 +118,9 @@ export class TheThingDataSource extends DataSource<TheThing> {
    */
   getProcessedData(data: TheThing[]): TheThing[] {
     let outputData: TheThing[] = [...data];
+    if (!!this._filter) {
+      outputData = this.getFilteredData(outputData);
+    }
     if (this.sort) {
       outputData = this.getSortedData(outputData);
     }
@@ -119,6 +128,18 @@ export class TheThingDataSource extends DataSource<TheThing> {
       outputData = this.getPagedData(outputData);
     }
     return outputData;
+  }
+
+  /**
+   * Filter the-things by search text this._filter,
+   * Check TheThing JSON include this._filter
+   *
+   * @param data original data of the-things array
+   */
+  private getFilteredData(data: TheThing[]): TheThing[] {
+    return data.filter(theThing =>
+      JSON.stringify(theThing).includes(this._filter)
+    );
   }
 
   /**

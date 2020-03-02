@@ -36,7 +36,9 @@ export class TheThingDataTableComponent implements OnInit {
   ngOnInit() {
     if (this.imitation) {
       // console.dir(this.imitation);
-      let compareFunctions: { [key: string]: TheThingCellComparator } = this.imitation.getComparators();
+      let compareFunctions: {
+        [key: string]: TheThingCellComparator;
+      } = this.imitation.getComparators();
       // if (!isEmpty(this.imitation.cellsDef)) {
       //   compareFunctions = pickBy(
       //     mapValues(this.imitation.cellsDef, cellType =>
@@ -55,8 +57,13 @@ export class TheThingDataTableComponent implements OnInit {
         this.displayedColumns = this.displayedColumns.concat(
           keys(this.dataTableConfig.columns)
         );
+        this.displayedColumns.push('management');
       }
     }
+  }
+
+  onSearchChanged(searchText: string) {
+    this.dataSource.filter = searchText;
   }
 
   ngAfterViewInit() {
@@ -68,5 +75,16 @@ export class TheThingDataTableComponent implements OnInit {
 
   onClickTheThing(theThing: TheThing) {
     this.router.navigate(['/', 'the-things', theThing.id]);
+  }
+
+  async onDelete(theThing: TheThing) {
+    if (confirm(`確定要永久刪除 ${theThing.name} ？`)) {
+      try {
+        await this.theThingAccessService.delete(theThing);
+        alert(`已刪除 ${theThing.name}`);
+      } catch (error) {
+        alert(`刪除失敗，錯誤原因： ${error.message}`);
+      }
+    }
   }
 }

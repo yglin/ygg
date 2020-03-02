@@ -1,21 +1,23 @@
 <div class="play-view" *ngIf="theThing">
-  <h1>{{ theThing.name }}</h1>
-  <h3>{{ theThing.getCellValue('副標題') }}</h3>
+  <h1 class='name'>{{ theThing.name }}</h1>
+  <h3 class='subtitle'>{{ theThing.getCellValue('副標題') }}</h3>
   <ygg-user-thumbnail [id]="theThing.ownerId"></ygg-user-thumbnail>
   <br />
-  <the-thing-cell-view [cell]="theThing.getCell('照片')"></the-thing-cell-view>
+  <div class='album'>
+    <ygg-album-view [album]='theThing.getCellValue("照片")'></ygg-album-view>
+  </div>
   <br />
   <div class='introduction'>
     <pre>{{ theThing.getCellValue('簡介') }}</pre>
   </div>
-  <div>
+  <div class='price'>
     <h3>每人費用：NTD {{ theThing.getCellValue('費用') }}</h3>
   </div>
   <div>
-    <h3>體驗時長：{{ theThing.getCellValue('時長') }}</h3>
+    <h3 class='time-length'>體驗時長：{{ theThing.getCellValue('時長') }}</h3>
   </div>
   <div>
-    <h3>
+    <h3 class='limit-on-number'>
       人數限制：{{ theThing.getCellValue('人數下限') }} -
       {{ theThing.getCellValue('人數上限') }} 人
     </h3>

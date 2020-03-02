@@ -65,13 +65,19 @@ export class TheThingCellsEditorPageObjectCypress extends TheThingCellsEditorPag
   expectCellValue(cell: TheThingCell) {
     switch (cell.type) {
       case 'text':
-        cy.get(`${this.getSelectorForCellControl(cell)} input`).invoke('val').should('equal', cell.value);
+        cy.get(`${this.getSelectorForCellControl(cell)} input`)
+          .invoke('val')
+          .should('equal', cell.value);
         break;
       case 'longtext':
-        cy.get(`${this.getSelectorForCellControl(cell)} textarea`).invoke('val').should('equal', cell.value);
+        cy.get(`${this.getSelectorForCellControl(cell)} textarea`)
+          .invoke('val')
+          .should('equal', !!cell.value ? cell.value : '');
         break;
       case 'number':
-        cy.get(`${this.getSelectorForCellControl(cell)} input`).invoke('val').should('equal', cell.value);
+        cy.get(`${this.getSelectorForCellControl(cell)} input[type="number"]`)
+          .invoke('val')
+          .should('equal', typeof cell.value === 'number' ? cell.value : '');
         break;
       case 'album':
         const albumControlPO = new AlbumControlPageObjectCypress(

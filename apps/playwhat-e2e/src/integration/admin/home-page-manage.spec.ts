@@ -1,4 +1,4 @@
-import { SiteNavigator } from '../../support/site-navigator';
+import { SiteNavigator } from '@ygg/playwhat/test';
 import {
   TheThingFilterPageObjectCypress,
   TheThingFinderPageObjectCypress,

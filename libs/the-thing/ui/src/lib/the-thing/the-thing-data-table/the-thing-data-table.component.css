@@ -2,8 +2,17 @@
   width: 100%;
 }
 
+.search {
+  max-width: 500px;
+}
+
 tr.mat-row:hover {
   cursor: pointer;
   background-color: #fff5e6;
   overflow: auto;
+}
+
+td.mat-cell, th {
+  max-width: 20vw;
+  padding-right: 20px;
 }

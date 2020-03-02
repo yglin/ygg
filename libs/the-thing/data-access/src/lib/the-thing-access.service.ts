@@ -74,9 +74,14 @@ export class TheThingAccessService {
   }
 
   async upsert(theThing: TheThing): Promise<TheThing> {
-    console.log('Upsert the-thing');
-    console.dir(theThing);
+    // console.log('Upsert the-thing');
+    // console.dir(theThing);
     await this.dataAccessService.upsert(theThing.collection, theThing.toJSON());
     return Promise.resolve(theThing);
+  }
+
+  async delete(theThing: TheThing): Promise<TheThing> {
+    await this.dataAccessService.delete(TheThing.collection, theThing.id);
+    return theThing;
   }
 }

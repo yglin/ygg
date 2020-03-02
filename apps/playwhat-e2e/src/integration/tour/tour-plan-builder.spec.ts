@@ -1,7 +1,7 @@
 import { sampleSize, values, pick, sum, sumBy, random } from 'lodash';
 import { MockDatabase, login } from '@ygg/shared/test/cypress';
 import { MinimalTourPlan, TourPlanFull } from './sample-tour-plan';
-import { SamplePlays, SampleAdditions } from './sample-plays';
+import { SamplePlays, SampleAdditions } from '../play/sample-plays';
 import {
   TheThingEditorPageObjectCypress,
   TheThingDataTablePageObjectCypress
@@ -10,7 +10,7 @@ import {
   TourPlanViewPageObjectCypress,
   TourPlanBuilderPageObjectCypress
 } from '@ygg/playwhat/test';
-import { SiteNavigator } from '../../support/site-navigator';
+import { SiteNavigator } from '@ygg/playwhat/test';
 import { TheThing } from '@ygg/the-thing/core';
 import { Contact } from '@ygg/shared/omni-types/core';
 import { ImitationTourPlan } from '@ygg/playwhat/core';
@@ -162,7 +162,9 @@ describe('What can we do in home page ?', () => {
   });
 
   it('Build a tour-plan with a few plays selected', () => {
-    const playsWithoutAddition = SamplePlays.filter(play => !play.hasRelation(RelationAddition));
+    const playsWithoutAddition = SamplePlays.filter(
+      play => !play.hasRelation(RelationAddition)
+    );
 
     // Select plays, set date and number of participants
     tourPlanBuilderPO.expectStep(1);

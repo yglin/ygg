@@ -1,12 +1,8 @@
 import * as SampleTourJSON from './sample-tour-birb.json';
 import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
 import { MockDatabase, login } from '@ygg/shared/test/cypress';
-import {
-  TheThingFilterPageObjectCypress,
-  TheThingListPageObjectCypress,
-} from '@ygg/the-thing/test';
-import { TourViewPageObjectCypress } from '@ygg/playwhat/test';
-import { SiteNavigator } from '../../support/site-navigator';
+import { TheThingFilterPageObjectCypress } from '@ygg/the-thing/test';
+import { SiteNavigator } from '@ygg/playwhat/test';
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
 
 const siteNavigator = new SiteNavigator();
@@ -54,5 +50,5 @@ describe('Find tours in my things', () => {
     // tourViewPO.expectVisible();
     // tourViewPO.expectValue(sampleTour);
     // tourViewPO.expectPlays(plays);
-});
+  });
 });

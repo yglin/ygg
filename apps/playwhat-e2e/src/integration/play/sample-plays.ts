@@ -1,5 +1,52 @@
 import { TheThing } from '@ygg/the-thing/core';
 import { RelationAddition } from '@ygg/shopping/core';
+import { ImitationPlay } from '@ygg/playwhat/core';
+import { v4 as uuid } from 'uuid';
+import { random } from 'lodash';
+import { Album } from '@ygg/shared/omni-types/core';
+
+export const MinimumPlay = ImitationPlay.createTheThing().fromJSON({
+  name: uuid(),
+  cells: {
+    照片: {
+      name: '照片',
+      type: 'album',
+      value: Album.forge().toJSON()
+    },
+    副標題: {
+      name: '副標題',
+      type: 'text',
+      value:
+        '臭雞味比賽'
+    },
+    簡介: {
+      name: '簡介',
+      type: 'longtext',
+      value:
+        '請帶上自家的傲嬌小肉雞，選出年度最臭雞味冠軍。評審為20年資歷鳥奴，現任3隻肉雞鏟屎官'
+    },
+    費用: {
+      name: '費用',
+      type: 'number',
+      value: random(10, 300)
+    },
+    時長: {
+      name: '時長',
+      type: 'number',
+      value: random(30, 120)
+    },
+    人數下限: {
+      name: '人數下限',
+      type: 'number',
+      value: random(1, 10)
+    },
+    人數上限: {
+      name: '人數上限',
+      type: 'number',
+      value: random(10, 50)
+    }    
+  }
+});
 
 export const SamplePlays = [
   {

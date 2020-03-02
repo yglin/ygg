@@ -19,22 +19,22 @@ import { Image } from '@ygg/shared/omni-types/core';
 import { TourPlanAdminComponent } from './ui/tour-plan-admin/tour-plan-admin.component';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { PlayViewComponent } from './ui/play-view/play-view.component';
-import { SharedUserModule } from '@ygg/shared/user';
+import { SharedUserModule, UserMenuService } from '@ygg/shared/user';
 import {
   ImitationPlay,
   ImitationTour,
   ImitationTourPlan
 } from '@ygg/playwhat/core';
 import { ShoppingUiModule } from '@ygg/shopping/ui';
-
-export const playwhatTourRoutes: Route[] = [];
+import { MyPlayListComponent } from './ui/my-play-list/my-play-list.component';
+import { routes } from './routes';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule,
+    RouterModule.forChild(routes),
     FlexLayoutModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
@@ -49,7 +49,8 @@ export const playwhatTourRoutes: Route[] = [];
     TourPlanViewComponent,
     TourPlanBuilderComponent,
     TourPlanAdminComponent,
-    PlayViewComponent
+    PlayViewComponent,
+    MyPlayListComponent
   ],
   entryComponents: [
     TourViewComponent,
@@ -68,6 +69,12 @@ export const playwhatTourRoutes: Route[] = [];
       provide: APP_INITIALIZER,
       useFactory: configAdminMenu,
       deps: [PlaywhatAdminService],
+      multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: configUserMenu,
+      deps: [UserMenuService],
       multi: true
     }
   ],
@@ -99,6 +106,17 @@ export function configTheThingImitation(
       id: 'tour-plan',
       label: '遊程規劃',
       component: TourPlanViewComponent
+    });
+  };
+}
+
+export function configUserMenu(userMenuService: UserMenuService) {
+  return () => {
+    userMenuService.addItem({
+      id: 'play',
+      label: '我的體驗',
+      link: 'plays/my',
+      icon: 'local_play'
     });
   };
 }

@@ -68,10 +68,10 @@ export class SiteNavigator {
   private gotoMyPlay(path: string[]) {
     cy.get('#account-widget .menu-trigger').click({ force: true });
     cy.get('#user-menu button#play').click({ force: true });
-    const route = path.shift();
-    if (route === 'list') {
-      cy.get('#play-list').click({ force: true });
-    }
+    // const route = path.shift();
+    // if (route === 'list') {
+    //   cy.get('#play-list').click({ force: true });
+    // }
   }
 
   private gotoScheduler(path: string[]) {

@@ -59,13 +59,13 @@ export class TheThingCellsEditorComponent
   }
 
   writeValue(cells: TheThingCell[] | { [key: string]: TheThingCell }): void {
-    console.log(JSON.stringify(cells));
+    // console.log(JSON.stringify(cells));
     if (isArray(cells)) {
       cells = keyBy(cells, 'name');
     } else {
       cells = isEmpty(cells) ? {} : cells;
     }
-    console.log(cells);
+    // console.log(cells);
     this.deleteAllCells();
     for (const name in cells) {
       if (cells.hasOwnProperty(name)) {
