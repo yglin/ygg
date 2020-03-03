@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@ygg/shared/types';
+import { Location } from '@ygg/shared/omni-types/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({

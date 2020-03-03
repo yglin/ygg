@@ -1,5 +1,5 @@
 import { PageObject } from '@ygg/shared/test/page-object';
-import { DateRange, NumberRange, Contact } from '@ygg/shared/types';
+import { DateRange, NumberRange, Contact } from '@ygg/shared/omni-types/core';
 import { Tags } from '@ygg/tags/core';
 
 export abstract class SchedulePlanControlPageObject extends PageObject {

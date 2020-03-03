@@ -27,7 +27,7 @@
       <div ygg-action-bar-content>
         <div
           *ngIf="relationSubject"
-          class='relation-create-hint'
+          class="relation-create-hint"
           fxLayout="row"
           fxLayoutAlign="start center"
           fxLayoutGap="10px"
@@ -82,8 +82,24 @@
             [formControl]="formControlCells"
           ></the-thing-cells-editor>
         </div>
-        <div class="relations">
+        <div class="relations-editors">
           <ygg-title-divider>關聯其他東東</ygg-title-divider>
+          <form [formGroup]="formGroupRelations">
+            <div
+              *ngFor="
+                let controlEntry of formGroupRelations.controls | keyvalue
+              "
+              [attr.relation-name]="controlEntry.key"
+            >
+              <the-thing-relations-editor
+                [name]="controlEntry.key"
+                [formControlName]="controlEntry.key"
+                [subject]="theThing"
+                (createObject)="gotoCreateRelationObject(controlEntry.key)"
+              ></the-thing-relations-editor>
+            </div>
+          </form>
+          <br /><br />
           <div class="add-relation">
             <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
               <div>
@@ -93,51 +109,24 @@
                     matInput
                     [formControl]="formControlNewRelationName"
                     class="relation-name"
+                    placeholder="新增關聯"
                   />
                 </mat-form-field>
-                <!-- <mat-autocomplete>
-        <mat-option *ngFor="let name of relationNames" [value]="name">
-        {{ name }}
-        </mat-option>
-        </mat-autocomplete> -->
               </div>
               <div>
                 <button
-                  type="button"
+                  [disabled]="!formControlNewRelationName.value"
                   mat-mini-fab
-                  class="the-thing-create"
-                  (click)="gotoCreateRelationObject()"
-                  [disabled]="isNewRelationNameEmpty"
+                  (click)="onAddNewRelation()"
+                  class="add-relation"
                 >
-                  <mat-icon>post_add</mat-icon>
-                </button>
-              </div>
-              <div>
-                <button
-                  type="button"
-                  mat-mini-fab
-                  class="the-thing-finder"
-                  (click)="openTheThingFinder()"
-                  [disabled]="isNewRelationNameEmpty"
-                >
-                  <mat-icon>zoom_in</mat-icon>
+                  <mat-icon>add</mat-icon>
                 </button>
               </div>
             </div>
           </div>
-          <div class="relation-list">
-            <div
-              *ngFor="let relation of relations | keyvalue"
-              [attr.relation-name]="relation.key"
-            >
-              <h3>{{ relation.key }}</h3>
-              <ygg-image-thumbnail-list
-                [items$]="relation.value.objects$"
-                (deleteItem)="onDeleteRelation(relation.key, $event)"
-              ></ygg-image-thumbnail-list>
-            </div>
-          </div>
-        </div></div
-    ></ygg-action-bar-layout>
+        </div>
+      </div></ygg-action-bar-layout
+    >
   </form>
 </div>

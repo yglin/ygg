@@ -33,6 +33,7 @@ import { ImitationManagerComponent } from './imitation/imitation-manager/imitati
 import { TheThingCellsEditorComponent } from './cell/cells-editor/cells-editor.component';
 import { ImitationViewDogComponent } from './imitation/imitation-view-dog/imitation-view-dog.component';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
+import { RelationsEditorComponent } from './relation/relations-editor/relations-editor.component';
 
 interface TheThingUiModuleConfig {
   imitations: TheThingImitation[];
@@ -69,6 +70,7 @@ interface TheThingUiModuleConfig {
     TheThingDataTableComponent,
     TheThingCellsEditorComponent,
     ImitationViewDogComponent,
+    RelationsEditorComponent,
   ],
   exports: [
     CellListComponent,
@@ -82,7 +84,8 @@ interface TheThingUiModuleConfig {
     TheThingListComponent,
     MyThingsComponent,
     TheThingDataTableComponent,
-    TheThingCellsEditorComponent
+    TheThingCellsEditorComponent,
+    RelationsEditorComponent
   ],
   entryComponents: [ImitationEditorComponent, TheThingFinderComponent, ImitationViewDogComponent],
   providers: [

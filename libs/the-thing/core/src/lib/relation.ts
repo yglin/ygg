@@ -15,7 +15,7 @@ export class TheThingRelation implements SerializableJSON {
   name: string;
   subjectId: string;
   objectId: string;
-  private cells: { [name: string]: TheThingCell } = {};
+  cells: { [name: string]: TheThingCell } = {};
 
   constructor(options?: ITheThingRelation) {
     if (options) {

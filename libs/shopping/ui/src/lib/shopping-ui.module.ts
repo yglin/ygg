@@ -8,6 +8,7 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { ShoppingCartEditorComponent } from './cart/shopping-cart-editor/shopping-cart-editor.component';
 import { FormsModule } from '@angular/forms';
 import { TheThingUiModule } from '@ygg/the-thing/ui';
+import { AdditionViewComponent } from './addition/addition-view/addition-view.component';
 // import { PurchaseControlComponent } from './purchase/purchase-control/purchase-control.component';
 
 @NgModule({
@@ -22,12 +23,14 @@ import { TheThingUiModule } from '@ygg/the-thing/ui';
     PurchaseListComponent,
     // ProductThumbnailComponent,
     // PurchaseThumbnailComponent,
-    ShoppingCartEditorComponent
+    ShoppingCartEditorComponent,
+    AdditionViewComponent
     // PurchaseControlComponent
   ],
   exports: [
     PurchaseListComponent,
-    ShoppingCartEditorComponent
+    ShoppingCartEditorComponent,
+    AdditionViewComponent
     // PurchaseControlComponent
   ],
   entryComponents: [

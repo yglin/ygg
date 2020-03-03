@@ -1,0 +1,16 @@
+<div class="addition-view" *ngIf="theThing">
+  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px">
+    <div>
+      <h3>{{ theThing.name }}</h3>
+    </div>
+    <div>
+      <div>
+        <h5>{{ CellNamePrice }}: {{ theThing.getCellValue(CellNamePrice)}}</h5>
+      </div>
+      <div>
+        <h5>{{ CellNameStock }}: {{ theThing.getCellValue(CellNameStock)}}</h5>
+      </div>
+    </div>
+  </div>
+  
+</div>

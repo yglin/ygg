@@ -1,5 +1,4 @@
 import { TheThing, TheThingCell } from '@ygg/the-thing/core';
-import { Album, Image } from '@ygg/shared/types';
 import { login, MockDatabase } from '@ygg/shared/test/cypress';
 import { littlePenguin, kiwi, kakapo } from './australia-birbs';
 import { Sam, Frodo, Gollum } from './hobbits';

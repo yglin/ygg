@@ -27,5 +27,6 @@ export abstract class ImageThumbnailListPageObject extends PageObject {
   abstract expectItems(items: ImageThumbnailItem[]): void;
   abstract selectItem(item: ImageThumbnailItem): void;
   abstract selectItems(items: ImageThumbnailItem[]): void;
+  abstract deleteItem(item: ImageThumbnailItem): void;
   abstract clearSelection(): void;
 }

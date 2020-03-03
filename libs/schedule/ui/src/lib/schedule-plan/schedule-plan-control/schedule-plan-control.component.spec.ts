@@ -15,7 +15,7 @@ import {
   NG_VALUE_ACCESSOR,
   ControlValueAccessor
 } from '@angular/forms';
-import { SharedTypesModule, DateRange, Contact } from '@ygg/shared/types';
+import { SharedTypesModule, DateRange, Contact } from '@ygg/shared/omni-types/core';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 import { SchedulePlanControlComponent } from './schedule-plan-control.component';

@@ -17,7 +17,6 @@
 
 import { TheThingImitation } from '@ygg/the-thing/core';
 export const CellNamePrice = '費用';
-export const RelationAddition = '加購項目';
 export const ImitationProduct: TheThingImitation = new TheThingImitation().fromJSON(
   {
     id: 'z21vrLvyVEqS9jssv5dgXg',

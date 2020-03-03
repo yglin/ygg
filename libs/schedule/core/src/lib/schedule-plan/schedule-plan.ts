@@ -19,7 +19,7 @@ import {
   DateRange,
   Contact,
   DayTimeRange
-} from '@ygg/shared/types';
+} from '@ygg/shared/omni-types/core';
 import { User } from '@ygg/shared/user';
 // import { PlayTag } from '@ygg/playwhat/play';
 import { Tags, Taggable } from '@ygg/tags/core';

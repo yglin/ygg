@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SchedulePlanService } from '@ygg/schedule/data-access';
 import { of } from 'rxjs';
-import { DateRangeComponent } from '@ygg/shared/types';
+import { DateRangeComponent } from '@ygg/shared/omni-types/core';
 import { MatIcon } from '@angular/material/icon';
 
 describe('SchedulePlanThumbnailComponent', () => {

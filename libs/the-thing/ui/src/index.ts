@@ -3,3 +3,4 @@ export * from './lib/cell';
 export * from './lib/the-thing';
 export * from './lib/imitation';
 export * from './lib/the-thing-views.service';
+export * from './lib/relation';

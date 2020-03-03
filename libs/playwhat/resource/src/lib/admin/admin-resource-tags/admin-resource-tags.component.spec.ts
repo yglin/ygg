@@ -1,6 +1,6 @@
 import { sampleSize, xor } from 'lodash';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Tags } from '@ygg/shared/types';
+import { Tags } from '@ygg/shared/omni-types/core';
 import { AdminResourceTagsComponent } from './admin-resource-tags.component';
 import { DebugElement, Injectable } from '@angular/core';
 // import { By } from '@angular/platform-browser';

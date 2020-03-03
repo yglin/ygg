@@ -1,5 +1,5 @@
 import { FormGroupModel, FormControlType } from '@ygg/shared/ui/dynamic-form';
-import { Album, BusinessHours, Location } from '@ygg/shared/types';
+import { Album, BusinessHours, Location } from '@ygg/shared/omni-types/core';
 
 export const PlayFormGroupModel: FormGroupModel = {
   name: 'play-form',

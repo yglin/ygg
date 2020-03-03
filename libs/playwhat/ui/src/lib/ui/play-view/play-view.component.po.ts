@@ -10,7 +10,8 @@ export abstract class PlayViewPageObject extends PageObject {
     album: '.album',
     price: '.price',
     timeLength: '.time-length',
-    limitOnNumber: '.limit-on-number'
+    limitOnNumber: '.limit-on-number',
+    additionList: '.additions'
   };
   albumViewPO: AlbumViewPageObject;
 

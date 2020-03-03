@@ -1,6 +1,8 @@
 import { PlayViewPageObject } from '@ygg/playwhat/ui';
 import { TheThing } from '@ygg/the-thing/core';
 import { AlbumViewPageObjectCypress } from '@ygg/shared/omni-types/test';
+import { CellNamePrice } from '@ygg/shopping/core';
+import { AdditionViewPageObjectCypress } from '@ygg/shopping/test';
 
 export class PlayViewPageObjectCypress extends PlayViewPageObject {
   constructor(parentSelector?: string) {
@@ -25,5 +27,14 @@ export class PlayViewPageObjectCypress extends PlayViewPageObject {
         '人數上限'
       )} 人`
     );
+  }
+
+  expectAdditions(additions: TheThing[]) {
+    cy.wrap(additions).each((addition: any) => {
+      const additionViewPO = new AdditionViewPageObjectCypress(
+        `${this.getSelector('additionList')} [name="${addition.name}"]`
+      );
+      additionViewPO.expectValue(addition);
+    });
   }
 }

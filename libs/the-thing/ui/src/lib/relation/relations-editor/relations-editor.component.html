@@ -1,0 +1,34 @@
+<div class="relations-editor" *ngIf="name && subject">
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+    <div>
+      <h3>{{ name }} <span *ngIf="subject"><mat-icon>arrow_forward</mat-icon> {{ subject.name }}</span></h3>
+    </div>
+    <div>
+      <button
+        type="button"
+        mat-mini-fab
+        class="create-object"
+        (click)="createRelationObject()"
+      >
+        <mat-icon>post_add</mat-icon>
+      </button>
+    </div>
+    <div>
+      <button
+        type="button"
+        mat-mini-fab
+        class="select-objects"
+        (click)="selectRelationObject()"
+      >
+        <mat-icon>zoom_in</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="object-list">
+    <ygg-image-thumbnail-list
+      [items]="objects"
+      (deleteItem)="onDeleteObject($event)"
+      (clickItem)="onClickItem($event)"
+    ></ygg-image-thumbnail-list>
+  </div>
+</div>

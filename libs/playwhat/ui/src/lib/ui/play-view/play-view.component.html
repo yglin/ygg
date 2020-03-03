@@ -22,4 +22,11 @@
       {{ theThing.getCellValue('人數上限') }} 人
     </h3>
   </div>
+  <br>
+  <div class='additions'>
+    <h3>{{ RelationAddition }}</h3>
+    <div *ngFor="let addition of additions" [attr.name]='addition.name'>
+      <ygg-addition-view [theThing]='addition'></ygg-addition-view>
+    </div>
+  </div>
 </div>

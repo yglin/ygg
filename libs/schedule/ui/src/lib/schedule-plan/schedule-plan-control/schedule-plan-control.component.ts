@@ -15,7 +15,7 @@ import {
   FormBuilder,
   Validators
 } from '@angular/forms';
-import { NumberRange, Contact, DateRange } from '@ygg/shared/types';
+import { NumberRange, Contact, DateRange } from '@ygg/shared/omni-types/core';
 import { combineLatest, Observable, Subscription, merge } from 'rxjs';
 import {
   first,

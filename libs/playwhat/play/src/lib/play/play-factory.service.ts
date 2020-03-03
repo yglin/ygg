@@ -3,7 +3,7 @@ import {
   FormGroupModel,
   FormFactoryService
 } from '@ygg/shared/ui/dynamic-form';
-import { BusinessHours, Album, Location } from "@ygg/shared/types";
+import { BusinessHours, Album, Location } from "@ygg/shared/omni-types/core";
 import { FormGroup, FormControl } from '@angular/forms';
 // import { Play } from "./play";
 import { Play } from './play';

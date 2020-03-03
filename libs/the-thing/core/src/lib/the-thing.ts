@@ -377,6 +377,14 @@ export class TheThing implements ImageThumbnailItem {
   }
 
   toJSON(): any {
+    for (const name in this.relations) {
+      if (this.relations.hasOwnProperty(name)) {
+        const relations = this.relations[name];
+        if (isEmpty(relations)) {
+          delete this.relations[name];
+        }
+      }
+    }
     return toJSONDeep(this);
   }
 }

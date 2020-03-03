@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { SharedTypesModule } from "@ygg/shared/types";
+import { SharedTypesModule } from "@ygg/shared/omni-types/core";
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppComponent } from './app.component';

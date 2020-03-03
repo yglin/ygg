@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { GeoPoint } from '@ygg/shared/types';
+import { GeoPoint } from '@ygg/shared/omni-types/core';
 
 @Component({
   selector: 'ygg-geo-point',

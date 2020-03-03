@@ -5,6 +5,7 @@ import { ChipsControlPageObjectCypress } from '@ygg/shared/test/cypress';
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
 import { TheThingFinderPageObjectCypress } from './the-thing-finder.po';
 import { TheThingCellsEditorPageObjectCypress } from '../cell';
+import { RelationsEditorPageObjectCypress } from '../relation';
 
 export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
   constructor(parentSelector?: string) {
@@ -76,41 +77,43 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
 
   addRelationExist(relationName: string, objectThing: TheThing) {
     cy.get(this.getSelector('inputRelationName'))
-      .clear({ force: true })
+      .clear()
       .type(relationName);
-    cy.get(this.getSelector('buttonFindRelationObject')).click({ force: true });
-    const theThingFinderDialogPO = new TheThingFinderPageObjectCypress(
-      '.ygg-dialog'
+    cy.get(this.getSelector('buttonAddRelation')).click();
+    const relationsEditorPO = new RelationsEditorPageObjectCypress(
+      this.getSelectorForRelationsEditor(relationName)
     );
-    theThingFinderDialogPO.select(objectThing);
-    theThingFinderDialogPO.submit();
-    // cy.get(this.getSelector('buttonAddRelation')).click({ force: true });
-    this.expectRelation(relationName, objectThing);
+    relationsEditorPO.expectVisible();
+    relationsEditorPO.addExistObject(objectThing);
   }
 
   removeRelation(relationName: string, objectThing: TheThing) {
-    const relationListControlPO = new ImageThumbnailListPageObjectCypress(
-      this.getSelectorForRelationObjects(relationName)
+    const relationsEditorPO = new RelationsEditorPageObjectCypress(
+      this.getSelectorForRelationsEditor(relationName)
     );
-    relationListControlPO.deleteItem(objectThing);
+    relationsEditorPO.expectVisible();
+    relationsEditorPO.deleteObject(objectThing);
   }
 
   expectRelation(relationName: string, objectThing: TheThing) {
-    const relationObjectListPO = new ImageThumbnailListPageObjectCypress(
-      this.getSelectorForRelationObjects(relationName)
+    const relationsEditorPO = new RelationsEditorPageObjectCypress(
+      this.getSelectorForRelationsEditor(relationName)
     );
-    // relationObjectListPO.expectItem(objectThing);
-    relationObjectListPO.expectItemByNameAndImage(objectThing);
+    relationsEditorPO.expectVisible();
+    relationsEditorPO.expectObject(objectThing);
   }
 
   addRelationAndGotoCreate(relationName: string) {
-    cy.get(this.getSelector('inputMetaName'))
-      .invoke('val')
-      .as('relationSubjectName');
+    cy.get(this.getSelector('inputMetaName')).invoke('val').as('relationSubjectName');
     cy.get(this.getSelector('inputRelationName'))
-      .clear({ force: true })
+      .clear()
       .type(relationName);
-    cy.get(this.getSelector('buttonCreateRelationObject')).click();
+    cy.get(this.getSelector('buttonAddRelation')).click();
+    const relationsEditorPO = new RelationsEditorPageObjectCypress(
+      this.getSelectorForRelationsEditor(relationName)
+    );
+    relationsEditorPO.expectVisible();
+    relationsEditorPO.gotoCreateRelationObject();
     cy.get('@relationSubjectName').then((relationSubjectName: any) => {
       this.expectRelationHint(relationName, relationSubjectName);
     });

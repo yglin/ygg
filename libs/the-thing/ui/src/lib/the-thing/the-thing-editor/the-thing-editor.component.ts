@@ -6,7 +6,8 @@ import {
   mapValues,
   isArray,
   find,
-  last
+  last,
+  keys
 } from 'lodash';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {
@@ -85,6 +86,7 @@ export class TheThingEditorComponent implements OnInit {
   views: { [id: string]: TheThingView } = {};
   relationSubject: RelationSubject;
   relationSubjectsStack: RelationSubject[] = [];
+  formGroupRelations: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -108,6 +110,7 @@ export class TheThingEditorComponent implements OnInit {
     // this.formControlNewCellType = new FormControl();
     // this.formControlNewCellName = new FormControl();
     this.formControlNewRelationName = new FormControl();
+    this.formGroupRelations = formBuilder.group({});
 
     this.subscriptions.push(
       this.imitationAccessService.list$().subscribe(imitations => {
@@ -217,25 +220,24 @@ export class TheThingEditorComponent implements OnInit {
     // this.formControlNewCellType.setValue(null);
     // this.formControlNewRelationName.setValue(null);
 
+    for (const key in this.formGroupRelations.controls) {
+      if (this.formGroupRelations.controls.hasOwnProperty(key)) {
+        this.formGroupRelations.removeControl(key);
+      }
+    }
     if (this.theThing) {
-      // Patch meta data
-      // console.log('reset');
-      // console.dir(this.theThing.toJSON());
       this.formGroup.patchValue(this.theThing, { emitEvent: false });
-      // console.log(this.theThing.cells);
       this.formControlCells.setValue(this.theThing.cells, { emitEvent: false });
-      // // Add cell controls for theThing
-      // for (const name in this.theThing.cells) {
-      //   if (this.theThing.cells.hasOwnProperty(name)) {
-      //     const cell = this.theThing.cells[name];
-      //     this.cellsFormGroup.addControl(
-      //       cell.name,
-      //       new FormControl(cell.value)
-      //     );
-      //   }
-      // }
-      // Relation controls
-      this.fetchRelations();
+      for (const relationName in this.theThing.relations) {
+        if (this.theThing.relations.hasOwnProperty(relationName)) {
+          const relations = this.theThing.relations[relationName];
+          // console.dir(JSON.stringify(relations));
+          this.formGroupRelations.addControl(
+            relationName,
+            new FormControl(relations)
+          );
+        }
+      }
     } else {
       this.formGroup.reset();
       this.formControlCells.setValue({}, { emitEvent: false });
@@ -314,21 +316,20 @@ export class TheThingEditorComponent implements OnInit {
   //   }
   // }
 
-  openTheThingFinder() {
-    const dialogRef = this.dialog.open(TheThingFinderComponent, {
-      title: '從既有的物件中選取'
-    });
-    dialogRef.afterClosed().subscribe((theThings: TheThing[]) => {
-      if (!isEmpty(theThings)) {
-        this.theThing.addRelations(
-          this.formControlNewRelationName.value,
-          theThings
-        );
-        this.theThingChanged.emit(this.theThing);
-        this.fetchRelations();
-      }
-    });
-  }
+  // openTheThingFinder() {
+  //   const dialogRef = this.dialog.open(TheThingFinderComponent, {
+  //     title: '從既有的物件中選取'
+  //   });
+  //   dialogRef.afterClosed().subscribe((theThings: TheThing[]) => {
+  //     if (!isEmpty(theThings)) {
+  //       this.theThing.addRelations(
+  //         this.formControlNewRelationName.value,
+  //         theThings
+  //       );
+  //       this.theThingChanged.emit(this.theThing);
+  //     }
+  //   });
+  // }
 
   updateTheThing() {
     extend(this.theThing, this.formGroup.value);
@@ -336,27 +337,28 @@ export class TheThingEditorComponent implements OnInit {
     if (this.currentUser && !this.theThing.ownerId) {
       this.theThing.ownerId = this.currentUser.id;
     }
-  }
-
-  fetchRelations() {
-    if (this.theThing && !isEmpty(this.theThing.relations)) {
-      this.relations = {};
-      for (const name in this.theThing.relations) {
-        if (this.theThing.relations.hasOwnProperty(name)) {
-          this.relations[name] = {
-            objects$: this.theThingAccessService.listByIds$(
-              this.theThing.getRelationObjectIds(name)
-            )
-          };
-        }
+    this.theThing.relations = {};
+    for (const relationName in this.formGroupRelations.controls) {
+      if (this.formGroupRelations.controls.hasOwnProperty(relationName)) {
+        const control = this.formGroupRelations.controls[relationName];
+        this.theThing.relations[relationName] = control.value;
       }
-    } else {
-      this.relations = {};
     }
   }
 
-  gotoCreateRelationObject() {
+  onAddNewRelation() {
     const relationName = this.formControlNewRelationName.value;
+    // console.log(relationName);
+    if (relationName in this.formGroupRelations.controls) {
+      alert(`關聯 ${relationName} 已存在`);
+    } else if (!!relationName) {
+      this.formGroupRelations.addControl(relationName, new FormControl([]));
+      // console.dir(keys(this.formGroupRelations.controls));
+    }
+  }
+
+  gotoCreateRelationObject(relationName: string) {
+    // const relationName = this.formControlNewRelationName.value;
     this.updateTheThing();
     this.relationSubjectsStack.push({ relationName, subject: this.theThing });
     // console.log('Create new relation object');
@@ -373,15 +375,14 @@ export class TheThingEditorComponent implements OnInit {
     }
   }
 
-  onDeleteRelation(relationName: string, objectThing: TheThing) {
-    if (
-      confirm(`確定要移除連結關係 ${relationName} - ${objectThing.name} ？`)
-    ) {
-      this.theThing.removeRelation(relationName, objectThing);
-      this.theThingChanged.emit(this.theThing);
-      this.fetchRelations();
-    }
-  }
+  // onDeleteRelation(relationName: string, objectThing: TheThing) {
+  //   if (
+  //     confirm(`確定要移除連結關係 ${relationName} - ${objectThing.name} ？`)
+  //   ) {
+  //     this.theThing.removeRelation(relationName, objectThing);
+  //     this.theThingChanged.emit(this.theThing);
+  //   }
+  // }
 
   applyTemplate() {
     this.inProgressing = true;

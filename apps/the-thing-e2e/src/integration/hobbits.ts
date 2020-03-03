@@ -1,5 +1,4 @@
 import { TheThing } from '@ygg/the-thing/core';
-import { Album, Image } from "@ygg/shared/types";
 
 export const Sam = new TheThing().fromJSON({
   name: 'Samwise Gamgee',

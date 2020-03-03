@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Tags } from '@ygg/shared/types';
+import { Tags } from '@ygg/shared/omni-types/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({

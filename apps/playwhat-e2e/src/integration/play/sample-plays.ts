@@ -188,3 +188,5 @@ export const SampleAdditions = [
 ].map(jsonItem => new TheThing().fromJSON(jsonItem));
 
 SamplePlays[0].addRelations(RelationAddition, SampleAdditions);
+
+export const PlayWithAdditions = SamplePlays[0];

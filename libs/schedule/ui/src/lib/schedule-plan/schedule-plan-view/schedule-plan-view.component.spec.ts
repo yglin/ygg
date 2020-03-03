@@ -1,7 +1,7 @@
 import { DebugElement, Inject, Injectable } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { SharedTypesModule, DATE_FORMATS } from '@ygg/shared/types';
+import { SharedTypesModule, DATE_FORMATS } from '@ygg/shared/omni-types/core';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import * as moment from 'moment';
 

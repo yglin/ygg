@@ -6,7 +6,7 @@ import { PlayFormComponent } from './play-form.component';
 import { DebugElement, Injectable } from '@angular/core';
 // import { isDisabled, PageObject } from '@ygg/shared/infra/test-utils';
 import { Play } from '../play';
-import { hasValidator, FormControlType } from '@ygg/shared/types';
+import { hasValidator, FormControlType } from '@ygg/shared/omni-types/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlayService } from '../play.service';
 import { LogService } from '@ygg/shared/infra/log';

@@ -1,5 +1,5 @@
 import { TheThing, TheThingCell, TheThingImitation } from '@ygg/the-thing/core';
-import { Album, Image } from '@ygg/shared/types';
+import { Album, Image } from '@ygg/shared/omni-types/core';
 
 export const imitationAustralianBirb = new TheThingImitation().fromJSON(
   {

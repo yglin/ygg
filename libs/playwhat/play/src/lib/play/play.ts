@@ -4,7 +4,7 @@ import { DataItem, toJSONDeep, generateID } from '@ygg/shared/infra/data-access'
 import {
   BusinessHours,
   Location,
-} from '@ygg/shared/types';
+} from '@ygg/shared/omni-types/core';
 import { Album } from '@ygg/shared/omni-types/core'
 import { FormGroupModel, FormControlModel, FormControlType } from "@ygg/shared/ui/dynamic-form";
 import { Tags, Taggable } from '@ygg/tags/core';

@@ -1,12 +1,10 @@
 import { TheThing, TheThingCell } from '@ygg/the-thing/core';
-import { Album, Image } from '@ygg/shared/types';
+import { Album } from '@ygg/shared/omni-types/core';
 import { login, MockDatabase } from '@ygg/shared/test/cypress';
-import { littlePenguin, kiwi, kakapo } from './australia-birbs';
-import { Sam, Frodo, Gollum } from './hobbits';
+import { kakapo } from './australia-birbs';
 import {
   TheThingEditorPageObjectCypress,
   TheThingViewPageObjectCypress,
-  getCreatedTheThingId
 } from '@ygg/the-thing/test';
 
 const mockDatabase = new MockDatabase();
