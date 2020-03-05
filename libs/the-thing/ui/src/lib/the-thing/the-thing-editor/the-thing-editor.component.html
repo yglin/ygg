@@ -26,7 +26,7 @@
       </div>
       <div ygg-action-bar-content>
         <div
-          *ngIf="relationSubject"
+          *ngIf="relationCreation"
           class="relation-create-hint"
           fxLayout="row"
           fxLayoutAlign="start center"
@@ -34,8 +34,8 @@
         >
           <h4>
             <mat-icon>call_merge</mat-icon>
-            關聯物件：{{ relationSubject.relationName }} →
-            {{ relationSubject.subject.name }}
+            關聯物件：{{ relationCreation.relationName }} →
+            {{ relationCreation.subject.name }}
           </h4>
           <button
             type="button"

@@ -27,10 +27,12 @@ export class TitleDividerComponent implements OnInit {
       );
     this.minFontSize = Math.max(MIN_FONT_SIZE, leveledFontSize - 2);
     this.maxFontSize = Math.min(MAX_FONT_SIZE, leveledFontSize + 2);
-    const width = (90 * (MAX_LEVEL - this.level + 1)) / MAX_LEVEL;
+    const width = Math.floor((90 * (MAX_LEVEL - this.level + 1)) / MAX_LEVEL);
+    const borderWidth = 2 + Math.floor((4 * (MAX_LEVEL - this.level + 1)) / MAX_LEVEL);
     this.styles = {
       width: width + '%',
-      'min-width': '300px'
+      'min-width': '300px',
+      'border-width': `${borderWidth}px`
     };
     // console.dir(this.level);
     // console.dir(this.styles);

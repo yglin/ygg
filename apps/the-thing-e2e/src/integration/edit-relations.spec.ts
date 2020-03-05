@@ -1,7 +1,20 @@
-import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import {
+  TheThing,
+  TheThingCell,
+  RelationDef,
+  ImitationsDataPath
+} from '@ygg/the-thing/core';
 import { login, MockDatabase } from '@ygg/shared/test/cypress';
 import { littlePenguin, kiwi, kakapo } from './australia-birbs';
-import { Sam, Frodo, Gollum } from './hobbits';
+import {
+  Sam,
+  Frodo,
+  Gollum,
+  ImitationFrodo,
+  relationGollumToFrodo,
+  relationSamToGollum,
+  ImitationGollum
+} from './hobbits';
 import {
   TheThingEditorPageObjectCypress,
   TheThingViewPageObjectCypress,
@@ -12,13 +25,28 @@ const mockDatabase = new MockDatabase();
 
 describe('Edit relations to other the-things', () => {
   before(() => {
-    login();
-    mockDatabase.insert(`${TheThing.collection}/${Sam.id}`, Sam.toJSON());
-    mockDatabase.insert(`${TheThing.collection}/${Gollum.id}`, Gollum.toJSON());
+    login().then(user => {
+      mockDatabase.insert(`${TheThing.collection}/${Sam.id}`, Sam.toJSON());
+      mockDatabase.insert(
+        `${TheThing.collection}/${Gollum.id}`,
+        Gollum.toJSON()
+      );
+      mockDatabase.backupRTDB(ImitationsDataPath);
+      mockDatabase.insertRTDB(
+        `${ImitationsDataPath}/${ImitationFrodo.id}`,
+        ImitationFrodo.toJSON()
+      );
+      mockDatabase.insertRTDB(
+        `${ImitationsDataPath}/${ImitationGollum.id}`,
+        ImitationGollum.toJSON()
+      );
+      cy.visit('/');
+    });
   });
 
   after(() => {
     mockDatabase.clear();
+    mockDatabase.restoreRTDB();
   });
 
   beforeEach(function() {
@@ -67,15 +95,12 @@ describe('Edit relations to other the-things', () => {
 
     const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.expectVisible();
-    const relationFrodoToGollum = 'Psychopath keeps calling me master';
-    // Set relation name "Save my sorry ass", and go-to creation of "Doraemon"
-    theThingEditorPO.addRelationAndGotoCreate(relationFrodoToGollum);
-    // cy.pause();
+    theThingEditorPO.addRelationAndGotoCreate(relationGollumToFrodo.name);
+
     // Now should be the second-level creation page
     theThingEditorPO.setValue(Gollum);
 
-    const relationGollumToSam = "Master's gay fwend";
-    theThingEditorPO.addRelationAndGotoCreate(relationGollumToSam);
+    theThingEditorPO.addRelationAndGotoCreate(relationSamToGollum.name);
     // cy.pause();
     // Third level creation page
     theThingEditorPO.setValue(Sam);
@@ -84,19 +109,28 @@ describe('Edit relations to other the-things', () => {
 
     // Back to second level
     theThingEditorPO.expectValue(Gollum);
-    theThingEditorPO.expectRelation(relationGollumToSam, Sam);
+    theThingEditorPO.expectRelation(relationSamToGollum.name, Sam);
     theThingEditorPO.submit();
 
     // Back to the originla the-thing
     theThingEditorPO.expectValue(Frodo);
-    theThingEditorPO.expectRelation(relationFrodoToGollum, Gollum);
+    theThingEditorPO.expectRelation(relationGollumToFrodo.name, Gollum);
     theThingEditorPO.submit();
 
     const theThingViewPO = new TheThingViewPageObjectCypress();
     theThingViewPO.expectVisible();
     theThingViewPO.expectValue(Frodo);
-    theThingViewPO.expectRelation(relationFrodoToGollum, Gollum);
+    theThingViewPO.expectRelation(relationGollumToFrodo.name, Gollum);
     // theThingViewPO.expectNotLinkRelationBack();
+  });
+
+  it('In creation of relation object, expect related imitation applied', () => {
+    cy.visit(`/the-things/create?imitation=${ImitationFrodo.id}`);
+    const theThingEditorPO = new TheThingEditorPageObjectCypress();
+    theThingEditorPO.expectVisible();
+    theThingEditorPO.expectRelation(relationGollumToFrodo.name);
+    theThingEditorPO.addRelationAndGotoCreate(relationGollumToFrodo.name);
+    theThingEditorPO.expectRelation(relationSamToGollum.name);
   });
 
   it('Cancel create relation object on-the-fly', () => {
@@ -104,12 +138,9 @@ describe('Edit relations to other the-things', () => {
 
     const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.expectVisible();
-    const relationFrodoToGollum = 'Psychopath keeps calling me master';
-    // Set relation name "Save my sorry ass", and go-to creation of "Doraemon"
-    theThingEditorPO.addRelationAndGotoCreate(relationFrodoToGollum);
-    theThingEditorPO.expectRelationHint(relationFrodoToGollum, Frodo.name);
+    theThingEditorPO.addRelationAndGotoCreate(relationGollumToFrodo.name);
+    theThingEditorPO.expectRelationHint(relationGollumToFrodo.name, Frodo.name);
     theThingEditorPO.cancelRelationCreate();
-    theThingEditorPO.expectValue(Frodo);    
+    theThingEditorPO.expectValue(Frodo);
   });
-  
 });

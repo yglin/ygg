@@ -206,24 +206,40 @@ export class TheThing implements ImageThumbnailItem {
     );
   }
 
-  addRelation(
-    relationName: string,
-    objectId: TheThing | string,
-    cells: TheThingCell[] = []
-  ) {
-    if (typeof objectId !== 'string') {
-      objectId = objectId.id;
+  addRelation(...args: any[]) {
+    if (!args || args.length <= 0) {
+      throw Error(
+        `Incorrect arguments for TheThing.addRelation(): ${JSON.stringify(
+          args
+        )}`
+      );
     }
-    const newRelation = new TheThingRelation({
-      name: relationName,
-      subjectId: this.id,
-      objectId: objectId,
-      cells: keyBy(cells, 'name')
-    });
+    const relationName = args[0];
     if (!(relationName in this.relations)) {
       this.relations[relationName] = [];
     }
-    this.relations[relationName].push(newRelation);
+
+    if (args.length >= 2) {
+      let objectId: string;
+      if (typeof args[1] === 'string') {
+        objectId = args[1];
+      } else {
+        objectId = args[1].id;
+      }
+
+      let cells: TheThingCell[] = [];
+      if (args.length >= 3 && !isEmpty(args[2])) {
+        cells = args[2];
+      }
+
+      const newRelation = new TheThingRelation({
+        name: relationName,
+        subjectId: this.id,
+        objectId: objectId,
+        cells: keyBy(cells, 'name')
+      });
+      this.relations[relationName].push(newRelation);
+    }
   }
 
   addRelations(relationName: string, objects: TheThing[] | string[]) {
@@ -377,14 +393,15 @@ export class TheThing implements ImageThumbnailItem {
   }
 
   toJSON(): any {
-    for (const name in this.relations) {
-      if (this.relations.hasOwnProperty(name)) {
-        const relations = this.relations[name];
+    const data = toJSONDeep(this);
+    for (const name in data.relations) {
+      if (data.relations.hasOwnProperty(name)) {
+        const relations = data.relations[name];
         if (isEmpty(relations)) {
-          delete this.relations[name];
+          delete data.relations[name];
         }
       }
     }
-    return toJSONDeep(this);
+    return data;
   }
 }

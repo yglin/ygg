@@ -1,4 +1,4 @@
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingImitation, RelationDef } from '@ygg/the-thing/core';
 
 export const Sam = new TheThing().fromJSON({
   name: 'Samwise Gamgee',
@@ -67,3 +67,63 @@ export const Gollum = new TheThing().fromJSON({
     }
   }
 });
+
+export const ImitationFrodo = new TheThingImitation().fromJSON({
+  name: 'Frodo Ball-Baggins',
+  image: 'https://img.memecdn.com/chicken-nugget-frodo_o_4166515.jpg',
+  description: 'MY sword, MY axe, MY bow, MY ring, ALL MINE~!!!',
+  cellsDef: [
+    {
+      name: 'photos',
+      type: 'album',
+      required: true
+    },
+    {
+      name: 'master level',
+      type: 'number',
+      required: true
+    },
+    {
+      name: 'number of followers',
+      type: 'number',
+      required: true
+    },
+  ]
+});
+
+export const ImitationGollum = new TheThingImitation().fromJSON({
+  name: 'Not That Ugly Dobby in Harry Potter',
+  image: 'https://images7.memedroid.com/images/UPLOADED170/565f936f42e6e.jpeg',
+  description: 'Dirty thieves...Me say Master ....... Dirty Fucking Thieves...',
+  cellsDef: [
+    {
+      name: 'photos',
+      type: 'album',
+      required: true
+    },
+    {
+      name: 'my precious',
+      type: 'text',
+      required: true
+    },
+    {
+      name: 'how to eat fish',
+      type: 'html',
+      required: true
+    },
+  ]
+});
+
+export const relationGollumToFrodo = new RelationDef({
+  name: "Psychopath keeps calling me master",
+  imitationId: ImitationGollum.id
+});
+
+ImitationFrodo.addRelationDef(relationGollumToFrodo);
+
+export const relationSamToGollum = new RelationDef({
+  name: "Masters gay fwend"
+});
+
+ImitationGollum.addRelationDef(relationSamToGollum);
+

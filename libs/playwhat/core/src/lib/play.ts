@@ -1,5 +1,5 @@
-import { TheThingImitation, TheThing } from '@ygg/the-thing/core';
-import { DateRange } from '@ygg/shared/omni-types/core';
+import { TheThingImitation, TheThing, RelationDef } from '@ygg/the-thing/core';
+import { RelationAddition } from '@ygg/shopping/core';
 
 export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON(
   {
@@ -23,7 +23,7 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
         name: '照片',
         type: 'album',
         required: true
-      },      
+      },
       費用: {
         name: '費用',
         type: 'number',
@@ -64,3 +64,5 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
     }
   }
 );
+
+ImitationPlay.addRelationDef(RelationAddition);

@@ -95,16 +95,20 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
     relationsEditorPO.deleteObject(objectThing);
   }
 
-  expectRelation(relationName: string, objectThing: TheThing) {
+  expectRelation(relationName: string, objectThing?: TheThing) {
     const relationsEditorPO = new RelationsEditorPageObjectCypress(
       this.getSelectorForRelationsEditor(relationName)
     );
     relationsEditorPO.expectVisible();
-    relationsEditorPO.expectObject(objectThing);
+    if (objectThing) {
+      relationsEditorPO.expectObject(objectThing);
+    }
   }
 
   addRelationAndGotoCreate(relationName: string) {
-    cy.get(this.getSelector('inputMetaName')).invoke('val').as('relationSubjectName');
+    cy.get(this.getSelector('inputMetaName'))
+      .invoke('val')
+      .as('relationSubjectName');
     cy.get(this.getSelector('inputRelationName'))
       .clear()
       .type(relationName);

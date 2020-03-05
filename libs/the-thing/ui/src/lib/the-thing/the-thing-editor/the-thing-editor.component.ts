@@ -22,7 +22,8 @@ import {
   TheThingCell,
   TheThingCellTypes,
   TheThingImitation,
-  TheThingView
+  TheThingView,
+  RelationDef
 } from '@ygg/the-thing/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { Tags } from '@ygg/tags/core';
@@ -38,7 +39,15 @@ import {
   Subject,
   merge
 } from 'rxjs';
-import { map, switchMap, take, catchError, timeout } from 'rxjs/operators';
+import {
+  map,
+  switchMap,
+  take,
+  catchError,
+  timeout,
+  first,
+  tap
+} from 'rxjs/operators';
 import {
   PageStashService,
   PageStashPromise
@@ -48,10 +57,12 @@ import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { TheThingFinderComponent } from '../the-thing-finder/the-thing-finder.component';
 import { TheThingViewsService } from '../../the-thing-views.service';
 import { TheThingBuilderService } from '../../the-thing-builder.service';
+import { LogService } from '@ygg/shared/infra/log';
 
-interface RelationSubject {
+interface RelationCreation {
   relationName: string;
   subject: TheThing;
+  imitation: TheThingImitation;
 }
 
 @Component({
@@ -75,6 +86,7 @@ export class TheThingEditorComponent implements OnInit {
   isNewRelationNameEmpty = true;
   subscriptions: Subscription[] = [];
   currentUser: User;
+  imitation: TheThingImitation;
   imitations: TheThingImitation[] = [];
   hasImitations: boolean = false;
   pendingRelation: any;
@@ -84,8 +96,8 @@ export class TheThingEditorComponent implements OnInit {
   inProgressing: boolean = false;
   // canDeleteAllCells: boolean = false;
   views: { [id: string]: TheThingView } = {};
-  relationSubject: RelationSubject;
-  relationSubjectsStack: RelationSubject[] = [];
+  relationCreation: RelationCreation;
+  relationCreationsStack: RelationCreation[] = [];
   formGroupRelations: FormGroup;
 
   constructor(
@@ -124,102 +136,64 @@ export class TheThingEditorComponent implements OnInit {
         this.isNewRelationNameEmpty = !value;
       })
     );
+
     this.subscriptions.push(
       this.authenticateService.currentUser$.subscribe(
         user => (this.currentUser = user)
       )
     );
 
-    // this.subscriptions.push(
-    //   merge(
-    //     this.formGroup.valueChanges,
-    //     this.formControlCells.valueChanges
-    //   ).subscribe(() => {
-    //     this.updateTheThing();
-    //     this.theThingChanged.emit(this.theThing);
-    //   })
-    // );
     this.views = this.theThingViewsService.views;
-    // console.dir(this.theThingViewsService.views);
   }
 
-  initResolveTheThing(): TheThing {
+  async initResolveTheThing(): Promise<TheThing> {
     if (this.theThing) {
-      // console.info('Resolve from component input');
       return this.theThing;
     }
-
-    // if (this.pageStashService.isMatchPageResolved(this.router.url)) {
-    //   // Fetch the-thing from local temporary storage
-    //   const pageData = this.pageStashService.pop();
-    //   // console.log(pageData);
-    //   const theThing = new TheThing().fromJSON(pageData.data.theThing);
-    //   for (const key in pageData.promises) {
-    //     if (pageData.promises.hasOwnProperty(key)) {
-    //       const promise = pageData.promises[key];
-    //       if (key === 'relation' && promise.data) {
-    //         theThing.addRelations(promise.data.name, [promise.data.objectId]);
-    //       }
-    //     }
-    //   }
-    //   console.info('Resolve from pending relation');
-    //   return theThing;
-    // }
 
     // Fetch the-thing from route resolver
     const fromResolve = get(this.route.snapshot, 'data.theThing', null);
     if (fromResolve) {
-      // console.info('Resolve from id in route path');
-      // console.info(fromResolve.toJSON());
       return fromResolve;
     }
 
     // Fetch the-thing from clone
     const cloneSource: TheThing = get(this.route.snapshot, 'data.clone', null);
     if (cloneSource) {
-      // console.info(`Resolve from clone: ${cloneSource.id}`);
       return cloneSource.clone();
     }
 
-    // // Fetch the-thing from clone origin
-    // const cloneId = this.route.snapshot.queryParamMap.get('clone');
-    // if (cloneId) {
-    //   return this.theThingAccessService
-    //     .get$(cloneId)
-    //     .pipe(map(origin => origin.clone()));
-    // }
-
-    // Fetch the-thing from imitation template
-    // console.log(this.route.snapshot.data);
-    const fromImitationTemplate = get(
-      this.route.snapshot,
-      'data.imitationTemplate',
-      null
-    );
-    if (fromImitationTemplate) {
-      // console.info('Resolve from imitation template');
-      return fromImitationTemplate;
+    let resolveNewThing: Promise<TheThing>;
+    // Apply imitation
+    const imitationId = this.route.snapshot.queryParamMap.get('imitation');
+    if (imitationId) {
+      resolveNewThing = new Promise((resolve, reject) => {
+        this.imitationAccessService
+          .get$(imitationId)
+          .pipe(
+            first(),
+            map(imitation => {
+              console.dir(imitation.toJSON());
+              this.imitation = imitation;
+              return imitation.createTheThing();
+            }),
+            tap(newThing => console.dir(newThing)),
+            catchError(error => {
+              console.warn(error.message);
+              return of(new TheThing());
+            })
+          )
+          .subscribe(newThing => {
+            resolve(newThing);
+          });
+      });
+    } else {
+      resolveNewThing = Promise.resolve(new TheThing());
     }
-
-    // Not found any source of the-thing, create a new one
-    // console.info('Resolve from nothing, create a brand new one');
-    return new TheThing();
+    return resolveNewThing;
   }
 
   reset() {
-    // Reset meta data
-    // this.formGroup.reset();
-    // // Cear cell controls
-    // for (const controlName in this.cellsFormGroup.controls) {
-    //   if (this.cellsFormGroup.controls.hasOwnProperty(controlName)) {
-    //     this.cellsFormGroup.removeControl(controlName);
-    //   }
-    // }
-    // // Reset cell adder controls
-    // this.formControlNewCellName.setValue(null);
-    // this.formControlNewCellType.setValue(null);
-    // this.formControlNewRelationName.setValue(null);
-
     for (const key in this.formGroupRelations.controls) {
       if (this.formGroupRelations.controls.hasOwnProperty(key)) {
         this.formGroupRelations.removeControl(key);
@@ -242,13 +216,13 @@ export class TheThingEditorComponent implements OnInit {
       this.formGroup.reset();
       this.formControlCells.setValue({}, { emitEvent: false });
     }
-    this.relationSubject = last(this.relationSubjectsStack);
+    this.relationCreation = last(this.relationCreationsStack);
     // this.pendingRelation = this.pageStashService.getPendingPromise('relation');
     this.inProgressing = false;
     // this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     // if (!isArray(this.onlyCells)) {
     //   this.onlyCells = this.onlyCells !== undefined && this.onlyCells !== false;
     // }
@@ -266,7 +240,8 @@ export class TheThingEditorComponent implements OnInit {
         this.reset();
       })
     );
-    this.theThing$.next(this.initResolveTheThing());
+    const initTheThing = await this.initResolveTheThing();
+    this.theThing$.next(initTheThing);
   }
 
   ngOnDestroy(): void {
@@ -276,60 +251,6 @@ export class TheThingEditorComponent implements OnInit {
       subscription.unsubscribe();
     }
   }
-
-  // addCell(cell: TheThingCell) {
-  //   if (!cell) {
-  //     const newCellName = this.formControlNewCellName.value;
-  //     const newCellType = this.formControlNewCellType.value;
-  //     cell = new TheThingCell().fromJSON({
-  //       name: newCellName,
-  //       type: newCellType,
-  //       value: null
-  //     });
-  //   }
-  //   if (this.theThing.hasCell(cell)) {
-  //     alert(`資料欄位 ${cell.name} 已存在了喔`);
-  //   } else {
-  //     this.theThing.addCell(cell);
-  //     this.cellsFormGroup.addControl(cell.name, new FormControl(cell.value));
-  //     this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
-  //   }
-  // }
-
-  // deleteCell(cell: TheThingCell) {
-  //   if (cell && confirm(`移除資料欄位 ${cell.name}`)) {
-  //     this.theThing.deleteCell(cell);
-  //     this.cellsFormGroup.removeControl(cell.name);
-  //     this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
-  //   }
-  // }
-
-  // deleteAllCells() {
-  //   if (confirm(`清除所有的資料欄位？`)) {
-  //     for (const cellName in this.theThing.cells) {
-  //       if (this.theThing.cells.hasOwnProperty(cellName)) {
-  //         this.cellsFormGroup.removeControl(cellName);
-  //       }
-  //     }
-  //     this.theThing.clearCells();
-  //     this.canDeleteAllCells = size(this.cellsFormGroup.controls) >= 3;
-  //   }
-  // }
-
-  // openTheThingFinder() {
-  //   const dialogRef = this.dialog.open(TheThingFinderComponent, {
-  //     title: '從既有的物件中選取'
-  //   });
-  //   dialogRef.afterClosed().subscribe((theThings: TheThing[]) => {
-  //     if (!isEmpty(theThings)) {
-  //       this.theThing.addRelations(
-  //         this.formControlNewRelationName.value,
-  //         theThings
-  //       );
-  //       this.theThingChanged.emit(this.theThing);
-  //     }
-  //   });
-  // }
 
   updateTheThing() {
     extend(this.theThing, this.formGroup.value);
@@ -357,20 +278,63 @@ export class TheThingEditorComponent implements OnInit {
     }
   }
 
-  gotoCreateRelationObject(relationName: string) {
+  async gotoCreateRelationObject(relationName: string) {
     // const relationName = this.formControlNewRelationName.value;
-    this.updateTheThing();
-    this.relationSubjectsStack.push({ relationName, subject: this.theThing });
+    this.backupRelationCreation(relationName);
     // console.log('Create new relation object');
-    this.theThing$.next(new TheThing());
+    let newThing: TheThing = new TheThing();
+    if (this.imitation) {
+      const relationDef: RelationDef = this.imitation.getRelationDef(
+        relationName
+      );
+      let imitation: TheThingImitation;
+      if (relationDef && relationDef.imitationId) {
+        try {
+          imitation = await this.imitationAccessService
+            .get$(relationDef.imitationId)
+            .pipe(take(1))
+            .toPromise();
+          newThing = imitation.createTheThing();
+        } catch (error) {
+          console.warn(error.message);
+          newThing = new TheThing();
+        }
+      } else {
+        newThing = new TheThing();
+      }
+      this.imitation = imitation;
+    }
+    console.log(`Create relation object~!!`);
+    this.theThing$.next(newThing);
+  }
+
+  backupRelationCreation(relationName: string) {
+    this.updateTheThing();
+    this.relationCreationsStack.push({
+      relationName,
+      subject: this.theThing,
+      imitation: this.imitation
+    });
+    this.relationCreation = last(this.relationCreationsStack);
+  }
+
+  restoreRelationCreation() {
+    console.log('Restore relation subject!!');
+    const relationCreation = this.relationCreationsStack.pop();
+    const subject = relationCreation.subject;
+    this.imitation = relationCreation.imitation;
+    this.theThing$.next(subject);
+    this.relationCreation = last(this.relationCreationsStack);
   }
 
   cancelCreateRelation() {
-    if (!isEmpty(this.relationSubjectsStack)) {
-      const subject = last(this.relationSubjectsStack).subject;
-      if (confirm(`取消關聯，回到前一物件 ${subject.name} 的編輯?`)) {
-        this.relationSubjectsStack.pop();
-        this.theThing$.next(subject);
+    if (this.relationCreation) {
+      if (
+        confirm(
+          `取消關聯，回到前一物件 ${this.relationCreation.subject.name} 的編輯?`
+        )
+      ) {
+        this.restoreRelationCreation();
       }
     }
   }
@@ -399,6 +363,7 @@ export class TheThingEditorComponent implements OnInit {
         imitation &&
         confirm(`套用範本 ${imitation.name} 將修改目前資料，確定繼續？`)
       ) {
+        this.imitation = imitation;
         this.theThing.imitate(imitation.createTheThing());
         this.theThing$.next(this.theThing);
       } else {
@@ -424,13 +389,12 @@ export class TheThingEditorComponent implements OnInit {
       try {
         this.theThing = await this.theThingAccessService.upsert(this.theThing);
         alert(`新增/修改 ${this.theThing.name} 成功`);
-        if (!isEmpty(this.relationSubjectsStack)) {
-          const relationSubject = this.relationSubjectsStack.pop();
-          const subject = relationSubject.subject;
-          subject.addRelations(relationSubject.relationName, [this.theThing]);
-          // console.log('Reload relation subject');
-          // console.dir(subject.toJSON());
-          this.theThing$.next(subject);
+        if (this.relationCreation) {
+          this.relationCreation.subject.addRelations(
+            this.relationCreation.relationName,
+            [this.theThing]
+          );
+          this.restoreRelationCreation();
         } else {
           this.router.navigate(['/', 'the-things', this.theThing.id]);
         }

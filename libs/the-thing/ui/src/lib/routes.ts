@@ -8,7 +8,7 @@ import {
   TheThingEditorPageObject
 } from './the-thing';
 import { LoggedInGuard, AdminGuard } from '@ygg/shared/user';
-import { ImitationTemplateResolver } from "./imitation-template-resolver.service";
+import { ImitationTemplateResolver } from './imitation-template-resolver.service';
 import { ImitationManagerComponent } from './imitation';
 
 export const routes: Route[] = [
@@ -23,12 +23,7 @@ export const routes: Route[] = [
       {
         path: 'create',
         children: [
-          { path: '', pathMatch: 'full', component: TheThingEditorComponent },
-          {
-            path: ':imitation',
-            component: TheThingEditorComponent,
-            resolve: { imitationTemplate: ImitationTemplateResolver }
-          }
+          { path: '', pathMatch: 'full', component: TheThingEditorComponent }
         ]
       },
       {
@@ -38,7 +33,7 @@ export const routes: Route[] = [
       },
       {
         path: 'imitations',
-        component: ImitationManagerComponent,
+        component: ImitationManagerComponent
         // canActivate: [LoggedInGuard, AdminGuard]
       },
       {
@@ -66,7 +61,6 @@ export const routes: Route[] = [
               clone: TheThingResolver
             }
           }
-
         ]
       }
     ]

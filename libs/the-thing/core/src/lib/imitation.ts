@@ -28,6 +28,7 @@ import {
   TheThingValidateError
 } from './validator';
 import { Tags } from '@ygg/tags/core';
+import { RelationDef } from './relation-def';
 
 export const ImitationsDataPath = 'the-thing/imitations';
 
@@ -50,6 +51,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   cellsDef: { [name: string]: TheThingCellDefine } = {};
   dataTableConfig?: DataTableConfig;
   validators: TheThingValidator[] = [];
+  relationsDef: { [name: string]: RelationDef } = {};
 
   /** Create time */
   createAt: number;
@@ -59,29 +61,23 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     this.createAt = new Date().valueOf();
     this.view = 'basic';
 
-    // let template: TheThing;
-    // let options: any = {};
-    // if (!isEmpty(args)) {
-    //   if (args.length >= 1) {
-    //     template = args[0];
-    //   }
-    //   if (args.length >= 2) {
-    //     options = args[1];
-    //   }
-    // }
     this.fromJSON(options);
-    // if (template) {
-    //   this.setTemplate(template);
-    // }
   }
 
   createTheThing(): TheThing {
     const theThing = new TheThing();
-    theThing.tags = new Tags(this.filter.tags);
+    if (this.filter && this.filter.tags) {
+      theThing.tags = new Tags(this.filter.tags);
+    }
     theThing.view = this.view;
     const requiredCellDefs = this.getRequiredCellDefs();
     for (const cellDef of requiredCellDefs) {
       theThing.addCell(TheThingCell.fromDef(cellDef));
+    }
+    for (const name in this.relationsDef) {
+      if (this.relationsDef.hasOwnProperty(name)) {
+        theThing.addRelation(name);
+      }
     }
     return theThing;
   }
@@ -111,14 +107,6 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     );
   }
 
-  // setTemplate(template: TheThing) {
-  //   // console.log(template);
-  //   if (!this.image) {
-  //     this.image = template.resolveImage();
-  //   }
-  //   this.templateId = template.id;
-  // }
-
   validate(theThing: TheThing): TheThingValidateError[] {
     if (isEmpty(this.validators)) {
       const basicValidator = new TheThingValidatorBasic({
@@ -133,6 +121,14 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     return errors;
   }
 
+  addRelationDef(rDef: RelationDef) {
+    this.relationsDef[rDef.name] = rDef;
+  }
+
+  getRelationDef(relationName: string): RelationDef {
+    return (relationName in this.relationsDef) ? this.relationsDef[relationName] : null;
+  }
+
   fromJSON(data: any = {}): this {
     extend(this, data);
     if (isArray(data.cellsDef)) {
@@ -140,6 +136,19 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     }
     if (data.filter) {
       this.filter = new TheThingFilter().fromJSON(data.filter);
+    }
+    if (!isEmpty(data.relationsDef)) {
+      if (isArray(data.relationsDef)) {
+        this.relationsDef = keyBy(
+          data.relationsDef.map(rDef => new RelationDef(rDef)),
+          'name'
+        );
+      } else {
+        this.relationsDef = mapValues(
+          data.relationsDef,
+          rDef => new RelationDef(rDef)
+        );
+      }
     }
     return this;
   }

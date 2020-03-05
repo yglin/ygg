@@ -66,6 +66,7 @@ export class TheThingImitationAccessService {
     if (id in this.localList) {
       return of(this.localList[id]);
     } else {
+      // console.log(`Get imitation ${id} from remote`);
       return this.dataAccessService
         .getDataObject$(`${ImitationsDataPath}/${id}`)
         .pipe(map(item => new TheThingImitation().fromJSON(item)));

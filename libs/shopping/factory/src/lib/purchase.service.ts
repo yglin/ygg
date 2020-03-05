@@ -36,7 +36,7 @@ export class PurchaseService {
         });
         purchases.push(thisPurchase);
         const childPurchases = await this.purchase(
-          product.getRelationObjectIds(RelationAddition),
+          product.getRelationObjectIds(RelationAddition.name),
           quantity
         );
         thisPurchase.childPurchaseIds = childPurchases.map(p => p.id);
