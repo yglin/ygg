@@ -11,4 +11,7 @@ export abstract class MyThingsPageObject extends PageObject {
   theThingListPO: ImageThumbnailListPageObject;
 
   abstract applyImitation(selection: TheThing[], imitation: TheThingImitation): void;
+  deleteThings(things: TheThing[]) {
+    this.theThingListPO.deleteItems(things);
+  }
 }

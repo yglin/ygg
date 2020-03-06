@@ -15,6 +15,8 @@ export class MyPlayListComponent implements OnInit {
   ngOnInit() {}
 
   gotoCreate() {
-    this.router.navigate(['/', 'the-things', 'create', ImitationPlay.id]);
+    this.router.navigate(['/', 'the-things', 'create'], {
+      queryParams: { imitation: ImitationPlay.id }
+    });
   }
 }

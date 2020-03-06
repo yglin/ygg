@@ -17,8 +17,8 @@ export class TheThingDataTablePageObjectCypress
 
   expectTheThing(theThing: TheThing) {
     this.setSearchText(theThing.name);
-    cy.get(`${this.getSelector()} tr`)
-      .contains(theThing.name)
+    cy.get(`${this.getSelector()}`)
+      .contains('td.name', theThing.name)
       .should('exist');
   }
 

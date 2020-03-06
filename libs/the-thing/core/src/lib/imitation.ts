@@ -70,9 +70,11 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       theThing.tags = new Tags(this.filter.tags);
     }
     theThing.view = this.view;
-    const requiredCellDefs = this.getRequiredCellDefs();
-    for (const cellDef of requiredCellDefs) {
-      theThing.addCell(TheThingCell.fromDef(cellDef));
+    for (const cellName in this.cellsDef) {
+      if (this.cellsDef.hasOwnProperty(cellName)) {
+        const cellDef = this.cellsDef[cellName];
+        theThing.addCell(TheThingCell.fromDef(cellDef));
+      }
     }
     for (const name in this.relationsDef) {
       if (this.relationsDef.hasOwnProperty(name)) {
@@ -125,8 +127,14 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     this.relationsDef[rDef.name] = rDef;
   }
 
+  hasRelationDef(relationName: string): boolean {
+    return !isEmpty(this.relationsDef) && relationName in this.relationsDef;
+  }
+
   getRelationDef(relationName: string): RelationDef {
-    return (relationName in this.relationsDef) ? this.relationsDef[relationName] : null;
+    return this.hasRelationDef(relationName)
+      ? this.relationsDef[relationName]
+      : null;
   }
 
   fromJSON(data: any = {}): this {

@@ -1,4 +1,4 @@
-import { extend, sample, random, keys, omit } from 'lodash';
+import { extend, sample, random, keys, omit, get } from 'lodash';
 import { Album, Address } from '@ygg/shared/omni-types/core';
 import {
   Html,
@@ -29,6 +29,7 @@ export type TheThingCellTypeID =
 interface TheThingCellType {
   id: TheThingCellTypeID;
   label: string;
+  default?: any;
   forge?: (options?: any) => any;
   comparator?: TheThingCellComparator;
 }
@@ -52,7 +53,8 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
     },
     comparator: (a: string, b: string, isAsc: boolean) => {
       return (+a < +b ? -1 : 1) * (isAsc ? 1 : -1);
-    }
+    },
+    default: ''
   },
   longtext: {
     id: 'longtext',
@@ -82,7 +84,8 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
     },
     comparator: (a: string, b: string, isAsc: boolean) => {
       return (+a < +b ? -1 : 1) * (isAsc ? 1 : -1);
-    }
+    },
+    default: ''
   },
   number: {
     id: 'number',
@@ -92,28 +95,32 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
     },
     comparator: (a: number, b: number, isAsc: boolean) => {
       return (a - b) * (isAsc ? 1 : -1);
-    }
+    },
+    default: 0
   },
   album: {
     id: 'album',
     label: '照片，相簿',
     forge: (options: any = {}): Album => {
       return Album.forge();
-    }
+    },
+    default: null
   },
   html: {
     id: 'html',
     label: 'HTML網頁內容',
     forge: (options: any = {}): Html => {
       return Html.forge(options);
-    }
+    },
+    default: ''
   },
   address: {
     id: 'address',
     label: '地址',
     forge: (options: any = {}): Address => {
       return Address.forge();
-    }
+    },
+    default: null
   },
   'date-range': {
     id: 'date-range',
@@ -121,7 +128,8 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
     forge: (options: any = {}): DateRange => {
       return DateRange.forge();
     },
-    comparator: DateRange.compare
+    comparator: DateRange.compare,
+    default: null
   },
   'day-time-range': {
     id: 'day-time-range',
@@ -129,14 +137,16 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
     forge: (options: any = {}): DayTimeRange => {
       return DayTimeRange.forge();
     },
-    comparator: DayTimeRange.compare
+    comparator: DayTimeRange.compare,
+    default: null
   },
   contact: {
     id: 'contact',
     label: '聯絡資料',
     forge: (options: any = {}): Contact => {
       return Contact.forge();
-    }
+    },
+    default: null
   }
 };
 
@@ -149,7 +159,7 @@ export class TheThingCell {
     return new TheThingCell().fromJSON({
       name: cellDef.name,
       type: cellDef.type,
-      value: null
+      value: get(TheThingCellTypes, `${cellDef.type}.default`, null)
     });
   }
 

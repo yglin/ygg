@@ -73,6 +73,27 @@ export class TheThingImitationAccessService {
     }
   }
 
+  getByRelation$(
+    imitation: TheThingImitation,
+    relationName: string
+  ): Observable<TheThingImitation> {
+    const relationDef = imitation.getRelationDef(relationName);
+    if (!relationDef) {
+      return throwError(
+        new Error(
+          `Imitation ${imitation.name} has no relation define ${relationName}`
+        )
+      );
+    }
+
+    if (!relationDef.imitationId) {
+      return throwError(
+        new Error(`Relation define ${relationName} has no related imitation`)
+      );
+    }
+
+    return this.get$(relationDef.imitationId);
+  }
   // getTemplate$(id: string): Observable<TheThing> {
   //   return this.get$(id).pipe(
   //     switchMap((imitation: TheThingImitation) =>

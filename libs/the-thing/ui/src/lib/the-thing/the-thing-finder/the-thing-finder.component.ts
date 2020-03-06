@@ -95,6 +95,9 @@ export class TheThingFinderComponent
     this.subscriptions.push(
       combineLatest([this.theThings$, this.filter$]).subscribe(
         ([theThings, filter]) => {
+          if (this.filter) {
+            filter = this.filter.merge(filter);
+          }
           if (filter) {
             this.filteredTheThings = (filter as TheThingFilter).filter(
               theThings

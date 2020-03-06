@@ -46,7 +46,8 @@ import {
   catchError,
   timeout,
   first,
-  tap
+  tap,
+  filter
 } from 'rxjs/operators';
 import {
   PageStashService,
@@ -173,11 +174,9 @@ export class TheThingEditorComponent implements OnInit {
           .pipe(
             first(),
             map(imitation => {
-              console.dir(imitation.toJSON());
               this.imitation = imitation;
               return imitation.createTheThing();
             }),
-            tap(newThing => console.dir(newThing)),
             catchError(error => {
               console.warn(error.message);
               return of(new TheThing());
@@ -234,8 +233,8 @@ export class TheThingEditorComponent implements OnInit {
     }
     this.subscriptions.push(
       this.theThing$.subscribe(theThing => {
-        // console.log('emit next theThing');
-        // console.dir(theThing.toJSON());
+        console.log('emit next theThing');
+        console.dir(theThing.toJSON());
         this.theThing = theThing;
         this.reset();
       })
@@ -278,34 +277,27 @@ export class TheThingEditorComponent implements OnInit {
     }
   }
 
-  async gotoCreateRelationObject(relationName: string) {
+  gotoCreateRelationObject(relationName: string) {
     // const relationName = this.formControlNewRelationName.value;
     this.backupRelationCreation(relationName);
-    // console.log('Create new relation object');
-    let newThing: TheThing = new TheThing();
+    // console.log('Create relation object');
     if (this.imitation) {
-      const relationDef: RelationDef = this.imitation.getRelationDef(
-        relationName
-      );
-      let imitation: TheThingImitation;
-      if (relationDef && relationDef.imitationId) {
-        try {
-          imitation = await this.imitationAccessService
-            .get$(relationDef.imitationId)
-            .pipe(take(1))
-            .toPromise();
-          newThing = imitation.createTheThing();
-        } catch (error) {
-          console.warn(error.message);
-          newThing = new TheThing();
-        }
-      } else {
-        newThing = new TheThing();
-      }
-      this.imitation = imitation;
+      this.imitationAccessService
+        .getByRelation$(this.imitation, relationName)
+        .pipe(
+          take(1),
+          filter(imitation => !!imitation),
+          map(imitation => imitation.createTheThing()),
+          timeout(5000),
+          catchError(error => {
+            console.warn(error);
+            return of(new TheThing());
+          })
+        )
+        .subscribe(newThing => this.theThing$.next(newThing));
+    } else {
+      this.theThing$.next(new TheThing());
     }
-    console.log(`Create relation object~!!`);
-    this.theThing$.next(newThing);
   }
 
   backupRelationCreation(relationName: string) {
@@ -323,6 +315,7 @@ export class TheThingEditorComponent implements OnInit {
     const relationCreation = this.relationCreationsStack.pop();
     const subject = relationCreation.subject;
     this.imitation = relationCreation.imitation;
+    console.dir(subject.toJSON());
     this.theThing$.next(subject);
     this.relationCreation = last(this.relationCreationsStack);
   }

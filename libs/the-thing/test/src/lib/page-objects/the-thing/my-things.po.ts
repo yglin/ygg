@@ -11,14 +11,16 @@ export class MyThingsPageObjectCypress extends MyThingsPageObject {
     );
   }
 
-  expectVisible() {
-    cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
+  expectVisible(): Cypress.Chainable<any> {
+    return cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
   }
 
   applyImitation(selection: TheThing[], imitation: TheThingImitation) {
     this.theThingListPO.selectItems(selection);
     cy.get(this.getSelector('buttonApplyImitation')).click();
-    const imitationSelectorDialogPO = new ImageThumbnailListPageObjectCypress('.ygg-dialog');
+    const imitationSelectorDialogPO = new ImageThumbnailListPageObjectCypress(
+      '.ygg-dialog'
+    );
     imitationSelectorDialogPO.expectVisible();
     imitationSelectorDialogPO.selectItem(imitation);
     // cy.on('window:alert', str => {

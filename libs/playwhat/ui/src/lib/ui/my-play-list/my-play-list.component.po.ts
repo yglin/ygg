@@ -9,17 +9,22 @@ export abstract class MyPlayListPageObject extends PageObject {
     dataTable: '.data-table'
   };
   theThingDataTablePO: TheThingDataTablePageObject;
+
   abstract clickCreate(): void;
-  
+
   deletePlay(play: TheThing) {
     this.theThingDataTablePO.deleteTheThing(play);
   }
-  
+
   expectPlay(play: TheThing) {
     this.theThingDataTablePO.expectTheThing(play);
   }
 
   expectNotPlay(play: TheThing) {
     this.theThingDataTablePO.expectNotTheThing(play);
+  }
+
+  clickPlay(play: TheThing) {
+    this.theThingDataTablePO.clickTheThing(play);
   }
 }

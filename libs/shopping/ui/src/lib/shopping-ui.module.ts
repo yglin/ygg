@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PurchaseListComponent } from './purchase/purchase-list/purchase-list.component';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
@@ -9,6 +9,8 @@ import { ShoppingCartEditorComponent } from './cart/shopping-cart-editor/shoppin
 import { FormsModule } from '@angular/forms';
 import { TheThingUiModule } from '@ygg/the-thing/ui';
 import { AdditionViewComponent } from './addition/addition-view/addition-view.component';
+import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
+import { ImitationProduct } from '@ygg/shopping/core';
 // import { PurchaseControlComponent } from './purchase/purchase-control/purchase-control.component';
 
 @NgModule({
@@ -35,6 +37,22 @@ import { AdditionViewComponent } from './addition/addition-view/addition-view.co
   ],
   entryComponents: [
     /* PurchaseControlComponent */
+  ],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: configTheThingImitation,
+      deps: [TheThingImitationAccessService],
+      multi: true
+    }
   ]
 })
 export class ShoppingUiModule {}
+
+export function configTheThingImitation(
+  imitationAccessService: TheThingImitationAccessService
+) {
+  return () => {
+    imitationAccessService.addLocal([ImitationProduct]);
+  };
+}

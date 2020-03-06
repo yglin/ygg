@@ -134,6 +134,12 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
     );
   }
 
+  expectNoRelationHint() {
+    cy.get(this.getSelector('relationCreateHint'), { timeout: 10000 }).should(
+      'not.be.visible'
+    );
+  }
+
   expectImitaion(imitation: TheThingImitation) {
     cy.get(this.getSelector('buttonOpenImitations'), {
       timeout: 10000

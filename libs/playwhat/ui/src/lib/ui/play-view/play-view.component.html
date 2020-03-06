@@ -8,7 +8,7 @@
   </div>
   <br />
   <div class='introduction'>
-    <pre>{{ theThing.getCellValue('簡介') }}</pre>
+    <p>{{ theThing.getCellValue('簡介') }}</p>
   </div>
   <div class='price'>
     <h3>每人費用：NTD {{ theThing.getCellValue('費用') }}</h3>
@@ -23,10 +23,8 @@
     </h3>
   </div>
   <br>
-  <div class='additions'>
-    <h3>{{ RelationAddition }}</h3>
-    <div *ngFor="let addition of additions" [attr.name]='addition.name'>
-      <ygg-addition-view [theThing]='addition'></ygg-addition-view>
-    </div>
+  <div class='addition-list' *ngIf="additions">
+    <h3>{{ RelationAddition.name }}</h3>
+    <ygg-image-thumbnail-list [items]='additions'></ygg-image-thumbnail-list>
   </div>
 </div>

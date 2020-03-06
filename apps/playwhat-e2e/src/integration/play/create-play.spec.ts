@@ -12,10 +12,11 @@ import {
 import {
   TheThingEditorPageObjectCypress,
   TheThingViewPageObjectCypress,
-  RelationsEditorPageObjectCypress
+  RelationsEditorPageObjectCypress,
+  MyThingsPageObjectCypress
 } from '@ygg/the-thing/test';
 import { ImitationPlay } from '@ygg/playwhat/core';
-import { RelationAddition } from '@ygg/shopping/core';
+import { RelationAddition, ImitationProduct } from '@ygg/shopping/core';
 
 describe('Create play', () => {
   const siteNavigator = new SiteNavigator();
@@ -72,28 +73,23 @@ describe('Create play', () => {
     theThingEditorPO.expectVisible();
     theThingEditorPO.expectValue(ImitationPlay.createTheThing());
 
-    // ======= Set values and create additions
-    theThingEditorPO.setValue(PlayWithAdditions);
-    const relationsEditorPO = new RelationsEditorPageObjectCypress(
-      this.getSelectorForRelationsEditor(RelationAddition)
-    );
-    relationsEditorPO.expectVisible();
-    relationsEditorPO.expectRelationToSubject(RelationAddition, PlayWithAdditions);
+    // ======= Set values and goto create additions
+    theThingEditorPO.extendValue(PlayWithAdditions);
     cy.wrap(SampleAdditions).each((addition: any) => {
-      relationsEditorPO.gotoCreateRelationObject();
-      // Refresh page, for creating addition
-      theThingEditorPO.setValue(addition);
+      theThingEditorPO.addRelationAndGotoCreate(RelationAddition.name);
+      // Addition follows product imitation
+      theThingEditorPO.expectValue(ImitationProduct.createTheThing());
+      // Expect all required cells should be there
+      theThingEditorPO.extendValue(addition);
       theThingEditorPO.submit();
-      // Back to creating play, expect the new relation to addition
-      relationsEditorPO.expectObject(addition);
+      // Wait until PlayWithAdditions reloaded
+      theThingEditorPO.expectNoRelationHint();
+      theThingEditorPO.expectValue(PlayWithAdditions);
     });
-    theThingEditorPO.submit();
 
-    // ======= Expect play view, check data
+    theThingEditorPO.submit();
     const playViewPO = new PlayViewPageObjectCypress();
     playViewPO.expectVisible();
-    playViewPO.expectValue(PlayWithAdditions);
-    playViewPO.expectAdditions(SampleAdditions);
 
     // ======= Go back to my plays page
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
@@ -101,8 +97,15 @@ describe('Create play', () => {
     // ======= Confirm the new play is there
     myPlayListPO.expectPlay(PlayWithAdditions);
 
-    // ======= Delete it
-    myPlayListPO.deletePlay(PlayWithAdditions);
-    myPlayListPO.expectNotPlay(PlayWithAdditions);
+    // ======= click it to play view, check data
+    myPlayListPO.clickPlay(PlayWithAdditions);
+    playViewPO.expectVisible();
+    playViewPO.expectValue(PlayWithAdditions);
+    playViewPO.expectAdditions(SampleAdditions);
+
+    // ======= Go to the-things page and delete test data
+    const myThingsPO = new MyThingsPageObjectCypress();
+    siteNavigator.goto(['the-things', 'my'], myThingsPO);
+    myThingsPO.deleteThings([PlayWithAdditions, ...SampleAdditions]);
   });
 });

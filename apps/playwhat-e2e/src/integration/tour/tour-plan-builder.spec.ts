@@ -163,7 +163,7 @@ describe('What can we do in home page ?', () => {
 
   it('Build a tour-plan with a few plays selected', () => {
     const playsWithoutAddition = SamplePlays.filter(
-      play => !play.hasRelation(RelationAddition)
+      play => !play.hasRelation(RelationAddition.name)
     );
 
     // Select plays, set date and number of participants
@@ -224,7 +224,7 @@ describe('What can we do in home page ?', () => {
 
   it('Build a tour-plan with a few plays selected, and setup additions', () => {
     const playsWithAddition = SamplePlays.filter(play =>
-      play.hasRelation(RelationAddition)
+      play.hasRelation(RelationAddition.name)
     );
 
     // Select plays, set date and number of participants

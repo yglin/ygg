@@ -4,7 +4,8 @@ import {
   TheThing,
   TheThingCellTypes,
   DataTableConfig,
-  TheThingCellComparator
+  TheThingCellComparator,
+  TheThingFilter
 } from '@ygg/the-thing/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -20,6 +21,7 @@ import { Router } from '@angular/router';
 })
 export class TheThingDataTableComponent implements OnInit {
   @Input() imitation: TheThingImitation;
+  @Input() filter: TheThingFilter;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   dataSource: TheThingDataSource;

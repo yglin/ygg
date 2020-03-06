@@ -17,4 +17,5 @@ export class MyPlayListPageObjectCypress extends MyPlayListPageObject {
   expectVisible(): Cypress.Chainable<any> {
     return cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
   }
+
 }

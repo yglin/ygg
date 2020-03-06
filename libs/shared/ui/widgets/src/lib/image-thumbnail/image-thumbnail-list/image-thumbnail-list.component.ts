@@ -24,7 +24,9 @@ export class ImageThumbnailListComponent
   @Input() readonly: boolean;
   @Output() clickItem: EventEmitter<ImageThumbnailItem> = new EventEmitter();
   @Output() clickAdd: EventEmitter<any> = new EventEmitter();
-  @Output() deleteItem: EventEmitter<ImageThumbnailItem> = new EventEmitter();
+  @Output() deleteItems: EventEmitter<
+    ImageThumbnailItem[]
+  > = new EventEmitter();
   @Input() selection: ImageThumbnailItem[] = [];
   @Input() singleSelect: boolean;
   @Output() selectionChanged: EventEmitter<
@@ -51,15 +53,19 @@ export class ImageThumbnailListComponent
     this.readonly = this.readonly !== undefined && this.readonly !== false;
     if (this.items$) {
       this.subscriptions.push(
-        this.items$.subscribe(items => (this.items = items))
+        this.items$.subscribe(items => {
+          this.items = items;
+          this.selection.length = 0;
+        })
       );
     }
-    this.isItemDeletable = this.deleteItem.observers.length > 0;
+    this.isItemDeletable = this.deleteItems.observers.length > 0;
     this.isSelectable =
       this.selectionChanged.observers.length > 0 ||
       this.dialogSubmit$.observers.length > 0 ||
       this.selectItem.observers.length > 0 ||
-      this.deselectItem.observers.length > 0;
+      this.deselectItem.observers.length > 0 ||
+      this.isItemDeletable;
     this.hideAddButton =
       this.readonly ||
       (this.hideAddButton !== undefined && this.hideAddButton !== false);
@@ -103,8 +109,8 @@ export class ImageThumbnailListComponent
     this.selection.length = 0;
   }
 
-  onDeleteItem(item: ImageThumbnailItem) {
-    this.deleteItem.emit(item);
+  deleteSelection() {
+    this.deleteItems.emit([...this.selection]);
   }
 
   onAdd() {

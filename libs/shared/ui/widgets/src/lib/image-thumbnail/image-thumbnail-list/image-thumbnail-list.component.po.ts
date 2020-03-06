@@ -8,19 +8,24 @@ export abstract class ImageThumbnailListPageObject extends PageObject {
     lastItem: '.last-item',
     buttonSubmit: 'button.submit',
     buttonClearSelection: 'button.clear-selection',
+    buttonDeleteSelection: 'button.delete-selection',
     selection: '.selection'
   };
 
+  getSelectorForSelectedItem(item: ImageThumbnailItem): string {
+    return `${this.getSelector('selection')} .item:contains("${item.name}")`;
+  }
+
   getSelectorForItem(item: ImageThumbnailItem): string {
-    return `${this.getSelector()} [item-id=${item.id}]`;
+    return `${this.getSelector()} .item:contains("${item.name}")`;
   }
 
   getSelectorForItemLink(item: ImageThumbnailItem): string {
-    return `${this.getSelector()} [item-id=${item.id}] .open-link`;
+    return `${this.getSelectorForItem(item)} .open-link`;
   }
 
   getSelectorForDeleteItem(item: ImageThumbnailItem): string {
-    return `${this.getSelectorForItem(item)} .delete-item button`;
+    return `${this.getSelectorForItem(item)} .delete button`;
   }
 
   abstract expectItem(item: ImageThumbnailItem): void;
@@ -28,5 +33,6 @@ export abstract class ImageThumbnailListPageObject extends PageObject {
   abstract selectItem(item: ImageThumbnailItem): void;
   abstract selectItems(items: ImageThumbnailItem[]): void;
   abstract deleteItem(item: ImageThumbnailItem): void;
+  abstract deleteItems(items: ImageThumbnailItem[]): void;
   abstract clearSelection(): void;
 }

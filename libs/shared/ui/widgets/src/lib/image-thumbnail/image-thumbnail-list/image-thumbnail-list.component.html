@@ -1,16 +1,5 @@
 <div class="image-thumbnail-list" *ngIf="items">
   <ygg-action-bar-layout>
-    <div ygg-action-bar-button *ngIf="isSelectable">
-      <button
-        type="button"
-        class="clear-selection"
-        mat-fab
-        [disabled]="!selection || selection.length <= 2"
-        (click)="clearSelection()"
-      >
-        <mat-icon>delete_sweep</mat-icon>
-      </button>
-    </div>
     <div ygg-action-bar-button *ngIf="dialogSubmit$.observers.length > 0">
       <button
         type="button"
@@ -39,11 +28,37 @@
             <ygg-image-thumbnail [item]="item"></ygg-image-thumbnail>
           </div>
         </div>
+        <div fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
+          <div>
+            <button
+              type="button"
+              class="clear-selection"
+              mat-fab
+              [disabled]="!selection || selection.length <= 2"
+              matTooltip="清除選取清單"
+              (click)="clearSelection()"
+            >
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+          <div *ngIf="isItemDeletable">
+            <button
+              type="button"
+              class="delete-selection"
+              mat-fab
+              [disabled]="!selection || selection.length <= 0"
+              matTooltip="永久刪除所選物件"
+              (click)="deleteSelection()"
+            >
+              <mat-icon>delete_sweep</mat-icon>
+            </button>
+          </div>
+        </div>
         <hr />
       </div>
       <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="20px">
         <div
-          *ngFor="let item of items; let isLast = last; let isFirst = first;"
+          *ngFor="let item of items; let isLast = last; let isFirst = first"
           [attr.item-id]="item.id"
           [attr.item-name]="item.name"
           [attr.item-image]="item.image"
@@ -57,21 +72,25 @@
         >
           <ygg-image-thumbnail [item]="item"></ygg-image-thumbnail>
           <div class="open-link" [hidden]="!item.link">
-            <button type="button" mat-mini-fab (click)="onClickLink(item);$event.stopPropagation();">
+            <button
+              type="button"
+              mat-mini-fab
+              (click)="onClickLink(item); $event.stopPropagation()"
+            >
               <mat-icon>open_in_new</mat-icon>
             </button>
           </div>
-          <div class="delete-item" [hidden]="!isItemDeletable">
-            <button type="button" mat-mini-fab (click)="onDeleteItem(item)">
+          <!-- <div class="delete" [hidden]="!isItemDeletable">
+            <button type="button" mat-mini-fab (click)="onDeleteItem(item);$event.stopPropagation();">
               <mat-icon>delete</mat-icon>
             </button>
-          </div>
+          </div> -->
         </div>
-        <div class="item" [hidden]="hideAddButton">
+        <!-- <div class="item" [hidden]="hideAddButton">
           <button class="add add-item" type="button" mat-fab (click)="onAdd()">
             <mat-icon>add</mat-icon>
           </button>
-        </div>
+        </div> -->
       </div>
     </div></ygg-action-bar-layout
   >

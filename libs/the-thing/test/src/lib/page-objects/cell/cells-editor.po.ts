@@ -77,7 +77,7 @@ export class TheThingCellsEditorPageObjectCypress extends TheThingCellsEditorPag
       case 'number':
         cy.get(`${this.getSelectorForCellControl(cell)} input[type="number"]`)
           .invoke('val')
-          .should('equal', typeof cell.value === 'number' ? cell.value : '');
+          .should('equal', typeof cell.value === 'number' ? cell.value.toString() : '');
         break;
       case 'album':
         const albumControlPO = new AlbumControlPageObjectCypress(

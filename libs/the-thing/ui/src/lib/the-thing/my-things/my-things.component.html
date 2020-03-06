@@ -28,8 +28,9 @@
   <br />
   <div class="the-thing-list">
     <ygg-image-thumbnail-list
-      [items]="filteredTheThings"
+      [items$]="filteredTheThings$"
       [(selection)]="selection"
+      (deleteItems)='deleteTheThings($event)'
     ></ygg-image-thumbnail-list>
   </div>
 </div>

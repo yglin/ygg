@@ -48,7 +48,7 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
   }
 
   selectPlays(plays: TheThing[]) {
-    this.clearSelectedPlays();
+    // this.clearSelectedPlays();
     cy.wrap(plays).each((play: any) => {
       this.selectPlay(play);
     });

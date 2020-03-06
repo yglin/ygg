@@ -35,8 +35,12 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
     );
   }
 
-  expectNoItem(item: ImageThumbnailItem) {
-    cy.get(this.getSelectorForItem(item)).should('not.be.exist');
+  expectNoItem(item: ImageThumbnailItem, timeout: number = 5000) {
+    cy.get(this.getSelectorForItem(item), { timeout }).should('not.be.exist');
+  }
+
+  expectNoItems(items: ImageThumbnailItem[]) {
+    cy.wrap(items).each((item: any) => this.expectNoItem(item));
   }
 
   expectItems(items: ImageThumbnailItem[]) {
@@ -56,12 +60,21 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
   }
 
   deleteItem(item: ImageThumbnailItem) {
-    cy.get(this.getSelectorForDeleteItem(item)).click({ force: true });
+    cy.get(`${this.getSelectorForDeleteItem(item)}`).click();
+    this.expectNoItem(item);
+  }
+
+  deleteItems(items: ImageThumbnailItem[]) {
+    this.selectItems(items);
+    cy.get(this.getSelector('buttonDeleteSelection')).click();
+    cy.wait(10000);
+    this.expectNoItems(items);
   }
 
   selectItem(item: ImageThumbnailItem) {
     cy.get(this.getSelectorForItem(item), { timeout: 10000 }).click({
-      force: true
+      force: true,
+      multiple: true
     });
     this.expectSelectedItem(item);
   }
@@ -71,9 +84,7 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
   }
 
   expectSelectedItem(item: ImageThumbnailItem) {
-    cy.get(this.getSelector('selection'))
-      .find(`[item-id="${item.id}"]`)
-      .should('exist');
+    cy.get(this.getSelectorForSelectedItem(item)).should('exist');
   }
 
   clearSelection() {

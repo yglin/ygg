@@ -1,5 +1,5 @@
 import { TheThing } from '@ygg/the-thing/core';
-import { RelationAddition } from '@ygg/shopping/core';
+import { RelationAddition, CellNamePrice, CellNameStock } from '@ygg/shopping/core';
 import { ImitationPlay } from '@ygg/playwhat/core';
 import { v4 as uuid } from 'uuid';
 import { random } from 'lodash';
@@ -58,6 +58,11 @@ export const SamplePlays = [
         type: 'text',
         value: '走尋巷弄的故事'
       },
+      照片: {
+        name: '照片',
+        type: 'album',
+        value : Album.forge().toJSON()
+      },
       簡介: {
         name: '簡介',
         type: 'longtext',
@@ -94,6 +99,11 @@ export const SamplePlays = [
         name: '副標題',
         type: 'text',
         value: '帶走中興的一片記憶'
+      },
+      照片: {
+        name: '照片',
+        type: 'album',
+        value : Album.forge().toJSON()
       },
       簡介: {
         name: '簡介',
@@ -132,6 +142,11 @@ export const SamplePlays = [
         type: 'text',
         value: '品味中興職人咖啡'
       },
+      照片: {
+        name: '照片',
+        type: 'album',
+        value : Album.forge().toJSON()
+      },
       簡介: {
         name: '簡介',
         type: 'longtext',
@@ -166,27 +181,37 @@ export const SampleAdditions = [
   {
     name: '四人協力車',
     tags: ['addition', '設備'],
-    cells: {
-      費用: {
-        name: '費用',
+    cells: [
+      {
+        name: CellNamePrice,
         type: 'number',
         value: 100
+      },
+      {
+        name: CellNameStock,
+        type: 'number',
+        value: 6
       }
-    }
+    ]
   },
   {
     name: '二人協力車',
     tags: ['addition', '設備'],
-    cells: {
-      費用: {
-        name: '費用',
+    cells: [
+      {
+        name: CellNamePrice,
         type: 'number',
-        value: 75
+        value: 60
+      },
+      {
+        name: CellNameStock,
+        type: 'number',
+        value: 5
       }
-    }
+    ]
   }
 ].map(jsonItem => new TheThing().fromJSON(jsonItem));
 
-SamplePlays[0].addRelations(RelationAddition, SampleAdditions);
+SamplePlays[0].addRelations(RelationAddition.name, SampleAdditions);
 
 export const PlayWithAdditions = SamplePlays[0];

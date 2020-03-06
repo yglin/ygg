@@ -13,7 +13,7 @@ import {
   Observable,
   throwError
 } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map, take } from 'rxjs/operators';
 import {
   TheThingAccessService,
   TheThingImitationAccessService
@@ -32,8 +32,9 @@ import {
 })
 export class MyThingsComponent implements OnInit, OnDestroy {
   myThings$: Observable<TheThing[]>;
+  // filter: TheThingFilter;
   filter$: BehaviorSubject<TheThingFilter> = new BehaviorSubject(null);
-  filteredTheThings: TheThing[] = [];
+  filteredTheThings$: Observable<TheThing[]>;
   selection: TheThing[] = [];
   // filterChange$: BehaviorSubject<TheThingFilter> = new BehaviorSubject(new TheThingFilter());
   subscriptions: Subscription[] = [];
@@ -57,18 +58,17 @@ export class MyThingsComponent implements OnInit, OnDestroy {
         }
       })
     );
-    this.subscriptions.push(
-      combineLatest([this.myThings$, this.filter$]).subscribe(
-        ([theThings, filter]) => {
-          if (filter) {
-            this.filteredTheThings = (filter as TheThingFilter).filter(
-              theThings
-            );
-          } else {
-            this.filteredTheThings = theThings;
-          }
+    this.filteredTheThings$ = combineLatest([
+      this.myThings$,
+      this.filter$
+    ]).pipe(
+      map(([theThings, filter]) => {
+        if (filter) {
+          return (filter as TheThingFilter).filter(theThings);
+        } else {
+          return theThings;
         }
-      )
+      })
     );
 
     this.subscriptions.push(
@@ -93,12 +93,27 @@ export class MyThingsComponent implements OnInit, OnDestroy {
   //   }
   // }
 
-  onFilterChanged(filter: TheThingFilter) {
-    this.filter$.next(filter);
-  }
+  // onFilterChanged(filter: TheThingFilter) {
+  //   this.filter$.next(filter);
+  // }
 
   addTheThing() {
     this.router.navigate(['/', 'the-things', 'create']);
+  }
+
+  // async onDeleteTheThing(thing: TheThing) {
+  //   if (confirm(`確定要刪除 ${thing.name} ？`)) {
+  //     try {
+  //       await this.theThingAccessService.delete(thing);
+  //       alert(`已刪除 ${thing.name}`);
+  //     } catch (error) {
+  //       alert(`刪除失敗，錯誤原因： ${error.message}`);
+  //     }
+  //   }
+  // }
+
+  onSelectChange(selection: TheThing[]) {
+    this.selection = isEmpty(selection) ? [] : selection;
   }
 
   applyImitation() {
@@ -109,11 +124,14 @@ export class MyThingsComponent implements OnInit, OnDestroy {
         singleSelect: true
       }
     });
-    return dialogRef.afterClosed().subscribe(async (imitation: TheThingImitation) => {
-      if (imitation && !isEmpty(this.selection)) {
-        const selectionNames = this.selection.map(select => select.name).join('，');
-        const confirmMessage = `以下東東將套用範本 ${imitation.name}，資料將會改變\n${selectionNames
-          }\n是否繼續？`;
+    return dialogRef
+      .afterClosed()
+      .subscribe(async (imitation: TheThingImitation) => {
+        if (imitation && !isEmpty(this.selection)) {
+          const selectionNames = this.selection
+            .map(select => select.name)
+            .join('，');
+          const confirmMessage = `以下東東將套用範本 ${imitation.name}，資料將會改變\n${selectionNames}\n是否繼續？`;
           if (confirm(confirmMessage)) {
             const promises: Promise<TheThing>[] = [];
             this.selection.forEach(select => {
@@ -128,6 +146,23 @@ export class MyThingsComponent implements OnInit, OnDestroy {
             }
           }
         }
-    });
+      });
+  }
+
+  async deleteTheThings(things: TheThing[]) {
+    const confirmMessage = `確定要刪除以下物件？\n ${things
+      .map(s => s.name)
+      .join('\n')}`;
+    if (confirmMessage) {
+      try {
+        for (const thing of things) {
+          console.log(`Delete ${thing.name}`);
+          await this.theThingAccessService.delete(thing);
+        }
+        alert(`已刪除完成`);
+      } catch (error) {
+        alert(`刪除失敗，錯誤原因：${error.message}`);
+      }
+    }
   }
 }
