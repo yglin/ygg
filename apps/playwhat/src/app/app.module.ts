@@ -1,16 +1,16 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SharedInfraLogModule } from "@ygg/shared/infra/log";
+import { SharedInfraLogModule } from '@ygg/shared/infra/log';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUserModule } from '@ygg/shared/user';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 import { PlaywhatAdminModule } from '@ygg/playwhat/admin';
 // import { PlaywhatPlayAdminModule, PlaywhatPlayFrontendModule } from "@ygg/playwhat/play";
-import { TagsAdminModule } from "@ygg/tags/admin";
+import { TagsAdminModule } from '@ygg/tags/admin';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './layout/header/header.component';
@@ -22,14 +22,14 @@ import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
 // import { ScheduleFrontendModule } from "@ygg/schedule/frontend";
 // import { ScheduleAdminModule } from '@ygg/schedule/admin';
 // import { ResourceUiModule } from '@ygg/resource/ui';
-import { TheThingUiModule } from "@ygg/the-thing/ui";
-import { PlaywhatUiModule } from "@ygg/playwhat/ui";
+import { TheThingUiModule } from '@ygg/the-thing/ui';
+import { PlaywhatUiModule } from '@ygg/playwhat/ui';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    HomeComponent,
+    HomeComponent
     // SchedulerNewComponent,
     // SchedulerFormViewComponent
   ],
@@ -50,7 +50,7 @@ import { PlaywhatUiModule } from "@ygg/playwhat/ui";
     TagsAdminModule,
     PlaywhatUiModule,
     PlaywhatAdminModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })
   ],
   providers: [],
   bootstrap: [AppComponent]

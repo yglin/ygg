@@ -1,0 +1,24 @@
+<div class="my-things-data-table">
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+    <button type="button" mat-fab class="create" (click)="gotoCreate()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  <br /><br />
+  <div *ngIf="imitation && theThings$">
+    <the-thing-data-table
+      [imitation]="imitation"
+      [theThings$]="theThings$"
+      [(selection)]="selection"
+    >
+      <div
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="10px"
+        selection-actions
+      >
+      <button mat-mini-fab (click)="deleteSelected()" class='delete-selection'><mat-icon>delete_sweep</mat-icon></button>
+    </div>
+    </the-thing-data-table>
+  </div>
+</div>

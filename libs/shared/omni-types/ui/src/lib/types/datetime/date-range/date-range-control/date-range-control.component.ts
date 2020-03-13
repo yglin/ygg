@@ -8,7 +8,7 @@ import {
 import * as moment from 'moment';
 import { DateRange, DATE_FORMATS } from '@ygg/shared/omni-types/core';
 import { Subscription, merge } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import {
   DateAdapter,
   MAT_DATE_FORMATS
@@ -62,22 +62,19 @@ export class DateRangeControlComponent
         this.endFormControl.valueChanges
       )
         .pipe(
-          // auditTime(500)
-          filter(() => {
-            const startValue: moment.Moment = this.startFormControl.value;
-            const endValue: moment.Moment = this.endFormControl.value;
+          map(() => [this.startFormControl.value, this.endFormControl.value]),
+          filter(([startValue, endValue]) => {
             return (
               startValue &&
               startValue.isValid() &&
               endValue &&
               endValue.isValid()
+              && startValue.isSameOrBefore(endValue)
             );
           })
         )
         // this.startFormControl.valueChanges
-        .subscribe(() => {
-          const startValue: moment.Moment = this.startFormControl.value;
-          const endValue: moment.Moment = this.endFormControl.value;
+        .subscribe(([startValue, endValue]) => {
           const dateRange = new DateRange(startValue.toDate(), endValue.toDate());
           this.emitChange(dateRange);
           // console.log(`Emit Change: ${dateRange.format()}`);
@@ -92,8 +89,8 @@ export class DateRangeControlComponent
   }
 
   writeValue(value: DateRange) {
-    console.log(value);
-    console.log(DateRange.isDateRange(value));
+    // console.log(value);
+    // console.log(DateRange.isDateRange(value));
     if (DateRange.isDateRange(value)) {
       this.startFormControl.setValue(moment(value.start), {
         emitEvent: false
@@ -126,23 +123,29 @@ export class DateRangeControlComponent
   //   });
   // }
 
-  formalize() {
-    const startValue: moment.Moment = this.startFormControl.value;
-    const endValue: moment.Moment = this.endFormControl.value;
-    if (startValue && endValue && startValue.isAfter(endValue)) {
-      this.startFormControl.setValue(endValue, {
-        emitEvent: false
-      });
-      this.endFormControl.setValue(startValue, {
-        emitEvent: false
-      });
-      const dateRange = new DateRange().fromMoment({
-        start: endValue,
-        end: startValue
-      });
-      this.emitChange(dateRange);
-    }
-  }
+  // formalize() {
+  //   const startValue: moment.Moment = this.startFormControl.value;
+  //   const endValue: moment.Moment = this.endFormControl.value;
+  //   if (startValue && endValue && startValue.isAfter(endValue)) {
+  //     this.startFormControl.setValue(endValue, {
+  //       emitEvent: false
+  //     });
+  //     this.endFormControl.setValue(startValue, {
+  //       emitEvent: false
+  //     });
+  //     const dateRange = new DateRange().fromMoment({
+  //       start: endValue,
+  //       end: startValue
+  //     });
+  //     this.emitChange(dateRange);
+  //   }
+  // }
+
+  // onChange(dateRange: DateRange) {
+  //   if (DateRange.isDateRange(dateRange)) {
+  //     this.emitChange(dateRange);
+  //   }
+  // }
 
   onBlur() {
     if (this.emitTouched) {

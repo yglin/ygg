@@ -2,7 +2,7 @@ import { PageObject } from '@ygg/shared/test/page-object';
 import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 import { TheThingListPageObject } from '../the-thing-list/the-thing-list.component.po';
 
-export class TheThingViewPageObject extends PageObject {
+export abstract class TheThingViewPageObject extends PageObject {
   selectors = {
     main: '.the-thing-view',
     tags: '.tags',
@@ -10,9 +10,11 @@ export class TheThingViewPageObject extends PageObject {
     owner: '.owner',
     cells: '.cells',
     relationList: '.relation-list',
-    buttonLinkRelationBack: 'button.link-relation-back',
+    buttonEdit: 'button.edit',
     buttonCreateByClone: 'button.create-clone'
   };
+
+  abstract gotoEdit(): void;
 
   getSelectorForCell(cell?: TheThingCell): string {
     const cellSelector = !!cell ? `[cell-name="${cell.name}"]` : '[cell-name]';

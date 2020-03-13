@@ -7,7 +7,8 @@ export abstract class RelationsEditorPageObject extends PageObject {
     main: '.relations-editor',
     objectList: '.object-list',
     buttonCreateObject: 'button.create-object',
-    buttonSelectObjects: 'button.select-objects'
+    buttonSelectObjects: 'button.select-objects',
+    buttonDeleteSelection: 'button.delete-selection'
   };
   imageThumbnailListPO: ImageThumbnailListPageObject;
 
@@ -18,7 +19,5 @@ export abstract class RelationsEditorPageObject extends PageObject {
   abstract expectObject(object: TheThing): void;
   abstract gotoCreateRelationObject(): void;
   abstract expectVisible(): void;
-  deleteObject(object: TheThing) {
-    this.imageThumbnailListPO.deleteItem(object);
-  }
+  abstract deleteObjects(objects: TheThing[]): void;
 }

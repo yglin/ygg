@@ -4,10 +4,12 @@ import { MockDatabase, login, getCurrentUser } from '@ygg/shared/test/cypress';
 import {
   TheThingEditorPageObjectCypress,
   getCreatedTheThingId,
-  TheThingViewPageObjectCypress
+  TheThingViewPageObjectCypress,
+  MyThingsPageObjectCypress
 } from '@ygg/the-thing/test';
-import { TourViewPageObjectCypress } from '@ygg/playwhat/test';
+import { TourViewPageObjectCypress, SiteNavigator } from '@ygg/playwhat/test';
 
+const siteNavigator = new SiteNavigator();
 const mockDatabase = new MockDatabase();
 const sampleTour = new TheThing().fromJSON(SampleTourJSON.tour);
 const plays = SampleTourJSON.plays.map(playJSON =>
@@ -30,6 +32,12 @@ describe('Create a tour composed of plays', () => {
   });
 
   after(() => {
+    // Goto my-things page and delete all test things
+    const myThingsPO = new MyThingsPageObjectCypress();
+    siteNavigator.goto(['the-things', 'my'], myThingsPO);
+    cy.wait(3000);
+    myThingsPO.deleteAll();
+
     mockDatabase.clear();
   });
 

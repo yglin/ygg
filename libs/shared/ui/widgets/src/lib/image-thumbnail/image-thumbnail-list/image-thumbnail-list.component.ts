@@ -29,7 +29,7 @@ export class ImageThumbnailListComponent
   > = new EventEmitter();
   @Input() selection: ImageThumbnailItem[] = [];
   @Input() singleSelect: boolean;
-  @Output() selectionChanged: EventEmitter<
+  @Output() selectionChange: EventEmitter<
     ImageThumbnailItem[]
   > = new EventEmitter();
   @Output() selectItem: EventEmitter<ImageThumbnailItem> = new EventEmitter();
@@ -54,14 +54,16 @@ export class ImageThumbnailListComponent
     if (this.items$) {
       this.subscriptions.push(
         this.items$.subscribe(items => {
+          // console.log('ITEMS~!!!');
+          // console.dir(items);
           this.items = items;
-          this.selection.length = 0;
+          this.selection = [];
         })
       );
     }
     this.isItemDeletable = this.deleteItems.observers.length > 0;
     this.isSelectable =
-      this.selectionChanged.observers.length > 0 ||
+      this.selectionChange.observers.length > 0 ||
       this.dialogSubmit$.observers.length > 0 ||
       this.selectItem.observers.length > 0 ||
       this.deselectItem.observers.length > 0 ||
@@ -89,7 +91,7 @@ export class ImageThumbnailListComponent
       this.selection.push(item);
       this.selectItem.emit(item);
     }
-    this.selectionChanged.emit(this.selection);
+    this.selectionChange.emit(this.selection);
   }
 
   onClickLink(item: ImageThumbnailItem) {

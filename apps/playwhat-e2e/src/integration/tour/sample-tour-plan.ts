@@ -1,7 +1,14 @@
-import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import {
+  TheThing,
+  TheThingCell,
+  TheThingRelation,
+  TheThingCellTypes
+} from '@ygg/the-thing/core';
 import { DateRange, DayTimeRange, Contact } from '@ygg/shared/omni-types/core';
 import { randomBytes } from 'crypto';
 import { random } from 'lodash';
+import { SamplePlays, SampleAdditions } from '../play/sample-plays';
+import { RelationNamePurchase, CellNameQuantity } from '@ygg/shopping/core';
 
 export const TourPlanTemplate = new TheThing().fromJSON({
   tags: ['tour', 'tour-plan', 'schedule', '遊程計畫'],
@@ -30,7 +37,7 @@ export const TourPlanTemplate = new TheThing().fromJSON({
 const dateRange = DateRange.forge();
 export const MinimalTourPlan = new TheThing().fromJSON({
   tags: ['tour-plan', '遊程規劃'],
-  name: `深度遊趣${dateRange.days() + 1}日遊`,
+  name: `測試遊程(最少需求資料)`,
   view: 'tour-plan',
   cells: [
     {
@@ -51,7 +58,11 @@ export const MinimalTourPlan = new TheThing().fromJSON({
   ]
 });
 
+export const MinimalTourPlanWithoutName = MinimalTourPlan.clone();
+delete MinimalTourPlanWithoutName.name;
+
 export const TourPlanFull = MinimalTourPlan.clone();
+TourPlanFull.name = '測試遊程(完整資料欄位)';
 TourPlanFull.addCells(
   [
     {
@@ -91,3 +102,22 @@ TourPlanFull.addCells(
     }
   ].map(cellData => new TheThingCell().fromJSON(cellData))
 );
+
+export const TourPlanFullWithPlays = TourPlanFull.clone();
+TourPlanFullWithPlays.name = '測試遊程(完整資料欄位＋預訂體驗)'
+for (const play of SamplePlays) {
+  const cellQuantity = new TheThingCell({
+    name: CellNameQuantity,
+    type: 'number',
+    value: random(10, 50)
+  });
+  TourPlanFullWithPlays.addRelation(RelationNamePurchase, play, [cellQuantity]);
+}
+for (const addition of SampleAdditions) {
+  const cellQuantity = new TheThingCell({
+    name: CellNameQuantity,
+    type: 'number',
+    value: random(1, 10)
+  });
+  TourPlanFullWithPlays.addRelation(RelationNamePurchase, addition, [cellQuantity]);
+}

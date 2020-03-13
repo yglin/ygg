@@ -76,7 +76,7 @@ export class TheThingFilterComponent implements OnInit, OnDestroy {
 
   onSaveFilter() {
     const filterName = this.formControlFilterName.value;
-    console.log(filterName);
+    // console.log(filterName);
     if (filterName && confirm(`將目前的搜尋條件儲存為 ${filterName} ？`)) {
       const newFilter = new TheThingFilter(filterName, this.formGroup.value);
       try {

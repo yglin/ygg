@@ -1,29 +1,31 @@
 import { TheThingImitation, TheThing } from '@ygg/the-thing/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 
-export const TemplateTourPlan: TheThing = new TheThing().fromJSON({
-  id: 'ep7Ds0lz9UKkII3NgyVrsA',
-  tags: ['tour-plan', '遊程規劃'],
-  name: '某某寶地一日遊',
-  view: 'tour-plan',
-  cells: [
-    {
-      name: '預計出遊日期',
-      type: 'date-range',
-      value: null
-    },
-    {
-      name: '預計參加人數',
-      type: 'number',
-      value: 0
-    },
-    {
-      name: '聯絡資訊',
-      type: 'contact',
-      value: null
-    }
-  ]
-});
+// export const TemplateTourPlan: TheThing = new TheThing().fromJSON({
+//   id: 'ep7Ds0lz9UKkII3NgyVrsA',
+//   tags: ['tour-plan', '遊程規劃'],
+//   name: '某某寶地一日遊',
+//   icon: '',
+//   image: '/assets/images/tour/tour-plans.svg',
+//   view: 'tour-plan',
+//   cells: [
+//     {
+//       name: '預計出遊日期',
+//       type: 'date-range',
+//       value: null
+//     },
+//     {
+//       name: '預計參加人數',
+//       type: 'number',
+//       value: 0
+//     },
+//     {
+//       name: '聯絡資訊',
+//       type: 'contact',
+//       value: null
+//     }
+//   ]
+// });
 
 
 export const ImitationTourPlan: TheThingImitation = new TheThingImitation().fromJSON(
@@ -31,8 +33,11 @@ export const ImitationTourPlan: TheThingImitation = new TheThingImitation().from
     id: 'BvyVkzRIxEuYoPjxIjHVOA',
     name: '旅遊行程規劃',
     description: '規劃你想玩的體驗組合，預計出遊日期、參加人數，以及其他細節',
+    icon:'directions_bike',
     image: '/assets/images/tour/tour-plans.svg',
-    templateId: TemplateTourPlan.id,
+    view: 'tour-plan',
+    editor: 'tour-plan',
+    // templateId: TemplateTourPlan.id,
     cellsDef: {
       預計出遊日期: {
         name: '預計出遊日期',

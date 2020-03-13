@@ -1,10 +1,18 @@
 import { sampleSize, values, pick, sum, sumBy, random } from 'lodash';
 import { MockDatabase, login } from '@ygg/shared/test/cypress';
-import { MinimalTourPlan, TourPlanFull } from './sample-tour-plan';
+import {
+  MinimalTourPlan,
+  TourPlanFull,
+  TourPlanFullWithPlays,
+  MinimalTourPlanWithoutName
+} from './sample-tour-plan';
 import { SamplePlays, SampleAdditions } from '../play/sample-plays';
 import {
   TheThingEditorPageObjectCypress,
-  TheThingDataTablePageObjectCypress
+  TheThingDataTablePageObjectCypress,
+  MyThingsDataTablePageObjectCypress,
+  TheThingViewPageObjectCypress,
+  MyThingsPageObjectCypress
 } from '@ygg/the-thing/test';
 import {
   TourPlanViewPageObjectCypress,
@@ -14,22 +22,40 @@ import { SiteNavigator } from '@ygg/playwhat/test';
 import { TheThing } from '@ygg/the-thing/core';
 import { Contact } from '@ygg/shared/omni-types/core';
 import { ImitationTourPlan } from '@ygg/playwhat/core';
-import { Purchase, RelationAddition, CellNameCharge } from '@ygg/shopping/core';
+import {
+  Purchase,
+  RelationAddition,
+  CellNameCharge,
+  CellNamePrice,
+  RelationNamePurchase,
+  CellNameQuantity
+} from '@ygg/shopping/core';
+import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
+import { MyThingsDataTableComponent } from 'libs/the-thing/ui/src/lib/the-thing/my-things-data-table/my-things-data-table.component';
 
 const mockDatabase = new MockDatabase();
 const siteNavigator = new SiteNavigator();
 const selectPlays = sampleSize(SamplePlays, 2);
 let tourPlanWithPlays: TheThing;
 const tourPlanFull: TheThing = TourPlanFull;
-const tourPlanBuilderPO = new TourPlanBuilderPageObjectCypress();
+const SampleTourPlans = [
+  MinimalTourPlan.clone(),
+  TourPlanFullWithPlays.clone()
+];
 
-describe('What can we do in home page ?', () => {
+const tourPlanBuilderPO = new TourPlanBuilderPageObjectCypress();
+const tourPlanViewPO = new TourPlanViewPageObjectCypress();
+
+describe('Tour-plan builder', () => {
   before(() => {
     tourPlanWithPlays = MinimalTourPlan.clone();
     tourPlanWithPlays.addRelations('體驗', selectPlays);
-    login().then(() => {
-      const SampleTheThings = SamplePlays.concat(SampleAdditions);
+    login().then(user => {
+      const SampleTheThings = SamplePlays.concat(SampleAdditions).concat(
+        SampleTourPlans
+      );
       cy.wrap(SampleTheThings).each((thing: any) => {
+        thing.ownerId = user.id;
         mockDatabase.insert(
           `${TheThing.collection}/${thing.id}`,
           thing.toJSON()
@@ -45,6 +71,12 @@ describe('What can we do in home page ?', () => {
   });
 
   after(() => {
+    // Goto my-things page and delete all test things
+    const myThingsPO = new MyThingsPageObjectCypress();
+    siteNavigator.goto(['the-things', 'my'], myThingsPO);
+    cy.wait(3000);
+    myThingsPO.deleteAll();
+
     mockDatabase.clear();
     mockDatabase.restoreRTDB();
   });
@@ -63,17 +95,15 @@ describe('What can we do in home page ?', () => {
     tourPlanBuilderPO.setContact(MinimalTourPlan.cells['聯絡資訊'].value);
     tourPlanBuilderPO.next();
 
-    // Show optional data fields of a tour-plan, here we just skip it
     tourPlanBuilderPO.expectStep(3);
     tourPlanBuilderPO.next();
 
-    // Show cart of selected plays, here we just skip it
     tourPlanBuilderPO.expectStep(4);
+    tourPlanBuilderPO.setName(MinimalTourPlan.name);
     tourPlanBuilderPO.next();
 
     // Review final tour-plan and submit it
     tourPlanBuilderPO.expectStep(5);
-    const tourPlanViewPO = new TourPlanViewPageObjectCypress();
     tourPlanViewPO.expectVisible();
     tourPlanViewPO.expectValue(MinimalTourPlan);
     tourPlanBuilderPO.submit();
@@ -82,11 +112,42 @@ describe('What can we do in home page ?', () => {
     const tourPlanDataTablePO = new TheThingDataTablePageObjectCypress();
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanDataTablePO);
     // tourPlanDataTablePO.expectTheThing(MinimalTourPlan);
+    tourPlanDataTablePO.expectFirst(MinimalTourPlan);
     tourPlanDataTablePO.clickFirst();
 
     // Click the tour-plan to review it
     tourPlanViewPO.expectVisible();
     tourPlanViewPO.expectValue(MinimalTourPlan);
+  });
+
+  it('A tour-plan without user input name should have default name', () => {
+    // Set date and number of participants
+    tourPlanBuilderPO.expectStep(1);
+    const dateRange = MinimalTourPlanWithoutName.cells['預計出遊日期'].value;
+    tourPlanBuilderPO.setDateRange(dateRange);
+    const numParticipants =
+      MinimalTourPlanWithoutName.cells['預計參加人數'].value;
+    tourPlanBuilderPO.setNumParticipants(numParticipants);
+    tourPlanBuilderPO.next();
+
+    // Fill in contact info
+    tourPlanBuilderPO.expectStep(2);
+    tourPlanBuilderPO.setContact(
+      MinimalTourPlanWithoutName.cells['聯絡資訊'].value
+    );
+    tourPlanBuilderPO.next();
+
+    tourPlanBuilderPO.expectStep(3);
+    tourPlanBuilderPO.next();
+
+    tourPlanBuilderPO.expectStep(4);
+    tourPlanBuilderPO.next();
+
+    // Review final tour-plan, the name should be defaultName
+    const defaultName = `深度遊趣${dateRange.days() + 1}日遊`;
+    tourPlanBuilderPO.expectStep(5);
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectName(defaultName);
   });
 
   it('Build a tour-plan with minimal required data fields: dateRange, numParticipants, contact', () => {
@@ -103,17 +164,15 @@ describe('What can we do in home page ?', () => {
     tourPlanBuilderPO.setContact(MinimalTourPlan.cells['聯絡資訊'].value);
     tourPlanBuilderPO.next();
 
-    // Show optional data fields of a tour-plan, here we just skip it
     tourPlanBuilderPO.expectStep(3);
     tourPlanBuilderPO.next();
 
-    // Show cart of selected plays, here we just skip it
     tourPlanBuilderPO.expectStep(4);
+    tourPlanBuilderPO.setName(MinimalTourPlan.name);
     tourPlanBuilderPO.next();
 
     // Review final tour-plan and submit it
     tourPlanBuilderPO.expectStep(5);
-    const tourPlanViewPO = new TourPlanViewPageObjectCypress();
     tourPlanViewPO.expectVisible();
     tourPlanViewPO.expectValue(MinimalTourPlan);
     tourPlanBuilderPO.submit();
@@ -137,21 +196,21 @@ describe('What can we do in home page ?', () => {
     tourPlanBuilderPO.setContact(TourPlanFull.cells['聯絡資訊'].value);
     tourPlanBuilderPO.next();
 
-    // Set optional data fields
+    // Show cart of selected plays, here we just skip it
     tourPlanBuilderPO.expectStep(3);
+    tourPlanBuilderPO.next();
+
+    tourPlanBuilderPO.expectStep(4);
+    tourPlanBuilderPO.setName(TourPlanFull.name);
+    // Set optional data fields
     const optionalCells = ImitationTourPlan.getOptionalCellNames();
     tourPlanBuilderPO.theThingCellsEditorPO.updateValue(
       TourPlanFull.getCellsByNames(optionalCells)
     );
     tourPlanBuilderPO.next();
 
-    // Show cart of selected plays, here we just skip it
-    tourPlanBuilderPO.expectStep(4);
-    tourPlanBuilderPO.next();
-
     // Review final tour-plan and submit it
     tourPlanBuilderPO.expectStep(5);
-    const tourPlanViewPO = new TourPlanViewPageObjectCypress();
     tourPlanViewPO.expectVisible();
     tourPlanViewPO.expectValue(TourPlanFull);
     tourPlanBuilderPO.submit();
@@ -180,10 +239,6 @@ describe('What can we do in home page ?', () => {
     tourPlanBuilderPO.setContact(tourPlanWithPlays.cells['聯絡資訊'].value);
     tourPlanBuilderPO.next();
 
-    // Show optional data fields of a tour-plan, here we just skip it
-    tourPlanBuilderPO.expectStep(3);
-    tourPlanBuilderPO.next();
-
     // Show cart of selected plays, expect correct total price
     const purchases: Purchase[] = [];
     for (const play of playsWithoutAddition) {
@@ -199,14 +254,18 @@ describe('What can we do in home page ?', () => {
       (play: TheThing) => play.getCellValue(CellNameCharge) * numParticipants
     );
     // const singleCharge: number = Math.ceil(totalCharge / numParticipants);
-    tourPlanBuilderPO.expectStep(4);
+    tourPlanBuilderPO.expectStep(3);
     tourPlanBuilderPO.cartEditorPO.expectProducts(playsWithoutAddition);
     tourPlanBuilderPO.cartEditorPO.expectTotalCharge(totalCharge);
     tourPlanBuilderPO.next();
 
+    // Show optional data fields of a tour-plan, here we just skip it
+    tourPlanBuilderPO.expectStep(4);
+    tourPlanBuilderPO.setName(tourPlanWithPlays.name);
+    tourPlanBuilderPO.next();
+
     // Review final tour-plan and submit it
     tourPlanBuilderPO.expectStep(5);
-    const tourPlanViewPO = new TourPlanViewPageObjectCypress();
     tourPlanViewPO.expectVisible();
     tourPlanViewPO.expectValue(tourPlanWithPlays);
     tourPlanBuilderPO.submit();
@@ -241,10 +300,6 @@ describe('What can we do in home page ?', () => {
     tourPlanBuilderPO.setContact(tourPlanWithPlays.cells['聯絡資訊'].value);
     tourPlanBuilderPO.next();
 
-    // Show optional data fields of a tour-plan, here we just skip it
-    tourPlanBuilderPO.expectStep(3);
-    tourPlanBuilderPO.next();
-
     // Show cart of selected plays, with additions, expect correct total price
     const additionPurchaseQuantity = random(3, 10);
     const purchases: Purchase[] = [];
@@ -273,7 +328,7 @@ describe('What can we do in home page ?', () => {
     );
 
     // const singleCharge: number = Math.ceil(totalCharge / numParticipants);
-    tourPlanBuilderPO.expectStep(4);
+    tourPlanBuilderPO.expectStep(3);
     tourPlanBuilderPO.cartEditorPO.expectProducts(products);
     tourPlanBuilderPO.cartEditorPO.setQuantity(
       SampleAdditions[0].id,
@@ -287,9 +342,13 @@ describe('What can we do in home page ?', () => {
     // cy.pause();
     tourPlanBuilderPO.next();
 
+    // Show optional data fields of a tour-plan, here we just skip it
+    tourPlanBuilderPO.expectStep(4);
+    tourPlanBuilderPO.setName(tourPlanWithPlays.name);
+    tourPlanBuilderPO.next();
+
     // Review final tour-plan and submit it
     tourPlanBuilderPO.expectStep(5);
-    const tourPlanViewPO = new TourPlanViewPageObjectCypress();
     tourPlanViewPO.expectVisible();
     tourPlanViewPO.expectValue(tourPlanWithPlays);
     // cy.pause();
@@ -304,5 +363,50 @@ describe('What can we do in home page ?', () => {
       })
     );
     tourPlanViewPO.purchaseListPO.expectTotalCharge(totalCharge);
+  });
+
+  it('Click edit button in my-tour-plans page, should goto tour-plan-builder', () => {
+    const myThingsPO = new MyThingsDataTablePageObjectCypress();
+    siteNavigator.goto(['tour-plans', 'my'], myThingsPO);
+    myThingsPO.theThingDataTablePO.expectTheThing(SampleTourPlans[0]);
+    myThingsPO.theThingDataTablePO.gotoTheThingEdit(SampleTourPlans[0]);
+
+    // Should redirect to tour-plan-builder
+    tourPlanBuilderPO.expectVisible();
+    tourPlanBuilderPO.expectStep(1);
+    tourPlanBuilderPO.next();
+    tourPlanBuilderPO.next();
+    tourPlanBuilderPO.next();
+    tourPlanBuilderPO.next();
+    tourPlanBuilderPO.submit();
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectValue(SampleTourPlans[0]);
+  });
+
+  it('Edit exist tour-plan with full data', () => {
+    const myThingsPO = new MyThingsDataTablePageObjectCypress();
+    siteNavigator.goto(['tour-plans', 'my'], myThingsPO);
+    myThingsPO.theThingDataTablePO.expectTheThing(SampleTourPlans[1]);
+    myThingsPO.theThingDataTablePO.gotoTheThingEdit(SampleTourPlans[1]);
+
+    // Should redirect to tour-plan-builder
+    tourPlanBuilderPO.expectVisible();
+    tourPlanBuilderPO.expectStep(1);
+    tourPlanBuilderPO.next();
+    tourPlanBuilderPO.next();
+    tourPlanBuilderPO.next();
+    tourPlanBuilderPO.next();
+    tourPlanBuilderPO.submit();
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectValue(SampleTourPlans[1]);
+
+    tourPlanViewPO.purchaseListPO.expectPurchases(
+      SampleTourPlans[1].getRelations(RelationNamePurchase).map(r => {
+        return {
+          productId: r.objectId,
+          quantity: r.getCellValue(CellNameQuantity)
+        };
+      })
+    );
   });
 });

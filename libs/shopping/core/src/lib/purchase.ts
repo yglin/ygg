@@ -7,7 +7,7 @@ import {
   toJSONDeep,
   generateID
 } from '@ygg/shared/infra/data-access';
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingRelation } from '@ygg/the-thing/core';
 
 export const RelationNamePurchase = '訂購';
 

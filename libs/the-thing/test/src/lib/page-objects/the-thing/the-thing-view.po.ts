@@ -127,6 +127,10 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
     cy.get(this.getSelector('buttonLinkRelationBack')).should('not.exist');
   }
 
+  gotoEdit() {
+    cy.get(this.getSelector('buttonEdit')).click();
+  }
+
   gotoCreateByClone() {
     cy.get(this.getSelector('buttonCreateByClone')).click({ force: true });
   }

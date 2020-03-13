@@ -39,8 +39,16 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
     cy.get(this.getSelectorForItem(item), { timeout }).should('not.be.exist');
   }
 
-  expectNoItems(items: ImageThumbnailItem[]) {
-    cy.wrap(items).each((item: any) => this.expectNoItem(item));
+  expectNoItems(items?: ImageThumbnailItem[]) {
+    if (items === undefined) {
+      cy.get(this.getSelectorForItem()).should('not.be.exist');
+    } else {
+      cy.wrap(items).each((item: any) => this.expectNoItem(item));
+    }
+  }
+
+  expectEmpty() {
+    cy.get(this.getSelectorForItem(), { timeout: 10000 }).should('not.exist');
   }
 
   expectItems(items: ImageThumbnailItem[]) {
@@ -69,6 +77,17 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
     cy.get(this.getSelector('buttonDeleteSelection')).click();
     cy.wait(10000);
     this.expectNoItems(items);
+  }
+
+  deleteAll() {
+    this.selectAll();
+    cy.get(this.getSelector('buttonDeleteSelection')).click();
+    cy.wait(10000);
+    this.expectNoItems();
+  }
+
+  selectAll() {
+    cy.get(this.getSelectorForItem()).click({ multiple: true });
   }
 
   selectItem(item: ImageThumbnailItem) {

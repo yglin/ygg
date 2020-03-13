@@ -16,8 +16,12 @@ export abstract class ImageThumbnailListPageObject extends PageObject {
     return `${this.getSelector('selection')} .item:contains("${item.name}")`;
   }
 
-  getSelectorForItem(item: ImageThumbnailItem): string {
-    return `${this.getSelector()} .item:contains("${item.name}")`;
+  getSelectorForItem(item?: ImageThumbnailItem): string {
+    if (item === undefined) {
+      return `${this.getSelector()} .item`;
+    } else {
+      return `${this.getSelector()} .item:contains("${item.name}")`;
+    }
   }
 
   getSelectorForItemLink(item: ImageThumbnailItem): string {
@@ -30,8 +34,11 @@ export abstract class ImageThumbnailListPageObject extends PageObject {
 
   abstract expectItem(item: ImageThumbnailItem): void;
   abstract expectItems(items: ImageThumbnailItem[]): void;
+  abstract expectNoItems(objects: ImageThumbnailItem[]): void;
+  abstract expectEmpty(): void;
   abstract selectItem(item: ImageThumbnailItem): void;
   abstract selectItems(items: ImageThumbnailItem[]): void;
+  abstract selectAll(): void;
   abstract deleteItem(item: ImageThumbnailItem): void;
   abstract deleteItems(items: ImageThumbnailItem[]): void;
   abstract clearSelection(): void;

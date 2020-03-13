@@ -28,6 +28,8 @@ import {
 import { ShoppingUiModule } from '@ygg/shopping/ui';
 import { MyPlayListComponent } from './ui/my-play-list/my-play-list.component';
 import { routes } from './routes';
+import { MyTourPlanListComponent } from './ui/my-tour-plan-list/my-tour-plan-list.component';
+import { TheThingEditorService } from 'libs/the-thing/ui/src/lib/the-thing-editor.service';
 
 @NgModule({
   imports: [
@@ -50,25 +52,25 @@ import { routes } from './routes';
     TourPlanBuilderComponent,
     TourPlanAdminComponent,
     PlayViewComponent,
-    MyPlayListComponent
+    MyPlayListComponent,
+    MyTourPlanListComponent
   ],
   entryComponents: [
     TourViewComponent,
     TourPlanViewComponent,
     TourPlanAdminComponent,
-    PlayViewComponent
+    PlayViewComponent,
+    TourPlanBuilderComponent
   ],
   providers: [
     {
       provide: APP_INITIALIZER,
       useFactory: configTheThingImitation,
-      deps: [TheThingImitationAccessService, TheThingViewsService],
-      multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: configAdminMenu,
-      deps: [PlaywhatAdminService],
+      deps: [
+        TheThingImitationAccessService,
+        TheThingViewsService,
+        TheThingEditorService
+      ],
       multi: true
     },
     {
@@ -84,7 +86,8 @@ export class PlaywhatUiModule {}
 
 export function configTheThingImitation(
   imitationAccessService: TheThingImitationAccessService,
-  theThingViewsService: TheThingViewsService
+  theThingViewsService: TheThingViewsService,
+  theThingEditorService: TheThingEditorService
 ) {
   return () => {
     imitationAccessService.addLocal([
@@ -107,6 +110,11 @@ export function configTheThingImitation(
       label: '遊程規劃',
       component: TourPlanViewComponent
     });
+    theThingEditorService.addEditor({
+      id: 'tour-plan',
+      label: '遊程規劃',
+      component: TourPlanBuilderComponent
+    });
   };
 }
 
@@ -115,24 +123,14 @@ export function configUserMenu(userMenuService: UserMenuService) {
     userMenuService.addItem({
       id: 'play',
       label: '我的體驗',
-      link: 'plays/my',
-      icon: 'local_play'
+      link: `the-things/my/${ImitationPlay.id}`,
+      icon: ImitationPlay.icon
     });
-  };
-}
-
-export function configAdminMenu(
-  playwhatAdminService: PlaywhatAdminService
-): Function {
-  const adminMenu = new MenuTree({
-    id: 'tour-plans',
-    link: 'tour-plans',
-    label: '遊程規劃清單',
-    icon: new Image('/assets/images/tour/tour-plans.svg'),
-    tooltip: '遊程規劃清單管理頁面',
-    component: TourPlanAdminComponent
-  });
-  return () => {
-    playwhatAdminService.menu.addMenu(adminMenu);
+    userMenuService.addItem({
+      id: 'tour-plan',
+      label: '我的遊程',
+      link: `the-things/my/${ImitationTourPlan.id}`,
+      icon: ImitationTourPlan.icon
+    });
   };
 }

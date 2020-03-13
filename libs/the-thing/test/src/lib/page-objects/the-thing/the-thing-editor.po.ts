@@ -92,7 +92,7 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
       this.getSelectorForRelationsEditor(relationName)
     );
     relationsEditorPO.expectVisible();
-    relationsEditorPO.deleteObject(objectThing);
+    relationsEditorPO.deleteObjects([objectThing]);
   }
 
   expectRelation(relationName: string, objectThing?: TheThing) {

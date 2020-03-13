@@ -13,6 +13,7 @@ export class TourPlanBuilderPageObject extends PageObject {
     dateRangeControl: '.step1 .date-range',
     numParticipantsControl: '.step1 .num-participants',
     contactControl: '.step2 .contact-control',
+    inputName: '.tour-plan-name input',
     optionalCellsEditor: '.optional-editor',
     shoppingCart: '.shopping-cart-editor',
     buttonSubmit: 'button.submit'

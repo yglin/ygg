@@ -152,7 +152,7 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
 
 export class TheThingCell {
   name: string;
-  type: TheThingCellTypeID;
+  type: string;
   value: any;
 
   static fromDef(cellDef: TheThingCellDefine): TheThingCell {

@@ -14,7 +14,8 @@ import {
   assign,
   pick,
   values,
-  defaults
+  defaults,
+  pickBy
 } from 'lodash';
 import { Tags } from '@ygg/tags/core';
 import { TheThingCell, TheThingCellTypeID } from './cell';
@@ -200,6 +201,10 @@ export class TheThing implements ImageThumbnailItem {
     }
   }
 
+  getCellValuesByNames(cellNames: string[]): { [cellName: string]: any } {
+    return mapValues(pick(this.cells, cellNames), cell => cell.value);
+  }
+
   hasRelation(relationName: string) {
     return (
       relationName in this.relations && !isEmpty(this.relations[relationName])
@@ -214,6 +219,7 @@ export class TheThing implements ImageThumbnailItem {
         )}`
       );
     }
+
     const relationName = args[0];
     if (!(relationName in this.relations)) {
       this.relations[relationName] = [];
@@ -246,15 +252,6 @@ export class TheThing implements ImageThumbnailItem {
     for (const object of objects) {
       this.addRelation(relationName, object);
     }
-    // let ids: string[] = [];
-    // if (typeof objectThings[0] === 'string') {
-    //   ids = objectThings as string[];
-    // } else {
-    //   ids = (objectThings as TheThing[]).map(thing => thing.id);
-    // }
-    // this.relations[relationName] = uniq(
-    //   (this.relations[relationName] || []).concat(ids)
-    // );
   }
 
   removeRelation(relationName, objectId?: TheThing | string) {

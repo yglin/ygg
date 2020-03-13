@@ -34,4 +34,10 @@ export class MyThingsPageObjectCypress extends MyThingsPageObject {
     imitationSelectorDialogPO.expectVisible(false);
     cy.wait(5000);
   }
+  
+  deleteAll() {
+    this.theThingListPO.selectAll();
+    cy.get(this.getSelector('buttonDeleteSelection')).click();
+    this.theThingListPO.expectEmpty();
+  }
 }

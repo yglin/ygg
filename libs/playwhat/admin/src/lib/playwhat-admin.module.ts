@@ -13,6 +13,7 @@ import { TheThingUiModule } from '@ygg/the-thing/ui';
 
 import { PlaywhatAdminService } from './playwhat-admin.service';
 import { HomepageManageComponent } from './homepage-manage/homepage-manage.component';
+import { ImitationTourPlan } from "@ygg/playwhat/core";
 
 @NgModule({
   imports: [
@@ -51,6 +52,16 @@ export function configRouting(
       tooltip: '管理首頁展示的物件',
       routeConfig: {
         component: HomepageManageComponent
+      }
+    });
+    playwhatAdminService.menu.addItem({
+      id: 'tour-plans',
+      link: 'tour-plans',
+      label: '遊程規劃清單',
+      icon: new Image(ImitationTourPlan.image),
+      tooltip: '遊程規劃清單管理頁面',
+      routeConfig: {
+        redirectTo: `/the-things/admin/${ImitationTourPlan.id}`
       }
     });
     const adminRoute = playwhatAdminService.menu.toRoute();

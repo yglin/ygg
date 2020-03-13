@@ -7,7 +7,7 @@ import {
 import { ImageThumbnailListPageObject } from '@ygg/shared/ui/widgets';
 import { PurchaseListPageObject } from '@ygg/shopping/ui';
 
-export class TourPlanViewPageObject extends PageObject {
+export abstract class TourPlanViewPageObject extends PageObject {
   selectors = {
     main: '.tour-plan-view',
     name: '.tour-plan-name',

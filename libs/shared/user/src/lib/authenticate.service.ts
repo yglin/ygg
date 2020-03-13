@@ -1,29 +1,43 @@
-import {Injectable} from '@angular/core';
-import {AngularFireAuth} from '@angular/fire/auth';
+import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
-import {sample} from 'lodash';
-import {BehaviorSubject, from, Observable, of, Subscription, throwError} from 'rxjs';
-import {catchError, map, switchMap} from 'rxjs/operators';
+import { sample } from 'lodash';
+import {
+  BehaviorSubject,
+  from,
+  Observable,
+  of,
+  Subscription,
+  throwError
+} from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-import {UserError, UserErrorCode} from './error';
-import {User} from './models/user';
-import {UserService} from './user.service';
+import { UserError, UserErrorCode } from './error';
+import { User } from './models/user';
+import { UserService } from './user.service';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AuthenticateService {
+  currentUser: User;
   currentUser$: BehaviorSubject<User>;
 
   constructor(
-      private userService: UserService,
-      private angularFireAuth: AngularFireAuth) {
-        this.currentUser$ = new BehaviorSubject(null);
-        this.angularFireAuth.authState.pipe(switchMap(firebaseUser => {
+    private userService: UserService,
+    private angularFireAuth: AngularFireAuth
+  ) {
+    this.currentUser$ = new BehaviorSubject(null);
+    this.angularFireAuth.authState
+      .pipe(
+        switchMap(firebaseUser => {
           if (!firebaseUser) {
             return of(null);
           } else {
             return this.findOrCreateUser$(firebaseUser);
           }
-        })).subscribe(this.currentUser$);
+        })
+      )
+      .pipe(tap(user => (this.currentUser = user)))
+      .subscribe(this.currentUser$);
   }
 
   async loginAnonymously() {
@@ -32,8 +46,9 @@ export class AuthenticateService {
 
   async login(providerName: string) {
     try {
-      let provider:|firebase.auth.GoogleAuthProvider|
-          firebase.auth.FacebookAuthProvider;
+      let provider:
+        | firebase.auth.GoogleAuthProvider
+        | firebase.auth.FacebookAuthProvider;
       switch (providerName) {
         case 'google':
           provider = new firebase.auth.GoogleAuthProvider();
@@ -59,20 +74,24 @@ export class AuthenticateService {
 
   findOrCreateUser$(firebaseUser: firebase.User): Observable<User> {
     const userId = firebaseUser.uid;
-    return this.userService.get$(userId).pipe(catchError(error => {
-      const userError: UserError = error;
-      if (userError.code === UserErrorCode.UserNotFound) {
-        const newUser =
-            new User().connectProvider(firebaseUser.providerId, firebaseUser);
-        return this.userService.upsert(newUser);
-      } else {
-        return throwError(error);
-      }
-    }));
+    return this.userService.get$(userId).pipe(
+      catchError(error => {
+        const userError: UserError = error;
+        if (userError.code === UserErrorCode.UserNotFound) {
+          const newUser = new User().connectProvider(
+            firebaseUser.providerId,
+            firebaseUser
+          );
+          return this.userService.upsert(newUser);
+        } else {
+          return throwError(error);
+        }
+      })
+    );
   }
 
   async logout() {
-    this.angularFireAuth.auth.signOut().then(()=> {
+    this.angularFireAuth.auth.signOut().then(() => {
       if (this.currentUser$.value) {
         this.currentUser$.next(null);
       }

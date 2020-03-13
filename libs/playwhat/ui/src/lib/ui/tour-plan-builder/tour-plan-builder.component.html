@@ -1,4 +1,4 @@
-<div class="tour-plan-builder">
+<div class="tour-plan-builder" *ngIf="theThing">
   <mat-horizontal-stepper linear #stepper>
     <mat-step [stepControl]="firstFormGroup">
       <div step="1" class="step1">
@@ -48,8 +48,8 @@
             <the-thing-finder
               [filter]="filterPlays"
               hideFilter
-              (selectTheThing)='onSelectPlay($event)'
-              (deselectTheThing)='onDeselectPlay($event)'
+              (selectTheThing)="onSelectPlay($event)"
+              (deselectTheThing)="onDeselectPlay($event)"
             ></the-thing-finder>
           </div>
         </form>
@@ -89,7 +89,7 @@
           </div>
         </div>
         <form [formGroup]="secondFormGroup">
-          <br><br>
+          <br /><br />
           <div class="contact-control">
             <ygg-contact-control
               formControlName="contact"
@@ -98,48 +98,8 @@
         </form>
       </div>
     </mat-step>
-    <mat-step [stepControl]="thirdFormGroup">
-      <div step="3" class="step3">
-        <div
-          fxLayout="row"
-          fxLayoutAlign="space-between center"
-          fxLayoutGap="10px"
-        >
-          <div>
-            <button
-              type="button"
-              mat-fab
-              class="previous"
-              matStepperPrevious
-              matTooltip="上一步"
-            >
-              <mat-icon>navigate_before</mat-icon>
-            </button>
-          </div>
-          <div><h2>其他需求事項</h2></div>
-          <div>
-            <button
-              type="button"
-              mat-fab
-              class="next"
-              matStepperNext
-              matTooltip="下一步"
-            >
-              <mat-icon>navigate_next</mat-icon>
-            </button>
-          </div>
-        </div>
-        <form [formGroup]="thirdFormGroup">
-          <div class="optional-editor">
-            <the-thing-cells-editor
-              [formControl]="formControlOptionalCells"
-            ></the-thing-cells-editor>
-          </div>
-        </form>
-      </div>
-    </mat-step>
     <mat-step>
-      <div step="4" class="step4">
+      <div step="3" class="step3">
         <div
           fxLayout="row"
           fxLayoutAlign="space-between center"
@@ -168,15 +128,64 @@
               class="next"
               matStepperNext
               matTooltip="下一步"
-              (click)="toFinalStep()"
             >
               <mat-icon>navigate_next</mat-icon>
             </button>
           </div>
         </div>
-        <div class='shopping-cart-editor'>
-          <ygg-shopping-cart-editor [formControl]='formControlPurchases'></ygg-shopping-cart-editor>
+        <div class="shopping-cart-editor">
+          <ygg-shopping-cart-editor
+            [formControl]="formControlPurchases"
+          ></ygg-shopping-cart-editor>
         </div>
+      </div>
+    </mat-step>
+    <mat-step [stepControl]="forthFormGroup">
+      <div step="4" class="step4">
+        <div
+          fxLayout="row"
+          fxLayoutAlign="space-between center"
+          fxLayoutGap="10px"
+        >
+          <div>
+            <button
+              type="button"
+              mat-fab
+              class="previous"
+              matStepperPrevious
+              matTooltip="上一步"
+            >
+              <mat-icon>navigate_before</mat-icon>
+            </button>
+          </div>
+          <div><h2>其他資訊與需求</h2></div>
+          <div>
+            <button
+              type="button"
+              mat-fab
+              class="next"
+              [disabled]="forthFormGroup.invalid"
+              (click)="toStepPreview()"
+              matStepperNext
+              matTooltip="下一步"
+            >
+              <mat-icon>navigate_next</mat-icon>
+            </button>
+          </div>
+        </div>
+        <form [formGroup]="forthFormGroup">
+          <div class="tour-plan-name">
+            <mat-form-field>
+              <input matInput placeholder="遊程名稱" formControlName="name" />
+            </mat-form-field>
+          </div>
+          <hr />
+          <div class="optional-editor">
+            <the-thing-cells-editor
+              formControlName="optionalCells"
+            ></the-thing-cells-editor>
+          </div>
+        </form>
       </div>
     </mat-step>
     <mat-step>
@@ -216,7 +225,9 @@
           </div>
         </div>
         <div>
-          <ygg-tour-plan-view [theThing$]="tourPlan$"></ygg-tour-plan-view>
+          <ygg-tour-plan-view
+            [theThing$]="theThingPreview$"
+          ></ygg-tour-plan-view>
         </div>
       </div>
     </mat-step>

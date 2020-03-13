@@ -1,6 +1,6 @@
 import { PageObject } from '@ygg/shared/test/page-object';
 import { TheThing } from '@ygg/the-thing/core';
-import { TheThingDataTablePageObject } from '@ygg/the-thing/ui';
+import { TheThingDataTablePageObject, MyThingsDataTablePageObject } from '@ygg/the-thing/ui';
 
 export abstract class MyPlayListPageObject extends PageObject {
   selectors = {
@@ -8,23 +8,23 @@ export abstract class MyPlayListPageObject extends PageObject {
     buttonCreate: 'button.create',
     dataTable: '.data-table'
   };
-  theThingDataTablePO: TheThingDataTablePageObject;
+  myPlaysDataTablePO: MyThingsDataTablePageObject;
 
   abstract clickCreate(): void;
 
   deletePlay(play: TheThing) {
-    this.theThingDataTablePO.deleteTheThing(play);
+    this.myPlaysDataTablePO.deleteSelection([play]);
   }
 
   expectPlay(play: TheThing) {
-    this.theThingDataTablePO.expectTheThing(play);
+    this.myPlaysDataTablePO.theThingDataTablePO.expectTheThing(play);
   }
 
   expectNotPlay(play: TheThing) {
-    this.theThingDataTablePO.expectNotTheThing(play);
+    this.myPlaysDataTablePO.theThingDataTablePO.expectNotTheThing(play);
   }
 
   clickPlay(play: TheThing) {
-    this.theThingDataTablePO.clickTheThing(play);
+    this.myPlaysDataTablePO.theThingDataTablePO.gotoTheThingView(play);
   }
 }

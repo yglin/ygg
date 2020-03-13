@@ -34,6 +34,12 @@ import { TheThingCellsEditorComponent } from './cell/cells-editor/cells-editor.c
 import { ImitationViewDogComponent } from './imitation/imitation-view-dog/imitation-view-dog.component';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { RelationsEditorComponent } from './relation/relations-editor/relations-editor.component';
+import { MyThingsDataTableComponent } from './the-thing/my-things-data-table/my-things-data-table.component';
+import { AdminThingsDataTableComponent } from './the-thing/admin-things-data-table/admin-things-data-table.component';
+import {
+  TheThingEditPageComponent,
+  TheThingEditorHostDirective
+} from './the-thing/the-thing-edit-page/the-thing-edit-page.component';
 
 interface TheThingUiModuleConfig {
   imitations: TheThingImitation[];
@@ -71,6 +77,10 @@ interface TheThingUiModuleConfig {
     TheThingCellsEditorComponent,
     ImitationViewDogComponent,
     RelationsEditorComponent,
+    MyThingsDataTableComponent,
+    AdminThingsDataTableComponent,
+    TheThingEditPageComponent,
+    TheThingEditorHostDirective
   ],
   exports: [
     CellListComponent,
@@ -85,9 +95,16 @@ interface TheThingUiModuleConfig {
     MyThingsComponent,
     TheThingDataTableComponent,
     TheThingCellsEditorComponent,
-    RelationsEditorComponent
+    RelationsEditorComponent,
+    MyThingsDataTableComponent,
+    AdminThingsDataTableComponent
   ],
-  entryComponents: [ImitationEditorComponent, TheThingFinderComponent, ImitationViewDogComponent],
+  entryComponents: [
+    ImitationEditorComponent,
+    TheThingFinderComponent,
+    ImitationViewDogComponent,
+    TheThingEditorComponent
+  ],
   providers: [
     {
       provide: APP_INITIALIZER,
@@ -100,15 +117,17 @@ interface TheThingUiModuleConfig {
       useFactory: registerImitations,
       deps: [TheThingImitationAccessService],
       multi: true
-    },
+    }
   ]
 })
 export class TheThingUiModule {}
 
-export function registerImitations(imitationAccessService: TheThingImitationAccessService) {
+export function registerImitations(
+  imitationAccessService: TheThingImitationAccessService
+) {
   return () => {
     imitationAccessService.addLocal(ImitationDog);
-  }
+  };
 }
 
 export function configUserMenu(userMenuService: UserMenuService) {

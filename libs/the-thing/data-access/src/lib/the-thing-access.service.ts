@@ -1,4 +1,4 @@
-import { isEmpty, every } from 'lodash';
+import { isEmpty, every, castArray } from 'lodash';
 import { Injectable } from '@angular/core';
 import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
 import { DataAccessService, Query } from '@ygg/shared/infra/data-access';
@@ -80,8 +80,15 @@ export class TheThingAccessService {
     return Promise.resolve(theThing);
   }
 
-  async delete(theThing: TheThing): Promise<TheThing> {
-    await this.dataAccessService.delete(TheThing.collection, theThing.id);
-    return theThing;
+  async delete(theThings: TheThing | TheThing[]): Promise<TheThing | TheThing[]> {
+    const victims: TheThing[]  = castArray(theThings);
+    const promises: Promise<any>[] = [];
+    for (const victim of victims) {
+      promises.push(
+        this.dataAccessService.delete(TheThing.collection, victim.id)
+      );
+    }
+    await Promise.all(promises);
+    return theThings;
   }
 }

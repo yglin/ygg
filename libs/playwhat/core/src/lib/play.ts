@@ -6,6 +6,7 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
     id: 'dSoAfEnTUUCAeAMJT3Ob2w',
     name: '體驗範本',
     description: '體驗項目，包含簡介、照片、費用、體驗時長和人數限制...等',
+    icon: 'local_play',
     image: '/assets/images/play/play.svg',
     view: 'play',
     tags: ['play', '體驗'],

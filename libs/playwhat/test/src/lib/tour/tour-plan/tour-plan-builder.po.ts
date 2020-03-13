@@ -7,7 +7,7 @@ import {
   NumberControlPageObjectCypress,
   ContactControlPageObjectCypress
 } from '@ygg/shared/omni-types/test';
-import { ShoppingCartEditorPageObjectCypress } from "@ygg/shopping/test";
+import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
 import { TheThingCellsEditorPageObjectCypress } from '@ygg/the-thing/test';
 
@@ -33,6 +33,10 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
     this.cartEditorPO = new ShoppingCartEditorPageObjectCypress(
       this.getSelector('shoppingCart')
     );
+  }
+
+  setName(name: string) {
+    cy.get(this.getSelector('inputName')).clear().type(name);
   }
 
   reset() {
@@ -61,5 +65,10 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
 
   submit() {
     cy.get(`${this.getSelector('buttonSubmit')}`).click();
+    // wait for redirect to view page
+    cy.location('pathname', { timeout: 10000 }).should(
+      'match',
+      /the-things\/[^\/]+/
+    );
   }
 }

@@ -43,9 +43,11 @@ export interface DataTableConfig {
 export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   id: string;
   name: string;
+  icon: string;
   image: string;
   description: string;
   view: string;
+  editor: string;
   // templateId: string;
   filter: TheThingFilter;
   cellsDef: { [name: string]: TheThingCellDefine } = {};
@@ -98,6 +100,12 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
 
   getOptionalCellNames(): string[] {
     return this.getOptionalCellDefs().map(cellDef => cellDef.name);
+  }
+
+  createOptionalCells(): TheThingCell[] {
+    return this.getOptionalCellDefs().map(cellDef =>
+      TheThingCell.fromDef(cellDef)
+    );
   }
 
   getComparators(): { [cellName: string]: TheThingCellComparator } {

@@ -119,14 +119,15 @@ export class MenuTree {
     if (item.routeConfig) {
       extend(result, item.routeConfig);
     }
-    if (isEmpty(item.children)) {
-      if (item.component) {
-        result.component = item.component;
-      } else {
-        const error = new TypeError(`Leaf menu item should has component`);
-        throwError(error);
-      }
-    } else {
+    if (!isEmpty(item.children)) {
+    //   if (item.component) {
+    //     result.component = item.component;
+    //   } else if (!(item.routeConfig && item.routeConfig.redirectTo)) {
+    //     const error = new Error(`Leaf menu item ${item.id} should has component or redirect path`);
+    //     console.error(error.message);
+    //     throw error;
+    //   }
+    // } else {
       result.children = [];
       for (const id in item.children) {
         if (item.children.hasOwnProperty(id)) {

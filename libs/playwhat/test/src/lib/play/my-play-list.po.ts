@@ -1,11 +1,11 @@
 import { MyPlayListPageObject } from '@ygg/playwhat/ui';
 import { TheThing } from '@ygg/the-thing/core';
-import { TheThingDataTablePageObjectCypress } from '@ygg/the-thing/test';
+import { TheThingDataTablePageObjectCypress, MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
 
 export class MyPlayListPageObjectCypress extends MyPlayListPageObject {
   constructor(parentSelector?: string) {
     super(parentSelector);
-    this.theThingDataTablePO = new TheThingDataTablePageObjectCypress(
+    this.myPlaysDataTablePO = new MyThingsDataTablePageObjectCypress(
       this.getSelector('dataTable')
     );
   }

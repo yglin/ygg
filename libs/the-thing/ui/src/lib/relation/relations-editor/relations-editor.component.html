@@ -1,7 +1,12 @@
 <div class="relations-editor" *ngIf="name && subject">
   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
     <div>
-      <h3>{{ name }} <span *ngIf="subject"><mat-icon>arrow_forward</mat-icon> {{ subject.name }}</span></h3>
+      <h3>
+        {{ name }}
+        <span *ngIf="subject"
+          ><mat-icon>arrow_forward</mat-icon> {{ subject.name }}</span
+        >
+      </h3>
     </div>
     <div>
       <button
@@ -25,10 +30,19 @@
     </div>
   </div>
   <div class="object-list">
-    <ygg-image-thumbnail-list
-      [items]="objects"
-      (deleteItem)="onDeleteObject($event)"
-      (clickItem)="onClickItem($event)"
-    ></ygg-image-thumbnail-list>
+    <ygg-image-thumbnail-list [items$]="objects$" [(selection)]="selection"
+      ><div selection-actions>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+          <button
+            mat-fab
+            matTooltip="刪除選擇的關聯物件"
+            class='delete-selection'
+            (click)="onDeleteSelection()"
+          >
+            <mat-icon>delete_sweep</mat-icon>
+          </button>
+        </div>
+      </div></ygg-image-thumbnail-list
+    >
   </div>
 </div>

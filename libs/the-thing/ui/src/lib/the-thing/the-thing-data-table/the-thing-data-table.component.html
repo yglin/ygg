@@ -2,9 +2,23 @@
   <div class="search">
     <ygg-reactive-text-input
       (changed)="onSearchChanged($event)"
-      placeholder="搜尋體驗內文"
+      placeholder="搜尋關鍵字"
     ></ygg-reactive-text-input>
   </div>
+  <div
+    fxLayout="row"
+    fxLayoutAlign="start start"
+    fxLayoutGap="10px"
+    *ngIf="selectionModel.hasValue()"
+  >
+    <div>
+      <h5>選了 {{ selectionModel.selected.length }} 個物件</h5>
+    </div>
+    <div>
+      <ng-content select="[selection-actions]"></ng-content>
+    </div>
+  </div>
+  <br />
   <table
     mat-table
     class="full-width-table mat-elevation-z8"
@@ -17,7 +31,7 @@
   >
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>名稱</th>
-      <td mat-cell *matCellDef="let theThing" class='name'>
+      <td mat-cell *matCellDef="let theThing" class="name">
         {{ theThing.name }}
       </td>
     </ng-container>
@@ -49,18 +63,39 @@
         <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
           <button
             type="button"
-            class="delete"
+            class="edit"
             mat-mini-fab
-            (click)="onDelete(theThing);$event.stopPropagation();"
+            (click)="onGotoEdit(theThing); $event.stopPropagation()"
           >
-            <mat-icon>delete</mat-icon>
+            <mat-icon>edit</mat-icon>
           </button>
         </div>
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox
+          class="toggle-select-all"
+          (change)="$event ? masterToggle() : null"
+          [checked]="selectionModel.hasValue() && isAllSelected()"
+          [indeterminate]="selectionModel.hasValue() && !isAllSelected()"
+        >
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox
+          (click)="$event.stopPropagation()"
+          (change)="$event ? selectionModel.toggle(row) : null"
+          [checked]="selectionModel.isSelected(row)"
+        >
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr
+      class="row"
       mat-row
       *matRowDef="let row; columns: displayedColumns; let isFirst = first"
       [ngClass]="{ first: isFirst }"

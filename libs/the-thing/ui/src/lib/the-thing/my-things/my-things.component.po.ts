@@ -6,11 +6,16 @@ import { ImageThumbnailListPageObject } from '@ygg/shared/ui/widgets';
 export abstract class MyThingsPageObject extends PageObject {
   selectors = {
     main: '.my-things',
-    buttonApplyImitation: 'button.apply-imitation'
+    buttonApplyImitation: 'button.apply-imitation',
+    buttonDeleteSelection: 'button.delete-selection'
   };
   theThingListPO: ImageThumbnailListPageObject;
 
-  abstract applyImitation(selection: TheThing[], imitation: TheThingImitation): void;
+  abstract applyImitation(
+    selection: TheThing[],
+    imitation: TheThingImitation
+  ): void;
+  abstract deleteAll(): void;
   deleteThings(things: TheThing[]) {
     this.theThingListPO.deleteItems(things);
   }

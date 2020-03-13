@@ -7,9 +7,9 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
-import { Observable, Subject, Subscription, merge } from 'rxjs';
+import { Observable, Subject, Subscription, merge, BehaviorSubject } from 'rxjs';
 import { TheThing, TheThingRelation } from '@ygg/the-thing/core';
-import { isArray, noop, isEmpty } from 'lodash';
+import { isArray, noop, isEmpty, find } from 'lodash';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { tap, switchMap } from 'rxjs/operators';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
@@ -31,9 +31,10 @@ export class RelationsEditorComponent implements OnInit, ControlValueAccessor {
   @Input() name: string;
   @Input() subject: TheThing;
   @Output() createObject: EventEmitter<any> = new EventEmitter();
-  objects: TheThing[];
+  objects$: Observable<TheThing[]>;
+  selection: TheThing[] = [];
   relations: TheThingRelation[];
-  relations$: Subject<TheThingRelation[]> = new Subject();
+  relations$: BehaviorSubject<TheThingRelation[]> = new BehaviorSubject([]);
   subscriptions: Subscription[] = [];
 
   onChange: (value: TheThingRelation[]) => any = noop;
@@ -43,26 +44,25 @@ export class RelationsEditorComponent implements OnInit, ControlValueAccessor {
     private theThingAccessService: TheThingAccessService,
     private dialog: YggDialogService
   ) {
-    this.subscriptions.push(
-      this.relations$
-        .pipe(
-          switchMap(relations => {
-            return this.theThingAccessService.listByIds$(
-              relations.map(relation => relation.objectId)
-            );
-          }),
-          tap(objects => (this.objects = objects))
+    this.objects$ = this.relations$.pipe(
+      // tap(relations => console.dir(relations)),
+      switchMap(relations =>
+        this.theThingAccessService.listByIds$(
+          relations.map(relation => relation.objectId)
         )
-        .subscribe()
+      ),
+      // tap(objects => console.dir(objects))
     );
   }
 
   ngOnInit(): void {}
 
-  writeValue(obj: any): void {
+  writeValue(value: any): void {
     // console.dir(JSON.stringify(obj));
-    if (isArray(obj)) {
-      this.relations = obj;
+    if (isArray(value)) {
+      this.relations = value;
+      // console.log('next relations');
+      // console.dir(this.relations);
       this.relations$.next(this.relations);
     }
   }
@@ -101,13 +101,27 @@ export class RelationsEditorComponent implements OnInit, ControlValueAccessor {
     });
   }
 
-  onDeleteObject(object: TheThing) {
-    if (confirm(`確定要取消與物件 ${object.name} 的關聯 ${this.name} ？`)) {
-      this.relations = this.relations.filter(
-        relation => relation.objectId !== object.id
-      );
-      this.onChange(this.relations);
-      this.relations$.next(this.relations);
+  onDeleteSelection() {
+    if (!isEmpty(this.selection)) {
+      const selectionNames = this.selection.map(s => s.name).join('\n');
+      if (confirm(`確定要刪除以下物件的關聯？\n ${selectionNames}`)) {
+        this.relations = this.relations.filter(
+          relation => !!find(this.selection, s => s.id !== relation.objectId)
+        );
+        this.onChange(this.relations);
+        this.relations$.next(this.relations);
+        this.selection = [];
+      }
     }
   }
+
+  // onDeleteObject(object: TheThing) {
+  //   if (confirm(`確定要取消與物件 ${object.name} 的關聯 ${this.name} ？`)) {
+  //     this.relations = this.relations.filter(
+  //       relation => relation.objectId !== object.id
+  //     );
+  //     this.onChange(this.relations);
+  //     this.relations$.next(this.relations);
+  //   }
+  // }
 }

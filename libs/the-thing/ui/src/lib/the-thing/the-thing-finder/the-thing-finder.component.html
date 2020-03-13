@@ -21,7 +21,7 @@
         <ygg-image-thumbnail-list
           [items]="filteredTheThings"
           [selection]="selection"
-          (selectionChanged)="onSelectTheThings($event)"
+          (selectionChange)="onSelectTheThings($event)"
           (selectItem)="selectTheThing.emit($event)"
           (deselectItem)="deselectTheThing.emit($event)"
           hideAddButton

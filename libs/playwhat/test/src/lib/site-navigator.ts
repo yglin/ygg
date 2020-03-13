@@ -44,7 +44,10 @@ export class SiteNavigator {
   private gotoTourPlans(path: string[] = []) {
     const route = path.shift();
     if (route === 'builder') {
-      // Do nothing, we just put TourPlanBuilder at home page
+      cy.get('.pw-header #to-home').click({ force: true });
+    } else if (route === 'my') {
+      cy.get('#account-widget .menu-trigger').click({ force: true });
+      cy.get('#user-menu button#tour-plan').click({ force: true });
     }
   }
 

@@ -1,7 +1,7 @@
 import * as SampleTourJSON from './sample-tour-birb.json';
 import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
 import { MockDatabase, login } from '@ygg/shared/test/cypress';
-import { TheThingFilterPageObjectCypress } from '@ygg/the-thing/test';
+import { TheThingFilterPageObjectCypress, MyThingsPageObjectCypress } from '@ygg/the-thing/test';
 import { SiteNavigator } from '@ygg/playwhat/test';
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
 
@@ -16,11 +16,11 @@ const relationPlay = '體驗';
 describe('Find tours in my things', () => {
   before(() => {
     login().then(user => {
-      sampleTour.ownerId = user.id;
       sampleTour.addRelations(relationPlay, plays);
 
       const stubTheThings = [sampleTour, ...plays];
       cy.wrap(stubTheThings).each((thing: any) => {
+        thing.ownerId = user.id;
         mockDatabase.insert(
           `${TheThing.collection}/${thing.id}`,
           thing.toJSON()
@@ -32,6 +32,12 @@ describe('Find tours in my things', () => {
   });
 
   after(() => {
+    // Goto my-things page and delete all test things
+    const myThingsPO = new MyThingsPageObjectCypress();
+    siteNavigator.goto(['the-things', 'my'], myThingsPO);
+    cy.wait(3000);
+    myThingsPO.deleteAll();
+
     mockDatabase.clear();
   });
 

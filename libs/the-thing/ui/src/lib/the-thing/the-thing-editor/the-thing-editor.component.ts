@@ -23,7 +23,8 @@ import {
   TheThingCellTypes,
   TheThingImitation,
   TheThingView,
-  RelationDef
+  RelationDef,
+  ITheThingEditorComponent
 } from '@ygg/the-thing/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { Tags } from '@ygg/tags/core';
@@ -37,7 +38,8 @@ import {
   of,
   combineLatest,
   Subject,
-  merge
+  merge,
+  from
 } from 'rxjs';
 import {
   map,
@@ -57,8 +59,8 @@ import { User, AuthenticateService } from '@ygg/shared/user';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { TheThingFinderComponent } from '../the-thing-finder/the-thing-finder.component';
 import { TheThingViewsService } from '../../the-thing-views.service';
-import { TheThingBuilderService } from '../../the-thing-builder.service';
 import { LogService } from '@ygg/shared/infra/log';
+import { TheThingFactoryService } from '../../the-thing-factory.service';
 
 interface RelationCreation {
   relationName: string;
@@ -71,7 +73,7 @@ interface RelationCreation {
   templateUrl: './the-thing-editor.component.html',
   styleUrls: ['./the-thing-editor.component.css']
 })
-export class TheThingEditorComponent implements OnInit {
+export class TheThingEditorComponent implements OnInit, ITheThingEditorComponent {
   @Input() theThing: TheThing;
   @Input() theThing$: Subject<TheThing>;
   @Output() theThingChanged: EventEmitter<TheThing> = new EventEmitter();
@@ -103,7 +105,7 @@ export class TheThingEditorComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private theThingBuilder: TheThingBuilderService,
+    private theThingFactory: TheThingFactoryService,
     private theThingAccessService: TheThingAccessService,
     private router: Router,
     private route: ActivatedRoute,
@@ -179,7 +181,7 @@ export class TheThingEditorComponent implements OnInit {
             }),
             catchError(error => {
               console.warn(error.message);
-              return of(new TheThing());
+              return from(this.theThingFactory.create());
             })
           )
           .subscribe(newThing => {
@@ -187,7 +189,7 @@ export class TheThingEditorComponent implements OnInit {
           });
       });
     } else {
-      resolveNewThing = Promise.resolve(new TheThing());
+      resolveNewThing = this.theThingFactory.create();
     }
     return resolveNewThing;
   }
@@ -233,8 +235,8 @@ export class TheThingEditorComponent implements OnInit {
     }
     this.subscriptions.push(
       this.theThing$.subscribe(theThing => {
-        console.log('emit next theThing');
-        console.dir(theThing.toJSON());
+        // console.log('emit next theThing');
+        // console.dir(theThing.toJSON());
         this.theThing = theThing;
         this.reset();
       })
@@ -291,12 +293,14 @@ export class TheThingEditorComponent implements OnInit {
           timeout(5000),
           catchError(error => {
             console.warn(error);
-            return of(new TheThing());
+            return from(this.theThingFactory.create());
           })
         )
         .subscribe(newThing => this.theThing$.next(newThing));
     } else {
-      this.theThing$.next(new TheThing());
+      this.theThingFactory
+        .create()
+        .then(newThing => this.theThing$.next(newThing));
     }
   }
 
@@ -311,11 +315,11 @@ export class TheThingEditorComponent implements OnInit {
   }
 
   restoreRelationCreation() {
-    console.log('Restore relation subject!!');
+    // console.log('Restore relation subject!!');
     const relationCreation = this.relationCreationsStack.pop();
     const subject = relationCreation.subject;
     this.imitation = relationCreation.imitation;
-    console.dir(subject.toJSON());
+    // console.dir(subject.toJSON());
     this.theThing$.next(subject);
     this.relationCreation = last(this.relationCreationsStack);
   }

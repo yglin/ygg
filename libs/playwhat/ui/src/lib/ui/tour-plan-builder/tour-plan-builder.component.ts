@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -9,21 +16,18 @@ import {
   TheThingFilter,
   TheThing,
   TheThingCell,
-  TheThingRelation
+  TheThingRelation,
+  ITheThingEditorComponent
 } from '@ygg/the-thing/core';
 import {
   TheThingImitationAccessService,
   TheThingAccessService
 } from '@ygg/the-thing/data-access';
 // import { take } from 'rxjs/operators';
-import {
-  TemplateTourPlan,
-  ImitationTourPlan,
-  ImitationPlay
-} from '@ygg/playwhat/core';
+import { ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import { isEmpty, keyBy, flatten, find, remove } from 'lodash';
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   Purchase,
@@ -33,22 +37,24 @@ import {
 } from '@ygg/shopping/core';
 import { PurchaseService } from '@ygg/shopping/factory';
 import { tap } from 'rxjs/operators';
+import { TourPlanBuilderService } from './tour-plan-builder.service';
+import { AuthenticateService } from '@ygg/shared/user';
 
 @Component({
   selector: 'ygg-tour-plan-builder',
   templateUrl: './tour-plan-builder.component.html',
   styleUrls: ['./tour-plan-builder.component.css']
 })
-export class TourPlanBuilderComponent implements OnInit, OnDestroy {
+export class TourPlanBuilderComponent
+  implements OnInit, OnDestroy, ITheThingEditorComponent {
   isLinear = false;
   firstFormGroup: FormGroup;
   // formControlSelectedPlays: FormControl;
   secondFormGroup: FormGroup;
-  thirdFormGroup: FormGroup;
+  forthFormGroup: FormGroup;
   filterPlays: TheThingFilter;
-  tourPlan: TheThing;
-  tourPlan$: Subject<TheThing> = new Subject();
-  formControlOptionalCells: FormControl;
+  @Input() theThing: TheThing;
+  theThingPreview$: BehaviorSubject<TheThing> = new BehaviorSubject(null);
   purchases: Purchase[] = [];
   subscriptions: Subscription[] = [];
   formControlPurchases: FormControl;
@@ -58,7 +64,9 @@ export class TourPlanBuilderComponent implements OnInit, OnDestroy {
     private theThingAccessService: TheThingAccessService,
     // private imitationAccessService: TheThingImitationAccessService,
     private purchaseService: PurchaseService,
-    private router: Router
+    private router: Router,
+    private theThingBuilder: TourPlanBuilderService,
+    private authService: AuthenticateService
   ) {
     this.filterPlays = ImitationPlay.filter;
     this.firstFormGroup = this.formBuilder.group({
@@ -66,56 +74,27 @@ export class TourPlanBuilderComponent implements OnInit, OnDestroy {
       numParticipants: [null, Validators.required]
     });
     this.formControlPurchases = new FormControl([]);
-    // this.subscriptions.push(
-    //   this.formControlPurchases.valueChanges
-    //     .pipe(
-    //       tap(purchases => {
-    //         console.log('purchases change!!!');
-    //         console.dir(purchases);
-    //       })
-    //     )
-    //     .subscribe(purchases => (this.purchases = purchases))
-    // );
-    // this.formControlSelectedPlays = this.firstFormGroup.get(
-    //   'selectedPlays'
-    // ) as FormControl;
-    // this.subscriptions.push(
-    //   this.formControlSelectedPlays.valueChanges.subscribe(async plays => {
-    //     this.purchases = [];
-    //     const numParticipants = this.firstFormGroup.get('numParticipants')
-    //       .value;
-    //     if (!isEmpty(plays) && numParticipants > 0) {
-    //       const purchases = await this.purchaseService.purchase(
-    //         plays.map(play => play.id),
-    //         numParticipants
-    //       );
-    //       this.formControlPurchases.setValue(purchases);
-    //     }
-    //   })
-    // );
 
     this.secondFormGroup = this.formBuilder.group({
       contact: [null, Validators.required]
     });
-    this.thirdFormGroup = this.formBuilder.group({});
 
-    const optionalCells: { [key: string]: TheThingCell } = keyBy(
-      ImitationTourPlan.getOptionalCellDefs().map(cellDef =>
-        TheThingCell.fromDef(cellDef)
-      ),
-      'name'
-    );
-    this.formControlOptionalCells = new FormControl(optionalCells);
+    this.forthFormGroup = this.formBuilder.group({
+      name: ['', Validators.required],
+      optionalCells: keyBy(ImitationTourPlan.createOptionalCells(), 'name')
+    });
+
     this.subscriptions.push(
-      this.formControlOptionalCells.valueChanges.subscribe(
-        (cells: { [key: string]: TheThingCell }) => {
-          this.tourPlan.updateCells(cells);
-          this.tourPlan$.next(this.tourPlan);
+      this.firstFormGroup.get('dateRange').valueChanges.subscribe(dateRange => {
+        console.dir(dateRange.toJSON());
+        console.log(dateRange.days());
+        let name = this.forthFormGroup.get('name').value;
+        if (!!dateRange && !name) {
+          name = `深度遊趣${dateRange.days() + 1}日遊`;
+          this.forthFormGroup.get('name').setValue(name);
         }
-      )
+      })
     );
-    this.tourPlan = TemplateTourPlan.clone();
-    this.tourPlan$.next(this.tourPlan);
   }
 
   async onSelectPlay(play: TheThing) {
@@ -142,7 +121,67 @@ export class TourPlanBuilderComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (!this.theThing) {
+      this.theThingBuilder.create().then(newTourPlan => {
+        this.theThing = newTourPlan;
+        this.theThingPreview$.next(this.theThing);
+      });
+    } else {
+      this.firstFormGroup.patchValue({
+        dateRange: this.theThing.getCellValue('預計出遊日期'),
+        numParticipants: this.theThing.getCellValue('預計參加人數')
+      });
+      this.secondFormGroup.patchValue({
+        contact: this.theThing.getCellValue('聯絡資訊')
+      });
+      this.forthFormGroup.patchValue({
+        name: this.theThing.name,
+        optionalCells: keyBy(
+          this.theThing.getCellsByNames(
+            ImitationTourPlan.getOptionalCellNames()
+          ),
+          'name'
+        )
+      });
+      // console.log('Convert relation to purchases');
+      // console.dir(this.theThing.toJSON());
+      if (this.theThing.hasRelation(RelationNamePurchase)) {
+        const promisePurchases: Promise<Purchase[]>[] = [];
+        for (const relation of this.theThing.getRelations(
+          RelationNamePurchase
+        )) {
+          promisePurchases.push(
+            this.purchaseService.purchase(
+              relation.objectId,
+              relation.getCellValue(CellNameQuantity)
+            )
+          );
+        }
+        Promise.all(promisePurchases).then(purchasesessessse => {
+          this.purchases = flatten(purchasesessessse);
+          // console.log('Converted purchases');
+          // console.dir(this.purchases);
+          this.formControlPurchases.setValue(this.purchases);
+        });
+      }
+      this.theThingPreview$.next(this.theThing);
+    }
+  }
+
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+  //   //Add '${implements OnChanges}' to the class.
+  //   console.log('ngonchange!!');
+  //   console.dir(this.theThing);
+  //   if (this.theThing) {
+  //     this.firstFormGroup.patchValue({
+  //       dateRange: this.theThing.getCellValue('預計出遊日期'),
+  //       numParticipants: this.theThing.getCellValue('預計參加人數')
+  //     });
+  //   }
+  //   this.theThingPreview$.next(this.theThing);
+  // }
 
   ngOnDestroy() {
     for (const subscription of this.subscriptions) {
@@ -151,23 +190,28 @@ export class TourPlanBuilderComponent implements OnInit, OnDestroy {
   }
 
   updateTourPlan() {
+    if (this.authService.currentUser) {
+      this.theThing.ownerId = this.authService.currentUser.id;
+    }
     const dateRange: DateRange = this.firstFormGroup.get('dateRange').value;
-    this.tourPlan.name = `深度遊趣${dateRange.days() + 1}日遊`;
-    // this.tourPlan.name = `深度遊趣快樂遊`;
-    this.tourPlan.cells['預計出遊日期'].value = dateRange;
+    // this.theThing.name = `深度遊趣快樂遊`;
+    this.theThing.cells['預計出遊日期'].value = dateRange;
     const numParticipants = this.firstFormGroup.get('numParticipants').value;
-    this.tourPlan.cells['預計參加人數'].value = numParticipants;
+    this.theThing.cells['預計參加人數'].value = numParticipants;
     const contact = this.secondFormGroup.get('contact').value;
-    this.tourPlan.cells['聯絡資訊'].value = contact;
+    this.theThing.cells['聯絡資訊'].value = contact;
     // const selectedPlays = this.firstFormGroup.get('selectedPlays').value;
     // if (!isEmpty(selectedPlays)) {
-    //   this.tourPlan.addRelations('體驗', selectedPlays);
+    //   this.theThing.addRelations('體驗', selectedPlays);
     // }
-    this.tourPlan.removeRelation(RelationNamePurchase);
+    this.theThing.name = this.forthFormGroup.get('name').value;
+    this.theThing.updateCells(this.forthFormGroup.get('optionalCells').value);
+
+    this.theThing.removeRelation(RelationNamePurchase);
     const purchases: Purchase[] = this.formControlPurchases.value;
     // console.dir(JSON.stringify(purchases));
     for (const purchase of purchases) {
-      this.tourPlan.addRelation(RelationNamePurchase, purchase.productId, [
+      this.theThing.addRelation(RelationNamePurchase, purchase.productId, [
         new TheThingCell({
           name: CellNameQuantity,
           type: 'number',
@@ -180,31 +224,32 @@ export class TourPlanBuilderComponent implements OnInit, OnDestroy {
         })
       ]);
     }
-    this.tourPlan$.next(this.tourPlan);
+    this.theThingPreview$.next(this.theThing);
   }
 
-  async toFinalStep() {
-    await this.updateTourPlan();
+  toStepPreview() {
+    this.updateTourPlan();
   }
 
-  onTourPlanChanged(tourPlan: TheThing) {
-    // console.log('Before theThingChanged');
-    // console.dir(this.tourPlan.toJSON())
-    // if (!!tourPlan) {
-    //   this.tourPlan = tourPlan;
-    //   console.log('After theThingChanged');
-    //   console.dir(this.tourPlan.toJSON());
-    //   this.tourPlan$.next(this.tourPlan);
-    // }
-  }
+  // onTourPlanChanged(theThing: TheThing) {
+  // console.log('Before theThingChanged');
+  // console.dir(this.theThing.toJSON())
+  // if (!!theThing) {
+  //   this.theThing = theThing;
+  //   console.log('After theThingChanged');
+  //   console.dir(this.theThing.toJSON());
+  //   this.theThingPreview$.next(this.theThing);
+  // }
+  // }
 
   async submitTourPlan() {
     if (confirm(`確定送出此遊程規劃？`)) {
       try {
         await this.updateTourPlan();
-        await this.theThingAccessService.upsert(this.tourPlan);
-        alert(`已成功送出遊程規劃${this.tourPlan.name}`);
-        this.router.navigate(['/', 'the-things', this.tourPlan.id]);
+        // console.dir(this.theThing.toJSON());
+        await this.theThingAccessService.upsert(this.theThing);
+        alert(`已成功送出遊程規劃${this.theThing.name}`);
+        this.router.navigate(['/', 'the-things', this.theThing.id]);
       } catch (error) {
         alert(`送出失敗，錯誤原因：${error.message}`);
       }
@@ -212,6 +257,6 @@ export class TourPlanBuilderComponent implements OnInit, OnDestroy {
   }
 
   isValidTourPlan(): boolean {
-    return !!this.tourPlan;
+    return !!this.theThing;
   }
 }

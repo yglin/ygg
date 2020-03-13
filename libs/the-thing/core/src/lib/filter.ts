@@ -45,6 +45,7 @@ export class TheThingFilter implements SerializableJSON {
   }
 
   test(theThing: TheThing): boolean {
+    // console.log(`${this.ownerId} ?== ${theThing.ownerId}`);
     if (!!this.ownerId && theThing.ownerId !== this.ownerId) {
       return false;
     }

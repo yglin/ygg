@@ -1,0 +1,17 @@
+<div class="admin-things-data-table">
+  <the-thing-data-table
+    [imitation]="imitation"
+    [theThings$]="theThings$"
+    [(selection)]="selection"
+    ><div
+      fxLayout="row"
+      fxLayoutAlign="start center"
+      fxLayoutGap="10px"
+      selection-actions
+    >
+      <button mat-mini-fab (click)="deleteSelected()">
+        <mat-icon>delete_sweep</mat-icon>
+      </button>
+    </div></the-thing-data-table
+  >
+</div>

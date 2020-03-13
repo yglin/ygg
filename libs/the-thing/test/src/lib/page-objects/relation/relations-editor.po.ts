@@ -12,7 +12,9 @@ export class RelationsEditorPageObjectCypress extends RelationsEditorPageObject 
   }
 
   expectVisible() {
-    cy.get(this.getSelector()).scrollIntoView().should('be.visible');
+    cy.get(this.getSelector())
+      .scrollIntoView()
+      .should('be.visible');
   }
 
   expectRelationToSubject(relationName: string, subject: TheThing) {
@@ -36,6 +38,12 @@ export class RelationsEditorPageObjectCypress extends RelationsEditorPageObject 
     );
     theThingFinderDialogPO.select(object);
     theThingFinderDialogPO.submit();
-    this.expectObject(object)
+    this.expectObject(object);
+  }
+
+  deleteObjects(objects: TheThing[]): void {
+    this.imageThumbnailListPO.selectItems(objects);
+    cy.get(this.getSelector('buttonDeleteSelection')).click();
+    this.imageThumbnailListPO.expectNoItems(objects);
   }
 }

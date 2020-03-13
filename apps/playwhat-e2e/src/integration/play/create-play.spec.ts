@@ -13,13 +13,16 @@ import {
   TheThingEditorPageObjectCypress,
   TheThingViewPageObjectCypress,
   RelationsEditorPageObjectCypress,
-  MyThingsPageObjectCypress
+  MyThingsPageObjectCypress,
+  TheThingDataTablePageObjectCypress,
+  MyThingsDataTablePageObjectCypress
 } from '@ygg/the-thing/test';
 import { ImitationPlay } from '@ygg/playwhat/core';
 import { RelationAddition, ImitationProduct } from '@ygg/shopping/core';
 
 describe('Create play', () => {
   const siteNavigator = new SiteNavigator();
+  const myPlayListPO = new MyThingsDataTablePageObjectCypress();
 
   before(() => {
     login().then(user => {
@@ -27,9 +30,16 @@ describe('Create play', () => {
     });
   });
 
+  after(() => {
+    // Goto my-things page and delete all test things
+    const myThingsPO = new MyThingsPageObjectCypress();
+    siteNavigator.goto(['the-things', 'my'], myThingsPO);
+    cy.wait(3000);
+    myThingsPO.deleteAll();
+  });
+
   it('Create a minimum play from template', () => {
     // ======= Go to my plays page
-    const myPlayListPO = new MyPlayListPageObjectCypress();
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
 
     // ======= Click create button
@@ -53,16 +63,11 @@ describe('Create play', () => {
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
 
     // ======= Confirm the new play is there
-    myPlayListPO.expectPlay(MinimumPlay);
-
-    // ======= Delete it
-    myPlayListPO.deletePlay(MinimumPlay);
-    myPlayListPO.expectNotPlay(MinimumPlay);
+    myPlayListPO.theThingDataTablePO.expectTheThing(MinimumPlay);
   });
 
   it('Create a play with some additions', () => {
     // ======= Go to my plays page
-    const myPlayListPO = new MyPlayListPageObjectCypress();
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
 
     // ======= Click create button
@@ -95,17 +100,12 @@ describe('Create play', () => {
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
 
     // ======= Confirm the new play is there
-    myPlayListPO.expectPlay(PlayWithAdditions);
+    myPlayListPO.theThingDataTablePO.expectTheThing(PlayWithAdditions);
 
     // ======= click it to play view, check data
-    myPlayListPO.clickPlay(PlayWithAdditions);
+    myPlayListPO.theThingDataTablePO.gotoTheThingView(PlayWithAdditions);
     playViewPO.expectVisible();
     playViewPO.expectValue(PlayWithAdditions);
     playViewPO.expectAdditions(SampleAdditions);
-
-    // ======= Go to the-things page and delete test data
-    const myThingsPO = new MyThingsPageObjectCypress();
-    siteNavigator.goto(['the-things', 'my'], myThingsPO);
-    myThingsPO.deleteThings([PlayWithAdditions, ...SampleAdditions]);
   });
 });

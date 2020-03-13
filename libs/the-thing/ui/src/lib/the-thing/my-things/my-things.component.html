@@ -21,6 +21,16 @@
         <mat-icon>library_books</mat-icon>
       </button>
     </div>
+    <div>
+      <button
+        [disabled]="!(selection && selection.length > 0)"
+        mat-fab
+        class="delete-selection"
+        (click)="onDeleteSelection()"
+      >
+        <mat-icon>delete_sweep</mat-icon>
+      </button>
+    </div>
   </div>
   <the-thing-filter
     (filterChanged)="onFilterChanged($event)"
@@ -30,7 +40,6 @@
     <ygg-image-thumbnail-list
       [items$]="filteredTheThings$"
       [(selection)]="selection"
-      (deleteItems)='deleteTheThings($event)'
     ></ygg-image-thumbnail-list>
   </div>
 </div>

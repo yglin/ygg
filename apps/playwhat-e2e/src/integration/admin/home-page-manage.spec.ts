@@ -2,35 +2,39 @@ import { SiteNavigator } from '@ygg/playwhat/test';
 import {
   TheThingFilterPageObjectCypress,
   TheThingFinderPageObjectCypress,
-  TheThingListPageObjectCypress
+  TheThingListPageObjectCypress,
+  MyThingsPageObjectCypress
 } from '@ygg/the-thing/test';
 import { TheThing } from '@ygg/the-thing/core';
 import { login, MockDatabase } from '@ygg/shared/test/cypress';
 import { TourViewPageObjectCypress } from '@ygg/playwhat/test';
-import { samplePlays, insertDatabase } from '../tour/sample-tour-birb';
-import { TemplateTour } from '@ygg/playwhat/core';
+import { samplePlays, sampleTour } from '../tour/sample-tour-birb';
+// import { TemplateTour } from '@ygg/playwhat/core';
 
 const siteNavigator = new SiteNavigator();
 const mockDatabase = new MockDatabase();
-let sampleTour: TheThing;
 
 describe('Manage content in home page', () => {
   before(() => {
     login().then(user => {
-      cy.wrap(samplePlays).each((play: any) => {
-        mockDatabase.insert(`${TheThing.collection}/${play.id}`, play.toJSON());
+      const things = [...samplePlays, sampleTour];
+      cy.wrap(things).each((thing: any) => {
+        thing.ownerId = user.id;
+        mockDatabase.insert(
+          `${TheThing.collection}/${thing.id}`,
+          thing.toJSON()
+        );
       });
-      sampleTour = TemplateTour.clone();
-      sampleTour.addRelations('體驗', samplePlays);
-      mockDatabase.insert(
-        `${TheThing.collection}/${sampleTour.id}`,
-        sampleTour.toJSON()
-      );
       cy.visit('/');
     });
   });
 
   after(() => {
+    // Goto my-things page and delete all test things
+    const myThingsPO = new MyThingsPageObjectCypress();
+    siteNavigator.goto(['the-things', 'my'], myThingsPO);
+    cy.wait(3000);
+    myThingsPO.deleteAll();
     mockDatabase.clear();
   });
 
