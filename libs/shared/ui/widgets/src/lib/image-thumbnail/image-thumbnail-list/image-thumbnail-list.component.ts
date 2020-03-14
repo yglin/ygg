@@ -100,11 +100,22 @@ export class ImageThumbnailListComponent
     }
   }
 
+  selectAll() {
+    if (this.isSelectable) {
+      this.selection = [...this.items];
+      this.selectionChange.emit(this.selection);
+    }
+  }
+
   isSelected(item: ImageThumbnailItem) {
     return (
       this.isSelectable &&
       find(this.selection, selected => selected.id === item.id)
     );
+  }
+
+  isAllSelected(): boolean {
+    return this.selection.length >= this.items.length;
   }
 
   clearSelection() {

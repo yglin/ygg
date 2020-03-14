@@ -149,18 +149,13 @@ export class MyThingsComponent implements OnInit, OnDestroy {
       });
   }
 
-  onDeleteSelection() {
-    this.deleteTheThings(this.selection);
-  }
-
-  async deleteTheThings(things: TheThing[]) {
-    const confirmMessage = `確定要刪除以下物件？\n ${things
+  async onDeleteSelection() {
+    const confirmMessage = `確定要刪除以下物件？\n ${this.selection
       .map(s => s.name)
       .join('\n')}`;
-    if (confirmMessage) {
+    if (confirm(confirmMessage)) {
       try {
-        things = [...things];
-        await this.theThingAccessService.delete(things);
+        await this.theThingAccessService.delete(this.selection);
         alert(`已刪除完成`);
       } catch (error) {
         alert(`刪除失敗，錯誤原因：${error.message}`);

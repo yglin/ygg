@@ -34,10 +34,20 @@ export class MyThingsPageObjectCypress extends MyThingsPageObject {
     imitationSelectorDialogPO.expectVisible(false);
     cy.wait(5000);
   }
-  
+
+  deleteThings(things: TheThing[]): void {
+    this.theThingListPO.selectItems(things);
+    cy.get(this.getSelector('buttonDeleteSelection'), {
+      timeout: 10000
+    }).click();
+    this.theThingListPO.expectNoItems(things);
+  }
+
   deleteAll() {
     this.theThingListPO.selectAll();
-    cy.get(this.getSelector('buttonDeleteSelection')).click();
+    cy.get(this.getSelector('buttonDeleteSelection'), {
+      timeout: 10000
+    }).click();
     this.theThingListPO.expectEmpty();
   }
 }

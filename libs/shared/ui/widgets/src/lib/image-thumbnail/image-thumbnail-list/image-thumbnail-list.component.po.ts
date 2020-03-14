@@ -7,31 +7,34 @@ export abstract class ImageThumbnailListPageObject extends PageObject {
     firstItem: '.first-item',
     lastItem: '.last-item',
     buttonSubmit: 'button.submit',
+    buttonSelectAll: 'button.select-all',
     buttonClearSelection: 'button.clear-selection',
-    buttonDeleteSelection: 'button.delete-selection',
-    selection: '.selection'
+    selectionHint: '.selection-hint'
   };
 
-  getSelectorForSelectedItem(item: ImageThumbnailItem): string {
-    return `${this.getSelector('selection')} .item:contains("${item.name}")`;
-  }
+  // getSelectorForSelectedItem(item: ImageThumbnailItem): string {
+  //   return `${this.getSelector('selection')} .item:contains("${item.name}")`;
+  // }
 
   getSelectorForItem(item?: ImageThumbnailItem): string {
     if (item === undefined) {
       return `${this.getSelector()} .item`;
+    } else if (item.image) {
+      return `${this.getSelector()} .item[item-image="${item.image}"]:contains("${item.name}")`;
     } else {
-      return `${this.getSelector()} .item:contains("${item.name}")`;
+      return `${this.getSelector()} .item:contains("${item.name}")`
     }
   }
 
-  getSelectorForItemLink(item: ImageThumbnailItem): string {
-    return `${this.getSelectorForItem(item)} .open-link`;
-  }
+  // getSelectorForItemLink(item: ImageThumbnailItem): string {
+  //   return `${this.getSelectorForItem(item)} .open-link`;
+  // }
 
-  getSelectorForDeleteItem(item: ImageThumbnailItem): string {
-    return `${this.getSelectorForItem(item)} .delete button`;
-  }
+  // getSelectorForDeleteItem(item: ImageThumbnailItem): string {
+  //   return `${this.getSelectorForItem(item)} .delete button`;
+  // }
 
+  abstract getItem(item: ImageThumbnailItem): any;
   abstract expectItem(item: ImageThumbnailItem): void;
   abstract expectItems(items: ImageThumbnailItem[]): void;
   abstract expectNoItems(objects: ImageThumbnailItem[]): void;
@@ -39,7 +42,5 @@ export abstract class ImageThumbnailListPageObject extends PageObject {
   abstract selectItem(item: ImageThumbnailItem): void;
   abstract selectItems(items: ImageThumbnailItem[]): void;
   abstract selectAll(): void;
-  abstract deleteItem(item: ImageThumbnailItem): void;
-  abstract deleteItems(items: ImageThumbnailItem[]): void;
   abstract clearSelection(): void;
 }

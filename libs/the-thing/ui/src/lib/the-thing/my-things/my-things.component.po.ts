@@ -16,7 +16,5 @@ export abstract class MyThingsPageObject extends PageObject {
     imitation: TheThingImitation
   ): void;
   abstract deleteAll(): void;
-  deleteThings(things: TheThing[]) {
-    this.theThingListPO.deleteItems(things);
-  }
+  abstract deleteThings(things: TheThing[]): void;
 }

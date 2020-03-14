@@ -5,6 +5,13 @@ import {
 import { ImageThumbnailItemPageObjectCypress } from './image-thumbnail-item.po';
 
 export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageObject {
+  getItem(item: ImageThumbnailItem): Cypress.Chainable<JQuery<HTMLElement>> {
+    return cy.get(this.getSelectorForItem(item));
+    // .contains('.item', item.name)
+    // .find(`img[src="${item.image}"]`)
+    // .parentsUntil('.item-list', '.item');
+  }
+
   expectFirstItem(item: ImageThumbnailItem) {
     const imageThumbnailPO = new ImageThumbnailItemPageObjectCypress(
       this.getSelector('firstItem')
@@ -20,43 +27,29 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
   }
 
   expectItem(item: ImageThumbnailItem) {
-    cy.get(this.getSelector())
-      .contains('.item', item.name)
-      .scrollIntoView()
-      .should('be.visible');
-  }
-
-  expectItemByNameAndImage(item: ImageThumbnailItem) {
-    cy.get(`${this.getSelector()} [item-name="${item.name}"]`).should(
-      'be.exist'
-    );
-    cy.get(`${this.getSelector()} [item-image="${item.image}"]`).should(
-      'be.exist'
-    );
-  }
-
-  expectNoItem(item: ImageThumbnailItem, timeout: number = 5000) {
-    cy.get(this.getSelectorForItem(item), { timeout }).should('not.be.exist');
-  }
-
-  expectNoItems(items?: ImageThumbnailItem[]) {
-    if (items === undefined) {
-      cy.get(this.getSelectorForItem()).should('not.be.exist');
-    } else {
-      cy.wrap(items).each((item: any) => this.expectNoItem(item));
-    }
-  }
-
-  expectEmpty() {
-    cy.get(this.getSelectorForItem(), { timeout: 10000 }).should('not.exist');
+    this.getItem(item).scrollIntoView().should('be.visible');
   }
 
   expectItems(items: ImageThumbnailItem[]) {
     cy.wrap(items).each((item: any) => this.expectItem(item));
     cy.get(this.getSelector())
-      .find('[item-id]')
+      .find('.item')
       .its('length')
       .should('eq', items.length);
+  }
+
+  expectNoItem(item: ImageThumbnailItem) {
+    this.getItem(item).should('not.exist');
+  }
+
+  expectNoItems(items: ImageThumbnailItem[]) {
+    cy.wrap(items).each((item: any) => this.expectNoItem(item));
+  }
+
+  expectEmpty() {
+    cy.get(`${this.getSelector()} .item`, { timeout: 10000 }).should(
+      'not.exist'
+    );
   }
 
   expectVisible(flag: boolean = true) {
@@ -67,60 +60,62 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
     }
   }
 
-  deleteItem(item: ImageThumbnailItem) {
-    cy.get(`${this.getSelectorForDeleteItem(item)}`).click();
-    this.expectNoItem(item);
-  }
-
-  deleteItems(items: ImageThumbnailItem[]) {
-    this.selectItems(items);
-    cy.get(this.getSelector('buttonDeleteSelection')).click();
-    cy.wait(10000);
-    this.expectNoItems(items);
-  }
-
-  deleteAll() {
-    this.selectAll();
-    cy.get(this.getSelector('buttonDeleteSelection')).click();
-    cy.wait(10000);
-    this.expectNoItems();
-  }
-
   selectAll() {
-    cy.get(this.getSelectorForItem()).click({ multiple: true });
+    cy.get(this.getSelector('buttonSelectAll')).click();
   }
 
   selectItem(item: ImageThumbnailItem) {
-    cy.get(this.getSelectorForItem(item), { timeout: 10000 }).click({
-      force: true,
-      multiple: true
-    });
+    this.clickItem(item);
     this.expectSelectedItem(item);
   }
 
   selectItems(items: ImageThumbnailItem[]) {
     cy.wrap(items).each((item: any) => this.selectItem(item));
+    cy.get(this.getSelector('selectionHint')).contains(
+      `選了 ${items.length} 個物件`
+    );
   }
 
   expectSelectedItem(item: ImageThumbnailItem) {
-    cy.get(this.getSelectorForSelectedItem(item)).should('exist');
+    this.getItem(item).should('have.class', 'selected');
   }
 
   clearSelection() {
-    cy.get(this.getSelector('buttonClearSelection')).click({ force: true });
+    cy.get(this.getSelector('buttonClearSelection')).click();
   }
 
   clickItem(item: ImageThumbnailItem) {
-    cy.get(this.getSelectorForItem(item)).click({ force: true });
+    this.getItem(item).click({ force: true });
   }
 
   clickItemLink(item: ImageThumbnailItem) {
-    cy.get(this.getSelectorForItemLink(item)).click({ force: true });
+    this.getItem(item)
+      .find('.open-link')
+      .click();
   }
 
   selectLastItem(item: ImageThumbnailItem) {
-    cy.get(this.getSelector('lastItem')).click({ force: true });
+    cy.get(this.getSelector('lastItem')).click();
   }
+
+  // deleteItem(item: ImageThumbnailItem) {
+  //   cy.get(`${this.getSelectorForDeleteItem(item)}`).click();
+  //   this.expectNoItem(item);
+  // }
+
+  // deleteItems(items: ImageThumbnailItem[]) {
+  //   this.selectItems(items);
+  //   cy.get(this.getSelector('buttonDeleteSelection')).click();
+  //   cy.wait(10000);
+  //   this.expectNoItems(items);
+  // }
+
+  // deleteAll() {
+  //   this.selectAll();
+  //   cy.get(this.getSelector('buttonDeleteSelection')).click();
+  //   cy.wait(10000);
+  //   this.expectEmpty();
+  // }
 
   submit() {
     cy.get(this.getSelector('buttonSubmit')).click();

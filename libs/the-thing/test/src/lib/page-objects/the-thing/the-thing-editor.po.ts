@@ -146,7 +146,7 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
     }).click();
     const imitationSelectorDialogPO = new ImageThumbnailListPageObjectCypress();
     imitationSelectorDialogPO.expectVisible();
-    imitationSelectorDialogPO.expectItemByNameAndImage(imitation);
+    imitationSelectorDialogPO.expectItem(imitation);
   }
 
   applyImitation(imitation: TheThingImitation) {

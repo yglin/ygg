@@ -99,7 +99,7 @@ export class TheThingViewPageObjectCypress extends TheThingViewPageObject {
     const theThingListPO = new ImageThumbnailListPageObjectCypress(
       this.getSelectorForRelation(relationName)
     );
-    theThingListPO.expectItemByNameAndImage(objectThing);
+    theThingListPO.expectItem(objectThing);
   }
 
   expectRelations(relationName: string, objectThings: TheThing[]) {
