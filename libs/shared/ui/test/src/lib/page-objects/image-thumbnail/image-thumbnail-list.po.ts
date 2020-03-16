@@ -6,7 +6,7 @@ import { ImageThumbnailItemPageObjectCypress } from './image-thumbnail-item.po';
 
 export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageObject {
   getItem(item: ImageThumbnailItem): Cypress.Chainable<JQuery<HTMLElement>> {
-    return cy.get(this.getSelectorForItem(item));
+    return cy.get(this.getSelectorForItem(item)).first();
     // .contains('.item', item.name)
     // .find(`img[src="${item.image}"]`)
     // .parentsUntil('.item-list', '.item');
@@ -39,7 +39,7 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
   }
 
   expectNoItem(item: ImageThumbnailItem) {
-    this.getItem(item).should('not.exist');
+    cy.get(this.getSelectorForItem(item)).should('not.exist');
   }
 
   expectNoItems(items: ImageThumbnailItem[]) {

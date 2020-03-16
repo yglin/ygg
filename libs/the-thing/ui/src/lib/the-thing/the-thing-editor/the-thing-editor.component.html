@@ -83,7 +83,7 @@
           ></the-thing-cells-editor>
         </div>
         <div class="relations-editors">
-          <ygg-title-divider>關聯其他東東</ygg-title-divider>
+          <ygg-title-divider [level]='2'>其他東東關聯</ygg-title-divider>
           <form [formGroup]="formGroupRelations">
             <div
               *ngFor="
@@ -91,6 +91,7 @@
               "
               [attr.relation-name]="controlEntry.key"
             >
+              <ygg-title-divider [level]='6'>{{ controlEntry.key }}</ygg-title-divider>
               <the-thing-relations-editor
                 [name]="controlEntry.key"
                 [formControlName]="controlEntry.key"

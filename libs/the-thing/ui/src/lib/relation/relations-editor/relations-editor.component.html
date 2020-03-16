@@ -3,7 +3,7 @@
     <div>
       <h3>
         {{ name }}
-        <span *ngIf="subject"
+        <span *ngIf="subject && subject.name"
           ><mat-icon>arrow_forward</mat-icon> {{ subject.name }}</span
         >
       </h3>

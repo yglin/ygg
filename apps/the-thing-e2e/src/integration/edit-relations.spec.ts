@@ -81,6 +81,7 @@ describe('Edit relations to other the-things', () => {
     cy.visit(`/the-things/${Frodo.id}/edit`);
     const relationToSam = 'dirty thief covet my precious';
     const theThingEditorPO = new TheThingEditorPageObjectCypress();
+    theThingEditorPO.expectVisible();
     theThingEditorPO.setValue(Frodo);
     theThingEditorPO.addRelationExist(relationToSam, Sam);
     theThingEditorPO.submit();

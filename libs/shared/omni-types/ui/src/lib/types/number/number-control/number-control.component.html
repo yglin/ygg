@@ -4,7 +4,7 @@
   </div>
   <div
     [fxLayout]="vertical ? 'row' : 'column-reverse'"
-    fxLayoutAlign="start center"
+    [fxLayoutAlign]="vertical ? 'start center' : 'start start'"
     fxLayoutGap="10px"
   >
     <div class="number-input">

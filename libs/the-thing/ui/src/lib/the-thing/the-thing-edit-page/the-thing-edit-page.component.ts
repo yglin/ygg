@@ -73,7 +73,7 @@ export class TheThingEditPageComponent implements OnInit {
       })
       .catch(error => {
         console.error(error.message);
-        return TheThingEditPageComponent;
+        return TheThingEditorComponent;
       });
 
     this.theThing$ = this.imitation$.then(imitation => {
@@ -95,6 +95,8 @@ export class TheThingEditPageComponent implements OnInit {
 
   ngOnInit() {
     Promise.all([this.component$, this.theThing$]).then(results => {
+      // console.log('component ?');
+      // console.dir(results[0]);
       const component = results[0];
       const theThing = results[1];
       this.loadEditorComponent(component, theThing);
@@ -110,6 +112,7 @@ export class TheThingEditPageComponent implements OnInit {
     viewContainerRef.clear();
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
+    // console.dir(componentRef.instance);
     (componentRef.instance as ITheThingEditorComponent).theThing = theThing;
   }
 }
