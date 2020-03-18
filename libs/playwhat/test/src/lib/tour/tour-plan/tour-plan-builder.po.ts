@@ -1,5 +1,5 @@
 import { TourPlanBuilderPageObject } from '@ygg/playwhat/ui';
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingRelation } from '@ygg/the-thing/core';
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import {
@@ -10,6 +10,20 @@ import {
 import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
 import { TheThingCellsEditorPageObjectCypress } from '@ygg/the-thing/test';
+import {
+  ImitationTourPlan,
+  defaultName,
+  ImitationPlay
+} from '@ygg/playwhat/core';
+import { TourPlanViewPageObjectCypress } from '../tour-plan-view.po';
+import {
+  Purchase,
+  RelationAddition,
+  CellNameStock,
+  RelationNamePurchase,
+  CellNameQuantity
+} from '@ygg/shopping/core';
+import { isEmpty, find, values } from 'lodash';
 
 export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
   implements PageObjectCypress {
@@ -33,10 +47,107 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
     this.cartEditorPO = new ShoppingCartEditorPageObjectCypress(
       this.getSelector('shoppingCart')
     );
+    this.tourPlanPreviewPO = new TourPlanViewPageObjectCypress(
+      this.getSelector('preview')
+    );
   }
 
   setName(name: string) {
-    cy.get(this.getSelector('inputName')).clear().type(name);
+    cy.get(this.getSelector('inputName'))
+      .clear()
+      .type(name);
+  }
+
+  setValue(
+    tourPlan: TheThing,
+    options: {
+      things?: TheThing[];
+    } = {}
+  ) {
+    const purchasePlays: TheThing[] = [];
+    const purchaseAdditions: TheThing[] = [];
+    const finalPurchases: Purchase[] = [];
+    if (tourPlan.hasRelation(RelationNamePurchase)) {
+      const relations = tourPlan.getRelations(RelationNamePurchase);
+      purchasePlays.push.apply(
+        purchasePlays,
+        relations
+          .map(r => find(options.things, pl => pl.id === r.objectId))
+          .filter(pl => !!pl && ImitationPlay.filter.test(pl))
+      );
+
+      for (const play of purchasePlays) {
+        if (play.hasRelation(RelationAddition.name)) {
+          purchaseAdditions.push.apply(
+            purchaseAdditions,
+            play
+              .getRelationObjectIds(RelationAddition.name)
+              .map(objId => find(options.things, ad => ad.id === objId))
+              .filter(ad => !!ad)
+          );
+        }
+      }
+
+      finalPurchases.push.apply(
+        finalPurchases,
+        this.fromRelations(
+          tourPlan.getRelations(RelationNamePurchase),
+          options.things
+        )
+      );
+    }
+
+    // Set date and number of participants
+    this.expectStep(1);
+    const dateRange = tourPlan.cells['預計出遊日期'].value;
+    this.setDateRange(dateRange);
+    const numParticipants = tourPlan.cells['預計參加人數'].value;
+    this.setNumParticipants(numParticipants);
+    if (!isEmpty(purchasePlays)) {
+      this.selectPlays(purchasePlays);
+    }
+    this.next();
+
+    // Fill in contact info
+    this.expectStep(2);
+    this.setContact(tourPlan.cells['聯絡資訊'].value);
+    this.next();
+
+    // Edit purchases
+    this.expectStep(3);
+    if (!isEmpty(finalPurchases)) {
+      const products = purchasePlays.concat(purchaseAdditions);
+      const purchases: Purchase[] = products.map(p =>
+        Purchase.purchase(p, numParticipants)
+      );
+      this.cartEditorPO.expectPurchases(purchases);
+      this.cartEditorPO.setPurchases(finalPurchases);
+      this.cartEditorPO.expectPurchases(finalPurchases);
+    }
+    this.next();
+
+    this.expectStep(4);
+    // A tour-plan without name should have this default name
+    if (!tourPlan.name) {
+      cy.get(this.getSelector('inputName'))
+        .invoke('val')
+        .should('equal', defaultName(tourPlan));
+    } else {
+      this.setName(tourPlan.name);
+    }
+    // Set optional data fields
+    const optionalCells = tourPlan.getCellsByNames(
+      ImitationTourPlan.getOptionalCellNames()
+    );
+    if (!isEmpty(optionalCells)) {
+      this.theThingCellsEditorPO.setValue(optionalCells);
+    }
+    this.next();
+
+    // Review final tour-plan
+    this.expectStep(5);
+    this.tourPlanPreviewPO.expectVisible();
+    this.tourPlanPreviewPO.expectValue(tourPlan, options);
   }
 
   reset() {
@@ -51,7 +162,7 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
     cy.get(this.getSelectorForStep(step)).should('be.visible');
   }
 
-  selectPlays(plays: TheThing[]) {
+  selectPlays(plays: TheThing[] | string[]) {
     // this.clearSelectedPlays();
     cy.wrap(plays).each((play: any) => {
       this.selectPlay(play);
@@ -63,6 +174,13 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
     this.currentStep += 1;
   }
 
+  skipToFinalStep() {
+    this.next();
+    this.next();
+    this.next();
+    this.next();
+  }
+
   submit() {
     cy.get(`${this.getSelector('buttonSubmit')}`).click();
     // wait for redirect to view page
@@ -70,5 +188,12 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
       'match',
       /the-things\/[^\/]+/
     );
+  }
+
+  fromRelations(relations: TheThingRelation[], things: TheThing[]): Purchase[] {
+    return relations.map(r => {
+      const product = find(things, t => t.id === r.objectId);
+      return Purchase.purchase(product, r.getCellValue(CellNameQuantity));
+    });
   }
 }

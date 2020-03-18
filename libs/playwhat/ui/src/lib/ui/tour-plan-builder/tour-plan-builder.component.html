@@ -17,6 +17,7 @@
               matStepperNext
               [disabled]="firstFormGroup.invalid"
               matTooltip="下一步"
+              (click)="updateTourPlan()"
             >
               <mat-icon>navigate_next</mat-icon>
             </button>
@@ -128,6 +129,7 @@
               class="next"
               matStepperNext
               matTooltip="下一步"
+              (click)="updateTourPlan()"
             >
               <mat-icon>navigate_next</mat-icon>
             </button>
@@ -224,7 +226,7 @@
             </button>
           </div>
         </div>
-        <div>
+        <div class='preview'>
           <ygg-tour-plan-view
             [theThing$]="theThingPreview$"
           ></ygg-tour-plan-view>

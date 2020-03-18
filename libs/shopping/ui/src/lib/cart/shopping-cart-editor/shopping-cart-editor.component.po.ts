@@ -1,5 +1,18 @@
 import { PageObject } from '@ygg/shared/test/page-object';
 import { TheThing } from '@ygg/the-thing/core';
+import { Purchase } from '@ygg/shopping/core';
+
+export abstract class PurchaseRowPageObject extends PageObject {
+  selectors = {
+    main: '',
+    inputQuantity: '.quantity input',
+    charge: '.charge'
+  };
+
+  abstract expectValue(purchase: Purchase): void;
+  abstract setValue(purchase: Purchase): void;
+  abstract setQuantity(quantity: number): void;
+}
 
 export abstract class ShoppingCartEditorPageObject extends PageObject {
   selectors = {
@@ -8,6 +21,12 @@ export abstract class ShoppingCartEditorPageObject extends PageObject {
     totalCharge: '.total-charge',
     buttonClear: 'button.clear-all'
   };
+
+  getSelectorForPurchase(purchase: Purchase): string {
+    return `${this.getSelector('purchaseList')} [product-id="${
+      purchase.productId
+    }"]`;
+  }
 
   getSelectorForProduct(productId: string): string {
     return `${this.getSelector('purchaseList')} [product-id="${productId}"]`;
@@ -18,6 +37,8 @@ export abstract class ShoppingCartEditorPageObject extends PageObject {
   }
 
   abstract setQuantity(productId: string, quantity: number): void;
+  abstract setPurchases(purchases: Purchase[]): void;
+  abstract expectPurchases(purchases: Purchase[]): void;
 
   // getSelectorForPurchase(purchase: Purchase): string {
   //   return `${this.getSelector('purchaseList')} [item-id="${purchase.productId}"]`;

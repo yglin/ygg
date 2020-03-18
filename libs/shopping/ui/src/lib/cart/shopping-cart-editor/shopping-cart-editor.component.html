@@ -35,7 +35,7 @@
 
       <ng-container matColumnDef="charge">
         <th mat-header-cell *matHeaderCellDef>費用</th>
-        <td mat-cell *matCellDef="let purchase" class="price">
+        <td mat-cell *matCellDef="let purchase" class="charge">
           <ygg-price [price]="purchase.charge"></ygg-price>
         </td>
         <td mat-footer-cell *matFooterCellDef>
@@ -83,6 +83,7 @@
       <tr
         mat-row
         *matRowDef="let row; columns: displayedColumns"
+        class='purchase-row'
         [attr.item-id]="row.productId"
         [attr.product-id]="row.productId"
       ></tr>

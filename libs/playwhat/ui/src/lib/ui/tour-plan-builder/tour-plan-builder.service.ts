@@ -7,10 +7,20 @@ import { ImitationTourPlan } from '@ygg/playwhat/core';
   providedIn: 'root'
 })
 export class TourPlanBuilderService {
+  tourPlan: TheThing;
 
-  constructor(private theThingFactory: TheThingFactoryService) { }
+  constructor(private theThingFactory: TheThingFactoryService) {}
+
+  reset() {
+    this.tourPlan = undefined;
+  }
 
   async create(): Promise<TheThing> {
-    return this.theThingFactory.create({ imitation: ImitationTourPlan.id });
+    if (!this.tourPlan) {
+      this.tourPlan = await this.theThingFactory.create({
+        imitation: ImitationTourPlan.id
+      });
+    }
+    return this.tourPlan;
   }
 }

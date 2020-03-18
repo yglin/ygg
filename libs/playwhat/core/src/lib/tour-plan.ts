@@ -27,13 +27,12 @@ import { DateRange } from '@ygg/shared/omni-types/core';
 //   ]
 // });
 
-
 export const ImitationTourPlan: TheThingImitation = new TheThingImitation().fromJSON(
   {
     id: 'BvyVkzRIxEuYoPjxIjHVOA',
     name: '旅遊行程規劃',
     description: '規劃你想玩的體驗組合，預計出遊日期、參加人數，以及其他細節',
-    icon:'directions_bike',
+    icon: 'directions_bike',
     image: '/assets/images/tour/tour-plans.svg',
     view: 'tour-plan',
     editor: 'tour-plan',
@@ -102,3 +101,8 @@ export const ImitationTourPlan: TheThingImitation = new TheThingImitation().from
     }
   }
 );
+
+export function defaultName(tourPlan: TheThing): string {
+  const dateRange: DateRange = tourPlan.getCellValue('預計出遊日期');
+  return `深度遊趣${dateRange.days() + 1}日遊`;
+}

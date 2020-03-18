@@ -6,9 +6,18 @@ import {
 } from '@ygg/the-thing/core';
 import { DateRange, DayTimeRange, Contact } from '@ygg/shared/omni-types/core';
 import { randomBytes } from 'crypto';
-import { random } from 'lodash';
-import { SamplePlays, SampleAdditions } from '../play/sample-plays';
-import { RelationNamePurchase, CellNameQuantity } from '@ygg/shopping/core';
+import { random, find } from 'lodash';
+import {
+  SamplePlays,
+  SampleAdditions,
+  PlaysWithoutAddition,
+  PlaysWithAddition
+} from '../play/sample-plays';
+import {
+  RelationNamePurchase,
+  CellNameQuantity,
+  RelationAddition
+} from '@ygg/shopping/core';
 
 export const TourPlanTemplate = new TheThing().fromJSON({
   tags: ['tour', 'tour-plan', 'schedule', '遊程計畫'],
@@ -104,8 +113,8 @@ TourPlanFull.addCells(
 );
 
 export const TourPlanFullWithPlays = TourPlanFull.clone();
-TourPlanFullWithPlays.name = '測試遊程(完整資料欄位＋預訂體驗)'
-for (const play of SamplePlays) {
+TourPlanFullWithPlays.name = '測試遊程(完整資料欄位＋預訂體驗)';
+for (const play of PlaysWithoutAddition) {
   const cellQuantity = new TheThingCell({
     name: CellNameQuantity,
     type: 'number',
@@ -113,11 +122,44 @@ for (const play of SamplePlays) {
   });
   TourPlanFullWithPlays.addRelation(RelationNamePurchase, play, [cellQuantity]);
 }
-for (const addition of SampleAdditions) {
+
+export const TourPlanWithPlaysNoAddition = MinimalTourPlan.clone();
+for (const play of PlaysWithoutAddition) {
   const cellQuantity = new TheThingCell({
     name: CellNameQuantity,
     type: 'number',
-    value: random(1, 10)
+    value: random(10, 50)
   });
-  TourPlanFullWithPlays.addRelation(RelationNamePurchase, addition, [cellQuantity]);
+  TourPlanWithPlaysNoAddition.addRelation(RelationNamePurchase, play, [
+    cellQuantity
+  ]);
 }
+TourPlanWithPlaysNoAddition.name = '測試遊程(預訂體驗, 無加購項目)';
+
+export const TourPlanWithPlaysAndAdditions = MinimalTourPlan.clone();
+for (const play of PlaysWithAddition) {
+  const cellQuantity = new TheThingCell({
+    name: CellNameQuantity,
+    type: 'number',
+    value: random(10, 50)
+  });
+  TourPlanWithPlaysAndAdditions.addRelation(RelationNamePurchase, play, [
+    cellQuantity
+  ]);
+  if (play.hasRelation(RelationAddition.name)) {
+    for (const relation of play.getRelations(RelationAddition.name)) {
+      const purchaseQuantityAddition = new TheThingCell({
+        name: CellNameQuantity,
+        type: 'number',
+        value: random(10, 50)
+      });
+      const addition = find(SampleAdditions, ad => ad.id === relation.objectId);
+      TourPlanWithPlaysAndAdditions.addRelation(
+        RelationNamePurchase,
+        addition,
+        [purchaseQuantityAddition]
+      );
+    }
+  }
+}
+TourPlanWithPlaysAndAdditions.name = '測試遊程(預訂體驗, 有加購項目)';

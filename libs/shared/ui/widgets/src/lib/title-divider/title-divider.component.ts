@@ -38,6 +38,6 @@ export class TitleDividerComponent implements OnInit {
       'border-width': `${borderWidth}px`
     };
     // console.dir(this.level);
-    console.dir(this.styles);
+    // console.dir(this.styles);
   }
 }

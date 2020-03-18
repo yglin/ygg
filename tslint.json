@@ -105,7 +105,7 @@
             "onlyDependOnLibsWithTags": [
               "scope:playwhat",
               "scope:the-thing",
-              "scope:schedule",
+              "scope:shopping",
               "scope:tags",
               "scope:shared"
             ]

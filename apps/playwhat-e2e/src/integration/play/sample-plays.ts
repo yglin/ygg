@@ -1,5 +1,9 @@
 import { TheThing } from '@ygg/the-thing/core';
-import { RelationAddition, CellNamePrice, CellNameStock } from '@ygg/shopping/core';
+import {
+  RelationAddition,
+  CellNamePrice,
+  CellNameStock
+} from '@ygg/shopping/core';
 import { ImitationPlay } from '@ygg/playwhat/core';
 import { v4 as uuid } from 'uuid';
 import { random } from 'lodash';
@@ -16,8 +20,7 @@ export const MinimumPlay = ImitationPlay.createTheThing().fromJSON({
     副標題: {
       name: '副標題',
       type: 'text',
-      value:
-        '臭雞味比賽'
+      value: '臭雞味比賽'
     },
     簡介: {
       name: '簡介',
@@ -44,7 +47,7 @@ export const MinimumPlay = ImitationPlay.createTheThing().fromJSON({
       name: '人數上限',
       type: 'number',
       value: random(10, 50)
-    }    
+    }
   }
 });
 
@@ -61,7 +64,7 @@ export const SamplePlays = [
       照片: {
         name: '照片',
         type: 'album',
-        value : Album.forge().toJSON()
+        value: Album.forge().toJSON()
       },
       簡介: {
         name: '簡介',
@@ -103,7 +106,7 @@ export const SamplePlays = [
       照片: {
         name: '照片',
         type: 'album',
-        value : Album.forge().toJSON()
+        value: Album.forge().toJSON()
       },
       簡介: {
         name: '簡介',
@@ -145,7 +148,7 @@ export const SamplePlays = [
       照片: {
         name: '照片',
         type: 'album',
-        value : Album.forge().toJSON()
+        value: Album.forge().toJSON()
       },
       簡介: {
         name: '簡介',
@@ -175,7 +178,7 @@ export const SamplePlays = [
       }
     }
   }
-].map(jsonItem => new TheThing().fromJSON(jsonItem));
+].map(jsonItem => ImitationPlay.createTheThing().fromJSON(jsonItem));
 
 export const SampleAdditions = [
   {
@@ -214,4 +217,7 @@ export const SampleAdditions = [
 
 SamplePlays[0].addRelations(RelationAddition.name, SampleAdditions);
 
-export const PlayWithAdditions = SamplePlays[0];
+export const PlaysWithAddition = [SamplePlays[0]];
+export const PlaysWithoutAddition = SamplePlays.filter(
+  pl => PlaysWithAddition.indexOf(pl) < 0
+);

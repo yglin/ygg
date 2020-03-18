@@ -8,6 +8,7 @@ import {
   generateID
 } from '@ygg/shared/infra/data-access';
 import { TheThing, TheThingRelation } from '@ygg/the-thing/core';
+import { CellNamePrice } from './product';
 
 export const RelationNamePurchase = '訂購';
 
@@ -43,6 +44,15 @@ export class Purchase implements SerializableJSON {
 
   static isPurchase(value: any): value is Purchase {
     return !!(value && value.productId);
+  }
+
+  static purchase(thing: TheThing, quantity: number): Purchase {
+    const newPurchase = new Purchase({
+      productId: thing.id,
+      price: thing.getCellValue(CellNamePrice),
+      quantity
+    });
+    return newPurchase;
   }
 
   constructor(options: any = {}) {

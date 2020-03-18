@@ -1,10 +1,15 @@
 import { PageObject } from '@ygg/shared/test/page-object';
 import { TheThing } from '@ygg/the-thing/core';
 import { ImageThumbnailListPageObject } from '@ygg/shared/ui/widgets';
-import { DateRangeControlPageObject, ContactControlPageObject, NumberControlPageObject} from '@ygg/shared/omni-types/ui';
+import {
+  DateRangeControlPageObject,
+  ContactControlPageObject,
+  NumberControlPageObject
+} from '@ygg/shared/omni-types/ui';
 import { DateRange, Contact } from '@ygg/shared/omni-types/core';
 import { TheThingCellsEditorPageObject } from '@ygg/the-thing/ui';
-import { ShoppingCartEditorPageObject } from "@ygg/shopping/ui";
+import { ShoppingCartEditorPageObject } from '@ygg/shopping/ui';
+import { TourPlanViewPageObject } from '../tour-plan-view/tour-plan-view.component.po';
 
 export class TourPlanBuilderPageObject extends PageObject {
   selectors = {
@@ -16,17 +21,19 @@ export class TourPlanBuilderPageObject extends PageObject {
     inputName: '.tour-plan-name input',
     optionalCellsEditor: '.optional-editor',
     shoppingCart: '.shopping-cart-editor',
-    buttonSubmit: 'button.submit'
+    buttonSubmit: 'button.submit',
+    preview: '.preview'
   };
 
   currentStep = 1;
-  
+
   playListPO: ImageThumbnailListPageObject;
   dateRangeControl: DateRangeControlPageObject;
   numParticipantsControl: NumberControlPageObject;
   contactControlPO: ContactControlPageObject;
   theThingCellsEditorPO: TheThingCellsEditorPageObject;
   cartEditorPO: ShoppingCartEditorPageObject;
+  tourPlanPreviewPO: TourPlanViewPageObject;
 
   getSelectorForStep(step: number): string {
     return `${this.getSelector()} [step="${step}"]`;

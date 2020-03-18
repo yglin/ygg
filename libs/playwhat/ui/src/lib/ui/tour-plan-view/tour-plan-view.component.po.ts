@@ -6,6 +6,7 @@ import {
 } from '@ygg/shared/omni-types/ui';
 import { ImageThumbnailListPageObject } from '@ygg/shared/ui/widgets';
 import { PurchaseListPageObject } from '@ygg/shopping/ui';
+import { TheThing } from '@ygg/the-thing/core';
 
 export abstract class TourPlanViewPageObject extends PageObject {
   selectors = {
@@ -24,4 +25,7 @@ export abstract class TourPlanViewPageObject extends PageObject {
   getSelectorForCell(cellName: string): string {
     return `${this.getSelector()} [cell-name="${cellName}"]`;
   }
+
+  abstract expectVisible(): any
+  abstract expectValue(value: TheThing, options: any): void
 }

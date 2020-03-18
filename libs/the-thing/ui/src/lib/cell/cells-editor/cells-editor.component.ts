@@ -59,7 +59,6 @@ export class TheThingCellsEditorComponent
   }
 
   writeValue(cells: TheThingCell[] | { [key: string]: TheThingCell }): void {
-    // console.log(JSON.stringify(cells));
     if (isArray(cells)) {
       cells = keyBy(cells, 'name');
     } else {
@@ -73,7 +72,6 @@ export class TheThingCellsEditorComponent
         this.addCell(cell);
       }
     }
-
   }
 
   registerOnChange(fn: any): void {

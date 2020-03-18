@@ -7,9 +7,15 @@ import {
   ContactViewPageObjectCypress
 } from '@ygg/shared/omni-types/test';
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
-import { ImitationTourPlan } from '@ygg/playwhat/core';
+import { ImitationTourPlan, defaultName } from '@ygg/playwhat/core';
 import { TheThingCellViewPageObjectCypress } from '@ygg/the-thing/test';
 import { PurchaseListPageObjectCypress } from '@ygg/shopping/test';
+import {
+  RelationNamePurchase,
+  Purchase,
+  CellNameQuantity
+} from '@ygg/shopping/core';
+import { isEmpty, find } from 'lodash';
 
 export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
   constructor(parentSelector?: string) {
@@ -41,8 +47,13 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     cellViewPagePO.expectValue(cell);
   }
 
-  expectValue(tourPlan: TheThing) {
-    this.expectName(tourPlan.name);
+  expectValue(
+    tourPlan: TheThing,
+    options: {
+      things?: TheThing[];
+    } = {}
+  ) {
+    this.expectName(tourPlan.name || defaultName(tourPlan));
     const requiredCells = ImitationTourPlan.getRequiredCellNames();
     for (const requiredCell of requiredCells) {
       const cell = tourPlan.cells[requiredCell];
@@ -54,6 +65,15 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
         const cell = tourPlan.cells[optionalCell];
         this.expectCell(cell);
       }
+    }
+    if (
+      tourPlan.hasRelation(RelationNamePurchase)
+    ) {
+      const purchases = tourPlan.getRelations(RelationNamePurchase).map(r => {
+        const product = find(options.things, t => t.id === r.objectId);
+        return Purchase.purchase(product, r.getCellValue(CellNameQuantity));
+      });
+      this.purchaseListPO.expectPurchases(purchases);
     }
   }
 }

@@ -7,7 +7,7 @@ import {
 import {
   MinimumPlay,
   SampleAdditions,
-  PlayWithAdditions
+  PlaysWithAddition
 } from './sample-plays';
 import {
   TheThingEditorPageObjectCypress,
@@ -19,6 +19,7 @@ import {
 } from '@ygg/the-thing/test';
 import { ImitationPlay } from '@ygg/playwhat/core';
 import { RelationAddition, ImitationProduct } from '@ygg/shopping/core';
+import { find } from 'lodash';
 
 describe('Create play', () => {
   const siteNavigator = new SiteNavigator();
@@ -67,6 +68,7 @@ describe('Create play', () => {
   });
 
   it('Create a play with some additions', () => {
+    const play = PlaysWithAddition[0];
     // ======= Go to my plays page
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
 
@@ -79,17 +81,19 @@ describe('Create play', () => {
     theThingEditorPO.expectValue(ImitationPlay.createTheThing());
 
     // ======= Set values and goto create additions
-    theThingEditorPO.extendValue(PlayWithAdditions);
-    cy.wrap(SampleAdditions).each((addition: any) => {
+    theThingEditorPO.extendValue(play);
+    const relationAdditions = play.getRelations(RelationAddition.name);
+    cy.wrap(relationAdditions).each((relation: any) => {
+      const addition = find(SampleAdditions, ad => ad.id === relation.objectId);
       theThingEditorPO.addRelationAndGotoCreate(RelationAddition.name);
       // Addition follows product imitation
       theThingEditorPO.expectValue(ImitationProduct.createTheThing());
       // Expect all required cells should be there
       theThingEditorPO.extendValue(addition);
       theThingEditorPO.submit();
-      // Wait until PlayWithAdditions reloaded
+      // Wait until PlaysWithAddition reloaded
       theThingEditorPO.expectNoRelationHint();
-      theThingEditorPO.expectValue(PlayWithAdditions);
+      theThingEditorPO.expectValue(play);
     });
 
     theThingEditorPO.submit();
@@ -100,12 +104,12 @@ describe('Create play', () => {
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
 
     // ======= Confirm the new play is there
-    myPlayListPO.theThingDataTablePO.expectTheThing(PlayWithAdditions);
+    myPlayListPO.theThingDataTablePO.expectTheThing(play);
 
     // ======= click it to play view, check data
-    myPlayListPO.theThingDataTablePO.gotoTheThingView(PlayWithAdditions);
+    myPlayListPO.theThingDataTablePO.gotoTheThingView(play);
     playViewPO.expectVisible();
-    playViewPO.expectValue(PlayWithAdditions);
+    playViewPO.expectValue(play);
     playViewPO.expectAdditions(SampleAdditions);
   });
 });
