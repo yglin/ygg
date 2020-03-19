@@ -15,7 +15,8 @@ export abstract class TourPlanViewPageObject extends PageObject {
     // dateRange: '.date-range',
     // numParticipants: '.num-participants .number',
     // contact: '.contact',
-    purchases: '.purchases'
+    purchases: '.purchases',
+    buttonSubmitApplication: 'button.submit-application'
   };
   dayTimeRangePO: DayTimeRangeViewPageObject;
   dateRangeViewPO: DateRangeViewPageObject;
@@ -26,6 +27,7 @@ export abstract class TourPlanViewPageObject extends PageObject {
     return `${this.getSelector()} [cell-name="${cellName}"]`;
   }
 
-  abstract expectVisible(): any
-  abstract expectValue(value: TheThing, options: any): void
+  abstract expectVisible(): any;
+  abstract expectValue(value: TheThing, options: any): void;
+  abstract submitApplication(): void;
 }

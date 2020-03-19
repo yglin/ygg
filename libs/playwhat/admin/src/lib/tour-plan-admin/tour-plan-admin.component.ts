@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ImitationTourPlan } from '@ygg/playwhat/core';
+import { Observable } from 'rxjs';
+import { TheThing } from '@ygg/the-thing/core';
+import { TourPlanService } from "@ygg/playwhat/ui";
 
 @Component({
   selector: 'ygg-tour-plan-admin',
@@ -8,7 +11,11 @@ import { ImitationTourPlan } from '@ygg/playwhat/core';
 })
 export class TourPlanAdminComponent implements OnInit {
   imitationTourPlan = ImitationTourPlan;
-  constructor() {}
+  tourPlans$: Observable<TheThing[]>;
+  
+  constructor(private tourPlanService: TourPlanService) {
+    this.tourPlans$ = this.tourPlanService.listInApplication$();
+  }
 
   ngOnInit() {}
 }

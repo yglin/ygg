@@ -1,13 +1,15 @@
-import { extend, isEmpty } from 'lodash';
+import { extend, isEmpty, assign } from 'lodash';
 import { TheThing } from './the-thing';
 import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { Tags } from '@ygg/tags/core';
+import { __assign } from 'tslib';
 
 export class TheThingFilter implements SerializableJSON {
   name: string;
   tags: string[] = [];
   ownerId: string;
   keywordName: string = '';
+  flags: { [name: string]: boolean } = {};
 
   constructor(...args: any[]) {
     if (!isEmpty(args)) {
@@ -36,10 +38,12 @@ export class TheThingFilter implements SerializableJSON {
         .toNameArray();
       const keywordName = `${this.keywordName} ${filter.keywordName}`;
       const ownerId = !!filter.ownerId ? filter.ownerId : this.ownerId;
+      const flags = assign({}, this.flags, filter.flags);
       return new TheThingFilter(name, {
         tags: tags,
         ownerId: ownerId,
-        keywordName: keywordName
+        keywordName: keywordName,
+        flags: flags
       });
     }
   }
@@ -61,7 +65,19 @@ export class TheThingFilter implements SerializableJSON {
         }
       }
     }
+    for (const name in this.flags) {
+      if (this.flags.hasOwnProperty(name)) {
+        const value = this.flags[name];
+        if (theThing.getFlag(name) !== value) {
+          return false;
+        }
+      }
+    }
     return true;
+  }
+
+  addFlags(flags: { [name: string]: boolean }) {
+    assign(this.flags, flags);
   }
 
   clone(): TheThingFilter {

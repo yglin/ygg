@@ -106,13 +106,15 @@ export class TheThingDataTableComponent
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
-    const prevSelection = changes.selection.previousValue;
-    const curSelection = changes.selection.currentValue;
-    if (isArray(curSelection) && curSelection !== prevSelection) {
-      this.selectionModel.clear();
-      for (const selected of curSelection) {
-        if (find(this.dataSource.data, thing => thing.id === selected.id)) {
-          this.selectionModel.select(selected);
+    if (changes.selection) {
+      const prevSelection = changes.selection.previousValue;
+      const curSelection = changes.selection.currentValue;
+      if (isArray(curSelection) && curSelection !== prevSelection) {
+        this.selectionModel.clear();
+        for (const selected of curSelection) {
+          if (find(this.dataSource.data, thing => thing.id === selected.id)) {
+            this.selectionModel.select(selected);
+          }
         }
       }
     }

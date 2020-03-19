@@ -156,15 +156,15 @@ describe('Tour-plan builder', () => {
     });
   });
 
-  it('Build a tour-plan and check it out in admin page', () => {
+  it('Build a tour-plan and send it for application', () => {
     tourPlanBuilderPO.setValue(MinimalTourPlan, {
       things: SampleThings
     });
-    tourPlanBuilderPO.submit();
+    tourPlanBuilderPO.tourPlanPreviewPO.submitApplication();
 
     // Expect the submitted tour-plan show up in administrator's list
     const tourPlanDataTablePO = new TheThingDataTablePageObjectCypress();
-    siteNavigator.goto(['admin', 'tour-plans'], tourPlanDataTablePO);
+    siteNavigator.goto(['admin', 'tour-plan-applications'], tourPlanDataTablePO);
     // tourPlanDataTablePO.expectTheThing(MinimalTourPlan);
     tourPlanDataTablePO.expectFirst(MinimalTourPlan);
     tourPlanDataTablePO.clickFirst();

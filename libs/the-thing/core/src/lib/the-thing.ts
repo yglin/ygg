@@ -71,6 +71,11 @@ export class TheThing implements ImageThumbnailItem {
    */
   link: string;
 
+  /**
+   * Boolean flags for combination of complex state
+   */
+  flags: { [name: string]: boolean } = {};
+
   static forge(options: any = {}): TheThing {
     const thing = new TheThing();
     thing.name =
@@ -355,6 +360,14 @@ export class TheThing implements ImageThumbnailItem {
         }
       }
     }
+  }
+
+  setFlag(name: string, flag: boolean) {
+    this.flags[name] = flag;
+  }
+
+  getFlag(name: string): boolean {
+    return name in this.flags ? this.flags[name] : false;
   }
 
   fromJSON(data: any): this {

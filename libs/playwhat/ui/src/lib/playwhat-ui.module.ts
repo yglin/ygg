@@ -16,7 +16,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlaywhatAdminService } from '@ygg/playwhat/admin';
 import { MenuTree } from '@ygg/shared/ui/navigation';
 import { Image } from '@ygg/shared/omni-types/core';
-import { TourPlanAdminComponent } from './ui/tour-plan-admin/tour-plan-admin.component';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { PlayViewComponent } from './ui/play-view/play-view.component';
 import { SharedUserModule, UserMenuService } from '@ygg/shared/user';
@@ -50,7 +49,6 @@ import { TheThingEditorService } from 'libs/the-thing/ui/src/lib/the-thing-edito
     PlayCardComponent,
     TourPlanViewComponent,
     TourPlanBuilderComponent,
-    TourPlanAdminComponent,
     PlayViewComponent,
     MyPlayListComponent,
     MyTourPlanListComponent
@@ -58,7 +56,6 @@ import { TheThingEditorService } from 'libs/the-thing/ui/src/lib/the-thing-edito
   entryComponents: [
     TourViewComponent,
     TourPlanViewComponent,
-    TourPlanAdminComponent,
     PlayViewComponent,
     TourPlanBuilderComponent
   ],
@@ -80,7 +77,7 @@ import { TheThingEditorService } from 'libs/the-thing/ui/src/lib/the-thing-edito
       multi: true
     }
   ],
-  exports: [TourViewComponent, TourPlanBuilderComponent, TourPlanAdminComponent]
+  exports: [TourViewComponent, TourPlanBuilderComponent]
 })
 export class PlaywhatUiModule {}
 

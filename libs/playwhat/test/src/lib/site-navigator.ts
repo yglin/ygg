@@ -96,6 +96,8 @@ export class SiteNavigator {
       this.gotoAdminScheduler(path);
     } else if (route === 'tour-plans') {
       cy.get('#tour-plans').click();
+    } else if (route === 'tour-plan-applications') {
+      cy.get('#tour-plan-applications').click();
     } else if (route === 'homepage') {
       cy.get('#homepage-manage a').click({ force: true });
     }

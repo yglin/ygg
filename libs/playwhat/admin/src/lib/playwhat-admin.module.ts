@@ -13,7 +13,8 @@ import { TheThingUiModule } from '@ygg/the-thing/ui';
 
 import { PlaywhatAdminService } from './playwhat-admin.service';
 import { HomepageManageComponent } from './homepage-manage/homepage-manage.component';
-import { ImitationTourPlan } from "@ygg/playwhat/core";
+import { ImitationTourPlan } from '@ygg/playwhat/core';
+import { TourPlanAdminComponent } from './tour-plan-admin/tour-plan-admin.component';
 
 @NgModule({
   imports: [
@@ -23,7 +24,7 @@ import { ImitationTourPlan } from "@ygg/playwhat/core";
     // SchedulerAdminRoutingModule,
     // RouterModule.forChild(routes)
   ],
-  declarations: [HomepageManageComponent],
+  declarations: [HomepageManageComponent, TourPlanAdminComponent],
   providers: [
     {
       provide: APP_INITIALIZER,
@@ -33,7 +34,7 @@ import { ImitationTourPlan } from "@ygg/playwhat/core";
     }
   ],
   exports: [],
-  entryComponents: [HomepageManageComponent]
+  entryComponents: [HomepageManageComponent, TourPlanAdminComponent]
 })
 export class PlaywhatAdminModule {}
 
@@ -55,15 +56,25 @@ export function configRouting(
       }
     });
     playwhatAdminService.menu.addItem({
-      id: 'tour-plans',
-      link: 'tour-plans',
-      label: '遊程規劃清單',
+      id: 'tour-plan-applications',
+      link: 'tour-plan-applications',
+      label: '遊程規劃申請',
       icon: new Image(ImitationTourPlan.image),
-      tooltip: '遊程規劃清單管理頁面',
+      tooltip: '申請中的遊程規劃清單',
       routeConfig: {
-        redirectTo: `/the-things/admin/${ImitationTourPlan.id}`
+        component: TourPlanAdminComponent
       }
     });
+    // playwhatAdminService.menu.addItem({
+    //   id: 'tour-plans',
+    //   link: 'tour-plans',
+    //   label: '遊程規劃清單',
+    //   icon: new Image(ImitationTourPlan.image),
+    //   tooltip: '遊程規劃清單管理頁面',
+    //   routeConfig: {
+    //     redirectTo: `/the-things/admin/${ImitationTourPlan.id}`
+    //   }
+    // });
     const adminRoute = playwhatAdminService.menu.toRoute();
     // console.dir(adminRoute);
     router.config.unshift(adminRoute);

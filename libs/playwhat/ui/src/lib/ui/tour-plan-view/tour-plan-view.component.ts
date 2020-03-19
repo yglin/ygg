@@ -12,9 +12,11 @@ import { TheThingImitationViewInterface } from '@ygg/the-thing/ui';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { Subscription, Observable, BehaviorSubject, of, Subject } from 'rxjs';
 import { tap, switchMap, filter } from 'rxjs/operators';
-import { ImitationTourPlan } from '@ygg/playwhat/core';
+import { ImitationTourPlan, ApplicationState } from '@ygg/playwhat/core';
 import { pick, values } from 'lodash';
 import { RelationNamePurchase } from '@ygg/shopping/core';
+import { TourPlanService } from '../../tour-plan.service';
+import { ApplicationService } from '../../application.service';
 
 @Component({
   selector: 'ygg-tour-plan-view',
@@ -34,8 +36,12 @@ export class TourPlanViewComponent
   requiredCells: TheThingCell[] = [];
   optionalCells: TheThingCell[] = [];
   subscriptions: Subscription[] = [];
+  canSubmitApplication = false;
 
-  constructor(private theThingAccessService: TheThingAccessService) {}
+  constructor(
+    private theThingAccessService: TheThingAccessService,
+    private applicationService: ApplicationService
+  ) {}
 
   ngOnInit() {
     if (!this.theThing$) {
@@ -67,7 +73,8 @@ export class TourPlanViewComponent
                 ImitationTourPlan.getOptionalCellNames()
               );
               this.purchases = this.theThing.getRelations(RelationNamePurchase);
-              // console.log(this.optionalCells);
+              
+              this.canSubmitApplication = !(this.theThing.getFlag(ApplicationState.InApplication));
             }, 0);
           })
         )
@@ -85,6 +92,18 @@ export class TourPlanViewComponent
   ngOnDestroy() {
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
+    }
+  }
+
+  async submitApplication() {
+    const confirmMessage = `將此遊程規劃送出申請？`;
+    if (confirm(confirmMessage)) {
+      try {
+        await this.applicationService.submitApplication(this.theThing);
+        alert(`遊程規劃已送出`);
+      } catch (error) {
+        alert(`送出失敗，錯誤原因：${error.message}`);
+      }
     }
   }
 }
