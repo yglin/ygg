@@ -1,4 +1,4 @@
-import { values, entries } from 'lodash';
+import { values, entries, get } from 'lodash';
 
 export interface Document {
   path: string;
@@ -6,10 +6,21 @@ export interface Document {
 }
 
 export class MockDatabase {
+  static alias = 'mockDatabase';
+
   documents: { [path: string]: Document } = {};
-  // documentsRTDB: { [path: string]: Document } = {};
-  upsert = this.insert;
+  cache: { [path: string]: any } = {};
   RTDBBackup: { [path: string]: any } = {};
+
+  static getFromCache(path: string): Cypress.Chainable<any> {
+    return cy.get(`@${MockDatabase.alias}`).then((mockDB: any) => {
+      return get(mockDB, `cache.${path}`, null);
+    });
+  }
+
+  constructor() {
+    cy.wrap(this).as(MockDatabase.alias);
+  }
 
   pushDocument(path: string, data?: any) {
     this.documents[path] = { path, data };
@@ -20,6 +31,7 @@ export class MockDatabase {
     cy.callFirestore('set', path, data).then(() => {
       cy.log(`Insert test data at ${path} in firebase firestore DB`);
       this.pushDocument(path, data);
+      this.cache[path] = data;
       cy.wrap(data).as(data.id);
     });
     return cy.get(`@${data.id}`);

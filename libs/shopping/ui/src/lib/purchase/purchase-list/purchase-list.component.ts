@@ -20,7 +20,7 @@ import { TheThingAccessService } from '@ygg/the-thing/data-access';
   styleUrls: ['./purchase-list.component.css']
 })
 export class PurchaseListComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() purchases: TheThingRelation[];
+  @Input() purchases: Purchase[];
   totalPrice = 0;
   CellNameQuantity = CellNameQuantity;
   subscriptions: Subscription[] = [];
@@ -32,7 +32,7 @@ export class PurchaseListComponent implements OnInit, OnChanges, OnDestroy {
   evalTotalPrice() {
     this.totalPrice = sumBy(
       this.purchases,
-      purchase => purchase.getCellValue(CellNameCharge, 0)
+      purchase => purchase.charge
     );
   }
 

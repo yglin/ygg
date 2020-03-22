@@ -7,7 +7,7 @@ export interface ITheThingRelation {
   name: string;
   subjectId: string;
   objectId: string;
-  cells?: { [name: string]: TheThingCell };
+  cells?: TheThingCell[] | { [name: string]: TheThingCell };
 }
 
 export class TheThingRelation implements SerializableJSON {
@@ -16,6 +16,10 @@ export class TheThingRelation implements SerializableJSON {
   subjectId: string;
   objectId: string;
   cells: { [name: string]: TheThingCell } = {};
+
+  static isTheThingRelation(value: any): value is TheThingRelation {
+    return value && value.id && value.name && value.objectId;
+  }
 
   constructor(options?: ITheThingRelation) {
     if (options) {

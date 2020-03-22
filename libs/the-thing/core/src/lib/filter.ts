@@ -68,6 +68,7 @@ export class TheThingFilter implements SerializableJSON {
     for (const name in this.flags) {
       if (this.flags.hasOwnProperty(name)) {
         const value = this.flags[name];
+        // console.log(`${theThing.getFlag(name)} ?= ${value}`);
         if (theThing.getFlag(name) !== value) {
           return false;
         }

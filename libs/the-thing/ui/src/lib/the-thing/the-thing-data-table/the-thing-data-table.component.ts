@@ -50,7 +50,7 @@ export class TheThingDataTableComponent
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   dataSource: TheThingDataSource;
   dataTableConfig: DataTableConfig;
-  displayedColumnsHead: string[] = ['select', 'name'];
+  displayedColumnsHead: string[] = ['name'];
   displayedColumnsTail: string[] = ['management'];
   displayedColumns: string[] = [];
   selectionModel: SelectionModel<TheThing> = new SelectionModel(true, []);
@@ -70,6 +70,9 @@ export class TheThingDataTableComponent
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
 
   ngOnInit() {
+    if (this.selectionChange.observers.length > 0) {
+      this.displayedColumnsHead.unshift('select');
+    }
     if (!this.theThings$) {
       this.theThings$ = this.theThingAccessService.list$();
     }

@@ -30,12 +30,12 @@ export const ImitationProduct: TheThingImitation = new TheThingImitation().fromJ
       {
         name: CellNamePrice,
         type: 'number',
-        required: true
+        userInput: 'required'
       },
       {
         name: CellNameStock,
         type: 'number',
-        required: true
+        userInput: 'required'
       }
     ],
     filter: {

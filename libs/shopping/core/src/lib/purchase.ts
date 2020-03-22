@@ -7,7 +7,7 @@ import {
   toJSONDeep,
   generateID
 } from '@ygg/shared/infra/data-access';
-import { TheThing, TheThingRelation } from '@ygg/the-thing/core';
+import { TheThing, TheThingRelation, TheThingCell } from '@ygg/the-thing/core';
 import { CellNamePrice } from './product';
 
 export const RelationNamePurchase = '訂購';
@@ -31,6 +31,7 @@ interface PurchaseOptions {
 
 export class Purchase implements SerializableJSON {
   id: string;
+  consumerId: string;
   productId: string;
   quantity: number;
   duration: Duration;
@@ -46,11 +47,26 @@ export class Purchase implements SerializableJSON {
     return !!(value && value.productId);
   }
 
-  static purchase(thing: TheThing, quantity: number): Purchase {
+  static purchase(
+    consumer: TheThing,
+    product: TheThing,
+    quantity: number
+  ): Purchase {
     const newPurchase = new Purchase({
-      productId: thing.id,
-      price: thing.getCellValue(CellNamePrice),
+      consumerId: consumer.id,
+      productId: product.id,
+      price: product.getCellValue(CellNamePrice),
       quantity
+    });
+    return newPurchase;
+  }
+
+  static fromRelation(relation: TheThingRelation): Purchase {
+    const newPurchase = new Purchase({
+      consumerId: relation.subjectId,
+      productId: relation.objectId,
+      price: relation.getCellValue(CellNamePrice),
+      quantity: relation.getCellValue(CellNameQuantity)
     });
     return newPurchase;
   }
@@ -58,6 +74,7 @@ export class Purchase implements SerializableJSON {
   constructor(options: any = {}) {
     this.id = generateID();
     // this.productType = ProductType.Unknown;
+    this.consumerId = '';
     this.productId = '';
     this.price = 0;
     this.quantity = 0;
@@ -66,6 +83,26 @@ export class Purchase implements SerializableJSON {
 
   clone(): Purchase {
     return new Purchase().fromJSON(this.toJSON());
+  }
+
+  toRelation(): TheThingRelation {
+    return new TheThingRelation({
+      name: RelationNamePurchase,
+      subjectId: this.consumerId,
+      objectId: this.productId,
+      cells: [
+        new TheThingCell({
+          name: CellNamePrice,
+          type: 'number',
+          value: this.price
+        }),
+        new TheThingCell({
+          name: CellNameQuantity,
+          type: 'number',
+          value: this.quantity
+        })
+      ]
+    });
   }
 
   fromJSON(data: any = {}): this {

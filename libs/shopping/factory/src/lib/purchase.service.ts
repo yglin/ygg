@@ -4,7 +4,7 @@ import { LogService } from '@ygg/shared/infra/log';
 import { take } from 'rxjs/operators';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { TheThing } from '@ygg/the-thing/core';
-import { castArray, isEmpty } from 'lodash';
+import { castArray, isEmpty, flatten, pick, values } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -12,57 +12,71 @@ import { castArray, isEmpty } from 'lodash';
 export class PurchaseService {
   purchasePool: { [purchaseId: string]: Purchase } = {};
 
-  constructor(
-    private logService: LogService,
-    private theThingAccessService: TheThingAccessService
-  ) {}
+  constructor(private theThingAccessService: TheThingAccessService) {}
+
+  listDescendantsIncludeMe(purchases: Purchase | Purchase[]): Purchase[] {
+    purchases = castArray(purchases);
+    const results = [];
+    for (const purchase of purchases) {
+      results.push(purchase);
+      if (!isEmpty(purchase.childPurchaseIds)) {
+        const descendants = this.listDescendantsIncludeMe(
+          values(pick(this.purchasePool, purchase.childPurchaseIds))
+        );
+        results.push(...descendants);
+      }
+    }
+    return results;
+  }
 
   async purchase(
-    productIds: string | string[],
+    consumer: string | TheThing,
+    product: string | TheThing,
     quantity: number
-  ): Promise<Purchase[]> {
-    productIds = castArray(productIds);
-    let purchases: Purchase[] = [];
+  ): Promise<Purchase> {
+    if (typeof consumer === 'string') {
+      consumer = await this.theThingAccessService
+        .get$(consumer)
+        .pipe(take(1))
+        .toPromise();
+    }
+    if (typeof product === 'string') {
+      product = await this.theThingAccessService
+        .get$(product)
+        .pipe(take(1))
+        .toPromise();
+    }
     try {
-      for (const productId of productIds) {
-        const product: TheThing = await this.theThingAccessService
-          .get$(productId)
-          .pipe(take(1))
-          .toPromise();
-        const thisPurchase = new Purchase({
-          productId: product.id,
-          quantity,
-          price: product.getCellValue(CellNamePrice)
-        });
-        purchases.push(thisPurchase);
-        const childPurchases = await this.purchase(
-          product.getRelationObjectIds(RelationAddition.name),
-          quantity
+      const thisPurchase = Purchase.purchase(consumer, product, quantity);
+      this.purchasePool[thisPurchase.id] = thisPurchase;
+      if (product.hasRelation(RelationAddition.name)) {
+        const childPurchases = await Promise.all(
+          product
+            .getRelationObjectIds(RelationAddition.name)
+            .map(additionId => this.purchase(consumer, additionId, quantity))
         );
         thisPurchase.childPurchaseIds = childPurchases.map(p => p.id);
-        purchases = purchases.concat(childPurchases);
       }
-      for (const purchase of purchases) {
-        this.purchasePool[purchase.id] = purchase;
-      }
-      return purchases;
+      return thisPurchase;
     } catch (error) {
-      this.logService.error(
-        `Failed to purchase ${productIds}, error: ${error.message}`
+      console.error(
+        `Failed to purchase ${product.id}, error: ${error.message}`
       );
-      return [];
+      throw error;
     }
   }
 
-  removePurchase(targetPurchase: Purchase): Purchase[] {
-    const removedPurchases: Purchase[] = [targetPurchase];
-    delete this.purchasePool[targetPurchase.id];
-    if (!isEmpty(targetPurchase.childPurchaseIds)) {
-      for (const childPurchaseId of targetPurchase.childPurchaseIds) {
-        if (childPurchaseId in this.purchasePool) {
-          removedPurchases.push(this.purchasePool[childPurchaseId]);
-          delete this.purchasePool[childPurchaseId];
-        }
+  removePurchases(targetPurchases: Purchase | Purchase[]): Purchase[] {
+    targetPurchases = castArray(targetPurchases);
+    const removedPurchases: Purchase[] = [];
+    for (const targetPurchase of targetPurchases) {
+      delete this.purchasePool[targetPurchase.id];
+      removedPurchases.push(targetPurchase);
+      if (!isEmpty(targetPurchase.childPurchaseIds)) {
+        const removedChildPurchases = this.removePurchases(
+          values(pick(this.purchasePool, targetPurchase.childPurchaseIds))
+        );
+        removedPurchases.push(...removedChildPurchases);
       }
     }
     return removedPurchases;

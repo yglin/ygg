@@ -15,12 +15,14 @@ import { PlaywhatAdminService } from './playwhat-admin.service';
 import { HomepageManageComponent } from './homepage-manage/homepage-manage.component';
 import { ImitationTourPlan } from '@ygg/playwhat/core';
 import { TourPlanAdminComponent } from './tour-plan-admin/tour-plan-admin.component';
+import { ShoppingUiModule } from '@ygg/shopping/ui';
 
 @NgModule({
   imports: [
     CommonModule,
     SharedUiWidgetsModule,
-    TheThingUiModule
+    TheThingUiModule,
+    ShoppingUiModule
     // SchedulerAdminRoutingModule,
     // RouterModule.forChild(routes)
   ],
@@ -56,11 +58,11 @@ export function configRouting(
       }
     });
     playwhatAdminService.menu.addItem({
-      id: 'tour-plan-applications',
-      link: 'tour-plan-applications',
-      label: '遊程規劃申請',
+      id: 'tour-plans',
+      link: 'tour-plans',
+      label: '遊程',
       icon: new Image(ImitationTourPlan.image),
-      tooltip: '申請中的遊程規劃清單',
+      tooltip: '遊程清單管理',
       routeConfig: {
         component: TourPlanAdminComponent
       }

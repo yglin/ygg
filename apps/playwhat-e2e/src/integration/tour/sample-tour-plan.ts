@@ -16,8 +16,10 @@ import {
 import {
   RelationNamePurchase,
   CellNameQuantity,
-  RelationAddition
+  RelationAddition,
+  Purchase
 } from '@ygg/shopping/core';
+import { ApplicationState } from '@ygg/playwhat/core';
 
 export const TourPlanTemplate = new TheThing().fromJSON({
   tags: ['tour', 'tour-plan', 'schedule', '遊程計畫'],
@@ -114,52 +116,50 @@ TourPlanFull.addCells(
 
 export const TourPlanFullWithPlays = TourPlanFull.clone();
 TourPlanFullWithPlays.name = '測試遊程(完整資料欄位＋預訂體驗)';
-for (const play of PlaysWithoutAddition) {
-  const cellQuantity = new TheThingCell({
-    name: CellNameQuantity,
-    type: 'number',
-    value: random(10, 50)
-  });
-  TourPlanFullWithPlays.addRelation(RelationNamePurchase, play, [cellQuantity]);
+for (const play of SamplePlays) {
+  const purchase = Purchase.purchase(
+    TourPlanFullWithPlays,
+    play,
+    random(10, 50)
+  );
+  TourPlanFullWithPlays.addRelation(purchase.toRelation());
 }
 
 export const TourPlanWithPlaysNoAddition = MinimalTourPlan.clone();
 for (const play of PlaysWithoutAddition) {
-  const cellQuantity = new TheThingCell({
-    name: CellNameQuantity,
-    type: 'number',
-    value: random(10, 50)
-  });
-  TourPlanWithPlaysNoAddition.addRelation(RelationNamePurchase, play, [
-    cellQuantity
-  ]);
+  const purchase = Purchase.purchase(
+    TourPlanWithPlaysNoAddition,
+    play,
+    random(10, 50)
+  );
+  TourPlanWithPlaysNoAddition.addRelation(purchase.toRelation());
 }
 TourPlanWithPlaysNoAddition.name = '測試遊程(預訂體驗, 無加購項目)';
 
 export const TourPlanWithPlaysAndAdditions = MinimalTourPlan.clone();
 for (const play of PlaysWithAddition) {
-  const cellQuantity = new TheThingCell({
-    name: CellNameQuantity,
-    type: 'number',
-    value: random(10, 50)
-  });
-  TourPlanWithPlaysAndAdditions.addRelation(RelationNamePurchase, play, [
-    cellQuantity
-  ]);
+  const purchase = Purchase.purchase(
+    TourPlanWithPlaysAndAdditions,
+    play,
+    random(10, 50)
+  );
+  TourPlanWithPlaysAndAdditions.addRelation(purchase.toRelation());
   if (play.hasRelation(RelationAddition.name)) {
     for (const relation of play.getRelations(RelationAddition.name)) {
-      const purchaseQuantityAddition = new TheThingCell({
-        name: CellNameQuantity,
-        type: 'number',
-        value: random(10, 50)
-      });
       const addition = find(SampleAdditions, ad => ad.id === relation.objectId);
-      TourPlanWithPlaysAndAdditions.addRelation(
-        RelationNamePurchase,
-        addition,
-        [purchaseQuantityAddition]
-      );
+      if (addition) {
+        const purchaseAd = Purchase.purchase(
+          TourPlanWithPlaysAndAdditions,
+          addition,
+          random(1, 10)
+        );
+        TourPlanWithPlaysAndAdditions.addRelation(purchaseAd.toRelation());
+      }
     }
   }
 }
 TourPlanWithPlaysAndAdditions.name = '測試遊程(預訂體驗, 有加購項目)';
+
+export const TourPlanInApplication = TourPlanWithPlaysAndAdditions.clone();
+TourPlanInApplication.name = '測試遊程(預訂體驗, 有加購項目，已提交申請)';
+TourPlanInApplication.setFlag(ApplicationState.InApplication, true);

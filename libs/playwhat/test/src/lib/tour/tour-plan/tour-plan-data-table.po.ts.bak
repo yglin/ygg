@@ -1,0 +1,45 @@
+import {
+  TheThingDataTablePageObjectCypress,
+  TheThingDataRowPageObjectCypress,
+  TheThingCellViewPageObjectCypress
+} from '@ygg/the-thing/test';
+import { TheThing, DataTableColumnConfig } from '@ygg/the-thing/core';
+import { PageObject } from '@ygg/shared/test/page-object';
+import { ImitationTourPlan } from '@ygg/playwhat/core';
+import { values } from 'lodash';
+
+class TourPlanDataRowPageObjectCypress extends TheThingDataRowPageObjectCypress {
+  expectValue(tourPlan: TheThing) {
+    super.expectValue(tourPlan);
+    cy.wrap(values(ImitationTourPlan.dataTableConfig.columns)).each(
+      (columnConfig: any) => {
+        columnConfig = columnConfig as DataTableColumnConfig;
+        switch (columnConfig.valueSource) {
+          case 'function':
+            const value = columnConfig.valueFunc(tourPlan);
+            cy.get(this.getSelectorForColumn(columnConfig.name)).contains(
+              value.toString()
+            );
+            break;
+          default:
+            const cell = tourPlan.getCell(columnConfig.name);
+            const cellViewPO = new TheThingCellViewPageObjectCypress(
+              this.getSelectorForColumn(columnConfig.name)
+            );
+            cellViewPO.expectValue(cell);
+            break;
+        }
+      }
+    );
+  }
+}
+
+export class TourPlanDataTablePageObjectCypress extends TheThingDataTablePageObjectCypress {
+  expectTheThing(tourPlan: TheThing) {
+    this.setSearchText(tourPlan.name);
+    const dataRowPO = new TourPlanDataRowPageObjectCypress(
+      this.getSelectorForTheThing(tourPlan)
+    );
+    dataRowPO.expectValue(tourPlan);
+  }
+}

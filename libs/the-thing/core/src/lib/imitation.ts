@@ -15,12 +15,7 @@ import {
 } from '@ygg/shared/infra/data-access';
 import { TheThing } from './the-thing';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
-import {
-  TheThingCellComparator,
-  TheThingCellTypes,
-  TheThingCellDefine,
-  TheThingCell
-} from './cell';
+import { TheThingCell } from './cell';
 import { TheThingFilter } from './filter';
 import {
   TheThingValidator,
@@ -29,14 +24,24 @@ import {
 } from './validator';
 import { Tags } from '@ygg/tags/core';
 import { RelationDef } from './relation-def';
+import { TheThingCellDefine } from './cell-define';
+import { TheThingCellComparator, TheThingCellTypes } from './cell-type';
 
 export const ImitationsDataPath = 'the-thing/imitations';
 
+type ValueSource = 'cell' | 'function';
+type ValueFunction = (thing: TheThing) => any;
+
+export interface DataTableColumnConfig {
+  name: string;
+  label: string;
+  valueSource?: ValueSource;
+  valueFunc?: ValueFunction;
+}
+
 export interface DataTableConfig {
   columns: {
-    [key: string]: {
-      label: string;
-    };
+    [key: string]: DataTableColumnConfig;
   };
 }
 
@@ -54,6 +59,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   dataTableConfig?: DataTableConfig;
   validators: TheThingValidator[] = [];
   relationsDef: { [name: string]: RelationDef } = {};
+  valueFunctions: { [name: string]: ValueFunction } = {};
 
   /** Create time */
   createAt: number;
@@ -66,6 +72,15 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     this.fromJSON(options);
   }
 
+  createCell(name: string, value: any): TheThingCell {
+    const cellDef = this.getCellDef(name);
+    return cellDef.createCell(value);
+  }
+
+  getCellDef(name: string): TheThingCellDefine {
+    return this.cellsDef[name];
+  }
+
   createTheThing(): TheThing {
     const theThing = new TheThing();
     if (this.filter && this.filter.tags) {
@@ -75,7 +90,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     for (const cellName in this.cellsDef) {
       if (this.cellsDef.hasOwnProperty(cellName)) {
         const cellDef = this.cellsDef[cellName];
-        theThing.addCell(TheThingCell.fromDef(cellDef));
+        theThing.addCell(cellDef.createCell());
       }
     }
     for (const name in this.relationsDef) {
@@ -87,7 +102,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   }
 
   getRequiredCellDefs(): TheThingCellDefine[] {
-    return filter(this.cellsDef, cellDef => cellDef.required);
+    return filter(this.cellsDef, cellDef => cellDef.userInput === 'required');
   }
 
   getRequiredCellNames(): string[] {
@@ -95,7 +110,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   }
 
   getOptionalCellDefs(): TheThingCellDefine[] {
-    return filter(this.cellsDef, cellDef => !cellDef.required);
+    return filter(this.cellsDef, cellDef => cellDef.userInput === 'optional');
   }
 
   getOptionalCellNames(): string[] {
@@ -103,9 +118,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   }
 
   createOptionalCells(): TheThingCell[] {
-    return this.getOptionalCellDefs().map(cellDef =>
-      TheThingCell.fromDef(cellDef)
-    );
+    return this.getOptionalCellDefs().map(cellDef => cellDef.createCell());
   }
 
   getComparators(): { [cellName: string]: TheThingCellComparator } {
@@ -147,24 +160,28 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
 
   fromJSON(data: any = {}): this {
     extend(this, data);
-    if (isArray(data.cellsDef)) {
-      this.cellsDef = keyBy(data.cellsDef, 'name');
+    if (!isEmpty(data.cellsDef)) {
+      let cellsDef = data.cellsDef;
+      if (isArray(data.cellsDef)) {
+        cellsDef = keyBy(data.cellsDef, 'name');
+      }
+      this.cellsDef = mapValues(
+        cellsDef,
+        cellDef => new TheThingCellDefine(cellDef)
+      );
     }
     if (data.filter) {
       this.filter = new TheThingFilter().fromJSON(data.filter);
     }
     if (!isEmpty(data.relationsDef)) {
+      let relationsDef = data.relationsDef;
       if (isArray(data.relationsDef)) {
-        this.relationsDef = keyBy(
-          data.relationsDef.map(rDef => new RelationDef(rDef)),
-          'name'
-        );
-      } else {
-        this.relationsDef = mapValues(
-          data.relationsDef,
-          rDef => new RelationDef(rDef)
-        );
+        relationsDef = keyBy(data.relationsDef, 'name');
       }
+      this.relationsDef = mapValues(
+        relationsDef,
+        rDef => new RelationDef(rDef)
+      );
     }
     return this;
   }

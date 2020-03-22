@@ -13,37 +13,38 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
     cellsDef: {
       副標題: {
         name: '副標題',
-        type: 'text'
+        type: 'text',
+        userInput: 'optional'
       },
       簡介: {
         name: '簡介',
         type: 'longtext',
-        required: true
+        userInput: 'required'
       },
       照片: {
         name: '照片',
         type: 'album',
-        required: true
+        userInput: 'required'
       },
       費用: {
         name: '費用',
         type: 'number',
-        required: true
+        userInput: 'required'
       },
       時長: {
         name: '時長',
         type: 'number',
-        required: true
+        userInput: 'required'
       },
       人數下限: {
         name: '人數下限',
         type: 'number',
-        required: true
+        userInput: 'required'
       },
       人數上限: {
         name: '人數上限',
         type: 'number',
-        required: true
+        userInput: 'required'
       }
     },
     dataTableConfig: {

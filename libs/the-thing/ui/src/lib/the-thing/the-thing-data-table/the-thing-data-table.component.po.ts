@@ -1,5 +1,17 @@
 import { PageObject } from '@ygg/shared/test/page-object';
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingImitation } from '@ygg/the-thing/core';
+
+export abstract class TheThingDataRowPageObject extends PageObject {
+  selectors = {
+    main: ''
+  };
+
+  getSelectorForColumn(columnName): string {
+    return `${this.getSelector()} [column-name="${columnName}"]`;
+  }
+
+  abstract expectValue(value: TheThing): void;
+}
 
 export abstract class TheThingDataTablePageObject extends PageObject {
   selectors = {
@@ -12,7 +24,14 @@ export abstract class TheThingDataTablePageObject extends PageObject {
     return `${this.getSelector()} tr.first`;
   }
 
-  abstract expectTheThing(theThing: TheThing): void;
+  getSelectorForTheThing(theThing: TheThing): string {
+    return `${this.getSelector()} tr:contains("${theThing.name}")`;
+  }
+
+  abstract expectTheThing(
+    theThing: TheThing,
+    imitation?: TheThingImitation
+  ): void;
   abstract gotoTheThingView(theThing: TheThing): void;
   abstract gotoTheThingEdit(theThing: TheThing): void;
   abstract expectNotTheThing(theThings: TheThing | TheThing[]): void;

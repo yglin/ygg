@@ -102,19 +102,26 @@ export class TourPlanBuilderComponent
     const purchases = this.formControlPurchases.value;
     const numParticipants = this.firstFormGroup.get('numParticipants').value;
     // console.log(`Quantity = ${numParticipants}`);
-    const addPurchases = await this.purchaseService.purchase(
-      play.id,
-      numParticipants
-    );
-    this.formControlPurchases.setValue(purchases.concat(addPurchases));
-    // console.dir(JSON.stringify(this.formControlPurchases.value));
+    try {
+      const purchaseThePlay = await this.purchaseService.purchase(
+        this.theThing,
+        play,
+        numParticipants
+      );
+      const newPurchases = this.purchaseService.listDescendantsIncludeMe(
+        purchaseThePlay
+      );
+      this.formControlPurchases.setValue(
+        purchases.concat(newPurchases)
+      );
+    } catch (error) {}
   }
 
   async onDeselectPlay(play: TheThing) {
     const purchases: Purchase[] = this.formControlPurchases.value;
     const targetPurchase = find(purchases, p => p.productId === play.id);
     if (targetPurchase) {
-      const removedPurchases: Purchase[] = this.purchaseService.removePurchase(
+      const removedPurchases: Purchase[] = this.purchaseService.removePurchases(
         targetPurchase
       );
       remove(purchases, p => find(removedPurchases, rp => rp.id === p.id));
@@ -153,21 +160,10 @@ export class TourPlanBuilderComponent
       optionalCells: keyBy(optionalCells, 'name')
     });
     if (this.theThing.hasRelation(RelationNamePurchase)) {
-      const promisePurchases: Promise<Purchase[]>[] = [];
-      for (const relation of this.theThing.getRelations(RelationNamePurchase)) {
-        promisePurchases.push(
-          this.purchaseService.purchase(
-            relation.objectId,
-            relation.getCellValue(CellNameQuantity)
-          )
-        );
-      }
-      Promise.all(promisePurchases).then(purchasesessessse => {
-        this.purchases = flatten(purchasesessessse);
-        // console.log('Converted purchases');
-        // console.dir(this.purchases);
-        this.formControlPurchases.setValue(this.purchases);
-      });
+      this.purchases = this.theThing
+        .getRelations(RelationNamePurchase)
+        .map(r => Purchase.fromRelation(r));
+      this.formControlPurchases.setValue(this.purchases);
     }
     this.theThingPreview$.next(this.theThing);
   }
@@ -197,23 +193,26 @@ export class TourPlanBuilderComponent
           this.theThing.removeRelation(RelationNamePurchase);
           const purchases: Purchase[] = this.formControlPurchases.value;
           for (const purchase of purchases) {
-            this.theThing.addRelation(
-              RelationNamePurchase,
-              purchase.productId,
-              [
-                new TheThingCell({
-                  name: CellNameQuantity,
-                  type: 'number',
-                  value: purchase.quantity
-                }),
-                new TheThingCell({
-                  name: CellNameCharge,
-                  type: 'number',
-                  value: purchase.charge
-                })
-              ]
-            );
+            this.theThing.addRelation(purchase.toRelation());
+            // this.theThing.addRelation(
+            //   RelationNamePurchase,
+            //   purchase.productId,
+            //   [
+            //     new TheThingCell({
+            //       name: CellNameQuantity,
+            //       type: 'number',
+            //       value: purchase.quantity
+            //     }),
+            //     new TheThingCell({
+            //       name: CellNameCharge,
+            //       type: 'number',
+            //       value: purchase.charge
+            //     })
+            //   ]
+            // );
           }
+          console.log('Update purchases');
+          console.dir(this.theThing.toJSON());
           break;
         case startIndex + 3:
           this.theThing.name = this.forthFormGroup.get('name').value;

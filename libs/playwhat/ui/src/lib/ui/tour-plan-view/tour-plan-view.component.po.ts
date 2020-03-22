@@ -16,7 +16,8 @@ export abstract class TourPlanViewPageObject extends PageObject {
     // numParticipants: '.num-participants .number',
     // contact: '.contact',
     purchases: '.purchases',
-    buttonSubmitApplication: 'button.submit-application'
+    buttonSubmitApplication: 'button.submit-application',
+    buttonAdminComplete: 'button.admin-complete'
   };
   dayTimeRangePO: DayTimeRangeViewPageObject;
   dateRangeViewPO: DateRangeViewPageObject;
@@ -30,4 +31,5 @@ export abstract class TourPlanViewPageObject extends PageObject {
   abstract expectVisible(): any;
   abstract expectValue(value: TheThing, options: any): void;
   abstract submitApplication(): void;
+  abstract adminComplete(): void;
 }

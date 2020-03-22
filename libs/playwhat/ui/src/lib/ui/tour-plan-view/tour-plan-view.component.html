@@ -5,6 +5,16 @@
         <mat-icon>send</mat-icon>
       </button>
     </div>
+    <div *ngIf="canComplete">
+      <button
+        mat-fab
+        class="admin-complete"
+        (click)="adminComplete()"
+        matTooltip="此遊程已完成，活動全部跑完"
+      >
+        <mat-icon>done_all</mat-icon>
+      </button>
+    </div>
   </div>
   <h1 class="tour-plan-name">{{ theThing.name }}</h1>
   <div *ngFor="let cell of requiredCells">

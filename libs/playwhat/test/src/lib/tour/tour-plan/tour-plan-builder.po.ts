@@ -118,7 +118,7 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
     if (!isEmpty(finalPurchases)) {
       const products = purchasePlays.concat(purchaseAdditions);
       const purchases: Purchase[] = products.map(p =>
-        Purchase.purchase(p, numParticipants)
+        Purchase.purchase(tourPlan, p, numParticipants)
       );
       this.cartEditorPO.expectPurchases(purchases);
       this.cartEditorPO.setPurchases(finalPurchases);
@@ -191,9 +191,6 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
   }
 
   fromRelations(relations: TheThingRelation[], things: TheThing[]): Purchase[] {
-    return relations.map(r => {
-      const product = find(things, t => t.id === r.objectId);
-      return Purchase.purchase(product, r.getCellValue(CellNameQuantity));
-    });
+    return relations.map(r => Purchase.fromRelation(r));
   }
 }

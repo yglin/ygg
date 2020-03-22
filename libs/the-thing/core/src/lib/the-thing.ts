@@ -4,21 +4,18 @@ import {
   sampleSize,
   sample,
   random,
-  range,
   remove,
   keyBy,
   isEmpty,
   mapValues,
-  uniq,
   omit,
   assign,
   pick,
-  values,
-  defaults,
-  pickBy
+  values
 } from 'lodash';
 import { Tags } from '@ygg/tags/core';
-import { TheThingCell, TheThingCellTypeID } from './cell';
+import { TheThingCell } from './cell';
+import { TheThingCellTypeID } from './cell-type';
 import { generateID, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 import { TheThingRelation } from './relation';
@@ -225,31 +222,39 @@ export class TheThing implements ImageThumbnailItem {
       );
     }
 
-    const relationName = args[0];
-    if (!(relationName in this.relations)) {
-      this.relations[relationName] = [];
-    }
-
-    if (args.length >= 2) {
-      let objectId: string;
-      if (typeof args[1] === 'string') {
-        objectId = args[1];
-      } else {
-        objectId = args[1].id;
+    if (args.length === 1 && TheThingRelation.isTheThingRelation(args[0])) {
+      const relation: TheThingRelation = args[0];
+      if (!(relation.name in this.relations)) {
+        this.relations[relation.name] = [];
+      }
+      this.relations[relation.name].push(relation);
+    } else {
+      const relationName = args[0];
+      if (!(relationName in this.relations)) {
+        this.relations[relationName] = [];
       }
 
-      let cells: TheThingCell[] = [];
-      if (args.length >= 3 && !isEmpty(args[2])) {
-        cells = args[2];
-      }
+      if (args.length >= 2) {
+        let objectId: string;
+        if (typeof args[1] === 'string') {
+          objectId = args[1];
+        } else {
+          objectId = args[1].id;
+        }
 
-      const newRelation = new TheThingRelation({
-        name: relationName,
-        subjectId: this.id,
-        objectId: objectId,
-        cells: keyBy(cells, 'name')
-      });
-      this.relations[relationName].push(newRelation);
+        let cells: TheThingCell[] = [];
+        if (args.length >= 3 && !isEmpty(args[2])) {
+          cells = args[2];
+        }
+
+        const newRelation = new TheThingRelation({
+          name: relationName,
+          subjectId: this.id,
+          objectId: objectId,
+          cells: keyBy(cells, 'name')
+        });
+        this.relations[relationName].push(newRelation);
+      }
     }
   }
 

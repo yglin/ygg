@@ -69,7 +69,7 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     if (tourPlan.hasRelation(RelationNamePurchase)) {
       const purchases = tourPlan.getRelations(RelationNamePurchase).map(r => {
         const product = find(options.things, t => t.id === r.objectId);
-        return Purchase.purchase(product, r.getCellValue(CellNameQuantity));
+        return Purchase.purchase(tourPlan, product, r.getCellValue(CellNameQuantity));
       });
       this.purchaseListPO.expectPurchases(purchases);
     }
@@ -77,5 +77,9 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
 
   submitApplication(): void {
     cy.get(this.getSelector('buttonSubmitApplication')).click();
+  }
+
+  adminComplete() {
+    cy.get(this.getSelector('buttonAdminComplete')).click();
   }
 }

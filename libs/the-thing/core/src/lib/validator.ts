@@ -1,7 +1,7 @@
 import { TheThing } from './the-thing';
 import { extend } from 'lodash';
-import { TheThingCell, TheThingCellDefine } from './cell';
 import { YGGError } from '@ygg/shared/infra/error';
+import { TheThingCellDefine } from './cell-define';
 
 export class TheThingValidateError extends YGGError {
   constructor(message: string, data: any) {

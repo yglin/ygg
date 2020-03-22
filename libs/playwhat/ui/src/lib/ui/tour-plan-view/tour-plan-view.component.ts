@@ -10,13 +10,21 @@ import { TheThing, TheThingCell, TheThingRelation } from '@ygg/the-thing/core';
 import { DateRange, DayTimeRange, Contact } from '@ygg/shared/omni-types/core';
 import { TheThingImitationViewInterface } from '@ygg/the-thing/ui';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { Subscription, Observable, BehaviorSubject, of, Subject } from 'rxjs';
+import {
+  Subscription,
+  Observable,
+  BehaviorSubject,
+  of,
+  Subject,
+  combineLatest
+} from 'rxjs';
 import { tap, switchMap, filter } from 'rxjs/operators';
 import { ImitationTourPlan, ApplicationState } from '@ygg/playwhat/core';
 import { pick, values } from 'lodash';
-import { RelationNamePurchase } from '@ygg/shopping/core';
+import { RelationNamePurchase, Purchase } from '@ygg/shopping/core';
 import { TourPlanService } from '../../tour-plan.service';
 import { ApplicationService } from '../../application.service';
+import { AuthenticateService, AuthorizeService } from '@ygg/shared/user';
 
 @Component({
   selector: 'ygg-tour-plan-view',
@@ -32,15 +40,18 @@ export class TourPlanViewComponent
   // dayTimeRange: DayTimeRange;
   // numParticipants: number;
   // contact: Contact;
-  purchases: TheThingRelation[] = [];
+  purchases: Purchase[] = [];
   requiredCells: TheThingCell[] = [];
   optionalCells: TheThingCell[] = [];
   subscriptions: Subscription[] = [];
   canSubmitApplication = false;
+  canComplete = false;
 
   constructor(
+    private authorizeService: AuthorizeService,
     private theThingAccessService: TheThingAccessService,
-    private applicationService: ApplicationService
+    private applicationService: ApplicationService,
+    private tourPlanService: TourPlanService
   ) {}
 
   ngOnInit() {
@@ -72,9 +83,11 @@ export class TourPlanViewComponent
               this.optionalCells = this.theThing.getCellsByNames(
                 ImitationTourPlan.getOptionalCellNames()
               );
-              this.purchases = this.theThing.getRelations(RelationNamePurchase);
-              
-              this.canSubmitApplication = !(this.theThing.getFlag(ApplicationState.InApplication));
+              this.purchases = this.theThing.getRelations(RelationNamePurchase).map(r => Purchase.fromRelation(r));
+
+              this.canSubmitApplication = !this.theThing.getFlag(
+                ApplicationState.InApplication
+              );
             }, 0);
           })
         )
@@ -83,6 +96,11 @@ export class TourPlanViewComponent
     if (this.theThing) {
       this.theThing$.next(this.theThing);
     }
+    this.subscriptions.push(
+      this.authorizeService.isAdmin().subscribe(isAdmin => {
+        this.canComplete = isAdmin;
+      })
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -92,6 +110,18 @@ export class TourPlanViewComponent
   ngOnDestroy() {
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
+    }
+  }
+
+  async adminComplete() {
+    const confirmMessage = `已確認此遊程所有款項已付清，活動已全部跑完，可以進入帳務結算？`;
+    if (confirm(confirmMessage)) {
+      try {
+        await this.tourPlanService.complete(this.theThing);
+        alert(`此遊程已全部完成`);
+      } catch (error) {
+        alert(`送出失敗，錯誤原因：${error.message}`);
+      }
     }
   }
 

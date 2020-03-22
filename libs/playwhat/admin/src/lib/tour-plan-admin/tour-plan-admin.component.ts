@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ImitationTourPlan } from '@ygg/playwhat/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { TheThing } from '@ygg/the-thing/core';
-import { TourPlanService } from "@ygg/playwhat/ui";
+import { TourPlanService } from '@ygg/playwhat/ui';
+import { TourPlanAdminPageObject } from './tour-plan-admin.component.po';
+import { IncomeRecord } from '@ygg/shopping/core';
+import { DateRange } from '@ygg/shared/omni-types/core';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'ygg-tour-plan-admin',
@@ -12,9 +16,16 @@ import { TourPlanService } from "@ygg/playwhat/ui";
 export class TourPlanAdminComponent implements OnInit {
   imitationTourPlan = ImitationTourPlan;
   tourPlans$: Observable<TheThing[]>;
-  
+  tabNames = TourPlanAdminPageObject.TabNames;
+  incomeRecords$: Observable<IncomeRecord[]>;
+  dateRange$: BehaviorSubject<DateRange>;
+
   constructor(private tourPlanService: TourPlanService) {
     this.tourPlans$ = this.tourPlanService.listInApplication$();
+    this.dateRange$ = new BehaviorSubject(DateRange.thisMonth());
+    this.incomeRecords$ = this.dateRange$.pipe(
+      switchMap(dateRange => this.tourPlanService.listIncomeRecords$(dateRange))
+    );
   }
 
   ngOnInit() {}

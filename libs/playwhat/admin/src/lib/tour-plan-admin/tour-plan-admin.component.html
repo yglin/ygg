@@ -1,3 +1,29 @@
-<div class='tour-plan-admin'>
-  <the-thing-data-table [imitation]="imitationTourPlan" [theThings$]='tourPlans$'></the-thing-data-table>
+<div class="tour-plan-admin">
+  <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label
+        ><div class="tab-header" [attr.tab-name]="tabNames.inApplication">
+          <h3>{{ tabNames.inApplication }}</h3>
+        </div></ng-template
+      >
+      <div class="tab-content" [attr.tab-name]="tabNames.inApplication">
+        <the-thing-data-table
+          [imitation]="imitationTourPlan"
+          [theThings$]="tourPlans$"
+        ></the-thing-data-table>
+      </div>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <div class="tab-header" [attr.tab-name]="tabNames.incomeRecords">
+          <h3>{{ tabNames.incomeRecords }}</h3>
+        </div>
+      </ng-template>
+      <div class="tab-content" [attr.tab-name]="tabNames.incomeRecords">
+        <ygg-income-data-table
+          [incomeRecords$]="incomeRecords$"
+        ></ygg-income-data-table>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

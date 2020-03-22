@@ -1,11 +1,68 @@
-import { TheThingDataTablePageObject } from '@ygg/the-thing/ui';
-import { TheThing } from '@ygg/the-thing/core';
+import {
+  TheThingDataTablePageObject,
+  TheThingDataRowPageObject
+} from '@ygg/the-thing/ui';
+import {
+  TheThing,
+  TheThingImitation,
+  DataTableColumnConfig
+} from '@ygg/the-thing/core';
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
 import { timeout } from 'rxjs/operators';
+import { values } from 'lodash';
+import { TheThingCellViewPageObjectCypress } from '../cell/cell-view.po';
+
+export class TheThingDataRowPageObjectCypress extends TheThingDataRowPageObject {
+  imitation: TheThingImitation;
+
+  constructor(
+    parentSelector: string = '',
+    imitation: TheThingImitation = null
+  ) {
+    super(parentSelector);
+    this.imitation = imitation;
+  }
+
+  expectValue(theThing: TheThing) {
+    cy.get(this.getSelectorForColumn('name')).contains(theThing.name);
+    if (this.imitation) {
+      cy.wrap(values(this.imitation.dataTableConfig.columns)).each(
+        (columnConfig: any) => {
+          columnConfig = columnConfig as DataTableColumnConfig;
+          switch (columnConfig.valueSource) {
+            case 'function':
+              const value = columnConfig.valueFunc(theThing);
+              cy.get(this.getSelectorForColumn(columnConfig.name)).contains(
+                value.toString()
+              );
+              break;
+            default:
+              const cell = theThing.getCell(columnConfig.name);
+              const cellViewPO = new TheThingCellViewPageObjectCypress(
+                this.getSelectorForColumn(columnConfig.name)
+              );
+              cellViewPO.expectValue(cell);
+              break;
+          }
+        }
+      );
+    }
+  }
+}
 
 export class TheThingDataTablePageObjectCypress
   extends TheThingDataTablePageObject
   implements PageObjectCypress {
+  imitation: TheThingImitation;
+
+  constructor(
+    parentSelector: string = '',
+    imitation: TheThingImitation = null
+  ) {
+    super(parentSelector);
+    this.imitation = imitation;
+  }
+
   expectVisible(): Cypress.Chainable<any> {
     return cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
   }
@@ -18,9 +75,11 @@ export class TheThingDataTablePageObjectCypress
 
   expectTheThing(theThing: TheThing) {
     this.setSearchText(theThing.name);
-    cy.get(`${this.getSelector()}`)
-      .contains('td.name', theThing.name)
-      .should('exist');
+    const theThingDataRowPO = new TheThingDataRowPageObjectCypress(
+      this.getSelectorForTheThing(theThing),
+      this.imitation
+    );
+    theThingDataRowPO.expectValue(theThing);
   }
 
   expectNotTheThing(theThing: TheThing) {
@@ -55,7 +114,10 @@ export class TheThingDataTablePageObjectCypress
   }
 
   gotoTheThingEdit(theThing: TheThing) {
-    cy.get(this.getSelector()).contains('tr.row', theThing.name).find('button.edit').click();
+    cy.get(this.getSelector())
+      .contains('tr.row', theThing.name)
+      .find('button.edit')
+      .click();
   }
 
   expectFirst(theThing: TheThing) {

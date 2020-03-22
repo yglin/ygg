@@ -11,6 +11,8 @@ import { TheThingUiModule } from '@ygg/the-thing/ui';
 import { AdditionViewComponent } from './addition/addition-view/addition-view.component';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { ImitationProduct } from '@ygg/shopping/core';
+import { IncomeRecordDataTableComponent } from './accounting/income-data-table/income-data-table.component';
+import { SharedUserModule } from '@ygg/shared/user';
 // import { PurchaseControlComponent } from './purchase/purchase-control/purchase-control.component';
 
 @NgModule({
@@ -19,6 +21,7 @@ import { ImitationProduct } from '@ygg/shopping/core';
     FormsModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
+    SharedUserModule,
     TheThingUiModule
   ],
   declarations: [
@@ -26,13 +29,15 @@ import { ImitationProduct } from '@ygg/shopping/core';
     // ProductThumbnailComponent,
     // PurchaseThumbnailComponent,
     ShoppingCartEditorComponent,
-    AdditionViewComponent
+    AdditionViewComponent,
+    IncomeRecordDataTableComponent
     // PurchaseControlComponent
   ],
   exports: [
     PurchaseListComponent,
     ShoppingCartEditorComponent,
-    AdditionViewComponent
+    AdditionViewComponent,
+    IncomeRecordDataTableComponent
     // PurchaseControlComponent
   ],
   entryComponents: [

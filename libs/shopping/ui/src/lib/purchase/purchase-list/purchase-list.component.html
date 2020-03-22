@@ -8,15 +8,15 @@
         fxLayout="row"
         fxLayoutAlign="space-around center"
         fxLayoutGap="30px"
-        [attr.product-id]="purchase.objectId"
+        [attr.product-id]="purchase.productId"
       >
         <div>
           <ygg-image-thumbnail
-            [item$]="theThingAccessService.get$(purchase.objectId)"
+            [item$]="theThingAccessService.get$(purchase.productId)"
           ></ygg-image-thumbnail>
         </div>
         <div>
-          {{ CellNameQuantity }} x <span class="quantity">{{ purchase.getCellValue(CellNameQuantity) }}</span>
+          {{ CellNameQuantity }} x <span class="quantity">{{ purchase.quantity }}</span>
         </div>
       </div>
       <div *ngIf="!isLast">
