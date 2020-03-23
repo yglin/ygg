@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TheThingImitation, TheThing } from '@ygg/the-thing/core';
+import { TheThingImitation, TheThing, TheThingFilter } from '@ygg/the-thing/core';
 import { Observable, Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
@@ -31,6 +31,7 @@ export class MyThingsDataTableComponent implements OnInit {
     }
     if (this.imitation && this.authService.currentUser) {
       const filterMy = this.imitation.filter.clone();
+      // const filterMy = new TheThingFilter();
       filterMy.ownerId = this.authService.currentUser.id;
       // console.dir(filterMy);
       this.theThings$ = this.theThingAccessService.listByFilter$(filterMy);

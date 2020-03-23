@@ -1,6 +1,6 @@
 import { sampleSize } from 'lodash';
 import { MockDatabase, login, getCurrentUser } from '@ygg/shared/test/cypress';
-import { TourPlanInApplication } from './sample-tour-plan';
+import { TourPlanInApplication, TourPlanPaid, TourPlanCompleted } from './sample-tour-plan';
 import { SamplePlays, SampleAdditions } from '../play/sample-plays';
 import { MyThingsPageObjectCypress } from '@ygg/the-thing/test';
 import {
@@ -13,19 +13,21 @@ import { TheThing } from '@ygg/the-thing/core';
 import {
   Purchase,
   RelationNamePurchase,
-  IncomeRecord
+  IncomeRecord,
+  ImitationOrder
 } from '@ygg/shopping/core';
 import { TourPlanAdminPageObject } from '@ygg/playwhat/admin';
 
 let mockDatabase: MockDatabase;
 const siteNavigator = new SiteNavigator();
-const SampleTourPlans = [TourPlanInApplication];
+const SampleTourPlans = [TourPlanInApplication, TourPlanPaid];
 const SampleThings = SamplePlays.concat(SampleAdditions).concat(
   SampleTourPlans
 );
 
 const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();
 const tourPlanView = new TourPlanViewPageObjectCypress();
+let incomeRecord: IncomeRecord;
 
 describe('Tour-plan administration', () => {
   before(() => {
@@ -38,6 +40,16 @@ describe('Tour-plan administration', () => {
           thing.toJSON()
         );
       });
+
+      const purchases: Purchase[] = TourPlanCompleted.getRelations(
+        RelationNamePurchase
+      ).map(r => Purchase.fromRelation(r));
+
+      incomeRecord = new IncomeRecord({
+        producerId: user.id,
+        purchases: purchases
+      });
+
       cy.visit('/');
     });
   });
@@ -57,23 +69,40 @@ describe('Tour-plan administration', () => {
     mockDatabase.restoreRTDB();
   });
 
-  it('Completed tour-plan should generate income record', () => {
-    const purchases: Purchase[] = TourPlanInApplication.getRelations(
-      RelationNamePurchase
-    ).map(r => Purchase.fromRelation(r));
-    getCurrentUser().then(user => {
-      const ir = new IncomeRecord({
-        producerId: user.id,
-        purchases: purchases
-      });
+  it('Approve tour-plan as paid by set it state Paid', () => {
+    tourPlanAdminPO.switchToTab(ImitationOrder.states.applied.name);
+    tourPlanAdminPO.inApplicationsDataTablePO.gotoTheThingView(
+      TourPlanInApplication
+    );
+    tourPlanView.expectVisible();
+    tourPlanView.adminPaid();
+    siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
+    tourPlanAdminPO.switchToTab(ImitationOrder.states.applied.name);
+    tourPlanAdminPO.inApplicationsDataTablePO.expectNotTheThing(
+      TourPlanInApplication
+    );
+    tourPlanAdminPO.switchToTab(ImitationOrder.states.paid.name);
+    tourPlanAdminPO.paidDataTablePO.expectVisible();
+    tourPlanAdminPO.paidDataTablePO.expectTheThing(TourPlanInApplication);
+  });
 
-      tourPlanAdminPO.gotoView(TourPlanInApplication);
-      tourPlanView.expectVisible();
-      tourPlanView.adminComplete();
-      siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
-      tourPlanAdminPO.switchToTab(TourPlanAdminPageObject.TabNames.incomeRecords);
-      tourPlanAdminPO.incomeDataTablePO.expectVisible();
-      tourPlanAdminPO.incomeDataTablePO.expectRecord(ir);
-    });
+  it('Complete tour-plan to set it state Completed', () => {
+    tourPlanAdminPO.switchToTab(ImitationOrder.states.paid.name);
+    tourPlanAdminPO.paidDataTablePO.gotoTheThingView(TourPlanPaid);
+    tourPlanView.expectVisible();
+    tourPlanView.adminComplete();
+    siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
+    tourPlanAdminPO.switchToTab(ImitationOrder.states.paid.name);
+    tourPlanAdminPO.paidDataTablePO.expectNotTheThing(TourPlanPaid);
+    tourPlanAdminPO.switchToTab(ImitationOrder.states.completed.name);
+    tourPlanAdminPO.completedDataTablePO.expectVisible();
+    tourPlanAdminPO.completedDataTablePO.expectTheThing(TourPlanPaid);
+  });
+
+  it('Completed tour-plan should generate income record', () => {
+    siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
+    tourPlanAdminPO.switchToTab(TourPlanAdminPageObject.TabNames.incomeRecords);
+    tourPlanAdminPO.incomeDataTablePO.expectVisible();
+    tourPlanAdminPO.incomeDataTablePO.expectRecord(incomeRecord);
   });
 });

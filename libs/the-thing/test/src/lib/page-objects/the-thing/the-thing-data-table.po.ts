@@ -84,9 +84,7 @@ export class TheThingDataTablePageObjectCypress
 
   expectNotTheThing(theThing: TheThing) {
     this.setSearchText(theThing.name);
-    cy.get(`${this.getSelector()} tr`)
-      .contains(theThing.name)
-      .should('not.exist');
+    cy.get(this.getSelectorForTheThing(theThing)).should('not.exist');
   }
 
   expectNotEmpty() {
@@ -108,9 +106,8 @@ export class TheThingDataTablePageObjectCypress
   }
 
   gotoTheThingView(theThing: TheThing) {
-    cy.get(`${this.getSelector()} tr`)
-      .contains(theThing.name)
-      .click();
+    this.setSearchText(theThing.name);
+    cy.get(this.getSelectorForTheThing(theThing)).click();
   }
 
   gotoTheThingEdit(theThing: TheThing) {

@@ -5,15 +5,30 @@
         <mat-icon>send</mat-icon>
       </button>
     </div>
-    <div *ngIf="canComplete">
-      <button
-        mat-fab
-        class="admin-complete"
-        (click)="adminComplete()"
-        matTooltip="此遊程已完成，活動全部跑完"
-      >
-        <mat-icon>done_all</mat-icon>
-      </button>
+    <div *ngIf="isAdmin">
+      <div [ngSwitch]="state">
+        <div *ngSwitchCase="states.applied">
+          <button
+            mat-fab
+            class="admin-paid"
+            (click)="adminPaid()"
+            matTooltip="標記此遊程已付款完成"
+          >
+            <mat-icon>payment</mat-icon>
+          </button>
+        </div>
+        <div *ngSwitchCase="states.paid">
+          <button
+            mat-fab
+            class="admin-complete"
+            (click)="adminComplete()"
+            matTooltip="標記此遊程已全部完成"
+          >
+            <mat-icon>done_all</mat-icon>
+          </button>
+        </div>
+        <div *ngSwitchDefault></div>
+      </div>
     </div>
   </div>
   <h1 class="tour-plan-name">{{ theThing.name }}</h1>

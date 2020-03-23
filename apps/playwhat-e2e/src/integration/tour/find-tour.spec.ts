@@ -6,7 +6,7 @@ import { SiteNavigator } from '@ygg/playwhat/test';
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
 
 const siteNavigator = new SiteNavigator();
-const mockDatabase = new MockDatabase();
+let mockDatabase: MockDatabase;
 const sampleTour = new TheThing().fromJSON(SampleTourJSON.tour);
 const plays = SampleTourJSON.plays.map(playJSON =>
   new TheThing().fromJSON(playJSON)
@@ -15,6 +15,7 @@ const relationPlay = '體驗';
 
 describe('Find tours in my things', () => {
   before(() => {
+    mockDatabase = new MockDatabase();
     login().then(user => {
       sampleTour.addRelations(relationPlay, plays);
 

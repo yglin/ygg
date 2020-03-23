@@ -17,11 +17,12 @@ import {
   RelationNamePurchase,
   CellNameQuantity,
   RelationAddition,
-  Purchase
+  Purchase,
+  ImitationOrder
 } from '@ygg/shopping/core';
-import { ApplicationState } from '@ygg/playwhat/core';
+import { ApplicationState, ImitationTourPlan } from '@ygg/playwhat/core';
 
-export const TourPlanTemplate = new TheThing().fromJSON({
+export const TourPlanTemplate = ImitationTourPlan.createTheThing().fromJSON({
   tags: ['tour', 'tour-plan', 'schedule', '遊程計畫'],
   name: '遊程計畫名稱',
   imitation: 'tour-plan',
@@ -46,8 +47,7 @@ export const TourPlanTemplate = new TheThing().fromJSON({
 });
 
 const dateRange = DateRange.forge();
-export const MinimalTourPlan = new TheThing().fromJSON({
-  tags: ['tour-plan', '遊程規劃'],
+export const MinimalTourPlan = ImitationTourPlan.createTheThing().fromJSON({
   name: `測試遊程(最少需求資料)`,
   view: 'tour-plan',
   cells: [
@@ -114,16 +114,16 @@ TourPlanFull.addCells(
   ].map(cellData => new TheThingCell().fromJSON(cellData))
 );
 
-export const TourPlanFullWithPlays = TourPlanFull.clone();
-TourPlanFullWithPlays.name = '測試遊程(完整資料欄位＋預訂體驗)';
-for (const play of SamplePlays) {
-  const purchase = Purchase.purchase(
-    TourPlanFullWithPlays,
-    play,
-    random(10, 50)
-  );
-  TourPlanFullWithPlays.addRelation(purchase.toRelation());
-}
+// export const TourPlanFullWithPlays = TourPlanFull.clone();
+// TourPlanFullWithPlays.name = '測試遊程(完整資料欄位＋預訂體驗)';
+// for (const play of SamplePlays) {
+//   const purchase = Purchase.purchase(
+//     TourPlanFullWithPlays,
+//     play,
+//     random(10, 50)
+//   );
+//   TourPlanFullWithPlays.addRelation(purchase.toRelation());
+// }
 
 export const TourPlanWithPlaysNoAddition = MinimalTourPlan.clone();
 for (const play of PlaysWithoutAddition) {
@@ -162,4 +162,12 @@ TourPlanWithPlaysAndAdditions.name = '測試遊程(預訂體驗, 有加購項目
 
 export const TourPlanInApplication = TourPlanWithPlaysAndAdditions.clone();
 TourPlanInApplication.name = '測試遊程(預訂體驗, 有加購項目，已提交申請)';
-TourPlanInApplication.setFlag(ApplicationState.InApplication, true);
+TourPlanInApplication.setState(ImitationOrder.stateName, ImitationOrder.states.applied);
+
+export const TourPlanPaid = TourPlanInApplication.clone();
+TourPlanPaid.name = '測試遊程(預訂體驗, 有加購項目，已付款完成)';
+TourPlanPaid.setState(ImitationOrder.stateName, ImitationOrder.states.paid);
+
+export const TourPlanCompleted = TourPlanPaid.clone();
+TourPlanCompleted.name = '測試遊程(預訂體驗, 有加購項目，已全部完成)';
+TourPlanCompleted.setState(ImitationOrder.stateName, ImitationOrder.states.completed);

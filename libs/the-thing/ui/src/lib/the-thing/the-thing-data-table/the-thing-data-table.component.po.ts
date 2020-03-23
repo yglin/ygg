@@ -28,6 +28,7 @@ export abstract class TheThingDataTablePageObject extends PageObject {
     return `${this.getSelector()} tr:contains("${theThing.name}")`;
   }
 
+  abstract expectVisible(): void;
   abstract expectTheThing(
     theThing: TheThing,
     imitation?: TheThingImitation

@@ -211,8 +211,8 @@ export class TourPlanBuilderComponent
             //   ]
             // );
           }
-          console.log('Update purchases');
-          console.dir(this.theThing.toJSON());
+          // console.log('Update purchases');
+          // console.dir(this.theThing.toJSON());
           break;
         case startIndex + 3:
           this.theThing.name = this.forthFormGroup.get('name').value;

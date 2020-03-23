@@ -12,10 +12,11 @@ import { samplePlays, sampleTour } from '../tour/sample-tour-birb';
 // import { TemplateTour } from '@ygg/playwhat/core';
 
 const siteNavigator = new SiteNavigator();
-const mockDatabase = new MockDatabase();
+let mockDatabase: MockDatabase;
 
 describe('Manage content in home page', () => {
   before(() => {
+    mockDatabase = new MockDatabase();
     login().then(user => {
       const things = [...samplePlays, sampleTour];
       cy.wrap(things).each((thing: any) => {

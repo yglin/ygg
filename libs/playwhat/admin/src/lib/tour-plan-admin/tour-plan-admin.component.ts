@@ -4,9 +4,10 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { TheThing } from '@ygg/the-thing/core';
 import { TourPlanService } from '@ygg/playwhat/ui';
 import { TourPlanAdminPageObject } from './tour-plan-admin.component.po';
-import { IncomeRecord } from '@ygg/shopping/core';
+import { IncomeRecord, ImitationOrder } from '@ygg/shopping/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import { switchMap } from 'rxjs/operators';
+import { TheThingAccessService } from '@ygg/the-thing/data-access';
 
 @Component({
   selector: 'ygg-tour-plan-admin',
@@ -15,14 +16,38 @@ import { switchMap } from 'rxjs/operators';
 })
 export class TourPlanAdminComponent implements OnInit {
   imitationTourPlan = ImitationTourPlan;
-  tourPlans$: Observable<TheThing[]>;
+  // tourPlansByState$: { [stateName: string]: Observable<TheThing[]> } = {};
   tabNames = TourPlanAdminPageObject.TabNames;
   incomeRecords$: Observable<IncomeRecord[]>;
   dateRange$: BehaviorSubject<DateRange>;
+  stateConfigs: {
+    name: string;
+    label: string;
+    theThings$: Observable<TheThing[]>;
+  }[] = [];
 
-  constructor(private tourPlanService: TourPlanService) {
-    this.tourPlans$ = this.tourPlanService.listInApplication$();
+  constructor(
+    private tourPlanService: TourPlanService,
+    private theThingAccessService: TheThingAccessService
+  ) {
     this.dateRange$ = new BehaviorSubject(DateRange.thisMonth());
+    this.stateConfigs = ['applied', 'paid', 'completed'].map(name => {
+      const filter = ImitationTourPlan.filter.clone();
+      filter.addState(
+        ImitationOrder.stateName,
+        ImitationOrder.states[name].value
+      );
+      const stateConfig = {
+        name,
+        label: ImitationOrder.states[name].label,
+        theThings$: this.dateRange$.pipe(
+          switchMap(dateRange =>
+            this.theThingAccessService.listByFilter$(filter)
+          )
+        )
+      };
+      return stateConfig;
+    });
     this.incomeRecords$ = this.dateRange$.pipe(
       switchMap(dateRange => this.tourPlanService.listIncomeRecords$(dateRange))
     );

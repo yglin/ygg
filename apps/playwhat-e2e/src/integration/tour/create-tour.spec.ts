@@ -10,7 +10,7 @@ import {
 import { TourViewPageObjectCypress, SiteNavigator } from '@ygg/playwhat/test';
 
 const siteNavigator = new SiteNavigator();
-const mockDatabase = new MockDatabase();
+let mockDatabase: MockDatabase;
 const sampleTour = new TheThing().fromJSON(SampleTourJSON.tour);
 const plays = SampleTourJSON.plays.map(playJSON =>
   new TheThing().fromJSON(playJSON)
@@ -19,6 +19,7 @@ const relationPlay = '體驗';
 
 describe('Create a tour composed of plays', () => {
   before(() => {
+    mockDatabase = new MockDatabase();
     login().then(user => {
       cy.wrap(plays).each((play: any) => {
         play.ownerId = user.id;

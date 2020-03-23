@@ -1,15 +1,15 @@
 <div class="tour-plan-admin">
   <mat-tab-group>
-    <mat-tab>
+    <mat-tab *ngFor="let stateConfig of stateConfigs">
       <ng-template mat-tab-label
-        ><div class="tab-header" [attr.tab-name]="tabNames.inApplication">
-          <h3>{{ tabNames.inApplication }}</h3>
+        ><div class="tab-header" [attr.tab-name]="stateConfig.name">
+          <h3>{{ stateConfig.label }}</h3>
         </div></ng-template
       >
-      <div class="tab-content" [attr.tab-name]="tabNames.inApplication">
+      <div class="tab-content" [attr.tab-name]="stateConfig.name">
         <the-thing-data-table
           [imitation]="imitationTourPlan"
-          [theThings$]="tourPlans$"
+          [theThings$]="stateConfig.theThings$"
         ></the-thing-data-table>
       </div>
     </mat-tab>

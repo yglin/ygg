@@ -3,7 +3,7 @@ import { MockDatabase, login } from '@ygg/shared/test/cypress';
 import {
   MinimalTourPlan,
   TourPlanFull,
-  TourPlanFullWithPlays,
+  // TourPlanFullWithPlays,
   MinimalTourPlanWithoutName,
   TourPlanWithPlaysNoAddition,
   TourPlanWithPlaysAndAdditions
@@ -26,13 +26,14 @@ let mockDatabase: MockDatabase;
 const siteNavigator = new SiteNavigator();
 const selectPlays = sampleSize(SamplePlays, 2);
 let tourPlanWithPlays: TheThing;
-const SampleTourPlans = [
-  MinimalTourPlan.clone(),
-  TourPlanFullWithPlays.clone()
-];
-const SampleThings = SamplePlays.concat(SampleAdditions).concat(
-  SampleTourPlans
-);
+// const SampleTourPlans = [
+//   MinimalTourPlan.clone(),
+//   TourPlanFullWithPlays.clone()
+// ];
+const SampleThings = SamplePlays.concat(SampleAdditions);
+// .concat(
+//   SampleTourPlans
+// );
 
 const tourPlanBuilderPO = new TourPlanBuilderPageObjectCypress();
 const tourPlanViewPO = new TourPlanViewPageObjectCypress();
@@ -71,83 +72,83 @@ describe('Tour-plan builder', () => {
     mockDatabase.restoreRTDB();
   });
 
-  // it('A tour-plan without user input name should have default name', () => {
-  //   tourPlanBuilderPO.setValue(MinimalTourPlanWithoutName, {
-  //     things: SampleThings
-  //   });
-  // });
+  it('A tour-plan without user input name should have default name', () => {
+    tourPlanBuilderPO.setValue(MinimalTourPlanWithoutName, {
+      things: SampleThings
+    });
+  });
 
-  // it('Build a tour-plan with minimal required data fields: dateRange, numParticipants, contact', () => {
-  //   tourPlanBuilderPO.setValue(MinimalTourPlan, {
-  //     things: SampleThings
-  //   });
-  //   tourPlanBuilderPO.submit();
+  it('Build a tour-plan with minimal required data fields: dateRange, numParticipants, contact', () => {
+    tourPlanBuilderPO.setValue(MinimalTourPlan, {
+      things: SampleThings
+    });
+    tourPlanBuilderPO.submit();
 
-  //   // Expect redirect to tour-plan view page, and check required data fields
-  //   tourPlanViewPO.expectVisible();
-  //   tourPlanViewPO.expectValue(MinimalTourPlan, {
-  //     things: SampleThings
-  //   });
-  // });
+    // Expect redirect to tour-plan view page, and check required data fields
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectValue(MinimalTourPlan, {
+      things: SampleThings
+    });
+  });
 
-  // it('Build a tour-plan plus includes all optional data fields', () => {
-  //   tourPlanBuilderPO.setValue(TourPlanFull, {
-  //     things: SampleThings
-  //   });
-  //   tourPlanBuilderPO.submit();
+  it('Build a tour-plan plus includes all optional data fields', () => {
+    tourPlanBuilderPO.setValue(TourPlanFull, {
+      things: SampleThings
+    });
+    tourPlanBuilderPO.submit();
 
-  //   // Expect redirect to tour-plan view page, and check required data fields
-  //   tourPlanViewPO.expectVisible();
-  //   tourPlanViewPO.expectValue(TourPlanFull, {
-  //     things: SampleThings
-  //   });
-  // });
+    // Expect redirect to tour-plan view page, and check required data fields
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectValue(TourPlanFull, {
+      things: SampleThings
+    });
+  });
 
-  // it('Build a tour-plan with a few plays selected', () => {
-  //   tourPlanBuilderPO.setValue(TourPlanWithPlaysNoAddition, {
-  //     things: SampleThings
-  //   });
-  //   tourPlanBuilderPO.submit();
+  it('Build a tour-plan with a few plays selected', () => {
+    tourPlanBuilderPO.setValue(TourPlanWithPlaysNoAddition, {
+      things: SampleThings
+    });
+    tourPlanBuilderPO.submit();
 
-  //   // Expect redirect to tour-plan view page, and check selected plays
-  //   tourPlanViewPO.expectVisible();
-  //   tourPlanViewPO.expectValue(TourPlanWithPlaysNoAddition, {
-  //     things: SampleThings
-  //   });
-  // });
+    // Expect redirect to tour-plan view page, and check selected plays
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectValue(TourPlanWithPlaysNoAddition, {
+      things: SampleThings
+    });
+  });
 
-  // it('Build a tour-plan with a few plays selected, and setup additions', () => {
-  //   tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions, {
-  //     things: SampleThings
-  //   });
-  //   tourPlanBuilderPO.submit();
+  it('Build a tour-plan with a few plays selected, and setup additions', () => {
+    tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions, {
+      things: SampleThings
+    });
+    tourPlanBuilderPO.submit();
 
-  //   // Expect redirect to tour-plan view page, and check selected plays
-  //   tourPlanViewPO.expectVisible();
-  //   tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions, {
-  //     things: SampleThings
-  //   });
-  // });
+    // Expect redirect to tour-plan view page, and check selected plays
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions, {
+      things: SampleThings
+    });
+  });
 
-  // it('Save tour-plan on leave page, restore on back', () => {
-  //   tourPlanBuilderPO.setValue(TourPlanFullWithPlays, {
-  //     things: SampleThings
-  //   });
-  //   // goto other page and back immediately
-  //   const myThingsPO = new MyThingsDataTablePageObjectCypress();
-  //   siteNavigator.goto(['tour-plans', 'my'], myThingsPO);
-  //   siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
+  it('Save tour-plan on leave page, restore on back', () => {
+    tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions, {
+      things: SampleThings
+    });
+    // goto other page and back immediately
+    const myThingsPO = new MyThingsDataTablePageObjectCypress();
+    siteNavigator.goto(['tour-plans', 'my'], myThingsPO);
+    siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
 
-  //   tourPlanBuilderPO.reset();
-  //   tourPlanBuilderPO.skipToFinalStep();
-  //   tourPlanBuilderPO.submit();
+    tourPlanBuilderPO.reset();
+    tourPlanBuilderPO.skipToFinalStep();
+    tourPlanBuilderPO.submit();
 
-  //   // Expect redirect to tour-plan view page, and check selected plays
-  //   tourPlanViewPO.expectVisible();
-  //   tourPlanViewPO.expectValue(TourPlanFullWithPlays, {
-  //     things: SampleThings
-  //   });
-  // });
+    // Expect redirect to tour-plan view page, and check selected plays
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions, {
+      things: SampleThings
+    });
+  });
 
   it('Build a tour-plan and send it for application', () => {
     tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions, {

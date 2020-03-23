@@ -6,7 +6,8 @@ import {
   mapValues,
   get,
   isArray,
-  keyBy
+  keyBy,
+  clone
 } from 'lodash';
 import {
   generateID,
@@ -26,6 +27,7 @@ import { Tags } from '@ygg/tags/core';
 import { RelationDef } from './relation-def';
 import { TheThingCellDefine } from './cell-define';
 import { TheThingCellComparator, TheThingCellTypes } from './cell-type';
+import { TheThingState } from './state';
 
 export const ImitationsDataPath = 'the-thing/imitations';
 
@@ -45,6 +47,8 @@ export interface DataTableConfig {
   };
 }
 
+type TheThingCreator = (thing: TheThing) => TheThing;
+
 export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   id: string;
   name: string;
@@ -60,9 +64,16 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   validators: TheThingValidator[] = [];
   relationsDef: { [name: string]: RelationDef } = {};
   valueFunctions: { [name: string]: ValueFunction } = {};
+  stateName: string;
+  states: { [name: string]: TheThingState };
+  creators: TheThingCreator[] = [];
 
   /** Create time */
   createAt: number;
+
+  static isTheThingImitation(value: any): value is TheThingImitation {
+    return !!(value && value.id && value.cellsDef && typeof value.createTheThing === 'function');
+  }
 
   constructor(options: any = {}) {
     this.id = generateID();
@@ -82,7 +93,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   }
 
   createTheThing(): TheThing {
-    const theThing = new TheThing();
+    let theThing = new TheThing();
     if (this.filter && this.filter.tags) {
       theThing.tags = new Tags(this.filter.tags);
     }
@@ -96,6 +107,11 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     for (const name in this.relationsDef) {
       if (this.relationsDef.hasOwnProperty(name)) {
         theThing.addRelation(name);
+      }
+    }
+    if (!isEmpty(this.creators)) {
+      for (const creator of this.creators) {
+        theThing = creator(theThing);
       }
     }
     return theThing;
@@ -156,6 +172,32 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     return this.hasRelationDef(relationName)
       ? this.relationsDef[relationName]
       : null;
+  }
+
+  /**
+   * Create a new imitation extends the difinitions of this imitation
+   *
+   * @param data JSON data, the new difinitions, override properies of this
+   */
+  extend(imitation: any = {}): TheThingImitation {
+    if (!TheThingImitation.isTheThingImitation(imitation)) {
+      imitation = new TheThingImitation().fromJSON(imitation);
+    }
+    imitation.cellsDef = extend({}, this.cellsDef, imitation.cellsDef);
+    imitation.relationsDef = extend(
+      {},
+      this.relationsDef,
+      imitation.relationsDef
+    );
+    imitation.valueFunctions = extend(
+      {},
+      this.valueFunctions,
+      imitation.valueFunctions
+    );
+    imitation.creators = [...this.creators, ...imitation.creators];
+    imitation.validators = [...this.validators, ...imitation.validators];
+    imitation.filter = this.filter.merge(imitation.filter);
+    return imitation;
   }
 
   fromJSON(data: any = {}): this {

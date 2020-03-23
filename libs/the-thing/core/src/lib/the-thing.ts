@@ -19,6 +19,7 @@ import { TheThingCellTypeID } from './cell-type';
 import { generateID, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 import { TheThingRelation } from './relation';
+import { TheThingState } from './state';
 
 export class TheThing implements ImageThumbnailItem {
   static collection = 'the-things';
@@ -72,6 +73,11 @@ export class TheThing implements ImageThumbnailItem {
    * Boolean flags for combination of complex state
    */
   flags: { [name: string]: boolean } = {};
+
+  /**
+   * State indicators for several imitation states
+   */
+  states: { [name: string]: number } = {};
 
   static forge(options: any = {}): TheThing {
     const thing = new TheThing();
@@ -373,6 +379,18 @@ export class TheThing implements ImageThumbnailItem {
 
   getFlag(name: string): boolean {
     return name in this.flags ? this.flags[name] : false;
+  }
+
+  setState(name: string, state: TheThingState) {
+    this.states[name] = state.value;
+  }
+
+  getState(name: string): number {
+    return (name in this.states) ? this.states[name] : -1;
+  }
+
+  isState(name:string, value: number): boolean {
+    return this.getState(name) === value;
   }
 
   fromJSON(data: any): this {

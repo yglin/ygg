@@ -1,6 +1,10 @@
-import { sampleSize, values, pick, sum, sumBy, random, find } from 'lodash';
+// import { sampleSize, values, pick, sum, sumBy, random, find } from 'lodash';
 import { MockDatabase, login } from '@ygg/shared/test/cypress';
-import { MinimalTourPlan, TourPlanFullWithPlays } from './sample-tour-plan';
+import {
+  MinimalTourPlan,
+  TourPlanFull,
+  TourPlanWithPlaysAndAdditions
+} from './sample-tour-plan';
 import { SamplePlays, SampleAdditions } from '../play/sample-plays';
 import {
   MyThingsDataTablePageObjectCypress,
@@ -14,7 +18,7 @@ import { SiteNavigator } from '@ygg/playwhat/test';
 import { TheThing } from '@ygg/the-thing/core';
 
 describe('Edit exist tour-plans from my-tour-plans page', () => {
-  const mockDatabase = new MockDatabase();
+  let mockDatabase: MockDatabase;
   const siteNavigator = new SiteNavigator();
   const SampleTourPlans = [MinimalTourPlan];
   const SampleThings = SamplePlays.concat(SampleAdditions).concat(
@@ -26,6 +30,7 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
   const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
 
   before(() => {
+    mockDatabase = new MockDatabase();
     login().then(user => {
       cy.wrap(SampleThings).each((thing: any) => {
         thing.ownerId = user.id;
@@ -38,7 +43,13 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     });
   });
 
-  beforeEach(() => {});
+  beforeEach(() => {
+    // Reset MinimalTourPlan
+    mockDatabase.insert(
+      `${TheThing.collection}/${MinimalTourPlan.id}`,
+      MinimalTourPlan.toJSON()
+    );
+  });
 
   after(() => {
     // Goto my-things page and delete all test things
@@ -53,6 +64,7 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
 
   it('Click edit button in my-tour-plans page, should goto tour-plan-builder', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    // cy.pause();
     myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
     myTourPlansPO.theThingDataTablePO.gotoTheThingEdit(MinimalTourPlan);
     tourPlanBuilderPO.expectVisible();
@@ -69,10 +81,27 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     myTourPlansPO.theThingDataTablePO.gotoTheThingEdit(MinimalTourPlan);
     tourPlanBuilderPO.expectVisible();
     tourPlanBuilderPO.reset();
-    tourPlanBuilderPO.setValue(TourPlanFullWithPlays,  { things: SampleThings });
+    tourPlanBuilderPO.setValue(TourPlanFull, { things: SampleThings });
     tourPlanBuilderPO.submit();
 
     tourPlanViewPO.expectVisible();
-    tourPlanViewPO.expectValue(TourPlanFullWithPlays, { things: SampleThings });
+    tourPlanViewPO.expectValue(TourPlanFull, { things: SampleThings });
+  });
+
+  it('Edit exist tour-plan with purchasing plays and additions', () => {
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingEdit(MinimalTourPlan);
+    tourPlanBuilderPO.expectVisible();
+    tourPlanBuilderPO.reset();
+    tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions, {
+      things: SampleThings
+    });
+    tourPlanBuilderPO.submit();
+
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions, {
+      things: SampleThings
+    });
   });
 });

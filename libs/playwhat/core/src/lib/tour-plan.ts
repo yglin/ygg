@@ -77,7 +77,7 @@ cellsDef[CellNames.completeAt] = {
   userInput: 'hidden'
 };
 
-export const ImitationTourPlan: TheThingImitation = new TheThingImitation().fromJSON(
+export const ImitationTourPlan: TheThingImitation = ImitationOrder.extend(
   {
     id: 'BvyVkzRIxEuYoPjxIjHVOA',
     name: '旅遊行程規劃',

@@ -10,6 +10,7 @@ export class TheThingFilter implements SerializableJSON {
   ownerId: string;
   keywordName: string = '';
   flags: { [name: string]: boolean } = {};
+  states: { [name: string]: number } = {};
 
   constructor(...args: any[]) {
     if (!isEmpty(args)) {
@@ -39,11 +40,13 @@ export class TheThingFilter implements SerializableJSON {
       const keywordName = `${this.keywordName} ${filter.keywordName}`;
       const ownerId = !!filter.ownerId ? filter.ownerId : this.ownerId;
       const flags = assign({}, this.flags, filter.flags);
+      const states = assign({}, this.states, filter.states);
       return new TheThingFilter(name, {
         tags: tags,
         ownerId: ownerId,
         keywordName: keywordName,
-        flags: flags
+        flags,
+        states
       });
     }
   }
@@ -74,11 +77,24 @@ export class TheThingFilter implements SerializableJSON {
         }
       }
     }
+    for (const name in this.states) {
+      if (this.states.hasOwnProperty(name)) {
+        const value = this.states[name];
+        // console.log(`${theThing.getFlag(name)} ?= ${value}`);
+        if (!theThing.isState(name, value)) {
+          return false;
+        }
+      }
+    }
     return true;
   }
 
   addFlags(flags: { [name: string]: boolean }) {
     assign(this.flags, flags);
+  }
+
+  addState(stateName: string, value: number) {
+    this.states[stateName] = value;
   }
 
   clone(): TheThingFilter {

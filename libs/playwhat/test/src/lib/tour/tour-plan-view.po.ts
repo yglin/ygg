@@ -82,4 +82,8 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
   adminComplete() {
     cy.get(this.getSelector('buttonAdminComplete')).click();
   }
+
+  adminPaid() {
+    cy.get(this.getSelector('buttonAdminPaid')).click();
+  }
 }

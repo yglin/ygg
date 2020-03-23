@@ -17,7 +17,8 @@ export abstract class TourPlanViewPageObject extends PageObject {
     // contact: '.contact',
     purchases: '.purchases',
     buttonSubmitApplication: 'button.submit-application',
-    buttonAdminComplete: 'button.admin-complete'
+    buttonAdminComplete: 'button.admin-complete',
+    buttonAdminPaid: 'button.admin-paid'
   };
   dayTimeRangePO: DayTimeRangeViewPageObject;
   dateRangeViewPO: DateRangeViewPageObject;

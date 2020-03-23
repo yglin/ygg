@@ -12,7 +12,8 @@ import { ApplicationService } from './application.service';
 import {
   IncomeRecord,
   Purchase,
-  RelationNamePurchase
+  RelationNamePurchase,
+  ImitationOrder
 } from '@ygg/shopping/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -33,7 +34,12 @@ export class TourPlanService {
   }
 
   listIncomeRecords$(dateRange: DateRange): Observable<IncomeRecord[]> {
-    return this.listCompleted$(dateRange).pipe(
+    const filter = ImitationTourPlan.filter.clone();
+    filter.addState(
+      ImitationOrder.stateName,
+      ImitationOrder.states.completed.value
+    );
+    return this.theThingAccessService.listByFilter$(filter).pipe(
       // tap(() => console.log('Get income records~!!')),
       map(tourPlans => {
         // console.dir(tourPlans);
@@ -96,14 +102,6 @@ export class TourPlanService {
         return incomeRecords;
       })
     );
-  }
-
-  listCompleted$(dateRange: DateRange): Observable<TheThing[]> {
-    const filter = ImitationTourPlan.filter.clone();
-    const flags = {};
-    flags[TourPlanStates.Completed] = true;
-    filter.addFlags(flags);
-    return this.theThingAccessService.listByFilter$(filter);
   }
 
   async complete(tourPlan: TheThing) {
