@@ -6,7 +6,7 @@ import {
 } from '@ygg/the-thing/core';
 import { DateRange, DayTimeRange, Contact } from '@ygg/shared/omni-types/core';
 import { randomBytes } from 'crypto';
-import { random, find } from 'lodash';
+import { random, find, omit } from 'lodash';
 import {
   SamplePlays,
   SampleAdditions,
@@ -21,6 +21,8 @@ import {
   ImitationOrder
 } from '@ygg/shopping/core';
 import { ApplicationState, ImitationTourPlan } from '@ygg/playwhat/core';
+import * as moment from "moment";
+
 
 export const TourPlanTemplate = ImitationTourPlan.createTheThing().fromJSON({
   tags: ['tour', 'tour-plan', 'schedule', '遊程計畫'],
@@ -162,7 +164,10 @@ TourPlanWithPlaysAndAdditions.name = '測試遊程(預訂體驗, 有加購項目
 
 export const TourPlanInApplication = TourPlanWithPlaysAndAdditions.clone();
 TourPlanInApplication.name = '測試遊程(預訂體驗, 有加購項目，已提交申請)';
-TourPlanInApplication.setState(ImitationOrder.stateName, ImitationOrder.states.applied);
+TourPlanInApplication.setState(
+  ImitationOrder.stateName,
+  ImitationOrder.states.applied
+);
 
 export const TourPlanPaid = TourPlanInApplication.clone();
 TourPlanPaid.name = '測試遊程(預訂體驗, 有加購項目，已付款完成)';
@@ -170,4 +175,37 @@ TourPlanPaid.setState(ImitationOrder.stateName, ImitationOrder.states.paid);
 
 export const TourPlanCompleted = TourPlanPaid.clone();
 TourPlanCompleted.name = '測試遊程(預訂體驗, 有加購項目，已全部完成)';
-TourPlanCompleted.setState(ImitationOrder.stateName, ImitationOrder.states.completed);
+TourPlanCompleted.setState(
+  ImitationOrder.stateName,
+  ImitationOrder.states.completed
+);
+
+export function stubTourPlansByStateAndMonth(): {
+  [state: string]: TheThing[];
+} {
+  const result = {};
+  for (const name in omit(ImitationOrder.states, 'new')) {
+    if (ImitationOrder.states.hasOwnProperty(name)) {
+      const state = ImitationOrder.states[name];
+      
+      const tourPlanThisMonth = TourPlanInApplication.clone();
+      tourPlanThisMonth.name = `測試遊程， ${state.label}(這個月)`;
+      tourPlanThisMonth.setState(ImitationOrder.stateName, state, moment().toDate());
+      
+      const tourPlanLastMonth = TourPlanInApplication.clone();
+      tourPlanLastMonth.name = `測試遊程， ${state.label}(上個月)`;
+      tourPlanLastMonth.setState(ImitationOrder.stateName, state, moment().subtract(1, 'month').toDate());
+      
+      const tourPlanTheOtherMonth = TourPlanInApplication.clone();
+      tourPlanTheOtherMonth.name = `測試遊程， ${state.label}(上上個月)`;
+      tourPlanTheOtherMonth.setState(ImitationOrder.stateName, state, moment().subtract(2, 'month').toDate());
+
+      result[state.name] = [
+        tourPlanThisMonth,
+        tourPlanLastMonth,
+        tourPlanTheOtherMonth
+      ];
+    }
+  }
+  return result;
+}

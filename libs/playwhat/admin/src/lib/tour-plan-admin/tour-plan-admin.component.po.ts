@@ -4,18 +4,15 @@ import { TheThingDataTablePageObject } from '@ygg/the-thing/ui';
 
 export abstract class TourPlanAdminPageObject extends PageObject {
   static TabNames = {
-    inApplication: '申請中',
-    paid: '已付款',
-    completed: '已完成',
     incomeRecords: '店家廠商收入'
   };
 
   selectors = {
-    main: '.tour-plan-admin'
+    main: '.tour-plan-admin',
+    selectMonth: 'select.month-select'
   };
-  inApplicationsDataTablePO: TheThingDataTablePageObject;
-  paidDataTablePO: TheThingDataTablePageObject;
-  completedDataTablePO: TheThingDataTablePageObject;
+
+  theThingDataTables: { [name: string]: TheThingDataTablePageObject } = {};
   incomeDataTablePO: IncomeDataTablePageObject;
 
   getSelectorForTabHeader(tabName): string {

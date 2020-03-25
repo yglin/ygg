@@ -4,22 +4,20 @@ import { TheThing } from '@ygg/the-thing/core';
 import { TheThingDataTablePageObjectCypress } from '@ygg/the-thing/test';
 import { ImitationTourPlan } from '@ygg/playwhat/core';
 import { ImitationOrder } from '@ygg/shopping/core';
+import { values, omit } from 'lodash';
+import { Month } from '@ygg/shared/omni-types/core';
 
 export class TourPlanAdminPageObjectCypress extends TourPlanAdminPageObject {
   constructor(parentSelector?: string) {
     super(parentSelector);
-    this.inApplicationsDataTablePO = new TheThingDataTablePageObjectCypress(
-      this.getSelectorForTabContent(ImitationOrder.states.applied.name),
-      ImitationTourPlan
-    );
-    this.paidDataTablePO = new TheThingDataTablePageObjectCypress(
-      this.getSelectorForTabContent(ImitationOrder.states.paid.name),
-      ImitationTourPlan
-    );
-    this.completedDataTablePO = new TheThingDataTablePageObjectCypress(
-      this.getSelectorForTabContent(ImitationOrder.states.completed.name),
-      ImitationTourPlan
-    );
+    for (const state of values(omit(ImitationOrder.states, 'new'))) {
+      this.theThingDataTables[
+        state.name
+      ] = new TheThingDataTablePageObjectCypress(
+        this.getSelectorForTabContent(state.name),
+        ImitationTourPlan
+      );
+    }
     this.incomeDataTablePO = new IncomeDataTablePageObjectCypress(
       this.getSelectorForTabContent(
         TourPlanAdminPageObject.TabNames.incomeRecords
@@ -33,5 +31,9 @@ export class TourPlanAdminPageObjectCypress extends TourPlanAdminPageObject {
 
   switchToTab(tabName: string): void {
     cy.get(this.getSelectorForTabHeader(tabName)).click();
+  }
+
+  selectMonth(month: Month) {
+    cy.get(this.getSelector('selectMonth')).select(month.displayName);
   }
 }

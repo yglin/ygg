@@ -21,6 +21,7 @@ import {
 } from '@ygg/playwhat/test';
 import { SiteNavigator } from '@ygg/playwhat/test';
 import { TheThing } from '@ygg/the-thing/core';
+import { ImitationOrder } from '@ygg/shopping/core';
 
 let mockDatabase: MockDatabase;
 const siteNavigator = new SiteNavigator();
@@ -159,8 +160,8 @@ describe('Tour-plan builder', () => {
     // Expect the submitted tour-plan show up in administrator's list
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
     // tourPlanDataTablePO.expectTheThing(MinimalTourPlan);
-    tourPlanAdminPO.inApplicationsDataTablePO.expectTheThing(TourPlanWithPlaysAndAdditions);
-    tourPlanAdminPO.inApplicationsDataTablePO.gotoTheThingView(TourPlanWithPlaysAndAdditions);
+    tourPlanAdminPO.theThingDataTables[ImitationOrder.states.applied.name].expectTheThing(TourPlanWithPlaysAndAdditions);
+    tourPlanAdminPO.theThingDataTables[ImitationOrder.states.applied.name].gotoTheThingView(TourPlanWithPlaysAndAdditions);
 
     // Click the tour-plan to review it
     tourPlanViewPO.expectVisible();

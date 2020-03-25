@@ -1,52 +1,37 @@
 import { Injectable } from '@angular/core';
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { DataAccessService } from '@ygg/shared/infra/data-access';
-import { Observable, combineLatest, of } from 'rxjs';
-import {
-  ImitationTourPlan,
-  CellNames as TourPlanCellNames,
-  States as TourPlanStates
-} from '@ygg/playwhat/core';
-import { ApplicationService } from './application.service';
+import { Observable, of } from 'rxjs';
 import {
   IncomeRecord,
   Purchase,
   RelationNamePurchase,
   ImitationOrder
 } from '@ygg/shopping/core';
-import { DateRange } from '@ygg/shared/omni-types/core';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { isEmpty, values, keys } from 'lodash';
+import { map, switchMap } from 'rxjs/operators';
+import { isEmpty, keys } from 'lodash';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class TourPlanService {
-  constructor(
-    private applicationService: ApplicationService,
-    private theThingAccessService: TheThingAccessService
-  ) {}
+export class AccountingService {
 
-  listInApplication$(): Observable<TheThing[]> {
-    const filter = ImitationTourPlan.filter.clone();
-    return this.applicationService.listInApplication$(filter);
-  }
+  constructor(private theThingAccessService: TheThingAccessService) { }
 
-  listIncomeRecords$(dateRange: DateRange): Observable<IncomeRecord[]> {
-    const filter = ImitationTourPlan.filter.clone();
+  listIncomeRecords$(filter: TheThingFilter): Observable<IncomeRecord[]> {
     filter.addState(
       ImitationOrder.stateName,
       ImitationOrder.states.completed.value
     );
     return this.theThingAccessService.listByFilter$(filter).pipe(
       // tap(() => console.log('Get income records~!!')),
-      map(tourPlans => {
-        // console.dir(tourPlans);
+      map(orders => {
+        // console.dir(orders);
         const byProductPurchases: { [productId: string]: Purchase[] } = {};
-        if (!isEmpty(tourPlans)) {
-          for (const tourPlan of tourPlans) {
-            const purchaseRelations = tourPlan.getRelations(
+        if (!isEmpty(orders)) {
+          for (const order of orders) {
+            const purchaseRelations = order.getRelations(
               RelationNamePurchase
             );
             for (const pr of purchaseRelations) {
@@ -102,16 +87,5 @@ export class TourPlanService {
         return incomeRecords;
       })
     );
-  }
-
-  async complete(tourPlan: TheThing) {
-    tourPlan.setFlag(TourPlanStates.Completed, true);
-    tourPlan.addCell(
-      ImitationTourPlan.createCell(
-        TourPlanCellNames.completeAt,
-        new Date().valueOf()
-      )
-    );
-    return this.theThingAccessService.upsert(tourPlan);
   }
 }

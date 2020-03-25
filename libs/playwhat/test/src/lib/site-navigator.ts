@@ -1,4 +1,5 @@
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
+import { timeout } from 'rxjs/operators';
 
 const expectPageTrivial = () => cy.get('body').should('be.visible');
 
@@ -54,7 +55,9 @@ export class SiteNavigator {
   private gotoTheThings(path: string[] = []) {
     const route = path.shift();
     if (route === 'my') {
-      cy.get('#account-widget .menu-trigger').click({ force: true });
+      cy.get('#account-widget .menu-trigger', { timeout: 10000 }).click({
+        force: true
+      });
       cy.get('#user-menu button#my-things').click({ force: true });
     }
   }
@@ -85,7 +88,9 @@ export class SiteNavigator {
   }
 
   private gotoAdmin(path: string[] = []) {
-    cy.get('#account-widget .menu-trigger').click({ force: true });
+    cy.get('#account-widget .menu-trigger', { timeout: 10000 }).click({
+      force: true
+    });
     cy.get('#user-menu button#admin').click({ force: true });
     const route = path.shift();
     if (route === 'play') {

@@ -69,7 +69,12 @@ export class TimeRange implements SerializableJSON {
       if (isArray(data) && data.length >= 2) {
         this.start = moment(data[0], DATE_FORMATS.serialize).toDate();
         this.end = moment(data[1], DATE_FORMATS.serialize).toDate();
-      } else if (data.start && data.start instanceof Date && data.end && data.end instanceof Date) {
+      } else if (
+        data.start &&
+        data.start instanceof Date &&
+        data.end &&
+        data.end instanceof Date
+      ) {
         this.start = new Date(data.start);
         this.end = new Date(data.end);
       }
@@ -106,4 +111,10 @@ export class TimeRange implements SerializableJSON {
     return moment(this.end).diff(moment(this.start), 'day');
   }
 
+  isBetweenIn(time: Date): boolean {
+    const mmTime = moment(time);
+    const mmStart = moment(this.start);
+    const mmEnd = moment(this.end);
+    return mmTime.isSameOrAfter(mmStart) && mmTime.isSameOrBefore(mmEnd);
+  }
 }

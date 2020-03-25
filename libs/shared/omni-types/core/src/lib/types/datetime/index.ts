@@ -5,3 +5,4 @@ export * from './day-time';
 export * from './day-time-range';
 // export * from './week-day';
 export * from './duration';
+export * from './month';

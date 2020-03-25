@@ -27,12 +27,6 @@ export class DateRange extends TimeRange {
     return new DateRange(start.toDate(), end.toDate());
   }
 
-  static thisMonth(): DateRange {
-    const start = moment().startOf('month');
-    const end = moment().endOf('month');
-    return new DateRange(start.toDate(), end.toDate());
-  }
-
   get start(): Date {
     return this._start;
   }

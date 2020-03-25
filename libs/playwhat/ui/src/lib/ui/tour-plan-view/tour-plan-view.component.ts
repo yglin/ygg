@@ -26,9 +26,7 @@ import {
   Purchase,
   ImitationOrder
 } from '@ygg/shopping/core';
-import { TourPlanService } from '../../tour-plan.service';
-import { ApplicationService } from '../../application.service';
-import { AuthenticateService, AuthorizeService } from '@ygg/shared/user';
+import { AuthorizeService } from '@ygg/shared/user';
 
 @Component({
   selector: 'ygg-tour-plan-view',
@@ -56,8 +54,6 @@ export class TourPlanViewComponent
   constructor(
     private authorizeService: AuthorizeService,
     private theThingAccessService: TheThingAccessService,
-    private applicationService: ApplicationService,
-    private tourPlanService: TourPlanService
   ) {}
 
   ngOnInit() {

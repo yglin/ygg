@@ -3,6 +3,7 @@ import { TheThing } from './the-thing';
 import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { Tags } from '@ygg/tags/core';
 import { __assign } from 'tslib';
+import { DateRange } from '@ygg/shared/omni-types/core';
 
 export class TheThingFilter implements SerializableJSON {
   name: string;
@@ -11,6 +12,7 @@ export class TheThingFilter implements SerializableJSON {
   keywordName: string = '';
   flags: { [name: string]: boolean } = {};
   states: { [name: string]: number } = {};
+  stateDateRange: DateRange;
 
   constructor(...args: any[]) {
     if (!isEmpty(args)) {
@@ -46,7 +48,8 @@ export class TheThingFilter implements SerializableJSON {
         ownerId: ownerId,
         keywordName: keywordName,
         flags,
-        states
+        states,
+        stateDateRange: filter.stateDateRange
       });
     }
   }
@@ -84,6 +87,17 @@ export class TheThingFilter implements SerializableJSON {
         if (!theThing.isState(name, value)) {
           return false;
         }
+        const stateTimestamp = theThing.stateTimestamps[`${name}__${value}`];
+        if (
+          this.stateDateRange &&
+          stateTimestamp &&
+          !this.stateDateRange.isBetweenIn(stateTimestamp)
+        ) {
+          // console.dir(this.stateDateRange);
+          // console.log(stateTimestamp);
+          // console.log('Filter false~!!');
+          return false;
+        }
       }
     }
     return true;
@@ -97,12 +111,19 @@ export class TheThingFilter implements SerializableJSON {
     this.states[stateName] = value;
   }
 
+  setStateDateRange(dateRange: DateRange) {
+    this.stateDateRange = dateRange;
+  }
+
   clone(): TheThingFilter {
     return new TheThingFilter().fromJSON(this.toJSON());
   }
 
   fromJSON(data: any): this {
     extend(this, data);
+    if (data.stateDateRange) {
+      this.stateDateRange = new DateRange().fromJSON(data.stateDateRange);
+    }
     return this;
   }
 

@@ -78,6 +78,7 @@ export class TheThing implements ImageThumbnailItem {
    * State indicators for several imitation states
    */
   states: { [name: string]: number } = {};
+  stateTimestamps: { [name: string]: Date } = {};
 
   static forge(options: any = {}): TheThing {
     const thing = new TheThing();
@@ -381,15 +382,16 @@ export class TheThing implements ImageThumbnailItem {
     return name in this.flags ? this.flags[name] : false;
   }
 
-  setState(name: string, state: TheThingState) {
+  setState(name: string, state: TheThingState, timestamp: Date = new Date()) {
     this.states[name] = state.value;
+    this.stateTimestamps[`${name}__${state.value}`] = timestamp;
   }
 
   getState(name: string): number {
-    return (name in this.states) ? this.states[name] : -1;
+    return name in this.states ? this.states[name] : -1;
   }
 
-  isState(name:string, value: number): boolean {
+  isState(name: string, value: number): boolean {
     return this.getState(name) === value;
   }
 
@@ -417,6 +419,10 @@ export class TheThing implements ImageThumbnailItem {
       // console.log(`TheThing.fromJSON: ${this.image}`);
       if (!this.image) {
         this.image = this.resolveImage();
+      }
+
+      if (data.stateTimestamps) {
+        this.stateTimestamps = mapValues(data.stateTimestamps, t => new Date(t));
       }
     }
     if (!this.link) {

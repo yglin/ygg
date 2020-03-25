@@ -1,8 +1,16 @@
-import { sampleSize } from 'lodash';
+import { sampleSize, flatten, values, keys } from 'lodash';
 import { MockDatabase, login, getCurrentUser } from '@ygg/shared/test/cypress';
-import { TourPlanInApplication, TourPlanPaid, TourPlanCompleted } from './sample-tour-plan';
+import {
+  TourPlanInApplication,
+  TourPlanPaid,
+  TourPlanCompleted,
+  stubTourPlansByStateAndMonth
+} from './sample-tour-plan';
 import { SamplePlays, SampleAdditions } from '../play/sample-plays';
-import { MyThingsPageObjectCypress } from '@ygg/the-thing/test';
+import {
+  MyThingsPageObjectCypress,
+  TheThingDataTablePageObjectCypress
+} from '@ygg/the-thing/test';
 import {
   TourPlanViewPageObjectCypress,
   TourPlanBuilderPageObjectCypress,
@@ -17,17 +25,24 @@ import {
   ImitationOrder
 } from '@ygg/shopping/core';
 import { TourPlanAdminPageObject } from '@ygg/playwhat/admin';
+import { Month } from '@ygg/shared/omni-types/core';
+
+const tourPlansByStateAndMonth: {
+  [state: string]: TheThing[];
+} = stubTourPlansByStateAndMonth();
 
 let mockDatabase: MockDatabase;
 const siteNavigator = new SiteNavigator();
-const SampleTourPlans = [TourPlanInApplication, TourPlanPaid];
+const SampleTourPlans = [TourPlanInApplication, TourPlanPaid].concat(
+  flatten(values(tourPlansByStateAndMonth))
+);
 const SampleThings = SamplePlays.concat(SampleAdditions).concat(
   SampleTourPlans
 );
 
 const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();
 const tourPlanView = new TourPlanViewPageObjectCypress();
-let incomeRecord: IncomeRecord;
+// let incomeRecord: IncomeRecord;
 
 describe('Tour-plan administration', () => {
   before(() => {
@@ -41,14 +56,14 @@ describe('Tour-plan administration', () => {
         );
       });
 
-      const purchases: Purchase[] = TourPlanCompleted.getRelations(
-        RelationNamePurchase
-      ).map(r => Purchase.fromRelation(r));
+      // const purchases: Purchase[] = TourPlanCompleted.getRelations(
+      //   RelationNamePurchase
+      // ).map(r => Purchase.fromRelation(r));
 
-      incomeRecord = new IncomeRecord({
-        producerId: user.id,
-        purchases: purchases
-      });
+      // incomeRecord = new IncomeRecord({
+      //   producerId: user.id,
+      //   purchases: purchases
+      // });
 
       cy.visit('/');
     });
@@ -71,38 +86,57 @@ describe('Tour-plan administration', () => {
 
   it('Approve tour-plan as paid by set it state Paid', () => {
     tourPlanAdminPO.switchToTab(ImitationOrder.states.applied.name);
-    tourPlanAdminPO.inApplicationsDataTablePO.gotoTheThingView(
-      TourPlanInApplication
-    );
+    tourPlanAdminPO.theThingDataTables[
+      ImitationOrder.states.applied.name
+    ].gotoTheThingView(TourPlanInApplication);
     tourPlanView.expectVisible();
     tourPlanView.adminPaid();
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
     tourPlanAdminPO.switchToTab(ImitationOrder.states.applied.name);
-    tourPlanAdminPO.inApplicationsDataTablePO.expectNotTheThing(
-      TourPlanInApplication
-    );
+    tourPlanAdminPO.theThingDataTables[
+      ImitationOrder.states.applied.name
+    ].expectNotTheThing(TourPlanInApplication);
     tourPlanAdminPO.switchToTab(ImitationOrder.states.paid.name);
-    tourPlanAdminPO.paidDataTablePO.expectVisible();
-    tourPlanAdminPO.paidDataTablePO.expectTheThing(TourPlanInApplication);
+    tourPlanAdminPO.theThingDataTables[
+      ImitationOrder.states.paid.name
+    ].expectVisible();
+    tourPlanAdminPO.theThingDataTables[
+      ImitationOrder.states.paid.name
+    ].expectTheThing(TourPlanInApplication);
   });
 
   it('Complete tour-plan to set it state Completed', () => {
     tourPlanAdminPO.switchToTab(ImitationOrder.states.paid.name);
-    tourPlanAdminPO.paidDataTablePO.gotoTheThingView(TourPlanPaid);
+    tourPlanAdminPO.theThingDataTables[
+      ImitationOrder.states.paid.name
+    ].gotoTheThingView(TourPlanPaid);
     tourPlanView.expectVisible();
     tourPlanView.adminComplete();
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
     tourPlanAdminPO.switchToTab(ImitationOrder.states.paid.name);
-    tourPlanAdminPO.paidDataTablePO.expectNotTheThing(TourPlanPaid);
+    tourPlanAdminPO.theThingDataTables[
+      ImitationOrder.states.paid.name
+    ].expectNotTheThing(TourPlanPaid);
     tourPlanAdminPO.switchToTab(ImitationOrder.states.completed.name);
-    tourPlanAdminPO.completedDataTablePO.expectVisible();
-    tourPlanAdminPO.completedDataTablePO.expectTheThing(TourPlanPaid);
+    tourPlanAdminPO.theThingDataTables[
+      ImitationOrder.states.completed.name
+    ].expectVisible();
+    tourPlanAdminPO.theThingDataTables[
+      ImitationOrder.states.completed.name
+    ].expectTheThing(TourPlanPaid);
   });
 
-  it('Completed tour-plan should generate income record', () => {
-    siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
-    tourPlanAdminPO.switchToTab(TourPlanAdminPageObject.TabNames.incomeRecords);
-    tourPlanAdminPO.incomeDataTablePO.expectVisible();
-    tourPlanAdminPO.incomeDataTablePO.expectRecord(incomeRecord);
+  it('Filter tour-plans by month', () => {
+    cy.wrap(keys(tourPlansByStateAndMonth)).each((stateName: any) => {
+      tourPlanAdminPO.switchToTab(stateName);
+      const tourPlans = tourPlansByStateAndMonth[stateName];
+      cy.wrap(tourPlans).each((tourPlan: any, index: number) => {
+        const offset = -index;
+        tourPlanAdminPO.selectMonth(Month.fromMonthOffset(offset));
+        const theThingDataTablePO =
+          tourPlanAdminPO.theThingDataTables[stateName];
+        theThingDataTablePO.expectTheThing(tourPlan);
+      });
+    });
   });
 });

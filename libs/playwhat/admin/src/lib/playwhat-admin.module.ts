@@ -16,10 +16,15 @@ import { HomepageManageComponent } from './homepage-manage/homepage-manage.compo
 import { ImitationTourPlan } from '@ygg/playwhat/core';
 import { TourPlanAdminComponent } from './tour-plan-admin/tour-plan-admin.component';
 import { ShoppingUiModule } from '@ygg/shopping/ui';
+import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
     TheThingUiModule,
     ShoppingUiModule
