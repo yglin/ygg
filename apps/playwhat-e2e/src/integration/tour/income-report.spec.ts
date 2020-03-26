@@ -1,5 +1,5 @@
 import { sampleSize, flatten, values, keys } from 'lodash';
-import { MockDatabase, login, getCurrentUser } from '@ygg/shared/test/cypress';
+import { MockDatabase, login, getCurrentUser, theMockDatabase } from '@ygg/shared/test/cypress';
 import {
   TourPlanInApplication,
   TourPlanPaid,
@@ -31,7 +31,6 @@ const tourPlansByStateAndMonth: {
   [state: string]: TheThing[];
 } = stubTourPlansByStateAndMonth();
 
-let mockDatabase: MockDatabase;
 const siteNavigator = new SiteNavigator();
 const SampleTourPlans = [TourPlanCompleted];
 const SampleThings = SamplePlays.concat(SampleAdditions).concat(
@@ -44,13 +43,12 @@ let incomeRecord: IncomeRecord;
 
 describe('Tour-plan administration', () => {
   before(() => {
-    mockDatabase = new MockDatabase();
     login().then(user => {
       cy.wrap(SampleThings).each((thing: any) => {
         thing.ownerId = user.id;
-        mockDatabase.insert(
+        theMockDatabase.insert(
           `${TheThing.collection}/${thing.id}`,
-          thing.toJSON()
+          thing
         );
       });
 
@@ -78,8 +76,8 @@ describe('Tour-plan administration', () => {
     // cy.wait(3000);
     // myThingsPO.deleteAll();
 
-    mockDatabase.clear();
-    mockDatabase.restoreRTDB();
+    theMockDatabase.clear();
+    theMockDatabase.restoreRTDB();
   });
 
   it('Completed tour-plan should generate income record', () => {

@@ -16,6 +16,7 @@ import {
   CellNameQuantity
 } from '@ygg/shopping/core';
 import { isEmpty, find } from 'lodash';
+import { MockDatabase, theMockDatabase } from '@ygg/shared/test/cypress';
 
 export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
   constructor(parentSelector?: string) {
@@ -47,12 +48,7 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     cellViewPagePO.expectValue(cell);
   }
 
-  expectValue(
-    tourPlan: TheThing,
-    options: {
-      things?: TheThing[];
-    } = {}
-  ) {
+  expectValue(tourPlan: TheThing) {
     this.expectName(tourPlan.name || defaultName(tourPlan));
     const requiredCells = ImitationTourPlan.getRequiredCellNames();
     for (const requiredCell of requiredCells) {
@@ -67,9 +63,16 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
       }
     }
     if (tourPlan.hasRelation(RelationNamePurchase)) {
+      // tslint:disable-next-line: no-unused-expression
       const purchases = tourPlan.getRelations(RelationNamePurchase).map(r => {
-        const product = find(options.things, t => t.id === r.objectId);
-        return Purchase.purchase(tourPlan, product, r.getCellValue(CellNameQuantity));
+        const product: TheThing = theMockDatabase.getEntity(
+          `${TheThing.collection}/${r.objectId}`
+        ) as TheThing;
+        return Purchase.purchase(
+          tourPlan,
+          product,
+          r.getCellValue(CellNameQuantity)
+        );
       });
       this.purchaseListPO.expectPurchases(purchases);
     }

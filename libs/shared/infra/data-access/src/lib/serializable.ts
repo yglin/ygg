@@ -10,7 +10,7 @@ export interface SerializableJSON {
   toJSON: () => any;
 }
 
-function isSerializableJSON(obj: any = {}): obj is SerializableJSON {
+export function isSerializableJSON(obj: any = {}): obj is SerializableJSON {
   return (obj && typeof obj.fromJSON === 'function') && (typeof obj.toJSON === 'function');
 }
 

@@ -1,4 +1,10 @@
 import { values, entries, get } from 'lodash';
+import {
+  SerializableJSON,
+  isSerializableJSON,
+  Entity,
+  isEntity
+} from '@ygg/shared/infra/data-access';
 
 export interface Document {
   path: string;
@@ -9,18 +15,10 @@ export class MockDatabase {
   static alias = 'mockDatabase';
 
   documents: { [path: string]: Document } = {};
-  cache: { [path: string]: any } = {};
+  entities: { [path: string]: Entity } = {};
   RTDBBackup: { [path: string]: any } = {};
 
-  static getFromCache(path: string): Cypress.Chainable<any> {
-    return cy.get(`@${MockDatabase.alias}`).then((mockDB: any) => {
-      return get(mockDB, `cache.${path}`, null);
-    });
-  }
-
-  constructor() {
-    cy.wrap(this).as(MockDatabase.alias);
-  }
+  constructor() {}
 
   pushDocument(path: string, data?: any) {
     this.documents[path] = { path, data };
@@ -30,8 +28,11 @@ export class MockDatabase {
     // @ts-ignore
     cy.callFirestore('set', path, data).then(() => {
       cy.log(`Insert test data at ${path} in firebase firestore DB`);
+      if (isEntity(data)) {
+        this.entities[path] = data;
+        data = data.toJSON();
+      }
       this.pushDocument(path, data);
-      this.cache[path] = data;
       cy.wrap(data).as(data.id);
     });
     return cy.get(`@${data.id}`);
@@ -95,6 +96,13 @@ export class MockDatabase {
     }
   }
 
+  getEntity(path: string): Entity {
+    if (!(path in this.entities)) {
+      throw new Error(`MockDatabase: Can not find entity of path "${path}"`);
+    }
+    return this.entities[path];
+  }
+
   clear() {
     cy.wrap<Document[]>(values(this.documents)).each((document: any) => {
       this.delete(document.path);
@@ -104,3 +112,5 @@ export class MockDatabase {
     // });
   }
 }
+
+export const theMockDatabase = new MockDatabase();

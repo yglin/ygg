@@ -30,7 +30,7 @@ export abstract class TourPlanViewPageObject extends PageObject {
   }
 
   abstract expectVisible(): any;
-  abstract expectValue(value: TheThing, options: any): void;
+  abstract expectValue(value: TheThing): void;
   abstract submitApplication(): void;
   abstract adminComplete(): void;
 }

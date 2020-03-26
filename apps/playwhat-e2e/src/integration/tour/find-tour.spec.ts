@@ -1,12 +1,14 @@
 import * as SampleTourJSON from './sample-tour-birb.json';
 import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
-import { MockDatabase, login } from '@ygg/shared/test/cypress';
-import { TheThingFilterPageObjectCypress, MyThingsPageObjectCypress } from '@ygg/the-thing/test';
+import { MockDatabase, login, theMockDatabase } from '@ygg/shared/test/cypress';
+import {
+  TheThingFilterPageObjectCypress,
+  MyThingsPageObjectCypress
+} from '@ygg/the-thing/test';
 import { SiteNavigator } from '@ygg/playwhat/test';
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
 
 const siteNavigator = new SiteNavigator();
-let mockDatabase: MockDatabase;
 const sampleTour = new TheThing().fromJSON(SampleTourJSON.tour);
 const plays = SampleTourJSON.plays.map(playJSON =>
   new TheThing().fromJSON(playJSON)
@@ -15,16 +17,15 @@ const relationPlay = '體驗';
 
 describe('Find tours in my things', () => {
   before(() => {
-    mockDatabase = new MockDatabase();
     login().then(user => {
       sampleTour.addRelations(relationPlay, plays);
 
       const stubTheThings = [sampleTour, ...plays];
       cy.wrap(stubTheThings).each((thing: any) => {
         thing.ownerId = user.id;
-        mockDatabase.insert(
+        theMockDatabase.insert(
           `${TheThing.collection}/${thing.id}`,
-          thing.toJSON()
+          thing
         );
       });
 
@@ -39,7 +40,7 @@ describe('Find tours in my things', () => {
     cy.wait(3000);
     myThingsPO.deleteAll();
 
-    mockDatabase.clear();
+    theMockDatabase.clear();
   });
 
   it('Go to my the-things page and search for the sample tour', () => {

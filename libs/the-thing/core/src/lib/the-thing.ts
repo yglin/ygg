@@ -16,12 +16,12 @@ import {
 import { Tags } from '@ygg/tags/core';
 import { TheThingCell } from './cell';
 import { TheThingCellTypeID } from './cell-type';
-import { generateID, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { generateID, toJSONDeep, Entity } from '@ygg/shared/infra/data-access';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 import { TheThingRelation } from './relation';
 import { TheThingState } from './state';
 
-export class TheThing implements ImageThumbnailItem {
+export class TheThing implements Entity, ImageThumbnailItem {
   static collection = 'the-things';
 
   id: string;

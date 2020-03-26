@@ -6,24 +6,22 @@ import {
   MyThingsPageObjectCypress
 } from '@ygg/the-thing/test';
 import { TheThing } from '@ygg/the-thing/core';
-import { login, MockDatabase } from '@ygg/shared/test/cypress';
+import { login, MockDatabase, theMockDatabase } from '@ygg/shared/test/cypress';
 import { TourViewPageObjectCypress } from '@ygg/playwhat/test';
 import { samplePlays, sampleTour } from '../tour/sample-tour-birb';
 // import { TemplateTour } from '@ygg/playwhat/core';
 
 const siteNavigator = new SiteNavigator();
-let mockDatabase: MockDatabase;
 
 describe('Manage content in home page', () => {
   before(() => {
-    mockDatabase = new MockDatabase();
     login().then(user => {
       const things = [...samplePlays, sampleTour];
       cy.wrap(things).each((thing: any) => {
         thing.ownerId = user.id;
-        mockDatabase.insert(
+        theMockDatabase.insert(
           `${TheThing.collection}/${thing.id}`,
-          thing.toJSON()
+          thing
         );
       });
       cy.visit('/');
@@ -36,7 +34,7 @@ describe('Manage content in home page', () => {
     siteNavigator.goto(['the-things', 'my'], myThingsPO);
     cy.wait(3000);
     myThingsPO.deleteAll();
-    mockDatabase.clear();
+    theMockDatabase.clear();
   });
 
   it('Specify a tour to be exhibited in home page', () => {

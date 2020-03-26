@@ -8,7 +8,10 @@ import {
   ContactControlPageObjectCypress
 } from '@ygg/shared/omni-types/test';
 import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
-import { PageObjectCypress } from '@ygg/shared/test/cypress';
+import {
+  PageObjectCypress,
+  theMockDatabase
+} from '@ygg/shared/test/cypress';
 import { TheThingCellsEditorPageObjectCypress } from '@ygg/the-thing/test';
 import {
   ImitationTourPlan,
@@ -58,12 +61,7 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
       .type(name);
   }
 
-  setValue(
-    tourPlan: TheThing,
-    options: {
-      things?: TheThing[];
-    } = {}
-  ) {
+  setValue(tourPlan: TheThing) {
     const purchasePlays: TheThing[] = [];
     const purchaseAdditions: TheThing[] = [];
     const finalPurchases: Purchase[] = [];
@@ -72,7 +70,12 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
       purchasePlays.push.apply(
         purchasePlays,
         relations
-          .map(r => find(options.things, pl => pl.id === r.objectId))
+          .map(
+            r =>
+              theMockDatabase.getEntity(
+                `${TheThing.collection}/${r.objectId}`
+              ) as TheThing
+          )
           .filter(pl => !!pl && ImitationPlay.filter.test(pl))
       );
 
@@ -82,7 +85,9 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
             purchaseAdditions,
             play
               .getRelationObjectIds(RelationAddition.name)
-              .map(objId => find(options.things, ad => ad.id === objId))
+              .map(objId =>
+                theMockDatabase.getEntity(`${TheThing.collection}/${objId}`)
+              )
               .filter(ad => !!ad)
           );
         }
@@ -90,10 +95,7 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
 
       finalPurchases.push.apply(
         finalPurchases,
-        this.fromRelations(
-          tourPlan.getRelations(RelationNamePurchase),
-          options.things
-        )
+        this.fromRelations(tourPlan.getRelations(RelationNamePurchase))
       );
     }
 
@@ -147,7 +149,7 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
     // Review final tour-plan
     this.expectStep(5);
     this.tourPlanPreviewPO.expectVisible();
-    this.tourPlanPreviewPO.expectValue(tourPlan, options);
+    this.tourPlanPreviewPO.expectValue(tourPlan);
   }
 
   reset() {
@@ -190,7 +192,7 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
     );
   }
 
-  fromRelations(relations: TheThingRelation[], things: TheThing[]): Purchase[] {
+  fromRelations(relations: TheThingRelation[]): Purchase[] {
     return relations.map(r => Purchase.fromRelation(r));
   }
 }
