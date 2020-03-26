@@ -59,28 +59,30 @@ export class TheThingCell {
 
   fromJSON(data: any): this {
     extend(this, data);
-    switch (data.type) {
-      case 'album':
-        this.value = new Album().fromJSON(data.value);
-        break;
-      case 'html':
-        this.value = new Html().fromJSON(data.value);
-        break;
-      case 'address':
-        this.value = new Address().fromJSON(data.value);
-        break;
-      case 'date-range':
-        this.value = new DateRange().fromJSON(data.value);
-        break;
-      case 'day-time-range':
-        this.value = new DayTimeRange().fromJSON(data.value);
-        break;
-      case 'contact':
-        this.value = new Contact().fromJSON(data.value);
-        break;
-      default:
-        // throw new Error(`Not supported cell type: ${data.type}`);
-        break;
+    if (data.value) {
+      switch (data.type) {
+        case 'album':
+          this.value = new Album().fromJSON(data.value);
+          break;
+        case 'html':
+          this.value = new Html().fromJSON(data.value);
+          break;
+        case 'address':
+          this.value = new Address().fromJSON(data.value);
+          break;
+        case 'date-range':
+          this.value = new DateRange().fromJSON(data.value);
+          break;
+        case 'day-time-range':
+          this.value = new DayTimeRange().fromJSON(data.value);
+          break;
+        case 'contact':
+          this.value = new Contact().fromJSON(data.value);
+          break;
+        default:
+          // throw new Error(`Not supported cell type: ${data.type}`);
+          break;
+      }
     }
     return this;
   }

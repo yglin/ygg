@@ -7,8 +7,10 @@ export abstract class ContactControlPageObject extends PageObject {
     inputName: 'input#name',
     inputPhone: 'input#phone',
     inputEmail: 'input#email',
-    inputLineID: 'input#lineID'
+    inputLineID: 'input#lineID',
+    buttonImportFromUser: 'button.import-from-user'
   };
 
   abstract setValue(contact: Contact): void;
+  abstract expectValue(contact: Contact): void;
 }

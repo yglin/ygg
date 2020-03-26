@@ -17,6 +17,7 @@ import {
 } from '@angular/forms';
 import { Contact } from '@ygg/shared/omni-types/core';
 import { Subscription } from 'rxjs';
+import { User, AuthenticateService } from '@ygg/shared/user';
 
 class LeastRequireErrorMatcher implements ErrorStateMatcher {
   fields: string[];
@@ -81,9 +82,13 @@ export class ContactControlComponent
     '請至少留下電話、Email、LINE ID其中一種聯絡方式'
   );
   emitChange: (contact: Contact) => any;
+  user: User;
   subscriptions: Subscription[] = [];
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthenticateService
+  ) {
     this.contactForm = this.formBuilder.group(
       {
         name: '',
@@ -95,6 +100,9 @@ export class ContactControlComponent
         validator: formGroup =>
           this.leastRequireErrorMatcher.validator(formGroup)
       }
+    );
+    this.subscriptions.push(
+      this.authService.currentUser$.subscribe(user => (this.user = user))
     );
   }
 
@@ -127,6 +135,12 @@ export class ContactControlComponent
 
   registerOnTouched(fn) {}
 
+  importFromUser() {
+    if (this.user) {
+      const contact = new Contact().fromUser(this.user);
+      this.contactForm.patchValue(contact)
+    }
+  }
   // requireEmailOrPhoneValidator(formGroup: FormGroup): any {
   //   if (formGroup.get('phone').value || formGroup.get('email').value) {
   //     return null;

@@ -22,34 +22,36 @@ import {
 import { SiteNavigator } from '@ygg/playwhat/test';
 import { TheThing } from '@ygg/the-thing/core';
 import { ImitationOrder } from '@ygg/shopping/core';
-
-const siteNavigator = new SiteNavigator();
-const selectPlays = sampleSize(SamplePlays, 2);
-let tourPlanWithPlays: TheThing;
-// const SampleTourPlans = [
-//   MinimalTourPlan.clone(),
-//   TourPlanFullWithPlays.clone()
-// ];
-const SampleThings = SamplePlays.concat(SampleAdditions);
-// .concat(
-//   SampleTourPlans
-// );
-
-const tourPlanBuilderPO = new TourPlanBuilderPageObjectCypress();
-const tourPlanViewPO = new TourPlanViewPageObjectCypress();
-const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();
+import { ContactControlPageObjectCypress } from '@ygg/shared/omni-types/test';
+import { User } from '@ygg/shared/user';
+import { Contact } from '@ygg/shared/omni-types/core';
 
 describe('Tour-plan builder', () => {
+  const siteNavigator = new SiteNavigator();
+  const selectPlays = sampleSize(SamplePlays, 2);
+  let tourPlanWithPlays: TheThing;
+  // const SampleTourPlans = [
+  //   MinimalTourPlan.clone(),
+  //   TourPlanFullWithPlays.clone()
+  // ];
+  const SampleThings = SamplePlays.concat(SampleAdditions);
+  // .concat(
+  //   SampleTourPlans
+  // );
+
+  const tourPlanBuilderPO = new TourPlanBuilderPageObjectCypress();
+  const tourPlanViewPO = new TourPlanViewPageObjectCypress();
+  const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();
+  let currentUser: User;
+
   before(() => {
     tourPlanWithPlays = MinimalTourPlan.clone();
     tourPlanWithPlays.addRelations('體驗', selectPlays);
     login().then(user => {
+      currentUser = user;
       cy.wrap(SampleThings).each((thing: any) => {
         thing.ownerId = user.id;
-        theMockDatabase.insert(
-          `${TheThing.collection}/${thing.id}`,
-          thing
-        );
+        theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
       });
       cy.visit('/');
     });
@@ -74,9 +76,14 @@ describe('Tour-plan builder', () => {
     tourPlanBuilderPO.setValue(MinimalTourPlanWithoutName);
   });
 
-  // it('A tour-plan with logged-in user can automatically fill contact info', () => {
-
-  // });
+  it('Logged-in user can automatically fill contact info', () => {
+    tourPlanBuilderPO.setValue(MinimalTourPlan, {
+      stopAtStep: 2
+    });
+    const contactControlPO = new ContactControlPageObjectCypress();
+    contactControlPO.importFromUser();
+    contactControlPO.expectValue(new Contact().fromUser(currentUser));
+  });
 
   it('Build a tour-plan with minimal required data fields: dateRange, numParticipants, contact', () => {
     tourPlanBuilderPO.setValue(MinimalTourPlan);

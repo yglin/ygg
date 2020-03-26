@@ -8,10 +8,7 @@ import {
   ContactControlPageObjectCypress
 } from '@ygg/shared/omni-types/test';
 import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
-import {
-  PageObjectCypress,
-  theMockDatabase
-} from '@ygg/shared/test/cypress';
+import { PageObjectCypress, theMockDatabase } from '@ygg/shared/test/cypress';
 import { TheThingCellsEditorPageObjectCypress } from '@ygg/the-thing/test';
 import {
   ImitationTourPlan,
@@ -61,7 +58,7 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
       .type(name);
   }
 
-  setValue(tourPlan: TheThing) {
+  setValue(tourPlan: TheThing, options: any = {}) {
     const purchasePlays: TheThing[] = [];
     const purchaseAdditions: TheThing[] = [];
     const finalPurchases: Purchase[] = [];
@@ -101,6 +98,9 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
 
     // Set date and number of participants
     this.expectStep(1);
+    if (options.stopAtStep === 1) {
+      return;
+    }
     const dateRange = tourPlan.cells['預計出遊日期'].value;
     this.setDateRange(dateRange);
     const numParticipants = tourPlan.cells['預計參加人數'].value;
@@ -108,15 +108,29 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
     if (!isEmpty(purchasePlays)) {
       this.selectPlays(purchasePlays);
     }
-    this.next();
+    if (options.stopAfterStep === 1) {
+      return;
+    } else {
+      this.next();
+    }
 
     // Fill in contact info
     this.expectStep(2);
+    if (options.stopAtStep === 2) {
+      return;
+    }
     this.setContact(tourPlan.cells['聯絡資訊'].value);
-    this.next();
+    if (options.stopAfterStep === 2) {
+      return;
+    } else {
+      this.next();
+    }
 
     // Edit purchases
     this.expectStep(3);
+    if (options.stopAtStep === 3) {
+      return;
+    }
     if (!isEmpty(finalPurchases)) {
       const products = purchasePlays.concat(purchaseAdditions);
       const purchases: Purchase[] = products.map(p =>
@@ -126,9 +140,16 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
       this.cartEditorPO.setPurchases(finalPurchases);
       this.cartEditorPO.expectPurchases(finalPurchases);
     }
-    this.next();
+    if (options.stopAfterStep === 3) {
+      return;
+    } else {
+      this.next();
+    }
 
     this.expectStep(4);
+    if (options.stopAtStep === 4) {
+      return;
+    }
     // A tour-plan without name should have this default name
     if (!tourPlan.name) {
       cy.get(this.getSelector('inputName'))
@@ -144,10 +165,17 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
     if (!isEmpty(optionalCells)) {
       this.theThingCellsEditorPO.setValue(optionalCells);
     }
-    this.next();
+    if (options.stopAfterStep === 4) {
+      return;
+    } else {
+      this.next();
+    }
 
     // Review final tour-plan
     this.expectStep(5);
+    if (options.stopAtStep === 5) {
+      return;
+    }
     this.tourPlanPreviewPO.expectVisible();
     this.tourPlanPreviewPO.expectValue(tourPlan);
   }

@@ -111,9 +111,7 @@ export class TourPlanBuilderComponent
       const newPurchases = this.purchaseService.listDescendantsIncludeMe(
         purchaseThePlay
       );
-      this.formControlPurchases.setValue(
-        purchases.concat(newPurchases)
-      );
+      this.formControlPurchases.setValue(purchases.concat(newPurchases));
     } catch (error) {}
   }
 
@@ -134,6 +132,7 @@ export class TourPlanBuilderComponent
       this.theThing = await this.tourPlanBuilder.create();
     }
     this.theThingPreview$.next(this.theThing);
+    console.dir(this.theThing);
     this.populateTourPlan();
   }
 

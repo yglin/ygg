@@ -63,55 +63,61 @@ export class TheThingCellsEditorPageObjectCypress extends TheThingCellsEditorPag
   }
 
   expectCellValue(cell: TheThingCell) {
-    switch (cell.type) {
-      case 'text':
-        cy.get(`${this.getSelectorForCellControl(cell)} input`)
-          .invoke('val')
-          .should('equal', cell.value);
-        break;
-      case 'longtext':
-        cy.get(`${this.getSelectorForCellControl(cell)} textarea`)
-          .invoke('val')
-          .should('equal', !!cell.value ? cell.value : '');
-        break;
-      case 'number':
-        cy.get(`${this.getSelectorForCellControl(cell)} input[type="number"]`)
-          .invoke('val')
-          .should('equal', typeof cell.value === 'number' ? cell.value.toString() : '');
-        break;
-      case 'album':
-        const albumControlPO = new AlbumControlPageObjectCypress(
-          this.getSelectorForCellControl(cell)
-        );
-        albumControlPO.expectValue(cell.value);
-        break;
-      case 'html':
-        const htmlControlPO = new HtmlControlPageObjectCypress(
-          this.getSelectorForCellControl(cell)
-        );
-        htmlControlPO.expectValue(cell.value);
-        break;
-      case 'address':
-        const addressControlPO = new AddressControlPageObjectCypress(
-          this.getSelectorForCellControl(cell)
-        );
-        addressControlPO.expectValue(cell.value);
-        break;
-      case 'date-range':
-        const dateRangeControlPO = new DateRangeControlPageObjectCypress(
-          this.getSelectorForCellControl(cell)
-        );
-        // cy.log(cell.value);
-        dateRangeControlPO.expectValue(cell.value);
-        break;
-      case 'day-time-range':
-        const dayTimeRangeControlPO = new DayTimeRangeControlPageObjectCypress(
-          this.getSelectorForCellControl(cell)
-        );
-        dayTimeRangeControlPO.expectValue(cell.value);
-        break;
-      default:
-        break;
+    cy.get(this.getSelectorForCellControl(cell)).should('exist');
+    if (!!cell.value) {
+      switch (cell.type) {
+        case 'text':
+          cy.get(`${this.getSelectorForCellControl(cell)} input`)
+            .invoke('val')
+            .should('equal', cell.value);
+          break;
+        case 'longtext':
+          cy.get(`${this.getSelectorForCellControl(cell)} textarea`)
+            .invoke('val')
+            .should('equal', !!cell.value ? cell.value : '');
+          break;
+        case 'number':
+          cy.get(`${this.getSelectorForCellControl(cell)} input[type="number"]`)
+            .invoke('val')
+            .should(
+              'equal',
+              typeof cell.value === 'number' ? cell.value.toString() : ''
+            );
+          break;
+        case 'album':
+          const albumControlPO = new AlbumControlPageObjectCypress(
+            this.getSelectorForCellControl(cell)
+          );
+          albumControlPO.expectValue(cell.value);
+          break;
+        case 'html':
+          const htmlControlPO = new HtmlControlPageObjectCypress(
+            this.getSelectorForCellControl(cell)
+          );
+          htmlControlPO.expectValue(cell.value);
+          break;
+        case 'address':
+          const addressControlPO = new AddressControlPageObjectCypress(
+            this.getSelectorForCellControl(cell)
+          );
+          addressControlPO.expectValue(cell.value);
+          break;
+        case 'date-range':
+          const dateRangeControlPO = new DateRangeControlPageObjectCypress(
+            this.getSelectorForCellControl(cell)
+          );
+          // cy.log(cell.value);
+          dateRangeControlPO.expectValue(cell.value);
+          break;
+        case 'day-time-range':
+          const dayTimeRangeControlPO = new DayTimeRangeControlPageObjectCypress(
+            this.getSelectorForCellControl(cell)
+          );
+          dayTimeRangeControlPO.expectValue(cell.value);
+          break;
+        default:
+          break;
+      }
     }
   }
 

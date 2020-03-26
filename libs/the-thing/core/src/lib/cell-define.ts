@@ -8,7 +8,7 @@ type UserInputType = 'required' | 'optional' | 'hidden';
 export class TheThingCellDefine implements SerializableJSON {
   name: string;
   type: TheThingCellTypeID;
-  userInput: UserInputType
+  userInput: UserInputType;
 
   constructor(options: any = {}) {
     this.fromJSON(options);

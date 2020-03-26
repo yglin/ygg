@@ -72,7 +72,12 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   createAt: number;
 
   static isTheThingImitation(value: any): value is TheThingImitation {
-    return !!(value && value.id && value.cellsDef && typeof value.createTheThing === 'function');
+    return !!(
+      value &&
+      value.id &&
+      value.cellsDef &&
+      typeof value.createTheThing === 'function'
+    );
   }
 
   constructor(options: any = {}) {
@@ -101,7 +106,8 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     for (const cellName in this.cellsDef) {
       if (this.cellsDef.hasOwnProperty(cellName)) {
         const cellDef = this.cellsDef[cellName];
-        theThing.addCell(cellDef.createCell());
+        const newCell = cellDef.createCell();
+        theThing.addCell(newCell);
       }
     }
     for (const name in this.relationsDef) {
