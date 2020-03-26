@@ -34,7 +34,7 @@ export class MyThingsComponent implements OnInit, OnDestroy {
   myThings$: Observable<TheThing[]>;
   // filter: TheThingFilter;
   filter$: BehaviorSubject<TheThingFilter> = new BehaviorSubject(null);
-  filteredTheThings$: Observable<TheThing[]>;
+  // filteredTheThings$: Observable<TheThing[]>;
   selection: TheThing[] = [];
   // filterChange$: BehaviorSubject<TheThingFilter> = new BehaviorSubject(new TheThingFilter());
   subscriptions: Subscription[] = [];
@@ -48,29 +48,20 @@ export class MyThingsComponent implements OnInit, OnDestroy {
     private dialog: YggDialogService,
     private imitationAccessService: TheThingImitationAccessService
   ) {
-    this.myThings$ = this.authenticateService.currentUser$.pipe(
-      switchMap(user => {
+    this.myThings$ = combineLatest([this.authenticateService.currentUser$, this.filter$]).pipe(
+      switchMap(([user, filter]) => {
         if (user) {
-          return this.theThingAccessService.listByOwner$(user.id);
+          if (!filter) {
+            filter = new TheThingFilter();
+          }
+          filter.ownerId = user.id;
+          return this.theThingAccessService.listByFilter$(filter);
         } else {
           alert('找不到登入用戶，尚未登入？');
           return of([]);
         }
       })
-    );
-    this.filteredTheThings$ = combineLatest([
-      this.myThings$,
-      this.filter$
-    ]).pipe(
-      map(([theThings, filter]) => {
-        if (filter) {
-          return (filter as TheThingFilter).filter(theThings);
-        } else {
-          return theThings;
-        }
-      })
-    );
-
+    )
     this.subscriptions.push(
       this.imitationAccessService.list$().subscribe(imitations => {
         this.imitations = imitations;
@@ -93,9 +84,9 @@ export class MyThingsComponent implements OnInit, OnDestroy {
   //   }
   // }
 
-  // onFilterChanged(filter: TheThingFilter) {
-  //   this.filter$.next(filter);
-  // }
+  onFilterChanged(filter: TheThingFilter) {
+    this.filter$.next(filter);
+  }
 
   addTheThing() {
     this.router.navigate(['/', 'the-things', 'create']);

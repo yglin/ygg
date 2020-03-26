@@ -4,7 +4,7 @@
   "integrationFolder": "./src/integration",
   "pluginsFile": "./src/plugins/index.js",
   "supportFile": "./src/support/index.ts",
-  "video": true,
+  "video": false,
   "videosFolder": "../../dist/cypress/apps/the-thing-e2e/videos",
   "screenshotsFolder": "../../dist/cypress/apps/the-thing-e2e/screenshots",
   "chromeWebSecurity": false,
