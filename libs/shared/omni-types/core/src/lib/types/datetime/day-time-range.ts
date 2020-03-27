@@ -18,7 +18,10 @@ export class DayTimeRange implements SerializableJSON {
   static forge(): DayTimeRange {
     const start = DayTime.forge();
     const end = DayTime.forge();
-    return new DayTimeRange(start, end);
+    const forged = new DayTimeRange(start, end);
+    // console.log('forge DayTimeRange');
+    // console.dir(forged);
+    return forged;
   }
 
   static isDayTimeRange(value: any): value is DayTimeRange {
@@ -30,7 +33,9 @@ export class DayTimeRange implements SerializableJSON {
   }
 
   static compare(tr1: DayTimeRange, tr2: DayTimeRange, isAsc: boolean): number {
-    if (!(DayTimeRange.isDayTimeRange(tr1) && DayTimeRange.isDayTimeRange(tr2))) {
+    if (
+      !(DayTimeRange.isDayTimeRange(tr1) && DayTimeRange.isDayTimeRange(tr2))
+    ) {
       return 0;
     }
     return (tr1.start.isAfter(tr2.start) ? 1 : -1) * (isAsc ? 1 : -1);
@@ -70,8 +75,14 @@ export class DayTimeRange implements SerializableJSON {
   }
 
   merge(that: DayTimeRange, options: any = {}): DayTimeRange {
-    const thisMomentRange = moment.range(this.start.toMoment(), this.end.toMoment());
-    const thatMomentRange = moment.range(that.start.toMoment(), that.end.toMoment());
+    const thisMomentRange = moment.range(
+      this.start.toMoment(),
+      this.end.toMoment()
+    );
+    const thatMomentRange = moment.range(
+      that.start.toMoment(),
+      that.end.toMoment()
+    );
     const merged = thisMomentRange.add(thatMomentRange, options);
     if (merged) {
       return new DayTimeRange(merged.start, merged.end);
@@ -81,15 +92,18 @@ export class DayTimeRange implements SerializableJSON {
   }
 
   subtract(that: DayTimeRange): DayTimeRange[] {
-    const thisMomentRange = moment.range(this.start.toMoment(), this.end.toMoment());
-    const thatMomentRange = moment.range(that.start.toMoment(), that.end.toMoment());
+    const thisMomentRange = moment.range(
+      this.start.toMoment(),
+      this.end.toMoment()
+    );
+    const thatMomentRange = moment.range(
+      that.start.toMoment(),
+      that.end.toMoment()
+    );
     const subtracted = thisMomentRange.subtract(thatMomentRange);
     return subtracted
       .filter(momentRange => !!momentRange)
-      .map(
-        momentRange =>
-          new DayTimeRange(momentRange.start, momentRange.end)
-      );
+      .map(momentRange => new DayTimeRange(momentRange.start, momentRange.end));
   }
 
   format(startTokenString: string = 'HH:mm', endTokenString?: string): string {

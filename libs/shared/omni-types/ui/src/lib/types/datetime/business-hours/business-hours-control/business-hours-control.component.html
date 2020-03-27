@@ -1,0 +1,105 @@
+<div class="business-hours-control">
+  <div class="control-label" *ngIf="label">
+    <h4>
+      <span>{{ label }}</span>
+    </h4>
+  </div>
+  <div
+    fxLayout="row wrap"
+    fxLayoutAlign="start center"
+    fxLayoutGap="10px"
+    [formGroup]="formGroupOpenHour"
+  >
+    <div fxFlex="150px" id="week-day-select" class="flex-row-wrap-item">
+      <div class="week-day-select">
+        <mat-select
+          placeholder="選擇星期幾..."
+          formControlName="weekDay"
+          class="select-weekday"
+        >
+          <mat-option
+            class="option-weekday"
+            *ngFor="let weekDayName of weekDayNames; let idx = index"
+            [value]="idx"
+            [attr.weekday]="idx"
+          >
+            {{ weekDayName }}
+          </mat-option>
+          <mat-option [value]="7">整週/每天</mat-option>
+        </mat-select>
+      </div>
+    </div>
+    <div
+      class="day-time-range-control flex-row-wrap-item"
+      style="margin-bottom: 20px;"
+    >
+      <ygg-day-time-range-control
+        formControlName="dayTimeRange"
+      ></ygg-day-time-range-control>
+    </div>
+    <div
+      fxLayout="row"
+      fxLayoutAlign="start center"
+      fxLayoutGap="10px"
+      class="flex-row-wrap-item"
+    >
+      <div>
+        <button
+          class="add-open-hour"
+          mat-mini-fab
+          (click)="addOpenHour()"
+          matTooltip="加入服務時段"
+        >
+          <mat-icon>timer</mat-icon>
+        </button>
+      </div>
+      <div>
+        <button
+          mat-mini-fab
+          class="subtract-open-hour"
+          (click)="subtractOpenHour()"
+          matTooltip="減去服務時段"
+        >
+          <mat-icon>timer_off</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div
+    class="open-hours-list"
+    *ngIf="businessHours.getOpenHours() as openHours"
+  >
+    <div [hidden]="openHours.length > 0">
+      <h4>尚未指定任何服務時段</h4>
+    </div>
+    <div>
+      <div
+        *ngFor="let openHour of openHours; let idx = index"
+        class="open-hour-item mat-elevation-z6"
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+        fxLayoutGap="20px"
+      >
+        <div>
+          <ygg-open-hour [openHour]="openHour"></ygg-open-hour>
+        </div>
+        <div>
+          <button mat-mini-fab (click)="deleteOpenHour(idx)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
+        <button
+          class="clear-all"
+          mat-mini-fab
+          (click)="clearAll()"
+          matTooltip="清除全部時段"
+        >
+          <mat-icon>delete_sweep</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

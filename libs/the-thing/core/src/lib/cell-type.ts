@@ -1,5 +1,5 @@
 import { sample, random } from 'lodash';
-import { Album, Address, Location } from '@ygg/shared/omni-types/core';
+import { Album, Address, Location, BusinessHours } from '@ygg/shared/omni-types/core';
 import {
   Html,
   DateRange,
@@ -19,6 +19,7 @@ export type TheThingCellTypeID =
   | 'location'
   | 'date-range'
   | 'day-time-range'
+  | 'business-hours'
   | 'contact';
 
 interface TheThingCellType {
@@ -141,6 +142,14 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
       return DayTimeRange.forge();
     },
     comparator: DayTimeRange.compare,
+    default: null
+  },
+  'business-hours': {
+    id: 'business-hours',
+    label: '服務時段(每週)',
+    forge: (options: any = {}): BusinessHours => {
+      return BusinessHours.forge();
+    },
     default: null
   },
   contact: {

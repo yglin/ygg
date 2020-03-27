@@ -69,6 +69,7 @@ describe('Create play', () => {
   });
 
   it('Create a play with all data fields', () => {
+    console.dir(PlayFull);
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
 
     // ======= Click create button

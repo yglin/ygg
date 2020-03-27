@@ -1,6 +1,6 @@
 import { PageObject } from '@ygg/shared/test/page-object';
 import { DayTimeRange } from '@ygg/shared/omni-types/core';
-import { DayTimeControlPageObject } from "../../day-time";
+import { DayTimeControlPageObject } from '../../day-time';
 
 export class DayTimeRangeControlPageObject extends PageObject {
   selectors = {
@@ -12,6 +12,7 @@ export class DayTimeRangeControlPageObject extends PageObject {
   endDayTimeControl: DayTimeControlPageObject;
 
   setValue(dayTimeRange: DayTimeRange) {
+    console.log(dayTimeRange);
     this.startDayTimeControl.setValue(dayTimeRange.start);
     this.endDayTimeControl.setValue(dayTimeRange.end);
   }

@@ -1,0 +1,18 @@
+<div
+  fxLayout="row"
+  fxLayoutAlign="start center"
+  fxLayoutGap="20px"
+  *ngIf="openHour"
+  class="open-hour"
+>
+  <div>
+    <h4 class="week-day">{{ getWeekDayName(openHour.weekDay) }}</h4>
+  </div>
+  <div>
+    <div class="day-time-range" *ngIf="openHour.dayTimeRange">
+      <ygg-day-time-range-view
+        [dayTimeRange]="openHour.dayTimeRange"
+      ></ygg-day-time-range-view>
+    </div>
+  </div>
+</div>

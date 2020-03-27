@@ -2,7 +2,8 @@ import { PlayViewPageObject } from '@ygg/playwhat/ui';
 import { TheThing } from '@ygg/the-thing/core';
 import {
   AlbumViewPageObjectCypress,
-  LocationViewPageObjectCypress
+  LocationViewPageObjectCypress,
+  BusinessHoursViewPageObjectCypress
 } from '@ygg/shared/omni-types/test';
 import { CellNamePrice } from '@ygg/shopping/core';
 import { AdditionViewPageObjectCypress } from '@ygg/shopping/test';
@@ -41,6 +42,13 @@ export class PlayViewPageObjectCypress extends PlayViewPageObject {
         this.getSelector('location')
       );
       locationViewPO.expectValue(location);
+    }
+    const businessHours = play.getCellValue('服務時段');
+    if (businessHours) {
+      const businessHoursViewPO = new BusinessHoursViewPageObjectCypress(
+        this.getSelector('businessHours')
+      );
+      businessHoursViewPO.expectValue(businessHours);
     }
 
     // for (const optionalCellDef of ImitationPlay.getOptionalCellDefs()) {

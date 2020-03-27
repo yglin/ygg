@@ -48,6 +48,11 @@
         [formControlName]="cell.name"
       ></ygg-day-time-range-control>
     </div>
+    <div *ngSwitchCase="'business-hours'">
+      <ygg-business-hours-control
+        [formControlName]="cell.name"
+      ></ygg-business-hours-control>
+    </div>
     <div *ngSwitchCase="'contact'">
       <ygg-contact-control [formControlName]="cell.name"></ygg-contact-control>
     </div>

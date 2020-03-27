@@ -6,7 +6,8 @@ import {
   AddressControlPageObjectCypress,
   DateRangeControlPageObjectCypress,
   DayTimeRangeControlPageObjectCypress,
-  LocationControlPageObjectCypress
+  LocationControlPageObjectCypress,
+  BusinessHoursControlPageObjectCypress
 } from '@ygg/shared/omni-types/test';
 
 export class TheThingCellsEditorPageObjectCypress extends TheThingCellsEditorPageObject {
@@ -63,6 +64,12 @@ export class TheThingCellsEditorPageObjectCypress extends TheThingCellsEditorPag
           this.getSelectorForCellControl(cell)
         );
         dayTimeRangeControlPO.setValue(cell.value);
+        break;
+      case 'business-hours':
+        const businessHoursControlPO = new BusinessHoursControlPageObjectCypress(
+          this.getSelectorForCellControl(cell)
+        );
+        businessHoursControlPO.setValue(cell.value);
         break;
       default:
         break;

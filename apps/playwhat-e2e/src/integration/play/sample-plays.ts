@@ -7,7 +7,7 @@ import {
 import { ImitationPlay } from '@ygg/playwhat/core';
 import { v4 as uuid } from 'uuid';
 import { random } from 'lodash';
-import { Album, Location } from '@ygg/shared/omni-types/core';
+import { Album, Location, BusinessHours } from '@ygg/shared/omni-types/core';
 
 export const MinimumPlay = ImitationPlay.createTheThing().fromJSON({
   name: '溜鳥鳥體驗(最少需求資料欄位)',
@@ -52,7 +52,12 @@ PlayFull.addCells([
   {
     name: '地點',
     type: 'location',
-    value: Location.forge()
+    value: Location.forge().toJSON()
+  },
+  {
+    name: '服務時段',
+    type: 'business-hours',
+    value: BusinessHours.forge().toJSON()
   }
 ].map(cellData => new TheThingCell().fromJSON(cellData)));
 

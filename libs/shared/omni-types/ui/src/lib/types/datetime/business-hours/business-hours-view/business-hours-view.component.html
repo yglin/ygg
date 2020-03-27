@@ -1,0 +1,8 @@
+<div class="business-hours-view" *ngIf="businessHours">
+  <div class="open-hour-list" *ngIf="businessHours.getOpenHours() as openHours">
+    <h4>服務時段</h4>
+    <div *ngFor="let openHour of openHours; let idx = index;">
+      <ygg-open-hour [attr.index]="idx" [openHour]="openHour"></ygg-open-hour>
+    </div>
+  </div>
+</div>

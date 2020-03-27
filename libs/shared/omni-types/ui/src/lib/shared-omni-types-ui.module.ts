@@ -29,7 +29,10 @@ import {
   GeoPointViewComponent,
   GoogleMapComponent,
   LocationControlComponent,
-  LocationViewComponent
+  LocationViewComponent,
+  BusinessHoursControlComponent,
+  BusinessHoursViewComponent,
+  OpenHourComponent
 } from './types';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -67,7 +70,10 @@ import { HttpClientModule } from '@angular/common/http';
     GeoPointViewComponent,
     GoogleMapComponent,
     LocationControlComponent,
-    LocationViewComponent
+    LocationViewComponent,
+    BusinessHoursControlComponent,
+    BusinessHoursViewComponent,
+    OpenHourComponent
   ],
   exports: [
     HtmlControlComponent,
@@ -89,7 +95,10 @@ import { HttpClientModule } from '@angular/common/http';
     GeoPointViewComponent,
     GoogleMapComponent,
     LocationControlComponent,
-    LocationViewComponent
+    LocationViewComponent,
+    BusinessHoursControlComponent,
+    BusinessHoursViewComponent,
+    OpenHourComponent
   ],
   entryComponents: [ImageUploaderComponent]
 })

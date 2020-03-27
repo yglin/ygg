@@ -27,7 +27,14 @@
         <ygg-date-range-view [dateRange]="cell.value"></ygg-date-range-view>
       </div>
       <div *ngSwitchCase="'day-time-range'">
-        <ygg-day-time-range-view [dayTimeRange]="cell.value"></ygg-day-time-range-view>
+        <ygg-day-time-range-view
+          [dayTimeRange]="cell.value"
+        ></ygg-day-time-range-view>
+      </div>
+      <div *ngSwitchCase="'day-time-range'">
+        <ygg-business-hours-view
+          [businessHours]="cell.value"
+        ></ygg-business-hours-view>
       </div>
       <div *ngSwitchCase="'contact'">
         <ygg-contact-view [contact]="cell.value"></ygg-contact-view>

@@ -6,7 +6,8 @@ import {
   Html,
   DateRange,
   DayTimeRange,
-  Contact
+  Contact,
+  BusinessHours
 } from '@ygg/shared/omni-types/core';
 import { TheThingCellTypes } from './cell-type';
 
@@ -79,6 +80,9 @@ export class TheThingCell {
           break;
         case 'day-time-range':
           this.value = new DayTimeRange().fromJSON(data.value);
+          break;
+        case 'business-hours':
+          this.value = new BusinessHours().fromJSON(data.value);
           break;
         case 'contact':
           this.value = new Contact().fromJSON(data.value);

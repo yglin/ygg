@@ -50,6 +50,11 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
         name: '地點',
         type: 'location',
         userInput: 'optional'
+      },
+      服務時段: {
+        name: '服務時段',
+        type: 'business-hours',
+        userInput: 'optional'
       }
     },
     cellsOrder: [
