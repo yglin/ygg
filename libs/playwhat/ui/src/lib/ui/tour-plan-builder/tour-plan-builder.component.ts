@@ -132,7 +132,7 @@ export class TourPlanBuilderComponent
       this.theThing = await this.tourPlanBuilder.create();
     }
     this.theThingPreview$.next(this.theThing);
-    console.dir(this.theThing);
+    // console.dir(this.theThing);
     this.populateTourPlan();
   }
 

@@ -27,24 +27,16 @@
       </mat-form-field>
     </div>
     <div *ngSwitchCase="'number'">
-      <ygg-number-control
-        [formControlName]="cell.name"
-      ></ygg-number-control>
+      <ygg-number-control [formControlName]="cell.name"></ygg-number-control>
     </div>
     <div *ngSwitchCase="'album'">
-      <ygg-album-control  
-        [formControlName]="cell.name"
-      ></ygg-album-control>
+      <ygg-album-control [formControlName]="cell.name"></ygg-album-control>
     </div>
     <div *ngSwitchCase="'html'">
-      <ygg-html-control  
-        [formControlName]="cell.name"
-      ></ygg-html-control>
+      <ygg-html-control [formControlName]="cell.name"></ygg-html-control>
     </div>
     <div *ngSwitchCase="'address'">
-      <ygg-address-control
-        [formControlName]="cell.name"
-      ></ygg-address-control>
+      <ygg-address-control [formControlName]="cell.name"></ygg-address-control>
     </div>
     <div *ngSwitchCase="'date-range'">
       <ygg-date-range-control
@@ -57,9 +49,12 @@
       ></ygg-day-time-range-control>
     </div>
     <div *ngSwitchCase="'contact'">
-      <ygg-contact-control
+      <ygg-contact-control [formControlName]="cell.name"></ygg-contact-control>
+    </div>
+    <div *ngSwitchCase="'location'">
+      <ygg-location-control
         [formControlName]="cell.name"
-      ></ygg-contact-control>
+      ></ygg-location-control>
     </div>
     <div *ngSwitchDefault>
       <h3>未支援的資料型態：{{ cell.type }}</h3>

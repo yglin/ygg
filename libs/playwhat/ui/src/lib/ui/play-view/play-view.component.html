@@ -22,6 +22,9 @@
       {{ theThing.getCellValue('人數上限') }} 人
     </h3>
   </div>
+  <div class="location" *ngIf="theThing.getCellValue('地點') as location">
+    <ygg-location-view [location]='location'></ygg-location-view>
+  </div>
   <br>
   <div class='addition-list' *ngIf="additions">
     <h3>{{ RelationAddition.name }}</h3>

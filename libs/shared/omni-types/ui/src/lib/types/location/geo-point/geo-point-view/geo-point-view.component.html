@@ -1,0 +1,4 @@
+<div class="geo-point-view" *ngIf="geoPoint">
+  <h5 class="coordinates">{{ geoPoint.latitude }}, {{ geoPoint.longitude }}</h5>
+  <ygg-google-map [geoPoint]="geoPoint" readonly></ygg-google-map>
+</div>

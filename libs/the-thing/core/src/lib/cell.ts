@@ -1,12 +1,13 @@
 import { extend, sample, random, keys, omit, get } from 'lodash';
-import { Album, Address } from '@ygg/shared/omni-types/core';
 import {
+  Album,
+  Address,
+  Location,
   Html,
   DateRange,
   DayTimeRange,
   Contact
 } from '@ygg/shared/omni-types/core';
-import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { TheThingCellTypes } from './cell-type';
 
 export class TheThingCell {
@@ -69,6 +70,9 @@ export class TheThingCell {
           break;
         case 'address':
           this.value = new Address().fromJSON(data.value);
+          break;
+        case 'location':
+          this.value = new Location().fromJSON(data.value);
           break;
         case 'date-range':
           this.value = new DateRange().fromJSON(data.value);

@@ -20,6 +20,9 @@
       <div *ngSwitchCase="'address'">
         <ygg-address-view [address]="cell.value"></ygg-address-view>
       </div>
+      <div *ngSwitchCase="'location'">
+        <ygg-location-view [location]="cell.value"></ygg-location-view>
+      </div>
       <div *ngSwitchCase="'date-range'">
         <ygg-date-range-view [dateRange]="cell.value"></ygg-date-range-view>
       </div>

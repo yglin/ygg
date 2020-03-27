@@ -1,4 +1,4 @@
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 import {
   RelationAddition,
   CellNamePrice,
@@ -7,20 +7,15 @@ import {
 import { ImitationPlay } from '@ygg/playwhat/core';
 import { v4 as uuid } from 'uuid';
 import { random } from 'lodash';
-import { Album } from '@ygg/shared/omni-types/core';
+import { Album, Location } from '@ygg/shared/omni-types/core';
 
 export const MinimumPlay = ImitationPlay.createTheThing().fromJSON({
-  name: uuid(),
+  name: '溜鳥鳥體驗(最少需求資料欄位)',
   cells: {
     照片: {
       name: '照片',
       type: 'album',
       value: Album.forge().toJSON()
-    },
-    副標題: {
-      name: '副標題',
-      type: 'text',
-      value: '臭雞味比賽'
     },
     簡介: {
       name: '簡介',
@@ -50,6 +45,16 @@ export const MinimumPlay = ImitationPlay.createTheThing().fromJSON({
     }
   }
 });
+
+export const PlayFull = MinimumPlay.clone();
+PlayFull.name = '測試體驗溜鳥鳥(所有資料欄位)';
+PlayFull.addCells([
+  {
+    name: '地點',
+    type: 'location',
+    value: Location.forge()
+  }
+].map(cellData => new TheThingCell().fromJSON(cellData)));
 
 export const SamplePlays = [
   {

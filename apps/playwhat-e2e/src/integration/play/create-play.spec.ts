@@ -7,7 +7,8 @@ import {
 import {
   MinimumPlay,
   SampleAdditions,
-  PlaysWithAddition
+  PlaysWithAddition,
+  PlayFull
 } from './sample-plays';
 import {
   TheThingEditorPageObjectCypress,
@@ -39,7 +40,7 @@ describe('Create play', () => {
     myThingsPO.deleteAll();
   });
 
-  it('Create a minimum play from template', () => {
+  it('Create a minimum play from imitation', () => {
     // ======= Go to my plays page
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
 
@@ -65,6 +66,30 @@ describe('Create play', () => {
 
     // ======= Confirm the new play is there
     myPlayListPO.theThingDataTablePO.expectTheThing(MinimumPlay);
+  });
+
+  it('Create a play with all data fields', () => {
+    siteNavigator.goto(['plays', 'my'], myPlayListPO);
+
+    // ======= Click create button
+    myPlayListPO.clickCreate();
+
+    // ======= Redirect to the-thing-editor and automatically apply ImitationPlay
+    const theThingEditorPO = new TheThingEditorPageObjectCypress();
+    theThingEditorPO.expectVisible();
+    theThingEditorPO.setValue(PlayFull);
+    theThingEditorPO.submit();
+
+    // ======= Expect play view, check data
+    const playViewPO = new PlayViewPageObjectCypress();
+    playViewPO.expectVisible();
+    playViewPO.expectValue(PlayFull);
+
+    // ======= Go back to my plays page
+    siteNavigator.goto(['plays', 'my'], myPlayListPO);
+
+    // ======= Confirm the new play is there
+    myPlayListPO.theThingDataTablePO.expectTheThing(PlayFull);
   });
 
   it('Create a play with some additions', () => {

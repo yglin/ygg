@@ -1,5 +1,5 @@
 import { sample, random } from 'lodash';
-import { Album, Address } from '@ygg/shared/omni-types/core';
+import { Album, Address, Location } from '@ygg/shared/omni-types/core';
 import {
   Html,
   DateRange,
@@ -16,6 +16,7 @@ export type TheThingCellTypeID =
   | 'album'
   | 'html'
   | 'address'
+  | 'location'
   | 'date-range'
   | 'day-time-range'
   | 'contact';
@@ -116,6 +117,14 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
     },
     default: null
   },
+  location: {
+    id: 'location',
+    label: '地點',
+    forge: (options: any = {}): Location => {
+      return Location.forge();
+    },
+    default: null
+  },
   'date-range': {
     id: 'date-range',
     label: '日期期間',
@@ -143,4 +152,3 @@ export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
     default: null
   }
 };
-

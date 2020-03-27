@@ -24,7 +24,12 @@ import {
   ContactControlComponent,
   ContactViewComponent,
   AddressControlComponent,
-  AddressViewComponent
+  AddressViewComponent,
+  GeoPointControlComponent,
+  GeoPointViewComponent,
+  GoogleMapComponent,
+  LocationControlComponent,
+  LocationViewComponent
 } from './types';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -57,7 +62,12 @@ import { HttpClientModule } from '@angular/common/http';
     ContactControlComponent,
     ContactViewComponent,
     AddressControlComponent,
-    AddressViewComponent
+    AddressViewComponent,
+    GeoPointControlComponent,
+    GeoPointViewComponent,
+    GoogleMapComponent,
+    LocationControlComponent,
+    LocationViewComponent
   ],
   exports: [
     HtmlControlComponent,
@@ -74,7 +84,12 @@ import { HttpClientModule } from '@angular/common/http';
     ContactControlComponent,
     ContactViewComponent,
     AddressControlComponent,
-    AddressViewComponent
+    AddressViewComponent,
+    GeoPointControlComponent,
+    GeoPointViewComponent,
+    GoogleMapComponent,
+    LocationControlComponent,
+    LocationViewComponent
   ],
   entryComponents: [ImageUploaderComponent]
 })

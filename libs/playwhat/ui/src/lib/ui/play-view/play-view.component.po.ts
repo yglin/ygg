@@ -1,5 +1,5 @@
 import { PageObject } from '@ygg/shared/test/page-object';
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 import { AlbumViewPageObject } from '@ygg/shared/omni-types/ui';
 
 export abstract class PlayViewPageObject extends PageObject {
@@ -11,9 +11,20 @@ export abstract class PlayViewPageObject extends PageObject {
     price: '.price',
     timeLength: '.time-length',
     limitOnNumber: '.limit-on-number',
+    location: '.location',
     additionList: '.addition-list'
   };
   albumViewPO: AlbumViewPageObject;
+
+  getSelectorForCell(cell: TheThingCell | string): string {
+    let cellName: string;
+    if (typeof cell === 'string') {
+      cellName = cell;
+    } else {
+      cellName = cell.name;
+    }
+    return `${this.getSelector()} [cell-name="${cellName}"]`;
+  }
 
   abstract expectVisible(): void;
   abstract expectValue(play: TheThing): void;

@@ -5,7 +5,8 @@ import {
   HtmlControlPageObjectCypress,
   AddressControlPageObjectCypress,
   DateRangeControlPageObjectCypress,
-  DayTimeRangeControlPageObjectCypress
+  DayTimeRangeControlPageObjectCypress,
+  LocationControlPageObjectCypress
 } from '@ygg/shared/omni-types/test';
 
 export class TheThingCellsEditorPageObjectCypress extends TheThingCellsEditorPageObject {
@@ -43,6 +44,12 @@ export class TheThingCellsEditorPageObjectCypress extends TheThingCellsEditorPag
           this.getSelectorForCellControl(cell)
         );
         addressControlPO.setValue(cell.value);
+        break;
+      case 'location':
+        const locationControlPO = new LocationControlPageObjectCypress(
+          this.getSelectorForCellControl(cell)
+        );
+        locationControlPO.setValue(cell.value);
         break;
       case 'date-range':
         const dateRangeControlPO = new DateRangeControlPageObjectCypress(

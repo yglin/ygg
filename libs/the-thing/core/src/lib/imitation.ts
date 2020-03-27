@@ -7,7 +7,8 @@ import {
   get,
   isArray,
   keyBy,
-  clone
+  clone,
+  uniq
 } from 'lodash';
 import {
   generateID,
@@ -67,6 +68,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   stateName: string;
   states: { [name: string]: TheThingState };
   creators: TheThingCreator[] = [];
+  cellsOrder: string[] = [];
 
   /** Create time */
   createAt: number;
@@ -203,6 +205,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     imitation.creators = [...this.creators, ...imitation.creators];
     imitation.validators = [...this.validators, ...imitation.validators];
     imitation.filter = this.filter.merge(imitation.filter);
+    imitation.cellsOrder = uniq(this.cellsOrder.concat(imitation.cellsOrder));
     return imitation;
   }
 

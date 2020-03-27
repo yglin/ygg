@@ -45,8 +45,23 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
         name: '人數上限',
         type: 'number',
         userInput: 'required'
+      },
+      地點: {
+        name: '地點',
+        type: 'location',
+        userInput: 'optional'
       }
     },
+    cellsOrder: [
+      '照片',
+      '簡介',
+      '費用',
+      '時長',
+      '人數下限',
+      '人數上限',
+      '副標題',
+      '地點'
+    ],
     dataTableConfig: {
       columns: {
         簡介: {

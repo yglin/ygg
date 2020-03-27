@@ -1,9 +1,13 @@
 import { PlayViewPageObject } from '@ygg/playwhat/ui';
 import { TheThing } from '@ygg/the-thing/core';
-import { AlbumViewPageObjectCypress } from '@ygg/shared/omni-types/test';
+import {
+  AlbumViewPageObjectCypress,
+  LocationViewPageObjectCypress
+} from '@ygg/shared/omni-types/test';
 import { CellNamePrice } from '@ygg/shopping/core';
 import { AdditionViewPageObjectCypress } from '@ygg/shopping/test';
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
+import { ImitationPlay } from '@ygg/playwhat/core';
 
 export class PlayViewPageObjectCypress extends PlayViewPageObject {
   constructor(parentSelector?: string) {
@@ -19,7 +23,10 @@ export class PlayViewPageObjectCypress extends PlayViewPageObject {
 
   expectValue(play: TheThing): void {
     cy.get(this.getSelector('name')).contains(play.name);
-    cy.get(this.getSelector('subtitle')).contains(play.getCellValue('副標題'));
+    const subtitle = play.getCellValue('副標題');
+    if (subtitle) {
+      cy.get(this.getSelector('subtitle')).contains(subtitle);
+    }
     this.albumViewPO.expectValue(play.getCellValue('照片'));
     cy.get(this.getSelector('price')).contains(play.getCellValue('費用'));
     cy.get(this.getSelector('timeLength')).contains(play.getCellValue('時長'));
@@ -28,10 +35,33 @@ export class PlayViewPageObjectCypress extends PlayViewPageObject {
         '人數上限'
       )} 人`
     );
+    const location = play.getCellValue('地點');
+    if (location) {
+      const locationViewPO = new LocationViewPageObjectCypress(
+        this.getSelector('location')
+      );
+      locationViewPO.expectValue(location);
+    }
+
+    // for (const optionalCellDef of ImitationPlay.getOptionalCellDefs()) {
+    //   const cell = play.getCell(optionalCellDef.name);
+    //   if (cell && cell.value) {
+    //     const cellViewPO = new TheThingCellViewPageObjectCypress(
+    //       this.getSelectorForCell(cell)
+    //     );
+    //     cellViewPO.expectValue(cell);
+    //   } else {
+    //     cy.get(this.getSelectorForCell(optionalCellDef.name)).should(
+    //       'not.exist'
+    //     );
+    //   }
+    // }
   }
 
   expectAdditions(additions: TheThing[]) {
-    const additionListPO = new ImageThumbnailListPageObjectCypress(this.getSelector('additionList'));
+    const additionListPO = new ImageThumbnailListPageObjectCypress(
+      this.getSelector('additionList')
+    );
     additionListPO.expectItems(additions);
   }
 }

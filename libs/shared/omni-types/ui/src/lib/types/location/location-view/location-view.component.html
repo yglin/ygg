@@ -1,0 +1,8 @@
+<div class="location-view" *ngIf="location">
+  <div class="address" *ngIf="location.address">
+    <ygg-address-view [address]="location.address"></ygg-address-view>
+  </div>
+  <div class="geo-point" *ngIf="location.geoPoint">
+    <ygg-geo-point-view [geoPoint]="location.geoPoint"></ygg-geo-point-view>
+  </div>
+</div>
