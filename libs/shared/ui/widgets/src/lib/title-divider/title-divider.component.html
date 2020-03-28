@@ -8,10 +8,11 @@
   <div fxFlex="10%">
     <mat-divider [ngStyle]="dividerStyle"></mat-divider>
   </div>
-  <div class="title" fxFlex="30%">
-    <div fittext [minFontSize]="minFontSize" [maxFontSize]="maxFontSize">
+  <div class="title" style.fontSize="{{titleSize}}px">
+    <ng-content></ng-content>
+    <!-- <div fittext [minFontSize]="minFontSize" [maxFontSize]="maxFontSize">
       <ng-content></ng-content>
-    </div>
+    </div> -->
   </div>
   <div fxFlex>
     <mat-divider [ngStyle]="dividerStyle"></mat-divider>
