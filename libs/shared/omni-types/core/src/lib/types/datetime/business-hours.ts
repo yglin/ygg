@@ -28,8 +28,8 @@ export class BusinessHours implements SerializableJSON {
   }
 
   addOpenHour(newOpenHour: OpenHour) {
-    console.log('new open-hour');
-    console.dir(newOpenHour);
+    // console.log('new open-hour');
+    // console.dir(newOpenHour);
     if (isEmpty(this.openHours)) {
       this.openHours.push(newOpenHour);
     } else {
@@ -57,7 +57,7 @@ export class BusinessHours implements SerializableJSON {
       // console.log(`insertAtIndex = ${insertAtIndex}, mergedCount = ${mergedCount}, merged = ${mergedOpenHour.format()}`);
       this.openHours.splice(insertAtIndex, mergedCount, newOpenHour);
     }
-    console.dir(this.openHours);
+    // console.dir(this.openHours);
   }
 
   removeOpenHourByIndex(index: number) {

@@ -61,6 +61,7 @@ export class TourPlanBuilderComponent
   purchases: Purchase[] = [];
   subscriptions: Subscription[] = [];
   formControlPurchases: FormControl;
+  imitation = ImitationTourPlan;
 
   constructor(
     private formBuilder: FormBuilder,

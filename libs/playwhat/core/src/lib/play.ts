@@ -65,7 +65,8 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
       '人數下限',
       '人數上限',
       '副標題',
-      '地點'
+      '地點',
+      '服務時段'
     ],
     dataTableConfig: {
       columns: {

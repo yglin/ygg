@@ -160,7 +160,7 @@
               <mat-icon>navigate_before</mat-icon>
             </button>
           </div>
-          <div><h2>其他資訊與需求</h2></div>
+          <div><h2>其他需求事項</h2></div>
           <div>
             <button
               type="button"
@@ -185,6 +185,7 @@
           <div class="optional-editor">
             <the-thing-cells-editor
               formControlName="optionalCells"
+              [cellsOrder]="imitation.cellsOrder"
             ></the-thing-cells-editor>
           </div>
         </form>
@@ -226,7 +227,7 @@
             </button>
           </div>
         </div>
-        <div class='preview'>
+        <div class="preview">
           <ygg-tour-plan-view
             [theThing$]="theThingPreview$"
           ></ygg-tour-plan-view>

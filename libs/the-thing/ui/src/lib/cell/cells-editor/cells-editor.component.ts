@@ -1,4 +1,12 @@
-import { Component, Input, OnInit, forwardRef, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  forwardRef,
+  OnDestroy,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -8,8 +16,18 @@ import {
   FormControl
 } from '@angular/forms';
 import { TheThingCell, TheThingCellTypes } from '@ygg/the-thing/core';
-import { isArray, isEmpty, keyBy, noop, size } from 'lodash';
+import {
+  isArray,
+  isEmpty,
+  keyBy,
+  noop,
+  size,
+  keys,
+  remove,
+  clone
+} from 'lodash';
 import { Subscription } from 'rxjs';
+import { timeout } from 'rxjs/operators';
 
 @Component({
   selector: 'the-thing-cells-editor',
@@ -26,13 +44,14 @@ import { Subscription } from 'rxjs';
 export class TheThingCellsEditorComponent
   implements OnInit, OnDestroy, ControlValueAccessor {
   cells: { [key: string]: TheThingCell } = {};
+  @Input() cellsOrder: string[] = [];
   formGroup: FormGroup;
   formGroupAddCell: FormGroup;
   onChange: (value: { [key: string]: TheThingCell }) => any = noop;
   onTouched: () => any = noop;
   subscriptions: Subscription[] = [];
   cellTypes = TheThingCellTypes;
-  canDeleteAllCells: boolean = false;
+  canDeleteAllCells = false;
 
   constructor(private formBuilder: FormBuilder) {
     this.formGroup = this.formBuilder.group({});
@@ -65,13 +84,19 @@ export class TheThingCellsEditorComponent
       cells = isEmpty(cells) ? {} : cells;
     }
     // console.log(cells);
+    // Force Angular refresh view
     this.deleteAllCells();
-    for (const name in cells) {
-      if (cells.hasOwnProperty(name)) {
-        const cell = cells[name].clone();
-        this.addCell(cell);
+    setTimeout(() => {
+      for (const name in cells) {
+        if (cells.hasOwnProperty(name)) {
+          const cell = cells[name].clone();
+          this.addCell(cell);
+        }
       }
-    }
+      if (isEmpty(this.cellsOrder)) {
+        this.cellsOrder = keys(this.cells);
+      }
+    }, 0);
   }
 
   registerOnChange(fn: any): void {
@@ -109,6 +134,7 @@ export class TheThingCellsEditorComponent
       }
       this.onChange(this.cells);
       this.canDeleteAllCells = size(this.formGroup.controls) >= 1;
+      remove(this.cellsOrder, name => name === cellName);
     }
   }
 
@@ -127,6 +153,9 @@ export class TheThingCellsEditorComponent
       });
       this.addCell(cell);
       this.onChange(this.cells);
+      if (this.cellsOrder.indexOf(cell.name) < 0) {
+        this.cellsOrder.push(cell.name);
+      }
     }
   }
 
@@ -141,7 +170,7 @@ export class TheThingCellsEditorComponent
     this.cells = {};
     for (const controlName in this.formGroup.controls) {
       if (this.formGroup.controls.hasOwnProperty(controlName)) {
-        const control = this.formGroup.controls[controlName];
+        // const control = this.formGroup.controls[controlName];
         this.formGroup.removeControl(controlName);
       }
     }

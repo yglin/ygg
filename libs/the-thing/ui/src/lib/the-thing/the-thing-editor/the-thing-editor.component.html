@@ -81,6 +81,7 @@
           <ygg-title-divider [level]="3">編輯資料欄位</ygg-title-divider>
           <the-thing-cells-editor
             [formControl]="formControlCells"
+            [cellsOrder]="imitation?.cellsOrder"
           ></the-thing-cells-editor>
         </div>
         <br /><br />
@@ -94,7 +95,7 @@
               "
               [attr.relation-name]="controlEntry.key"
               yggNgForColorBackground
-              [palette]='relaitonEditorsPalette'
+              [palette]="relaitonEditorsPalette"
               [index]="idx"
             >
               <ygg-title-divider [level]="6">{{

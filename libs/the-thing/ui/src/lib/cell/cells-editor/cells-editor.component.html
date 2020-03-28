@@ -1,15 +1,15 @@
 <div class="the-thing-cells-editor">
-  <div class="cell-controls">
-    <div *ngFor="let cellItem of cells | keyvalue; let idx = index">
-      <div
+  <div class="cell-controls" *ngIf="cells">
+    <div *ngFor="let cellName of cellsOrder; let idx = index">
+      <div *ngIf="cells[cellName] as cell"
         yggNgForColorBackground
         [index]="idx"
-        [attr.cell-name]="cellItem.key"
+        [attr.cell-name]="cell.name"
       >
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
           <div fxFlex>
             <ygg-title-divider [level]="5">{{
-              cellItem.key
+              cell.name
             }}</ygg-title-divider>
           </div>
           <div fxFlex="50px">
@@ -17,15 +17,14 @@
               type="button"
               class="delete"
               mat-mini-fab
-              (click)="onClickDeleteCell(cellItem.key)"
+              (click)="onClickDeleteCell(cell.name)"
             >
               <mat-icon>delete</mat-icon>
             </button>
           </div>
-          <div fxFlex></div>
         </div>
         <the-thing-cell-control
-          [cell]="cellItem.value"
+          [cell]="cell"
           [formGroup]="formGroup"
         ></the-thing-cell-control>
       </div>

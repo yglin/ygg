@@ -295,6 +295,7 @@ export class TheThingEditorComponent
         .pipe(
           take(1),
           filter(imitation => !!imitation),
+          tap(imitation => (this.imitation = imitation)),
           map(imitation => imitation.createTheThing()),
           timeout(5000),
           catchError(error => {

@@ -65,35 +65,41 @@ const cellsDef = {
     userInput: 'optional'
   },
   其他注意事項: {
-    name: '其他注意事項',
-    type: 'longtext',
+    name: '其他事項',
+    type: 'html',
     userInput: 'optional'
   }
 };
 
-cellsDef[CellNames.completeAt] = {
-  name: CellNames.completeAt,
-  type: 'datetime',
-  userInput: 'hidden'
-};
+const cellsOrder = [
+  '預計出遊日期',
+  '預計參加人數',
+  '聯絡資訊',
+  '預計遊玩時間',
+  '用餐需求',
+  '交通需求',
+  '長輩人數',
+  '孩童人數',
+  '司領人數',
+  '其他事項'
+];
 
-export const ImitationTourPlan: TheThingImitation = ImitationOrder.extend(
-  {
-    id: 'BvyVkzRIxEuYoPjxIjHVOA',
-    name: '旅遊行程規劃',
-    description: '規劃你想玩的體驗組合，預計出遊日期、參加人數，以及其他細節',
-    icon: 'directions_bike',
-    image: '/assets/images/tour/tour-plans.svg',
-    view: 'tour-plan',
-    editor: 'tour-plan',
-    // templateId: TemplateTourPlan.id,
-    cellsDef,
-    filter: {
-      name: '搜尋旅遊行程',
-      tags: ['tour-plan', '遊程規劃']
-    }
+export const ImitationTourPlan: TheThingImitation = ImitationOrder.extend({
+  id: 'BvyVkzRIxEuYoPjxIjHVOA',
+  name: '旅遊行程規劃',
+  description: '規劃你想玩的體驗組合，預計出遊日期、參加人數，以及其他細節',
+  icon: 'directions_bike',
+  image: '/assets/images/tour/tour-plans.svg',
+  view: 'tour-plan',
+  editor: 'tour-plan',
+  // templateId: TemplateTourPlan.id,
+  cellsDef,
+  cellsOrder,
+  filter: {
+    name: '搜尋旅遊行程',
+    tags: ['tour-plan', '遊程規劃']
   }
-);
+});
 
 ImitationTourPlan.dataTableConfig = {
   columns: keyBy(
