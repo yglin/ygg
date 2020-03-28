@@ -99,14 +99,17 @@ export class TheThingCellsEditorComponent
   }
 
   onClickDeleteCell(cellName: string) {
-    if (cellName in this.cells) {
-      delete this.cells[cellName];
+    const confirmMessage = `確定要刪除資料欄位：${cellName}？`;
+    if (confirm(confirmMessage)) {
+      if (cellName in this.cells) {
+        delete this.cells[cellName];
+      }
+      if (cellName in this.formGroup.controls) {
+        this.formGroup.removeControl(cellName);
+      }
+      this.onChange(this.cells);
+      this.canDeleteAllCells = size(this.formGroup.controls) >= 1;
     }
-    if (cellName in this.formGroup.controls) {
-      this.formGroup.removeControl(cellName);
-    }
-    this.onChange(this.cells);
-    this.canDeleteAllCells = size(this.formGroup.controls) >= 1;
   }
 
   onClickAddCell() {
@@ -124,6 +127,13 @@ export class TheThingCellsEditorComponent
       });
       this.addCell(cell);
       this.onChange(this.cells);
+    }
+  }
+
+  onClickDeleteAllCells() {
+    const confirmMessage = `注意：一旦刪除並且儲存，資料便無法回復，確定要刪除所有資料欄位？`;
+    if (confirm(confirmMessage)) {
+      this.deleteAllCells();
     }
   }
 

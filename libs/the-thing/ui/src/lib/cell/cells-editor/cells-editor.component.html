@@ -1,7 +1,11 @@
 <div class="the-thing-cells-editor">
   <div class="cell-controls">
-    <div *ngFor="let cellItem of cells | keyvalue; let idx = index;">
-      <div yggNgForColorBackground [index]='idx' [attr.cell-name]="cellItem.key">
+    <div *ngFor="let cellItem of cells | keyvalue; let idx = index">
+      <div
+        yggNgForColorBackground
+        [index]="idx"
+        [attr.cell-name]="cellItem.key"
+      >
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
           <div fxFlex>
             <ygg-title-divider [level]="5">{{
@@ -33,7 +37,7 @@
         [disabled]="!canDeleteAllCells"
         class="delete-all"
         mat-fab
-        (click)="deleteAllCells()"
+        (click)="onClickDeleteAllCells()"
         matTooltip="刪除所有資料欄位"
       >
         <mat-icon>delete_sweep</mat-icon>
