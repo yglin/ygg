@@ -1,28 +1,10 @@
-<div class="chips-control">
-  <div
-    class="action-bar"
-    fxLayout="row"
-    fxLayoutAlign="end center"
-    fxLayoutGap="10px"
-  >
-    <div [hidden]="!showButtonClearAll">
-      <button type="button" id="clear-all" mat-mini-fab (click)="clearAll()">
-        <mat-icon>delete_sweep</mat-icon>
-      </button>
-    </div>
-    <div [hidden]="!showButtonAdd">
-      <button
-        type="button"
-        id="add-chip"
-        class="add"
-        mat-mini-fab
-        (click)="addChip()"
-      >
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
-  </div>
-  <div>
+<div
+  class="chips-control"
+  fxLayout="row wrap"
+  fxLayoutAlign="start center"
+  fxLayoutGap="5px"
+>
+  <div fxFlex>
     <mat-form-field>
       <mat-chip-list #chipList>
         <mat-chip
@@ -66,5 +48,23 @@
         >{{ auto.isOpen ? 'arrow_drop_up' : 'arrow_drop_down' }}</mat-icon
       >
     </mat-form-field>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+    <div [hidden]="!showButtonAdd">
+      <button
+        type="button"
+        id="add-chip"
+        class="add"
+        mat-mini-fab
+        (click)="addChip()"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div [hidden]="!showButtonClearAll">
+      <button type="button" id="clear-all" mat-mini-fab (click)="clearAll()">
+        <mat-icon>delete_sweep</mat-icon>
+      </button>
+    </div>
   </div>
 </div>

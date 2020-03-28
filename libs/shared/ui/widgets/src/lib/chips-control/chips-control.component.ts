@@ -142,8 +142,11 @@ export class ChipsControlComponent
   }
 
   clearAll() {
-    this.chips.length = 0;
-    this.notifyChange();
+    const confirmMessage = `清除所有標籤？`;
+    if (confirm(confirmMessage)) {
+      this.chips.length = 0;
+      this.notifyChange();
+    }
   }
 
   addChipUnique(chip: string) {
