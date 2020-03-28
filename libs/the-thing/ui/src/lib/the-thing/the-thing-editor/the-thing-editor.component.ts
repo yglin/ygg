@@ -61,6 +61,8 @@ import { TheThingFinderComponent } from '../the-thing-finder/the-thing-finder.co
 import { TheThingViewsService } from '../../the-thing-views.service';
 import { LogService } from '@ygg/shared/infra/log';
 import { TheThingFactoryService } from '../../the-thing-factory.service';
+import { Color } from 'chroma-js';
+import * as chroma from 'chroma-js';
 
 interface RelationCreation {
   relationName: string;
@@ -73,7 +75,8 @@ interface RelationCreation {
   templateUrl: './the-thing-editor.component.html',
   styleUrls: ['./the-thing-editor.component.css']
 })
-export class TheThingEditorComponent implements OnInit, ITheThingEditorComponent {
+export class TheThingEditorComponent
+  implements OnInit, ITheThingEditorComponent {
   @Input() theThing: TheThing;
   @Input() theThing$: Subject<TheThing>;
   @Output() theThingChanged: EventEmitter<TheThing> = new EventEmitter();
@@ -102,6 +105,7 @@ export class TheThingEditorComponent implements OnInit, ITheThingEditorComponent
   relationCreation: RelationCreation;
   relationCreationsStack: RelationCreation[] = [];
   formGroupRelations: FormGroup;
+  relaitonEditorsPalette: Color[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -147,6 +151,8 @@ export class TheThingEditorComponent implements OnInit, ITheThingEditorComponent
     );
 
     this.views = this.theThingViewsService.views;
+
+    this.relaitonEditorsPalette = [chroma('#f8ffb8'), chroma('#ebb0ff')];
   }
 
   async initResolveTheThing(): Promise<TheThing> {
