@@ -1,7 +1,7 @@
 <div class="the-thing-cells-editor">
   <div class="cell-controls">
-    <div *ngFor="let cellItem of cells | keyvalue">
-      <div [attr.cell-name]="cellItem.key">
+    <div *ngFor="let cellItem of cells | keyvalue; let idx = index;">
+      <div yggNgForColorBackground [index]='idx' [attr.cell-name]="cellItem.key">
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
           <div fxFlex>
             <ygg-title-divider [level]="5">{{

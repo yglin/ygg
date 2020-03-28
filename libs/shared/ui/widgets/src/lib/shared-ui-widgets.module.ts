@@ -29,6 +29,7 @@ import {
   // ImageThumbnailSelectorComponent
 } from './image-thumbnail';
 import { AngularFittextModule } from 'angular-fittext';
+import { NgForColorBackgroundDirective } from './ng-for-color-background/ng-for-color-background.directive';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { AngularFittextModule } from 'angular-fittext';
     PriceComponent,
     ImageThumbnailComponent,
     ImageThumbnailListComponent,
+    NgForColorBackgroundDirective,
     // ImageThumbnailSelectorComponent
   ],
   imports: [
@@ -78,6 +80,7 @@ import { AngularFittextModule } from 'angular-fittext';
     PriceComponent,
     ImageThumbnailComponent,
     ImageThumbnailListComponent,
+    NgForColorBackgroundDirective,
     // ImageThumbnailSelectorComponent
   ],
   entryComponents: [
