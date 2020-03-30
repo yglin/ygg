@@ -65,7 +65,7 @@
     <ygg-purchase-list [purchases]="purchases"></ygg-purchase-list>
   </div>
   <div *ngFor="let cell of optionalCells">
-    <div [attr.cell-name]="cell.name">
+    <div [attr.cell-name]="cell.name" *ngIf="cell.value">
       <h4>{{ cell.name }}</h4>
       <the-thing-cell-view [cell]="cell"></the-thing-cell-view>
     </div>
