@@ -40,6 +40,8 @@
               <ygg-number-control
                 label="預計參加人數"
                 formControlName="numParticipants"
+                [min]='1'
+                [max]='200'
               ></ygg-number-control>
             </div>
           </div>
