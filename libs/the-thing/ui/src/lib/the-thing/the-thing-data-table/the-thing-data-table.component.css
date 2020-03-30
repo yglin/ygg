@@ -1,6 +1,19 @@
-.the-thing-data-table table {
+.mat-table {
+  background-color: rgba(255, 255, 255, 0.2);
   width: 100%;
 }
+
+.mat-paginator {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.mat-header-cell {
+  font-weight: 800;
+}
+/* 
+.the-thing-data-table table {
+  width: 100%;
+} */
 
 .search {
   max-width: 500px;
@@ -12,7 +25,8 @@ tr.mat-row:hover {
   overflow: auto;
 }
 
-td.mat-cell, th {
+td.mat-cell,
+th {
   max-width: 20vw;
   padding-right: 20px;
 }
