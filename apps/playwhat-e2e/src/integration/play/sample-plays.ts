@@ -19,7 +19,7 @@ export const MinimumPlay = ImitationPlay.createTheThing().fromJSON({
     },
     簡介: {
       name: '簡介',
-      type: 'longtext',
+      type: 'html',
       value:
         '請帶上自家的傲嬌小肉雞，選出年度最臭雞味冠軍。評審為20年資歷鳥奴，現任3隻肉雞鏟屎官'
     },
@@ -78,7 +78,7 @@ export const SamplePlays = [
       },
       簡介: {
         name: '簡介',
-        type: 'longtext',
+        type: 'html',
         value:
           '騎乘協力車見證台灣近代史的文 化聚落,其中的特殊省府文化, 不只透過眼睛來看見中興新村, 更以美食的嗅覺、手心的觸覺、 耳朵的聽覺等,從全方位的重新 認識過往美好質樸的優閒生活。 (含導覽解說、冷泡茶一瓶)'
       },
@@ -120,7 +120,7 @@ export const SamplePlays = [
       },
       簡介: {
         name: '簡介',
-        type: 'longtext',
+        type: 'html',
         value:
           '透過環境中的花草樹木感受省府 的生命之美,講師將帶領學員認 識環境的植物風景,以手作苔球 將迷人的植物濃縮成一個深邃、 引人駐足的迷你世界,呈現出苔 球獨有寂靜、律動的魅力姿態(學 員可製作帶回一顆苔球)。'
       },
@@ -162,7 +162,7 @@ export const SamplePlays = [
       },
       簡介: {
         name: '簡介',
-        type: 'longtext',
+        type: 'html',
         value:
           '體驗世界咖啡各式品種及口味差 異,藉由實際手作感受不一樣的 香氣,領略一場咖啡的氣味旅行。 (課程學員可自行體驗一杯手沖 咖啡與帶回一包耳掛式)。'
       },

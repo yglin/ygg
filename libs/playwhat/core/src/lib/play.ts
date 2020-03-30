@@ -18,7 +18,7 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
       },
       簡介: {
         name: '簡介',
-        type: 'longtext',
+        type: 'html',
         userInput: 'required'
       },
       照片: {
