@@ -11,6 +11,11 @@
   background: rgba(255, 255, 255, 0);
 }
 
+.colon {
+  font-size: 24px;
+  font-weight: bold;
+}
+
 button.time-picker {
   margin-bottom: 5px;
 }

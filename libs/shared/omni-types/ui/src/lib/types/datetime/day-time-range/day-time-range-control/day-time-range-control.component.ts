@@ -6,9 +6,12 @@ import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import { noop } from 'lodash';
+import { noop, isEmpty } from 'lodash';
 import { DayTimeRange, DayTime } from '@ygg/shared/omni-types/core';
 import { Subscription } from 'rxjs';
+import { tap, filter } from 'rxjs/operators';
+import { DayTimeRangeViewPageObject } from '../day-time-range-view/day-time-range-view.component.po';
+import { SlideInOutAnimation } from '@ygg/shared/ui/themes';
 
 @Component({
   selector: 'ygg-day-time-range-control',
@@ -20,11 +23,14 @@ import { Subscription } from 'rxjs';
       useExisting: forwardRef(() => DayTimeRangeControlComponent),
       multi: true
     }
-  ]
+  ],
+  animations: [SlideInOutAnimation]
 })
 export class DayTimeRangeControlComponent
   implements ControlValueAccessor, OnDestroy {
   @Input() label: string;
+  errorMessages: string[] = [];
+  stateShowError = 'out';
   // _dayTimeRange: DayTimeRange = new DayTimeRange(
   //   new DayTime(0, 0),
   //   new DayTime(0, 0)
@@ -45,21 +51,29 @@ export class DayTimeRangeControlComponent
 
   constructor(private formBuilder: FormBuilder) {
     this.formGroup = this.formBuilder.group({
-      start: [new DayTime(0, 0), Validators.required],
-      end: [new DayTime(0, 0), Validators.required]
+      start: [null, Validators.required],
+      end: [null, Validators.required]
     });
 
     this.subscriptions.push(
-      this.formGroup.valueChanges.subscribe((value: DayTimeRange) => {
-        if (
-          !!value &&
-          DayTime.isDayTime(value.start) &&
-          DayTime.isDayTime(value.end) &&
-          value.end.isAfter(value.start)
-        ) {
+      this.formGroup.valueChanges
+        .pipe(
+          tap(() => {
+            this.errorMessages = [];
+          }),
+          tap(value => {
+            if (!(value && value.start && value.end)) {
+              this.errorMessages.push(`請輸入開始時間和結束時間`);
+            } else if (value.start.isAfter(value.end)) {
+              this.errorMessages.push(`結束時間必須在開始時間之前`);
+            }
+            this.stateShowError = isEmpty(this.errorMessages) ? 'out' : 'in';
+          }),
+          filter(value => value && DayTimeRange.isDayTimeRange(value))
+        )
+        .subscribe((value: DayTimeRange) => {
           this.emitChange(new DayTimeRange(value));
-        }
-      })
+        })
     );
   }
 

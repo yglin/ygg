@@ -11,4 +11,9 @@
       <ygg-day-time-control formControlName="end" id="end"></ygg-day-time-control>
     </div>
   </div>
+  <div class="error-messages" [@slideInOut]="stateShowError">
+    <div *ngFor="let message of errorMessages">
+      <div class="error">{{ message }}</div>
+    </div>
+  </div>
 </div>

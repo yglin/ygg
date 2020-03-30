@@ -28,7 +28,8 @@ export class DayTimeRange implements SerializableJSON {
     return !!(
       value &&
       DayTime.isDayTime(value.start) &&
-      DayTime.isDayTime(value.end)
+      DayTime.isDayTime(value.end) &&
+      value.end.isAfter(value.start)
     );
   }
 

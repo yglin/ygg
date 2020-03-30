@@ -30,7 +30,7 @@ export class DayTimeControlComponent
   subscriptions: Subscription[] = [];
   formGroup: FormGroup;
 
-  _dayTime: DayTime = new DayTime(0, 0);
+  _dayTime: DayTime = null;
   set dayTime(value: DayTime) {
     if (DayTime.isDayTime(value)) {
       this._dayTime = value;
@@ -46,8 +46,8 @@ export class DayTimeControlComponent
     private amazingTimePickerService: AmazingTimePickerService
   ) {
     this.formGroup = this.formBuilder.group({
-      hour: 0,
-      minute: 0
+      hour: null,
+      minute: null
     });
 
     this.subscriptions.push(
@@ -85,7 +85,7 @@ export class DayTimeControlComponent
 
   openTimePicker() {
     const amazingTimePicker = this.amazingTimePickerService.open({
-      time: this.dayTime.format('HH:mm')
+      time: !!this.dayTime ? this.dayTime.format('HH:mm') : '12:00'
     });
     amazingTimePicker.afterClose().subscribe(timeToken => {
       if (timeToken) {
