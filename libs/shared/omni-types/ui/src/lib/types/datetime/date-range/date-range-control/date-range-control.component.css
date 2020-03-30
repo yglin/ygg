@@ -1,7 +1,12 @@
 
-.ygg-date-range-control .mat-form-field {
+.mat-form-field {
   width: 100%;
   min-width: 250px;
   max-width: 360px;
   font-size: 20px;
+}
+
+.error {
+  color: crimson;
+  font-weight: 500;
 }

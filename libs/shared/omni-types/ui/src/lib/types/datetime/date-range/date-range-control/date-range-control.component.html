@@ -38,4 +38,9 @@
       </mat-form-field>
     </div>
   </div>
+  <div class="error-messages" [@slideInOut]="stateShowError">
+    <div *ngFor="let message of errorMessages">
+      <div class="error">{{ message }}</div>
+    </div>
+  </div>
 </div>

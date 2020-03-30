@@ -1,4 +1,4 @@
-import { noop } from 'lodash';
+import { noop, isEmpty } from 'lodash';
 import { Component, forwardRef, OnDestroy, Inject, Input } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -8,12 +8,10 @@ import {
 import * as moment from 'moment';
 import { DateRange, DATE_FORMATS } from '@ygg/shared/omni-types/core';
 import { Subscription, merge } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS
-} from '@angular/material/core';
+import { filter, map, tap } from 'rxjs/operators';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { SlideInOutAnimation } from '@ygg/shared/ui/themes';
 
 @Component({
   selector: 'ygg-date-range-control',
@@ -30,7 +28,8 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
       provide: MAT_DATE_FORMATS,
       useValue: DATE_FORMATS
     }
-  ]
+  ],
+  animations: [SlideInOutAnimation]
 })
 export class DateRangeControlComponent
   implements ControlValueAccessor, OnDestroy {
@@ -40,10 +39,11 @@ export class DateRangeControlComponent
   startFormControl: FormControl;
   endFormControl: FormControl;
   subscriptions: Subscription[] = [];
+  errorMessages: string[] = [];
+  stateShowError = 'out';
 
   constructor(
-    private dateAdapter: DateAdapter<any>,
-    // @Inject(LOCALE_ID) public locale_id: string
+    private dateAdapter: DateAdapter<any> // @Inject(LOCALE_ID) public locale_id: string
   ) {
     // Set locale
     //@ts-ignore
@@ -63,19 +63,38 @@ export class DateRangeControlComponent
       )
         .pipe(
           map(() => [this.startFormControl.value, this.endFormControl.value]),
+          tap(() => (this.errorMessages = [])),
+          tap(([startValue, endValue]) => {
+            if (
+              !(
+                startValue &&
+                startValue.isValid() &&
+                endValue &&
+                endValue.isValid()
+              )
+            ) {
+              this.errorMessages.push(`請填入開始日期與結束日期`);
+            } else if (startValue.isAfter(endValue)) {
+              this.errorMessages.push(`結束日期必須在開始日期之前`);
+            }
+            this.stateShowError = isEmpty(this.errorMessages) ? 'out' : 'in';
+          }),
           filter(([startValue, endValue]) => {
             return (
               startValue &&
               startValue.isValid() &&
               endValue &&
-              endValue.isValid()
-              && startValue.isSameOrBefore(endValue)
+              endValue.isValid() &&
+              startValue.isSameOrBefore(endValue)
             );
           })
         )
         // this.startFormControl.valueChanges
         .subscribe(([startValue, endValue]) => {
-          const dateRange = new DateRange(startValue.toDate(), endValue.toDate());
+          const dateRange = new DateRange(
+            startValue.toDate(),
+            endValue.toDate()
+          );
           this.emitChange(dateRange);
           // console.log(`Emit Change: ${dateRange.format()}`);
         })

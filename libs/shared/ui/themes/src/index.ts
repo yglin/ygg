@@ -1,1 +1,1 @@
-export * from './lib/shared-ui-themes.module';
+export * from './lib/angular-animations';
