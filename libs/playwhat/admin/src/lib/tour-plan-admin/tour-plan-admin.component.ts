@@ -5,7 +5,7 @@ import { TheThing } from '@ygg/the-thing/core';
 import { TourPlanAdminPageObject } from './tour-plan-admin.component.po';
 import { IncomeRecord, ImitationOrder } from '@ygg/shopping/core';
 import { AccountingService } from '@ygg/shopping/factory';
-import { DateRange, Month } from '@ygg/shared/omni-types/core';
+import { Month } from '@ygg/shared/omni-types/core';
 import { switchMap, startWith } from 'rxjs/operators';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { range } from 'lodash';

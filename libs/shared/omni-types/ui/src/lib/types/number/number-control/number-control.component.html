@@ -20,7 +20,7 @@
           ><mat-icon *ngIf="iconType === 'font'">{{ icon }}</mat-icon>
           <img *ngIf="iconType === 'url'" [src]="icon" />
         </span>
-        <mat-error *ngIf="value <= 0">請填入{{ label }}</mat-error>
+        <mat-error *ngIf="!value">請填入{{ label }}</mat-error>
       </mat-form-field>
       <h6 *ngIf="zeroIsNoLimit && value == 0">無上限</h6>
     </div>

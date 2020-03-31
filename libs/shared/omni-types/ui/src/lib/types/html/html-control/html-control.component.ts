@@ -10,23 +10,17 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import * as DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { Html } from '@ygg/shared/omni-types/core';
 import { FormControl } from '@angular/forms';
 import { Subscription, of } from 'rxjs';
 import { FireStorageService } from '@ygg/shared/infra/data-access';
 import {
-  timeout,
-  take,
-  first,
   catchError,
-  map,
   finalize,
   tap
 } from 'rxjs/operators';
 import {
   AngularFireUploadTask,
-  AngularFireStorageReference
 } from '@angular/fire/storage';
 
 interface CKEditorImageResponse {

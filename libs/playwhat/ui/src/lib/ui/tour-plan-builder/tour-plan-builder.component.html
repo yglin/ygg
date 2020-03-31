@@ -42,6 +42,7 @@
                 formControlName="numParticipants"
                 [min]='1'
                 [max]='200'
+                required
               ></ygg-number-control>
             </div>
           </div>
@@ -51,8 +52,7 @@
             <the-thing-finder
               [filter]="filterPlays"
               hideFilter
-              (selectTheThing)="onSelectPlay($event)"
-              (deselectTheThing)="onDeselectPlay($event)"
+              formControlName='selectedPlays'
             ></the-thing-finder>
           </div>
         </form>

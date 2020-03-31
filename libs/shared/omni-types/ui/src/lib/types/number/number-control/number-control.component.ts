@@ -30,7 +30,7 @@ export class NumberControlComponent implements OnInit, ControlValueAccessor {
 
   set value(_value: number) {
     if (_value !== this._value) {
-      this._value = Math.min(Math.max(_value, this.min), this.max);
+      this._value = _value;
       if (this.emitChange) {
         this.emitChange(this._value);
       }
@@ -55,14 +55,12 @@ export class NumberControlComponent implements OnInit, ControlValueAccessor {
         this.iconType = 'font';
       }
     }
-    this._value = Math.max(this._value, this.min);
-    this._value = Math.min(this._value, this.max);
   }
 
   writeValue(value: number) {
     // alert(`Initial value of number-control-control: ${value}`);
-    if (value !== this._value) {
-      this._value = Math.min(Math.max(value, this.min), this.max);
+    if (typeof value === 'number' && value !== this._value) {
+      this._value = value;
     }
   }
 

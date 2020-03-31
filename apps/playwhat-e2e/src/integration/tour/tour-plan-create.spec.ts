@@ -127,7 +127,6 @@ describe('Tour-plan builder', () => {
     const myThingsPO = new MyThingsDataTablePageObjectCypress();
     siteNavigator.goto(['tour-plans', 'my'], myThingsPO);
     siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
-
     tourPlanBuilderPO.reset();
     tourPlanBuilderPO.skipToFinalStep();
     tourPlanBuilderPO.submit();

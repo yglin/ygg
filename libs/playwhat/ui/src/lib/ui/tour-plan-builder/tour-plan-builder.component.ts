@@ -37,7 +37,7 @@ import {
   CellNameCharge
 } from '@ygg/shopping/core';
 import { PurchaseService } from '@ygg/shopping/factory';
-import { tap } from 'rxjs/operators';
+import { tap, first, map } from 'rxjs/operators';
 import { TourPlanBuilderService } from './tour-plan-builder.service';
 import { AuthenticateService } from '@ygg/shared/user';
 import { MatStepper } from '@angular/material/stepper';
@@ -75,8 +75,14 @@ export class TourPlanBuilderComponent
     this.filterPlays = ImitationPlay.filter;
     this.firstFormGroup = this.formBuilder.group({
       dateRange: [null, Validators.required],
-      numParticipants: [null, Validators.required]
+      numParticipants: [null, Validators.required],
+      selectedPlays: null
     });
+    this.subscriptions.push(
+      this.firstFormGroup.get('selectedPlays').valueChanges.subscribe(plays => {
+        this.purchaseSelectedPlays();
+      })
+    );
     this.formControlPurchases = new FormControl([]);
 
     this.secondFormGroup = this.formBuilder.group({
@@ -88,45 +94,67 @@ export class TourPlanBuilderComponent
       optionalCells: keyBy(ImitationTourPlan.createOptionalCells(), 'name')
     });
 
-    this.subscriptions.push(
-      this.firstFormGroup.get('dateRange').valueChanges.subscribe(dateRange => {
-        let name = this.forthFormGroup.get('name').value;
-        if (!!dateRange && !name) {
-          name = `深度遊趣${dateRange.days() + 1}日遊`;
-          this.forthFormGroup.get('name').setValue(name);
-        }
-      })
-    );
+    // this.subscriptions.push(
+    //   this.firstFormGroup.get('dateRange').valueChanges.subscribe(dateRange => {
+    //     let name = this.forthFormGroup.get('name').value;
+    //     if (!!dateRange && !name) {
+    //       name = `深度遊趣${dateRange.days() + 1}日遊`;
+    //       this.forthFormGroup.get('name').setValue(name);
+    //     }
+    //   })
+    // );
   }
 
-  async onSelectPlay(play: TheThing) {
-    const purchases = this.formControlPurchases.value;
-    const numParticipants = this.firstFormGroup.get('numParticipants').value;
-    // console.log(`Quantity = ${numParticipants}`);
-    try {
-      const purchaseThePlay = await this.purchaseService.purchase(
-        this.theThing,
-        play,
-        numParticipants
-      );
-      const newPurchases = this.purchaseService.listDescendantsIncludeMe(
-        purchaseThePlay
-      );
-      this.formControlPurchases.setValue(purchases.concat(newPurchases));
-    } catch (error) {}
-  }
-
-  async onDeselectPlay(play: TheThing) {
-    const purchases: Purchase[] = this.formControlPurchases.value;
-    const targetPurchase = find(purchases, p => p.productId === play.id);
-    if (targetPurchase) {
-      const removedPurchases: Purchase[] = this.purchaseService.removePurchases(
-        targetPurchase
-      );
-      remove(purchases, p => find(removedPurchases, rp => rp.id === p.id));
-      this.formControlPurchases.setValue(purchases);
+  async purchaseSelectedPlays() {
+    let purchases: Purchase[] = [];
+    const quantity = this.firstFormGroup.get('numParticipants').value;
+    const selectedPlays = this.firstFormGroup.get('selectedPlays').value || [];
+    for (const play of selectedPlays) {
+      try {
+        const purchaseThePlay = await this.purchaseService.purchase(
+          this.theThing,
+          play,
+          quantity
+        );
+        const newPurchases = this.purchaseService.listDescendantsIncludeMe(
+          purchaseThePlay
+        );
+        purchases = purchases.concat(newPurchases);
+      } catch (error) {
+        alert(`購買 ${play.name} 失敗，錯誤原因：${error.message}`);
+      }
     }
+    this.formControlPurchases.setValue(purchases);
   }
+
+  // async onSelectPlay(play: TheThing) {
+  //   const purchases = this.formControlPurchases.value;
+  //   const numParticipants = this.firstFormGroup.get('numParticipants').value;
+  //   // console.log(`Quantity = ${numParticipants}`);
+  //   try {
+  //     const purchaseThePlay = await this.purchaseService.purchase(
+  //       this.theThing,
+  //       play,
+  //       numParticipants
+  //     );
+  //     const newPurchases = this.purchaseService.listDescendantsIncludeMe(
+  //       purchaseThePlay
+  //     );
+  //     this.formControlPurchases.setValue(purchases.concat(newPurchases));
+  //   } catch (error) {}
+  // }
+
+  // async onDeselectPlay(play: TheThing) {
+  //   const purchases: Purchase[] = this.formControlPurchases.value;
+  //   const targetPurchase = find(purchases, p => p.productId === play.id);
+  //   if (targetPurchase) {
+  //     const removedPurchases: Purchase[] = this.purchaseService.removePurchases(
+  //       targetPurchase
+  //     );
+  //     remove(purchases, p => find(removedPurchases, rp => rp.id === p.id));
+  //     this.formControlPurchases.setValue(purchases);
+  //   }
+  // }
 
   async ngOnInit() {
     if (!this.theThing) {
@@ -163,6 +191,20 @@ export class TourPlanBuilderComponent
       this.purchases = this.theThing
         .getRelations(RelationNamePurchase)
         .map(r => Purchase.fromRelation(r));
+      this.theThingAccessService
+        .listByIds$(this.theThing.getRelationObjectIds(RelationNamePurchase))
+        .pipe(
+          first(),
+          map(products => {
+            return products.filter(p => this.filterPlays.test(p));
+          })
+        )
+        .toPromise()
+        .then(plays => {
+          this.firstFormGroup
+            .get('selectedPlays')
+            .setValue(plays, { emitEvent: false });
+        });
       this.formControlPurchases.setValue(this.purchases);
     }
     this.theThingPreview$.next(this.theThing);
@@ -181,9 +223,14 @@ export class TourPlanBuilderComponent
           const dateRange: DateRange = this.firstFormGroup.get('dateRange')
             .value;
           this.theThing.cells['預計出遊日期'].value = dateRange;
+          if (!this.theThing.name && dateRange) {
+            const name = `深度遊趣${dateRange.days() + 1}日遊`;
+            this.forthFormGroup.get('name').setValue(name);
+          }
           const numParticipants = this.firstFormGroup.get('numParticipants')
             .value;
           this.theThing.cells['預計參加人數'].value = numParticipants;
+          // this.purchaseSelectedPlays();
           break;
         case startIndex + 1:
           const contact = this.secondFormGroup.get('contact').value;
