@@ -1,37 +1,53 @@
 <div class="tour-plan-view" *ngIf="theThing">
-  <div fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px">
+  <div fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px"></div>
+  <h1 class="tour-plan-name">{{ theThing.name }}</h1>
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+    <div>
+      <h4 class="state">{{ stateLabel }}</h4>
+    </div>
     <div *ngIf="canSubmitApplication">
-      <button mat-fab class="submit-application" (click)="submitApplication()">
+      <button
+        mat-mini-fab
+        class="submit-application"
+        (click)="submitApplication()"
+      >
         <mat-icon>send</mat-icon>
       </button>
     </div>
-    <div *ngIf="isAdmin">
-      <div [ngSwitch]="state">
-        <div *ngSwitchCase="states.applied">
-          <button
-            mat-fab
-            class="admin-paid"
-            (click)="adminPaid()"
-            matTooltip="標記此遊程已付款完成"
-          >
-            <mat-icon>payment</mat-icon>
-          </button>
-        </div>
-        <div *ngSwitchCase="states.paid">
-          <button
-            mat-fab
-            class="admin-complete"
-            (click)="adminComplete()"
-            matTooltip="標記此遊程已全部完成"
-          >
-            <mat-icon>done_all</mat-icon>
-          </button>
-        </div>
-        <div *ngSwitchDefault></div>
+    <div *ngIf="canCancelApplied">
+      <button
+        mat-mini-fab
+        class="cancel-applied"
+        (click)="cancelApplied()"
+        matTooltip="取消此遊程申請"
+      >
+        <mat-icon>backspace</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="isAdmin" [ngSwitch]="state">
+      <div *ngSwitchCase="states.applied">
+        <button
+          mat-mini-fab
+          class="admin-paid"
+          (click)="adminPaid()"
+          matTooltip="標記此遊程已付款完成"
+        >
+          <mat-icon>payment</mat-icon>
+        </button>
       </div>
+      <div *ngSwitchCase="states.paid">
+        <button
+          mat-mini-fab
+          class="admin-complete"
+          (click)="adminComplete()"
+          matTooltip="標記此遊程已全部完成"
+        >
+          <mat-icon>done_all</mat-icon>
+        </button>
+      </div>
+      <div *ngSwitchDefault></div>
     </div>
   </div>
-  <h1 class="tour-plan-name">{{ theThing.name }}</h1>
   <div *ngFor="let cell of requiredCells">
     <div [attr.cell-name]="cell.name">
       <h4>{{ cell.name }}</h4>

@@ -152,6 +152,10 @@ describe('Tour-plan builder', () => {
 
     // Click the tour-plan to review it
     tourPlanViewPO.expectVisible();
+    TourPlanWithPlaysAndAdditions.setState(
+      ImitationOrder.stateName,
+      ImitationOrder.states.applied
+    );
     tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions);
   });
 });

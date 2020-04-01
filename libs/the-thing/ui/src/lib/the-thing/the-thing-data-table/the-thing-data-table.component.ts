@@ -45,13 +45,14 @@ export class TheThingDataTableComponent
   @Input() imitation: TheThingImitation;
   @Input() theThings$: Observable<TheThing[]>;
   @Input() selection: TheThing[];
+  @Input() readonly: boolean;
   @Output() selectionChange: EventEmitter<TheThing[]> = new EventEmitter();
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   dataSource: TheThingDataSource;
   dataTableConfig: DataTableConfig;
   displayedColumnsHead: string[] = ['name'];
-  displayedColumnsTail: string[] = ['management'];
+  displayedColumnsTail: string[] = [];
   displayedColumns: string[] = [];
   selectionModel: SelectionModel<TheThing> = new SelectionModel(true, []);
   subscriptions: Subscription[] = [];
@@ -70,6 +71,10 @@ export class TheThingDataTableComponent
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
 
   ngOnInit() {
+    this.readonly = this.readonly !== undefined && this.readonly !== false;
+    if (!this.readonly) {
+      this.displayedColumnsTail.push('management');
+    }
     if (this.selectionChange.observers.length > 0) {
       this.displayedColumnsHead.unshift('select');
     }

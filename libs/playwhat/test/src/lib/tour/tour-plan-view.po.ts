@@ -13,7 +13,8 @@ import { PurchaseListPageObjectCypress } from '@ygg/shopping/test';
 import {
   RelationNamePurchase,
   Purchase,
-  CellNameQuantity
+  CellNameQuantity,
+  ImitationOrder
 } from '@ygg/shopping/core';
 import { isEmpty, find } from 'lodash';
 import { MockDatabase, theMockDatabase } from '@ygg/shared/test/cypress';
@@ -48,6 +49,10 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     cellViewPagePO.expectValue(cell);
   }
 
+  expectState(stateLabel: string): void {
+    cy.get(this.getSelector('state')).should('include.text', stateLabel);
+  }
+
   expectValue(tourPlan: TheThing) {
     this.expectName(tourPlan.name || defaultName(tourPlan));
     const requiredCells = ImitationTourPlan.getRequiredCellNames();
@@ -76,6 +81,12 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
       });
       this.purchaseListPO.expectPurchases(purchases);
     }
+
+    this.expectState(
+      ImitationTourPlan.getStateLabel(
+        tourPlan.getState(ImitationTourPlan.stateName)
+      )
+    );
   }
 
   submitApplication(): void {
@@ -88,5 +99,9 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
 
   adminPaid() {
     cy.get(this.getSelector('buttonAdminPaid')).click();
+  }
+
+  cancelApplied() {
+    cy.get(this.getSelector('buttonCancelApplied')).click();
   }
 }

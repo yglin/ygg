@@ -10,6 +10,8 @@ import {
   Type
 } from '@angular/core';
 import { TheThing, TheThingImitation } from '@ygg/the-thing/core';
+import { Observable } from 'rxjs';
+import { TheThingImitationViewInterface } from './imitation-view-interface.component';
 
 @Directive({
   selector: '[the-thing-imitation-view-host]'
@@ -25,13 +27,11 @@ export class ImitationViewHostDirective {
 })
 export class TheThingImitationViewComponent implements OnInit {
   @Input() component: Type<any>;
-  @Input() theThing: TheThing;
+  @Input() theThing$: Observable<TheThing>;
   @ViewChild(ImitationViewHostDirective, { static: true })
   imitationViewHost: ImitationViewHostDirective;
 
-  constructor(
-    private componentFactoryResolver: ComponentFactoryResolver
-  ) {}
+  constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
 
   ngOnInit() {
     if (this.component) {
@@ -39,7 +39,7 @@ export class TheThingImitationViewComponent implements OnInit {
     }
   }
 
-  loadImitationComponent(component: Type<TheThingImitationViewComponent>) {
+  loadImitationComponent(component: Type<TheThingImitationViewInterface>) {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(
       component
     );
@@ -48,6 +48,6 @@ export class TheThingImitationViewComponent implements OnInit {
     viewContainerRef.clear();
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
-    (componentRef.instance as TheThingImitationViewComponent).theThing = this.theThing;
+    (componentRef.instance as TheThingImitationViewInterface).theThing$ = this.theThing$;
   }
 }

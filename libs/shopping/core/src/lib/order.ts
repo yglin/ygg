@@ -15,7 +15,7 @@ export const ImitationOrder = new TheThingImitation({
   states: {
     new: {
       name: 'new',
-      label: '新成立',
+      label: '新建立',
       value: 1
     },
     applied: {

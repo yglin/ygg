@@ -8,7 +8,8 @@ import {
   isArray,
   keyBy,
   clone,
-  uniq
+  uniq,
+  find
 } from 'lodash';
 import {
   generateID,
@@ -206,7 +207,14 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     imitation.validators = [...this.validators, ...imitation.validators];
     imitation.filter = this.filter.merge(imitation.filter);
     imitation.cellsOrder = uniq(this.cellsOrder.concat(imitation.cellsOrder));
+    imitation.stateName = this.stateName || imitation.stateName;
+    imitation.states = extend({}, this.states, imitation.states);
     return imitation;
+  }
+
+  getStateLabel(stateValue: number): string {
+    const state = find(this.states, s => s.value === stateValue);
+    return !!state ? state.label : '未知狀態';
   }
 
   fromJSON(data: any = {}): this {

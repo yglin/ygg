@@ -29,6 +29,7 @@ import { TheThingViewsService } from '../../the-thing-views.service';
 })
 export class TheThingViewComponent implements OnInit, OnDestroy {
   @Input() theThing: TheThing;
+  theThing$: Observable<TheThing>;
   @Input() readonly = false;
   isOwner = false;
   relationObjects: { [relationName: string]: Observable<TheThing[]> } = {};
@@ -54,6 +55,10 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
       if (this.route.snapshot.data && this.route.snapshot.data.theThing) {
         this.theThing = this.route.snapshot.data.theThing;
       }
+    }
+
+    if (this.theThing && this.theThing.id) {
+      this.theThing$ = this.theThingAccessService.get$(this.theThing.id);
     }
 
     if (this.theThing.view) {

@@ -26,7 +26,7 @@ import {
   Purchase,
   ImitationOrder
 } from '@ygg/shopping/core';
-import { AuthorizeService } from '@ygg/shared/user';
+import { AuthorizeService, AuthenticateService } from '@ygg/shared/user';
 
 @Component({
   selector: 'ygg-tour-plan-view',
@@ -34,9 +34,9 @@ import { AuthorizeService } from '@ygg/shared/user';
   styleUrls: ['./tour-plan-view.component.css']
 })
 export class TourPlanViewComponent
-  implements OnInit, OnChanges, OnDestroy, TheThingImitationViewInterface {
-  @Input() theThing: TheThing;
-  @Input() theThing$: Subject<TheThing>;
+  implements OnInit, OnDestroy, TheThingImitationViewInterface {
+  @Input() theThing$: Observable<TheThing>;
+  theThing: TheThing;
   // tourPlan: TheThing;
   // dateRange: DateRange;
   // dayTimeRange: DayTimeRange;
@@ -49,16 +49,18 @@ export class TourPlanViewComponent
   canSubmitApplication = false;
   isAdmin = false;
   state: number;
+  stateLabel: string;
   states: { [key: string]: number } = {};
+  canCancelApplied = false;
 
   constructor(
     private authorizeService: AuthorizeService,
-    private theThingAccessService: TheThingAccessService,
+    private theThingAccessService: TheThingAccessService
   ) {}
 
   ngOnInit() {
     if (!this.theThing$) {
-      this.theThing$ = new Subject();
+      this.theThing$ = of(null);
     }
     this.subscriptions.push(
       this.theThing$
@@ -89,29 +91,29 @@ export class TourPlanViewComponent
                 .getRelations(RelationNamePurchase)
                 .map(r => Purchase.fromRelation(r));
 
+              this.state = this.theThing.getState(ImitationOrder.stateName);
+              this.states = mapValues(ImitationOrder.states, s => s.value);
+              this.stateLabel = ImitationTourPlan.getStateLabel(this.state);
+              this.canCancelApplied =
+                this.authorizeService.isOwner(this.theThing) &&
+                this.theThing.isState(
+                  ImitationOrder.stateName,
+                  ImitationOrder.states.applied.value
+                );
               this.canSubmitApplication = this.theThing.isState(
                 ImitationOrder.stateName,
                 ImitationOrder.states.new.value
               );
-              this.state = this.theThing.getState(ImitationOrder.stateName);
-              this.states = mapValues(ImitationOrder.states, s => s.value);
             }, 0);
           })
         )
         .subscribe()
     );
-    if (this.theThing) {
-      this.theThing$.next(this.theThing);
-    }
     this.subscriptions.push(
       this.authorizeService.isAdmin().subscribe(isAdmin => {
         this.isAdmin = isAdmin;
       })
     );
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this.theThing$.next(this.theThing);
   }
 
   ngOnDestroy() {
@@ -162,6 +164,22 @@ export class TourPlanViewComponent
         );
         await this.theThingAccessService.upsert(this.theThing);
         alert(`遊程規劃已送出`);
+      } catch (error) {
+        alert(`送出失敗，錯誤原因：${error.message}`);
+      }
+    }
+  }
+
+  async cancelApplied() {
+    const confirmMessage = `取消此遊程規劃的申請？`;
+    if (confirm(confirmMessage)) {
+      try {
+        this.theThing.setState(
+          ImitationOrder.stateName,
+          ImitationOrder.states.new
+        );
+        await this.theThingAccessService.upsert(this.theThing);
+        alert(`已取消遊程規劃申請`);
       } catch (error) {
         alert(`送出失敗，錯誤原因：${error.message}`);
       }

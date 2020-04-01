@@ -1,4 +1,4 @@
-<div class="tour-view">
+<div class="tour-view" *ngIf="tour">
   <div class="main-title">
     <div class="title-background" [ngStyle]="titleStyle"></div>
     <div
@@ -12,7 +12,7 @@
       </div>
     </div>
   </div>
-  <br><br><br>
+  <br /><br /><br />
   <div class="plays">
     <div *ngFor="let play of plays" [attr.play-id]="play.id">
       <ygg-play-card [play]="play"></ygg-play-card>
