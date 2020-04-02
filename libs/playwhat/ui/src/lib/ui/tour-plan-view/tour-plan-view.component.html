@@ -5,7 +5,7 @@
     <div>
       <h4 class="state">{{ stateLabel }}</h4>
     </div>
-    <div *ngIf="canSubmitApplication">
+    <div *ngIf="canSubmitApplication && !readonly">
       <button
         mat-mini-fab
         class="submit-application"
@@ -14,7 +14,7 @@
         <mat-icon>send</mat-icon>
       </button>
     </div>
-    <div *ngIf="canCancelApplied">
+    <div *ngIf="canCancelApplied && !readonly">
       <button
         mat-mini-fab
         class="cancel-applied"
@@ -24,7 +24,7 @@
         <mat-icon>backspace</mat-icon>
       </button>
     </div>
-    <div *ngIf="isAdmin" [ngSwitch]="state">
+    <div *ngIf="isAdmin && !readonly" [ngSwitch]="state">
       <div *ngSwitchCase="states.applied">
         <button
           mat-mini-fab

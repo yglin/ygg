@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as uuid from 'uuid';
 import * as moment from 'moment';
 import { DataItem, toJSONDeep } from '@ygg/shared/data-access';
-import { Contact } from '@ygg/shared/user';
+import { User } from "@ygg/shared/user/core";
 import { Purchase } from './purchase/purchase';
 
 export enum OrderState {

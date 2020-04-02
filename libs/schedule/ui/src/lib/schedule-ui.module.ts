@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-import { SharedUserModule } from '@ygg/shared/user';
+import { SharedUserUiModule } from "@ygg/shared/user/ui";
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { TagsUiModule } from '@ygg/tags/ui';
@@ -34,7 +34,7 @@ import { ResourceUiModule } from '@ygg/resource/ui';
     RouterModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
-    SharedUserModule,
+    SharedUserUiModule,
     SharedTypesModule,
     SharedOmniTypesUiModule,
     TagsUiModule,

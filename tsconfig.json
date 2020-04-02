@@ -16,7 +16,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@ygg/shared/user": ["libs/shared/user/src/index.ts"],
+      "@ygg/shared/user/ui": ["libs/shared/user/ui/src/index.ts"],
       "@ygg/shared/infra/error": ["libs/shared/infra/error/src/index.ts"],
       "@ygg/shared/infra/log": ["libs/shared/infra/log/src/index.ts"],
       "@ygg/shared/ui/ng-material": ["libs/shared/ui/ng-material/src/index.ts"],
@@ -66,7 +66,9 @@
       "@ygg/shared/ui/test": ["libs/shared/ui/test/src/index.ts"],
       "@ygg/playwhat/core": ["libs/playwhat/core/src/index.ts"],
       "@ygg/shopping/test": ["libs/shopping/test/src/index.ts"],
-      "@ygg/playwhat/test": ["libs/playwhat/test/src/index.ts"]
+      "@ygg/playwhat/test": ["libs/playwhat/test/src/index.ts"],
+      "@ygg/shared/user/core": ["libs/shared/user/core/src/index.ts"],
+      "@ygg/shared/user/test": ["libs/shared/user/test/src/index.ts"]
     },
     "rootDir": "."
   },

@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 // import { routes } from './routes';
 import { MenuTree } from '@ygg/shared/ui/navigation';
 import { Image } from '@ygg/shared/omni-types/core';
-import { LoggedInGuard, AdminGuard } from '@ygg/shared/user';
+import { LoggedInGuard, AdminGuard } from "@ygg/shared/user/ui";
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { TheThingUiModule } from '@ygg/the-thing/ui';
 

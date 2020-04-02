@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { DataAccessService, Query } from '@ygg/shared/infra/data-access';
 import { Play } from './play';
 import { Observable, of, combineLatest } from 'rxjs';
-import { User } from '@ygg/shared/user';
+import { User } from "@ygg/shared/user/core";
 import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import { Addition } from '@ygg/resource/core';
 import { AdditionService } from '@ygg/resource/data-access';

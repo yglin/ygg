@@ -15,7 +15,7 @@ import { By } from '@angular/platform-browser';
 import { BehaviorSubject, of } from 'rxjs';
 import { SchedulePlanService } from '@ygg/schedule/data-access';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
-import { SharedUserModule } from '@ygg/shared/user';
+import { SharedUserUiModule } from "@ygg/shared/user/ui";
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -53,7 +53,7 @@ describe('SchedulePlanTableComponent', () => {
         SharedUiNgMaterialModule,
         SharedUiWidgetsModule,
         SharedTypesModule,
-        SharedUserModule,
+        SharedUserUiModule,
         RouterTestingModule.withRoutes([
           { path: '**', redirectTo: ''}
         ])

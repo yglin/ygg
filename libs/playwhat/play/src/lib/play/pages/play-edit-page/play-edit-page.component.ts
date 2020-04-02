@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Play } from '../..';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take, first, timeout } from 'rxjs/operators';
-import { AuthenticateService } from '@ygg/shared/user';
+import { AuthenticateService } from "@ygg/shared/user/ui";
 import { PlayFactoryService } from '../../play-factory.service';
 
 @Component({

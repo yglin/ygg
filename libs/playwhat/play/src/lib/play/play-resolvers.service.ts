@@ -8,7 +8,7 @@ import {
 } from '@angular/router';
 import { Play } from './play';
 import { Observable, throwError } from 'rxjs';
-import { AuthenticateService } from '@ygg/shared/user';
+import { AuthenticateService } from "@ygg/shared/user/ui";
 import { take, switchMap, tap } from 'rxjs/operators';
 import { PlayService } from './play.service';
 import { LogService } from '@ygg/shared/infra/log';

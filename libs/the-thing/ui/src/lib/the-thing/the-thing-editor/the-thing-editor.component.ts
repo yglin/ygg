@@ -55,7 +55,8 @@ import {
   PageStashService,
   PageStashPromise
 } from '@ygg/shared/infra/data-access';
-import { User, AuthenticateService } from '@ygg/shared/user';
+import { User } from '@ygg/shared/user/core';
+import { AuthenticateService } from '@ygg/shared/user/ui';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { TheThingFinderComponent } from '../the-thing-finder/the-thing-finder.component';
 import { TheThingViewsService } from '../../the-thing-views.service';

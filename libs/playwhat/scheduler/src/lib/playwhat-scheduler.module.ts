@@ -9,7 +9,7 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { PlaywhatPlayModule } from '@ygg/playwhat/play';
 import { TagsUiModule } from '@ygg/tags/ui';
 
-import { SharedUserModule } from '@ygg/shared/user';
+import { SharedUserUiModule } from "@ygg/shared/user/ui";
 import { RouterModule } from '@angular/router';
 import { ScheduleUiModule } from '@ygg/schedule/ui';
 

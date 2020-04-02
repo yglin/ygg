@@ -3,7 +3,7 @@ import { Play } from '../..';
 import { ActivatedRoute, Router } from '@angular/router';
 import { timeout, first } from 'rxjs/operators';
 import { Subscription, combineLatest } from 'rxjs';
-import { AuthenticateService, User } from '@ygg/shared/user';
+import { AuthenticateService, User } from "@ygg/shared/user/ui";
 
 @Component({
   selector: 'ygg-play-view-page',

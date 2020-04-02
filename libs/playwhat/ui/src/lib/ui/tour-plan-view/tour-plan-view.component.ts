@@ -26,7 +26,8 @@ import {
   Purchase,
   ImitationOrder
 } from '@ygg/shopping/core';
-import { AuthorizeService, AuthenticateService } from '@ygg/shared/user';
+import { AuthorizeService, AuthenticateService } from '@ygg/shared/user/ui';
+import { TourPlanBuilderService } from '../tour-plan-builder/tour-plan-builder.service';
 
 @Component({
   selector: 'ygg-tour-plan-view',
@@ -37,6 +38,7 @@ export class TourPlanViewComponent
   implements OnInit, OnDestroy, TheThingImitationViewInterface {
   @Input() theThing$: Observable<TheThing>;
   theThing: TheThing;
+  @Input() readonly: boolean;
   // tourPlan: TheThing;
   // dateRange: DateRange;
   // dayTimeRange: DayTimeRange;
@@ -55,10 +57,12 @@ export class TourPlanViewComponent
 
   constructor(
     private authorizeService: AuthorizeService,
-    private theThingAccessService: TheThingAccessService
+    private theThingAccessService: TheThingAccessService,
+    private tourPlanService: TourPlanBuilderService
   ) {}
 
   ngOnInit() {
+    this.readonly = this.readonly !== undefined && this.readonly !== false;
     if (!this.theThing$) {
       this.theThing$ = of(null);
     }
@@ -100,10 +104,12 @@ export class TourPlanViewComponent
                   ImitationOrder.stateName,
                   ImitationOrder.states.applied.value
                 );
-              this.canSubmitApplication = this.theThing.isState(
-                ImitationOrder.stateName,
-                ImitationOrder.states.new.value
-              );
+              this.canSubmitApplication =
+                this.authorizeService.isOwner(this.theThing) &&
+                this.theThing.isState(
+                  ImitationOrder.stateName,
+                  ImitationOrder.states.new.value
+                );
             }, 0);
           })
         )
@@ -163,7 +169,7 @@ export class TourPlanViewComponent
           ImitationOrder.states.applied
         );
         await this.theThingAccessService.upsert(this.theThing);
-        alert(`遊程規劃已送出`);
+        alert(`此遊程已送出申請`);
       } catch (error) {
         alert(`送出失敗，錯誤原因：${error.message}`);
       }

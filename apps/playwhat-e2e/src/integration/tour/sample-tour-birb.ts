@@ -1,7 +1,7 @@
 import * as SampleTourJSON from './sample-tour-birb.json';
 import { TheThing } from "@ygg/the-thing/core";
 import { MockDatabase } from "@ygg/shared/test/cypress";
-import { User } from '@ygg/shared/user';
+import { User } from "@ygg/shared/user/core";
 
 export const sampleTour = new TheThing().fromJSON(SampleTourJSON.tour);
 export const samplePlays = SampleTourJSON.plays.map(playJSON =>

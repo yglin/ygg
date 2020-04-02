@@ -1,4 +1,4 @@
-import { User } from '@ygg/shared/user';
+import { User } from "@ygg/shared/user/core";
 
 const aliasCurrrentLoginUser = 'current-login-user';
 
@@ -16,9 +16,9 @@ export function loginAdmin() {
   login();
 }
 
-export function logout() {
+export function logout(): Cypress.Chainable<any> {
   // @ts-ignore
-  cy.logout();
+  return cy.logout();
 }
 
 export function getCurrentUser(): Cypress.Chainable<User> {

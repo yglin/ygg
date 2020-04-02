@@ -39,7 +39,10 @@ import {
 import { PurchaseService } from '@ygg/shopping/factory';
 import { tap, first, map } from 'rxjs/operators';
 import { TourPlanBuilderService } from './tour-plan-builder.service';
-import { AuthenticateService } from '@ygg/shared/user';
+import {
+  AuthenticateService,
+  AuthenticateUiService
+} from '@ygg/shared/user/ui';
 import { MatStepper } from '@angular/material/stepper';
 
 @Component({
@@ -70,7 +73,8 @@ export class TourPlanBuilderComponent
     private purchaseService: PurchaseService,
     private router: Router,
     private tourPlanBuilder: TourPlanBuilderService,
-    private authService: AuthenticateService
+    private authService: AuthenticateService,
+    private authUiService: AuthenticateUiService
   ) {
     this.filterPlays = ImitationPlay.filter;
     this.firstFormGroup = this.formBuilder.group({
@@ -290,17 +294,18 @@ export class TourPlanBuilderComponent
   // }
 
   async submitTourPlan() {
-    if (confirm(`確定送出此遊程規劃？`)) {
-      try {
-        await this.updateTourPlan();
-        // console.dir(this.theThing.toJSON());
-        await this.theThingAccessService.upsert(this.theThing);
-        alert(`已成功送出遊程規劃${this.theThing.name}`);
-        this.tourPlanBuilder.reset();
-        this.router.navigate(['/', 'the-things', this.theThing.id]);
-      } catch (error) {
-        alert(`送出失敗，錯誤原因：${error.message}`);
-      }
+    if (confirm(`確定儲存此遊程規劃？`)) {
+      await this.updateTourPlan();
+      this.theThing = await this.tourPlanBuilder.upsert(this.theThing);
+      this.router.navigate(['/', 'the-things', this.theThing.id]);
+    }
+  }
+
+  async submitApplication() {
+    if (confirm(`儲存此遊程規劃並且一併送出申請？`)) {
+      await this.updateTourPlan();
+      this.theThing = await this.tourPlanBuilder.sendApplication(this.theThing);
+      this.router.navigate(['/', 'the-things', this.theThing.id]);
     }
   }
 

@@ -10,7 +10,7 @@ import { SchedulePlanViewComponent } from './schedule-plan-view.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, BehaviorSubject } from 'rxjs';
 import { SchedulePlanService } from '@ygg/schedule/data-access';
-import { User, AuthenticateService } from '@ygg/shared/user';
+import { User, AuthenticateService } from "@ygg/shared/user/ui";
 import { AngularJestTester } from "@ygg/shared/test/angular-jest";
 import { SchedulePlanViewPageObject } from "./schedule-plan-view.component.po";
 import { TagsUiModule } from '@ygg/tags/ui';

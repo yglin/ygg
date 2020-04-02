@@ -29,7 +29,7 @@ import {
   AuthenticateService,
   AuthenticateUiService,
   UserService
-} from '@ygg/shared/user';
+} from "@ygg/shared/user/ui";
 import { By } from '@angular/platform-browser';
 // import { PlaywhatPlayModule } from '@ygg/playwhat/play';
 

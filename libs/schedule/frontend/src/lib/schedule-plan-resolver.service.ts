@@ -8,7 +8,7 @@ import { SchedulePlan } from '@ygg/schedule/core';
 import { SchedulePlanService } from '@ygg/schedule/data-access';
 import { Observable, throwError, of, EMPTY } from 'rxjs';
 import { catchError, take, switchMap, tap } from 'rxjs/operators';
-import { AuthenticateService, User } from '@ygg/shared/user';
+import { AuthenticateService, User } from "@ygg/shared/user/ui";
 import { Query } from '@ygg/shared/infra/data-access';
 
 

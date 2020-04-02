@@ -1,6 +1,6 @@
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserMenuService } from '@ygg/shared/user';
+import { UserMenuService } from "@ygg/shared/user/ui";
 import { PlaywhatSchedulerModule } from './playwhat-scheduler.module';
 import { PlaywhatSchedulerRoutingModule } from './playwhat-scheduler-routing.module';
 

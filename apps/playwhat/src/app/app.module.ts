@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { SharedInfraLogModule } from '@ygg/shared/infra/log';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-import { SharedUserModule } from '@ygg/shared/user';
+import { SharedUserUiModule } from "@ygg/shared/user/ui";
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 import { PlaywhatAdminModule } from '@ygg/playwhat/admin';
@@ -38,7 +38,7 @@ import { PlaywhatUiModule } from '@ygg/playwhat/ui';
     BrowserAnimationsModule,
     SharedInfraLogModule.forRoot(),
     SharedUiNgMaterialModule,
-    SharedUserModule,
+    SharedUserUiModule,
     SharedUiWidgetsModule,
     SharedUiNavigationModule,
     TheThingUiModule,

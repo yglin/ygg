@@ -3,7 +3,7 @@ import { TheThingImitation, TheThing, TheThingFilter } from '@ygg/the-thing/core
 import { Observable, Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { AuthenticateService } from '@ygg/shared/user';
+import { AuthenticateService } from "@ygg/shared/user/ui";
 
 @Component({
   selector: 'my-things-data-table',

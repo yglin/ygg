@@ -22,6 +22,7 @@ export class TourPlanBuilderPageObject extends PageObject {
     optionalCellsEditor: '.optional-editor',
     shoppingCart: '.shopping-cart-editor',
     buttonSubmit: 'button.submit',
+    buttonSubmitApplication: 'button.submit-application',
     preview: '.preview'
   };
 

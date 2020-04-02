@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TheThing, TheThingImitation } from '@ygg/the-thing/core';
-import { AuthenticateService } from '@ygg/shared/user';
+import { AuthenticateService } from "@ygg/shared/user/ui";
 import { take, first } from 'rxjs/operators';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 

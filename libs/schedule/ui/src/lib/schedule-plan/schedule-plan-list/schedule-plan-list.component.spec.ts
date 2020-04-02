@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { SchedulePlanService } from '@ygg/schedule/data-access';
 import { SchedulePlan } from '@ygg/schedule/core';
 import { of, Observable } from 'rxjs';
-import { User, AuthenticateService } from '@ygg/shared/user';
+import { User, AuthenticateService } from "@ygg/shared/user/ui";
 import { Query } from '@ygg/shared/infra/data-access';
 import { SchedulePlanThumbnailComponent } from '../schedule-plan-thumbnail/schedule-plan-thumbnail.component';
 import { PageTitleComponent } from '@ygg/shared/ui/widgets';

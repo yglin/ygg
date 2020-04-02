@@ -18,7 +18,7 @@ import {
   TheThingAccessService,
   TheThingImitationAccessService
 } from '@ygg/the-thing/data-access';
-import { AuthenticateService } from '@ygg/shared/user';
+import { AuthenticateService } from "@ygg/shared/user/ui";
 import { Router } from '@angular/router';
 import {
   YggDialogService,

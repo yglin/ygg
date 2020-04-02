@@ -8,9 +8,6 @@
     "nx.json": "*"
   },
   "projects": {
-    "shared-user": {
-      "tags": ["scope:shared", "type:feature", "platform:desktop"]
-    },
     "payment": {
       "tags": ["scope:shopping", "type:feature", "platform:desktop"]
     },
@@ -193,6 +190,15 @@
     },
     "playwhat-test": {
       "tags": ["scope:playwhat", "type:test"]
+    },
+    "shared-user-ui": {
+      "tags": ["scope:shared", "type:ui"]
+    },
+    "shared-user-core": {
+      "tags": ["scope:shared", "type:core"]
+    },
+    "shared-user-test": {
+      "tags": ["scope:shared", "type:test"]
     }
   }
 }

@@ -7,7 +7,7 @@ import {
   TheThingResolver,
   TheThingEditorPageObject
 } from './the-thing';
-import { LoggedInGuard, AdminGuard } from '@ygg/shared/user';
+import { LoggedInGuard, AdminGuard } from "@ygg/shared/user/ui";
 import { ImitationTemplateResolver } from './imitation-template-resolver.service';
 import { ImitationManagerComponent } from './imitation';
 import { MyThingsDataTableComponent } from './the-thing/my-things-data-table/my-things-data-table.component';

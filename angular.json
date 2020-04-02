@@ -3,40 +3,6 @@
   "version": 1,
   "newProjectRoot": "",
   "projects": {
-    "shared-user": {
-      "root": "libs/shared/user",
-      "sourceRoot": "libs/shared/user/src",
-      "projectType": "library",
-      "prefix": "ygg",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "libs/shared/user/tsconfig.lib.json",
-            "project": "libs/shared/user/ng-package.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/shared/user/tsconfig.lib.json",
-              "libs/shared/user/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/shared/user/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/shared/user/jest.config.js",
-            "tsConfig": "libs/shared/user/tsconfig.spec.json",
-            "setupFile": "libs/shared/user/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {}
-    },
     "payment": {
       "root": "libs/shopping/payment",
       "sourceRoot": "libs/shopping/payment/src",
@@ -1971,6 +1937,83 @@
           "options": {
             "jestConfig": "libs/playwhat/test/jest.config.js",
             "tsConfig": "libs/playwhat/test/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "shared-user-ui": {
+      "projectType": "library",
+      "root": "libs/shared/user/ui",
+      "sourceRoot": "libs/shared/user/ui/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/user/ui/tsconfig.lib.json",
+              "libs/shared/user/ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/user/ui/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/user/ui/jest.config.js",
+            "tsConfig": "libs/shared/user/ui/tsconfig.spec.json",
+            "setupFile": "libs/shared/user/ui/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shared-user-core": {
+      "root": "libs/shared/user/core",
+      "sourceRoot": "libs/shared/user/core/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/user/core/tsconfig.lib.json",
+              "libs/shared/user/core/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/user/core/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/user/core/jest.config.js",
+            "tsConfig": "libs/shared/user/core/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "shared-user-test": {
+      "root": "libs/shared/user/test",
+      "sourceRoot": "libs/shared/user/test/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/user/test/tsconfig.lib.json",
+              "libs/shared/user/test/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/user/test/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/user/test/jest.config.js",
+            "tsConfig": "libs/shared/user/test/tsconfig.spec.json"
           }
         }
       }

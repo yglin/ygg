@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { SchedulePlan } from '@ygg/schedule/core';
 import { TranspotationTypes } from '@ygg/schedule/core';
-import { AuthenticateService, User } from '@ygg/shared/user';
+import { AuthenticateService, User } from "@ygg/shared/user/ui";
 import { Accommodation } from '@ygg/resource/core';
 import { AccommodationService } from '@ygg/resource/data-access';
 import { Subscription } from 'rxjs';

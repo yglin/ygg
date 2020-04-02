@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockComponent } from "ng-mocks";
 import { AdminAgentComponent } from './admin-agent.component';
 import { ScheduleAdminService } from "../schedule-admin.service";
-import { UserSelectorComponent } from '@ygg/shared/user';
+import { UserSelectorComponent } from "@ygg/shared/user/ui";
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 

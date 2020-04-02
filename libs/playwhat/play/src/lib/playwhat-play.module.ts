@@ -14,7 +14,7 @@ import { PlayListComponent } from './play/play-list/play-list.component';
 import { PlayThumbnailComponent } from './play/play-thumbnail/play-thumbnail.component';
 import { PlayDashboardComponent } from './play/play-dashboard/play-dashboard.component';
 import { RouterModule } from '@angular/router';
-import { SharedUserModule } from '@ygg/shared/user';
+import { SharedUserUiModule } from "@ygg/shared/user/ui";
 import { PlayViewPageComponent } from './play/pages/play-view-page/play-view-page.component';
 import { PlaySelectorComponent } from './play/play-selector/play-selector.component';
 import { AdditionEditDialogComponent } from './play/addition-edit-dialog/addition-edit-dialog.component';
@@ -28,7 +28,7 @@ import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-    SharedUserModule,
+    SharedUserUiModule,
     SharedTypesModule,
     SharedUiWidgetsModule,
     SharedUiNgMaterialModule,

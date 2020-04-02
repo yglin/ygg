@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 // import { isEmpty } from 'lodash';
 import { Observable, of } from 'rxjs';
-// import { UserService, User } from '@ygg/shared/user';
+// import { UserService, User } from "@ygg/shared/user/ui";
 import { switchMap, map } from 'rxjs/operators';
 // import { adminMenu } from './menu';
 import { MenuTree } from '@ygg/shared/ui/navigation';

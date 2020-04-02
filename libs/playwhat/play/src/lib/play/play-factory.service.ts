@@ -8,7 +8,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 // import { Play } from "./play";
 import { Play } from './play';
 import { Tags } from '@ygg/tags/core';
-import { AuthenticateService, User } from '@ygg/shared/user';
+import { AuthenticateService, User } from "@ygg/shared/user/ui";
 import { take } from 'rxjs/operators';
 import { LogService } from '@ygg/shared/infra/log';
 import { PlayFormGroupModel } from './play-form-model';

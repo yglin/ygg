@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ImitationTourPlan } from '@ygg/playwhat/core';
 import { TheThingFilter } from '@ygg/the-thing/core';
-import { AuthenticateService } from '@ygg/shared/user';
+import { AuthenticateService } from "@ygg/shared/user/ui";
 
 @Component({
   selector: 'ygg-my-tour-plan-list',

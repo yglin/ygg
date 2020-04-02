@@ -1,4 +1,4 @@
-import { LoggedInGuard } from '@ygg/shared/user';
+import { LoggedInGuard } from "@ygg/shared/user/ui";
 import { Routes } from '@angular/router';
 import { SchedulePlanListPageComponent } from './schedule-plan-list-page/schedule-plan-list-page.component';
 import { SchedulePlanEditPageComponent } from './schedule-plan-edit-page/schedule-plan-edit-page.component';

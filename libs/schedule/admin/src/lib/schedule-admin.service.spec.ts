@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ScheduleAdminService } from './schedule-admin.service';
-import { User, UserService } from '@ygg/shared/user';
+import { User, UserService } from "@ygg/shared/user/ui";
 import { Observable, of, noop, BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { PlaywhatAdminService } from '@ygg/playwhat/admin';

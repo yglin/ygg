@@ -7,7 +7,7 @@ import {
 } from '@ygg/shared/omni-types/test';
 import { HtmlViewPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { TheThingListPageObjectCypress } from './the-thing-list.po';
-import { User } from '@ygg/shared/user';
+import { User } from "@ygg/shared/user/core";
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
 
 class Relation {

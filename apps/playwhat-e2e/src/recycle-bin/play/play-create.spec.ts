@@ -6,7 +6,7 @@ import {
 } from '../../page-objects/play.po';
 import { Play } from '@ygg/playwhat/play';
 import { MockDatabase } from '../../support/mock-database';
-import { User } from '@ygg/shared/user';
+import { User } from "@ygg/shared/user/core";
 import { login } from '../../page-objects/app.po';
 import { Addition } from '@ygg/resource/core';
 

@@ -16,7 +16,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@ygg/shared/user": ["libs/shared/user/src/index.ts"],
+      "@ygg/shared/user/ui": ["libs/shared/user/src/index.ts"],
       "@ygg/shopping/payment": ["libs/shopping/payment/src/index.ts"],
       "@ygg/shopping/order": ["libs/shopping/order/src/index.ts"],
       "@ygg/shopping/cart": ["libs/shopping/cart/src/index.ts"],

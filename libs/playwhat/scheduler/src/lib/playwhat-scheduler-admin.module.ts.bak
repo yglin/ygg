@@ -4,7 +4,7 @@ import { PlaywhatAdminService } from '@ygg/playwhat/admin';
 import { ScheduleAdminService } from '@ygg/schedule/admin';// import { MenuTree } from '@ygg/shared/ui/navigation';
 // import { Image } from '@ygg/shared/omni-types/core';
 import { AdminAgentComponent } from '../../../../schedule/admin/src/lib/admin-agent/admin-agent.component';
-import { SharedUserModule } from '@ygg/shared/user';
+import { SharedUserUiModule } from "@ygg/shared/user/ui";
 import { adminMenu } from "../../../../schedule/admin/src/lib";
 import { AdminSchedulePlansComponent } from '../../../../schedule/admin/src/lib/admin-schedule-plans/admin-schedule-plans.component';
 import { PlaywhatSchedulerModule } from './playwhat-scheduler.module';
@@ -13,7 +13,7 @@ import { PlaywhatSchedulerModule } from './playwhat-scheduler.module';
   declarations: [AdminAgentComponent, AdminSchedulePlansComponent],
   imports: [
     CommonModule,
-    SharedUserModule,
+    SharedUserUiModule,
     PlaywhatSchedulerModule
   ],
   entryComponents: [

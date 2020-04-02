@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Contact, Product } from '@ygg/shared/interfaces';
-import { AuthenticateService } from '@ygg/shared/user';
+import { AuthenticateService } from "@ygg/shared/user/ui";
 import { Order, Purchase, OrderService } from '@ygg/shopping/order';
 
 @Injectable({

@@ -213,10 +213,10 @@
           </div>
           <div>
             <h2>
-              預覽並送出遊程規劃
+              預覽遊程規劃
             </h2>
           </div>
-          <div>
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
             <button
               type="button"
               mat-fab
@@ -227,11 +227,22 @@
             >
               <mat-icon>save</mat-icon>
             </button>
+            <button
+              type="button"
+              mat-fab
+              class="submit-application"
+              matTooltip="儲存遊程規劃並提交申請"
+              [disabled]="!isValidTourPlan()"
+              (click)="submitApplication()"
+            >
+              <mat-icon>send</mat-icon>
+            </button>
           </div>
         </div>
         <div class="preview">
           <ygg-tour-plan-view
             [theThing$]="theThingPreview$"
+            readonly
           ></ygg-tour-plan-view>
         </div>
       </div>

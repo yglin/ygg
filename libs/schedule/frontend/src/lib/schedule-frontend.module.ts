@@ -1,6 +1,6 @@
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserMenuService } from '@ygg/shared/user';
+import { UserMenuService } from "@ygg/shared/user/ui";
 import { ScheduleUiModule } from '@ygg/schedule/ui';
 import { SchedulePlanListPageComponent } from './schedule-plan-list-page/schedule-plan-list-page.component';
 import { SchedulePlanEditPageComponent } from './schedule-plan-edit-page/schedule-plan-edit-page.component';

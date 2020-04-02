@@ -19,7 +19,7 @@ import {
 } from '@ygg/shared/ui/dynamic-form';
 import { Subscription } from 'rxjs';
 import { PlayFactoryService } from '../play-factory.service';
-import { AuthenticateService, User } from '@ygg/shared/user';
+import { AuthenticateService, User } from "@ygg/shared/user/ui";
 import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { Addition } from '@ygg/resource/core';
 import { AdditionEditDialogComponent } from '../addition-edit-dialog/addition-edit-dialog.component';

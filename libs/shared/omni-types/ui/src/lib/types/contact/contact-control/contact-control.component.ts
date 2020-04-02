@@ -17,7 +17,8 @@ import {
 } from '@angular/forms';
 import { Contact } from '@ygg/shared/omni-types/core';
 import { Subscription } from 'rxjs';
-import { User, AuthenticateService } from '@ygg/shared/user';
+import { User } from "@ygg/shared/user/core";
+import { AuthenticateService } from "@ygg/shared/user/ui";
 
 class LeastRequireErrorMatcher implements ErrorStateMatcher {
   fields: string[];

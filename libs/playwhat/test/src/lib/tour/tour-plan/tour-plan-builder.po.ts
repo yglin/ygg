@@ -213,11 +213,10 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
 
   submit() {
     cy.get(`${this.getSelector('buttonSubmit')}`).click();
-    // wait for redirect to view page
-    cy.location('pathname', { timeout: 10000 }).should(
-      'match',
-      /the-things\/[^\/]+/
-    );
+  }
+
+  submitApplication() {
+    cy.get(`${this.getSelector('buttonSubmitApplication')}`).click();
   }
 
   fromRelations(relations: TheThingRelation[]): Purchase[] {

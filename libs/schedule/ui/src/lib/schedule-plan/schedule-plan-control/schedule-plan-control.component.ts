@@ -36,7 +36,7 @@ import {
   AuthenticateService,
   UserService,
   AuthenticateUiService
-} from '@ygg/shared/user';
+} from "@ygg/shared/user/ui";
 import { Tags } from '@ygg/tags/core';
 import { TranspotationTypes } from '@ygg/schedule/core';
 import { ActivatedRoute } from '@angular/router';

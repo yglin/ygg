@@ -47,18 +47,18 @@ export class SiteNavigator {
     if (route === 'builder') {
       cy.get('.pw-header #to-home').click({ force: true });
     } else if (route === 'my') {
-      cy.get('#account-widget .menu-trigger').click({ force: true });
-      cy.get('#user-menu button#tour-plan').click({ force: true });
+      cy.get('.account-widget .menu-trigger').click({ force: true });
+      cy.get('.user-menu-item button#tour-plan').click({ force: true });
     }
   }
 
   private gotoTheThings(path: string[] = []) {
     const route = path.shift();
     if (route === 'my') {
-      cy.get('#account-widget .menu-trigger', { timeout: 10000 }).click({
+      cy.get('.account-widget .menu-trigger', { timeout: 10000 }).click({
         force: true
       });
-      cy.get('#user-menu button#my-things').click({ force: true });
+      cy.get('.user-menu-item button#my-things').click({ force: true });
     }
   }
 
@@ -72,8 +72,8 @@ export class SiteNavigator {
   }
 
   private gotoMyPlay(path: string[]) {
-    cy.get('#account-widget .menu-trigger').click({ force: true });
-    cy.get('#user-menu button#play').click({ force: true });
+    cy.get('.account-widget .menu-trigger').click({ force: true });
+    cy.get('.user-menu-item button#play').click({ force: true });
     // const route = path.shift();
     // if (route === 'list') {
     //   cy.get('#play-list').click({ force: true });
@@ -88,10 +88,10 @@ export class SiteNavigator {
   }
 
   private gotoAdmin(path: string[] = []) {
-    cy.get('#account-widget .menu-trigger', { timeout: 10000 }).click({
+    cy.get('.account-widget .menu-trigger', { timeout: 10000 }).click({
       force: true
     });
-    cy.get('#user-menu button#admin').click({ force: true });
+    cy.get('.user-menu-item button#admin').click({ force: true });
     const route = path.shift();
     if (route === 'play') {
       this.gotoAdminPlay(path);
@@ -143,8 +143,8 @@ export class SiteNavigator {
   private gotoSchedulePlans(path: string[] = []) {
     const route = path.shift();
     if (route === 'my') {
-      cy.get('#account-widget .menu-trigger').click({ force: true });
-      cy.get('#user-menu button#scheduler').click({ force: true });
+      cy.get('.account-widget .menu-trigger').click({ force: true });
+      cy.get('.user-menu-item button#scheduler').click({ force: true });
       cy.get('.my-schedule-plan-list').click({ force: true });
     }
   }

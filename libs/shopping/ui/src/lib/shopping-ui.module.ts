@@ -12,7 +12,7 @@ import { AdditionViewComponent } from './addition/addition-view/addition-view.co
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { ImitationProduct } from '@ygg/shopping/core';
 import { IncomeRecordDataTableComponent } from './accounting/income-data-table/income-data-table.component';
-import { SharedUserModule } from '@ygg/shared/user';
+import { SharedUserUiModule } from "@ygg/shared/user/ui";
 // import { PurchaseControlComponent } from './purchase/purchase-control/purchase-control.component';
 
 @NgModule({
@@ -21,7 +21,7 @@ import { SharedUserModule } from '@ygg/shared/user';
     FormsModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
-    SharedUserModule,
+    SharedUserUiModule,
     TheThingUiModule
   ],
   declarations: [

@@ -21,7 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
 import { TheThingResolver } from '@ygg/the-thing/ui';
-import { LoggedInGuard } from "@ygg/shared/user";
+import { LoggedInGuard } from "@ygg/shared/user/ui";
 
 @NgModule({
   declarations: [

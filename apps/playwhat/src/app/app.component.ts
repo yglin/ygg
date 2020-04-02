@@ -9,13 +9,13 @@ import {
 } from '@angular/core';
 import { ViewportScroller } from '@angular/common';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { User } from '@ygg/shared/user/core';
 import {
   AuthenticateService,
   AuthorizeService,
   UserMenuService,
-  UserMenuItem,
-  User
-} from '@ygg/shared/user';
+  UserMenuItem
+} from '@ygg/shared/user/ui';
 import { Subscription, of, fromEvent, BehaviorSubject, Subject } from 'rxjs';
 import {
   switchMap,

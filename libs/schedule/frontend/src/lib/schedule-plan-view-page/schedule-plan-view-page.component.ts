@@ -3,7 +3,7 @@ import { SchedulePlan } from '@ygg/schedule/core';
 import { Observable, Subscription, merge } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
-import { User, AuthenticateService } from '@ygg/shared/user';
+import { User, AuthenticateService } from "@ygg/shared/user/ui";
 import { ScheduleFactoryService } from "@ygg/schedule/factory";
 
 @Component({

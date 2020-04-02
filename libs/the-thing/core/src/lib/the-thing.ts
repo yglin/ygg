@@ -326,7 +326,16 @@ export class TheThing implements Entity, ImageThumbnailItem {
 
   clone(): TheThing {
     return new TheThing().fromJSON(
-      omit(this.toJSON(), ['id', 'createAt', 'modifyAt', 'ownerId', 'link'])
+      omit(this.toJSON(), [
+        'id',
+        'createAt',
+        'modifyAt',
+        'ownerId',
+        'link',
+        'flags',
+        'states',
+        'stateTimestamps'
+      ])
     );
   }
 
@@ -422,7 +431,10 @@ export class TheThing implements Entity, ImageThumbnailItem {
       }
 
       if (data.stateTimestamps) {
-        this.stateTimestamps = mapValues(data.stateTimestamps, t => new Date(t));
+        this.stateTimestamps = mapValues(
+          data.stateTimestamps,
+          t => new Date(t)
+        );
       }
     }
     if (!this.link) {

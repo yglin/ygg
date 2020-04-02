@@ -4,7 +4,7 @@ import { Route, RouterModule } from '@angular/router';
 import { PlaywhatPlayModule } from './playwhat-play.module';
 
 import { routesForLazyLoad } from './routes';
-import { UserMenuService } from '@ygg/shared/user';
+import { UserMenuService } from "@ygg/shared/user/ui";
 export const routes: Route[] = [{ path: 'plays', children: routesForLazyLoad }];
 
 @NgModule({

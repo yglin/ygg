@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 import { Album } from '@ygg/shared/omni-types/core';
-import { User } from '@ygg/shared/user';
+import { User } from "@ygg/shared/user/core";
 import { TheThing } from '@ygg/the-thing/core';
 import { TourViewPageObject, PlayCardPageObject } from '@ygg/playwhat/ui';
 import { AlbumViewPageObjectCypress } from '@ygg/shared/omni-types/test';

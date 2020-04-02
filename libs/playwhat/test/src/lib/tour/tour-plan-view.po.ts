@@ -33,6 +33,11 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     );
   }
 
+  expectShowAsPage() {
+    cy.url().should('match', /the-things\/[^\/]+\/?/);
+    this.expectVisible();
+  }
+
   expectVisible() {
     cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
   }
@@ -81,12 +86,6 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
       });
       this.purchaseListPO.expectPurchases(purchases);
     }
-
-    this.expectState(
-      ImitationTourPlan.getStateLabel(
-        tourPlan.getState(ImitationTourPlan.stateName)
-      )
-    );
   }
 
   submitApplication(): void {

@@ -6,7 +6,7 @@ import { OrderStateComponent } from './order/order-state/order-state.component';
 import { NgMaterialModule } from './ng-material.module';
 import { PurchaseListComponent } from './purchase/purchase-list/purchase-list.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { SharedUserModule } from '@ygg/shared/user';
+import { SharedUserUiModule } from "@ygg/shared/user/ui";
 import { DataAccessModule } from '@ygg/shared/data-access';
 import { PaymentModule } from '@ygg/shopping/payment';
 
@@ -16,7 +16,7 @@ import { PaymentModule } from '@ygg/shopping/payment';
     CommonModule,
     FlexLayoutModule,
     NgMaterialModule,
-    SharedUserModule,
+    SharedUserUiModule,
     DataAccessModule,
     PaymentModule,
     RouterModule.forChild([

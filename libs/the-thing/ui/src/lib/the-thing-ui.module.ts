@@ -22,12 +22,12 @@ import { TagsUiModule } from '@ygg/tags/ui';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-thing-thumbnail.component';
 import { MyThingsComponent } from './the-thing/my-things/my-things.component';
-import { SharedUserModule } from '@ygg/shared/user';
+import { SharedUserUiModule } from "@ygg/shared/user/ui";
 import { TheThingFilterComponent } from './the-thing/the-thing-filter/the-thing-filter.component';
 import { TheThingImitation, ImitationDog } from '@ygg/the-thing/core';
 import { routes } from './routes';
 import { TheThingImitationViewComponent } from './the-thing/the-thing-imitation-view/the-thing-imitation-view.component';
-import { UserMenuService } from '@ygg/shared/user';
+import { UserMenuService } from "@ygg/shared/user/ui";
 import { ImitationEditorComponent } from './imitation/imitation-editor/imitation-editor.component';
 import { ImitationManagerComponent } from './imitation/imitation-manager/imitation-manager.component';
 import { TheThingCellsEditorComponent } from './cell/cells-editor/cells-editor.component';
@@ -52,7 +52,7 @@ interface TheThingUiModuleConfig {
     ReactiveFormsModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
-    SharedUserModule,
+    SharedUserUiModule,
     TagsUiModule,
     SharedOmniTypesUiModule,
     RouterModule.forChild(routes)
