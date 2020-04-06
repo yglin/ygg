@@ -6,7 +6,7 @@ export function login(): Cypress.Chainable<User> {
   // @ts-ignore
   cy.login().then(firebaseUser => {
     const user: User = User.fromFirebase(firebaseUser);
-    cy.log(`Login as user ${user.name}, uid=${user.id}`);
+    // cy.log(`Login as user ${user.name}, uid=${user.id}`);
     cy.wrap(user).as(aliasCurrrentLoginUser);
   });
   return getCurrentUser();

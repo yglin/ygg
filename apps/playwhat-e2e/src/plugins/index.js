@@ -1,5 +1,6 @@
 const { preprocessTypescript } = require('@nrwl/cypress/plugins/preprocessor');
-var cypressFirebasePlugin = require('cypress-firebase').plugin;
+const admin = require("firebase-admin");
+const cypressFirebasePlugin = require('cypress-firebase').plugin;
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
 //
@@ -15,5 +16,5 @@ module.exports = function(on, config) {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
   on('file:preprocessor', preprocessTypescript(config));
-  return cypressFirebasePlugin(config);
+  return cypressFirebasePlugin(on, config, admin);
 };

@@ -10,7 +10,7 @@
       "prefix": "ygg",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/shopping/payment/tsconfig.lib.json",
             "project": "libs/shopping/payment/ng-package.json"
@@ -23,7 +23,10 @@
               "libs/shopping/payment/tsconfig.lib.json",
               "libs/shopping/payment/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/payment/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/payment/**"
+            ]
           }
         },
         "test": {
@@ -31,7 +34,8 @@
           "options": {
             "jestConfig": "libs/shopping/payment/jest.config.js",
             "tsConfig": "libs/shopping/payment/tsconfig.spec.json",
-            "setupFile": "libs/shopping/payment/src/test-setup.ts"
+            "setupFile": "libs/shopping/payment/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -44,7 +48,7 @@
       "prefix": "ygg",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/shopping/order/tsconfig.lib.json",
             "project": "libs/shopping/order/ng-package.json"
@@ -57,7 +61,10 @@
               "libs/shopping/order/tsconfig.lib.json",
               "libs/shopping/order/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/order/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/order/**"
+            ]
           }
         },
         "test": {
@@ -65,7 +72,8 @@
           "options": {
             "jestConfig": "libs/shopping/order/jest.config.js",
             "tsConfig": "libs/shopping/order/tsconfig.spec.json",
-            "setupFile": "libs/shopping/order/src/test-setup.ts"
+            "setupFile": "libs/shopping/order/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -84,7 +92,10 @@
               "libs/shopping/cart/tsconfig.lib.json",
               "libs/shopping/cart/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/cart/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/cart/**"
+            ]
           }
         },
         "test": {
@@ -92,7 +103,8 @@
           "options": {
             "jestConfig": "libs/shopping/cart/jest.config.js",
             "tsConfig": "libs/shopping/cart/tsconfig.spec.json",
-            "setupFile": "libs/shopping/cart/src/test-setup.ts"
+            "setupFile": "libs/shopping/cart/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -111,7 +123,10 @@
             "outputPath": "dist/apps/firebase-functions",
             "main": "apps/firebase-functions/src/main.ts",
             "tsConfig": "apps/firebase-functions/tsconfig.app.json",
-            "assets": ["apps/firebase-functions/src/assets"]
+            "assets": [
+              "apps/firebase-functions/src/assets"
+            ],
+            "buildLibsFromSource": true
           },
           "configurations": {
             "production": {
@@ -141,14 +156,18 @@
               "apps/firebase-functions/tsconfig.app.json",
               "apps/firebase-functions/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/firebase-functions/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/firebase-functions/**"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/firebase-functions/jest.config.js",
-            "tsConfig": "apps/firebase-functions/tsconfig.spec.json"
+            "tsConfig": "apps/firebase-functions/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -166,14 +185,18 @@
               "libs/shared/infra/error/tsconfig.lib.json",
               "libs/shared/infra/error/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/infra/error/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/infra/error/**"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/shared/infra/error/jest.config.js",
-            "tsConfig": "libs/shared/infra/error/tsconfig.spec.json"
+            "tsConfig": "libs/shared/infra/error/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       },
@@ -192,7 +215,10 @@
               "libs/shared/ui/widgets/tsconfig.lib.json",
               "libs/shared/ui/widgets/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/ui/widgets/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/widgets/**"
+            ]
           }
         },
         "test": {
@@ -200,7 +226,8 @@
           "options": {
             "jestConfig": "libs/shared/ui/widgets/jest.config.js",
             "tsConfig": "libs/shared/ui/widgets/tsconfig.spec.json",
-            "setupFile": "libs/shared/ui/widgets/src/test-setup.ts"
+            "setupFile": "libs/shared/ui/widgets/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -219,7 +246,10 @@
               "libs/shared/ui/themes/tsconfig.lib.json",
               "libs/shared/ui/themes/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/ui/themes/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/themes/**"
+            ]
           }
         },
         "test": {
@@ -227,7 +257,8 @@
           "options": {
             "jestConfig": "libs/shared/ui/themes/jest.config.js",
             "tsConfig": "libs/shared/ui/themes/tsconfig.spec.json",
-            "setupFile": "libs/shared/ui/themes/src/test-setup.ts"
+            "setupFile": "libs/shared/ui/themes/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -311,7 +342,10 @@
               "apps/sandbox/tsconfig.app.json",
               "apps/sandbox/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/sandbox/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/sandbox/**"
+            ]
           }
         },
         "test": {
@@ -319,7 +353,8 @@
           "options": {
             "jestConfig": "apps/sandbox/jest.config.js",
             "tsConfig": "apps/sandbox/tsconfig.spec.json",
-            "setupFile": "apps/sandbox/src/test-setup.ts"
+            "setupFile": "apps/sandbox/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -346,7 +381,10 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/sandbox-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**", "!apps/sandbox-e2e/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/sandbox-e2e/**"
+            ]
           }
         }
       }
@@ -429,7 +467,10 @@
               "apps/playwhat/tsconfig.app.json",
               "apps/playwhat/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/playwhat/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/playwhat/**"
+            ]
           }
         },
         "test": {
@@ -437,7 +478,8 @@
           "options": {
             "jestConfig": "apps/playwhat/jest.config.js",
             "tsConfig": "apps/playwhat/tsconfig.spec.json",
-            "setupFile": "apps/playwhat/src/test-setup.ts"
+            "setupFile": "apps/playwhat/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -464,7 +506,10 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/playwhat-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**", "!apps/playwhat-e2e/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/playwhat-e2e/**"
+            ]
           }
         }
       }
@@ -482,7 +527,10 @@
               "libs/playwhat/scheduler/tsconfig.lib.json",
               "libs/playwhat/scheduler/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/scheduler/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/scheduler/**"
+            ]
           }
         },
         "test": {
@@ -490,7 +538,8 @@
           "options": {
             "jestConfig": "libs/playwhat/scheduler/jest.config.js",
             "tsConfig": "libs/playwhat/scheduler/tsconfig.spec.json",
-            "setupFile": "libs/playwhat/scheduler/src/test-setup.ts"
+            "setupFile": "libs/playwhat/scheduler/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -509,7 +558,10 @@
               "libs/playwhat/resource/tsconfig.lib.json",
               "libs/playwhat/resource/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/resource/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/resource/**"
+            ]
           }
         },
         "test": {
@@ -517,7 +569,8 @@
           "options": {
             "jestConfig": "libs/playwhat/resource/jest.config.js",
             "tsConfig": "libs/playwhat/resource/tsconfig.spec.json",
-            "setupFile": "libs/playwhat/resource/src/test-setup.ts"
+            "setupFile": "libs/playwhat/resource/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -547,7 +600,8 @@
           "options": {
             "jestConfig": "libs/shared/infra/data-access/jest.config.js",
             "tsConfig": "libs/shared/infra/data-access/tsconfig.spec.json",
-            "setupFile": "libs/shared/infra/data-access/src/test-setup.ts"
+            "setupFile": "libs/shared/infra/data-access/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -566,7 +620,10 @@
               "libs/shared/types/tsconfig.lib.json",
               "libs/shared/types/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/types/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/types/**"
+            ]
           }
         },
         "test": {
@@ -574,7 +631,8 @@
           "options": {
             "jestConfig": "libs/shared/types/jest.config.js",
             "tsConfig": "libs/shared/types/tsconfig.spec.json",
-            "setupFile": "libs/shared/types/src/test-setup.ts"
+            "setupFile": "libs/shared/types/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -593,7 +651,10 @@
               "libs/playwhat/admin/tsconfig.lib.json",
               "libs/playwhat/admin/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/admin/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/admin/**"
+            ]
           }
         },
         "test": {
@@ -601,7 +662,8 @@
           "options": {
             "jestConfig": "libs/playwhat/admin/jest.config.js",
             "tsConfig": "libs/playwhat/admin/tsconfig.spec.json",
-            "setupFile": "libs/playwhat/admin/src/test-setup.ts"
+            "setupFile": "libs/playwhat/admin/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -620,7 +682,10 @@
               "libs/shared/ui/navigation/tsconfig.lib.json",
               "libs/shared/ui/navigation/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/ui/navigation/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/navigation/**"
+            ]
           }
         },
         "test": {
@@ -628,7 +693,8 @@
           "options": {
             "jestConfig": "libs/shared/ui/navigation/jest.config.js",
             "tsConfig": "libs/shared/ui/navigation/tsconfig.spec.json",
-            "setupFile": "libs/shared/ui/navigation/src/test-setup.ts"
+            "setupFile": "libs/shared/ui/navigation/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -647,7 +713,10 @@
               "libs/playwhat/play/tsconfig.lib.json",
               "libs/playwhat/play/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/play/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/play/**"
+            ]
           }
         },
         "test": {
@@ -655,7 +724,8 @@
           "options": {
             "jestConfig": "libs/playwhat/play/jest.config.js",
             "tsConfig": "libs/playwhat/play/tsconfig.spec.json",
-            "setupFile": "libs/playwhat/play/src/test-setup.ts"
+            "setupFile": "libs/playwhat/play/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -685,7 +755,8 @@
           "options": {
             "jestConfig": "libs/shared/infra/device-adapter/jest.config.js",
             "tsConfig": "libs/shared/infra/device-adapter/tsconfig.spec.json",
-            "setupFile": "libs/shared/infra/device-adapter/src/test-setup.ts"
+            "setupFile": "libs/shared/infra/device-adapter/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -768,7 +839,10 @@
               "apps/shared-types-demo/tsconfig.app.json",
               "apps/shared-types-demo/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/shared-types-demo/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/shared-types-demo/**"
+            ]
           }
         },
         "test": {
@@ -776,7 +850,8 @@
           "options": {
             "jestConfig": "apps/shared-types-demo/jest.config.js",
             "tsConfig": "apps/shared-types-demo/tsconfig.spec.json",
-            "setupFile": "apps/shared-types-demo/src/test-setup.ts"
+            "setupFile": "apps/shared-types-demo/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -803,7 +878,10 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/shared-types-demo-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**", "!apps/shared-types-demo-e2e/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/shared-types-demo-e2e/**"
+            ]
           }
         }
       }
@@ -821,7 +899,10 @@
               "libs/shared/infra/log/tsconfig.lib.json",
               "libs/shared/infra/log/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/infra/log/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/infra/log/**"
+            ]
           }
         },
         "test": {
@@ -829,7 +910,8 @@
           "options": {
             "jestConfig": "libs/shared/infra/log/jest.config.js",
             "tsConfig": "libs/shared/infra/log/tsconfig.spec.json",
-            "setupFile": "libs/shared/infra/log/src/test-setup.ts"
+            "setupFile": "libs/shared/infra/log/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -848,7 +930,10 @@
               "libs/shared/ui/ng-material/tsconfig.lib.json",
               "libs/shared/ui/ng-material/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/ui/ng-material/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/ng-material/**"
+            ]
           }
         },
         "test": {
@@ -856,7 +941,8 @@
           "options": {
             "jestConfig": "libs/shared/ui/ng-material/jest.config.js",
             "tsConfig": "libs/shared/ui/ng-material/tsconfig.spec.json",
-            "setupFile": "libs/shared/ui/ng-material/src/test-setup.ts"
+            "setupFile": "libs/shared/ui/ng-material/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -875,7 +961,10 @@
               "libs/tags/core/tsconfig.lib.json",
               "libs/tags/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/tags/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/tags/core/**"
+            ]
           }
         },
         "test": {
@@ -883,7 +972,8 @@
           "options": {
             "jestConfig": "libs/tags/core/jest.config.js",
             "tsConfig": "libs/tags/core/tsconfig.spec.json",
-            "setupFile": "libs/tags/core/src/test-setup.ts"
+            "setupFile": "libs/tags/core/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -902,7 +992,10 @@
               "libs/tags/ui/tsconfig.lib.json",
               "libs/tags/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/tags/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/tags/ui/**"
+            ]
           }
         },
         "test": {
@@ -910,7 +1003,8 @@
           "options": {
             "jestConfig": "libs/tags/ui/jest.config.js",
             "tsConfig": "libs/tags/ui/tsconfig.spec.json",
-            "setupFile": "libs/tags/ui/src/test-setup.ts"
+            "setupFile": "libs/tags/ui/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -929,7 +1023,10 @@
               "libs/tags/admin/tsconfig.lib.json",
               "libs/tags/admin/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/tags/admin/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/tags/admin/**"
+            ]
           }
         },
         "test": {
@@ -937,7 +1034,8 @@
           "options": {
             "jestConfig": "libs/tags/admin/jest.config.js",
             "tsConfig": "libs/tags/admin/tsconfig.spec.json",
-            "setupFile": "libs/tags/admin/src/test-setup.ts"
+            "setupFile": "libs/tags/admin/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -967,7 +1065,8 @@
           "options": {
             "jestConfig": "libs/tags/firebase-functions/jest.config.js",
             "tsConfig": "libs/tags/firebase-functions/tsconfig.spec.json",
-            "setupFile": "libs/tags/firebase-functions/src/test-setup.ts"
+            "setupFile": "libs/tags/firebase-functions/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -986,7 +1085,10 @@
               "libs/tags/data-access/tsconfig.lib.json",
               "libs/tags/data-access/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/tags/data-access/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/tags/data-access/**"
+            ]
           }
         },
         "test": {
@@ -994,7 +1096,8 @@
           "options": {
             "jestConfig": "libs/tags/data-access/jest.config.js",
             "tsConfig": "libs/tags/data-access/tsconfig.spec.json",
-            "setupFile": "libs/tags/data-access/src/test-setup.ts"
+            "setupFile": "libs/tags/data-access/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1023,7 +1126,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/shared/test/page-object/jest.config.js",
-            "tsConfig": "libs/shared/test/page-object/tsconfig.spec.json"
+            "tsConfig": "libs/shared/test/page-object/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -1051,7 +1155,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/shared/test/angular-jest/jest.config.js",
-            "tsConfig": "libs/shared/test/angular-jest/tsconfig.spec.json"
+            "tsConfig": "libs/shared/test/angular-jest/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -1069,7 +1174,10 @@
               "libs/schedule/core/tsconfig.lib.json",
               "libs/schedule/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/schedule/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/schedule/core/**"
+            ]
           }
         },
         "test": {
@@ -1077,7 +1185,8 @@
           "options": {
             "jestConfig": "libs/schedule/core/jest.config.js",
             "tsConfig": "libs/schedule/core/tsconfig.spec.json",
-            "setupFile": "libs/schedule/core/src/test-setup.ts"
+            "setupFile": "libs/schedule/core/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1096,7 +1205,10 @@
               "libs/schedule/data-access/tsconfig.lib.json",
               "libs/schedule/data-access/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/schedule/data-access/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/schedule/data-access/**"
+            ]
           }
         },
         "test": {
@@ -1104,7 +1216,8 @@
           "options": {
             "jestConfig": "libs/schedule/data-access/jest.config.js",
             "tsConfig": "libs/schedule/data-access/tsconfig.spec.json",
-            "setupFile": "libs/schedule/data-access/src/test-setup.ts"
+            "setupFile": "libs/schedule/data-access/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1123,7 +1236,10 @@
               "libs/schedule/ui/tsconfig.lib.json",
               "libs/schedule/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/schedule/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/schedule/ui/**"
+            ]
           }
         },
         "test": {
@@ -1131,7 +1247,8 @@
           "options": {
             "jestConfig": "libs/schedule/ui/jest.config.js",
             "tsConfig": "libs/schedule/ui/tsconfig.spec.json",
-            "setupFile": "libs/schedule/ui/src/test-setup.ts"
+            "setupFile": "libs/schedule/ui/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1150,7 +1267,10 @@
               "libs/schedule/admin/tsconfig.lib.json",
               "libs/schedule/admin/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/schedule/admin/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/schedule/admin/**"
+            ]
           }
         },
         "test": {
@@ -1158,7 +1278,8 @@
           "options": {
             "jestConfig": "libs/schedule/admin/jest.config.js",
             "tsConfig": "libs/schedule/admin/tsconfig.spec.json",
-            "setupFile": "libs/schedule/admin/src/test-setup.ts"
+            "setupFile": "libs/schedule/admin/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1177,7 +1298,10 @@
               "libs/schedule/frontend/tsconfig.lib.json",
               "libs/schedule/frontend/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/schedule/frontend/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/schedule/frontend/**"
+            ]
           }
         },
         "test": {
@@ -1185,7 +1309,8 @@
           "options": {
             "jestConfig": "libs/schedule/frontend/jest.config.js",
             "tsConfig": "libs/schedule/frontend/tsconfig.spec.json",
-            "setupFile": "libs/schedule/frontend/src/test-setup.ts"
+            "setupFile": "libs/schedule/frontend/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1204,7 +1329,10 @@
               "libs/schedule/factory/tsconfig.lib.json",
               "libs/schedule/factory/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/schedule/factory/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/schedule/factory/**"
+            ]
           }
         },
         "test": {
@@ -1212,7 +1340,8 @@
           "options": {
             "jestConfig": "libs/schedule/factory/jest.config.js",
             "tsConfig": "libs/schedule/factory/tsconfig.spec.json",
-            "setupFile": "libs/schedule/factory/src/test-setup.ts"
+            "setupFile": "libs/schedule/factory/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1231,7 +1360,10 @@
               "libs/shopping/core/tsconfig.lib.json",
               "libs/shopping/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/core/**"
+            ]
           }
         },
         "test": {
@@ -1239,7 +1371,8 @@
           "options": {
             "jestConfig": "libs/shopping/core/jest.config.js",
             "tsConfig": "libs/shopping/core/tsconfig.spec.json",
-            "setupFile": "libs/shopping/core/src/test-setup.ts"
+            "setupFile": "libs/shopping/core/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1258,7 +1391,10 @@
               "libs/shopping/ui/tsconfig.lib.json",
               "libs/shopping/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/ui/**"
+            ]
           }
         },
         "test": {
@@ -1266,7 +1402,8 @@
           "options": {
             "jestConfig": "libs/shopping/ui/jest.config.js",
             "tsConfig": "libs/shopping/ui/tsconfig.spec.json",
-            "setupFile": "libs/shopping/ui/src/test-setup.ts"
+            "setupFile": "libs/shopping/ui/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1285,7 +1422,10 @@
               "libs/shopping/data-access/tsconfig.lib.json",
               "libs/shopping/data-access/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/data-access/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/data-access/**"
+            ]
           }
         },
         "test": {
@@ -1293,7 +1433,8 @@
           "options": {
             "jestConfig": "libs/shopping/data-access/jest.config.js",
             "tsConfig": "libs/shopping/data-access/tsconfig.spec.json",
-            "setupFile": "libs/shopping/data-access/src/test-setup.ts"
+            "setupFile": "libs/shopping/data-access/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1312,7 +1453,10 @@
               "libs/shopping/factory/tsconfig.lib.json",
               "libs/shopping/factory/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/factory/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/factory/**"
+            ]
           }
         },
         "test": {
@@ -1320,7 +1464,8 @@
           "options": {
             "jestConfig": "libs/shopping/factory/jest.config.js",
             "tsConfig": "libs/shopping/factory/tsconfig.spec.json",
-            "setupFile": "libs/shopping/factory/src/test-setup.ts"
+            "setupFile": "libs/shopping/factory/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1339,7 +1484,10 @@
               "libs/resource/core/tsconfig.lib.json",
               "libs/resource/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/resource/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/resource/core/**"
+            ]
           }
         },
         "test": {
@@ -1347,7 +1495,8 @@
           "options": {
             "jestConfig": "libs/resource/core/jest.config.js",
             "tsConfig": "libs/resource/core/tsconfig.spec.json",
-            "setupFile": "libs/resource/core/src/test-setup.ts"
+            "setupFile": "libs/resource/core/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1366,7 +1515,10 @@
               "libs/resource/data-access/tsconfig.lib.json",
               "libs/resource/data-access/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/resource/data-access/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/resource/data-access/**"
+            ]
           }
         },
         "test": {
@@ -1374,7 +1526,8 @@
           "options": {
             "jestConfig": "libs/resource/data-access/jest.config.js",
             "tsConfig": "libs/resource/data-access/tsconfig.spec.json",
-            "setupFile": "libs/resource/data-access/src/test-setup.ts"
+            "setupFile": "libs/resource/data-access/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1393,7 +1546,10 @@
               "libs/resource/ui/tsconfig.lib.json",
               "libs/resource/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/resource/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/resource/ui/**"
+            ]
           }
         },
         "test": {
@@ -1401,7 +1557,8 @@
           "options": {
             "jestConfig": "libs/resource/ui/jest.config.js",
             "tsConfig": "libs/resource/ui/tsconfig.spec.json",
-            "setupFile": "libs/resource/ui/src/test-setup.ts"
+            "setupFile": "libs/resource/ui/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1420,7 +1577,10 @@
               "libs/shared/ui/dynamic-form/tsconfig.lib.json",
               "libs/shared/ui/dynamic-form/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/ui/dynamic-form/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/dynamic-form/**"
+            ]
           }
         },
         "test": {
@@ -1428,7 +1588,8 @@
           "options": {
             "jestConfig": "libs/shared/ui/dynamic-form/jest.config.js",
             "tsConfig": "libs/shared/ui/dynamic-form/tsconfig.spec.json",
-            "setupFile": "libs/shared/ui/dynamic-form/src/test-setup.ts"
+            "setupFile": "libs/shared/ui/dynamic-form/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1447,7 +1608,10 @@
               "libs/resource/factory/tsconfig.lib.json",
               "libs/resource/factory/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/resource/factory/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/resource/factory/**"
+            ]
           }
         },
         "test": {
@@ -1455,7 +1619,8 @@
           "options": {
             "jestConfig": "libs/resource/factory/jest.config.js",
             "tsConfig": "libs/resource/factory/tsconfig.spec.json",
-            "setupFile": "libs/resource/factory/src/test-setup.ts"
+            "setupFile": "libs/resource/factory/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1539,7 +1704,10 @@
               "apps/the-thing/tsconfig.app.json",
               "apps/the-thing/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/the-thing/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/the-thing/**"
+            ]
           }
         },
         "test": {
@@ -1547,7 +1715,8 @@
           "options": {
             "jestConfig": "apps/the-thing/jest.config.js",
             "tsConfig": "apps/the-thing/tsconfig.spec.json",
-            "setupFile": "apps/the-thing/src/test-setup.ts"
+            "setupFile": "apps/the-thing/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -1574,7 +1743,10 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/the-thing-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**", "!apps/the-thing-e2e/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/the-thing-e2e/**"
+            ]
           }
         }
       }
@@ -1592,14 +1764,18 @@
               "libs/shared/test/cypress/tsconfig.lib.json",
               "libs/shared/test/cypress/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/test/cypress/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/test/cypress/**"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/shared/test/cypress/jest.config.js",
-            "tsConfig": "libs/shared/test/cypress/tsconfig.spec.json"
+            "tsConfig": "libs/shared/test/cypress/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -1617,14 +1793,18 @@
               "libs/the-thing/core/tsconfig.lib.json",
               "libs/the-thing/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/the-thing/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/the-thing/core/**"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/the-thing/core/jest.config.js",
-            "tsConfig": "libs/the-thing/core/tsconfig.spec.json"
+            "tsConfig": "libs/the-thing/core/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -1642,7 +1822,10 @@
               "libs/the-thing/admin/tsconfig.lib.json",
               "libs/the-thing/admin/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/the-thing/admin/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/the-thing/admin/**"
+            ]
           }
         },
         "test": {
@@ -1650,7 +1833,8 @@
           "options": {
             "jestConfig": "libs/the-thing/admin/jest.config.js",
             "tsConfig": "libs/the-thing/admin/tsconfig.spec.json",
-            "setupFile": "libs/the-thing/admin/src/test-setup.ts"
+            "setupFile": "libs/the-thing/admin/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1669,7 +1853,10 @@
               "libs/the-thing/data-access/tsconfig.lib.json",
               "libs/the-thing/data-access/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/the-thing/data-access/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/the-thing/data-access/**"
+            ]
           }
         },
         "test": {
@@ -1677,7 +1864,8 @@
           "options": {
             "jestConfig": "libs/the-thing/data-access/jest.config.js",
             "tsConfig": "libs/the-thing/data-access/tsconfig.spec.json",
-            "setupFile": "libs/the-thing/data-access/src/test-setup.ts"
+            "setupFile": "libs/the-thing/data-access/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1696,7 +1884,10 @@
               "libs/the-thing/ui/tsconfig.lib.json",
               "libs/the-thing/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/the-thing/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/the-thing/ui/**"
+            ]
           }
         },
         "test": {
@@ -1704,7 +1895,8 @@
           "options": {
             "jestConfig": "libs/the-thing/ui/jest.config.js",
             "tsConfig": "libs/the-thing/ui/tsconfig.spec.json",
-            "setupFile": "libs/the-thing/ui/src/test-setup.ts"
+            "setupFile": "libs/the-thing/ui/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1723,14 +1915,18 @@
               "libs/the-thing/test/tsconfig.lib.json",
               "libs/the-thing/test/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/the-thing/test/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/the-thing/test/**"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/the-thing/test/jest.config.js",
-            "tsConfig": "libs/the-thing/test/tsconfig.spec.json"
+            "tsConfig": "libs/the-thing/test/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -1748,7 +1944,10 @@
               "libs/shared/omni-types/ui/tsconfig.lib.json",
               "libs/shared/omni-types/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/omni-types/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/omni-types/ui/**"
+            ]
           }
         },
         "test": {
@@ -1756,7 +1955,8 @@
           "options": {
             "jestConfig": "libs/shared/omni-types/ui/jest.config.js",
             "tsConfig": "libs/shared/omni-types/ui/tsconfig.spec.json",
-            "setupFile": "libs/shared/omni-types/ui/src/test-setup.ts"
+            "setupFile": "libs/shared/omni-types/ui/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1775,14 +1975,18 @@
               "libs/shared/omni-types/core/tsconfig.lib.json",
               "libs/shared/omni-types/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/omni-types/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/omni-types/core/**"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/shared/omni-types/core/jest.config.js",
-            "tsConfig": "libs/shared/omni-types/core/tsconfig.spec.json"
+            "tsConfig": "libs/shared/omni-types/core/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -1800,14 +2004,18 @@
               "libs/shared/omni-types/test/tsconfig.lib.json",
               "libs/shared/omni-types/test/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/omni-types/test/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/omni-types/test/**"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/shared/omni-types/test/jest.config.js",
-            "tsConfig": "libs/shared/omni-types/test/tsconfig.spec.json"
+            "tsConfig": "libs/shared/omni-types/test/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -1825,7 +2033,10 @@
               "libs/playwhat/ui/tsconfig.lib.json",
               "libs/playwhat/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/ui/**"
+            ]
           }
         },
         "test": {
@@ -1833,7 +2044,8 @@
           "options": {
             "jestConfig": "libs/playwhat/ui/jest.config.js",
             "tsConfig": "libs/playwhat/ui/tsconfig.spec.json",
-            "setupFile": "libs/playwhat/ui/src/test-setup.ts"
+            "setupFile": "libs/playwhat/ui/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1852,14 +2064,18 @@
               "libs/shared/ui/test/tsconfig.lib.json",
               "libs/shared/ui/test/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/ui/test/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/test/**"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/shared/ui/test/jest.config.js",
-            "tsConfig": "libs/shared/ui/test/tsconfig.spec.json"
+            "tsConfig": "libs/shared/ui/test/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -1877,14 +2093,18 @@
               "libs/playwhat/core/tsconfig.lib.json",
               "libs/playwhat/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/core/**"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/playwhat/core/jest.config.js",
-            "tsConfig": "libs/playwhat/core/tsconfig.spec.json"
+            "tsConfig": "libs/playwhat/core/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -1902,7 +2122,10 @@
               "libs/shopping/test/tsconfig.lib.json",
               "libs/shopping/test/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/test/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/test/**"
+            ]
           }
         },
         "test": {
@@ -1910,7 +2133,8 @@
           "options": {
             "jestConfig": "libs/shopping/test/jest.config.js",
             "tsConfig": "libs/shopping/test/tsconfig.spec.json",
-            "setupFile": "libs/shopping/test/src/test-setup.ts"
+            "setupFile": "libs/shopping/test/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1929,14 +2153,18 @@
               "libs/playwhat/test/tsconfig.lib.json",
               "libs/playwhat/test/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/test/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/test/**"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/playwhat/test/jest.config.js",
-            "tsConfig": "libs/playwhat/test/tsconfig.spec.json"
+            "tsConfig": "libs/playwhat/test/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -1954,7 +2182,10 @@
               "libs/shared/user/ui/tsconfig.lib.json",
               "libs/shared/user/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/user/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/user/ui/**"
+            ]
           }
         },
         "test": {
@@ -1962,7 +2193,8 @@
           "options": {
             "jestConfig": "libs/shared/user/ui/jest.config.js",
             "tsConfig": "libs/shared/user/ui/tsconfig.spec.json",
-            "setupFile": "libs/shared/user/ui/src/test-setup.ts"
+            "setupFile": "libs/shared/user/ui/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1981,14 +2213,18 @@
               "libs/shared/user/core/tsconfig.lib.json",
               "libs/shared/user/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/user/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/user/core/**"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/shared/user/core/jest.config.js",
-            "tsConfig": "libs/shared/user/core/tsconfig.spec.json"
+            "tsConfig": "libs/shared/user/core/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -2006,14 +2242,18 @@
               "libs/shared/user/test/tsconfig.lib.json",
               "libs/shared/user/test/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/user/test/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/user/test/**"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/shared/user/test/jest.config.js",
-            "tsConfig": "libs/shared/user/test/tsconfig.spec.json"
+            "tsConfig": "libs/shared/user/test/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -2024,7 +2264,8 @@
       "typescriptMismatch": false,
       "versionMismatch": false
     },
-    "defaultCollection": "@nrwl/angular"
+    "defaultCollection": "@nrwl/angular",
+    "analytics": "ad1bb496-0b23-464e-8b51-04980c26ac7c"
   },
   "schematics": {
     "@nrwl/schematics:library": {

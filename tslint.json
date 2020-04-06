@@ -133,7 +133,8 @@
               "scope:shared"
             ]
           }
-        ]
+        ],
+        "enforceBuildableLibDependency": true
       }
     ]
   }

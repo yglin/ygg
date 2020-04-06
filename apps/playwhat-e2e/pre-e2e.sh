@@ -1,2 +1,2 @@
 #! /bin/bash -x
-npx cypress-firebase createTestEnvFile
+# npx cypress-firebase createTestEnvFile

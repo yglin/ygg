@@ -33,13 +33,15 @@
       "tags": []
     },
     "sandbox-e2e": {
-      "tags": []
+      "tags": [],
+      "implicitDependencies": ["sandbox"]
     },
     "playwhat": {
       "tags": ["scope:playwhat", "type:app", "platform:mobile"]
     },
     "playwhat-e2e": {
-      "tags": ["scope:playwhat", "type:e2e", "platform:mobile"]
+      "tags": ["scope:playwhat", "type:e2e", "platform:mobile"],
+      "implicitDependencies": ["playwhat"]
     },
     "playwhat-scheduler": {
       "tags": ["scope:playwhat", "type:feature", "platform:mobile"]
@@ -66,7 +68,8 @@
       "tags": ["scope:shared", "type:utils"]
     },
     "shared-types-demo-e2e": {
-      "tags": []
+      "tags": [],
+      "implicitDependencies": ["shared-types-demo"]
     },
     "shared-types-demo": {
       "tags": ["scope:demo", "type:app"]
@@ -144,7 +147,8 @@
       "tags": ["scope:resource", "type:factory"]
     },
     "the-thing-e2e": {
-      "tags": ["scope:the-thing", "type:test"]
+      "tags": ["scope:the-thing", "type:test"],
+      "implicitDependencies": ["the-thing"]
     },
     "the-thing": {
       "tags": ["scope:the-thing", "type:app"]
@@ -199,6 +203,14 @@
     },
     "shared-user-test": {
       "tags": ["scope:shared", "type:test"]
+    }
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
+      }
     }
   }
 }
