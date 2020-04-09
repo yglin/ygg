@@ -144,7 +144,7 @@ ImitationTourPlan.dataTableConfig = {
 //   return totalCharge;
 // }
 
-export function defaultName(tourPlan: TheThing): string {
+export function defaultTourPlanName(tourPlan: TheThing): string {
   const dateRange: DateRange = tourPlan.getCellValue('預計出遊日期');
   return `深度遊趣${dateRange.days() + 1}日遊`;
 }

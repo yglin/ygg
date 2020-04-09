@@ -11,6 +11,10 @@ import {
 } from '@ygg/shared/omni-types/test';
 
 export class TheThingCellsEditorPageObjectCypress extends TheThingCellsEditorPageObject {
+  expectVisible(): Cypress.Chainable<any> {
+    return cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
+  }
+
   setCellValue(cell: TheThingCell) {
     switch (cell.type) {
       case 'text':
@@ -159,17 +163,25 @@ export class TheThingCellsEditorPageObjectCypress extends TheThingCellsEditorPag
     });
   }
 
-  setValue(cells: TheThingCell[]) {
-    this.clearAll();
+  addValue(cells: TheThingCell[]) {
     cy.wrap(cells).each((cell: any) => {
       this.addCell(cell);
       this.setCellValue(cell);
-    });
+    });    
+  }
+
+  setValue(cells: TheThingCell[]) {
+    this.clearAll();
+    this.addValue(cells);
   }
 
   updateValue(cells: TheThingCell[]) {
     cy.wrap(cells).each((cell: any) => {
       this.setCellValue(cell);
     });
+  }
+
+  submit() {
+    cy.get(this.getSelector('buttonSubmit')).click();
   }
 }

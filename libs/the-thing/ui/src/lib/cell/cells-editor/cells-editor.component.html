@@ -1,16 +1,29 @@
 <div class="the-thing-cells-editor">
   <div class="cell-controls" *ngIf="cells">
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px" *ngIf="isPage">
+      <button
+        type="button"
+        class="submit"
+        mat-fab
+        (click)="submit()"
+      >
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
     <div *ngFor="let cellName of cellsOrder; let idx = index">
-      <div *ngIf="cells[cellName] as cell"
+      <div
+        *ngIf="cells[cellName] as cell"
         yggNgForColorBackground
         [index]="idx"
         [attr.cell-name]="cell.name"
       >
-        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+        <div
+          fxLayout="row"
+          fxLayoutAlign="space-between center"
+          fxLayoutGap="10px"
+        >
           <div fxFlex>
-            <ygg-title-divider [level]="5">{{
-              cell.name
-            }}</ygg-title-divider>
+            <ygg-title-divider [level]="5">{{ cell.name }}</ygg-title-divider>
           </div>
           <div fxFlex="50px">
             <button
@@ -33,7 +46,7 @@
     <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
       <button
         type="button"
-        [disabled]="!canDeleteAllCells"
+        *ngIf="canDeleteAllCells"
         class="delete-all"
         mat-fab
         (click)="onClickDeleteAllCells()"

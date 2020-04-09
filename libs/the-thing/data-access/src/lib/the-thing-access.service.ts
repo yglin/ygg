@@ -3,19 +3,29 @@ import { Injectable } from '@angular/core';
 import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
 import { DataAccessService, Query } from '@ygg/shared/infra/data-access';
 import { Observable, throwError } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, shareReplay, tap } from 'rxjs/operators';
 import { Tags } from '@ygg/tags/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TheThingAccessService {
+  cache: { [id: string]: Observable<TheThing> } = {};
   constructor(private dataAccessService: DataAccessService) {}
 
   get$(id: string): Observable<TheThing> {
-    return this.dataAccessService
-      .get$(TheThing.collection, id)
-      .pipe(map(data => new TheThing().fromJSON(data)));
+    if (!(id in this.cache)) {
+      // console.log(`To fetch ${id}`);
+      this.cache[id] = this.dataAccessService
+        .get$(TheThing.collection, id)
+        .pipe(
+          map(data => new TheThing().fromJSON(data)),
+          // tap(thing => console.log(`Get new version thing ${thing.id}`)),
+          shareReplay(1),
+          // tap(thing => console.log(`Get the thing ${thing.id}`))
+        );
+    }
+    return this.cache[id];
   }
 
   list$(): Observable<TheThing[]> {
@@ -80,8 +90,10 @@ export class TheThingAccessService {
     return Promise.resolve(theThing);
   }
 
-  async delete(theThings: TheThing | TheThing[]): Promise<TheThing | TheThing[]> {
-    const victims: TheThing[]  = castArray(theThings);
+  async delete(
+    theThings: TheThing | TheThing[]
+  ): Promise<TheThing | TheThing[]> {
+    const victims: TheThing[] = castArray(theThings);
     const promises: Promise<any>[] = [];
     for (const victim of victims) {
       promises.push(

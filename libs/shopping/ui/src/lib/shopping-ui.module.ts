@@ -13,6 +13,8 @@ import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { ImitationProduct } from '@ygg/shopping/core';
 import { IncomeRecordDataTableComponent } from './accounting/income-data-table/income-data-table.component';
 import { SharedUserUiModule } from "@ygg/shared/user/ui";
+import { RouterModule } from '@angular/router';
+import { routes } from './routes';
 // import { PurchaseControlComponent } from './purchase/purchase-control/purchase-control.component';
 
 @NgModule({
@@ -22,7 +24,8 @@ import { SharedUserUiModule } from "@ygg/shared/user/ui";
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
     SharedUserUiModule,
-    TheThingUiModule
+    TheThingUiModule,
+    RouterModule.forChild(routes)
   ],
   declarations: [
     PurchaseListComponent,

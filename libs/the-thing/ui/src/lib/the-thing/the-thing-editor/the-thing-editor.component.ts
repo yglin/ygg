@@ -51,16 +51,10 @@ import {
   tap,
   filter
 } from 'rxjs/operators';
-import {
-  PageStashService,
-  PageStashPromise
-} from '@ygg/shared/infra/data-access';
 import { User } from '@ygg/shared/user/core';
 import { AuthenticateService } from '@ygg/shared/user/ui';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
-import { TheThingFinderComponent } from '../the-thing-finder/the-thing-finder.component';
 import { TheThingViewsService } from '../../the-thing-views.service';
-import { LogService } from '@ygg/shared/infra/log';
 import { TheThingFactoryService } from '../../the-thing-factory.service';
 import { Color } from 'chroma-js';
 import * as chroma from 'chroma-js';
@@ -115,7 +109,6 @@ export class TheThingEditorComponent
     private router: Router,
     private route: ActivatedRoute,
     private dialog: YggDialogService,
-    private pageStashService: PageStashService,
     private authenticateService: AuthenticateService,
     private imitationAccessService: TheThingImitationAccessService,
     private theThingViewsService: TheThingViewsService

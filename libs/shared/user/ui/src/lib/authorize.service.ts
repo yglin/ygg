@@ -43,4 +43,8 @@ export class AuthorizeService {
       this.authenticateService.currentUser.id === property.ownerId
     );
   }
+
+  canModify(property: Property): boolean {
+    return !property.ownerId || this.isOwner(property);
+  }
 }

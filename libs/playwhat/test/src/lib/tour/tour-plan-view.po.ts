@@ -6,8 +6,8 @@ import {
   DayTimeRangeViewPageObjectCypress,
   ContactViewPageObjectCypress
 } from '@ygg/shared/omni-types/test';
-import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
-import { ImitationTourPlan, defaultName } from '@ygg/playwhat/core';
+import { ControlViewSwitchPageObjectCypress } from '@ygg/shared/ui/test';
+import { ImitationTourPlan } from '@ygg/playwhat/core';
 import { TheThingCellViewPageObjectCypress } from '@ygg/the-thing/test';
 import { PurchaseListPageObjectCypress } from '@ygg/shopping/test';
 import {
@@ -59,7 +59,7 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
   }
 
   expectValue(tourPlan: TheThing) {
-    this.expectName(tourPlan.name || defaultName(tourPlan));
+    this.expectName(tourPlan.name);
     const requiredCells = ImitationTourPlan.getRequiredCellNames();
     for (const requiredCell of requiredCells) {
       const cell = tourPlan.cells[requiredCell];
@@ -102,5 +102,24 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
 
   cancelApplied() {
     cy.get(this.getSelector('buttonCancelApplied')).click();
+  }
+
+  gotoEditOptionalCells(): void {
+    cy.get(this.getSelector('buttonGotoEditOptionalCells')).click();
+  }
+
+  gotoEditPurchases(): void {
+    cy.get(this.getSelector('buttonGotoEditPurchases')).click();
+  }
+
+  setName(name: string) {
+    const controlViewSwitchPO = new ControlViewSwitchPageObjectCypress(
+      this.getSelector('name')
+    );
+    controlViewSwitchPO.openControl();
+    cy.get(this.getSelector('inputName'))
+      .clear()
+      .type(name);
+    controlViewSwitchPO.closeControl();
   }
 }

@@ -10,11 +10,7 @@ import {
 import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
 import { PageObjectCypress, theMockDatabase } from '@ygg/shared/test/cypress';
 import { TheThingCellsEditorPageObjectCypress } from '@ygg/the-thing/test';
-import {
-  ImitationTourPlan,
-  defaultName,
-  ImitationPlay
-} from '@ygg/playwhat/core';
+import { ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
 import { TourPlanViewPageObjectCypress } from '../tour-plan-view.po';
 import {
   Purchase,
@@ -24,6 +20,12 @@ import {
   CellNameQuantity
 } from '@ygg/shopping/core';
 import { isEmpty, find, values } from 'lodash';
+
+export interface IOptionsSetValue {
+  stopAtStep?: number;
+  stopAfterStep?: number;
+  hasOptionalFields?: boolean;
+}
 
 export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
   implements PageObjectCypress {
@@ -41,15 +43,30 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
     this.contactControlPO = new ContactControlPageObjectCypress(
       this.getSelector('contactControl')
     );
-    this.theThingCellsEditorPO = new TheThingCellsEditorPageObjectCypress(
-      this.getSelector('optionalCellsEditor')
-    );
-    this.cartEditorPO = new ShoppingCartEditorPageObjectCypress(
-      this.getSelector('shoppingCart')
-    );
+    // this.theThingCellsEditorPO = new TheThingCellsEditorPageObjectCypress(
+    //   this.getSelector('optionalCellsEditor')
+    // );
+    // this.cartEditorPO = new ShoppingCartEditorPageObjectCypress(
+    //   this.getSelector('shoppingCart')
+    // );
     this.tourPlanPreviewPO = new TourPlanViewPageObjectCypress(
       this.getSelector('preview')
     );
+  }
+
+  // gotoFirstStep() {
+  //   this.prev();
+  //   this.prev();
+  //   this.expectStep(1);
+  // }
+
+  prev() {
+    cy.get(this.getSelector('buttonPrev')).click();
+    this.currentStep -= 1;
+  }
+
+  expectStepFinal() {
+    this.expectStep(3);
   }
 
   setName(name: string) {
@@ -58,7 +75,7 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
       .type(name);
   }
 
-  setValue(tourPlan: TheThing, options: any = {}) {
+  setValue(tourPlan: TheThing, options: IOptionsSetValue = {}) {
     const purchasePlays: TheThing[] = [];
     const purchaseAdditions: TheThing[] = [];
     const finalPurchases: Purchase[] = [];
@@ -126,58 +143,73 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
       this.next();
     }
 
-    // Edit purchases
+    // Review final tour-plan
     this.expectStep(3);
     if (options.stopAtStep === 3) {
       return;
     }
+
+    this.tourPlanPreviewPO.expectVisible();
+
+    if (tourPlan.name) {
+      this.tourPlanPreviewPO.setName(tourPlan.name);
+    }
+
+    if (options.hasOptionalFields) {
+      this.tourPlanPreviewPO.gotoEditOptionalCells();
+      const theThingCellsEditorPO = new TheThingCellsEditorPageObjectCypress();
+      theThingCellsEditorPO.expectVisible();
+      const optionalCells = tourPlan.getCellsByNames(
+        ImitationTourPlan.getOptionalCellNames()
+      );
+      theThingCellsEditorPO.updateValue(optionalCells);
+      theThingCellsEditorPO.submit();
+    }
+
+    // Edit purchases
     if (!isEmpty(finalPurchases)) {
       const products = purchasePlays.concat(purchaseAdditions);
       const purchases: Purchase[] = products.map(p =>
         Purchase.purchase(tourPlan, p, numParticipants)
       );
-      this.cartEditorPO.expectPurchases(purchases);
-      this.cartEditorPO.setPurchases(finalPurchases);
-      this.cartEditorPO.expectPurchases(finalPurchases);
-    }
-    if (options.stopAfterStep === 3) {
-      return;
-    } else {
-      this.next();
-    }
-
-    this.expectStep(4);
-    if (options.stopAtStep === 4) {
-      return;
-    }
-    // A tour-plan without name should have this default name
-    if (!tourPlan.name) {
-      cy.get(this.getSelector('inputName'))
-        .invoke('val')
-        .should('equal', defaultName(tourPlan));
-    } else {
-      this.setName(tourPlan.name);
-    }
-    // Set optional data fields
-    const optionalCells = tourPlan.getCellsByNames(
-      ImitationTourPlan.getOptionalCellNames()
-    );
-    if (!isEmpty(optionalCells)) {
-      this.theThingCellsEditorPO.setValue(optionalCells);
-    }
-    if (options.stopAfterStep === 4) {
-      return;
-    } else {
-      this.next();
+      this.tourPlanPreviewPO.gotoEditPurchases();
+      const cartEditorPO = new ShoppingCartEditorPageObjectCypress();
+      cartEditorPO.expectVisible();
+      cartEditorPO.expectPurchases(purchases);
+      cartEditorPO.setPurchases(finalPurchases);
+      cartEditorPO.expectPurchases(finalPurchases);
+      cartEditorPO.submit();
     }
 
-    // Review final tour-plan
-    this.expectStep(5);
-    if (options.stopAtStep === 5) {
-      return;
-    }
+    this.expectStep(3);
     this.tourPlanPreviewPO.expectVisible();
     this.tourPlanPreviewPO.expectValue(tourPlan);
+
+    // // Set optional fields
+    // this.expectStep(4);
+    // if (options.stopAtStep === 4) {
+    //   return;
+    // }
+    // // A tour-plan without name should have this default name
+    // if (!tourPlan.name) {
+    //   cy.get(this.getSelector('inputName'))
+    //     .invoke('val')
+    //     .should('equal', defaultName(tourPlan));
+    // } else {
+    //   this.setName(tourPlan.name);
+    // }
+    // // Set optional data fields
+    // const optionalCells = tourPlan.getCellsByNames(
+    //   ImitationTourPlan.getOptionalCellNames()
+    // );
+    // if (!isEmpty(optionalCells)) {
+    //   this.theThingCellsEditorPO.setValue(optionalCells);
+    // }
+    // if (options.stopAfterStep === 4) {
+    //   return;
+    // } else {
+    //   this.next();
+    // }
   }
 
   reset() {
@@ -189,7 +221,10 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
   }
 
   expectStep(step: number) {
-    cy.get(this.getSelectorForStep(step)).should('be.visible');
+    cy.get(this.getSelectorForStep(step), { timeout: 10000 }).should(
+      'be.visible'
+    );
+    this.currentStep = step;
   }
 
   selectPlays(plays: TheThing[] | string[]) {
@@ -202,13 +237,6 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
   next() {
     cy.get(`${this.getSelectorForStep(this.currentStep)} button.next`).click();
     this.currentStep += 1;
-  }
-
-  skipToFinalStep() {
-    this.next();
-    this.next();
-    this.next();
-    this.next();
   }
 
   submit() {

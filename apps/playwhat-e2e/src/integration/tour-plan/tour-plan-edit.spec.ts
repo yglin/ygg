@@ -32,12 +32,8 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     login().then(user => {
       cy.wrap(SampleThings).each((thing: any) => {
         thing.ownerId = user.id;
-        theMockDatabase.insert(
-          `${TheThing.collection}/${thing.id}`,
-          thing
-        );
+        theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
       });
-      cy.visit('/');
     });
   });
 
@@ -47,14 +43,15 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
       `${TheThing.collection}/${MinimalTourPlan.id}`,
       MinimalTourPlan
     );
+    cy.visit('/');
   });
 
   after(() => {
-    // Goto my-things page and delete all test things
-    const myThingsPO = new MyThingsPageObjectCypress();
-    siteNavigator.goto(['the-things', 'my'], myThingsPO);
-    cy.wait(3000);
-    myThingsPO.deleteAll();
+    // // Goto my-things page and delete all test things
+    // const myThingsPO = new MyThingsPageObjectCypress();
+    // siteNavigator.goto(['the-things', 'my'], myThingsPO);
+    // cy.wait(3000);
+    // myThingsPO.deleteAll();
 
     theMockDatabase.clear();
   });
@@ -65,8 +62,7 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
     myTourPlansPO.theThingDataTablePO.gotoTheThingEdit(MinimalTourPlan);
     tourPlanBuilderPO.expectVisible();
-    tourPlanBuilderPO.reset();
-    tourPlanBuilderPO.skipToFinalStep();
+    tourPlanBuilderPO.expectStepFinal();
     tourPlanBuilderPO.submit();
     tourPlanViewPO.expectVisible();
     tourPlanViewPO.expectValue(MinimalTourPlan);
@@ -77,8 +73,11 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
     myTourPlansPO.theThingDataTablePO.gotoTheThingEdit(MinimalTourPlan);
     tourPlanBuilderPO.expectVisible();
-    tourPlanBuilderPO.reset();
-    tourPlanBuilderPO.setValue(TourPlanFull);
+    tourPlanBuilderPO.expectStepFinal();
+    tourPlanBuilderPO.prev();
+    tourPlanBuilderPO.prev();
+    tourPlanBuilderPO.expectStep(1);
+    tourPlanBuilderPO.setValue(TourPlanFull, { hasOptionalFields: true });
     tourPlanBuilderPO.submit();
 
     tourPlanViewPO.expectVisible();
@@ -90,8 +89,13 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
     myTourPlansPO.theThingDataTablePO.gotoTheThingEdit(MinimalTourPlan);
     tourPlanBuilderPO.expectVisible();
-    tourPlanBuilderPO.reset();
-    tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions);
+    tourPlanBuilderPO.expectStepFinal();
+    tourPlanBuilderPO.prev();
+    tourPlanBuilderPO.prev();
+    tourPlanBuilderPO.expectStep(1);
+    tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions, {
+      hasOptionalFields: true
+    });
     tourPlanBuilderPO.submit();
 
     tourPlanViewPO.expectVisible();

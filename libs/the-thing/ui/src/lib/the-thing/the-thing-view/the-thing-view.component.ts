@@ -14,9 +14,9 @@ import {
 import { TheThing, TheThingImitation } from '@ygg/the-thing/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
-import { PageStashService, PageData } from '@ygg/shared/infra/data-access';
+// import { PageStashService, PageData } from '@ygg/shared/infra/data-access';
 import {
-  TheThingImitationAccessService,
+  // TheThingImitationAccessService,
   TheThingAccessService
 } from '@ygg/the-thing/data-access';
 import { AuthenticateService } from "@ygg/shared/user/ui";
@@ -40,9 +40,9 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private pageStashService: PageStashService,
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private imitationService: TheThingImitationAccessService,
+    // private pageStashService: PageStashService,
+    // private componentFactoryResolver: ComponentFactoryResolver,
+    // private imitationService: TheThingImitationAccessService,
     private authenticateService: AuthenticateService,
     private theThingViewsService: TheThingViewsService,
     private theThingAccessService: TheThingAccessService
@@ -95,7 +95,7 @@ export class TheThingViewComponent implements OnInit, OnDestroy {
     }
     // console.dir(this.theThing);
     // console.dir(this.theThingViewComponent);
-    const pageData = this.pageStashService.peepTop();
+    // const pageData = this.pageStashService.peepTop();
     // this.isPendingRelation = !get(pageData, 'promises.relation.resolved', true);
   }
 

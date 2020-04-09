@@ -1,4 +1,4 @@
-import { isEmpty, noop, remove, sumBy } from 'lodash';
+import { isEmpty, noop, remove, sumBy, get } from 'lodash';
 import { Component, OnInit, OnDestroy, Input, forwardRef } from '@angular/core';
 import { Purchase } from '@ygg/shopping/core';
 import { Subscription, Observable, of, combineLatest, Subject } from 'rxjs';
@@ -9,6 +9,7 @@ import { YggDialogService } from '@ygg/shared/ui/widgets';
 // import { PurchaseControlComponent } from '../../purchase';
 import { TheThing } from '@ygg/the-thing/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { PageResolverService } from '@ygg/shared/ui/navigation';
 
 @Component({
   selector: 'ygg-shopping-cart-editor',
@@ -32,10 +33,11 @@ export class ShoppingCartEditorComponent
   // asyncPurchasesData: { [purchaseId: string]: { price?: number } } = {};
   subscriptions: Subscription[] = [];
   clearButtonDisabled = true;
+  isPage = false;
 
-  constructor() // protected shoppingCartService: ShoppingCartService,
-  // private dialog: YggDialogService
-  {
+  constructor(
+    private pageResolver: PageResolverService // protected shoppingCartService: ShoppingCartService, // private dialog: YggDialogService
+  ) {
     this.totalCharge = 0;
     this.displayedColumns = ['product', 'quantity', 'charge', 'management'];
     this.purchasesDataSource = new MatTableDataSource<Purchase>([]);
@@ -55,6 +57,11 @@ export class ShoppingCartEditorComponent
   registerOnTouched(fn: any) {}
 
   ngOnInit() {
+    if (this.pageResolver.isPending()) {
+      this.isPage = true;
+      this.purchases = get(this.pageResolver.getInput(), 'purchases', []);
+      this.writeValue(this.purchases);
+    }
     // if (this.rootPurchase) {
     //   this.subscriptions.push(
     //     this.purchaseService.evalPurchase$(this.rootPurchase).subscribe(() => {
@@ -117,5 +124,14 @@ export class ShoppingCartEditorComponent
     // console.log(`Fuck, typeof quantity input ${typeof value}`);
     this.emitChange(this.purchases);
     this.evalTotalCharge();
+  }
+
+  submit() {
+    const confirmMessage = '確定以下購買資料正確？';
+    if (confirm(confirmMessage)) {
+      if (this.pageResolver.isPending()) {
+        this.pageResolver.back({ purchases: this.purchases });
+      }
+    }
   }
 }

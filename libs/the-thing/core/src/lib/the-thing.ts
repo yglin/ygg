@@ -180,6 +180,17 @@ export class TheThing implements Entity, ImageThumbnailItem {
     assign(this.cells, cells);
   }
 
+  updateCellValues(cellValues: { [name: string]: any }) {
+    for (const name in cellValues) {
+      if (cellValues.hasOwnProperty(name)) {
+        const value = cellValues[name];
+        if (this.hasCell(name)) {
+          this.cells[name].value = value;
+        }
+      }
+    }
+  }
+
   deleteCell(cell: TheThingCell) {
     if (this.hasCell(cell)) {
       delete this.cells[cell.name];
@@ -265,9 +276,19 @@ export class TheThing implements Entity, ImageThumbnailItem {
     }
   }
 
-  addRelations(relationName: string, objects: TheThing[] | string[]) {
+  addRelations(
+    relationName: string,
+    objects: TheThing[] | string[] | TheThingRelation[]
+  ) {
     for (const object of objects) {
       this.addRelation(relationName, object);
+    }
+  }
+
+  setRelation(relationName: string, relations: TheThingRelation[]) {
+    this.removeRelation(relationName);
+    for (const relation of relations) {
+      this.addRelation(relation);
     }
   }
 

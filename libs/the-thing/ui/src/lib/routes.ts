@@ -7,13 +7,14 @@ import {
   TheThingResolver,
   TheThingEditorPageObject
 } from './the-thing';
-import { LoggedInGuard, AdminGuard } from "@ygg/shared/user/ui";
+import { LoggedInGuard, AdminGuard } from '@ygg/shared/user/ui';
 import { ImitationTemplateResolver } from './imitation-template-resolver.service';
 import { ImitationManagerComponent } from './imitation';
 import { MyThingsDataTableComponent } from './the-thing/my-things-data-table/my-things-data-table.component';
 import { AdminThingsDataTableComponent } from './the-thing/admin-things-data-table/admin-things-data-table.component';
 import { ImitationResolver } from './imitation/imitation-resolver.service';
 import { TheThingEditPageComponent } from './the-thing/the-thing-edit-page/the-thing-edit-page.component';
+import { TheThingCellsEditorComponent } from './cell/cells-editor/cells-editor.component';
 
 export const routes: Route[] = [
   {
@@ -50,19 +51,30 @@ export const routes: Route[] = [
       },
       {
         path: 'admin',
-        children: [{
-          path: ':imitation',
-          component: AdminThingsDataTableComponent,
-          resolve: {
-            imitation: ImitationResolver
+        children: [
+          {
+            path: ':imitation',
+            component: AdminThingsDataTableComponent,
+            resolve: {
+              imitation: ImitationResolver
+            }
           }
-        }],
+        ],
         canActivateChild: [AdminGuard]
       },
       {
         path: 'imitations',
         component: ImitationManagerComponent
         // canActivate: [LoggedInGuard, AdminGuard]
+      },
+      {
+        path: 'cells',
+        children: [
+          {
+            path: 'edit',
+            component: TheThingCellsEditorComponent
+          }
+        ]
       },
       {
         path: ':id',

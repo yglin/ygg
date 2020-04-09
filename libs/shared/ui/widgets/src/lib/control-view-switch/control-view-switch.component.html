@@ -1,0 +1,30 @@
+<div class="control-view-switch">
+  <div *ngIf="showControl">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+      <div>
+        <ng-content select="[control]"></ng-content>
+      </div>
+      <div>
+        <button
+          mat-mini-fab
+          (click)="showControl = false"
+          class="close-control"
+        >
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!showControl">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+      <div>
+        <ng-content select="[view]"></ng-content>
+      </div>
+      <div *ngIf="!readonly">
+        <button mat-mini-fab (click)="showControl = true" class="open-control">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

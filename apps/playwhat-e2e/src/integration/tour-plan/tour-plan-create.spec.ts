@@ -26,6 +26,7 @@ import { ImitationOrder } from '@ygg/shopping/core';
 import { ContactControlPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { User } from '@ygg/shared/user/core';
 import { Contact } from '@ygg/shared/omni-types/core';
+import { defaultTourPlanName } from '@ygg/playwhat/core';
 
 describe('Tour-plan builder', () => {
   const siteNavigator = new SiteNavigator();
@@ -55,11 +56,11 @@ describe('Tour-plan builder', () => {
         thing.ownerId = user.id;
         theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
       });
-      cy.visit('/');
     });
   });
 
   beforeEach(() => {
+    cy.visit('/');
     tourPlanBuilderPO.reset();
     siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
   });
@@ -74,7 +75,10 @@ describe('Tour-plan builder', () => {
   });
 
   it('A tour-plan without user input name should have default name', () => {
-    tourPlanBuilderPO.setValue(MinimalTourPlanWithoutName);
+    tourPlanBuilderPO.setValue(MinimalTourPlanWithoutName, { stopAtStep: 3 });
+    tourPlanBuilderPO.tourPlanPreviewPO.expectName(
+      defaultTourPlanName(MinimalTourPlanWithoutName)
+    );
   });
 
   it('Logged-in user can automatically fill contact info', () => {
@@ -96,7 +100,9 @@ describe('Tour-plan builder', () => {
   });
 
   it('Build a tour-plan plus includes all optional data fields', () => {
-    tourPlanBuilderPO.setValue(TourPlanFull);
+    tourPlanBuilderPO.setValue(TourPlanFull, {
+      hasOptionalFields: true
+    });
     tourPlanBuilderPO.submit();
 
     // Expect redirect to tour-plan view page, and check required data fields
@@ -128,7 +134,6 @@ describe('Tour-plan builder', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
     tourPlanBuilderPO.reset();
-    tourPlanBuilderPO.skipToFinalStep();
     tourPlanBuilderPO.submit();
 
     // Expect redirect to tour-plan view page, and check selected plays

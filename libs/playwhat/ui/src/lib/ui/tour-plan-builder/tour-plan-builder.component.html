@@ -1,5 +1,10 @@
 <div class="tour-plan-builder" *ngIf="theThing">
-  <mat-horizontal-stepper linear #stepper>
+  <mat-horizontal-stepper
+    linear
+    #stepper
+    [selectedIndex]="stepIndex"
+    (selectionChange)="onStepChange($event)"
+  >
     <mat-step [stepControl]="firstFormGroup">
       <div step="1" class="step1">
         <div
@@ -17,7 +22,6 @@
               matStepperNext
               [disabled]="firstFormGroup.invalid"
               matTooltip="下一步"
-              (click)="updateTourPlan()"
             >
               <mat-icon>navigate_next</mat-icon>
             </button>
@@ -40,8 +44,8 @@
               <ygg-number-control
                 label="預計參加人數"
                 formControlName="numParticipants"
-                [min]='1'
-                [max]='200'
+                [min]="1"
+                [max]="200"
                 required
               ></ygg-number-control>
             </div>
@@ -52,7 +56,7 @@
             <the-thing-finder
               [filter]="filterPlays"
               hideFilter
-              formControlName='selectedPlays'
+              formControlName="selectedPlays"
             ></the-thing-finder>
           </div>
         </form>
@@ -70,7 +74,7 @@
               type="button"
               mat-fab
               class="previous"
-              matStepperPrevious
+              (click)="prevStep()"
               matTooltip="上一步"
             >
               <mat-icon>navigate_before</mat-icon>
@@ -84,7 +88,6 @@
               class="next"
               matStepperNext
               [disabled]="secondFormGroup.invalid"
-              (click)="updateTourPlan()"
               matTooltip="下一步"
             >
               <mat-icon>navigate_next</mat-icon>
@@ -101,7 +104,7 @@
         </form>
       </div>
     </mat-step>
-    <mat-step>
+    <!-- <mat-step>
       <div step="3" class="step3">
         <div
           fxLayout="row"
@@ -143,8 +146,8 @@
           ></ygg-shopping-cart-editor>
         </div>
       </div>
-    </mat-step>
-    <mat-step [stepControl]="forthFormGroup">
+    </mat-step> -->
+    <!-- <mat-step [stepControl]="forthFormGroup">
       <div step="4" class="step4">
         <div
           fxLayout="row"
@@ -192,9 +195,9 @@
           </div>
         </form>
       </div>
-    </mat-step>
+    </mat-step> -->
     <mat-step>
-      <div step="5" class="step5">
+      <div step="3" class="step3">
         <div
           fxLayout="row"
           fxLayoutAlign="space-between center"
@@ -205,8 +208,8 @@
               type="button"
               mat-fab
               class="previous"
-              matStepperPrevious
               matTooltip="上一步"
+              (click)="prevStep()"
             >
               <mat-icon>navigate_before</mat-icon>
             </button>
@@ -242,7 +245,6 @@
         <div class="preview">
           <ygg-tour-plan-view
             [theThing$]="theThingPreview$"
-            readonly
           ></ygg-tour-plan-view>
         </div>
       </div>

@@ -30,6 +30,7 @@ import {
 } from './image-thumbnail';
 import { AngularFittextModule } from 'angular-fittext';
 import { NgForColorBackgroundDirective } from './ng-for-color-background/ng-for-color-background.directive';
+import { ControlViewSwitchComponent } from './control-view-switch/control-view-switch.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { NgForColorBackgroundDirective } from './ng-for-color-background/ng-for-
     ImageThumbnailComponent,
     ImageThumbnailListComponent,
     NgForColorBackgroundDirective,
+    ControlViewSwitchComponent,
     // ImageThumbnailSelectorComponent
   ],
   imports: [
@@ -81,6 +83,7 @@ import { NgForColorBackgroundDirective } from './ng-for-color-background/ng-for-
     ImageThumbnailComponent,
     ImageThumbnailListComponent,
     NgForColorBackgroundDirective,
+    ControlViewSwitchComponent,
     // ImageThumbnailSelectorComponent
   ],
   entryComponents: [

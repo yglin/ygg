@@ -8,7 +8,10 @@ import {
 } from '@angular/core';
 import { TheThing, TheThingCell, TheThingRelation } from '@ygg/the-thing/core';
 import { DateRange, DayTimeRange, Contact } from '@ygg/shared/omni-types/core';
-import { TheThingImitationViewInterface } from '@ygg/the-thing/ui';
+import {
+  TheThingImitationViewInterface,
+  TheThingFactoryService
+} from '@ygg/the-thing/ui';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import {
   Subscription,
@@ -16,11 +19,12 @@ import {
   BehaviorSubject,
   of,
   Subject,
-  combineLatest
+  combineLatest,
+  merge
 } from 'rxjs';
 import { tap, switchMap, filter } from 'rxjs/operators';
-import { ImitationTourPlan, ApplicationState } from '@ygg/playwhat/core';
-import { pick, values, mapValues } from 'lodash';
+import { ImitationTourPlan } from '@ygg/playwhat/core';
+import { pick, values, mapValues, get, isEmpty } from 'lodash';
 import {
   RelationNamePurchase,
   Purchase,
@@ -28,6 +32,10 @@ import {
 } from '@ygg/shopping/core';
 import { AuthorizeService, AuthenticateService } from '@ygg/shared/user/ui';
 import { TourPlanBuilderService } from '../tour-plan-builder/tour-plan-builder.service';
+import { Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
+import { PageStashService } from '@ygg/shared/infra/data-access';
+import { PageResolverService } from '@ygg/shared/ui/navigation';
 
 @Component({
   selector: 'ygg-tour-plan-view',
@@ -50,15 +58,19 @@ export class TourPlanViewComponent
   subscriptions: Subscription[] = [];
   canSubmitApplication = false;
   isAdmin = false;
+  // isOwner = false;
   state: number;
   stateLabel: string;
   states: { [key: string]: number } = {};
   canCancelApplied = false;
+  formControlName: FormControl = new FormControl(null);
 
   constructor(
     private authorizeService: AuthorizeService,
     private theThingAccessService: TheThingAccessService,
-    private tourPlanService: TourPlanBuilderService
+    private theThingFactory: TheThingFactoryService,
+    private pageResolver: PageResolverService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -66,59 +78,77 @@ export class TourPlanViewComponent
     if (!this.theThing$) {
       this.theThing$ = of(null);
     }
-    this.subscriptions.push(
-      this.theThing$
-        .pipe(
-          // tap(theThing => {
-          //   console.log('Update tour plan view');
-          //   console.dir(theThing.toJSON());
-          // }),
-          filter(theThing => !!theThing),
-          tap(theThing => {
-            // Force Angular to trigger change detection
-            this.theThing = undefined;
-            setTimeout(() => {
-              this.theThing = theThing;
-              // this.dateRange = theThing.getCellValue('預計出遊日期');
-              // // this.dayTimeRange = this.tourPlan.cells['預計遊玩時間'].value;
-              // this.numParticipants = theThing.getCellValue('預計參加人數');
-              // // console.log(this.numParticipants);
-              // this.contact = theThing.getCellValue('聯絡資訊');
+    const theThingUpdate$ = this.theThing$.pipe(
+      // tap(theThing => {
+      //   console.log('Update tour plan view');
+      //   console.dir(theThing.toJSON());
+      // }),
+      filter(theThing => !!theThing),
+      tap(theThing => {
+        // Force Angular to trigger change detection
+        this.theThing = undefined;
+        setTimeout(() => {
+          this.theThing = theThing;
+          // this.dateRange = theThing.getCellValue('預計出遊日期');
+          // // this.dayTimeRange = this.tourPlan.cells['預計遊玩時間'].value;
+          // this.numParticipants = theThing.getCellValue('預計參加人數');
+          // // console.log(this.numParticipants);
+          // this.contact = theThing.getCellValue('聯絡資訊');
 
-              this.requiredCells = this.theThing.getCellsByNames(
-                ImitationTourPlan.getRequiredCellNames()
-              );
-              this.optionalCells = this.theThing.getCellsByNames(
-                ImitationTourPlan.getOptionalCellNames()
-              );
-              this.purchases = this.theThing
-                .getRelations(RelationNamePurchase)
-                .map(r => Purchase.fromRelation(r));
+          this.formControlName.setValue(this.theThing.name, {
+            emitEvent: false
+          });
 
-              this.state = this.theThing.getState(ImitationOrder.stateName);
-              this.states = mapValues(ImitationOrder.states, s => s.value);
-              this.stateLabel = ImitationTourPlan.getStateLabel(this.state);
-              this.canCancelApplied =
-                this.authorizeService.isOwner(this.theThing) &&
-                this.theThing.isState(
-                  ImitationOrder.stateName,
-                  ImitationOrder.states.applied.value
-                );
-              this.canSubmitApplication =
-                this.authorizeService.isOwner(this.theThing) &&
-                this.theThing.isState(
-                  ImitationOrder.stateName,
-                  ImitationOrder.states.new.value
-                );
-            }, 0);
-          })
-        )
-        .subscribe()
+          this.updateFromPageResolver(this.theThing);
+
+          this.requiredCells = this.theThing.getCellsByNames(
+            ImitationTourPlan.getRequiredCellNames()
+          );
+          this.optionalCells = this.theThing.getCellsByNames(
+            ImitationTourPlan.getOptionalCellNames()
+          );
+
+          this.purchases = this.theThing
+            .getRelations(RelationNamePurchase)
+            .map(r => Purchase.fromRelation(r));
+
+          // this.isOwner = this.authorizeService.isOwner(this.theThing);
+          this.readonly =
+            this.readonly || !this.authorizeService.canModify(this.theThing);
+
+          this.state = this.theThing.getState(ImitationOrder.stateName);
+          this.states = mapValues(ImitationOrder.states, s => s.value);
+          this.stateLabel = ImitationTourPlan.getStateLabel(this.state);
+          this.canCancelApplied =
+            this.authorizeService.isOwner(this.theThing) &&
+            this.theThing.isState(
+              ImitationOrder.stateName,
+              ImitationOrder.states.applied.value
+            );
+          this.canSubmitApplication =
+            this.authorizeService.isOwner(this.theThing) &&
+            this.theThing.isState(
+              ImitationOrder.stateName,
+              ImitationOrder.states.new.value
+            );
+        }, 0);
+      })
     );
-    this.subscriptions.push(
-      this.authorizeService.isAdmin().subscribe(isAdmin => {
+    const isAdmin$ = this.authorizeService.isAdmin().pipe(
+      tap(isAdmin => {
         this.isAdmin = isAdmin;
       })
+    );
+    const nameChange$ = this.formControlName.valueChanges.pipe(
+      tap(name => {
+        if (this.theThing && name) {
+          this.theThing.name = name;
+          console.log(this.theThing.name);
+        }
+      })
+    );
+    this.subscriptions.push(
+      merge(theThingUpdate$, isAdmin$, nameChange$).subscribe()
     );
   }
 
@@ -126,6 +156,42 @@ export class TourPlanViewComponent
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
     }
+  }
+
+  updateFromPageResolver(theThing: TheThing) {
+    // const purchases = get(this.stateData, 'purchases', []);
+    let purchases: Purchase[] = [];
+    let cells: TheThingCell[] = [];
+    if (this.pageResolver.isResolved()) {
+      const outputData = get(this.pageResolver.pop(), 'output', null);
+      purchases = get(outputData, 'purchases', []);
+      cells = get(outputData, 'cells', []);
+    }
+    if (!isEmpty(cells)) {
+      theThing.addCells(cells);
+    }
+    if (!isEmpty(purchases)) {
+      theThing.setRelation(
+        RelationNamePurchase,
+        purchases.map(p => p.toRelation())
+      );
+    }
+  }
+
+  gotoEditOptionalCells() {
+    const optionalCells = ImitationTourPlan.createOptionalCells();
+    this.pageResolver.to('/the-things/cells/edit', {
+      cells: optionalCells,
+      imitation: ImitationTourPlan
+    });
+  }
+
+  gotoEditPurchases() {
+    const purchases: Purchase[] = this.theThing
+      .getRelations(RelationNamePurchase)
+      .map(r => Purchase.fromRelation(r));
+    // console.log(purchases);
+    this.pageResolver.to('/shopping/cart', { purchases });
   }
 
   async adminPaid() {

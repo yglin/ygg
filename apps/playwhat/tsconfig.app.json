@@ -4,6 +4,6 @@
     "outDir": "../../dist/out-tsc",
     "types": ["googlemaps", "jest"]
   },
-  "exclude": ["src/test-setup.ts", "**/*.spec.ts"],
+  "exclude": ["src/test-setup.ts", "src/environments/*", "**/*.spec.ts"],
   "include": ["**/*.ts"]
 }

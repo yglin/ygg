@@ -12,6 +12,7 @@ export abstract class TourPlanViewPageObject extends PageObject {
   selectors = {
     main: '.tour-plan-view',
     name: '.tour-plan-name',
+    inputName: '.tour-plan-name input',
     // dateRange: '.date-range',
     // numParticipants: '.num-participants .number',
     // contact: '.contact',
@@ -20,7 +21,9 @@ export abstract class TourPlanViewPageObject extends PageObject {
     buttonAdminComplete: 'button.admin-complete',
     buttonAdminPaid: 'button.admin-paid',
     buttonCancelApplied: 'button.cancel-applied',
-    state: '.state'
+    state: '.state',
+    buttonGotoEditOptionalCells: 'button.goto-edit-optional-cells',
+    buttonGotoEditPurchases: 'button.goto-edit-purchases'
   };
   dayTimeRangePO: DayTimeRangeViewPageObject;
   dateRangeViewPO: DateRangeViewPageObject;
@@ -31,10 +34,14 @@ export abstract class TourPlanViewPageObject extends PageObject {
     return `${this.getSelector()} [cell-name="${cellName}"]`;
   }
 
+  abstract setName(name: string);
+  abstract expectName(name: string);
   abstract expectVisible(): any;
   abstract expectValue(value: TheThing): void;
   abstract submitApplication(): void;
   abstract adminComplete(): void;
   abstract expectState(stateLabel: string): void;
   abstract cancelApplied(): void;
+  abstract gotoEditOptionalCells(): void;
+  abstract gotoEditPurchases(): void;
 }

@@ -1,6 +1,19 @@
 <div class="tour-plan-view" *ngIf="theThing">
   <div fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px"></div>
-  <h1 class="tour-plan-name">{{ theThing.name }}</h1>
+  <ygg-control-view-switch [readonly]="readonly" class="tour-plan-name">
+    <div control>
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="請輸入遊程名稱"
+          [formControl]="formControlName"
+        />
+      </mat-form-field>
+    </div>
+    <div view>
+      <h1>{{ formControlName.value }}</h1>
+    </div>
+  </ygg-control-view-switch>
   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
     <div>
       <h4 class="state">{{ stateLabel }}</h4>
@@ -76,14 +89,44 @@
     <ygg-contact-view [contact]="contact"></ygg-contact-view>
   </div> -->
   <br /><br />
-  <h2>預訂品項</h2>
+
   <div class="purchases">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <div>
+        <h2>預訂品項</h2>
+      </div>
+      <div *ngIf="!readonly">
+        <button
+          mat-mini-fab
+          class="goto-edit-purchases"
+          (click)="gotoEditPurchases()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+    </div>
     <ygg-purchase-list [purchases]="purchases"></ygg-purchase-list>
   </div>
-  <div *ngFor="let cell of optionalCells">
-    <div [attr.cell-name]="cell.name" *ngIf="cell.value">
-      <h4>{{ cell.name }}</h4>
-      <the-thing-cell-view [cell]="cell"></the-thing-cell-view>
+  <div class="optional-cells">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <h2>
+        其他需求事項
+      </h2>
+      <div *ngIf="!readonly">
+        <button
+          mat-mini-fab
+          class="goto-edit-optional-cells"
+          (click)="gotoEditOptionalCells()"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div *ngFor="let cell of optionalCells">
+      <div [attr.cell-name]="cell.name" *ngIf="cell.value">
+        <h4>{{ cell.name }}</h4>
+        <the-thing-cell-view [cell]="cell"></the-thing-cell-view>
+      </div>
     </div>
   </div>
 </div>

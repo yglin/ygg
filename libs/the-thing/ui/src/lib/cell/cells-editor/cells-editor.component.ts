@@ -5,7 +5,9 @@ import {
   forwardRef,
   OnDestroy,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  Injector,
+  AfterViewInit
 } from '@angular/core';
 import {
   FormGroup,
@@ -13,9 +15,15 @@ import {
   NG_VALUE_ACCESSOR,
   ControlValueAccessor,
   Validators,
-  FormControl
+  FormControl,
+  NgControl
 } from '@angular/forms';
-import { TheThingCell, TheThingCellTypes } from '@ygg/the-thing/core';
+import {
+  TheThingCell,
+  TheThingCellTypes,
+  TheThing,
+  TheThingImitation
+} from '@ygg/the-thing/core';
 import {
   isArray,
   isEmpty,
@@ -24,10 +32,14 @@ import {
   size,
   keys,
   remove,
-  clone
+  clone,
+  values
 } from 'lodash';
 import { Subscription } from 'rxjs';
 import { timeout } from 'rxjs/operators';
+import { TheThingFactoryService } from '../../the-thing-factory.service';
+import { Location } from '@angular/common';
+import { PageResolverService } from '@ygg/shared/ui/navigation';
 
 @Component({
   selector: 'the-thing-cells-editor',
@@ -43,6 +55,7 @@ import { timeout } from 'rxjs/operators';
 })
 export class TheThingCellsEditorComponent
   implements OnInit, OnDestroy, ControlValueAccessor {
+  control: FormControl;
   cells: { [key: string]: TheThingCell } = {};
   @Input() cellsOrder: string[] = [];
   formGroup: FormGroup;
@@ -52,8 +65,16 @@ export class TheThingCellsEditorComponent
   subscriptions: Subscription[] = [];
   cellTypes = TheThingCellTypes;
   canDeleteAllCells = false;
+  isPage = false;
+  imitation: TheThingImitation;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    // private theThingFactory: TheThingFactoryService,
+    private pageResolver: PageResolverService,
+    // private location: Location,
+    // private injector: Injector
+  ) {
     this.formGroup = this.formBuilder.group({});
     this.formGroupAddCell = this.formBuilder.group({
       name: [null, Validators.required],
@@ -78,6 +99,7 @@ export class TheThingCellsEditorComponent
   }
 
   writeValue(cells: TheThingCell[] | { [key: string]: TheThingCell }): void {
+    console.log('TheThingCellsEditor: writeValue is called');
     if (isArray(cells)) {
       cells = keyBy(cells, 'name');
     } else {
@@ -109,7 +131,24 @@ export class TheThingCellsEditorComponent
 
   setDisabledState(isDisabled: boolean): void {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.pageResolver.isPending()) {
+      this.isPage = true;
+      const inputData = this.pageResolver.getInput();
+      this.imitation = inputData.imitation;
+      this.writeValue(inputData.cells);
+    }
+    if (this.imitation) {
+      if (isEmpty(this.cellsOrder)) {
+        this.cellsOrder = this.imitation.cellsOrder;
+      }
+    }
+    // if (isEmpty(this.cellsOrder)) {
+    //   this.cellsOrder = keys(this.cells);
+    // }
+    // console.log(this.cells);
+    // console.log(this.cellsOrder);
+  }
 
   ngOnDestroy() {
     for (const subscription of this.subscriptions) {
@@ -176,5 +215,14 @@ export class TheThingCellsEditorComponent
     }
     this.onChange(this.cells);
     this.canDeleteAllCells = size(this.formGroup.controls) >= 1;
+  }
+
+  submit() {
+    const confirmMessage = `確定要新增/修改這些資料？`;
+    if (confirm(confirmMessage)) {
+      if (this.pageResolver.isPending()) {
+        this.pageResolver.back({ cells: values(this.cells) });
+      }
+    }
   }
 }

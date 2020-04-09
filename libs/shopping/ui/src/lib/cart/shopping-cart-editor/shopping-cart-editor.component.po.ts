@@ -19,7 +19,8 @@ export abstract class ShoppingCartEditorPageObject extends PageObject {
     main: '.shopping-cart',
     purchaseList: '.purchases-table',
     totalCharge: '.total-charge',
-    buttonClear: 'button.clear-all'
+    buttonClear: 'button.clear-all',
+    buttonSubmit: 'button.submit'
   };
 
   getSelectorForPurchase(purchase: Purchase): string {
@@ -39,7 +40,8 @@ export abstract class ShoppingCartEditorPageObject extends PageObject {
   abstract setQuantity(productId: string, quantity: number): void;
   abstract setPurchases(purchases: Purchase[]): void;
   abstract expectPurchases(purchases: Purchase[]): void;
-
+  abstract submit(): void;
+  
   // getSelectorForPurchase(purchase: Purchase): string {
   //   return `${this.getSelector('purchaseList')} [item-id="${purchase.productId}"]`;
   // }

@@ -23,6 +23,7 @@ export class TourPlanBuilderPageObject extends PageObject {
     shoppingCart: '.shopping-cart-editor',
     buttonSubmit: 'button.submit',
     buttonSubmitApplication: 'button.submit-application',
+    buttonPrev: 'button.previous:visible',
     preview: '.preview'
   };
 
@@ -32,8 +33,8 @@ export class TourPlanBuilderPageObject extends PageObject {
   dateRangeControl: DateRangeControlPageObject;
   numParticipantsControl: NumberControlPageObject;
   contactControlPO: ContactControlPageObject;
-  theThingCellsEditorPO: TheThingCellsEditorPageObject;
-  cartEditorPO: ShoppingCartEditorPageObject;
+  // theThingCellsEditorPO: TheThingCellsEditorPageObject;
+  // cartEditorPO: ShoppingCartEditorPageObject;
   tourPlanPreviewPO: TourPlanViewPageObject;
 
   getSelectorForStep(step: number): string {

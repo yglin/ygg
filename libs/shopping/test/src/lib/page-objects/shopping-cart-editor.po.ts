@@ -34,6 +34,13 @@ export class PurchaseRowPageObjectCypress extends PurchaseRowPageObject {
 }
 
 export class ShoppingCartEditorPageObjectCypress extends ShoppingCartEditorPageObject {
+  submit(): void {
+    cy.get(this.getSelector('buttonSubmit')).click();
+  }
+  expectVisible() {
+    cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
+  }
+
   expectTotalCharge(totalCharge: number): void {
     cy.get(this.getSelector('totalCharge')).should(
       'include.text',

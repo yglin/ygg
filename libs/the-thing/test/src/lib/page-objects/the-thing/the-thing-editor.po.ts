@@ -65,7 +65,7 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
     this.setTags(theThing.tags.toNameArray());
     this.setName(theThing.name);
     this.setView(theThing.view);
-    this.theThingCellsEditorPO.setValue(values(theThing.cells));
+    this.theThingCellsEditorPO.addValue(values(theThing.cells));
   }
 
   addRelationExist(relationName: string, objectThing: TheThing) {
