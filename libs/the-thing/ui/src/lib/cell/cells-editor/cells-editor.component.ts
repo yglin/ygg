@@ -99,7 +99,7 @@ export class TheThingCellsEditorComponent
   }
 
   writeValue(cells: TheThingCell[] | { [key: string]: TheThingCell }): void {
-    console.log('TheThingCellsEditor: writeValue is called');
+    // console.log('TheThingCellsEditor: writeValue is called');
     if (isArray(cells)) {
       cells = keyBy(cells, 'name');
     } else {

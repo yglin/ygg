@@ -35,6 +35,7 @@ testem.log
 /typings
 .firebase/
 *.env.json
+/recycle-bin
 
 # System Files
 .DS_Store

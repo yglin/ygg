@@ -17,9 +17,6 @@
     "shopping-cart": {
       "tags": ["scope:shopping", "type:feature", "platform:desktop"]
     },
-    "firebase-functions": {
-      "tags": ["scope:playwhat", "type:backend"]
-    },
     "shared-infra-error": {
       "tags": ["scope:shared", "type:infrastructure"]
     },
