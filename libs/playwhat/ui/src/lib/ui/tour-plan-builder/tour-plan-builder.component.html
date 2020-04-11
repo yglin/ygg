@@ -19,7 +19,7 @@
             <button
               mat-fab
               class="next"
-              matStepperNext
+              (click)="nextStep()"
               [disabled]="firstFormGroup.invalid"
               matTooltip="下一步"
             >
@@ -86,7 +86,7 @@
               type="button"
               mat-fab
               class="next"
-              matStepperNext
+              (click)="nextStep()"
               [disabled]="secondFormGroup.invalid"
               matTooltip="下一步"
             >

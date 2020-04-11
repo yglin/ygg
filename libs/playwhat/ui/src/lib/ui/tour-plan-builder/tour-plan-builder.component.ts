@@ -294,6 +294,10 @@ export class TourPlanBuilderComponent
     this.stepIndex = Math.max(0, this.stepIndex - 1);
   }
 
+  nextStep() {
+    this.stepIndex += 1;
+  }
+
   // toStepPreview() {
   //   this.updateTourPlan();
   // }

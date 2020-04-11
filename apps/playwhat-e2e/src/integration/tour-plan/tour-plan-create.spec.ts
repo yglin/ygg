@@ -183,4 +183,16 @@ describe('Tour-plan builder', () => {
       });
     });
   });
+
+  it('Can switch back to previous step', () => {
+    tourPlanBuilderPO.setValue(MinimalTourPlan, { stopAtStep: 2 });
+    tourPlanBuilderPO.prev();
+    tourPlanBuilderPO.setValue(MinimalTourPlan, { stopAtStep: 3 });
+    tourPlanBuilderPO.prev();
+    tourPlanBuilderPO.prev();
+    tourPlanBuilderPO.setValue(MinimalTourPlan);
+    tourPlanBuilderPO.submit();
+    tourPlanViewPO.expectShowAsPage();
+    tourPlanViewPO.expectValue(MinimalTourPlan);
+  });
 });
