@@ -1,4 +1,21 @@
 <div class="tour-plan-view" *ngIf="theThing">
+  <div
+    *ngIf="!readonly"
+    fxLayout="row"
+    fxLayoutAlign="end center"
+    fxLayoutGap="10px"
+  >
+    <button
+      type="button"
+      mat-fab
+      class="save"
+      matTooltip="儲存遊程規劃"
+      [disabled]="!isValidTourPlan()"
+      (click)="save()"
+    >
+      <mat-icon>save</mat-icon>
+    </button>
+  </div>
   <div fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px"></div>
   <ygg-control-view-switch [readonly]="readonly" class="tour-plan-name">
     <div control>
@@ -64,7 +81,11 @@
   <div *ngFor="let cell of requiredCells">
     <div [attr.cell-name]="cell.name">
       <h4>{{ cell.name }}</h4>
-      <the-thing-cell-view [cell]="cell"></the-thing-cell-view>
+      <the-thing-cell-view
+        [cell]="cell"
+        [editable]="!readonly"
+      ></the-thing-cell-view>
+      <!-- <the-thing-cell-view [cell]="cell"></the-thing-cell-view> -->
     </div>
   </div>
   <!-- <div class="date-range">
@@ -113,16 +134,12 @@
         其他需求事項
       </h2>
       <div *ngIf="!readonly">
-        <button
-          mat-mini-fab
-          class="goto-edit-optional-cells"
-          (click)="gotoEditOptionalCells()"
-        >
-          <mat-icon>edit</mat-icon>
+        <button mat-mini-fab class="add-cell" (click)="addCell()">
+          <mat-icon>add</mat-icon>
         </button>
       </div>
     </div>
-    <div *ngFor="let cell of optionalCells">
+    <div *ngFor="let cell of getOptionalCells()">
       <div [attr.cell-name]="cell.name" *ngIf="cell.value">
         <h4>{{ cell.name }}</h4>
         <the-thing-cell-view [cell]="cell"></the-thing-cell-view>

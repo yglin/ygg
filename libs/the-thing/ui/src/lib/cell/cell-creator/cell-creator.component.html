@@ -1,0 +1,49 @@
+<div class="cell-creator">
+  <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px">
+    <div *ngIf="hasPresets()" class="presets">
+      <mat-select placeholder="預設選項" [formControl]="formControlPreset">
+        <mat-option *ngFor="let cell of presetCells" [value]="cell.name">
+          {{ cell.name }}
+        </mat-option>
+      </mat-select>
+    </div>
+    <div class="form-create" [formGroup]="formGroupCreate">
+      <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <div class="cell-type">
+          <mat-form-field>
+            <mat-select
+              matNativeControl
+              placeholder="欄位型態"
+              formControlName="type"
+            >
+              <mat-option
+                *ngFor="let cellType of cellTypes | keyvalue"
+                [value]="cellType.key"
+              >
+                {{ cellType.value.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <input
+              class="name"
+              matInput
+              placeholder="欄位名稱"
+              formControlName="name"
+              required
+            />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div [formGroup]="formGroupCreate" class="value-control">
+    <ygg-omni-type-control
+      [type]="formGroupCreate.get('type').value"
+      formControlName="value"
+    ></ygg-omni-type-control>
+  </div>
+</div>

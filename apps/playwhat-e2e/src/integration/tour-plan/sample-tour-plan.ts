@@ -1,8 +1,6 @@
 import {
   TheThing,
   TheThingCell,
-  TheThingRelation,
-  TheThingCellTypes
 } from '@ygg/the-thing/core';
 import { DateRange, DayTimeRange, Contact } from '@ygg/shared/omni-types/core';
 import { randomBytes } from 'crypto';

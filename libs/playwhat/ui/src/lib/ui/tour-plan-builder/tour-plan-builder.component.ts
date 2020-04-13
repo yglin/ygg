@@ -321,12 +321,12 @@ export class TourPlanBuilderComponent
     }
   }
 
-  async submitTourPlan() {
-    if (confirm(`確定儲存此遊程規劃？`)) {
-      await this.save();
-      this.router.navigate(['/', 'the-things', this.theThing.id]);
-    }
-  }
+  // async submitTourPlan() {
+  //   if (confirm(`確定儲存此遊程規劃？`)) {
+  //     await this.save();
+  //     this.router.navigate(['/', 'the-things', this.theThing.id]);
+  //   }
+  // }
 
   async submitApplication() {
     if (confirm(`儲存此遊程規劃並且一併送出申請？`)) {

@@ -35,6 +35,14 @@ import {
   OpenHourComponent
 } from './types';
 import { HttpClientModule } from '@angular/common/http';
+import { TextControlComponent } from './types/text/text-control/text-control.component';
+import { OmniTypeControlComponent } from './omni-type/omni-type-control/omni-type-control.component';
+import { OmniTypeViewComponent } from './omni-type/omni-type-view/omni-type-view.component';
+import { OmniTypeViewControlComponent } from './omni-type/omni-type-view-control/omni-type-view-control.component';
+import { NumberViewComponent } from './types/number/number-view/number-view.component';
+import { TextViewComponent } from './types/text/text-view/text-view.component';
+import { LongTextViewComponent } from './types/long-text/long-text-view/long-text-view.component';
+import { LongTextControlComponent } from './types/long-text/long-text-control/long-text-control.component';
 
 @NgModule({
   imports: [
@@ -73,7 +81,15 @@ import { HttpClientModule } from '@angular/common/http';
     LocationViewComponent,
     BusinessHoursControlComponent,
     BusinessHoursViewComponent,
-    OpenHourComponent
+    OpenHourComponent,
+    TextControlComponent,
+    OmniTypeControlComponent,
+    OmniTypeViewComponent,
+    OmniTypeViewControlComponent,
+    NumberViewComponent,
+    TextViewComponent,
+    LongTextViewComponent,
+    LongTextControlComponent
   ],
   exports: [
     HtmlControlComponent,
@@ -98,7 +114,10 @@ import { HttpClientModule } from '@angular/common/http';
     LocationViewComponent,
     BusinessHoursControlComponent,
     BusinessHoursViewComponent,
-    OpenHourComponent
+    OpenHourComponent,
+    TextControlComponent,
+    OmniTypeControlComponent,
+    OmniTypeViewControlComponent
   ],
   entryComponents: [ImageUploaderComponent]
 })

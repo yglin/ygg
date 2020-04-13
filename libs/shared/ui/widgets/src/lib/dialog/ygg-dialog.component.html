@@ -7,8 +7,21 @@
   <div class="content">
     <!-- <h3>Here should be the real dialog content</h3> -->
     <ng-template ygg-dialog-content-host></ng-template>
+    <br />
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
+      <div *ngIf="hasOutput">
+        <button
+          mat-mini-fab
+          class="confirm"
+          [disabled]="!hasOutputValue"
+          (click)="confirmOutput()"
+        >
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </div>
   </div>
   <div class="close-button">
-    <button mat-fab mat-dialog-close><mat-icon>close</mat-icon></button>
+    <button mat-mini-fab mat-dialog-close><mat-icon>close</mat-icon></button>
   </div>
 </div>

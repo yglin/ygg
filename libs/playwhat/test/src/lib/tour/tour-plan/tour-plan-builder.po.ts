@@ -11,7 +11,7 @@ import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
 import { PageObjectCypress, theMockDatabase } from '@ygg/shared/test/cypress';
 import { TheThingCellsEditorPageObjectCypress } from '@ygg/the-thing/test';
 import { ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
-import { TourPlanViewPageObjectCypress } from '../tour-plan-view.po';
+import { TourPlanViewPageObjectCypress } from './tour-plan-view.po';
 import {
   Purchase,
   RelationAddition,
@@ -156,14 +156,17 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
     }
 
     if (options.hasOptionalFields) {
-      this.tourPlanPreviewPO.gotoEditOptionalCells();
-      const theThingCellsEditorPO = new TheThingCellsEditorPageObjectCypress();
-      theThingCellsEditorPO.expectVisible();
+      // this.tourPlanPreviewPO.gotoEditOptionalCells();
+      // const theThingCellsEditorPO = new TheThingCellsEditorPageObjectCypress();
+      // theThingCellsEditorPO.expectVisible();
       const optionalCells = tourPlan.getCellsByNames(
         ImitationTourPlan.getOptionalCellNames()
       );
-      theThingCellsEditorPO.updateValue(optionalCells);
-      theThingCellsEditorPO.submit();
+      cy.wrap(optionalCells).each((cell: any) => {
+        this.tourPlanPreviewPO.addOptionalCell(cell);
+      });
+      // theThingCellsEditorPO.updateValue(optionalCells);
+      // theThingCellsEditorPO.submit();
     }
 
     // Edit purchases
@@ -237,10 +240,6 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
   next() {
     cy.get(`${this.getSelectorForStep(this.currentStep)} button.next`).click();
     this.currentStep += 1;
-  }
-
-  submit() {
-    cy.get(`${this.getSelector('buttonSubmit')}`).click();
   }
 
   submitApplication() {

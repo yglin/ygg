@@ -1,4 +1,4 @@
-import { sample, extend } from "lodash";
+import { sample, extend, random } from 'lodash';
 import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
 
 interface User {
@@ -15,7 +15,6 @@ export class Contact implements SerializableJSON {
   email: string;
   lineID?: string;
 
-
   static isContact(value: any): value is Contact {
     return value && value.name && (value.phone || value.email || value.lineID);
   }
@@ -23,9 +22,18 @@ export class Contact implements SerializableJSON {
   static forge(): Contact {
     const forged = new Contact();
     forged.name = sample(['馬＊久', '蔣＊虢', '李＊灰', '菜＊文', '陳＊匾']);
-    forged.email = 'taiwanNO1@ygmail.com';
-    forged.phone = '0999089457';
-    forged.lineID = '上Y下G功德圓滿';
+    forged.email = `taiwanNO${random(1, 10)}@ygmail.com`;
+    forged.phone = `0987${random(100000, 1000000)
+      .toString()
+      .padStart(6, '0')}`;
+    forged.lineID = sample([
+      '上Y下G功德圓滿',
+      '明治地寶寶你在欉三小？',
+      '習維尼',
+      'TaiwanNO1',
+      'ILIKETOMOVEITMOVEIT',
+      'yllekIMISSYOUTERRIBLY'
+    ]);
     return forged;
   }
 

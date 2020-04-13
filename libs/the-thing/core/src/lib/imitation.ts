@@ -28,7 +28,7 @@ import {
 import { Tags } from '@ygg/tags/core';
 import { RelationDef } from './relation-def';
 import { TheThingCellDefine } from './cell-define';
-import { TheThingCellComparator, TheThingCellTypes } from './cell-type';
+import { OmniTypeComparator, OmniTypes } from '@ygg/shared/omni-types/core';
 import { TheThingState } from './state';
 
 export const ImitationsDataPath = 'the-thing/imitations';
@@ -146,10 +146,10 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     return this.getOptionalCellDefs().map(cellDef => cellDef.createCell());
   }
 
-  getComparators(): { [cellName: string]: TheThingCellComparator } {
+  getComparators(): { [cellName: string]: OmniTypeComparator } {
     return pickBy(
       mapValues(this.cellsDef, cellDef =>
-        get(TheThingCellTypes, `${cellDef.type}.comparator`, null)
+        get(OmniTypes, `${cellDef.type}.comparator`, null)
       ),
       cf => typeof cf === 'function'
     );

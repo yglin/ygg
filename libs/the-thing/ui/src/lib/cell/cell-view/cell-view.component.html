@@ -1,6 +1,12 @@
 <div class="the-thing-cell-view" *ngIf="cell">
+  <ygg-omni-type-view-control
+    [type]="cell.type"
+    [value]="cell.value"
+    (valueChange)="onChangeValue($event)"
+    [editable]="editable"
+  ></ygg-omni-type-view-control>
   <!-- <h3>{{ cell.name }}</h3> -->
-  <div class="value">
+  <!-- <div class="value">
     <div [ngSwitch]="cell.type">
       <div *ngSwitchCase="'text'">
         <h5>{{ cell.value }}</h5>
@@ -44,5 +50,5 @@
         {{ cell.value | json }}
       </div>
     </div>
-  </div>
+  </div> -->
 </div>

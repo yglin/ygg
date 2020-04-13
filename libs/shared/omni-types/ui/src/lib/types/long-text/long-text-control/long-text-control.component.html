@@ -1,0 +1,13 @@
+<div class="long-text-control">
+  <mat-form-field>
+    <textarea
+      matInput
+      placeholder="。。。"
+      [(ngModel)]="value"
+      cdkTextareaAutosize
+      #autosize="cdkTextareaAutosize"
+      cdkAutosizeMinRows="3"
+      cdkAutosizeMaxRows="10"
+    ></textarea>
+  </mat-form-field>
+</div>

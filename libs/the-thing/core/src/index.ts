@@ -1,5 +1,4 @@
 export * from './lib/cell';
-export * from './lib/cell-type';
 export * from './lib/cell-define';
 export * from './lib/the-thing';
 export * from './lib/relation';

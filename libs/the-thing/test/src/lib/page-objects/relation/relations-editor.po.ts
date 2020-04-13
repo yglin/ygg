@@ -1,6 +1,9 @@
 import { RelationsEditorPageObject } from '@ygg/the-thing/ui';
 import { TheThing } from '@ygg/the-thing/core';
-import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
+import {
+  ImageThumbnailListPageObjectCypress,
+  YggDialogPageObjectCypress
+} from '@ygg/shared/ui/test';
 import { TheThingFinderPageObjectCypress } from '../the-thing/the-thing-finder.po';
 
 export class RelationsEditorPageObjectCypress extends RelationsEditorPageObject {
@@ -33,11 +36,15 @@ export class RelationsEditorPageObjectCypress extends RelationsEditorPageObject 
 
   addExistObject(object: TheThing) {
     cy.get(this.getSelector('buttonSelectObjects')).click();
-    const theThingFinderDialogPO = new TheThingFinderPageObjectCypress(
-      '.ygg-dialog'
+    const dialogPO = new YggDialogPageObjectCypress();
+    const theThingFinderPO = new TheThingFinderPageObjectCypress(
+      dialogPO.getSelector()
     );
-    theThingFinderDialogPO.select(object);
-    theThingFinderDialogPO.submit();
+    dialogPO.expectVisible();
+    theThingFinderPO.expectVisible();
+    theThingFinderPO.select(object);
+    dialogPO.confirm();
+    dialogPO.expectClosed();
     this.expectObject(object);
   }
 

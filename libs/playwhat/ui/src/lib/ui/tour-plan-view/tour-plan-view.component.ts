@@ -10,7 +10,8 @@ import { TheThing, TheThingCell, TheThingRelation } from '@ygg/the-thing/core';
 import { DateRange, DayTimeRange, Contact } from '@ygg/shared/omni-types/core';
 import {
   TheThingImitationViewInterface,
-  TheThingFactoryService
+  TheThingFactoryService,
+  CellCreatorComponent
 } from '@ygg/the-thing/ui';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import {
@@ -36,6 +37,7 @@ import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { PageStashService } from '@ygg/shared/infra/data-access';
 import { PageResolverService } from '@ygg/shared/ui/navigation';
+import { YggDialogService } from '@ygg/shared/ui/widgets';
 
 @Component({
   selector: 'ygg-tour-plan-view',
@@ -70,7 +72,8 @@ export class TourPlanViewComponent
     private theThingAccessService: TheThingAccessService,
     private theThingFactory: TheThingFactoryService,
     private pageResolver: PageResolverService,
-    private router: Router
+    private router: Router,
+    private dialog: YggDialogService
   ) {}
 
   ngOnInit() {
@@ -143,7 +146,7 @@ export class TourPlanViewComponent
       tap(name => {
         if (this.theThing && name) {
           this.theThing.name = name;
-          console.log(this.theThing.name);
+          // console.log(this.theThing.name);
         }
       })
     );
@@ -256,5 +259,42 @@ export class TourPlanViewComponent
         alert(`送出失敗，錯誤原因：${error.message}`);
       }
     }
+  }
+
+  addCell() {
+    const dialogRef = this.dialog.open(CellCreatorComponent, {
+      title: '新增其他項目',
+      data: {
+        presetCells: ImitationTourPlan.createOptionalCells()
+      }
+    });
+    dialogRef.afterClosed().subscribe(cell => {
+      if (!!cell) {
+        // console.log(`Add new cell ${cell.name}`);
+        // console.dir(cell);
+        this.theThing.addCell(cell);
+      }
+    });
+  }
+
+  async save() {
+    if (confirm(`確定儲存此遊程規劃？`)) {
+      try {
+        await this.theThingFactory.save({ requireOwner: true });
+      } catch (error) {
+        console.error(error.message);
+      }
+      this.router.navigate(['/', 'the-things', this.theThing.id]);
+    }
+  }
+
+  isValidTourPlan(): boolean {
+    return !!this.theThing;
+  }
+
+  getOptionalCells(): TheThingCell[] {
+    return this.theThing.getCellsByNames(
+      ImitationTourPlan.getOptionalCellNames()
+    );
   }
 }

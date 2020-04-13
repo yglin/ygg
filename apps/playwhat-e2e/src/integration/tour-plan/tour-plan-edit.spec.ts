@@ -28,22 +28,34 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
   const tourPlanViewPO = new TourPlanViewPageObjectCypress();
   const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
 
-  before(() => {
+  // before(() => {
+  //   login().then(user => {
+  //     MinimalTourPlan.ownerId = user.id;
+  //     cy.wrap(SampleThings).each((thing: any) => {
+  //       thing.ownerId = user.id;
+  //       theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
+  //     });
+  //   });
+  // });
+
+  beforeEach(() => {
     login().then(user => {
+      // MinimalTourPlan.ownerId = user.id;
       cy.wrap(SampleThings).each((thing: any) => {
         thing.ownerId = user.id;
         theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
       });
     });
+    // // Reset MinimalTourPlan
+    // theMockDatabase.insert(
+    //   `${TheThing.collection}/${MinimalTourPlan.id}`,
+    //   MinimalTourPlan
+    // );
+    cy.visit('/');
   });
 
-  beforeEach(() => {
-    // Reset MinimalTourPlan
-    theMockDatabase.insert(
-      `${TheThing.collection}/${MinimalTourPlan.id}`,
-      MinimalTourPlan
-    );
-    cy.visit('/');
+  afterEach(() => {
+    theMockDatabase.clear();
   });
 
   after(() => {
@@ -63,7 +75,7 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     myTourPlansPO.theThingDataTablePO.gotoTheThingEdit(MinimalTourPlan);
     tourPlanBuilderPO.expectVisible();
     tourPlanBuilderPO.expectStepFinal();
-    tourPlanBuilderPO.submit();
+    tourPlanBuilderPO.tourPlanPreviewPO.save();
     tourPlanViewPO.expectVisible();
     tourPlanViewPO.expectValue(MinimalTourPlan);
   });
@@ -78,7 +90,7 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     tourPlanBuilderPO.prev();
     tourPlanBuilderPO.expectStep(1);
     tourPlanBuilderPO.setValue(TourPlanFull, { hasOptionalFields: true });
-    tourPlanBuilderPO.submit();
+    tourPlanBuilderPO.tourPlanPreviewPO.save();
 
     tourPlanViewPO.expectVisible();
     tourPlanViewPO.expectValue(TourPlanFull);
@@ -96,7 +108,7 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions, {
       hasOptionalFields: true
     });
-    tourPlanBuilderPO.submit();
+    tourPlanBuilderPO.tourPlanPreviewPO.save();
 
     tourPlanViewPO.expectVisible();
     tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions);

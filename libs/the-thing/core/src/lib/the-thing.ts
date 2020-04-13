@@ -15,7 +15,7 @@ import {
 } from 'lodash';
 import { Tags } from '@ygg/tags/core';
 import { TheThingCell } from './cell';
-import { TheThingCellTypeID } from './cell-type';
+import { OmniTypeID } from '@ygg/shared/omni-types/core';
 import { generateID, toJSONDeep, Entity } from '@ygg/shared/infra/data-access';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 import { TheThingRelation } from './relation';
@@ -146,7 +146,7 @@ export class TheThing implements Entity, ImageThumbnailItem {
     return this.tags.include(tags);
   }
 
-  hasCell(cell: TheThingCell | string, type?: TheThingCellTypeID): boolean {
+  hasCell(cell: TheThingCell | string, type?: OmniTypeID): boolean {
     let cellName: string;
     if (typeof cell === 'string') {
       cellName = cell;

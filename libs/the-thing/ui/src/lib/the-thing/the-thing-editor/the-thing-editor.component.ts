@@ -1,14 +1,4 @@
-import {
-  size,
-  isEmpty,
-  extend,
-  get,
-  mapValues,
-  isArray,
-  find,
-  last,
-  keys
-} from 'lodash';
+import { isEmpty, extend, get, last } from 'lodash';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {
   FormGroup,
@@ -19,31 +9,18 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   TheThing,
-  TheThingCell,
-  TheThingCellTypes,
   TheThingImitation,
   TheThingView,
-  RelationDef,
   ITheThingEditorComponent
 } from '@ygg/the-thing/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { Tags } from '@ygg/tags/core';
 import {
   YggDialogService,
   ImageThumbnailListComponent
 } from '@ygg/shared/ui/widgets';
-import {
-  Observable,
-  Subscription,
-  of,
-  combineLatest,
-  Subject,
-  merge,
-  from
-} from 'rxjs';
+import { Observable, Subscription, Subject, from } from 'rxjs';
 import {
   map,
-  switchMap,
   take,
   catchError,
   timeout,
@@ -81,7 +58,7 @@ export class TheThingEditorComponent
   formControlCells: FormControl;
   // cellsFormGroup: FormGroup;
   // formControlNewCellType: FormControl;
-  // cellTypes = TheThingCellTypes;
+  // cellTypes = OmniTypes;
   // formControlNewCellName: FormControl;
   formControlNewRelationName: FormControl;
   isNewRelationNameEmpty = true;

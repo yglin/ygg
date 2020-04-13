@@ -1,15 +1,18 @@
 import { sample, random } from 'lodash';
-import { Album, Address, Location, BusinessHours } from '@ygg/shared/omni-types/core';
 import {
+  Album,
+  Address,
+  Location,
+  BusinessHours,
   Html,
   DateRange,
   DayTimeRange,
   Contact
-} from '@ygg/shared/omni-types/core';
+} from '../types';
 
-export type TheThingCellComparator = (a: any, b: any, isAsc: boolean) => number;
+export type OmniTypeComparator = (a: any, b: any, isAsc: boolean) => number;
 
-export type TheThingCellTypeID =
+export type OmniTypeID =
   | 'text'
   | 'longtext'
   | 'number'
@@ -22,15 +25,15 @@ export type TheThingCellTypeID =
   | 'business-hours'
   | 'contact';
 
-interface TheThingCellType {
-  id: TheThingCellTypeID;
+interface OmniType {
+  id: OmniTypeID;
   label: string;
   default?: any;
   forge?: (options?: any) => any;
-  comparator?: TheThingCellComparator;
+  comparator?: OmniTypeComparator;
 }
 
-export const TheThingCellTypes: { [id: string]: TheThingCellType } = {
+export const OmniTypes: { [id: string]: OmniType } = {
   text: {
     id: 'text',
     label: '文字',

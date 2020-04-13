@@ -9,6 +9,7 @@ import { TheThing } from '@ygg/the-thing/core';
 import { login, MockDatabase, theMockDatabase } from '@ygg/shared/test/cypress';
 import { TourViewPageObjectCypress } from '@ygg/playwhat/test';
 import { samplePlays, sampleTour } from '../tour/sample-tour-birb';
+import { YggDialogPageObjectCypress } from '@ygg/shared/ui/test';
 // import { TemplateTour } from '@ygg/playwhat/core';
 
 const siteNavigator = new SiteNavigator();
@@ -38,12 +39,17 @@ describe('Manage content in home page', () => {
   });
 
   it('Specify a tour to be exhibited in home page', () => {
+    const dialogPO = new YggDialogPageObjectCypress()
+    const theThingFinderDialogPO = new TheThingFinderPageObjectCypress(dialogPO.getSelector());
+
     siteNavigator.goto(['admin', 'homepage']);
-    cy.get('.exhibit-things button.add').click({ force: true });
-    const theThingFinderDialogPO = new TheThingFinderPageObjectCypress();
+    cy.get('.exhibit-things button.add').click();
+    dialogPO.expectVisible()
     theThingFinderDialogPO.expectVisible();
     theThingFinderDialogPO.select(sampleTour);
-    theThingFinderDialogPO.submit();
+    dialogPO.confirm();
+    dialogPO.expectClosed();
+    
     const theThingListPO = new TheThingListPageObjectCypress();
     theThingListPO.expectTheThing(sampleTour);
 

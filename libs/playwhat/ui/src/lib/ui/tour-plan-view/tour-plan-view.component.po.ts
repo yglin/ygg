@@ -6,7 +6,8 @@ import {
 } from '@ygg/shared/omni-types/ui';
 import { ImageThumbnailListPageObject } from '@ygg/shared/ui/widgets';
 import { PurchaseListPageObject } from '@ygg/shopping/ui';
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import { DateRange, Contact } from '@ygg/shared/omni-types/core';
 
 export abstract class TourPlanViewPageObject extends PageObject {
   selectors = {
@@ -23,7 +24,9 @@ export abstract class TourPlanViewPageObject extends PageObject {
     buttonCancelApplied: 'button.cancel-applied',
     state: '.state',
     buttonGotoEditOptionalCells: 'button.goto-edit-optional-cells',
-    buttonGotoEditPurchases: 'button.goto-edit-purchases'
+    buttonGotoEditPurchases: 'button.goto-edit-purchases',
+    buttonAddCell: 'button.add-cell',
+    buttonSave: 'button.save'
   };
   dayTimeRangePO: DayTimeRangeViewPageObject;
   dateRangeViewPO: DateRangeViewPageObject;
@@ -44,4 +47,7 @@ export abstract class TourPlanViewPageObject extends PageObject {
   abstract cancelApplied(): void;
   abstract gotoEditOptionalCells(): void;
   abstract gotoEditPurchases(): void;
+  abstract setCellValue(cell: TheThingCell): void;
+  abstract addOptionalCell(cell: TheThingCell): void;
+  abstract save(): void;
 }

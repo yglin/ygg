@@ -4,11 +4,18 @@ import { TourPlanViewPageObject } from '@ygg/playwhat/ui';
 import {
   DateRangeViewPageObjectCypress,
   DayTimeRangeViewPageObjectCypress,
-  ContactViewPageObjectCypress
+  ContactViewPageObjectCypress,
+  OmniTypeViewControlPageObjectCypress
 } from '@ygg/shared/omni-types/test';
-import { ControlViewSwitchPageObjectCypress } from '@ygg/shared/ui/test';
+import {
+  ControlViewSwitchPageObjectCypress,
+  YggDialogPageObjectCypress
+} from '@ygg/shared/ui/test';
 import { ImitationTourPlan } from '@ygg/playwhat/core';
-import { TheThingCellViewPageObjectCypress } from '@ygg/the-thing/test';
+import {
+  TheThingCellViewPageObjectCypress,
+  CellCreatorPageObjectCypress
+} from '@ygg/the-thing/test';
 import { PurchaseListPageObjectCypress } from '@ygg/shopping/test';
 import {
   RelationNamePurchase,
@@ -121,5 +128,30 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
       .clear()
       .type(name);
     controlViewSwitchPO.closeControl();
+  }
+
+  setCellValue(cell: TheThingCell): void {
+    const omniTypeViewControlPO = new OmniTypeViewControlPageObjectCypress(
+      this.getSelectorForCell(cell.name)
+    );
+    omniTypeViewControlPO.setValue(cell.type, cell.value);
+  }
+
+  save(): void {
+    cy.get(this.getSelector('buttonSave')).click();
+  }
+
+  addOptionalCell(cell: TheThingCell): void {
+    cy.get(this.getSelector('buttonAddCell')).click();
+    const dialogPO = new YggDialogPageObjectCypress();
+    dialogPO.expectVisible();
+    const cellCreatorPO = new CellCreatorPageObjectCypress(
+      dialogPO.getSelector()
+    );
+    cellCreatorPO.selectPreset(cell.name);
+    cellCreatorPO.setCellValue(cell);
+    dialogPO.confirm();
+    dialogPO.expectClosed();
+    this.expectCell(cell);
   }
 }

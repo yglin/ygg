@@ -1,13 +1,13 @@
 import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { TheThingCell } from './cell';
 import { extend, get } from 'lodash';
-import { TheThingCellTypes, TheThingCellTypeID } from './cell-type';
+import { OmniTypes, OmniTypeID } from '@ygg/shared/omni-types/core';
 
 type UserInputType = 'required' | 'optional' | 'hidden';
 
 export class TheThingCellDefine implements SerializableJSON {
   name: string;
-  type: TheThingCellTypeID;
+  type: OmniTypeID;
   userInput: UserInputType;
 
   constructor(options: any = {}) {
@@ -17,7 +17,7 @@ export class TheThingCellDefine implements SerializableJSON {
   createCell(value?: any): TheThingCell {
     value =
       value === undefined
-        ? get(TheThingCellTypes, `${this.type}.default`, null)
+        ? get(OmniTypes, `${this.type}.default`, null)
         : value;
     return new TheThingCell().fromJSON({
       name: this.name,

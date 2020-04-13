@@ -1,15 +1,5 @@
 <div class="the-thing-finder">
   <ygg-action-bar-layout>
-    <div ygg-action-bar-button *ngIf="dialogSubmit$.observers.length > 0">
-      <button
-        class="submit"
-        mat-fab
-        [disabled]="selection.length <= 0"
-        (click)="onSubmit()"
-      >
-        <mat-icon>check</mat-icon>
-      </button>
-    </div>
     <div ygg-action-bar-content>
       <div [hidden]="hideFilter">
         <the-thing-filter
@@ -26,7 +16,7 @@
           (deselectItem)="deselectTheThing.emit($event)"
           hideAddButton
           ><div selection-actions>
-            <ng-content select='[selection-actions]'></ng-content>
+            <ng-content select="[selection-actions]"></ng-content>
           </div>
         </ygg-image-thumbnail-list>
       </div>

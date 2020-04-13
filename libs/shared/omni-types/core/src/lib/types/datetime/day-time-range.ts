@@ -47,8 +47,8 @@ export class DayTimeRange implements SerializableJSON {
     let end: DayTime = new DayTime();
     if (args.length >= 1) {
       if (DayTimeRange.isDayTimeRange(args[0])) {
-        start = args[0].start;
-        end = args[0].end;
+        start = new DayTime(args[0].start);
+        end = new DayTime(args[0].end);
       } else if (args.length >= 2) {
         start = new DayTime(args[0]);
         end = new DayTime(args[1]);

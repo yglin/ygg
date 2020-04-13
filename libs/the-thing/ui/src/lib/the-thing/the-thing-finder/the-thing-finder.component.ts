@@ -62,7 +62,7 @@ export class TheThingFinderComponent
   selection: TheThing[] = [];
   isDialog = false;
   dialogData: any;
-  dialogSubmit$: Subject<TheThing[]> = new Subject();
+  dialogOutput$: Subject<TheThing[]> = new Subject();
 
   constructor(private theThingAccessService: TheThingAccessService) {}
 
@@ -128,9 +128,6 @@ export class TheThingFinderComponent
   onSelectTheThings(selection: TheThing[]) {
     this.selection = selection;
     this.emitChange(selection);
-  }
-
-  onSubmit() {
-    this.dialogSubmit$.next(this.selection);
+    this.dialogOutput$.next(selection);
   }
 }

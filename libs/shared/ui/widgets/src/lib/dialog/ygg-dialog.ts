@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 export interface YggDialogContentComponent {
   dialogData: any;
-  dialogSubmit$: Observable<any>;
+  dialogOutput$?: Observable<any>;
 }
 
 export interface YggDialogComponentData {
@@ -11,4 +11,3 @@ export interface YggDialogComponentData {
   title?: string;
   data?: any;
 }
-

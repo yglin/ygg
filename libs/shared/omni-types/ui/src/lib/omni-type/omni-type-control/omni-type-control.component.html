@@ -1,0 +1,54 @@
+<div class="omni-type-control">
+  <div *ngIf="type">
+    <div [ngSwitch]="type">
+      <div *ngSwitchCase="'text'">
+        <ygg-text-control [formControl]="formControl"></ygg-text-control>
+      </div>
+      <div *ngSwitchCase="'longtext'">
+        <ygg-long-text-control
+          [formControl]="formControl"
+        ></ygg-long-text-control>
+      </div>
+      <div *ngSwitchCase="'date-range'">
+        <ygg-date-range-control
+          [formControl]="formControl"
+        ></ygg-date-range-control>
+      </div>
+      <div *ngSwitchCase="'day-time-range'">
+        <ygg-day-time-range-control
+          [formControl]="formControl"
+        ></ygg-day-time-range-control>
+      </div>
+      <div *ngSwitchCase="'number'">
+        <ygg-number-control [formControl]="formControl"></ygg-number-control>
+      </div>
+      <div *ngSwitchCase="'location'">
+        <ygg-location-control
+          [formControl]="formControl"
+        ></ygg-location-control>
+      </div>
+      <div *ngSwitchCase="'album'">
+        <ygg-album-control [formControl]="formControl"></ygg-album-control>
+      </div>
+      <div *ngSwitchCase="'location'">
+        <ygg-location-control
+          [formControl]="formControl"
+        ></ygg-location-control>
+      </div>
+      <div *ngSwitchCase="'html'">
+        <ygg-html-control [formControl]="formControl"></ygg-html-control>
+      </div>
+      <div *ngSwitchCase="'business-hours'">
+        <ygg-business-hours-control
+          [formControl]="formControl"
+        ></ygg-business-hours-control>
+      </div>
+      <div *ngSwitchCase="'contact'">
+        <ygg-contact-control [formControl]="formControl"></ygg-contact-control>
+      </div>
+      <div *ngSwitchDefault>
+        <h3>未支援的資料型態：{{ type }}</h3>
+      </div>
+    </div>
+  </div>
+</div>

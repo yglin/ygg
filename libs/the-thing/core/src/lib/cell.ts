@@ -7,13 +7,14 @@ import {
   DateRange,
   DayTimeRange,
   Contact,
-  BusinessHours
+  BusinessHours,
+  OmniTypeID
 } from '@ygg/shared/omni-types/core';
-import { TheThingCellTypes } from './cell-type';
+import { OmniTypes } from '@ygg/shared/omni-types/core';
 
 export class TheThingCell {
   name: string;
-  type: string;
+  type: OmniTypeID;
   value: any;
 
   static forge(options: any = {}): TheThingCell {
@@ -38,20 +39,21 @@ export class TheThingCell {
     if (options.type) {
       cell.type = options.type;
     } else {
-      cell.type = sample(TheThingCellTypes).id;
+      cell.type = sample(OmniTypes).id;
     }
 
     if (options.value) {
       cell.value = options.value;
     } else {
-      cell.value = TheThingCellTypes[cell.type].forge();
+      cell.value = OmniTypes[cell.type].forge();
     }
     return cell;
   }
 
   constructor(options?: any) {
     if (options) {
-      this.fromJSON(options);
+      extend(this, options);
+      // this.fromJSON(options);
     }
   }
 

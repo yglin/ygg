@@ -1,0 +1,44 @@
+<div class="omni-type-view" *ngIf="type">
+  <!-- <h3>{{ cell.name }}</h3> -->
+  <div class="value">
+    <div [ngSwitch]="type">
+      <div *ngSwitchCase="'text'">
+        <ygg-text-view [text]="value"></ygg-text-view>
+      </div>
+      <div *ngSwitchCase="'longtext'">
+        <ygg-long-text-view [longText]="value"></ygg-long-text-view>
+      </div>
+      <div *ngSwitchCase="'date-range'">
+        <ygg-date-range-view [dateRange]="value"></ygg-date-range-view>
+      </div>
+      <div *ngSwitchCase="'day-time-range'">
+        <ygg-day-time-range-view
+          [dayTimeRange]="value"
+        ></ygg-day-time-range-view>
+      </div>
+      <div *ngSwitchCase="'number'">
+        <ygg-number-view [number]="value"></ygg-number-view>
+      </div>
+      <div *ngSwitchCase="'contact'">
+        <ygg-contact-view [contact]="value"></ygg-contact-view>
+      </div>
+      <div *ngSwitchCase="'album'">
+        <ygg-album-view [album]="value"></ygg-album-view>
+      </div>
+      <div *ngSwitchCase="'location'">
+        <ygg-location-view [location]="value"></ygg-location-view>
+      </div>
+      <div *ngSwitchCase="'html'">
+        <ygg-html-view [html]="value"></ygg-html-view>
+      </div>
+      <div *ngSwitchCase="'business-hours'">
+        <ygg-business-hours-view
+          [businessHours]="value"
+        ></ygg-business-hours-view>
+      </div>
+      <div *ngSwitchDefault>
+        <h3>未支援的資料型態：{{ type }}</h3>
+      </div>
+    </div>
+  </div>
+</div>

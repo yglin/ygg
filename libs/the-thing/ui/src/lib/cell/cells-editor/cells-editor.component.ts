@@ -20,7 +20,6 @@ import {
 } from '@angular/forms';
 import {
   TheThingCell,
-  TheThingCellTypes,
   TheThing,
   TheThingImitation
 } from '@ygg/the-thing/core';
@@ -36,10 +35,8 @@ import {
   values
 } from 'lodash';
 import { Subscription } from 'rxjs';
-import { timeout } from 'rxjs/operators';
-import { TheThingFactoryService } from '../../the-thing-factory.service';
-import { Location } from '@angular/common';
 import { PageResolverService } from '@ygg/shared/ui/navigation';
+import { OmniTypes } from '@ygg/shared/omni-types/core';
 
 @Component({
   selector: 'the-thing-cells-editor',
@@ -63,7 +60,7 @@ export class TheThingCellsEditorComponent
   onChange: (value: { [key: string]: TheThingCell }) => any = noop;
   onTouched: () => any = noop;
   subscriptions: Subscription[] = [];
-  cellTypes = TheThingCellTypes;
+  cellTypes = OmniTypes;
   canDeleteAllCells = false;
   isPage = false;
   imitation: TheThingImitation;

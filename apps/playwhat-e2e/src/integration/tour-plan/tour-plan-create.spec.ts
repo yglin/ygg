@@ -1,4 +1,4 @@
-import { sampleSize } from 'lodash';
+import { sampleSize, random } from 'lodash';
 import { login, theMockDatabase, logout } from '@ygg/shared/test/cypress';
 import { LoginDialogPageObjectCypress } from '@ygg/shared/user/test';
 import {
@@ -25,8 +25,9 @@ import { TheThing } from '@ygg/the-thing/core';
 import { ImitationOrder } from '@ygg/shopping/core';
 import { ContactControlPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { User } from '@ygg/shared/user/core';
-import { Contact } from '@ygg/shared/omni-types/core';
+import { Contact, DateRange } from '@ygg/shared/omni-types/core';
 import { defaultTourPlanName } from '@ygg/playwhat/core';
+import { randomBytes } from 'crypto';
 
 describe('Tour-plan builder', () => {
   const siteNavigator = new SiteNavigator();
@@ -92,7 +93,7 @@ describe('Tour-plan builder', () => {
 
   it('Build a tour-plan with minimal required data fields: dateRange, numParticipants, contact', () => {
     tourPlanBuilderPO.setValue(MinimalTourPlan);
-    tourPlanBuilderPO.submit();
+    tourPlanBuilderPO.tourPlanPreviewPO.save();
 
     // Expect redirect to tour-plan view page, and check required data fields
     tourPlanViewPO.expectShowAsPage();
@@ -103,7 +104,7 @@ describe('Tour-plan builder', () => {
     tourPlanBuilderPO.setValue(TourPlanFull, {
       hasOptionalFields: true
     });
-    tourPlanBuilderPO.submit();
+    tourPlanBuilderPO.tourPlanPreviewPO.save();
 
     // Expect redirect to tour-plan view page, and check required data fields
     tourPlanViewPO.expectShowAsPage();
@@ -112,7 +113,7 @@ describe('Tour-plan builder', () => {
 
   it('Build a tour-plan with a few plays selected', () => {
     tourPlanBuilderPO.setValue(TourPlanWithPlaysNoAddition);
-    tourPlanBuilderPO.submit();
+    tourPlanBuilderPO.tourPlanPreviewPO.save();
 
     // Expect redirect to tour-plan view page, and check selected plays
     tourPlanViewPO.expectShowAsPage();
@@ -121,7 +122,7 @@ describe('Tour-plan builder', () => {
 
   it('Build a tour-plan with a few plays selected, and setup additions', () => {
     tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions);
-    tourPlanBuilderPO.submit();
+    tourPlanBuilderPO.tourPlanPreviewPO.save();
 
     // Expect redirect to tour-plan view page, and check selected plays
     tourPlanViewPO.expectShowAsPage();
@@ -134,7 +135,7 @@ describe('Tour-plan builder', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
     tourPlanBuilderPO.reset();
-    tourPlanBuilderPO.submit();
+    tourPlanBuilderPO.tourPlanPreviewPO.save();
 
     // Expect redirect to tour-plan view page, and check selected plays
     tourPlanViewPO.expectShowAsPage();
@@ -171,7 +172,7 @@ describe('Tour-plan builder', () => {
       // So we wait several seconds here for tour-plan-builder to be stable
       cy.wait(3000);
       tourPlanBuilderPO.setValue(MinimalTourPlan);
-      tourPlanBuilderPO.submit();
+      tourPlanBuilderPO.tourPlanPreviewPO.save();
       const loginDialogPO = new LoginDialogPageObjectCypress();
       loginDialogPO.expectVisible();
       login().then(() => {
@@ -191,8 +192,35 @@ describe('Tour-plan builder', () => {
     tourPlanBuilderPO.prev();
     tourPlanBuilderPO.prev();
     tourPlanBuilderPO.setValue(MinimalTourPlan);
-    tourPlanBuilderPO.submit();
+    tourPlanBuilderPO.tourPlanPreviewPO.save();
     tourPlanViewPO.expectShowAsPage();
     tourPlanViewPO.expectValue(MinimalTourPlan);
+  });
+
+  it('Can change dateRange, numParticipants, and contact directly in preview', () => {
+    const MinimalTourPlan2: TheThing = MinimalTourPlan.clone();
+    const newDateRange = DateRange.forge();
+    const newNumParticipants = random(100, 1000);
+    const newContact = Contact.forge();
+    MinimalTourPlan2.updateCellValues({
+      預計出遊日期: newDateRange,
+      預計參加人數: newNumParticipants,
+      聯絡資訊: newContact
+    });
+    tourPlanBuilderPO.setValue(MinimalTourPlan);
+    tourPlanBuilderPO.tourPlanPreviewPO.expectVisible();
+
+    tourPlanBuilderPO.tourPlanPreviewPO.setCellValue(
+      MinimalTourPlan2.getCell('預計出遊日期')
+    );
+    tourPlanBuilderPO.tourPlanPreviewPO.setCellValue(
+      MinimalTourPlan2.getCell('預計參加人數')
+    );
+    tourPlanBuilderPO.tourPlanPreviewPO.setCellValue(
+      MinimalTourPlan2.getCell('聯絡資訊')
+    );
+    tourPlanBuilderPO.tourPlanPreviewPO.save();
+    tourPlanViewPO.expectShowAsPage();
+    tourPlanViewPO.expectValue(MinimalTourPlan2);
   });
 });

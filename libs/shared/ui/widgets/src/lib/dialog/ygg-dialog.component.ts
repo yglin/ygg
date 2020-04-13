@@ -35,6 +35,9 @@ export class YggDialogComponent implements OnInit {
   @ViewChild(YggDialogContentHostDirective, { static: true })
   contentHost: YggDialogContentHostDirective;
   contentComponent: YggDialogContentComponent;
+  hasOutput = false;
+  hasOutputValue = false;
+  output: any;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private dialogData: YggDialogComponentData,
@@ -57,17 +60,21 @@ export class YggDialogComponent implements OnInit {
         );
         this.contentComponent = contentComponentRef.instance as YggDialogContentComponent;
         this.contentComponent.dialogData = this.dialogData.data;
-        if (this.contentComponent.dialogSubmit$) {
-          this.contentComponent.dialogSubmit$
-            .pipe(take(1))
-            .subscribe(submitData => {
-              this.dialogRef.close(submitData);
-            });
+        if (this.contentComponent.dialogOutput$) {
+          this.hasOutput = true;
+          this.contentComponent.dialogOutput$.subscribe(output => {
+            this.hasOutputValue = true;
+            this.output = output;
+          });
         }
       }
       if (this.dialogData.title) {
         this.title = this.dialogData.title;
       }
     }
+  }
+
+  confirmOutput() {
+    this.dialogRef.close(this.output);
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TheThingCell } from "@ygg/the-thing/core";
+import { TheThingCell } from '@ygg/the-thing/core';
 
 @Component({
   selector: 'the-thing-cell-view',
@@ -8,10 +8,15 @@ import { TheThingCell } from "@ygg/the-thing/core";
 })
 export class CellViewComponent implements OnInit {
   @Input() cell: TheThingCell;
-  
-  constructor() { }
+  @Input() editable: boolean;
+
+  constructor() {}
 
   ngOnInit() {
+    this.editable = this.editable !== undefined && this.editable !== false;
   }
 
+  onChangeValue(value: any) {
+    this.cell.value = value;
+  }
 }

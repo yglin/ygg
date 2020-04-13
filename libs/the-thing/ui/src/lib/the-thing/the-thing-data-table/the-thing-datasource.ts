@@ -11,8 +11,9 @@ import {
   of,
   Subscription
 } from 'rxjs';
-import { TheThing, TheThingCellComparator } from '@ygg/the-thing/core';
+import { TheThing } from '@ygg/the-thing/core';
 import { isEmpty, sortBy } from 'lodash';
+import { OmniTypeComparator } from '@ygg/shared/omni-types/core';
 
 /**
  * Data source for the TheThing view. This class should
@@ -26,12 +27,12 @@ export class TheThingDataSource extends DataSource<TheThing> {
   sortSubscription: Subscription;
   data: TheThing[] = [];
   updateEvent$: BehaviorSubject<any>;
-  compareFunctions: { [key: string]: TheThingCellComparator } = {};
+  compareFunctions: { [key: string]: OmniTypeComparator } = {};
   _filter: string;
 
   constructor(
     dataSource: Observable<TheThing[]> | TheThing[],
-    compareFunctions?: { [key: string]: TheThingCellComparator }
+    compareFunctions?: { [key: string]: OmniTypeComparator }
   ) {
     super();
     // Build the data flow

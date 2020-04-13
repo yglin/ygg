@@ -12,9 +12,7 @@ import {
 import {
   TheThingImitation,
   TheThing,
-  TheThingCellTypes,
   DataTableConfig,
-  TheThingCellComparator,
   TheThingFilter
 } from '@ygg/the-thing/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -22,11 +20,6 @@ import { MatSort } from '@angular/material/sort';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import {
   keys,
-  isEmpty,
-  filter,
-  pickBy,
-  mapValues,
-  get,
   isArray,
   find
 } from 'lodash';
@@ -34,6 +27,7 @@ import { TheThingDataSource } from './the-thing-datasource';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
+import { OmniTypeComparator } from '@ygg/shared/omni-types/core';
 
 @Component({
   selector: 'the-thing-data-table',
@@ -91,7 +85,7 @@ export class TheThingDataTableComponent
     let imitationColumns: string[] = [];
     if (this.imitation) {
       const compareFunctions: {
-        [key: string]: TheThingCellComparator;
+        [key: string]: OmniTypeComparator;
       } = this.imitation.getComparators();
 
       this.dataSource = new TheThingDataSource(

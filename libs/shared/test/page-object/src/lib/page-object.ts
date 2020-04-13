@@ -12,6 +12,14 @@ export abstract class PageObject {
   }
 
   getSelector(nameOrSelector?: string): string {
+    if (!this.selectors || typeof this.selectors.main !== 'string') {
+      const instance = this.constructor;
+      throw new Error(
+        `Invalid selectors of ${instance.name}: ${JSON.stringify(
+          this.selectors
+        )}`
+      );
+    }
     const rootSelector = `${this.parentSelector} ${this.selectors.main}`.trim();
     if (!nameOrSelector) {
       // console.log(`Return root selector: ${rootSelector}`);
