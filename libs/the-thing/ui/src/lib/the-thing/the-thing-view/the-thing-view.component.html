@@ -1,41 +1,4 @@
 <div class="the-thing-view" *ngIf="theThing">
-  <div
-    fxLayout="row"
-    fxLayoutAlign="end center"
-    fxLayoutGap="10px"
-    *ngIf="!readonly"
-  >
-    <div>
-      <button
-        mat-fab
-        class="create-clone"
-        (click)="createClone()"
-        matTooltip="複製"
-      >
-        <mat-icon>file_copy</mat-icon>
-      </button>
-    </div>
-    <div *ngIf="!readonly && isOwner">
-      <button
-        mat-fab
-        class="edit"
-        (click)="gotoEdit()"
-        matTooltip="修改這個東東"
-      >
-        <mat-icon>edit</mat-icon>
-      </button>
-    </div>
-    <!-- <div *ngIf="isPendingRelation">
-      <button
-        mat-fab
-        class="link-relation-back"
-        (click)="linkRelationBack()"
-        matTooltip="回到前一個編輯的關係連結"
-      >
-        <mat-icon>call_merge</mat-icon>
-      </button>
-    </div> -->
-  </div>
   <div *ngIf="!!theThingViewComponent">
     <the-thing-imitation-view
       [theThing$]="theThing$"
@@ -72,9 +35,11 @@
           *ngFor="let relation of relationObjects | keyvalue"
           [attr.relation-name]="relation.key"
         >
-          <div >
+          <div>
             <h3>{{ relation.key }}</h3>
-            <ygg-image-thumbnail-list [items$]="relation.value"></ygg-image-thumbnail-list>
+            <ygg-image-thumbnail-list
+              [items$]="relation.value"
+            ></ygg-image-thumbnail-list>
           </div>
         </div>
       </div>
