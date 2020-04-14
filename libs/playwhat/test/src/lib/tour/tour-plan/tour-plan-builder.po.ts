@@ -21,7 +21,7 @@ import {
 } from '@ygg/shopping/core';
 import { isEmpty, find, values } from 'lodash';
 
-export interface IOptionsSetValue {
+export interface IOptionsTourPlanBuilderSetValue {
   stopAtStep?: number;
   stopAfterStep?: number;
   hasOptionalFields?: boolean;
@@ -75,7 +75,7 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
       .type(name);
   }
 
-  setValue(tourPlan: TheThing, options: IOptionsSetValue = {}) {
+  setValue(tourPlan: TheThing, options: IOptionsTourPlanBuilderSetValue = {}) {
     const purchasePlays: TheThing[] = [];
     const purchaseAdditions: TheThing[] = [];
     const finalPurchases: Purchase[] = [];
@@ -178,8 +178,7 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
       this.tourPlanPreviewPO.gotoEditPurchases();
       const cartEditorPO = new ShoppingCartEditorPageObjectCypress();
       cartEditorPO.expectVisible();
-      cartEditorPO.expectPurchases(purchases);
-      cartEditorPO.setPurchases(finalPurchases);
+      cartEditorPO.updatePurchases(finalPurchases);
       cartEditorPO.expectPurchases(finalPurchases);
       cartEditorPO.submit();
     }

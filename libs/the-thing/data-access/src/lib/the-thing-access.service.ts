@@ -1,17 +1,24 @@
 import { isEmpty, every, castArray } from 'lodash';
 import { Injectable } from '@angular/core';
 import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
+import { IDataAccessor } from '@ygg/shared/infra/core';
 import { DataAccessService, Query } from '@ygg/shared/infra/data-access';
 import { Observable, throwError } from 'rxjs';
-import { map, shareReplay, tap } from 'rxjs/operators';
+import { map, shareReplay, tap, take } from 'rxjs/operators';
 import { Tags } from '@ygg/tags/core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TheThingAccessService {
+export class TheThingAccessService implements IDataAccessor<TheThing> {
   cache: { [id: string]: Observable<TheThing> } = {};
   constructor(private dataAccessService: DataAccessService) {}
+
+  get(id: string): Promise<TheThing> {
+    return this.get$(id)
+      .pipe(take(1))
+      .toPromise();
+  }
 
   get$(id: string): Observable<TheThing> {
     if (!(id in this.cache)) {
@@ -21,7 +28,7 @@ export class TheThingAccessService {
         .pipe(
           map(data => new TheThing().fromJSON(data)),
           // tap(thing => console.log(`Get new version thing ${thing.id}`)),
-          shareReplay(1),
+          shareReplay(1)
           // tap(thing => console.log(`Get the thing ${thing.id}`))
         );
     }

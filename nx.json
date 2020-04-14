@@ -200,6 +200,9 @@
     },
     "shared-user-test": {
       "tags": ["scope:shared", "type:test"]
+    },
+    "shared-infra-core": {
+      "tags": ["scope:shared", "type:core"]
     }
   },
   "tasksRunnerOptions": {

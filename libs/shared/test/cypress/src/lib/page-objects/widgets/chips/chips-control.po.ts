@@ -5,11 +5,15 @@ export class ChipsControlPageObjectCypress extends ChipsControlPageObject {
     cy.get(this.getSelector('buttonClear')).click({ force: true });
   }
 
-  setValue(chips: string[]) {
-    this.clear();
+  addValue(chips: string[]) {
     cy.wrap(chips).each((chip: any) => {
       this.addChip(chip as string);
     });
+  }
+
+  setValue(chips: string[]) {
+    this.clear();
+    this.addValue(chips);
   }
 
   expectValue(chips: string[]) {

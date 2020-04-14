@@ -1,11 +1,17 @@
 import {
   ShoppingCartEditorPageObject,
-  PurchaseRowPageObject
+  PurchaseRowPageObject,
+  IPurchasePack
 } from '@ygg/shopping/ui';
-import { ImageThumbnailItemPageObjectCypress } from '@ygg/shared/ui/test';
-import { TheThing } from '@ygg/the-thing/core';
+import {
+  ImageThumbnailItemPageObjectCypress,
+  YggDialogPageObjectCypress
+} from '@ygg/shared/ui/test';
+import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
 import { Purchase } from '@ygg/shopping/core';
 import { sum } from 'lodash';
+import { IDataAccessor } from '@ygg/shared/infra/core';
+import { TheThingFinderPageObjectCypress } from '@ygg/the-thing/test';
 
 export class PurchaseRowPageObjectCypress extends PurchaseRowPageObject {
   expectValue(purchase: Purchase): void {
@@ -62,13 +68,32 @@ export class ShoppingCartEditorPageObjectCypress extends ShoppingCartEditorPageO
     purchaseRowPO.setQuantity(quantity);
   }
 
-  setPurchases(purchases: Purchase[]): void {
+  purchasePack(pack: IPurchasePack): void {
+    cy.get(this.getSelector('buttonAddPurchase')).click();
+    const dialogPO = new YggDialogPageObjectCypress();
+    const theThingFinderPO = new TheThingFinderPageObjectCypress(
+      dialogPO.getSelector()
+    );
+    dialogPO.expectVisible();
+    theThingFinderPO.expectVisible();
+    theThingFinderPO.theThingFilterPO.expectFilter(pack.filter);
+    theThingFinderPO.selectItems(pack.things);
+    dialogPO.confirm();
+    dialogPO.expectClosed();
+    this.updatePurchases(pack.finalList);
+  }
+
+  updatePurchases(purchases: Purchase[]): void {
     cy.wrap(purchases).each((purchase: any) => {
       const purchaseRowPO = new PurchaseRowPageObjectCypress(
         this.getSelectorForPurchase(purchase)
       );
       purchaseRowPO.setValue(purchase);
     });
+  }
+
+  clearPurchases() {
+    cy.get(this.getSelector('buttonClear')).click();
   }
 
   expectPurchases(purchases: Purchase[]): void {

@@ -11,7 +11,9 @@ import {
   omit,
   assign,
   pick,
-  values
+  values,
+  castArray,
+  flatten
 } from 'lodash';
 import { Tags } from '@ygg/tags/core';
 import { TheThingCell } from './cell';
@@ -311,8 +313,13 @@ export class TheThing implements Entity, ImageThumbnailItem {
     }
   }
 
-  getRelations(relationName: string): TheThingRelation[] {
-    return this.hasRelation(relationName) ? this.relations[relationName] : [];
+  getRelations(relationNames: string | string[]): TheThingRelation[] {
+    relationNames = castArray(relationNames);
+    return flatten(
+      relationNames.map(relationName =>
+        this.hasRelation(relationName) ? this.relations[relationName] : []
+      )
+    );
   }
 
   /**

@@ -1,6 +1,7 @@
 import { PageObject } from '@ygg/shared/test/page-object';
+import { TheThingFilter } from '@ygg/the-thing/core';
 
-export class TheThingFilterPageObject extends PageObject {
+export abstract class TheThingFilterPageObject extends PageObject {
   selectors = {
     main: '.the-thing-filter',
     inputSearchName: '.search-name input',
@@ -8,4 +9,7 @@ export class TheThingFilterPageObject extends PageObject {
     buttonSave: 'button.save',
     buttonLoad: 'button.load'
   };
+
+  abstract expectFilter(filter: TheThingFilter): void
+  abstract setFilter(filter: TheThingFilter): void;
 }

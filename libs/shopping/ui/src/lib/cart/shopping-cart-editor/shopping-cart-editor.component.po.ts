@@ -1,6 +1,7 @@
 import { PageObject } from '@ygg/shared/test/page-object';
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
 import { Purchase } from '@ygg/shopping/core';
+import { IConsumer } from 'libs/shopping/core/src/lib/models/consumer';
 
 export abstract class PurchaseRowPageObject extends PageObject {
   selectors = {
@@ -14,13 +15,26 @@ export abstract class PurchaseRowPageObject extends PageObject {
   abstract setQuantity(quantity: number): void;
 }
 
+export interface IInputShoppingCart {
+  consumer?: IConsumer;
+  purchases: Purchase[];
+  productFilter: TheThingFilter;
+}
+
+export interface IPurchasePack {
+  things: TheThing[];
+  filter: TheThingFilter;
+  finalList: Purchase[];
+}
+
 export abstract class ShoppingCartEditorPageObject extends PageObject {
   selectors = {
     main: '.shopping-cart',
     purchaseList: '.purchases-table',
     totalCharge: '.total-charge',
     buttonClear: 'button.clear-all',
-    buttonSubmit: 'button.submit'
+    buttonSubmit: 'button.submit',
+    buttonAddPurchase: 'button.add-purchase'
   };
 
   getSelectorForPurchase(purchase: Purchase): string {
@@ -38,10 +52,11 @@ export abstract class ShoppingCartEditorPageObject extends PageObject {
   }
 
   abstract setQuantity(productId: string, quantity: number): void;
-  abstract setPurchases(purchases: Purchase[]): void;
+  abstract purchasePack(pack: IPurchasePack): void;
+  abstract updatePurchases(purchases: Purchase[]): void;
   abstract expectPurchases(purchases: Purchase[]): void;
   abstract submit(): void;
-  
+
   // getSelectorForPurchase(purchase: Purchase): string {
   //   return `${this.getSelector('purchaseList')} [item-id="${purchase.productId}"]`;
   // }

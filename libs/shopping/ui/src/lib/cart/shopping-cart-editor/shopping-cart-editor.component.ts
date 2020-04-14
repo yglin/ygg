@@ -1,15 +1,23 @@
 import { isEmpty, noop, remove, sumBy, get } from 'lodash';
 import { Component, OnInit, OnDestroy, Input, forwardRef } from '@angular/core';
-import { Purchase } from '@ygg/shopping/core';
+import { Purchase, PurchaseAgent } from '@ygg/shopping/core';
 import { Subscription, Observable, of, combineLatest, Subject } from 'rxjs';
 // import { ShoppingCartService } from '@ygg/shopping/factory';
 import { tap, switchMap } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
 // import { PurchaseControlComponent } from '../../purchase';
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { PageResolverService } from '@ygg/shared/ui/navigation';
+import { IInputShoppingCart } from './shopping-cart-editor.component.po';
+import {
+  TheThingFinderComponent,
+  IInputTheThingFinder
+} from '@ygg/the-thing/ui';
+import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { IConsumer } from 'libs/shopping/core/src/lib/models/consumer';
+import { AuthenticateService } from '@ygg/shared/user/ui';
 
 @Component({
   selector: 'ygg-shopping-cart-editor',
@@ -24,9 +32,12 @@ import { PageResolverService } from '@ygg/shared/ui/navigation';
   ]
 })
 export class ShoppingCartEditorComponent
-  implements OnInit, OnDestroy, ControlValueAccessor {
+  implements OnInit, OnDestroy, ControlValueAccessor, IInputShoppingCart {
   emitChange: (value: Purchase[]) => any = noop;
   purchases: Purchase[] = [];
+  consumer: IConsumer;
+  productFilter: TheThingFilter;
+  purchaseAgent: PurchaseAgent;
   totalCharge: number;
   purchasesDataSource: MatTableDataSource<Purchase>;
   displayedColumns: string[];
@@ -36,7 +47,11 @@ export class ShoppingCartEditorComponent
   isPage = false;
 
   constructor(
-    private pageResolver: PageResolverService // protected shoppingCartService: ShoppingCartService, // private dialog: YggDialogService
+    private pageResolver: PageResolverService,
+    private theThingAccessService: TheThingAccessService,
+    private authService: AuthenticateService,
+    // protected shoppingCartService: ShoppingCartService,
+    private dialog: YggDialogService
   ) {
     this.totalCharge = 0;
     this.displayedColumns = ['product', 'quantity', 'charge', 'management'];
@@ -59,19 +74,21 @@ export class ShoppingCartEditorComponent
   ngOnInit() {
     if (this.pageResolver.isPending()) {
       this.isPage = true;
-      this.purchases = get(this.pageResolver.getInput(), 'purchases', []);
+      const pageInput: IInputShoppingCart = this.pageResolver.getInput();
+      if (pageInput) {
+        this.purchases = pageInput.purchases || [];
+        this.productFilter = pageInput.productFilter;
+        this.consumer = pageInput.consumer;
+      }
       this.writeValue(this.purchases);
     }
-    // if (this.rootPurchase) {
-    //   this.subscriptions.push(
-    //     this.purchaseService.evalPurchase$(this.rootPurchase).subscribe(() => {
-    //       this.totalCharge = this.purchaseService.evalCharge(this.rootPurchase);
-    //       this.purchasesDataSource.data = this.purchaseService.listSubPurchases(
-    //         this.cart
-    //       );
-    //     })
-    //   );
-    // }
+    if (!this.consumer) {
+      this.consumer = this.authService.currentUser;
+    }
+    this.purchaseAgent = new PurchaseAgent(
+      this.consumer,
+      this.theThingAccessService
+    );
   }
 
   ngOnDestroy() {
@@ -92,22 +109,31 @@ export class ShoppingCartEditorComponent
     this.clearButtonDisabled = this.purchases.length < 3;
   }
 
-  // editPurchase(purchase: Purchase) {
-  //   const clonePurchase = this.purchaseService.clonePurchase(purchase);
-  //   const dialogRef = this.dialog.open(ShoppingCartEditorComponent, {
-  //     title: '修改購買項目',
-  //     data: {
-  //       clonePurchase
-  //     }
-  //   });
-  //   this.subscriptions.push(
-  //     dialogRef.afterClosed().subscribe(result => {
-  //       if (result) {
-  //         this.purchaseService.updatePurchase(purchase, result);
-  //       }
-  //     })
-  //   );
-  // }
+  addPurchases() {
+    const finderInputs: IInputTheThingFinder = {
+      filter: this.productFilter
+    };
+    const dialogRef = this.dialog.open(TheThingFinderComponent, {
+      title: '購買新品項',
+      data: finderInputs
+    });
+    dialogRef.afterClosed().subscribe(async (products: TheThing[]) => {
+      console.log('Select products~!!!');
+      console.dir(products);
+      if (!isEmpty(products)) {
+        for (const product of products) {
+          const newPurchases: Purchase[] = await this.purchaseAgent.purchaseTheThing(
+            product,
+            1
+          );
+          console.log('New purchases');
+          console.dir(newPurchases);
+          this.purchases.push(...newPurchases);
+        }
+        this.writeValue(this.purchases);
+      }
+    });
+  }
 
   removeAll() {
     if (confirm('清除所有購買項目？')) {

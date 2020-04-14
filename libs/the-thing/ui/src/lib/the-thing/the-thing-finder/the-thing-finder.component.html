@@ -1,8 +1,9 @@
 <div class="the-thing-finder">
   <ygg-action-bar-layout>
     <div ygg-action-bar-content>
-      <div [hidden]="hideFilter">
+      <div [hidden]="hideFilter" class="filter">
         <the-thing-filter
+          [filter]='filter'
           (filterChanged)="onFilterChanged($event)"
         ></the-thing-filter>
         <br />

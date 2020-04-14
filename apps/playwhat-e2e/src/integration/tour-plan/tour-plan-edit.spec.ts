@@ -5,7 +5,12 @@ import {
   TourPlanFull,
   TourPlanWithPlaysAndAdditions
 } from './sample-tour-plan';
-import { SamplePlays, SampleAdditions } from '../play/sample-plays';
+import {
+  SamplePlays,
+  SampleAdditions,
+  PlaysWithoutAddition,
+  PlaysWithAddition
+} from '../play/sample-plays';
 import {
   MyThingsDataTablePageObjectCypress,
   MyThingsPageObjectCypress
@@ -16,6 +21,9 @@ import {
 } from '@ygg/playwhat/test';
 import { SiteNavigator } from '@ygg/playwhat/test';
 import { TheThing } from '@ygg/the-thing/core';
+import { ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
+import { RelationNamePurchase, Purchase } from '@ygg/shopping/core';
+import { IPurchasePack } from '@ygg/shopping/ui';
 
 describe('Edit exist tour-plans from my-tour-plans page', () => {
   const siteNavigator = new SiteNavigator();
@@ -68,49 +76,40 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     theMockDatabase.clear();
   });
 
-  it('Click edit button in my-tour-plans page, should goto tour-plan-builder', () => {
-    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    // cy.pause();
-    myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingEdit(MinimalTourPlan);
-    tourPlanBuilderPO.expectVisible();
-    tourPlanBuilderPO.expectStepFinal();
-    tourPlanBuilderPO.tourPlanPreviewPO.save();
-    tourPlanViewPO.expectVisible();
-    tourPlanViewPO.expectValue(MinimalTourPlan);
-  });
-
   it('Edit exist tour-plan with full data', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingEdit(MinimalTourPlan);
-    tourPlanBuilderPO.expectVisible();
-    tourPlanBuilderPO.expectStepFinal();
-    tourPlanBuilderPO.prev();
-    tourPlanBuilderPO.prev();
-    tourPlanBuilderPO.expectStep(1);
-    tourPlanBuilderPO.setValue(TourPlanFull, { hasOptionalFields: true });
-    tourPlanBuilderPO.tourPlanPreviewPO.save();
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(MinimalTourPlan);
 
     tourPlanViewPO.expectVisible();
+    const newCells = TourPlanFull.getCellsByNames(
+      ImitationTourPlan.getOptionalCellNames()
+    );
+    tourPlanViewPO.setValue(TourPlanFull, { newCells });
+    tourPlanViewPO.save();
     tourPlanViewPO.expectValue(TourPlanFull);
   });
 
   it('Edit exist tour-plan with purchasing plays and additions', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingEdit(MinimalTourPlan);
-    tourPlanBuilderPO.expectVisible();
-    tourPlanBuilderPO.expectStepFinal();
-    tourPlanBuilderPO.prev();
-    tourPlanBuilderPO.prev();
-    tourPlanBuilderPO.expectStep(1);
-    tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions, {
-      hasOptionalFields: true
-    });
-    tourPlanBuilderPO.tourPlanPreviewPO.save();
-
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(MinimalTourPlan);
     tourPlanViewPO.expectVisible();
+
+    const finalList: Purchase[] = TourPlanWithPlaysAndAdditions.getRelations(
+      RelationNamePurchase
+    ).map(r => Purchase.fromRelation(r));
+    const purchasedPlays: TheThing[] = PlaysWithAddition;
+
+    const newPurchases: IPurchasePack = {
+      things: purchasedPlays,
+      filter: ImitationPlay.filter,
+      finalList
+    };
+
+    tourPlanViewPO.setValue(TourPlanWithPlaysAndAdditions, {
+      newPurchases
+    });
     tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions);
   });
 });

@@ -24,7 +24,7 @@ import {
   merge
 } from 'rxjs';
 import { tap, switchMap, filter } from 'rxjs/operators';
-import { ImitationTourPlan } from '@ygg/playwhat/core';
+import { ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
 import { pick, values, mapValues, get, isEmpty } from 'lodash';
 import {
   RelationNamePurchase,
@@ -38,6 +38,7 @@ import { FormControl } from '@angular/forms';
 import { PageStashService } from '@ygg/shared/infra/data-access';
 import { PageResolverService } from '@ygg/shared/ui/navigation';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
+import { IInputShoppingCart } from '@ygg/shopping/ui';
 
 @Component({
   selector: 'ygg-tour-plan-view',
@@ -194,7 +195,13 @@ export class TourPlanViewComponent
       .getRelations(RelationNamePurchase)
       .map(r => Purchase.fromRelation(r));
     // console.log(purchases);
-    this.pageResolver.to('/shopping/cart', { purchases });
+
+    const inputs: IInputShoppingCart = {
+      purchases,
+      productFilter: ImitationPlay.filter,
+      consumer: this.theThing
+    };
+    this.pageResolver.to('/shopping/cart', inputs);
   }
 
   async adminPaid() {

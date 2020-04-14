@@ -1,12 +1,16 @@
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
 import { TheThingFinderPageObject } from '@ygg/the-thing/ui';
 import { ChipsControlPageObjectCypress } from '@ygg/shared/test/cypress';
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
 import { ImageThumbnailListPageObject } from '@ygg/shared/ui/widgets';
+import { TheThingFilterPageObjectCypress } from './the-thing-filter.po';
 
 export class TheThingFinderPageObjectCypress extends TheThingFinderPageObject {
   constructor(parentSelector?: string) {
     super(parentSelector);
+    this.theThingFilterPO = new TheThingFilterPageObjectCypress(
+      this.getSelector('filter')
+    );
     this.imageThumbnailList = new ImageThumbnailListPageObjectCypress(
       this.getSelector('theThingList')
     );
@@ -28,7 +32,10 @@ export class TheThingFinderPageObjectCypress extends TheThingFinderPageObject {
     this.imageThumbnailList.expectItem(theThing);
   }
 
-  submit() {
-    cy.get(this.getSelector('buttonSubmit')).click({ force: true });
+  selectItems(things: TheThing[]) {
+    this.imageThumbnailList.selectItems(things);
   }
+  // submit() {
+  //   cy.get(this.getSelector('buttonSubmit')).click({ force: true });
+  // }
 }

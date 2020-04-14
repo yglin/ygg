@@ -26,6 +26,7 @@ import {
 } from 'rxjs';
 import { debounceTime, switchMap, startWith } from 'rxjs/operators';
 import { YggDialogContentComponent } from '@ygg/shared/ui/widgets';
+import { IInputTheThingFinder } from './the-thing-finder.component.po';
 
 @Component({
   selector: 'the-thing-finder',
@@ -44,6 +45,7 @@ export class TheThingFinderComponent
     OnInit,
     OnDestroy,
     ControlValueAccessor,
+    IInputTheThingFinder,
     YggDialogContentComponent {
   @Input() theThings: TheThing[];
   @Input() theThings$: Observable<TheThing[]>;
@@ -61,7 +63,7 @@ export class TheThingFinderComponent
   subscriptions: Subscription[] = [];
   selection: TheThing[] = [];
   isDialog = false;
-  dialogData: any;
+  dialogData: IInputTheThingFinder;
   dialogOutput$: Subject<TheThing[]> = new Subject();
 
   constructor(private theThingAccessService: TheThingAccessService) {}
@@ -81,6 +83,9 @@ export class TheThingFinderComponent
   registerOnTouched(fn) {}
 
   ngOnInit() {
+    if (this.dialogData) {
+      this.filter = this.dialogData.filter;
+    }
     this.singleSelect =
       this.singleSelect !== undefined && this.singleSelect !== false;
     this.hideFilter =

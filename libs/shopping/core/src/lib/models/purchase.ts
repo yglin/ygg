@@ -9,6 +9,9 @@ import {
 } from '@ygg/shared/infra/data-access';
 import { TheThing, TheThingRelation, TheThingCell } from '@ygg/the-thing/core';
 import { CellNamePrice } from './product';
+import { IDataAccessor } from '@ygg/shared/infra/core';
+import { RelationAddition } from './addition';
+import { IConsumer } from './consumer';
 
 export const RelationNamePurchase = '訂購';
 
@@ -48,7 +51,7 @@ export class Purchase implements SerializableJSON {
   }
 
   static purchase(
-    consumer: TheThing,
+    consumer: IConsumer,
     product: TheThing,
     quantity: number
   ): Purchase {

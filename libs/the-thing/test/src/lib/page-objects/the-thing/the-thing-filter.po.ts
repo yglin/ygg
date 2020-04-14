@@ -10,6 +10,12 @@ export class TheThingFilterPageObjectCypress extends TheThingFilterPageObject {
     this.chipControlPO = new ChipsControlPageObjectCypress(this.getSelector());
   }
 
+  // setValue(filter: TheThingFilter): void {
+  //   this.clear();
+  //   this.setTags(filter.tags);
+  //   this.searchName(filter.keywordName);
+  // }
+
   clear() {
     this.chipControlPO.clear();
     cy.get(this.getSelector('inputSearchName')).clear({ force: true });
@@ -28,6 +34,15 @@ export class TheThingFilterPageObjectCypress extends TheThingFilterPageObject {
   setFilter(filter: TheThingFilter) {
     this.setTags(filter.tags);
     this.searchName(filter.keywordName);
+  }
+
+  expectFilter(filter: TheThingFilter): void {
+    this.chipControlPO.expectValue(filter.tags);
+    if (filter.keywordName) {
+      cy.get(this.getSelector('inputSearchName'))
+        .invoke('val')
+        .should('equal', filter.keywordName);
+    }
   }
 
   saveFilter(name: string) {

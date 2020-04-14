@@ -1,9 +1,20 @@
 <div class="shopping-cart">
   <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+    <div>
+      <button
+        type="button"
+        class="add-purchase"
+        mat-fab
+        (click)="addPurchases()"
+        matTooltip="加購其他品項"
+      >
+        <mat-icon>add_shopping_cart</mat-icon>
+      </button>
+    </div>
     <div *ngIf="isPage">
       <button
         type="button"
-        class='submit'
+        class="submit"
         mat-fab
         (click)="submit()"
         matTooltip="送出以下購買資料"
@@ -12,7 +23,7 @@
       </button>
     </div>
   </div>
-  <br>
+  <br />
   <div class="purchases-table">
     <table mat-table [dataSource]="purchasesDataSource">
       <ng-container matColumnDef="product">

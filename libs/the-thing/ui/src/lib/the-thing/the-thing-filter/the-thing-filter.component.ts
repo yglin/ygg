@@ -4,7 +4,10 @@ import {
   OnInit,
   OnDestroy,
   Output,
-  EventEmitter
+  EventEmitter,
+  Input,
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -17,7 +20,8 @@ import { debounceTime } from 'rxjs/operators';
   templateUrl: './the-thing-filter.component.html',
   styleUrls: ['./the-thing-filter.component.css']
 })
-export class TheThingFilterComponent implements OnInit, OnDestroy {
+export class TheThingFilterComponent implements OnInit, OnDestroy, OnChanges {
+  @Input() filter: TheThingFilter;
   @Output() filterChanged = new EventEmitter<TheThingFilter>();
   formGroup: FormGroup;
   subscriptions: Subscription[] = [];
@@ -64,6 +68,15 @@ export class TheThingFilterComponent implements OnInit, OnDestroy {
           }
         })
     );
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.filter) {
+      this.formGroup.patchValue({
+        tags: this.filter.tags,
+        name: this.filter.keywordName
+      });
+    }
   }
 
   ngOnInit() {}

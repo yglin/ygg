@@ -114,7 +114,7 @@
     "async": "^3.1.0",
     "child-process-promise": "^2.2.1",
     "codelyzer": "~5.1.0",
-    "cypress": "^4.3.0",
+    "cypress": "^4.4.0",
     "cypress-firebase": "^1.0.0",
     "cypress-promise": "^1.0.2",
     "dotenv": "8.0.0",
@@ -130,7 +130,8 @@
     "tsickle": "0.38.1",
     "tslib": "^1.10.0",
     "tslint": "6.0.0",
-    "typescript": "~3.8.3"
+    "typescript": "~3.8.3",
+    "ts-jest": "25.2.1"
   },
   "main": "./dist/apps/firebase-functions/main.js",
   "engines": {
