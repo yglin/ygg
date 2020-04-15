@@ -315,7 +315,7 @@ export class TourPlanBuilderComponent
 
   async save() {
     try {
-      await this.theThingFactory.save({ requireOwner: true });
+      await this.theThingFactory.save(this.theThing, { requireOwner: true });
     } catch (error) {
       console.error(error.message);
     }

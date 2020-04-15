@@ -298,7 +298,7 @@ export class TourPlanViewComponent
   async save() {
     if (confirm(`確定儲存此遊程規劃？`)) {
       try {
-        await this.theThingFactory.save({ requireOwner: true });
+        await this.theThingFactory.save(this.theThing, { requireOwner: true });
       } catch (error) {
         console.error(error.message);
       }

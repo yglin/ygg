@@ -88,18 +88,20 @@ export class TheThingFactoryService {
     return newThing;
   }
 
-  async save(options: ITheThingSaveOptions = {}) {
-    if (options.requireOwner && !this.subjectThing.ownerId) {
+  async save(theThing: TheThing, options: ITheThingSaveOptions = {}) {
+    if (options.requireOwner && !theThing.ownerId) {
       try {
         const currentUser = await this.authUiService.requireLogin();
-        this.subjectThing.ownerId = currentUser.id;
+        theThing.ownerId = currentUser.id;
       } catch (error) {
         return Promise.reject(error);
       }
     }
     try {
-      const result = await this.theThingAccessService.upsert(this.subjectThing);
-      alert(`已成功儲存${this.subjectThing.name}`);
+      const result: TheThing = await this.theThingAccessService.upsert(
+        theThing
+      );
+      alert(`已成功儲存${result.name}`);
       this.reset();
       return result;
     } catch (error) {
