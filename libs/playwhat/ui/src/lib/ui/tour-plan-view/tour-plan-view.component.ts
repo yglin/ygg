@@ -67,6 +67,10 @@ export class TourPlanViewComponent
   states: { [key: string]: number } = {};
   canCancelApplied = false;
   formControlName: FormControl = new FormControl(null);
+  nameStyle = {
+    'font-size': '24px',
+    'text-shadow': '3px 3px 3px #336699'
+  };
 
   constructor(
     private authorizeService: AuthorizeService,

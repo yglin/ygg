@@ -16,7 +16,8 @@
           ></ygg-image-thumbnail>
         </div>
         <div>
-          {{ CellNameQuantity }} x <span class="quantity">{{ purchase.quantity }}</span>
+          {{ CellNameQuantity }} x
+          <span class="quantity">{{ purchase.quantity }}</span>
         </div>
       </div>
       <div *ngIf="!isLast">
@@ -25,10 +26,8 @@
     </div>
   </div>
   <div fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
-    <div>
-      <h3 class="total-charge">
-        總價：<ygg-price [price]="totalPrice"></ygg-price>
-      </h3>
+    <div class="total-charge" *ngIf="purchases && purchases.length > 0">
+      <h3>總價：<ygg-price [price]="totalPrice"></ygg-price></h3>
     </div>
   </div>
 </div>

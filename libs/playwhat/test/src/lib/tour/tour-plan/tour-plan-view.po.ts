@@ -130,14 +130,18 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
   }
 
   setName(name: string) {
-    const controlViewSwitchPO = new ControlViewSwitchPageObjectCypress(
+    const omniTypeViewControlPO = new OmniTypeViewControlPageObjectCypress(
       this.getSelector('name')
     );
-    controlViewSwitchPO.openControl();
-    cy.get(this.getSelector('inputName'))
-      .clear()
-      .type(name);
-    controlViewSwitchPO.closeControl();
+    omniTypeViewControlPO.setValue('text', name);
+    // const controlViewSwitchPO = new ControlViewSwitchPageObjectCypress(
+    //   this.getSelector('name')
+    // );
+    // controlViewSwitchPO.openControl();
+    // cy.get(this.getSelector('inputName'))
+    //   .clear()
+    //   .type(name);
+    // controlViewSwitchPO.closeControl();
   }
 
   setCellValue(cell: TheThingCell): void {
@@ -152,43 +156,6 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
   }
 
   setValue(tourPlan: TheThing, options: IOptionsSetValue = {}) {
-    // const purchasePlays: TheThing[] = [];
-    // const purchaseAdditions: TheThing[] = [];
-    // const finalPurchases: Purchase[] = [];
-    // if (tourPlan.hasRelation(RelationNamePurchase)) {
-    //   const relations = tourPlan.getRelations(RelationNamePurchase);
-    //   purchasePlays.push.apply(
-    //     purchasePlays,
-    //     relations
-    //       .map(
-    //         r =>
-    //           theMockDatabase.getEntity(
-    //             `${TheThing.collection}/${r.objectId}`
-    //           ) as TheThing
-    //       )
-    //       .filter(pl => !!pl && ImitationPlay.filter.test(pl))
-    //   );
-
-    //   for (const play of purchasePlays) {
-    //     if (play.hasRelation(RelationAddition.name)) {
-    //       purchaseAdditions.push.apply(
-    //         purchaseAdditions,
-    //         play
-    //           .getRelationObjectIds(RelationAddition.name)
-    //           .map(objId =>
-    //             theMockDatabase.getEntity(`${TheThing.collection}/${objId}`)
-    //           )
-    //           .filter(ad => !!ad)
-    //       );
-    //     }
-    //   }
-
-    //   finalPurchases.push.apply(
-    //     finalPurchases,
-    //     this.fromRelations(tourPlan.getRelations(RelationNamePurchase))
-    //   );
-    // }
-
     if (tourPlan.name) {
       this.setName(tourPlan.name);
     }

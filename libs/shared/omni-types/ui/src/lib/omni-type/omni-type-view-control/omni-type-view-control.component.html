@@ -4,7 +4,11 @@
   fxLayoutAlign="start start"
   fxLayoutGap="20px"
 >
-  <ygg-omni-type-view [type]="type" [value]="value"></ygg-omni-type-view>
+  <ygg-omni-type-view
+    [type]="type"
+    [value]="value"
+    [ngStyle]="viewStyle"
+  ></ygg-omni-type-view>
   <div *ngIf="editable">
     <button class="edit" mat-mini-fab (click)="openControlDialog()">
       <mat-icon>edit</mat-icon>

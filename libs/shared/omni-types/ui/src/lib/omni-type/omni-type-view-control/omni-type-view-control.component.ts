@@ -13,6 +13,7 @@ export class OmniTypeViewControlComponent implements OnInit {
   @Input() value: any;
   @Output() valueChange: EventEmitter<any> = new EventEmitter();
   @Input() editable = false;
+  @Input() viewStyle = {};
 
   constructor(private dialog: YggDialogService) {}
 

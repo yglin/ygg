@@ -16,8 +16,14 @@
       <mat-icon>save</mat-icon>
     </button>
   </div>
-  <div fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px"></div>
-  <ygg-control-view-switch [readonly]="readonly" class="tour-plan-name">
+  <ygg-omni-type-view-control
+    class="tour-plan-name"
+    [(value)]="theThing.name"
+    type="text"
+    [editable]="!readonly"
+    [viewStyle]="nameStyle"
+  ></ygg-omni-type-view-control>
+  <!-- <ygg-control-view-switch [readonly]="readonly" class="tour-plan-name">
     <div control>
       <mat-form-field>
         <input
@@ -30,7 +36,7 @@
     <div view>
       <h1>{{ formControlName.value }}</h1>
     </div>
-  </ygg-control-view-switch>
+  </ygg-control-view-switch> -->
   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
     <div>
       <h4 class="state">{{ stateLabel }}</h4>
