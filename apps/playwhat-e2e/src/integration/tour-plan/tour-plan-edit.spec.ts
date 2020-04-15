@@ -1,5 +1,10 @@
 // import { sampleSize, values, pick, sum, sumBy, random, find } from 'lodash';
-import { MockDatabase, login, theMockDatabase } from '@ygg/shared/test/cypress';
+import {
+  MockDatabase,
+  login,
+  theMockDatabase,
+  logout
+} from '@ygg/shared/test/cypress';
 import {
   MinimalTourPlan,
   TourPlanFull,
@@ -20,14 +25,14 @@ import {
   TourPlanBuilderPageObjectCypress
 } from '@ygg/playwhat/test';
 import { SiteNavigator } from '@ygg/playwhat/test';
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 import { ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
 import { RelationNamePurchase, Purchase } from '@ygg/shopping/core';
 import { IPurchasePack } from '@ygg/shopping/ui';
 
 describe('Edit exist tour-plans from my-tour-plans page', () => {
   const siteNavigator = new SiteNavigator();
-  const SampleTourPlans = [MinimalTourPlan];
+  const SampleTourPlans = [MinimalTourPlan, TourPlanFull];
   const SampleThings = SamplePlays.concat(SampleAdditions).concat(
     SampleTourPlans
   );
@@ -111,5 +116,33 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
       newPurchases
     });
     tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions);
+  });
+
+  it('Edit tour-plan, remove optional cells', () => {
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.expectTheThing(TourPlanFull);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanFull);
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectValue(TourPlanFull);
+    const cells2BDel: TheThingCell[] = TourPlanFull.getCellsByNames(
+      ImitationTourPlan.getOptionalCellNames()
+    );
+    for (const cell of cells2BDel) {
+      tourPlanViewPO.deleteCell(cell);
+    }
+    tourPlanViewPO.save();
+
+    const resultTourPlan = TourPlanFull.clone();
+    resultTourPlan.deleteCells(cells2BDel);
+
+    tourPlanViewPO.expectValue(resultTourPlan);
+  });
+
+  it('Can not modify if not owner', () => {
+    logout().then(() => {
+      cy.visit(`the-things/${MinimalTourPlan.id}`);
+      tourPlanViewPO.expectVisible();
+      tourPlanViewPO.expectReadonly();
+    });
   });
 });

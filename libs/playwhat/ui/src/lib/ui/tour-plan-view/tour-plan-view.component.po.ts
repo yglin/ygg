@@ -26,7 +26,8 @@ export abstract class TourPlanViewPageObject extends PageObject {
     buttonGotoEditOptionalCells: 'button.goto-edit-optional-cells',
     buttonGotoEditPurchases: 'button.goto-edit-purchases',
     buttonAddCell: 'button.add-cell',
-    buttonSave: 'button.save'
+    buttonSave: 'button.save',
+    editButtons: 'button.edit'
   };
   dayTimeRangePO: DayTimeRangeViewPageObject;
   dateRangeViewPO: DateRangeViewPageObject;

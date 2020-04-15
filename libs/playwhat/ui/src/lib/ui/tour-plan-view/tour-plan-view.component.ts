@@ -284,6 +284,13 @@ export class TourPlanViewComponent
     });
   }
 
+  deleteCell(cell: TheThingCell) {
+    const confirmMessage = `移除資料欄位${cell.name}？`;
+    if (confirm(confirmMessage)) {
+      this.theThing.deleteCell(cell);
+    }
+  }
+
   async save() {
     if (confirm(`確定儲存此遊程規劃？`)) {
       try {

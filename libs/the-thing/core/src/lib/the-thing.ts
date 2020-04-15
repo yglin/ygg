@@ -193,9 +193,16 @@ export class TheThing implements Entity, ImageThumbnailItem {
     }
   }
 
-  deleteCell(cell: TheThingCell) {
-    if (this.hasCell(cell)) {
-      delete this.cells[cell.name];
+  deleteCell(cellName: TheThingCell | string) {
+    cellName = typeof cellName === 'string' ? cellName : cellName.name;
+    if (this.hasCell(cellName)) {
+      delete this.cells[cellName];
+    }
+  }
+
+  deleteCells(cells: string[] | TheThingCell[]) {
+    for (const cell of cells) {
+      this.deleteCell(cell);
     }
   }
 

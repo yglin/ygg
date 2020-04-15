@@ -232,4 +232,17 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     dialogPO.expectClosed();
     this.expectCell(cell);
   }
+
+  expectReadonly() {
+    cy.get(this.getSelector('editButtons')).should('not.be.visible');
+  }
+
+  deleteCell(cell: TheThingCell) {
+    cy.get(`${this.getSelectorForCell(cell.name)} button.delete`).click();
+    this.expectNoCell(cell);
+  }
+
+  expectNoCell(cell: TheThingCell) {
+    cy.get(this.getSelectorForCell(cell.name)).should('not.exist');
+  }
 }

@@ -8,7 +8,7 @@
     <button
       type="button"
       mat-fab
-      class="save"
+      class="save edit"
       matTooltip="儲存遊程規劃"
       [disabled]="!isValidTourPlan()"
       (click)="save()"
@@ -37,8 +37,9 @@
     </div>
     <div *ngIf="canSubmitApplication && !readonly">
       <button
+        type="button"
         mat-mini-fab
-        class="submit-application"
+        class="submit-application edit"
         (click)="submitApplication()"
       >
         <mat-icon>send</mat-icon>
@@ -46,8 +47,9 @@
     </div>
     <div *ngIf="canCancelApplied && !readonly">
       <button
+        type="button"
         mat-mini-fab
-        class="cancel-applied"
+        class="cancel-applied edit"
         (click)="cancelApplied()"
         matTooltip="取消此遊程申請"
       >
@@ -57,8 +59,9 @@
     <div *ngIf="isAdmin && !readonly" [ngSwitch]="state">
       <div *ngSwitchCase="states.applied">
         <button
+          type="button"
           mat-mini-fab
-          class="admin-paid"
+          class="admin-paid edit"
           (click)="adminPaid()"
           matTooltip="標記此遊程已付款完成"
         >
@@ -67,8 +70,9 @@
       </div>
       <div *ngSwitchCase="states.paid">
         <button
+          type="button"
           mat-mini-fab
-          class="admin-complete"
+          class="admin-complete edit"
           (click)="adminComplete()"
           matTooltip="標記此遊程已全部完成"
         >
@@ -118,8 +122,9 @@
       </div>
       <div *ngIf="!readonly">
         <button
+          type="button"
           mat-mini-fab
-          class="goto-edit-purchases"
+          class="goto-edit-purchases edit"
           (click)="gotoEditPurchases()"
         >
           <mat-icon>edit</mat-icon>
@@ -134,15 +139,36 @@
         其他需求事項
       </h2>
       <div *ngIf="!readonly">
-        <button mat-mini-fab class="add-cell" (click)="addCell()">
+        <button
+          type="button"
+          mat-mini-fab
+          class="add-cell edit"
+          (click)="addCell()"
+        >
           <mat-icon>add</mat-icon>
         </button>
       </div>
     </div>
     <div *ngFor="let cell of getOptionalCells()">
       <div [attr.cell-name]="cell.name" *ngIf="cell.value">
-        <h4>{{ cell.name }}</h4>
-        <the-thing-cell-view [cell]="cell"></the-thing-cell-view>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+          <h4>{{ cell.name }}</h4>
+          <div>
+            <button
+              type="button"
+              class="delete"
+              mat-mini-fab
+              matTooltip="移除這個欄位"
+              (click)="deleteCell(cell)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+        <the-thing-cell-view
+          [cell]="cell"
+          [editable]="!readonly"
+        ></the-thing-cell-view>
       </div>
     </div>
   </div>
