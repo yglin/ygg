@@ -18,11 +18,7 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import {
-  keys,
-  isArray,
-  find
-} from 'lodash';
+import { keys, isArray, find } from 'lodash';
 import { TheThingDataSource } from './the-thing-datasource';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -66,9 +62,9 @@ export class TheThingDataTableComponent
 
   ngOnInit() {
     this.readonly = this.readonly !== undefined && this.readonly !== false;
-    if (!this.readonly) {
-      this.displayedColumnsTail.push('management');
-    }
+    // if (!this.readonly) {
+    //   this.displayedColumnsTail.push('management');
+    // }
     if (this.selectionChange.observers.length > 0) {
       this.displayedColumnsHead.unshift('select');
     }
