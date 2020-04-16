@@ -31,16 +31,7 @@ import { randomBytes } from 'crypto';
 
 describe('Tour-plan builder', () => {
   const siteNavigator = new SiteNavigator();
-  const selectPlays = sampleSize(SamplePlays, 2);
-  let tourPlanWithPlays: TheThing;
-  // const SampleTourPlans = [
-  //   MinimalTourPlan.clone(),
-  //   TourPlanFullWithPlays.clone()
-  // ];
   const SampleThings = SamplePlays.concat(SampleAdditions);
-  // .concat(
-  //   SampleTourPlans
-  // );
 
   const tourPlanBuilderPO = new TourPlanBuilderPageObjectCypress();
   const tourPlanViewPO = new TourPlanViewPageObjectCypress();
@@ -49,8 +40,6 @@ describe('Tour-plan builder', () => {
   let currentUser: User;
 
   before(() => {
-    tourPlanWithPlays = MinimalTourPlan.clone();
-    tourPlanWithPlays.addRelations('體驗', selectPlays);
     login().then(user => {
       currentUser = user;
       cy.wrap(SampleThings).each((thing: any) => {

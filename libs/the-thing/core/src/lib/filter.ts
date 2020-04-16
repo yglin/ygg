@@ -9,7 +9,7 @@ export class TheThingFilter implements SerializableJSON {
   name: string;
   tags: string[] = [];
   ownerId: string;
-  keywordName: string = '';
+  keywordName: string;
   flags: { [name: string]: boolean } = {};
   states: { [name: string]: number } = {};
   stateDateRange: DateRange;
@@ -39,7 +39,7 @@ export class TheThingFilter implements SerializableJSON {
       const tags = new Tags(this.tags)
         .merge(new Tags(filter.tags))
         .toNameArray();
-      const keywordName = `${this.keywordName} ${filter.keywordName}`;
+      const keywordName = `${!!this.keywordName ? this.keywordName : ''} ${!!filter.keywordName ? filter.keywordName : ''}`.trim();
       const ownerId = !!filter.ownerId ? filter.ownerId : this.ownerId;
       const flags = assign({}, this.flags, filter.flags);
       const states = assign({}, this.states, filter.states);
@@ -55,19 +55,20 @@ export class TheThingFilter implements SerializableJSON {
   }
 
   test(theThing: TheThing): boolean {
-    // console.log(`${this.ownerId} ?== ${theThing.ownerId}`);
     if (!!this.ownerId && theThing.ownerId !== this.ownerId) {
       return false;
     }
     if (!isEmpty(this.tags) && !theThing.tags.include(this.tags)) {
       return false;
     }
-    const seachText = JSON.stringify(theThing).toLowerCase();
-    const keywords: string[] = this.keywordName.split(' ,');
-    if (!isEmpty(keywords)) {
-      for (const keyword of keywords) {
-        if (!seachText.includes(keyword.toLowerCase())) {
-          return false;
+    if (!isEmpty(this.keywordName)) {
+      const seachText = JSON.stringify(theThing).toLowerCase();
+      const keywords: string[] = this.keywordName.split(' ,');
+      if (!isEmpty(keywords)) {
+        for (const keyword of keywords) {
+          if (!seachText.includes(keyword.toLowerCase())) {
+            return false;
+          }
         }
       }
     }

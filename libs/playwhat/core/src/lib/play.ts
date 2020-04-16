@@ -82,7 +82,7 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
       }
     },
     filter: {
-      name: '搜尋體驗項目',
+      name: '搜尋體驗',
       tags: ['play', '體驗']
     }
   }

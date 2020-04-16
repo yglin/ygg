@@ -48,18 +48,20 @@ export const MinimumPlay = ImitationPlay.createTheThing().fromJSON({
 
 export const PlayFull = MinimumPlay.clone();
 PlayFull.name = '測試體驗溜鳥鳥(所有資料欄位)';
-PlayFull.addCells([
-  {
-    name: '地點',
-    type: 'location',
-    value: Location.forge().toJSON()
-  },
-  {
-    name: '服務時段',
-    type: 'business-hours',
-    value: BusinessHours.forge().toJSON()
-  }
-].map(cellData => new TheThingCell().fromJSON(cellData)));
+PlayFull.addCells(
+  [
+    {
+      name: '地點',
+      type: 'location',
+      value: Location.forge().toJSON()
+    },
+    {
+      name: '服務時段',
+      type: 'business-hours',
+      value: BusinessHours.forge().toJSON()
+    }
+  ].map(cellData => new TheThingCell().fromJSON(cellData))
+);
 
 export const SamplePlays = [
   {
@@ -187,6 +189,90 @@ export const SamplePlays = [
         value: 10
       }
     }
+  },
+  {
+    name: '省府植物拓印體驗',
+    tags: ['體驗', 'play', '深度遊趣', '省府日常散策', '拓印'],
+    cells: {
+      副標題: {
+        name: '副標題',
+        type: 'text',
+        value: '封存美好記憶'
+      },
+      照片: {
+        name: '照片',
+        type: 'album',
+        value: Album.forge().toJSON()
+      },
+      簡介: {
+        name: '簡介',
+        type: 'html',
+        value:
+          '撿拾環境中的落葉、花草,運用畫筆顏料拓印至白紙保留植物的葉脈紋理,透過色彩堆疊與手作溫度保留旅行的記憶,最終親手寫上祝福,替旅行留下最美好句點'
+      },
+      費用: {
+        name: '費用',
+        type: 'number',
+        value: 350
+      },
+      時長: {
+        name: '時長',
+        type: 'number',
+        value: 90
+      },
+      人數下限: {
+        name: '人數下限',
+        type: 'number',
+        value: 2
+      },
+      人數上限: {
+        name: '人數上限',
+        type: 'number',
+        value: 15
+      }
+    }
+  },
+  {
+    name: '省府草地野餐(建議秋冬時節)',
+    // tags: ['體驗', 'play', '深度遊趣', '省府日常散策', '野餐'],
+    cells: {
+      副標題: {
+        name: '副標題',
+        type: 'text',
+        value: '草地野餐派對'
+      },
+      照片: {
+        name: '照片',
+        type: 'album',
+        value: Album.forge().toJSON()
+      },
+      簡介: {
+        name: '簡介',
+        type: 'html',
+        value:
+          '在最具森林風情的中興野地用餐,簡單的沙拉、熱壓吐司漢堡、湯品、飲品,搭配美好的森林草地,自由自在地徜徉在綠地與樹下,是中興新村最美味的中餐!!'
+      },
+      費用: {
+        name: '費用',
+        type: 'number',
+        value: 500
+      },
+      時長: {
+        name: '時長',
+        type: 'number',
+        value: 120
+      },
+      人數下限: {
+        name: '人數下限',
+        type: 'number',
+        value: 10
+      },
+      人數上限: {
+        name: '人數上限',
+        type: 'number',
+        value: 40
+      }
+    }
   }
 ].map(jsonItem => ImitationPlay.createTheThing().fromJSON(jsonItem));
 
@@ -227,7 +313,9 @@ export const SampleAdditions = [
 
 SamplePlays[0].addRelations(RelationAddition.name, SampleAdditions);
 
-export const PlaysWithAddition = [SamplePlays[0]];
+export const PlaysWithAddition = SamplePlays.filter(p =>
+  p.hasRelation(RelationAddition.name)
+);
 export const PlaysWithoutAddition = SamplePlays.filter(
-  pl => PlaysWithAddition.indexOf(pl) < 0
+  p => !p.hasRelation(RelationAddition.name)
 );
