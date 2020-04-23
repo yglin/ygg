@@ -50,5 +50,7 @@ export abstract class TourPlanViewPageObject extends PageObject {
   abstract gotoEditPurchases(): void;
   abstract setCellValue(cell: TheThingCell): void;
   abstract addOptionalCell(cell: TheThingCell): void;
-  abstract save(): void;
+  abstract save(thing: TheThing): void;
+  abstract issueSave(thing: TheThing): void;
+  abstract alertSaved(thing: TheThing): void;
 }

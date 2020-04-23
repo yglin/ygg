@@ -10,6 +10,7 @@ import {
   TheThingAccessService
 } from '@ygg/the-thing/data-access';
 import { TheThingImitationViewInterface } from './the-thing/the-thing-imitation-view/imitation-view-interface.component';
+import { YggDialogService } from '@ygg/shared/ui/widgets';
 
 export interface ITheThingCreateOptions {
   imitation?: string;
@@ -31,7 +32,8 @@ export class TheThingFactoryService {
     private authService: AuthenticateService,
     private authUiService: AuthenticateUiService,
     private theThingAccessService: TheThingAccessService,
-    private imitationAccessServcie: TheThingImitationAccessService
+    private imitationAccessServcie: TheThingImitationAccessService,
+    private dialog: YggDialogService
   ) {}
 
   reset() {
@@ -101,11 +103,11 @@ export class TheThingFactoryService {
       const result: TheThing = await this.theThingAccessService.upsert(
         theThing
       );
-      alert(`已成功儲存${result.name}`);
+      await this.dialog.alert(`已成功儲存 ${result.name}`);
       this.reset();
       return result;
     } catch (error) {
-      alert(`儲存失敗，錯誤原因：${error.message}`);
+      await this.dialog.alert(`儲存失敗，錯誤原因：${error.message}`);
       return Promise.reject(error);
     }
   }

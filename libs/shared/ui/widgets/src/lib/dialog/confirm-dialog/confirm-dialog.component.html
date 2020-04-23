@@ -1,0 +1,17 @@
+<div class="confirm-dialog">
+  <h1 mat-dialog-title>確認下一步</h1>
+  <div class="content" [innerHtml]="dialogData.content"></div>
+  <div
+    fxLayout="row"
+    fxLayoutAlign="end center"
+    fxLayoutGap="20px"
+    class="action-bar"
+  >
+    <button mat-button class="cancel" (click)="cancel()">
+      <mat-icon>close</mat-icon> 取消
+    </button>
+    <button mat-button class="confirm" (click)="confirm()">
+      <mat-icon>check</mat-icon> 確定
+    </button>
+  </div>
+</div>

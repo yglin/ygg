@@ -1,6 +1,10 @@
 import { TourPlanBuilderPageObject } from '@ygg/playwhat/ui';
 import { TheThing, TheThingRelation } from '@ygg/the-thing/core';
-import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
+import {
+  ImageThumbnailListPageObjectCypress,
+  ConfirmDialogPageObjectCypress,
+  AlertDialogPageObjectCypress
+} from '@ygg/shared/ui/test';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import {
   DateRangeControlPageObjectCypress,
@@ -241,8 +245,14 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
     this.currentStep += 1;
   }
 
-  submitApplication() {
+  submitApplication(tourPlan: TheThing) {
     cy.get(`${this.getSelector('buttonSubmitApplication')}`).click();
+    const confirmDialogPO = new ConfirmDialogPageObjectCypress();
+    confirmDialogPO.expectMessage(`儲存 ${tourPlan.name} 並且送出申請？`);
+    confirmDialogPO.confirm();
+    const alertDialogPO = new AlertDialogPageObjectCypress();
+    alertDialogPO.expectMessage(`已成功儲存 ${tourPlan.name}`);
+    alertDialogPO.confirm();
   }
 
   fromRelations(relations: TheThingRelation[]): Purchase[] {

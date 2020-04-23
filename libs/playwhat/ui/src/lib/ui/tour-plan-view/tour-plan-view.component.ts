@@ -296,14 +296,18 @@ export class TourPlanViewComponent
   }
 
   async save() {
-    if (confirm(`確定儲存此遊程規劃？`)) {
-      try {
-        await this.theThingFactory.save(this.theThing, { requireOwner: true });
-      } catch (error) {
-        console.error(error.message);
-      }
-      this.router.navigate(['/', 'the-things', this.theThing.id]);
-    }
+    this.dialog
+      .confirm(`<h2>確定要儲存 ${this.theThing.name} ？</h2>`)
+      .then(async () => {
+        try {
+          await this.theThingFactory.save(this.theThing, {
+            requireOwner: true
+          });
+        } catch (error) {
+          console.error(error.message);
+        }
+        this.router.navigate(['/', 'the-things', this.theThing.id]);
+      });
   }
 
   isValidTourPlan(): boolean {

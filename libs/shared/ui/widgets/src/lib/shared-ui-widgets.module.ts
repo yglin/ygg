@@ -6,10 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 
 import { ActionBarredComponent } from './action-barred/action-barred.component';
-import {
-  YggDialogComponent,
-  YggDialogContentHostDirective
-} from './dialog';
+import { YggDialogComponent, YggDialogContentHostDirective } from './dialog';
 import { IMaybeALinkDirective } from './i-maybe-a-link/i-maybe-a-link.directive';
 import { NumberSliderComponent } from './number-slider/number-slider.component';
 import { PageTitleComponent } from './page-title/page-title.component';
@@ -25,12 +22,14 @@ import { ActionBarLayoutComponent } from './action-bar-layout/action-bar-layout.
 import { PriceComponent } from './price/price.component';
 import {
   ImageThumbnailComponent,
-  ImageThumbnailListComponent,
+  ImageThumbnailListComponent
   // ImageThumbnailSelectorComponent
 } from './image-thumbnail';
 import { AngularFittextModule } from 'angular-fittext';
 import { NgForColorBackgroundDirective } from './ng-for-color-background/ng-for-color-background.directive';
 import { ControlViewSwitchComponent } from './control-view-switch/control-view-switch.component';
+import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
+import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +52,8 @@ import { ControlViewSwitchComponent } from './control-view-switch/control-view-s
     ImageThumbnailListComponent,
     NgForColorBackgroundDirective,
     ControlViewSwitchComponent,
+    ConfirmDialogComponent,
+    AlertDialogComponent
     // ImageThumbnailSelectorComponent
   ],
   imports: [
@@ -83,13 +84,14 @@ import { ControlViewSwitchComponent } from './control-view-switch/control-view-s
     ImageThumbnailComponent,
     ImageThumbnailListComponent,
     NgForColorBackgroundDirective,
-    ControlViewSwitchComponent,
+    ControlViewSwitchComponent
     // ImageThumbnailSelectorComponent
   ],
   entryComponents: [
     ProgressSpinnerComponent,
     YggDialogComponent,
     ImageThumbnailListComponent,
+    ConfirmDialogComponent
     // ImageThumbnailSelectorComponent
   ]
 })

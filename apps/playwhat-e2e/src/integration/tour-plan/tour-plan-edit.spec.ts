@@ -91,7 +91,7 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
       ImitationTourPlan.getOptionalCellNames()
     );
     tourPlanViewPO.setValue(TourPlanFull, { newCells });
-    tourPlanViewPO.save();
+    tourPlanViewPO.save(TourPlanFull);
     tourPlanViewPO.expectValue(TourPlanFull);
   });
 
@@ -130,7 +130,7 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     for (const cell of cells2BDel) {
       tourPlanViewPO.deleteCell(cell);
     }
-    tourPlanViewPO.save();
+    tourPlanViewPO.save(TourPlanFull);
 
     const resultTourPlan = TourPlanFull.clone();
     resultTourPlan.deleteCells(cells2BDel);

@@ -3,6 +3,8 @@ import { ComponentType } from '@angular/cdk/portal';
 import { MatDialog } from '@angular/material/dialog';
 import { YggDialogComponentData } from './ygg-dialog';
 import { YggDialogComponent } from './ygg-dialog.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
 
 export interface IYggDialogOpenConfig {
   title?: string;
@@ -23,5 +25,41 @@ export class YggDialogService {
     config.data = wrappingData;
     config.panelClass = ['ygg-dialog'];
     return this.dialog.open(YggDialogComponent, config);
+  }
+
+  async confirm(content: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const confirmDialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          content
+        }
+      });
+      confirmDialogRef.afterClosed().subscribe(isConfirmed => {
+        if (isConfirmed) {
+          resolve();
+        } else {
+          reject();
+        }
+      });
+    });
+  }
+
+  async alert(content: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const alertDialogRef = this.dialog.open(AlertDialogComponent, {
+        data: {
+          content
+        }
+      });
+      alertDialogRef.afterClosed().subscribe(
+        () => {
+          resolve();
+        },
+        error => {
+          console.error(error);
+          reject(error);
+        }
+      );
+    });
   }
 }

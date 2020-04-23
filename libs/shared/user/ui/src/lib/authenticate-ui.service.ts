@@ -31,7 +31,6 @@ export class AuthenticateUiService {
     if (!!this.authenticateService.currentUser) {
       return Promise.resolve(this.authenticateService.currentUser);
     } else {
-      alert(`需要登入才能繼續喔`);
       try {
         const loginUser = await this.openLoginDialog();
         return loginUser;

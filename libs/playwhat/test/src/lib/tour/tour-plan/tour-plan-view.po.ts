@@ -9,7 +9,9 @@ import {
 } from '@ygg/shared/omni-types/test';
 import {
   ControlViewSwitchPageObjectCypress,
-  YggDialogPageObjectCypress
+  YggDialogPageObjectCypress,
+  ConfirmDialogPageObjectCypress,
+  AlertDialogPageObjectCypress
 } from '@ygg/shared/ui/test';
 import { ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
 import {
@@ -151,8 +153,22 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     omniTypeViewControlPO.setValue(cell.type, cell.value);
   }
 
-  save(): void {
+  save(tourPlan: TheThing): void {
+    this.issueSave(tourPlan);
+    this.alertSaved(tourPlan)
+  }
+
+  issueSave(tourPlan: TheThing) {
     cy.get(this.getSelector('buttonSave')).click();
+    const confirmDialogPO = new ConfirmDialogPageObjectCypress();
+    confirmDialogPO.expectMessage(`確定要儲存 ${tourPlan.name} ？`);
+    confirmDialogPO.confirm();
+  }
+
+  alertSaved(tourPlan: TheThing) {
+    const alertDialogPO = new AlertDialogPageObjectCypress();
+    alertDialogPO.expectMessage(`已成功儲存 ${tourPlan.name}`);
+    alertDialogPO.confirm();
   }
 
   setValue(tourPlan: TheThing, options: IOptionsSetValue = {}) {

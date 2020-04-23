@@ -57,6 +57,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { TheThingFactoryService } from '@ygg/the-thing/ui';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { PageStashService } from '@ygg/shared/infra/data-access';
+import { YggDialogService } from '@ygg/shared/ui/widgets';
 
 @Component({
   selector: 'ygg-tour-plan-builder',
@@ -83,6 +84,7 @@ export class TourPlanBuilderComponent
 
   constructor(
     private formBuilder: FormBuilder,
+    private dialog: YggDialogService,
     private theThingAccessService: TheThingAccessService,
     private theThingFactory: TheThingFactoryService,
     // private imitationAccessService: TheThingImitationAccessService,
@@ -329,14 +331,16 @@ export class TourPlanBuilderComponent
   // }
 
   async submitApplication() {
-    if (confirm(`儲存此遊程規劃並且一併送出申請？`)) {
-      this.theThing.setState(
-        ImitationTourPlan.stateName,
-        ImitationTourPlan.states.applied
-      );
-      await this.save();
-      this.router.navigate(['/', 'the-things', this.theThing.id]);
-    }
+    this.dialog
+      .confirm(`儲存 ${this.theThing.name} 並且送出申請？`)
+      .then(async () => {
+        this.theThing.setState(
+          ImitationTourPlan.stateName,
+          ImitationTourPlan.states.applied
+        );
+        await this.save();
+        this.router.navigate(['/', 'the-things', this.theThing.id]);
+      });
   }
 
   isValidTourPlan(): boolean {

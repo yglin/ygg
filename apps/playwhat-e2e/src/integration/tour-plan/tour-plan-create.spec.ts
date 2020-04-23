@@ -82,7 +82,7 @@ describe('Tour-plan builder', () => {
 
   it('Build a tour-plan with minimal required data fields: dateRange, numParticipants, contact', () => {
     tourPlanBuilderPO.setValue(MinimalTourPlan);
-    tourPlanBuilderPO.tourPlanPreviewPO.save();
+    tourPlanBuilderPO.tourPlanPreviewPO.save(MinimalTourPlan);
 
     // Expect redirect to tour-plan view page, and check required data fields
     tourPlanViewPO.expectShowAsPage();
@@ -93,7 +93,7 @@ describe('Tour-plan builder', () => {
     tourPlanBuilderPO.setValue(TourPlanFull, {
       hasOptionalFields: true
     });
-    tourPlanBuilderPO.tourPlanPreviewPO.save();
+    tourPlanBuilderPO.tourPlanPreviewPO.save(TourPlanFull);
 
     // Expect redirect to tour-plan view page, and check required data fields
     tourPlanViewPO.expectShowAsPage();
@@ -102,7 +102,7 @@ describe('Tour-plan builder', () => {
 
   it('Build a tour-plan with a few plays selected', () => {
     tourPlanBuilderPO.setValue(TourPlanWithPlaysNoAddition);
-    tourPlanBuilderPO.tourPlanPreviewPO.save();
+    tourPlanBuilderPO.tourPlanPreviewPO.save(TourPlanWithPlaysNoAddition);
 
     // Expect redirect to tour-plan view page, and check selected plays
     tourPlanViewPO.expectShowAsPage();
@@ -111,7 +111,7 @@ describe('Tour-plan builder', () => {
 
   it('Build a tour-plan with a few plays selected, and setup additions', () => {
     tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions);
-    tourPlanBuilderPO.tourPlanPreviewPO.save();
+    tourPlanBuilderPO.tourPlanPreviewPO.save(TourPlanWithPlaysAndAdditions);
 
     // Expect redirect to tour-plan view page, and check selected plays
     tourPlanViewPO.expectShowAsPage();
@@ -124,7 +124,7 @@ describe('Tour-plan builder', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
     tourPlanBuilderPO.reset();
-    tourPlanBuilderPO.tourPlanPreviewPO.save();
+    tourPlanBuilderPO.tourPlanPreviewPO.save(TourPlanWithPlaysAndAdditions);
 
     // Expect redirect to tour-plan view page, and check selected plays
     tourPlanViewPO.expectShowAsPage();
@@ -133,7 +133,7 @@ describe('Tour-plan builder', () => {
 
   it('Build a tour-plan and send it for application', () => {
     tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions);
-    tourPlanBuilderPO.submitApplication();
+    tourPlanBuilderPO.submitApplication(TourPlanWithPlaysAndAdditions);
     tourPlanViewPO.expectShowAsPage();
 
     // Expect the submitted tour-plan show up in administrator's list
@@ -155,25 +155,6 @@ describe('Tour-plan builder', () => {
     tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions);
   });
 
-  it('Require login when save', () => {
-    logout().then(() => {
-      // Logout will redirect user back to home, cause re-render of tour-plan-builder
-      // So we wait several seconds here for tour-plan-builder to be stable
-      cy.wait(3000);
-      tourPlanBuilderPO.setValue(MinimalTourPlan);
-      tourPlanBuilderPO.tourPlanPreviewPO.save();
-      const loginDialogPO = new LoginDialogPageObjectCypress();
-      loginDialogPO.expectVisible();
-      login().then(() => {
-        loginDialogPO.expectClosed();
-        tourPlanViewPO.expectShowAsPage();
-        // tourPlanViewPO.expectValue(MinimalTourPlan);
-        siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-        myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
-      });
-    });
-  });
-
   it('Can switch back to previous step', () => {
     tourPlanBuilderPO.setValue(MinimalTourPlan, { stopAtStep: 2 });
     tourPlanBuilderPO.prev();
@@ -181,7 +162,7 @@ describe('Tour-plan builder', () => {
     tourPlanBuilderPO.prev();
     tourPlanBuilderPO.prev();
     tourPlanBuilderPO.setValue(MinimalTourPlan);
-    tourPlanBuilderPO.tourPlanPreviewPO.save();
+    tourPlanBuilderPO.tourPlanPreviewPO.save(MinimalTourPlan);
     tourPlanViewPO.expectShowAsPage();
     tourPlanViewPO.expectValue(MinimalTourPlan);
   });
@@ -208,8 +189,28 @@ describe('Tour-plan builder', () => {
     tourPlanBuilderPO.tourPlanPreviewPO.setCellValue(
       MinimalTourPlan2.getCell('聯絡資訊')
     );
-    tourPlanBuilderPO.tourPlanPreviewPO.save();
+    tourPlanBuilderPO.tourPlanPreviewPO.save(MinimalTourPlan);
     tourPlanViewPO.expectShowAsPage();
     tourPlanViewPO.expectValue(MinimalTourPlan2);
+  });
+
+  it('Require login when save', () => {
+    logout().then(() => {
+      // Logout will redirect user back to home, cause re-render of tour-plan-builder
+      // So we wait several seconds here for tour-plan-builder to be stable
+      cy.wait(3000);
+      tourPlanBuilderPO.setValue(MinimalTourPlan);
+      tourPlanBuilderPO.tourPlanPreviewPO.issueSave(MinimalTourPlan);
+      const loginDialogPO = new LoginDialogPageObjectCypress();
+      loginDialogPO.expectVisible();
+      login().then(() => {
+        loginDialogPO.expectClosed();
+        tourPlanBuilderPO.tourPlanPreviewPO.alertSaved(MinimalTourPlan);
+        tourPlanViewPO.expectShowAsPage();
+        // tourPlanViewPO.expectValue(MinimalTourPlan);
+        siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+        myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
+      });
+    });
   });
 });
