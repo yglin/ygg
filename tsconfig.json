@@ -30,7 +30,6 @@
       "@ygg/shared/infra/device-adapter": [
         "libs/shared/infra/device-adapter/src/index.ts"
       ],
-      "@ygg/playwhat/tag": ["libs/playwhat/tag/src/index.ts"],
       "@ygg/firebase/*": [".firebase/*"],
       "@ygg/tags/core": ["libs/tags/core/src/index.ts"],
       "@ygg/tags/ui": ["libs/tags/ui/src/index.ts"],
