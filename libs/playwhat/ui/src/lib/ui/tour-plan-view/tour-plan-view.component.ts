@@ -21,10 +21,16 @@ import {
   of,
   Subject,
   combineLatest,
-  merge
+  merge,
+  from
 } from 'rxjs';
 import { tap, switchMap, filter } from 'rxjs/operators';
-import { ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
+import {
+  ImitationTourPlan,
+  ImitationPlay,
+  CellNames,
+  defaultTourPlanName
+} from '@ygg/playwhat/core';
 import { pick, values, mapValues, get, isEmpty } from 'lodash';
 import {
   RelationNamePurchase,
@@ -34,7 +40,12 @@ import {
 import { AuthorizeService, AuthenticateService } from '@ygg/shared/user/ui';
 import { TourPlanBuilderService } from '../tour-plan-builder/tour-plan-builder.service';
 import { Router } from '@angular/router';
-import { FormControl } from '@angular/forms';
+import {
+  FormControl,
+  Validators,
+  FormGroup,
+  FormBuilder
+} from '@angular/forms';
 import { PageStashService } from '@ygg/shared/infra/data-access';
 import { PageResolverService } from '@ygg/shared/ui/navigation';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
@@ -66,10 +77,11 @@ export class TourPlanViewComponent
   stateLabel: string;
   states: { [key: string]: number } = {};
   canCancelApplied = false;
-  formControlName: FormControl = new FormControl(null);
+  formGroup: FormGroup;
+  formControlName: FormControl = new FormControl(null, [Validators.required]);
   nameStyle = {
     'font-size': '24px',
-    'text-shadow': '3px 3px 3px #336699'
+    'text-shadow': '3px 3px 3px #FDFFC7'
   };
 
   constructor(
@@ -78,13 +90,19 @@ export class TourPlanViewComponent
     private theThingFactory: TheThingFactoryService,
     private pageResolver: PageResolverService,
     private router: Router,
-    private dialog: YggDialogService
-  ) {}
+    private dialog: YggDialogService,
+    private formBuilder: FormBuilder
+  ) {
+    this.formGroup = formBuilder.group({});
+    this.formGroup.addControl('name', this.formControlName);
+  }
 
   ngOnInit() {
     this.readonly = this.readonly !== undefined && this.readonly !== false;
     if (!this.theThing$) {
-      this.theThing$ = of(null);
+      this.theThing$ = from(
+        this.theThingFactory.create({ imitation: ImitationTourPlan.id })
+      );
     }
     const theThingUpdate$ = this.theThing$.pipe(
       // tap(theThing => {
@@ -97,11 +115,6 @@ export class TourPlanViewComponent
         this.theThing = undefined;
         setTimeout(() => {
           this.theThing = theThing;
-          // this.dateRange = theThing.getCellValue('預計出遊日期');
-          // // this.dayTimeRange = this.tourPlan.cells['預計遊玩時間'].value;
-          // this.numParticipants = theThing.getCellValue('預計參加人數');
-          // // console.log(this.numParticipants);
-          // this.contact = theThing.getCellValue('聯絡資訊');
 
           this.formControlName.setValue(this.theThing.name, {
             emitEvent: false
@@ -109,9 +122,38 @@ export class TourPlanViewComponent
 
           this.updateFromPageResolver(this.theThing);
 
+          for (const controlName in this.formGroup.controls) {
+            if (this.formGroup.controls.hasOwnProperty(controlName)) {
+              if (controlName !== 'name') {
+                this.formGroup.removeControl(controlName);
+              }
+            }
+          }
+
           this.requiredCells = this.theThing.getCellsByNames(
             ImitationTourPlan.getRequiredCellNames()
           );
+
+          for (const cell of this.requiredCells) {
+            const formControl = new FormControl(cell.value, [
+              Validators.required
+            ]);
+            if (cell.name === CellNames.dateRange) {
+              this.subscriptions.push(
+                formControl.valueChanges.subscribe(value => {
+                  if (
+                    DateRange.isDateRange(value) &&
+                    !this.formControlName.value
+                  ) {
+                    this.formControlName.setValue(defaultTourPlanName(value), {
+                      emitEvent: false
+                    });
+                  }
+                })
+              );
+            }
+            this.formGroup.addControl(cell.name, formControl);
+          }
           this.optionalCells = this.theThing.getCellsByNames(
             ImitationTourPlan.getOptionalCellNames()
           );
@@ -151,7 +193,6 @@ export class TourPlanViewComponent
       tap(name => {
         if (this.theThing && name) {
           this.theThing.name = name;
-          // console.log(this.theThing.name);
         }
       })
     );
@@ -272,6 +313,16 @@ export class TourPlanViewComponent
     }
   }
 
+  isPreviousCellInvalid(index: number): boolean {
+    const prevIndex = index - 1;
+    if (prevIndex < 0 || prevIndex >= this.requiredCells.length) {
+      return false;
+    }
+    const prevCell = this.requiredCells[prevIndex];
+    const control = this.formGroup.get(prevCell.name);
+    return !control || !control.value;
+  }
+
   addCell() {
     const dialogRef = this.dialog.open(CellCreatorComponent, {
       title: '新增其他項目',
@@ -295,10 +346,34 @@ export class TourPlanViewComponent
     }
   }
 
+  isRequiredCellsFilled() {
+    for (const cell of this.requiredCells) {
+      const control = this.formGroup.get(cell.name);
+      if (!control || !control.value) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  updateTheThing() {
+    this.theThing.name = this.formGroup.get('name').value;
+    for (const controlName in this.formGroup.controls) {
+      if (
+        controlName !== 'name' &&
+        this.formGroup.controls.hasOwnProperty(controlName)
+      ) {
+        const control = this.formGroup.controls[controlName];
+        this.theThing.updateCellValue(controlName, control.value);
+      }
+    }
+  }
+
   async save() {
     this.dialog
       .confirm(`<h2>確定要儲存 ${this.theThing.name} ？</h2>`)
       .then(async () => {
+        this.updateTheThing();
         try {
           await this.theThingFactory.save(this.theThing, {
             requireOwner: true

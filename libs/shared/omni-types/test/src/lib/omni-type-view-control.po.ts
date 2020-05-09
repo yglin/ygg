@@ -5,8 +5,12 @@ import { OmniTypeControlPageObjectCypress } from './omni-type-control.po';
 import { OmniTypeViewPageObjectCypress } from './omni-type-view.po';
 
 export class OmniTypeViewControlPageObjectCypress extends OmniTypeViewControlPageObject {
-  setValue(type: OmniTypeID, value: any) {
+  openControl() {
     cy.get(this.getSelector('buttonEdit')).click();
+  }
+
+  setValue(type: OmniTypeID, value: any) {
+    this.openControl();
     const dialogPO = new YggDialogPageObjectCypress();
     dialogPO.expectVisible();
     const controlPO = new OmniTypeControlPageObjectCypress(

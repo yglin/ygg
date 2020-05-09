@@ -27,7 +27,8 @@ export abstract class TourPlanViewPageObject extends PageObject {
     buttonGotoEditPurchases: 'button.goto-edit-purchases',
     buttonAddCell: 'button.add-cell',
     buttonSave: 'button.save',
-    editButtons: 'button.edit'
+    editButtons: 'button.edit',
+    optionals: '.optionals'
   };
   dayTimeRangePO: DayTimeRangeViewPageObject;
   dateRangeViewPO: DateRangeViewPageObject;
@@ -48,7 +49,7 @@ export abstract class TourPlanViewPageObject extends PageObject {
   abstract cancelApplied(): void;
   abstract gotoEditOptionalCells(): void;
   abstract gotoEditPurchases(): void;
-  abstract setCellValue(cell: TheThingCell): void;
+  abstract setCell(cell: TheThingCell): void;
   abstract addOptionalCell(cell: TheThingCell): void;
   abstract save(thing: TheThing): void;
   abstract issueSave(thing: TheThing): void;

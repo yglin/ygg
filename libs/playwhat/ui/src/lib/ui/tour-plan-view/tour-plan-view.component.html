@@ -1,4 +1,4 @@
-<div class="tour-plan-view" *ngIf="theThing">
+<div class="tour-plan-view" *ngIf="theThing" [formGroup]="formGroup">
   <div
     *ngIf="!readonly"
     fxLayout="row"
@@ -10,7 +10,7 @@
       mat-fab
       class="save edit"
       matTooltip="儲存遊程規劃"
-      [disabled]="!isValidTourPlan()"
+      [disabled]="formGroup.invalid"
       (click)="save()"
     >
       <mat-icon>save</mat-icon>
@@ -18,25 +18,18 @@
   </div>
   <ygg-omni-type-view-control
     class="tour-plan-name"
-    [(value)]="theThing.name"
+    formControlName="name"
     type="text"
     [editable]="!readonly"
     [viewStyle]="nameStyle"
-  ></ygg-omni-type-view-control>
-  <!-- <ygg-control-view-switch [readonly]="readonly" class="tour-plan-name">
-    <div control>
-      <mat-form-field>
-        <input
-          matInput
-          placeholder="請輸入遊程名稱"
-          [formControl]="formControlName"
-        />
-      </mat-form-field>
+  >
+    <div errors>
+      <div *ngIf="formControlName.errors?.required">
+        請填入遊程名稱
+      </div>
     </div>
-    <div view>
-      <h1>{{ formControlName.value }}</h1>
-    </div>
-  </ygg-control-view-switch> -->
+  </ygg-omni-type-view-control>
+
   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
     <div>
       <h4 class="state">{{ stateLabel }}</h4>
@@ -88,93 +81,87 @@
       <div *ngSwitchDefault></div>
     </div>
   </div>
-  <div *ngFor="let cell of requiredCells">
-    <div [attr.cell-name]="cell.name">
+  <div *ngFor="let cell of requiredCells; let idx = index">
+    <div
+      [attr.cell-name]="cell.name"
+      [hidden]="isPreviousCellInvalid(idx)"
+      *ngIf="formGroup.get(cell.name) as formControl"
+    >
       <h4>{{ cell.name }}</h4>
-      <the-thing-cell-view
+      <ygg-omni-type-view-control
+        [formControlName]="cell.name"
+        [type]="cell.type"
+        [editable]="!readonly"
+      >
+        <div errors>
+          <div *ngIf="formControl.errors?.required">請填入{{ cell.name }}</div>
+        </div>
+      </ygg-omni-type-view-control>
+
+      <!-- <the-thing-cell-view
         [cell]="cell"
         [editable]="!readonly"
-      ></the-thing-cell-view>
-      <!-- <the-thing-cell-view [cell]="cell"></the-thing-cell-view> -->
+      ></the-thing-cell-view> -->
     </div>
   </div>
-  <!-- <div class="date-range">
-    <h4>預計出遊日期</h4>
-    <ygg-date-range-view [dateRange]="dateRange"></ygg-date-range-view>
-  </div> -->
-  <!-- <div class="day-time-range">
-    <h4>預計出遊時段</h4>
-    <ygg-day-time-range-view
-      [dayTimeRange]="dayTimeRange"
-    ></ygg-day-time-range-view>
-  </div> -->
-  <!-- <div class="num-participants">
-    <h4>預計參加人數</h4>
-    <div>
-      <mat-icon>people</mat-icon>
-      <span class="number">{{ numParticipants }}</span>
-    </div>
-  </div> -->
-  <!-- <div class="contact">
-    <h4>聯絡資訊</h4>
-    <ygg-contact-view [contact]="contact"></ygg-contact-view>
-  </div> -->
-  <br /><br />
-
-  <div class="purchases">
-    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-      <div>
-        <h2>預訂品項</h2>
-      </div>
-      <div *ngIf="!readonly">
-        <button
-          type="button"
-          mat-mini-fab
-          class="goto-edit-purchases edit"
-          (click)="gotoEditPurchases()"
-        >
-          <mat-icon>edit</mat-icon>
-        </button>
-      </div>
-    </div>
-    <ygg-purchase-list [purchases]="purchases"></ygg-purchase-list>
-  </div>
-  <div class="optional-cells">
-    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-      <h2>
-        其他需求事項
-      </h2>
-      <div *ngIf="!readonly">
-        <button
-          type="button"
-          mat-mini-fab
-          class="add-cell edit"
-          (click)="addCell()"
-        >
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
-    </div>
-    <div *ngFor="let cell of getOptionalCells()">
-      <div [attr.cell-name]="cell.name" *ngIf="cell.value">
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-          <h4>{{ cell.name }}</h4>
-          <div>
-            <button
-              type="button"
-              class="delete"
-              mat-mini-fab
-              matTooltip="移除這個欄位"
-              (click)="deleteCell(cell)"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
+  <div class="optionals" [hidden]="!isRequiredCellsFilled()">
+    <br /><br />
+    <div class="purchases">
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <div>
+          <h2>預訂品項</h2>
         </div>
-        <the-thing-cell-view
-          [cell]="cell"
-          [editable]="!readonly"
-        ></the-thing-cell-view>
+        <div *ngIf="!readonly">
+          <button
+            type="button"
+            mat-mini-fab
+            class="goto-edit-purchases edit"
+            (click)="gotoEditPurchases()"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+      <ygg-purchase-list [purchases]="purchases"></ygg-purchase-list>
+    </div>
+    <br /><br />
+    <div class="optional-cells">
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <h2>
+          其他需求事項
+        </h2>
+        <div *ngIf="!readonly">
+          <button
+            type="button"
+            mat-mini-fab
+            class="add-cell edit"
+            (click)="addCell()"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div *ngFor="let cell of getOptionalCells()">
+        <div [attr.cell-name]="cell.name" *ngIf="cell.value">
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <h4>{{ cell.name }}</h4>
+            <div>
+              <button
+                type="button"
+                class="delete"
+                mat-mini-fab
+                matTooltip="移除這個欄位"
+                (click)="deleteCell(cell)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <the-thing-cell-view
+            [cell]="cell"
+            [editable]="!readonly"
+          ></the-thing-cell-view>
+        </div>
       </div>
     </div>
   </div>

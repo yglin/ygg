@@ -77,4 +77,8 @@ export class YggDialogComponent implements OnInit {
   confirmOutput() {
     this.dialogRef.close(this.output);
   }
+
+  cancel() {
+    this.dialogRef.close();
+  }
 }

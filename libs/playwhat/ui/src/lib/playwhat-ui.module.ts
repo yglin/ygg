@@ -18,7 +18,7 @@ import { MenuTree } from '@ygg/shared/ui/navigation';
 import { Image } from '@ygg/shared/omni-types/core';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { PlayViewComponent } from './ui/play-view/play-view.component';
-import { SharedUserUiModule, UserMenuService } from "@ygg/shared/user/ui";
+import { SharedUserUiModule, UserMenuService } from '@ygg/shared/user/ui';
 import {
   ImitationPlay,
   ImitationTour,
@@ -77,7 +77,7 @@ import { TheThingEditorService } from 'libs/the-thing/ui/src/lib/the-thing-edito
       multi: true
     }
   ],
-  exports: [TourViewComponent, TourPlanBuilderComponent]
+  exports: [TourViewComponent, TourPlanViewComponent]
 })
 export class PlaywhatUiModule {}
 

@@ -182,13 +182,19 @@ export class TheThing implements Entity, ImageThumbnailItem {
     assign(this.cells, cells);
   }
 
+  updateCellValue(name: string, value: any) {
+    if (this.hasCell(name)) {
+      this.cells[name].value = value;
+    } else {
+      throw new Error(`${this.name} has no cell ${name}`);
+    }
+  }
+
   updateCellValues(cellValues: { [name: string]: any }) {
     for (const name in cellValues) {
       if (cellValues.hasOwnProperty(name)) {
         const value = cellValues[name];
-        if (this.hasCell(name)) {
-          this.cells[name].value = value;
-        }
+        this.updateCellValue(name, value);
       }
     }
   }

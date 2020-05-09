@@ -11,7 +11,10 @@ import {
 import { keyBy } from 'lodash';
 
 export const CellNames = {
-  completeAt: '完成時間'
+  dateRange: '預計出遊日期',
+  completeAt: '完成時間',
+  numParticipants: '預計參加人數',
+  contact: '聯絡資訊'
 };
 
 export enum States {
@@ -144,7 +147,6 @@ ImitationTourPlan.dataTableConfig = {
 //   return totalCharge;
 // }
 
-export function defaultTourPlanName(tourPlan: TheThing): string {
-  const dateRange: DateRange = tourPlan.getCellValue('預計出遊日期');
+export function defaultTourPlanName(dateRange: DateRange): string {
   return `深度遊趣${dateRange.days() + 1}日遊`;
 }

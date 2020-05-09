@@ -34,6 +34,7 @@ import { MockDatabase, theMockDatabase } from '@ygg/shared/test/cypress';
 import { IPurchasePack } from '@ygg/shopping/ui';
 
 export interface IOptionsSetValue {
+  freshNew?: boolean;
   newCells?: TheThingCell[];
   newPurchases?: IPurchasePack;
 }
@@ -67,10 +68,13 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
 
   expectCell(cell: TheThingCell) {
     cy.get(`${this.getSelectorForCell(cell.name)} h4`).contains(cell.name);
-    const cellViewPagePO = new TheThingCellViewPageObjectCypress(
+    // const cellViewPagePO = new TheThingCellViewPageObjectCypress(
+    //   this.getSelectorForCell(cell.name)
+    // );
+    const cellViewPagePO = new OmniTypeViewControlPageObjectCypress(
       this.getSelectorForCell(cell.name)
     );
-    cellViewPagePO.expectValue(cell);
+    cellViewPagePO.expectValue(cell.type, cell.value);
   }
 
   expectState(stateLabel: string): void {
@@ -146,7 +150,7 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     // controlViewSwitchPO.closeControl();
   }
 
-  setCellValue(cell: TheThingCell): void {
+  setCell(cell: TheThingCell): void {
     const omniTypeViewControlPO = new OmniTypeViewControlPageObjectCypress(
       this.getSelectorForCell(cell.name)
     );
@@ -155,7 +159,7 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
 
   save(tourPlan: TheThing): void {
     this.issueSave(tourPlan);
-    this.alertSaved(tourPlan)
+    this.alertSaved(tourPlan);
   }
 
   issueSave(tourPlan: TheThing) {
@@ -172,15 +176,52 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
   }
 
   setValue(tourPlan: TheThing, options: IOptionsSetValue = {}) {
+    if (options.freshNew) {
+      // Show required name error
+      this.expectError(this.getSelector('name'), '請填入遊程名稱');
+    }
+
     if (tourPlan.name) {
       this.setName(tourPlan.name);
     }
 
-    cy.wrap(
-      tourPlan.getCellsByNames(ImitationTourPlan.getRequiredCellNames())
-    ).each((cell: any) => {
-      this.setCellValue(cell);
+    const orderedRequiredCells = tourPlan.getCellsByNames(
+      ImitationTourPlan.getRequiredCellNames()
+    );
+
+    if (options.freshNew) {
+      // Only show first required cell, hide rest cells and other optional inputs
+      for (let index = 1; index < orderedRequiredCells.length; index++) {
+        const cell = orderedRequiredCells[index];
+        cy.get(this.getSelectorForCell(cell.name)).should('not.be.visible');
+      }
+      cy.get(this.getSelector('optionals')).should('not.be.visible');
+    }
+
+    cy.wrap(orderedRequiredCells).each((cell: any, index: number) => {
+      if (options.freshNew) {
+        // Show required error
+        this.expectError(
+          this.getSelectorForCell(cell.name),
+          `請填入${cell.name}`
+        );
+      }
+      const omniTypeViewControlPO = new OmniTypeViewControlPageObjectCypress(
+        this.getSelectorForCell(cell.name)
+      );
+      omniTypeViewControlPO.setValue(cell.type, cell.value);
+
+      if (options.freshNew && index + 1 < orderedRequiredCells.length) {
+        // Reveal next required cell
+        const nextCell = orderedRequiredCells[index + 1];
+        cy.get(this.getSelectorForCell(nextCell.name)).should('be.visible');
+      }
     });
+
+    if (options.freshNew) {
+      // Reveal optional inputs
+      cy.get(this.getSelector('optionals')).should('be.visible');
+    }
 
     if (!isEmpty(options.newCells)) {
       cy.wrap(options.newCells).each((cell: any) => {
@@ -200,6 +241,10 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     }
 
     this.expectValue(tourPlan);
+  }
+
+  expectError(selector: string, errorMessage: string) {
+    cy.get(selector).should('include.text', errorMessage);
   }
 
   addOptionalCell(cell: TheThingCell): void {

@@ -1,5 +1,5 @@
 import { sampleSize, random } from 'lodash';
-import { login, theMockDatabase, logout } from '@ygg/shared/test/cypress';
+import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import { LoginDialogPageObjectCypress } from '@ygg/shared/user/test';
 import {
   MinimalTourPlan,
@@ -23,11 +23,15 @@ import {
 import { SiteNavigator } from '@ygg/playwhat/test';
 import { TheThing } from '@ygg/the-thing/core';
 import { ImitationOrder } from '@ygg/shopping/core';
-import { ContactControlPageObjectCypress } from '@ygg/shared/omni-types/test';
+import {
+  ContactControlPageObjectCypress,
+  OmniTypeViewControlPageObjectCypress
+} from '@ygg/shared/omni-types/test';
 import { User } from '@ygg/shared/user/core';
 import { Contact, DateRange } from '@ygg/shared/omni-types/core';
-import { defaultTourPlanName } from '@ygg/playwhat/core';
+import { defaultTourPlanName, CellNames } from '@ygg/playwhat/core';
 import { randomBytes } from 'crypto';
+import { YggDialogPageObjectCypress } from '@ygg/shared/ui/test';
 
 describe('Tour-plan builder', () => {
   const siteNavigator = new SiteNavigator();
@@ -46,13 +50,14 @@ describe('Tour-plan builder', () => {
         thing.ownerId = user.id;
         theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
       });
+      cy.visit('/');
     });
   });
 
   beforeEach(() => {
-    cy.visit('/');
-    tourPlanBuilderPO.reset();
-    siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
+    tourPlanViewPO.expectVisible();
+    // tourPlanBuilderPO.reset();
+    // siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
   });
 
   after(() => {
@@ -64,153 +69,157 @@ describe('Tour-plan builder', () => {
     theMockDatabase.clear();
   });
 
-  it('A tour-plan without user input name should have default name', () => {
-    tourPlanBuilderPO.setValue(MinimalTourPlanWithoutName, { stopAtStep: 3 });
-    tourPlanBuilderPO.tourPlanPreviewPO.expectName(
-      defaultTourPlanName(MinimalTourPlanWithoutName)
-    );
-  });
+  // it('Build a tour-plan with minimal required data fields: dateRange, numParticipants, contact', () => {
+  //   tourPlanViewPO.setValue(MinimalTourPlan, { freshNew: true });
+  //   tourPlanViewPO.save(MinimalTourPlan);
+  //   tourPlanViewPO.expectValue(MinimalTourPlan);
+  // });
 
-  it('Logged-in user can automatically fill contact info', () => {
-    tourPlanBuilderPO.setValue(MinimalTourPlan, {
-      stopAtStep: 2
-    });
-    const contactControlPO = new ContactControlPageObjectCypress();
-    contactControlPO.importFromUser();
-    contactControlPO.expectValue(new Contact().fromUser(currentUser));
-  });
+  // it('A tour-plan without user input name should have default name', () => {
+  //   const dateRange = MinimalTourPlan.getCellValue(CellNames.dateRange);
+  //   tourPlanViewPO.setCell(dateRange);
+  //   tourPlanViewPO.expectName(defaultTourPlanName(dateRange));
+  // });
 
-  it('Build a tour-plan with minimal required data fields: dateRange, numParticipants, contact', () => {
-    tourPlanBuilderPO.setValue(MinimalTourPlan);
-    tourPlanBuilderPO.tourPlanPreviewPO.save(MinimalTourPlan);
-
-    // Expect redirect to tour-plan view page, and check required data fields
-    tourPlanViewPO.expectShowAsPage();
-    tourPlanViewPO.expectValue(MinimalTourPlan);
-  });
+  // it('Logged-in user can automatically fill contact info', () => {
+  //   tourPlanViewPO.setCell(MinimalTourPlan.getCell(CellNames.dateRange));
+  //   tourPlanViewPO.setCell(MinimalTourPlan.getCell(CellNames.numParticipants));
+  //   const omniTypeViewControl = new OmniTypeViewControlPageObjectCypress(
+  //     tourPlanViewPO.getSelectorForCell(CellNames.contact)
+  //   );
+  //   omniTypeViewControl.openControl();
+  //   const dialogPO = new YggDialogPageObjectCypress();
+  //   const contactControlPO = new ContactControlPageObjectCypress(
+  //     dialogPO.getSelector()
+  //   );
+  //   contactControlPO.importFromUser();
+  //   contactControlPO.expectValue(new Contact().fromUser(currentUser));
+  //   dialogPO.confirm();
+  //   omniTypeViewControl.expectValue(
+  //     'contact',
+  //     new Contact().fromUser(currentUser)
+  //   );
+  // });
 
   it('Build a tour-plan plus includes all optional data fields', () => {
-    tourPlanBuilderPO.setValue(TourPlanFull, {
-      hasOptionalFields: true
+    tourPlanViewPO.setValue(TourPlanFull, {
+      freshNew: true
     });
-    tourPlanBuilderPO.tourPlanPreviewPO.save(TourPlanFull);
-
-    // Expect redirect to tour-plan view page, and check required data fields
-    tourPlanViewPO.expectShowAsPage();
+    tourPlanViewPO.save(TourPlanFull);
     tourPlanViewPO.expectValue(TourPlanFull);
   });
 
-  it('Build a tour-plan with a few plays selected', () => {
-    tourPlanBuilderPO.setValue(TourPlanWithPlaysNoAddition);
-    tourPlanBuilderPO.tourPlanPreviewPO.save(TourPlanWithPlaysNoAddition);
+  // it('Build a tour-plan with a few plays selected', () => {
+  //   tourPlanBuilderPO.setValue(TourPlanWithPlaysNoAddition);
+  //   tourPlanBuilderPO.tourPlanPreviewPO.save(TourPlanWithPlaysNoAddition);
 
-    // Expect redirect to tour-plan view page, and check selected plays
-    tourPlanViewPO.expectShowAsPage();
-    tourPlanViewPO.expectValue(TourPlanWithPlaysNoAddition);
-  });
+  //   // Expect redirect to tour-plan view page, and check selected plays
+  //   tourPlanViewPO.expectShowAsPage();
+  //   tourPlanViewPO.expectValue(TourPlanWithPlaysNoAddition);
+  // });
 
-  it('Build a tour-plan with a few plays selected, and setup additions', () => {
-    tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions);
-    tourPlanBuilderPO.tourPlanPreviewPO.save(TourPlanWithPlaysAndAdditions);
+  // it('Build a tour-plan with a few plays selected, and setup additions', () => {
+  //   tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions);
+  //   tourPlanBuilderPO.tourPlanPreviewPO.save(TourPlanWithPlaysAndAdditions);
 
-    // Expect redirect to tour-plan view page, and check selected plays
-    tourPlanViewPO.expectShowAsPage();
-    tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions);
-  });
+  //   // Expect redirect to tour-plan view page, and check selected plays
+  //   tourPlanViewPO.expectShowAsPage();
+  //   tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions);
+  // });
 
-  it('Save tour-plan on leave page, restore on back', () => {
-    tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions);
-    // goto other page and back immediately
-    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
-    tourPlanBuilderPO.reset();
-    tourPlanBuilderPO.tourPlanPreviewPO.save(TourPlanWithPlaysAndAdditions);
+  // it('Save tour-plan on leave page, restore on back', () => {
+  //   tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions);
+  //   // goto other page and back immediately
+  //   siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+  //   siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
+  //   tourPlanBuilderPO.reset();
+  //   tourPlanBuilderPO.tourPlanPreviewPO.save(TourPlanWithPlaysAndAdditions);
 
-    // Expect redirect to tour-plan view page, and check selected plays
-    tourPlanViewPO.expectShowAsPage();
-    tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions);
-  });
+  //   // Expect redirect to tour-plan view page, and check selected plays
+  //   tourPlanViewPO.expectShowAsPage();
+  //   tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions);
+  // });
 
-  it('Build a tour-plan and send it for application', () => {
-    tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions);
-    tourPlanBuilderPO.submitApplication(TourPlanWithPlaysAndAdditions);
-    tourPlanViewPO.expectShowAsPage();
+  // it('Build a tour-plan and send it for application', () => {
+  //   tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions);
+  //   tourPlanBuilderPO.submitApplication(TourPlanWithPlaysAndAdditions);
+  //   tourPlanViewPO.expectShowAsPage();
 
-    // Expect the submitted tour-plan show up in administrator's list
-    siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
-    // tourPlanDataTablePO.expectTheThing(MinimalTourPlan);
-    tourPlanAdminPO.theThingDataTables[
-      ImitationOrder.states.applied.name
-    ].expectTheThing(TourPlanWithPlaysAndAdditions);
-    tourPlanAdminPO.theThingDataTables[
-      ImitationOrder.states.applied.name
-    ].gotoTheThingView(TourPlanWithPlaysAndAdditions);
+  //   // Expect the submitted tour-plan show up in administrator's list
+  //   siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
+  //   // tourPlanDataTablePO.expectTheThing(MinimalTourPlan);
+  //   tourPlanAdminPO.theThingDataTables[
+  //     ImitationOrder.states.applied.name
+  //   ].expectTheThing(TourPlanWithPlaysAndAdditions);
+  //   tourPlanAdminPO.theThingDataTables[
+  //     ImitationOrder.states.applied.name
+  //   ].gotoTheThingView(TourPlanWithPlaysAndAdditions);
 
-    // Click the tour-plan to review it
-    tourPlanViewPO.expectShowAsPage();
-    TourPlanWithPlaysAndAdditions.setState(
-      ImitationOrder.stateName,
-      ImitationOrder.states.applied
-    );
-    tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions);
-  });
+  //   // Click the tour-plan to review it
+  //   tourPlanViewPO.expectShowAsPage();
+  //   TourPlanWithPlaysAndAdditions.setState(
+  //     ImitationOrder.stateName,
+  //     ImitationOrder.states.applied
+  //   );
+  //   tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions);
+  // });
 
-  it('Can switch back to previous step', () => {
-    tourPlanBuilderPO.setValue(MinimalTourPlan, { stopAtStep: 2 });
-    tourPlanBuilderPO.prev();
-    tourPlanBuilderPO.setValue(MinimalTourPlan, { stopAtStep: 3 });
-    tourPlanBuilderPO.prev();
-    tourPlanBuilderPO.prev();
-    tourPlanBuilderPO.setValue(MinimalTourPlan);
-    tourPlanBuilderPO.tourPlanPreviewPO.save(MinimalTourPlan);
-    tourPlanViewPO.expectShowAsPage();
-    tourPlanViewPO.expectValue(MinimalTourPlan);
-  });
+  // it('Can switch back to previous step', () => {
+  //   tourPlanBuilderPO.setValue(MinimalTourPlan, { stopAtStep: 2 });
+  //   tourPlanBuilderPO.prev();
+  //   tourPlanBuilderPO.setValue(MinimalTourPlan, { stopAtStep: 3 });
+  //   tourPlanBuilderPO.prev();
+  //   tourPlanBuilderPO.prev();
+  //   tourPlanBuilderPO.setValue(MinimalTourPlan);
+  //   tourPlanBuilderPO.tourPlanPreviewPO.save(MinimalTourPlan);
+  //   tourPlanViewPO.expectShowAsPage();
+  //   tourPlanViewPO.expectValue(MinimalTourPlan);
+  // });
 
-  it('Can change dateRange, numParticipants, and contact directly in preview', () => {
-    const MinimalTourPlan2: TheThing = MinimalTourPlan.clone();
-    const newDateRange = DateRange.forge();
-    const newNumParticipants = random(100, 1000);
-    const newContact = Contact.forge();
-    MinimalTourPlan2.updateCellValues({
-      預計出遊日期: newDateRange,
-      預計參加人數: newNumParticipants,
-      聯絡資訊: newContact
-    });
-    tourPlanBuilderPO.setValue(MinimalTourPlan);
-    tourPlanBuilderPO.tourPlanPreviewPO.expectVisible();
+  // it('Can change dateRange, numParticipants, and contact directly in preview', () => {
+  //   const MinimalTourPlan2: TheThing = MinimalTourPlan.clone();
+  //   const newDateRange = DateRange.forge();
+  //   const newNumParticipants = random(100, 1000);
+  //   const newContact = Contact.forge();
+  //   MinimalTourPlan2.updateCellValues({
+  //     預計出遊日期: newDateRange,
+  //     預計參加人數: newNumParticipants,
+  //     聯絡資訊: newContact
+  //   });
+  //   tourPlanBuilderPO.setValue(MinimalTourPlan);
+  //   tourPlanBuilderPO.tourPlanPreviewPO.expectVisible();
 
-    tourPlanBuilderPO.tourPlanPreviewPO.setCellValue(
-      MinimalTourPlan2.getCell('預計出遊日期')
-    );
-    tourPlanBuilderPO.tourPlanPreviewPO.setCellValue(
-      MinimalTourPlan2.getCell('預計參加人數')
-    );
-    tourPlanBuilderPO.tourPlanPreviewPO.setCellValue(
-      MinimalTourPlan2.getCell('聯絡資訊')
-    );
-    tourPlanBuilderPO.tourPlanPreviewPO.save(MinimalTourPlan);
-    tourPlanViewPO.expectShowAsPage();
-    tourPlanViewPO.expectValue(MinimalTourPlan2);
-  });
+  //   tourPlanBuilderPO.tourPlanPreviewPO.setCellValue(
+  //     MinimalTourPlan2.getCell('預計出遊日期')
+  //   );
+  //   tourPlanBuilderPO.tourPlanPreviewPO.setCellValue(
+  //     MinimalTourPlan2.getCell('預計參加人數')
+  //   );
+  //   tourPlanBuilderPO.tourPlanPreviewPO.setCellValue(
+  //     MinimalTourPlan2.getCell('聯絡資訊')
+  //   );
+  //   tourPlanBuilderPO.tourPlanPreviewPO.save(MinimalTourPlan);
+  //   tourPlanViewPO.expectShowAsPage();
+  //   tourPlanViewPO.expectValue(MinimalTourPlan2);
+  // });
 
-  it('Require login when save', () => {
-    logout().then(() => {
-      // Logout will redirect user back to home, cause re-render of tour-plan-builder
-      // So we wait several seconds here for tour-plan-builder to be stable
-      cy.wait(3000);
-      tourPlanBuilderPO.setValue(MinimalTourPlan);
-      tourPlanBuilderPO.tourPlanPreviewPO.issueSave(MinimalTourPlan);
-      const loginDialogPO = new LoginDialogPageObjectCypress();
-      loginDialogPO.expectVisible();
-      login().then(() => {
-        loginDialogPO.expectClosed();
-        tourPlanBuilderPO.tourPlanPreviewPO.alertSaved(MinimalTourPlan);
-        tourPlanViewPO.expectShowAsPage();
-        // tourPlanViewPO.expectValue(MinimalTourPlan);
-        siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-        myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
-      });
-    });
-  });
+  // it('Require login when save', () => {
+  //   logout().then(() => {
+  //     // Logout will redirect user back to home, cause re-render of tour-plan-builder
+  //     // So we wait several seconds here for tour-plan-builder to be stable
+  //     cy.wait(3000);
+  //     tourPlanBuilderPO.setValue(MinimalTourPlan);
+  //     tourPlanBuilderPO.tourPlanPreviewPO.issueSave(MinimalTourPlan);
+  //     const loginDialogPO = new LoginDialogPageObjectCypress();
+  //     loginDialogPO.expectVisible();
+  //     login().then(() => {
+  //       loginDialogPO.expectClosed();
+  //       tourPlanBuilderPO.tourPlanPreviewPO.alertSaved(MinimalTourPlan);
+  //       tourPlanViewPO.expectShowAsPage();
+  //       // tourPlanViewPO.expectValue(MinimalTourPlan);
+  //       siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+  //       myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
+  //     });
+  //   });
+  // });
 });

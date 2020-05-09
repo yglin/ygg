@@ -95,7 +95,7 @@ export const OmniTypes: { [id: string]: OmniType } = {
     comparator: (a: number, b: number, isAsc: boolean) => {
       return (a - b) * (isAsc ? 1 : -1);
     },
-    default: 0
+    default: null
   },
   album: {
     id: 'album',

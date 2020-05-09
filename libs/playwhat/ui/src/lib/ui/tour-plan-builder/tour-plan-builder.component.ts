@@ -29,7 +29,8 @@ import {
 import {
   ImitationTourPlan,
   ImitationPlay,
-  defaultTourPlanName
+  defaultTourPlanName,
+  CellNames
 } from '@ygg/playwhat/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import { isEmpty, keyBy, flatten, find, remove, get } from 'lodash';
@@ -262,7 +263,9 @@ export class TourPlanBuilderComponent
           預計參加人數: numParticipants
         });
         if (!this.theThing.name) {
-          this.theThing.name = defaultTourPlanName(this.theThing);
+          this.theThing.name = defaultTourPlanName(
+            this.theThing.getCellValue(CellNames.dateRange)
+          );
         }
         this.theThing.setRelation(
           RelationNamePurchase,
