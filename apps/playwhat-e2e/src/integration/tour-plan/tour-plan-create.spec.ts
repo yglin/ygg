@@ -1,6 +1,9 @@
 import { sampleSize, random } from 'lodash';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
-import { LoginDialogPageObjectCypress } from '@ygg/shared/user/test';
+import {
+  LoginDialogPageObjectCypress,
+  waitForLogin
+} from '@ygg/shared/user/test';
 import {
   MinimalTourPlan,
   TourPlanFull,
@@ -21,7 +24,7 @@ import {
   TourPlanAdminPageObjectCypress
 } from '@ygg/playwhat/test';
 import { SiteNavigator } from '@ygg/playwhat/test';
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 import { ImitationOrder } from '@ygg/shopping/core';
 import {
   ContactControlPageObjectCypress,
@@ -29,9 +32,16 @@ import {
 } from '@ygg/shared/omni-types/test';
 import { User } from '@ygg/shared/user/core';
 import { Contact, DateRange } from '@ygg/shared/omni-types/core';
-import { defaultTourPlanName, CellNames } from '@ygg/playwhat/core';
+import {
+  defaultTourPlanName,
+  CellNames,
+  ImitationTourPlan
+} from '@ygg/playwhat/core';
 import { randomBytes } from 'crypto';
-import { YggDialogPageObjectCypress } from '@ygg/shared/ui/test';
+import {
+  YggDialogPageObjectCypress,
+  EmceePageObjectCypress
+} from '@ygg/shared/ui/test';
 
 describe('Tour-plan builder', () => {
   const siteNavigator = new SiteNavigator();
@@ -55,6 +65,8 @@ describe('Tour-plan builder', () => {
   });
 
   beforeEach(() => {
+    cy.visit('/');
+    waitForLogin();
     tourPlanViewPO.expectVisible();
     // tourPlanBuilderPO.reset();
     // siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
@@ -69,44 +81,93 @@ describe('Tour-plan builder', () => {
     theMockDatabase.clear();
   });
 
-  // it('Build a tour-plan with minimal required data fields: dateRange, numParticipants, contact', () => {
-  //   tourPlanViewPO.setValue(MinimalTourPlan, { freshNew: true });
-  //   tourPlanViewPO.save(MinimalTourPlan);
-  //   tourPlanViewPO.expectValue(MinimalTourPlan);
-  // });
+  it('Build a tour-plan with minimal required data fields: dateRange, numParticipants, contact', () => {
+    tourPlanViewPO.setValue(MinimalTourPlan, { freshNew: true });
+    tourPlanViewPO.save(MinimalTourPlan);
+    tourPlanViewPO.expectShowAsPage();
+    tourPlanViewPO.expectValue(MinimalTourPlan);
+  });
 
-  // it('A tour-plan without user input name should have default name', () => {
-  //   const dateRange = MinimalTourPlan.getCellValue(CellNames.dateRange);
-  //   tourPlanViewPO.setCell(dateRange);
-  //   tourPlanViewPO.expectName(defaultTourPlanName(dateRange));
-  // });
+  it('A tour-plan without user input name should have default name', () => {
+    const dateRangeCell = MinimalTourPlan.getCell(CellNames.dateRange);
+    tourPlanViewPO.setCell(dateRangeCell);
+    tourPlanViewPO.expectName(defaultTourPlanName(dateRangeCell.value));
+  });
 
-  // it('Logged-in user can automatically fill contact info', () => {
-  //   tourPlanViewPO.setCell(MinimalTourPlan.getCell(CellNames.dateRange));
-  //   tourPlanViewPO.setCell(MinimalTourPlan.getCell(CellNames.numParticipants));
-  //   const omniTypeViewControl = new OmniTypeViewControlPageObjectCypress(
-  //     tourPlanViewPO.getSelectorForCell(CellNames.contact)
-  //   );
-  //   omniTypeViewControl.openControl();
-  //   const dialogPO = new YggDialogPageObjectCypress();
-  //   const contactControlPO = new ContactControlPageObjectCypress(
-  //     dialogPO.getSelector()
-  //   );
-  //   contactControlPO.importFromUser();
-  //   contactControlPO.expectValue(new Contact().fromUser(currentUser));
-  //   dialogPO.confirm();
-  //   omniTypeViewControl.expectValue(
-  //     'contact',
-  //     new Contact().fromUser(currentUser)
-  //   );
-  // });
+  it('Logged-in user can automatically fill contact info', () => {
+    tourPlanViewPO.setCell(MinimalTourPlan.getCell(CellNames.dateRange));
+    tourPlanViewPO.setCell(MinimalTourPlan.getCell(CellNames.numParticipants));
+    const omniTypeViewControl = new OmniTypeViewControlPageObjectCypress(
+      tourPlanViewPO.getSelectorForCell(CellNames.contact)
+    );
+    omniTypeViewControl.openControl();
+    const dialogPO = new YggDialogPageObjectCypress();
+    const contactControlPO = new ContactControlPageObjectCypress(
+      dialogPO.getSelector()
+    );
+    contactControlPO.importFromUser();
+    contactControlPO.expectValue(new Contact().fromUser(currentUser));
+    dialogPO.confirm();
+    omniTypeViewControl.expectValue(
+      'contact',
+      new Contact().fromUser(currentUser)
+    );
+  });
+
+  it('Can not add duplicate named cell', () => {
+    tourPlanViewPO.setCell(MinimalTourPlan.getCell(CellNames.dateRange));
+    tourPlanViewPO.setCell(MinimalTourPlan.getCell(CellNames.numParticipants));
+    tourPlanViewPO.setCell(MinimalTourPlan.getCell(CellNames.contact));
+    const cell = new TheThingCell({
+      name: '兩顆子彈',
+      type: 'text',
+      value: '肚皮'
+    });
+    tourPlanViewPO.addCell(cell);
+    tourPlanViewPO.addCell(cell);
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.alert(`資料欄位 ${cell.name} 已存在`);
+    cy.get(tourPlanViewPO.getSelectorForCell(cell.name)).should(
+      'have.length',
+      1
+    );
+  });
 
   it('Build a tour-plan plus includes all optional data fields', () => {
+    const optionalCells = TourPlanFull.getCellsByNames(
+      ImitationTourPlan.getOptionalCellNames()
+    );
     tourPlanViewPO.setValue(TourPlanFull, {
+      freshNew: true,
+      newCells: optionalCells
+    });
+    // cy.pause();
+    tourPlanViewPO.save(TourPlanFull);
+    tourPlanViewPO.expectShowAsPage();
+    // cy.pause();
+    tourPlanViewPO.expectValue(TourPlanFull);
+  });
+
+  it('Can delete cells', () => {
+    const optionalCells = TourPlanFull.getCellsByNames(
+      ImitationTourPlan.getOptionalCellNames()
+    );
+    tourPlanViewPO.setValue(MinimalTourPlan, {
       freshNew: true
     });
-    tourPlanViewPO.save(TourPlanFull);
-    tourPlanViewPO.expectValue(TourPlanFull);
+    for (const cell of optionalCells) {
+      tourPlanViewPO.addCell(cell);
+      tourPlanViewPO.expectCell(cell);
+    }
+    for (const cell of optionalCells) {
+      tourPlanViewPO.deleteCell(cell);
+      tourPlanViewPO.expectNoCell(cell);
+    }
+    tourPlanViewPO.save(MinimalTourPlan);
+    tourPlanViewPO.expectShowAsPage();
+    for (const cell of optionalCells) {
+      tourPlanViewPO.expectNoCell(cell);
+    }
   });
 
   // it('Build a tour-plan with a few plays selected', () => {

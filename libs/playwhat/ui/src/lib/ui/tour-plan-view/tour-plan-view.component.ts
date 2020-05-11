@@ -1,55 +1,38 @@
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
-  Component,
-  OnInit,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  OnDestroy
-} from '@angular/core';
-import { TheThing, TheThingCell, TheThingRelation } from '@ygg/the-thing/core';
-import { DateRange, DayTimeRange, Contact } from '@ygg/shared/omni-types/core';
-import {
-  TheThingImitationViewInterface,
-  TheThingFactoryService,
-  CellCreatorComponent
-} from '@ygg/the-thing/ui';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import {
-  Subscription,
-  Observable,
-  BehaviorSubject,
-  of,
-  Subject,
-  combineLatest,
-  merge,
-  from
-} from 'rxjs';
-import { tap, switchMap, filter } from 'rxjs/operators';
-import {
-  ImitationTourPlan,
-  ImitationPlay,
-  CellNames,
-  defaultTourPlanName
-} from '@ygg/playwhat/core';
-import { pick, values, mapValues, get, isEmpty } from 'lodash';
-import {
-  RelationNamePurchase,
-  Purchase,
-  ImitationOrder
-} from '@ygg/shopping/core';
-import { AuthorizeService, AuthenticateService } from '@ygg/shared/user/ui';
-import { TourPlanBuilderService } from '../tour-plan-builder/tour-plan-builder.service';
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  FormControl,
-  Validators,
-  FormGroup,
-  FormBuilder
-} from '@angular/forms';
-import { PageStashService } from '@ygg/shared/infra/data-access';
+  CellNames,
+  defaultTourPlanName,
+  ImitationPlay,
+  ImitationTourPlan
+} from '@ygg/playwhat/core';
+import { AlertType } from '@ygg/shared/infra/core';
+import { DateRange } from '@ygg/shared/omni-types/core';
 import { PageResolverService } from '@ygg/shared/ui/navigation';
-import { YggDialogService } from '@ygg/shared/ui/widgets';
+import { EmceeService, YggDialogService } from '@ygg/shared/ui/widgets';
+import { AuthorizeService } from '@ygg/shared/user/ui';
+import {
+  ImitationOrder,
+  Purchase,
+  RelationNamePurchase
+} from '@ygg/shopping/core';
 import { IInputShoppingCart } from '@ygg/shopping/ui';
+import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import {
+  CellCreatorComponent,
+  TheThingFactoryService,
+  TheThingImitationViewInterface
+} from '@ygg/the-thing/ui';
+import { get, isEmpty, keys, mapValues, omit, values, remove } from 'lodash';
+import { from, merge, Observable, of, Subscription } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'ygg-tour-plan-view',
@@ -68,7 +51,7 @@ export class TourPlanViewComponent
   // contact: Contact;
   purchases: Purchase[] = [];
   requiredCells: TheThingCell[] = [];
-  optionalCells: TheThingCell[] = [];
+  otherCells: TheThingCell[] = [];
   subscriptions: Subscription[] = [];
   canSubmitApplication = false;
   isAdmin = false;
@@ -91,6 +74,7 @@ export class TourPlanViewComponent
     private pageResolver: PageResolverService,
     private router: Router,
     private dialog: YggDialogService,
+    private emcee: EmceeService,
     private formBuilder: FormBuilder
   ) {
     this.formGroup = formBuilder.group({});
@@ -98,11 +82,16 @@ export class TourPlanViewComponent
   }
 
   ngOnInit() {
+    // console.log('Tour View ~!!!');
     this.readonly = this.readonly !== undefined && this.readonly !== false;
     if (!this.theThing$) {
-      this.theThing$ = from(
-        this.theThingFactory.create({ imitation: ImitationTourPlan.id })
-      );
+      if (this.theThing) {
+        this.theThing$ = of(this.theThing);
+      } else {
+        this.theThing$ = from(
+          this.theThingFactory.create({ imitation: ImitationTourPlan.id })
+        );
+      }
     }
     const theThingUpdate$ = this.theThing$.pipe(
       // tap(theThing => {
@@ -130,33 +119,44 @@ export class TourPlanViewComponent
             }
           }
 
-          this.requiredCells = this.theThing.getCellsByNames(
-            ImitationTourPlan.getRequiredCellNames()
+          this.requiredCells = ImitationTourPlan.getRequiredCellDefs().map(
+            cellDef => cellDef.createCell()
           );
 
           for (const cell of this.requiredCells) {
-            const formControl = new FormControl(cell.value, [
-              Validators.required
-            ]);
-            if (cell.name === CellNames.dateRange) {
-              this.subscriptions.push(
-                formControl.valueChanges.subscribe(value => {
-                  if (
-                    DateRange.isDateRange(value) &&
-                    !this.formControlName.value
-                  ) {
-                    this.formControlName.setValue(defaultTourPlanName(value), {
-                      emitEvent: false
-                    });
-                  }
-                })
-              );
-            }
-            this.formGroup.addControl(cell.name, formControl);
+            cell.value = this.theThing.getCellValue(cell.name);
+            this.addCellControl(cell, { required: true });
           }
-          this.optionalCells = this.theThing.getCellsByNames(
-            ImitationTourPlan.getOptionalCellNames()
+
+          this.subscriptions.push(
+            this.formGroup
+              .get(CellNames.dateRange)
+              .valueChanges.subscribe(value => {
+                if (
+                  DateRange.isDateRange(value) &&
+                  !this.formControlName.value
+                ) {
+                  this.formControlName.setValue(defaultTourPlanName(value), {
+                    emitEvent: false
+                  });
+                }
+              })
           );
+
+          this.otherCells = values(this.theThing.cells).filter(cell => {
+            const cellDef = ImitationTourPlan.getCellDef(cell.name);
+            if (
+              !!cellDef &&
+              (cellDef.userInput === 'required' ||
+                cellDef.userInput === 'hidden')
+            ) {
+              return false;
+            }
+            return true;
+          });
+          for (const cell of this.otherCells) {
+            this.addCellControl(cell);
+          }
 
           this.purchases = this.theThing
             .getRelations(RelationNamePurchase)
@@ -323,6 +323,18 @@ export class TourPlanViewComponent
     return !control || !control.value;
   }
 
+  addCellControl(cell: TheThingCell, options: { required?: boolean } = {}) {
+    const validators = [];
+    if (options.required) {
+      validators.push(Validators.required);
+    }
+    const control = new FormControl(cell.value, validators);
+    this.formGroup.registerControl(cell.name, control);
+    // control.setValue(cell.value);
+    // control.setValue(cell.value);
+    // console.log(this.formGroup.get(cell.name) === control ? 'true' : 'false');
+  }
+
   addCell() {
     const dialogRef = this.dialog.open(CellCreatorComponent, {
       title: '新增其他項目',
@@ -332,17 +344,21 @@ export class TourPlanViewComponent
     });
     dialogRef.afterClosed().subscribe(cell => {
       if (!!cell) {
-        // console.log(`Add new cell ${cell.name}`);
-        // console.dir(cell);
-        this.theThing.addCell(cell);
+        if (!!this.formGroup.get(cell.name)) {
+          this.emcee.alert(`資料欄位 ${cell.name} 已存在`, AlertType.Warning);
+        } else {
+          // console.dir(cell);
+          this.addCellControl(cell);
+          this.otherCells.push(cell);
+        }
       }
     });
   }
 
   deleteCell(cell: TheThingCell) {
-    const confirmMessage = `移除資料欄位${cell.name}？`;
-    if (confirm(confirmMessage)) {
-      this.theThing.deleteCell(cell);
+    remove(this.otherCells, c => c.name === cell.name);
+    if (!!this.formGroup.get(cell.name)) {
+      this.formGroup.removeControl(cell.name);
     }
   }
 
@@ -358,31 +374,20 @@ export class TourPlanViewComponent
 
   updateTheThing() {
     this.theThing.name = this.formGroup.get('name').value;
-    for (const controlName in this.formGroup.controls) {
-      if (
-        controlName !== 'name' &&
-        this.formGroup.controls.hasOwnProperty(controlName)
-      ) {
-        const control = this.formGroup.controls[controlName];
-        this.theThing.updateCellValue(controlName, control.value);
-      }
+    for (const cell of this.requiredCells.concat(this.otherCells)) {
+      cell.value = this.formGroup.get(cell.name).value;
+      this.theThing.upsertCell(cell);
     }
   }
 
   async save() {
-    this.dialog
-      .confirm(`<h2>確定要儲存 ${this.theThing.name} ？</h2>`)
-      .then(async () => {
-        this.updateTheThing();
-        try {
-          await this.theThingFactory.save(this.theThing, {
-            requireOwner: true
-          });
-        } catch (error) {
-          console.error(error.message);
-        }
-        this.router.navigate(['/', 'the-things', this.theThing.id]);
+    this.updateTheThing();
+    try {
+      await this.theThingFactory.save(this.theThing, {
+        requireOwner: true
       });
+      this.router.navigate(['/', 'the-things', this.theThing.id]);
+    } catch (error) {}
   }
 
   isValidTourPlan(): boolean {
@@ -391,7 +396,10 @@ export class TourPlanViewComponent
 
   getOptionalCells(): TheThingCell[] {
     return this.theThing.getCellsByNames(
-      ImitationTourPlan.getOptionalCellNames()
+      omit(
+        keys(this.theThing.cells),
+        this.requiredCells.map(c => c.name)
+      )
     );
   }
 }

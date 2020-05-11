@@ -36,9 +36,9 @@ export class YggDialogService {
       });
       confirmDialogRef.afterClosed().subscribe(isConfirmed => {
         if (isConfirmed) {
-          resolve();
+          resolve(true);
         } else {
-          reject();
+          reject(false);
         }
       });
     });

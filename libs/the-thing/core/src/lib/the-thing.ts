@@ -168,9 +168,12 @@ export class TheThing implements Entity, ImageThumbnailItem {
     return values(pick(this.cells, names));
   }
 
-  addCell(cell: TheThingCell) {
+  upsertCell(cell: TheThingCell) {
     this.cells[cell.name] = cell;
   }
+
+  // To be deprecated
+  addCell = this.upsertCell;
 
   addCells(cells: TheThingCell[]) {
     for (const cell of cells) {

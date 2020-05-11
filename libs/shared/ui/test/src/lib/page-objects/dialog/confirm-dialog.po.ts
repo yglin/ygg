@@ -5,6 +5,10 @@ export class ConfirmDialogPageObjectCypress extends ConfirmDialogPageObject {
     cy.get(this.getSelector('content')).should('have.text', message);
   }
 
+  expectClosed() {
+    cy.get(this.getSelector(), { timeout: 10000 }).should('not.be.visible');
+  }
+
   confirm(): void {
     cy.get(this.getSelector('buttonConfirm')).click();
     cy.get(this.getSelector()).should('not.be.visible');

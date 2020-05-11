@@ -91,10 +91,10 @@ export class TheThingAccessService implements IDataAccessor<TheThing> {
   }
 
   async upsert(theThing: TheThing): Promise<TheThing> {
-    // console.log('Upsert the-thing');
-    // console.dir(theThing);
-    await this.dataAccessService.upsert(theThing.collection, theThing.toJSON());
-    return Promise.resolve(theThing);
+    return this.dataAccessService.upsert(
+      theThing.collection,
+      theThing.toJSON()
+    );
   }
 
   async delete(

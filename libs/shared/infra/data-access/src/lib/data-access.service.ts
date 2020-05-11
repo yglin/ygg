@@ -6,7 +6,7 @@ import {
 } from '@angular/fire/firestore';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map, catchError, filter, tap } from 'rxjs/operators';
+import { map, catchError, filter, take } from 'rxjs/operators';
 import { LogService } from '@ygg/shared/infra/log';
 import { DataItem } from './data-item';
 import { DataAccessError, DataAccessErrorCode } from './error';
@@ -163,7 +163,7 @@ export class DataAccessService {
     );
   }
 
-  upsert<T extends DataItem>(
+  async upsert<T extends DataItem>(
     collection: string,
     item: T,
     constructor?: new () => T
@@ -172,10 +172,15 @@ export class DataAccessService {
       typeof item.toJSON === 'function' ? item.toJSON() : item;
     data.refPath = `${collection}/${item.id}`;
     data.modifyAt = Date().valueOf();
-    return this.getCollection(collection)
-      .doc(item.id)
-      .set(data)
-      .then(() => item, error => this.logService.error(error.message));
+    try {
+      await this.getCollection(collection)
+        .doc(item.id)
+        .set(data);
+      return item;
+    } catch (error) {
+      this.logService.error(error.message);
+      throw error;
+    }
   }
 
   async delete(collection: string, itemId: string) {

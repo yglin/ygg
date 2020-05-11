@@ -141,7 +141,7 @@
           </button>
         </div>
       </div>
-      <div *ngFor="let cell of getOptionalCells()">
+      <div *ngFor="let cell of otherCells">
         <div [attr.cell-name]="cell.name" *ngIf="cell.value">
           <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
             <h4>{{ cell.name }}</h4>
@@ -150,17 +150,19 @@
                 type="button"
                 class="delete"
                 mat-mini-fab
-                matTooltip="移除這個欄位"
+                [matTooltip]="'移除資料欄位 ' + cell.name"
                 (click)="deleteCell(cell)"
               >
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
           </div>
-          <the-thing-cell-view
-            [cell]="cell"
+          <ygg-omni-type-view-control
+            [formControlName]="cell.name"
+            [type]="cell.type"
             [editable]="!readonly"
-          ></the-thing-cell-view>
+          >
+          </ygg-omni-type-view-control>
         </div>
       </div>
     </div>

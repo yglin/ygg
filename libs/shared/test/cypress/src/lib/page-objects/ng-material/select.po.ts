@@ -8,6 +8,9 @@ export class MaterialSelectPageObjectCypress extends PageObject {
   select(label: string) {
     // cy.pause();
     cy.get(`${this.getSelector()} .mat-select-trigger`).click();
-    cy.get(`.mat-option:contains("${label}")`).click();
+    const regexp = new RegExp(`^\\s*${label}\\s*$`, 'g');
+    cy.get('.mat-option')
+      .contains(regexp)
+      .click();
   }
 }

@@ -97,7 +97,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   }
 
   getCellDef(name: string): TheThingCellDefine {
-    return this.cellsDef[name];
+    return name in this.cellsDef ? this.cellsDef[name] : null;
   }
 
   createTheThing(): TheThing {
@@ -106,18 +106,18 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       theThing.tags = new Tags(this.filter.tags);
     }
     theThing.view = this.view;
-    for (const cellName in this.cellsDef) {
-      if (this.cellsDef.hasOwnProperty(cellName)) {
-        const cellDef = this.cellsDef[cellName];
-        const newCell = cellDef.createCell();
-        theThing.addCell(newCell);
-      }
-    }
-    for (const name in this.relationsDef) {
-      if (this.relationsDef.hasOwnProperty(name)) {
-        theThing.addRelation(name);
-      }
-    }
+    // for (const cellName in this.cellsDef) {
+    //   if (this.cellsDef.hasOwnProperty(cellName)) {
+    //     const cellDef = this.cellsDef[cellName];
+    //     const newCell = cellDef.createCell();
+    //     theThing.addCell(newCell);
+    //   }
+    // }
+    // for (const name in this.relationsDef) {
+    //   if (this.relationsDef.hasOwnProperty(name)) {
+    //     theThing.addRelation(name);
+    //   }
+    // }
     if (!isEmpty(this.creators)) {
       for (const creator of this.creators) {
         theThing = creator(theThing);

@@ -6,15 +6,15 @@ export class AccountWidgetPageObjectCypress extends AccountWidgetPageObject {
     super(parentSelector);
     this.userMenuPO = new UserMenuPageObjectCypress(this.getSelector());
   }
-  
+
   login(): void {
     cy.get(this.getSelector('buttonLogin')).click();
   }
 
-  expectLoggedIn(): void {
-    cy.get(this.getSelector('loggedInWidget'), { timeout: 10000 }).should(
-      'be.visible'
-    );
+  expectLoggedIn(): Cypress.Chainable<any> {
+    return cy
+      .get(this.getSelector('loggedInWidget'), { timeout: 10000 })
+      .should('be.visible');
   }
 
   expectLoggedOut(): void {

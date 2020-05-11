@@ -10,7 +10,8 @@ import {
   TheThingAccessService
 } from '@ygg/the-thing/data-access';
 import { TheThingImitationViewInterface } from './the-thing/the-thing-imitation-view/imitation-view-interface.component';
-import { YggDialogService } from '@ygg/shared/ui/widgets';
+import { YggDialogService, EmceeService } from '@ygg/shared/ui/widgets';
+import { AlertType } from '@ygg/shared/infra/core';
 
 export interface ITheThingCreateOptions {
   imitation?: string;
@@ -33,7 +34,7 @@ export class TheThingFactoryService {
     private authUiService: AuthenticateUiService,
     private theThingAccessService: TheThingAccessService,
     private imitationAccessServcie: TheThingImitationAccessService,
-    private dialog: YggDialogService
+    private emceeService: EmceeService
   ) {}
 
   reset() {
@@ -91,6 +92,13 @@ export class TheThingFactoryService {
   }
 
   async save(theThing: TheThing, options: ITheThingSaveOptions = {}) {
+    const confirm = await this.emceeService.confirm(
+      `確定要儲存 ${theThing.name} ？`
+    );
+    if (!confirm) {
+      return;
+    }
+
     if (options.requireOwner && !theThing.ownerId) {
       try {
         const currentUser = await this.authUiService.requireLogin();
@@ -103,11 +111,16 @@ export class TheThingFactoryService {
       const result: TheThing = await this.theThingAccessService.upsert(
         theThing
       );
-      await this.dialog.alert(`已成功儲存 ${result.name}`);
-      this.reset();
+      await this.emceeService.alert(
+        `已成功儲存 ${result.name}`,
+        AlertType.Info
+      );
       return result;
     } catch (error) {
-      await this.dialog.alert(`儲存失敗，錯誤原因：${error.message}`);
+      await this.emceeService.alert(
+        `儲存失敗，錯誤原因：${error.message}`,
+        AlertType.Error
+      );
       return Promise.reject(error);
     }
   }

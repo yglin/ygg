@@ -1,6 +1,11 @@
 import { LoginDialogPageObjectCypress } from './login-dialog.po';
 import { AccountWidgetPageObjectCypress } from './account-widget.po';
 
+export function waitForLogin():Cypress.Chainable<any> {
+  const accountWidgetPO = new AccountWidgetPageObjectCypress();
+  return accountWidgetPO.expectLoggedIn();
+}
+
 export function login(provider: string) {
   const accountWidgetPO = new AccountWidgetPageObjectCypress();
   accountWidgetPO.login();

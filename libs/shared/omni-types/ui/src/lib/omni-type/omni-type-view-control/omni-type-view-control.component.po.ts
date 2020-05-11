@@ -4,6 +4,11 @@ import { OmniTypeControlPageObject } from '../omni-type-control/omni-type-contro
 import { OmniTypeViewPageObject } from '../omni-type-view/omni-type-view.component.po';
 import { YggDialogPageObject } from '@ygg/shared/ui/widgets';
 
+export interface OmniTypeViewControlValue {
+  type: OmniTypeID;
+  value: any;
+}
+
 export abstract class OmniTypeViewControlPageObject extends PageObject {
   selectors = {
     main: '.omni-type-view-control',

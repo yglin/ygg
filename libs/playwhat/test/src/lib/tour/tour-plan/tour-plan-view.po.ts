@@ -11,7 +11,8 @@ import {
   ControlViewSwitchPageObjectCypress,
   YggDialogPageObjectCypress,
   ConfirmDialogPageObjectCypress,
-  AlertDialogPageObjectCypress
+  AlertDialogPageObjectCypress,
+  EmceePageObjectCypress
 } from '@ygg/shared/ui/test';
 import { ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
 import {
@@ -164,15 +165,13 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
 
   issueSave(tourPlan: TheThing) {
     cy.get(this.getSelector('buttonSave')).click();
-    const confirmDialogPO = new ConfirmDialogPageObjectCypress();
-    confirmDialogPO.expectMessage(`確定要儲存 ${tourPlan.name} ？`);
-    confirmDialogPO.confirm();
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.confirm(`確定要儲存 ${tourPlan.name} ？`);
   }
 
   alertSaved(tourPlan: TheThing) {
-    const alertDialogPO = new AlertDialogPageObjectCypress();
-    alertDialogPO.expectMessage(`已成功儲存 ${tourPlan.name}`);
-    alertDialogPO.confirm();
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.alert(`已成功儲存 ${tourPlan.name}`);
   }
 
   setValue(tourPlan: TheThing, options: IOptionsSetValue = {}) {
@@ -220,12 +219,15 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
 
     if (options.freshNew) {
       // Reveal optional inputs
-      cy.get(this.getSelector('optionals')).should('be.visible');
+      cy.get(this.getSelector('optionals'), { timeout: 10000 })
+        .scrollIntoView()
+        .should('be.visible');
     }
 
     if (!isEmpty(options.newCells)) {
       cy.wrap(options.newCells).each((cell: any) => {
         this.addOptionalCell(cell);
+        this.expectCell(cell);
       });
     }
 
@@ -247,6 +249,19 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     cy.get(selector).should('include.text', errorMessage);
   }
 
+  addCell(cell: TheThingCell) {
+    cy.get(this.getSelector('buttonAddCell')).click();
+    const dialogPO = new YggDialogPageObjectCypress();
+    dialogPO.expectVisible();
+    const cellCreatorPO = new CellCreatorPageObjectCypress(
+      dialogPO.getSelector()
+    );
+    cellCreatorPO.setCell(cell);
+    cellCreatorPO.setCellValue(cell);
+    dialogPO.confirm();
+    dialogPO.expectClosed();
+  }
+
   addOptionalCell(cell: TheThingCell): void {
     cy.get(this.getSelector('buttonAddCell')).click();
     const dialogPO = new YggDialogPageObjectCypress();
@@ -258,7 +273,6 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     cellCreatorPO.setCellValue(cell);
     dialogPO.confirm();
     dialogPO.expectClosed();
-    this.expectCell(cell);
   }
 
   expectReadonly() {
@@ -267,7 +281,6 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
 
   deleteCell(cell: TheThingCell) {
     cy.get(`${this.getSelectorForCell(cell.name)} button.delete`).click();
-    this.expectNoCell(cell);
   }
 
   expectNoCell(cell: TheThingCell) {
