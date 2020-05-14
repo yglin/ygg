@@ -15,7 +15,7 @@ export class MockDatabase {
   static alias = 'mockDatabase';
 
   documents: { [path: string]: Document } = {};
-  entities: { [path: string]: Entity } = {};
+  entities: { [path: string]: any } = {};
   RTDBBackup: { [path: string]: any } = {};
 
   constructor() {}
@@ -96,7 +96,7 @@ export class MockDatabase {
     }
   }
 
-  getEntity(path: string): Entity {
+  getEntity<T extends Entity>(path: string): T {
     if (!(path in this.entities)) {
       throw new Error(`MockDatabase: Can not find entity of path "${path}"`);
     }

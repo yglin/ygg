@@ -2,7 +2,8 @@ import { sampleSize, random } from 'lodash';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import {
   LoginDialogPageObjectCypress,
-  waitForLogin
+  waitForLogin,
+  logout
 } from '@ygg/shared/user/test';
 import {
   MinimalTourPlan,
@@ -24,8 +25,12 @@ import {
   TourPlanAdminPageObjectCypress
 } from '@ygg/playwhat/test';
 import { SiteNavigator } from '@ygg/playwhat/test';
-import { TheThing, TheThingCell } from '@ygg/the-thing/core';
-import { ImitationOrder } from '@ygg/shopping/core';
+import { TheThing, TheThingCell, TheThingRelation } from '@ygg/the-thing/core';
+import {
+  ImitationOrder,
+  Purchase,
+  RelationNamePurchase
+} from '@ygg/shopping/core';
 import {
   ContactControlPageObjectCypress,
   OmniTypeViewControlPageObjectCypress
@@ -35,13 +40,15 @@ import { Contact, DateRange } from '@ygg/shared/omni-types/core';
 import {
   defaultTourPlanName,
   CellNames,
-  ImitationTourPlan
+  ImitationTourPlan,
+  ImitationPlay
 } from '@ygg/playwhat/core';
 import { randomBytes } from 'crypto';
 import {
   YggDialogPageObjectCypress,
   EmceePageObjectCypress
 } from '@ygg/shared/ui/test';
+import { IPurchasePack } from '@ygg/shopping/ui';
 
 describe('Tour-plan builder', () => {
   const siteNavigator = new SiteNavigator();
@@ -56,10 +63,10 @@ describe('Tour-plan builder', () => {
   before(() => {
     login().then(user => {
       currentUser = user;
-      cy.wrap(SampleThings).each((thing: any) => {
-        thing.ownerId = user.id;
-        theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
-      });
+      // cy.wrap(SampleThings).each((thing: any) => {
+      //   thing.ownerId = user.id;
+      //   theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
+      // });
       cy.visit('/');
     });
   });
@@ -67,17 +74,12 @@ describe('Tour-plan builder', () => {
   beforeEach(() => {
     cy.visit('/');
     waitForLogin();
-    tourPlanViewPO.expectVisible();
+    siteNavigator.goto(['tour-plans', 'create'], tourPlanViewPO);
     // tourPlanBuilderPO.reset();
     // siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
   });
 
   after(() => {
-    // Goto my-things page and delete all test things
-    const myThingsPO = new MyThingsPageObjectCypress();
-    siteNavigator.goto(['the-things', 'my'], myThingsPO);
-    cy.wait(3000);
-    myThingsPO.deleteAll();
     theMockDatabase.clear();
   });
 
@@ -170,117 +172,67 @@ describe('Tour-plan builder', () => {
     }
   });
 
-  // it('Build a tour-plan with a few plays selected', () => {
-  //   tourPlanBuilderPO.setValue(TourPlanWithPlaysNoAddition);
-  //   tourPlanBuilderPO.tourPlanPreviewPO.save(TourPlanWithPlaysNoAddition);
+  it('Save tour-plan on leave page, restore on back', () => {
+    tourPlanViewPO.setValue(TourPlanFull, { freshNew: true });
+    // goto other page and back immediately
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    siteNavigator.goto(['tour-plans', 'create'], tourPlanViewPO);
+    tourPlanViewPO.save(TourPlanFull);
 
-  //   // Expect redirect to tour-plan view page, and check selected plays
-  //   tourPlanViewPO.expectShowAsPage();
-  //   tourPlanViewPO.expectValue(TourPlanWithPlaysNoAddition);
-  // });
+    // Expect redirect to tour-plan view page, and check selected plays
+    tourPlanViewPO.expectShowAsPage();
+    tourPlanViewPO.expectValue(TourPlanFull);
 
-  // it('Build a tour-plan with a few plays selected, and setup additions', () => {
-  //   tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions);
-  //   tourPlanBuilderPO.tourPlanPreviewPO.save(TourPlanWithPlaysAndAdditions);
+    // After save, reset tour-plan
+    siteNavigator.goto(['tour-plans', 'create'], tourPlanViewPO);
+    tourPlanViewPO.expectFreshNew();
+  });
 
-  //   // Expect redirect to tour-plan view page, and check selected plays
-  //   tourPlanViewPO.expectShowAsPage();
-  //   tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions);
-  // });
+  it('Show saved tour-plan in /tour-plans/my', () => {
+    tourPlanViewPO.setValue(MinimalTourPlan);
+    tourPlanViewPO.save(MinimalTourPlan);
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
+  });
 
-  // it('Save tour-plan on leave page, restore on back', () => {
-  //   tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions);
-  //   // goto other page and back immediately
-  //   siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-  //   siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
-  //   tourPlanBuilderPO.reset();
-  //   tourPlanBuilderPO.tourPlanPreviewPO.save(TourPlanWithPlaysAndAdditions);
+  it('Require login when save', () => {
+    logout();
+    // Logout will redirect user back to home, cause re-render of tour-plan-builder
+    // So we wait several seconds here for tour-plan-builder to be stable
+    cy.wait(3000);
+    tourPlanViewPO.setValue(MinimalTourPlan);
+    tourPlanViewPO.issueSave(MinimalTourPlan);
+    const loginDialogPO = new LoginDialogPageObjectCypress();
+    loginDialogPO.expectVisible();
+    login();
+    loginDialogPO.expectClosed();
+    tourPlanViewPO.sendApplication(false);
+    tourPlanViewPO.alertSaved(MinimalTourPlan);
+    tourPlanViewPO.expectShowAsPage();
+    // tourPlanViewPO.expectValue(MinimalTourPlan);
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
+  });
 
-  //   // Expect redirect to tour-plan view page, and check selected plays
-  //   tourPlanViewPO.expectShowAsPage();
-  //   tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions);
-  // });
+  it('Save a tour-plan and send it for application as well', () => {
+    // Goto my-things page and delete previous save tour plans
+    const myThingsPO = new MyThingsPageObjectCypress();
+    siteNavigator.goto(['the-things', 'my'], myThingsPO);
+    cy.wait(3000);
+    myThingsPO.deleteAll();
+    siteNavigator.goto(['tour-plans', 'create'], tourPlanViewPO);
+    tourPlanViewPO.setValue(MinimalTourPlan);
+    tourPlanViewPO.save(MinimalTourPlan, {
+      freshNew: true,
+      sendApplication: true
+    });
+    tourPlanViewPO.expectShowAsPage();
 
-  // it('Build a tour-plan and send it for application', () => {
-  //   tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions);
-  //   tourPlanBuilderPO.submitApplication(TourPlanWithPlaysAndAdditions);
-  //   tourPlanViewPO.expectShowAsPage();
-
-  //   // Expect the submitted tour-plan show up in administrator's list
-  //   siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
-  //   // tourPlanDataTablePO.expectTheThing(MinimalTourPlan);
-  //   tourPlanAdminPO.theThingDataTables[
-  //     ImitationOrder.states.applied.name
-  //   ].expectTheThing(TourPlanWithPlaysAndAdditions);
-  //   tourPlanAdminPO.theThingDataTables[
-  //     ImitationOrder.states.applied.name
-  //   ].gotoTheThingView(TourPlanWithPlaysAndAdditions);
-
-  //   // Click the tour-plan to review it
-  //   tourPlanViewPO.expectShowAsPage();
-  //   TourPlanWithPlaysAndAdditions.setState(
-  //     ImitationOrder.stateName,
-  //     ImitationOrder.states.applied
-  //   );
-  //   tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions);
-  // });
-
-  // it('Can switch back to previous step', () => {
-  //   tourPlanBuilderPO.setValue(MinimalTourPlan, { stopAtStep: 2 });
-  //   tourPlanBuilderPO.prev();
-  //   tourPlanBuilderPO.setValue(MinimalTourPlan, { stopAtStep: 3 });
-  //   tourPlanBuilderPO.prev();
-  //   tourPlanBuilderPO.prev();
-  //   tourPlanBuilderPO.setValue(MinimalTourPlan);
-  //   tourPlanBuilderPO.tourPlanPreviewPO.save(MinimalTourPlan);
-  //   tourPlanViewPO.expectShowAsPage();
-  //   tourPlanViewPO.expectValue(MinimalTourPlan);
-  // });
-
-  // it('Can change dateRange, numParticipants, and contact directly in preview', () => {
-  //   const MinimalTourPlan2: TheThing = MinimalTourPlan.clone();
-  //   const newDateRange = DateRange.forge();
-  //   const newNumParticipants = random(100, 1000);
-  //   const newContact = Contact.forge();
-  //   MinimalTourPlan2.updateCellValues({
-  //     預計出遊日期: newDateRange,
-  //     預計參加人數: newNumParticipants,
-  //     聯絡資訊: newContact
-  //   });
-  //   tourPlanBuilderPO.setValue(MinimalTourPlan);
-  //   tourPlanBuilderPO.tourPlanPreviewPO.expectVisible();
-
-  //   tourPlanBuilderPO.tourPlanPreviewPO.setCellValue(
-  //     MinimalTourPlan2.getCell('預計出遊日期')
-  //   );
-  //   tourPlanBuilderPO.tourPlanPreviewPO.setCellValue(
-  //     MinimalTourPlan2.getCell('預計參加人數')
-  //   );
-  //   tourPlanBuilderPO.tourPlanPreviewPO.setCellValue(
-  //     MinimalTourPlan2.getCell('聯絡資訊')
-  //   );
-  //   tourPlanBuilderPO.tourPlanPreviewPO.save(MinimalTourPlan);
-  //   tourPlanViewPO.expectShowAsPage();
-  //   tourPlanViewPO.expectValue(MinimalTourPlan2);
-  // });
-
-  // it('Require login when save', () => {
-  //   logout().then(() => {
-  //     // Logout will redirect user back to home, cause re-render of tour-plan-builder
-  //     // So we wait several seconds here for tour-plan-builder to be stable
-  //     cy.wait(3000);
-  //     tourPlanBuilderPO.setValue(MinimalTourPlan);
-  //     tourPlanBuilderPO.tourPlanPreviewPO.issueSave(MinimalTourPlan);
-  //     const loginDialogPO = new LoginDialogPageObjectCypress();
-  //     loginDialogPO.expectVisible();
-  //     login().then(() => {
-  //       loginDialogPO.expectClosed();
-  //       tourPlanBuilderPO.tourPlanPreviewPO.alertSaved(MinimalTourPlan);
-  //       tourPlanViewPO.expectShowAsPage();
-  //       // tourPlanViewPO.expectValue(MinimalTourPlan);
-  //       siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-  //       myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
-  //     });
-  //   });
-  // });
+    // Expect the submitted tour-plan show up in administrator's list
+    siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
+    // tourPlanDataTablePO.expectTheThing(MinimalTourPlan);
+    tourPlanAdminPO.theThingDataTables[
+      ImitationOrder.states.applied.name
+    ].expectTheThing(MinimalTourPlan);
+  });
 });

@@ -53,9 +53,16 @@
       <td mat-cell *matCellDef="let theThing" [attr.column-name]="column.key">
         <div [ngSwitch]="column.value.valueSource">
           <div *ngSwitchCase="'cell'">
-            <the-thing-cell-view
+            <div *ngIf="theThing.cells[column.key] as cell">
+              <!-- {{ theThing.cells[column.key] | json }} -->
+              <ygg-omni-type-view
+                [type]="cell.type"
+                [value]="cell.value"
+              ></ygg-omni-type-view>
+            </div>
+            <!-- <the-thing-cell-view
               [cell]="theThing.cells[column.key]"
-            ></the-thing-cell-view>
+            ></the-thing-cell-view> -->
           </div>
           <div *ngSwitchCase="'function'">
             {{ column.value.valueFunc(theThing) }}

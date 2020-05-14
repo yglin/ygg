@@ -92,13 +92,6 @@ export class TheThingFactoryService {
   }
 
   async save(theThing: TheThing, options: ITheThingSaveOptions = {}) {
-    const confirm = await this.emceeService.confirm(
-      `確定要儲存 ${theThing.name} ？`
-    );
-    if (!confirm) {
-      return;
-    }
-
     if (options.requireOwner && !theThing.ownerId) {
       try {
         const currentUser = await this.authUiService.requireLogin();
@@ -108,14 +101,9 @@ export class TheThingFactoryService {
       }
     }
     try {
-      const result: TheThing = await this.theThingAccessService.upsert(
+      return await this.theThingAccessService.upsert(
         theThing
       );
-      await this.emceeService.alert(
-        `已成功儲存 ${result.name}`,
-        AlertType.Info
-      );
-      return result;
     } catch (error) {
       await this.emceeService.alert(
         `儲存失敗，錯誤原因：${error.message}`,

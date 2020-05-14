@@ -38,7 +38,7 @@ export class YggDialogService {
         if (isConfirmed) {
           resolve(true);
         } else {
-          reject(false);
+          resolve(false);
         }
       });
     });

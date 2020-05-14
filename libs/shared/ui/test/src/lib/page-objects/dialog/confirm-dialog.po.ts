@@ -11,11 +11,11 @@ export class ConfirmDialogPageObjectCypress extends ConfirmDialogPageObject {
 
   confirm(): void {
     cy.get(this.getSelector('buttonConfirm')).click();
-    cy.get(this.getSelector()).should('not.be.visible');
+    // cy.get(this.getSelector()).should('not.be.visible');
   }
 
   cancel(): void {
     cy.get(this.getSelector('buttonCancel')).click();
-    cy.get(this.getSelector()).should('not.be.visible');
+    // cy.get(this.getSelector()).should('not.be.visible');
   }
 }

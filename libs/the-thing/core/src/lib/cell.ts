@@ -17,6 +17,10 @@ export class TheThingCell {
   type: OmniTypeID;
   value: any;
 
+  static isTheThingCell(value: any): value is TheThingCell {
+    return !!value && !!value.name && !!value.type;
+  }
+
   static forge(options: any = {}): TheThingCell {
     const cell = new TheThingCell();
     if (options.name) {

@@ -101,15 +101,14 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(MinimalTourPlan);
     tourPlanViewPO.expectVisible();
 
-    const finalList: Purchase[] = TourPlanWithPlaysAndAdditions.getRelations(
+    const purchases: Purchase[] = TourPlanWithPlaysAndAdditions.getRelations(
       RelationNamePurchase
     ).map(r => Purchase.fromRelation(r));
     const purchasedPlays: TheThing[] = PlaysWithAddition;
 
     const newPurchases: IPurchasePack = {
-      things: purchasedPlays,
       filter: ImitationPlay.filter,
-      finalList
+      purchases
     };
 
     tourPlanViewPO.setValue(TourPlanWithPlaysAndAdditions, {

@@ -24,7 +24,7 @@
     [viewStyle]="nameStyle"
   >
     <div errors>
-      <div *ngIf="formControlName.errors?.required">
+      <div *ngIf="formGroup.get('name').errors?.required">
         請填入遊程名稱
       </div>
     </div>

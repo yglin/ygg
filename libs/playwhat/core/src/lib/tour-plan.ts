@@ -14,7 +14,8 @@ export const CellNames = {
   dateRange: '預計出遊日期',
   completeAt: '完成時間',
   numParticipants: '預計參加人數',
-  contact: '聯絡資訊'
+  contact: '聯絡資訊',
+  misc: '其他'
 };
 
 export enum States {
@@ -67,8 +68,8 @@ const cellsDef = {
     type: 'number',
     userInput: 'optional'
   },
-  其他注意事項: {
-    name: '其他事項',
+  其他: {
+    name: CellNames.misc,
     type: 'html',
     userInput: 'optional'
   }
@@ -84,7 +85,7 @@ const cellsOrder = [
   '長輩人數',
   '孩童人數',
   '司領人數',
-  '其他事項'
+  CellNames.misc
 ];
 
 export const ImitationTourPlan: TheThingImitation = ImitationOrder.extend({

@@ -117,6 +117,7 @@ import { LongTextControlComponent } from './types/long-text/long-text-control/lo
     OpenHourComponent,
     TextControlComponent,
     OmniTypeControlComponent,
+    OmniTypeViewComponent,
     OmniTypeViewControlComponent
   ],
   entryComponents: [ImageUploaderComponent]

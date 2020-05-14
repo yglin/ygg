@@ -30,7 +30,7 @@ import {
   ImitationOrder,
   RelationAddition
 } from '@ygg/shopping/core';
-import { isEmpty, find } from 'lodash';
+import { isEmpty, find, values } from 'lodash';
 import { MockDatabase, theMockDatabase } from '@ygg/shared/test/cypress';
 import { IPurchasePack } from '@ygg/shopping/ui';
 
@@ -59,8 +59,21 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     this.expectVisible();
   }
 
-  expectVisible() {
-    cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
+  expectFreshNew() {
+    this.expectError(this.getSelector('name'), '請填入遊程名稱');
+    const orderedRequiredCells = ImitationTourPlan.getRequiredCellDefs().map(
+      cellDef => cellDef.createCell()
+    );
+    // Only show first required cell, hide rest cells and other optional inputs
+    for (let index = 1; index < orderedRequiredCells.length; index++) {
+      const cell = orderedRequiredCells[index];
+      cy.get(this.getSelectorForCell(cell.name)).should('not.be.visible');
+    }
+    cy.get(this.getSelector('optionals')).should('not.be.visible');
+  }
+
+  expectVisible(): Cypress.Chainable<any> {
+    return cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
   }
 
   expectName(name: string) {
@@ -158,8 +171,17 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     omniTypeViewControlPO.setValue(cell.type, cell.value);
   }
 
-  save(tourPlan: TheThing): void {
+  save(
+    tourPlan: TheThing,
+    options: {
+      freshNew?: boolean;
+      sendApplication?: boolean;
+    } = { freshNew: true }
+  ): void {
     this.issueSave(tourPlan);
+    if (options.freshNew) {
+      this.sendApplication(options.sendApplication);
+    }
     this.alertSaved(tourPlan);
   }
 
@@ -174,10 +196,16 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     emceePO.alert(`已成功儲存 ${tourPlan.name}`);
   }
 
+  sendApplication(doSend: boolean = true) {
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.confirm(`順便將遊程計畫送出申請？`, {
+      doConfirm: doSend
+    });
+  }
+
   setValue(tourPlan: TheThing, options: IOptionsSetValue = {}) {
     if (options.freshNew) {
-      // Show required name error
-      this.expectError(this.getSelector('name'), '請填入遊程名稱');
+      this.expectFreshNew();
     }
 
     if (tourPlan.name) {
@@ -187,15 +215,6 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     const orderedRequiredCells = tourPlan.getCellsByNames(
       ImitationTourPlan.getRequiredCellNames()
     );
-
-    if (options.freshNew) {
-      // Only show first required cell, hide rest cells and other optional inputs
-      for (let index = 1; index < orderedRequiredCells.length; index++) {
-        const cell = orderedRequiredCells[index];
-        cy.get(this.getSelectorForCell(cell.name)).should('not.be.visible');
-      }
-      cy.get(this.getSelector('optionals')).should('not.be.visible');
-    }
 
     cy.wrap(orderedRequiredCells).each((cell: any, index: number) => {
       if (options.freshNew) {
@@ -224,20 +243,30 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
         .should('be.visible');
     }
 
-    if (!isEmpty(options.newCells)) {
-      cy.wrap(options.newCells).each((cell: any) => {
+    const additionalCells = ImitationTourPlan.pickNonRequiredCells(
+      values(tourPlan.cells)
+    );
+    if (options.freshNew) {
+      cy.wrap(additionalCells).each((cell: any) => {
         this.addOptionalCell(cell);
         this.expectCell(cell);
       });
     }
 
     // Edit purchases
-    if (!isEmpty(options.newPurchases)) {
+    const purchaseRelations = tourPlan.getRelations(RelationNamePurchase);
+    const purchases: Purchase[] = purchaseRelations.map(pr =>
+      Purchase.fromRelation(pr)
+    );
+    if (options.freshNew && !isEmpty(purchases)) {
       this.gotoEditPurchases();
       const cartEditorPO = new ShoppingCartEditorPageObjectCypress();
       cartEditorPO.expectVisible();
-      cartEditorPO.purchasePack(options.newPurchases);
-      cartEditorPO.expectPurchases(options.newPurchases.finalList);
+      cartEditorPO.purchasePack({
+        filter: ImitationPlay.filter,
+        purchases
+      });
+      cartEditorPO.expectPurchases(purchases);
       cartEditorPO.submit();
       this.expectVisible();
     }

@@ -15,8 +15,7 @@ export class SiteNavigator {
     }
     const fullPathName = `/${path.join('/')}`;
     cy.log(`Go to ${fullPathName}`);
-    cy.get('.pw-header #to-home').click({ force: true });
-    cy.location('pathname').should('eq', '/home');
+    this.gotoHome();
     const route = path.shift();
     if (route === 'plays') {
       this.gotoPlays(path);
@@ -38,6 +37,10 @@ export class SiteNavigator {
     return targetPage.expectVisible();
   }
 
+  private gotoHome() {
+    cy.get('.pw-header #to-home').click({ force: true });
+    cy.location('pathname').should('eq', '/home');
+  }
   // gotoSchedulePlanView(schedulePlan: SchedulePlan) {
   //   cy.visit(`/scheduler/schedule-plans/${schedulePlan.id}`);
   // }
@@ -49,6 +52,8 @@ export class SiteNavigator {
     } else if (route === 'my') {
       cy.get('.account-widget .menu-trigger').click({ force: true });
       cy.get('.user-menu-item button#tour-plan').click({ force: true });
+    } else if (route === 'create') {
+      this.gotoHome();
     }
   }
 

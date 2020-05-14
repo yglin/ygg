@@ -22,9 +22,9 @@ export interface IInputShoppingCart {
 }
 
 export interface IPurchasePack {
-  things: TheThing[];
+  // things: TheThing[];
   filter: TheThingFilter;
-  finalList: Purchase[];
+  purchases: Purchase[];
 }
 
 export abstract class ShoppingCartEditorPageObject extends PageObject {

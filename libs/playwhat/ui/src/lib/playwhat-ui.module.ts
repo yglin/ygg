@@ -1,34 +1,25 @@
-import { NgModule, APP_INITIALIZER, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Route } from '@angular/router';
-import { TourViewComponent } from './ui/tour-view/tour-view.component';
-import { TheThingUiModule, TheThingViewsService } from '@ygg/the-thing/ui';
-import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
-import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
-import { PlayCardComponent } from './ui/play-card/play-card.component';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { TourPlanViewComponent } from './ui/tour-plan-view/tour-plan-view.component';
-import { TheThingConfig } from './the-thing-config';
-import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-import { TourPlanBuilderPageObject } from './ui';
-import { TourPlanBuilderComponent } from './ui/tour-plan-builder/tour-plan-builder.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PlaywhatAdminService } from '@ygg/playwhat/admin';
-import { MenuTree } from '@ygg/shared/ui/navigation';
-import { Image } from '@ygg/shared/omni-types/core';
+import { RouterModule } from '@angular/router';
+import { ImitationPlay, ImitationTour, ImitationTourPlan } from '@ygg/playwhat/core';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
+import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
-import { PlayViewComponent } from './ui/play-view/play-view.component';
 import { SharedUserUiModule, UserMenuService } from '@ygg/shared/user/ui';
-import {
-  ImitationPlay,
-  ImitationTour,
-  ImitationTourPlan
-} from '@ygg/playwhat/core';
 import { ShoppingUiModule } from '@ygg/shopping/ui';
-import { MyPlayListComponent } from './ui/my-play-list/my-play-list.component';
-import { routes } from './routes';
-import { MyTourPlanListComponent } from './ui/my-tour-plan-list/my-tour-plan-list.component';
+import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
+import { TheThingUiModule, TheThingViewsService } from '@ygg/the-thing/ui';
 import { TheThingEditorService } from 'libs/the-thing/ui/src/lib/the-thing-editor.service';
+import { routes } from './routes';
+import { MyPlayListComponent } from './ui/my-play-list/my-play-list.component';
+import { MyTourPlanListComponent } from './ui/my-tour-plan-list/my-tour-plan-list.component';
+import { PlayCardComponent } from './ui/play-card/play-card.component';
+import { PlayViewComponent } from './ui/play-view/play-view.component';
+// import { TourPlanBuilderComponent } from './ui/tour-plan-builder/tour-plan-builder.component';
+import { TourPlanViewComponent } from './ui/tour-plan-view/tour-plan-view.component';
+import { TourViewComponent } from './ui/tour-view/tour-view.component';
 
 @NgModule({
   imports: [
@@ -48,7 +39,7 @@ import { TheThingEditorService } from 'libs/the-thing/ui/src/lib/the-thing-edito
     TourViewComponent,
     PlayCardComponent,
     TourPlanViewComponent,
-    TourPlanBuilderComponent,
+    // TourPlanBuilderComponent,
     PlayViewComponent,
     MyPlayListComponent,
     MyTourPlanListComponent
@@ -57,7 +48,7 @@ import { TheThingEditorService } from 'libs/the-thing/ui/src/lib/the-thing-edito
     TourViewComponent,
     TourPlanViewComponent,
     PlayViewComponent,
-    TourPlanBuilderComponent
+    // TourPlanBuilderComponent
   ],
   providers: [
     {
@@ -107,11 +98,11 @@ export function configTheThingImitation(
       label: '遊程規劃',
       component: TourPlanViewComponent
     });
-    theThingEditorService.addEditor({
-      id: 'tour-plan',
-      label: '遊程規劃',
-      component: TourPlanBuilderComponent
-    });
+    // theThingEditorService.addEditor({
+    //   id: 'tour-plan',
+    //   label: '遊程規劃',
+    //   component: TourPlanBuilderComponent
+    // });
   };
 }
 

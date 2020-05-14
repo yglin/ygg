@@ -11,6 +11,7 @@ import { PageObjectCypress } from '@ygg/shared/test/cypress';
 import { timeout } from 'rxjs/operators';
 import { values } from 'lodash';
 import { TheThingCellViewPageObjectCypress } from '../cell/cell-view.po';
+import { OmniTypeViewPageObjectCypress } from '@ygg/shared/omni-types/test';
 
 export class TheThingDataRowPageObjectCypress extends TheThingDataRowPageObject {
   imitation: TheThingImitation;
@@ -38,10 +39,10 @@ export class TheThingDataRowPageObjectCypress extends TheThingDataRowPageObject 
               break;
             default:
               const cell = theThing.getCell(columnConfig.name);
-              const cellViewPO = new TheThingCellViewPageObjectCypress(
+              const cellViewPO = new OmniTypeViewPageObjectCypress(
                 this.getSelectorForColumn(columnConfig.name)
               );
-              cellViewPO.expectValue(cell);
+              cellViewPO.expectValue(cell.type, cell.value);
               break;
           }
         }

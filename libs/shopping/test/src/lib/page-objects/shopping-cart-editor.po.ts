@@ -12,6 +12,7 @@ import { Purchase } from '@ygg/shopping/core';
 import { sum } from 'lodash';
 import { IDataAccessor } from '@ygg/shared/infra/core';
 import { TheThingFinderPageObjectCypress } from '@ygg/the-thing/test';
+import { theMockDatabase } from '@ygg/shared/test/cypress';
 
 export class PurchaseRowPageObjectCypress extends PurchaseRowPageObject {
   expectValue(purchase: Purchase): void {
@@ -77,10 +78,13 @@ export class ShoppingCartEditorPageObjectCypress extends ShoppingCartEditorPageO
     dialogPO.expectVisible();
     theThingFinderPO.expectVisible();
     theThingFinderPO.theThingFilterPO.expectFilter(pack.filter);
-    theThingFinderPO.selectItems(pack.things);
+    const products: TheThing[] = pack.purchases.map(p =>
+      theMockDatabase.getEntity(p.productId)
+    );
+    theThingFinderPO.selectItems(products);
     dialogPO.confirm();
     dialogPO.expectClosed();
-    this.updatePurchases(pack.finalList);
+    this.updatePurchases(pack.purchases);
   }
 
   updatePurchases(purchases: Purchase[]): void {

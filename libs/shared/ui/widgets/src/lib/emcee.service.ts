@@ -21,7 +21,7 @@ export class EmceeService extends Emcee {
   showProgress(message: string, percentage: number): void {
     throw new Error('Method not implemented.');
   }
-  
+
   hideProgress(delay: number): void {
     throw new Error('Method not implemented.');
   }

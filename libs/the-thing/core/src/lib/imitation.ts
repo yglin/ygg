@@ -30,6 +30,7 @@ import { RelationDef } from './relation-def';
 import { TheThingCellDefine } from './cell-define';
 import { OmniTypeComparator, OmniTypes } from '@ygg/shared/omni-types/core';
 import { TheThingState } from './state';
+import { stat } from 'fs';
 
 export const ImitationsDataPath = 'the-thing/imitations';
 
@@ -106,13 +107,15 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       theThing.tags = new Tags(this.filter.tags);
     }
     theThing.view = this.view;
-    // for (const cellName in this.cellsDef) {
-    //   if (this.cellsDef.hasOwnProperty(cellName)) {
-    //     const cellDef = this.cellsDef[cellName];
-    //     const newCell = cellDef.createCell();
-    //     theThing.addCell(newCell);
-    //   }
-    // }
+    for (const cellName in this.cellsDef) {
+      if (this.cellsDef.hasOwnProperty(cellName)) {
+        const cellDef = this.cellsDef[cellName];
+        if (cellDef.userInput === 'required') {
+          const newCell = cellDef.createCell();
+          theThing.addCell(newCell);
+        }
+      }
+    }
     // for (const name in this.relationsDef) {
     //   if (this.relationsDef.hasOwnProperty(name)) {
     //     theThing.addRelation(name);
@@ -215,6 +218,27 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   getStateLabel(stateValue: number): string {
     const state = find(this.states, s => s.value === stateValue);
     return !!state ? state.label : '未知狀態';
+  }
+
+  pickNonRequiredCells(cells: TheThingCell[]): TheThingCell[] {
+    return cells.filter(c => {
+      const cellDef = this.getCellDef(c.name);
+      if (
+        !!cellDef &&
+        (cellDef.userInput === 'required' || cellDef.userInput === 'hidden')
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+  }
+
+  isState(theThing: TheThing, state: TheThingState) {
+    return (
+      this.stateName in theThing.states &&
+      theThing.states[this.stateName] === state.value
+    );
   }
 
   fromJSON(data: any = {}): this {
