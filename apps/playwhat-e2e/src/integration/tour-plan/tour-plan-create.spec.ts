@@ -80,6 +80,11 @@ describe('Tour-plan builder', () => {
   });
 
   after(() => {
+    // Goto my-things page and delete previously created things
+    const myThingsPO = new MyThingsPageObjectCypress();
+    siteNavigator.goto(['the-things', 'my'], myThingsPO);
+    cy.wait(3000);
+    myThingsPO.deleteAll();
     theMockDatabase.clear();
   });
 
@@ -197,9 +202,10 @@ describe('Tour-plan builder', () => {
 
   it('Require login when save', () => {
     logout();
-    // Logout will redirect user back to home, cause re-render of tour-plan-builder
-    // So we wait several seconds here for tour-plan-builder to be stable
-    cy.wait(3000);
+    // // Logout will redirect user back to home, cause re-render of tour-plan-builder
+    // // So we wait several seconds here for tour-plan-builder to be stable
+    // cy.wait(3000);
+    siteNavigator.goto(['tour-plans', 'create'], tourPlanViewPO);
     tourPlanViewPO.setValue(MinimalTourPlan);
     tourPlanViewPO.issueSave(MinimalTourPlan);
     const loginDialogPO = new LoginDialogPageObjectCypress();
@@ -215,14 +221,10 @@ describe('Tour-plan builder', () => {
   });
 
   it('Save a tour-plan and send it for application as well', () => {
-    // Goto my-things page and delete previous save tour plans
-    const myThingsPO = new MyThingsPageObjectCypress();
-    siteNavigator.goto(['the-things', 'my'], myThingsPO);
-    cy.wait(3000);
-    myThingsPO.deleteAll();
-    siteNavigator.goto(['tour-plans', 'create'], tourPlanViewPO);
-    tourPlanViewPO.setValue(MinimalTourPlan);
-    tourPlanViewPO.save(MinimalTourPlan, {
+    const MinimalTourPlan2 = MinimalTourPlan.clone();
+    MinimalTourPlan2.name = '測試遊程(儲存順便送出申請)';
+    tourPlanViewPO.setValue(MinimalTourPlan2);
+    tourPlanViewPO.save(MinimalTourPlan2, {
       freshNew: true,
       sendApplication: true
     });
@@ -233,6 +235,6 @@ describe('Tour-plan builder', () => {
     // tourPlanDataTablePO.expectTheThing(MinimalTourPlan);
     tourPlanAdminPO.theThingDataTables[
       ImitationOrder.states.applied.name
-    ].expectTheThing(MinimalTourPlan);
+    ].expectTheThing(MinimalTourPlan2);
   });
 });

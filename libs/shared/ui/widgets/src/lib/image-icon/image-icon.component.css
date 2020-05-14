@@ -1,8 +1,10 @@
 .ygg-image-icon {
-  width: 10vw;
+  width: 100%;
   min-width: 70px;
-  height: 10vw;
+  max-width: 300px;
+  height: 100%;
   min-height: 70px;
+  max-height: 300px;
   border-radius: 10%;
   overflow: hidden;
 }

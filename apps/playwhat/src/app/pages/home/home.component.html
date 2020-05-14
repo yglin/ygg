@@ -1,10 +1,20 @@
 <div class="homepage" *ngIf="reloader">
-  <ygg-tour-plan-view></ygg-tour-plan-view>
-  <div class="exhibits">
+  <div
+    fxLayout="row wrap"
+    fxLayoutAlign="space-around center"
+    fxLayoutGap="10px"
+  >
+    <div *ngFor="let link of links" class="link-card">
+      <a [routerLink]="link.path" [ngClass]="link.class">
+        <ygg-image-thumbnail [item]="link" size="big"></ygg-image-thumbnail>
+      </a>
+    </div>
+  </div>
+  <!-- <div class="exhibits">
     <div *ngFor="let thing of exhibitThings">
       <the-thing-view [theThing]="thing" readonly></the-thing-view>
     </div>
-  </div>
+  </div> -->
   <!-- <mat-card>
     <mat-card-header>
       <mat-card-title>我想要...</mat-card-title>

@@ -45,6 +45,7 @@ export class AuthorizeService {
   }
 
   canModify(property: Property): boolean {
+    // console.log(property.ownerId);
     return !property.ownerId || this.isOwner(property);
   }
 }

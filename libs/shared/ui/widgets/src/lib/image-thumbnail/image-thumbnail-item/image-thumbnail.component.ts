@@ -1,7 +1,6 @@
-import { isEmpty } from 'lodash';
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { ImageThumbnailItem } from '../image-thumbnail';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
+import { ImageThumbnailItem } from '../image-thumbnail';
 
 @Component({
   selector: 'ygg-image-thumbnail',
@@ -11,13 +10,15 @@ import { Observable, Subscription } from 'rxjs';
 export class ImageThumbnailComponent implements OnInit, OnDestroy {
   @Input() item: ImageThumbnailItem;
   @Input() item$: Observable<ImageThumbnailItem>;
+  @Input() size;
   subscriptions: Subscription[] = [];
 
   constructor() {}
 
   ngOnInit() {
+    this.size = !!this.size ? this.size : 'medium';
     if (this.item$) {
-      this.subscriptions.push(this.item$.subscribe(item => this.item = item));
+      this.subscriptions.push(this.item$.subscribe(item => (this.item = item)));
     }
   }
 
@@ -28,11 +29,4 @@ export class ImageThumbnailComponent implements OnInit, OnDestroy {
       subscription.unsubscribe();
     }
   }
-
-  // onClick(event: MouseEvent) {
-  //   if (!isEmpty(this.clicked.observers)) {
-  //     event.stopPropagation();
-  //     this.clicked.emit(this.item);
-  //   }
-  // }
 }

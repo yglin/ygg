@@ -53,7 +53,7 @@ export class SiteNavigator {
       cy.get('.account-widget .menu-trigger').click({ force: true });
       cy.get('.user-menu-item button#tour-plan').click({ force: true });
     } else if (route === 'create') {
-      this.gotoHome();
+      cy.get('.goto-create-tour-plan').click({ force: true });
     }
   }
 

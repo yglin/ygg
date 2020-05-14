@@ -82,9 +82,9 @@ export class TheThingFactoryService {
       newThing = new TheThing();
     }
 
-    if (this.authService.currentUser) {
-      newThing.ownerId = this.authService.currentUser.id;
-    }
+    // if (this.authService.currentUser) {
+    //   newThing.ownerId = this.authService.currentUser.id;
+    // }
     // console.log('Create the thing~!!');
     // console.dir(newThing.toJSON());
     this.subjectThing = newThing;

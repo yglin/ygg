@@ -3,6 +3,8 @@ import { TheThing } from '@ygg/the-thing/core';
 import { HomepageManageService } from '@ygg/playwhat/admin';
 import { Subscription } from 'rxjs';
 import { Router, NavigationEnd } from '@angular/router';
+import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
+import { ImitationTourPlan } from '@ygg/playwhat/core';
 
 @Component({
   selector: 'pw-home',
@@ -13,8 +15,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   exhibitThings: TheThing[] = [];
   subscriptions: Subscription[] = [];
   reloader = true;
+  links: ImageThumbnailItem[] = [];
 
   constructor(private homepageManageService: HomepageManageService, private router: Router) {
+    this.links.push({
+      id: 'create-tour-plan',
+      name: '新增一個遊程計畫',
+      image: '/assets/images/tour-plan/tour-plan.png',
+      path: ['/', 'tour-plans', 'create'],
+      class: 'goto-create-tour-plan'
+    });
+
     this.subscriptions.push(
       this.homepageManageService
         .loadExhibitThings$()
