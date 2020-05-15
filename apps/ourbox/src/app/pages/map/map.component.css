@@ -1,0 +1,29 @@
+.map-container {
+  height: 80vh;
+  min-height: 300px;
+}
+
+.map {
+  height: 100%;
+  background: rgb(154, 125, 109);
+  background: linear-gradient(
+    0deg,
+    rgba(154, 125, 109, 1) 0%,
+    rgba(251, 255, 138, 1) 52%,
+    rgba(182, 255, 254, 1) 100%
+  );
+}
+
+.search {
+  width: 50%;
+  min-width: 300px;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+img {
+  max-width: 64px;
+  max-height: 64px;
+}

@@ -3,8 +3,9 @@
     fxLayout="column"
     fxLayoutAlign="center center"
     fxLayoutGap="10px"
+    [ngClass]="size"
   >
-    <ygg-image-icon class="image" [src]="item.image" [ngClass]="size"
+    <ygg-image-icon class="image" [src]="item.image"
     ></ygg-image-icon>
     <div class="name" *ngIf="item.name">
       <div fittext minFontSize="12" maxFontSize="32">{{ item.name }}</div>

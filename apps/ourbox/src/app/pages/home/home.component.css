@@ -1,0 +1,15 @@
+.quick-start .page-link {
+  width: 180px;
+  font-size: 24px;
+  font-weight: bolder;
+}
+
+.link-card {
+  margin-bottom: 50px;
+  border-radius: 10px;
+  box-shadow: 5px 5px 20px #0a2412;
+}
+
+.link-card a {
+  text-decoration: none;
+}

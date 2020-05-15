@@ -27,7 +27,9 @@ export class GeoPoint implements SerializableJSON {
     });
   }
 
-  static fromGoogleMapsLatLng(latLng: google.maps.LatLngLiteral | google.maps.LatLng): GeoPoint {
+  static fromGoogleMapsLatLng(
+    latLng: google.maps.LatLngLiteral | google.maps.LatLng
+  ): GeoPoint {
     return new GeoPoint().fromJSON({
       latitude: typeof latLng.lat === 'function' ? latLng.lat() : latLng.lat,
       longitude: typeof latLng.lng === 'function' ? latLng.lng() : latLng.lng
@@ -41,9 +43,12 @@ export class GeoPoint implements SerializableJSON {
     );
   }
 
-  constructor() {
+  constructor(options?: { latitude: number; longitude: number }) {
     this._latitude = 23.6978;
     this._longitude = 120.9605;
+    if (options) {
+      this.fromJSON(options);
+    }
   }
 
   fromJSON(data: any = {}): this {
