@@ -18,6 +18,7 @@ import { BoardComponent } from './pages/board/board.component';
 import { BoxViewComponent } from './pages/box/box-view/box-view.component';
 import { ItemViewComponent } from './pages/item/item-view/item-view.component';
 import { TheThingUiModule } from '@ygg/the-thing/ui';
+import { ItemThumbnailComponent } from './pages/item/item-thumbnail/item-thumbnail.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { TheThingUiModule } from '@ygg/the-thing/ui';
     BoxCreateComponent,
     BoardComponent,
     BoxViewComponent,
-    ItemViewComponent
+    ItemViewComponent,
+    ItemThumbnailComponent
   ],
   imports: [
     BrowserModule,

@@ -207,6 +207,9 @@
     "ourbox-e2e": {
       "tags": [],
       "implicitDependencies": ["ourbox"]
+    },
+    "ourbox-core": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {

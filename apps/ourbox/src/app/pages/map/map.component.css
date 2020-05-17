@@ -23,7 +23,16 @@
   width: 90%;
 }
 
-img {
-  max-width: 64px;
-  max-height: 64px;
+::ng-deep .leaflet-popup-content-wrapper {
+  min-width: 150px;
+  min-height: 150px;
+  text-align: center;
+  padding: 5px;
+  background: url('/assets/images/map/popup-background.jpg');
+  background-size: 100% 100%;
+}
+
+::ng-deep .leaflet-popup-content img {
+  max-width: 128px;
+  max-height: 128px;
 }

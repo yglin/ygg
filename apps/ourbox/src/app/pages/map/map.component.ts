@@ -2,13 +2,15 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import * as leaflet from 'leaflet';
 import { range, random } from 'lodash';
 import { GeoPoint } from '@ygg/shared/omni-types/core';
+import { forgeItems } from '@ygg/ourbox/core';
 import 'leaflet/dist/images/marker-icon-2x.png';
 import 'leaflet/dist/images/marker-shadow.png';
 
-interface MapItem {
+interface Marker {
   location: GeoPoint;
-  imgUrl: string;
   name: string;
+  imgUrl: string;
+  id: string;
 }
 
 @Component({
@@ -18,7 +20,7 @@ interface MapItem {
 })
 export class MapComponent implements OnInit, AfterViewInit {
   private map: any;
-  items: MapItem[] = [];
+  markers: Marker[] = [];
   center: GeoPoint;
   constructor() {}
 
@@ -40,28 +42,36 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {}
 
-  addMarkers(items: MapItem[]) {
-    console.dir(items);
-    for (const item of items) {
+  addMarkers(markers: Marker[]) {
+    console.dir(markers);
+    for (const marker of markers) {
       const lfMarker = leaflet
-        .marker([item.location.latitude, item.location.longitude])
+        .marker([marker.location.latitude, marker.location.longitude])
         .addTo(this.map);
+      const link = `/items/${marker.id}`;
+      const target = `ourbox_item_${marker.id}`;
       lfMarker.bindPopup(
-        `<img src="${item.imgUrl}"/><div><h5>${item.name}</h5></div>`
+        `<a href="${link}" target="${target}">
+          <div class="map-popup">
+            <img src='${marker.imgUrl}' />
+            <h2>${marker.name}</h2>
+          </div>
+        </a>
+        `
       );
     }
   }
 
-  async loadItems(center: GeoPoint): Promise<MapItem[]> {
-    return range(10).map(() => {
+  async loadItems(center: GeoPoint): Promise<Marker[]> {
+    return forgeItems().map(item => {
       const marker: GeoPoint = new GeoPoint({
         latitude: this.center.latitude + random(-0.01, 0.01, true),
         longitude: this.center.longitude + random(-0.01, 0.01, true)
       });
       return {
-        name: '呱呱瓜',
-        imgUrl:
-          'https://image.flaticon.com/icons/png/128/2636/2636941.png',
+        id: item.id,
+        name: item.name,
+        imgUrl: item.image,
         location: marker
       };
     });
@@ -69,9 +79,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   async ngAfterViewInit() {
     this.center = await this.getUserLocation();
-    this.items = await this.loadItems(this.center);
+    this.markers = await this.loadItems(this.center);
     this.initMap(this.center);
-    this.addMarkers(this.items);
+    this.addMarkers(this.markers);
   }
 
   initMap(center: GeoPoint): void {

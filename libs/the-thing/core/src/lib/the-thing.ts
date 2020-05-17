@@ -17,7 +17,7 @@ import {
 } from 'lodash';
 import { Tags } from '@ygg/tags/core';
 import { TheThingCell } from './cell';
-import { OmniTypeID } from '@ygg/shared/omni-types/core';
+import { OmniTypeID, Image } from '@ygg/shared/omni-types/core';
 import { generateID, toJSONDeep, Entity } from '@ygg/shared/infra/data-access';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 import { TheThingRelation } from './relation';
@@ -99,9 +99,7 @@ export class TheThing implements Entity, ImageThumbnailItem {
         '便便'
       ]);
     thing.tags = !!options.tags ? new Tags(options.tags) : Tags.forge();
-    thing.image =
-      options.image ||
-      'https://live.staticflickr.com/6130/6019458291_4e512065fd.jpg';
+    thing.image = options.image || Image.forge().src;
 
     if (options.cells) {
       thing.cells = options.cells;
