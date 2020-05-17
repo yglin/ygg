@@ -44,14 +44,28 @@ body {
   background: rgba(255, 255, 255, 0);
 }
 
+.mat-tooltip {
+  font-size: 20px;
+}
+
 .panel {
   padding: 10px 5px;
   border-radius: 5px;
-  background: rgb(255, 243, 233);
+  background: rgb(255, 255, 255);
   background: radial-gradient(
     circle,
-    rgba(255, 243, 233, 1) 0%,
-    rgba(255, 214, 177, 0.8748541652989321) 68%,
-    rgba(255, 122, 3, 0.49670290479473034) 100%
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 231, 209, 0.8748541652989321) 69%,
+    rgba(255, 205, 160, 0.49670290479473034) 100%
   );
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: bisque;
+  text-shadow: 2px 2px 2px #222222;
 }

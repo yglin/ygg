@@ -1,10 +1,15 @@
-<div id='user-thumbnail' class="ygg-user-thumbnail" *ngIf="user" [attr.userId]="user.id">
+<div
+  id="user-thumbnail"
+  class="ygg-user-thumbnail"
+  *ngIf="user"
+  [attr.userId]="user.id"
+>
   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-    <div fxFlex='50px' class='avatar'>
+    <div fxFlex="50px" class="avatar" [matTooltip]="user.name">
       <img [src]="user.avatarUrl" />
     </div>
-    <div fxFlex class='name'>
-      <span [hidden]='!showName'>{{ user.name }}</span>
+    <div fxFlex class="name">
+      <span [hidden]="!showName">{{ user.name }}</span>
     </div>
   </div>
 </div>

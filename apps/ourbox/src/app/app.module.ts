@@ -15,6 +15,9 @@ import { HeaderComponent } from './layout/header/header.component';
 import { SharedUserUiModule } from '@ygg/shared/user/ui';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BoardComponent } from './pages/board/board.component';
+import { BoxViewComponent } from './pages/box/box-view/box-view.component';
+import { ItemViewComponent } from './pages/item/item-view/item-view.component';
+import { TheThingUiModule } from '@ygg/the-thing/ui';
 
 @NgModule({
   declarations: [
@@ -23,7 +26,9 @@ import { BoardComponent } from './pages/board/board.component';
     HeaderComponent,
     MapComponent,
     BoxCreateComponent,
-    BoardComponent
+    BoardComponent,
+    BoxViewComponent,
+    ItemViewComponent
   ],
   imports: [
     BrowserModule,
@@ -33,6 +38,7 @@ import { BoardComponent } from './pages/board/board.component';
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
     SharedUserUiModule,
+    TheThingUiModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(routes)
   ],

@@ -1,5 +1,10 @@
 <div class="image-thumbnail-list" *ngIf="items">
-  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
+  <div
+    fxLayout="row"
+    fxLayoutAlign="start start"
+    fxLayoutGap="10px"
+    *ngIf="isSelectable"
+  >
     <div>
       <button
         class="select-all"
@@ -47,7 +52,7 @@
   <div
     class="item-list"
     fxLayout="row wrap"
-    fxLayoutAlign="start center"
+    fxLayoutAlign="space-around center"
     fxLayoutGap="20px"
   >
     <div

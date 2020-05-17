@@ -1,0 +1,33 @@
+<div class="item-view">
+  <ygg-page-title icon="category">{{ item.name }}</ygg-page-title>
+  <br />
+  <div fxLayout="row" fxLayoutAlign="space-between end" fxLayoutGap="20px">
+    <div>
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+        <h2>
+          目前的保管者：
+        </h2>
+        <ygg-user-thumbnail
+          [id]="keeperId"
+          [showName]="false"
+        ></ygg-user-thumbnail>
+      </div>
+      <br />
+      <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="5px">
+        <h2>
+          排隊中：
+        </h2>
+        <ygg-user-thumbnail
+          *ngFor="let userId of standbyList"
+          [id]="userId"
+          [showName]="false"
+        ></ygg-user-thumbnail>
+      </div>
+    </div>
+    <button mat-fab matTooltip="我要借這個" (click)="askForIt()">
+      <mat-icon>loyalty</mat-icon>
+    </button>
+  </div>
+  <br /><br />
+  <the-thing-view [theThing]="item"></the-thing-view>
+</div>
