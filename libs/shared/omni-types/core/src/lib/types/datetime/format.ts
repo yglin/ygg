@@ -7,6 +7,7 @@ export const DATE_FORMATS = {
   },
   display: {
     date: 'L',
+    datetime: 'LLL',
     dateInput: 'L',
     monthYearLabel: 'MM YYYY',
     dateA11yLabel: 'LL',

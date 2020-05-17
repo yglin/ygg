@@ -1,5 +1,57 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~leaflet/dist/leaflet.css";
+@import '~leaflet/dist/leaflet.css';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 5px 5px 20px #0a2412;
+  background-color: rgba(230, 200, 220, 0.85);
+  /* background: rgb(255,241,219); */
+  background: rgb(255, 241, 219);
+  background: linear-gradient(
+    62deg,
+    rgba(255, 241, 219, 0.9) 0%,
+    rgba(255, 190, 130, 0.9) 11%,
+    rgba(255, 255, 255, 1) 15%,
+    rgba(255, 233, 208, 0.9) 19%,
+    rgba(235, 255, 190, 0.8496440812653187) 75%,
+    rgba(255, 254, 253, 1) 80%,
+    rgba(255, 231, 208, 0.8748541652989321) 84%,
+    rgba(255, 246, 233, 0.9) 100%
+  );
+}
+
+.mat-form-field {
+  padding: 5px 10px;
+}
+
+.page-title {
+  color: bisque;
+  text-shadow: 3px 3px 5px #000000;
+}
+
+.mat-form-field,
+.mat-stepper-vertical,
+.mat-stepper-horizontal {
+  background: rgba(255, 255, 255, 0);
+}
+
+.panel {
+  padding: 10px 5px;
+  border-radius: 5px;
+  background: rgb(255, 243, 233);
+  background: radial-gradient(
+    circle,
+    rgba(255, 243, 233, 1) 0%,
+    rgba(255, 214, 177, 0.8748541652989321) 68%,
+    rgba(255, 122, 3, 0.49670290479473034) 100%
+  );
+}

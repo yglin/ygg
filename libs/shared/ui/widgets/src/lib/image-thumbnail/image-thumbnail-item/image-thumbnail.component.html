@@ -5,10 +5,18 @@
     fxLayoutGap="10px"
     [ngClass]="size"
   >
-    <ygg-image-icon class="image" [src]="item.image"
-    ></ygg-image-icon>
+    <ygg-image-icon class="image" [src]="item.image"></ygg-image-icon>
     <div class="name" *ngIf="item.name">
       <div fittext minFontSize="12" maxFontSize="32">{{ item.name }}</div>
     </div>
+  </div>
+  <div class="open-link" [hidden]="!item.link">
+    <button
+      type="button"
+      mat-mini-fab
+      (click)="onClickLink(item); $event.stopPropagation()"
+    >
+      <mat-icon>open_in_new</mat-icon>
+    </button>
   </div>
 </div>

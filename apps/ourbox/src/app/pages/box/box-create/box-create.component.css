@@ -1,0 +1,13 @@
+.tab-content {
+  min-height: 300px;
+}
+
+.icon {
+  width: 20vw;
+  height: 20vw;
+}
+
+.icon img {
+  width: 100%;
+  height: 100%;
+}

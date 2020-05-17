@@ -1,6 +1,7 @@
 .image-thumbnail {
   margin: 5px;
-  overflow: hidden;
+  overflow: visible;
+  position: relative;
 }
 
 .big {
@@ -35,4 +36,16 @@
 
 .name {
   min-width: 50%;
+}
+
+.open-link {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  cursor: pointer;
+  opacity: 0.25;
+}
+
+.open-link:hover {
+  opacity: 1;
 }

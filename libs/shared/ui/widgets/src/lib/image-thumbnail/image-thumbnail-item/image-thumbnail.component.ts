@@ -29,4 +29,11 @@ export class ImageThumbnailComponent implements OnInit, OnDestroy {
       subscription.unsubscribe();
     }
   }
+
+  onClickLink(item: ImageThumbnailItem) {
+    if (item.link) {
+      window.open(item.link, item.id);
+    }
+  }
+
 }

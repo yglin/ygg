@@ -8,13 +8,6 @@
   position: relative;
 }
 
-.open-link {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  cursor: pointer;
-}
-
 .delete {
   position: absolute;
   bottom: -5px;

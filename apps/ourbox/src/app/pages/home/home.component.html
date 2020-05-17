@@ -1,6 +1,6 @@
 <div class='home'>
   <div fxLayout="row wrap" fxLayoutAlign="space-around center" fxLayoutGap="0px">
-    <div *ngFor="let link of links" class="link-card">
+    <div *ngFor="let link of links" class="link-card card">
       <a [routerLink]="link.path" [ngClass]="link.class">
         <ygg-image-thumbnail [item]="link" size="big"></ygg-image-thumbnail>
       </a>

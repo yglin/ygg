@@ -1,0 +1,94 @@
+<div class="box-create">
+  <ygg-page-title icon="library_add">開一個新寶箱</ygg-page-title>
+  <br />
+  <div class="panel">
+    <mat-horizontal-stepper linear="true" #stepper>
+      <mat-step [stepControl]="firstFormGroup">
+        <form [formGroup]="firstFormGroup">
+          <ng-template matStepLabel>寶箱名稱</ng-template>
+          <div
+            class="tab-content"
+            fxLayout="row wrap"
+            fxLayoutAlign="center center"
+            fxLayoutGap="10px"
+          >
+            <div class="icon"><img src="/assets/images/box/create.png" /></div>
+            <mat-form-field>
+              <input
+                matInput
+                placeholder="請輸入寶箱名稱"
+                formControlName="name"
+                required
+              />
+            </mat-form-field>
+          </div>
+          <div
+            fxLayout="row"
+            fxLayoutAlign="space-between center"
+            fxLayoutGap="20px"
+          >
+            <div></div>
+            <button mat-button matStepperNext>下一步</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="secondFormGroup">
+        <form [formGroup]="secondFormGroup">
+          <ng-template matStepLabel>邀請好友加入</ng-template>
+
+          <div
+            class="tab-content"
+            fxLayout="row wrap"
+            fxLayoutAlign="center center"
+            fxLayoutGap="10px"
+          >
+            <div class="icon"><img src="/assets/images/box/share.png" /></div>
+
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+              <mat-form-field>
+                <input
+                  matInput
+                  formControlName="emails"
+                  placeholder="輸入email"
+                />
+              </mat-form-field>
+              <button mat-mini-fab>
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div
+            fxLayout="row"
+            fxLayoutAlign="space-between center"
+            fxLayoutGap="20px"
+          >
+            <button mat-button matStepperPrevious>上一步</button>
+            <button mat-button matStepperNext>下一步</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>公開寶箱</ng-template>
+        <div
+          class="tab-content"
+          fxLayout="row wrap"
+          fxLayoutAlign="center center"
+          fxLayoutGap="10px"
+        >
+          <div class="icon"><img src="/assets/images/box/publish.png" /></div>
+          <div>
+            <mat-checkbox>公開這個寶箱的內容？</mat-checkbox>
+          </div>
+        </div>
+        <div
+          fxLayout="row"
+          fxLayoutAlign="space-between center"
+          fxLayoutGap="10px"
+        >
+          <button mat-button matStepperPrevious>上一步</button>
+          <button mat-button (click)="submit()">完成</button>
+        </div>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </div>
+</div>

@@ -4,5 +4,9 @@
 }
 
 .ygg-page-title .material-icons{
-  font-size: 36px;
+  font-size: 28px;
+}
+
+.title {
+  font-size: 24px;
 }

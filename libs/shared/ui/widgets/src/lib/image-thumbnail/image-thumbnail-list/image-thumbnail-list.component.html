@@ -64,15 +64,6 @@
       (click)="onClickItem(item)"
     >
       <ygg-image-thumbnail [item]="item"></ygg-image-thumbnail>
-      <div class="open-link" [hidden]="!item.link">
-        <button
-          type="button"
-          mat-mini-fab
-          (click)="onClickLink(item); $event.stopPropagation()"
-        >
-          <mat-icon>open_in_new</mat-icon>
-        </button>
-      </div>
     </div>
   </div>
 </div>

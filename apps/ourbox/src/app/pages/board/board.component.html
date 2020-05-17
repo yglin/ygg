@@ -1,0 +1,21 @@
+<div class="board">
+  <ygg-page-title icon="dashboard">佈告欄</ygg-page-title>
+  <br />
+  <div class="message-list">
+    <div *ngFor="let message of messages" class="message panel">
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
+        <div>
+          <ygg-image-thumbnail
+            size="small"
+            [item]="message"
+          ></ygg-image-thumbnail>
+        </div>
+        <div fxFlex>
+          <ygg-datetime [value]="message.timestamp"></ygg-datetime>
+          <mat-divider> </mat-divider>
+          <pre>{{ message.content }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

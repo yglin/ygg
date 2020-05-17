@@ -94,12 +94,6 @@ export class ImageThumbnailListComponent
     this.selectionChange.emit(this.selection);
   }
 
-  onClickLink(item: ImageThumbnailItem) {
-    if (item.link) {
-      window.open(item.link, item.id);
-    }
-  }
-
   selectAll() {
     if (this.isSelectable) {
       this.selection = [...this.items];

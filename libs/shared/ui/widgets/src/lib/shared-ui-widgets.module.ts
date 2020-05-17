@@ -30,6 +30,7 @@ import { NgForColorBackgroundDirective } from './ng-for-color-background/ng-for-
 import { ControlViewSwitchComponent } from './control-view-switch/control-view-switch.component';
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.component';
+import { DatetimeComponent } from './datetime/datetime.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.compone
     NgForColorBackgroundDirective,
     ControlViewSwitchComponent,
     ConfirmDialogComponent,
-    AlertDialogComponent
+    AlertDialogComponent,
+    DatetimeComponent
     // ImageThumbnailSelectorComponent
   ],
   imports: [
@@ -84,7 +86,8 @@ import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.compone
     ImageThumbnailComponent,
     ImageThumbnailListComponent,
     NgForColorBackgroundDirective,
-    ControlViewSwitchComponent
+    ControlViewSwitchComponent,
+    DatetimeComponent
     // ImageThumbnailSelectorComponent
   ],
   entryComponents: [

@@ -7,13 +7,13 @@ import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  hasMyBoxes: boolean = false;
+  hasMyBoxes: boolean = true;
 
   links: ImageThumbnailItem[] = [
     {
       id: 'map-search',
-      name: '寶物地圖',
-      image: '/assets/map.png',
+      name: '撿寶地圖',
+      image: '/assets/images/map.png',
       path: '/map'
     }
   ];
@@ -24,15 +24,15 @@ export class HomeComponent implements OnInit {
     if (this.hasMyBoxes) {
       this.links.push({
         id: 'my-board',
-        name: '我的佈告欄',
-        image: '/assets/board.png',
+        name: '佈告欄',
+        image: '/assets/images/board.png',
         path: '/board'
-      })
+      });
     } else {
       this.links.push({
         id: 'create-box',
         name: '開新寶箱',
-        image: '/assets/create-box.png',
+        image: '/assets/images/box/create.png',
         path: '/boxes/create'
       });
     }
