@@ -7,7 +7,8 @@ export abstract class PurchaseRowPageObject extends PageObject {
   selectors = {
     main: '',
     inputQuantity: '.quantity input',
-    charge: '.charge'
+    charge: '.charge',
+    buttonDelete: 'button.delete'
   };
 
   abstract expectValue(purchase: Purchase): void;
@@ -37,10 +38,14 @@ export abstract class ShoppingCartEditorPageObject extends PageObject {
     buttonAddPurchase: 'button.add-purchase'
   };
 
-  getSelectorForPurchase(purchase: Purchase): string {
-    return `${this.getSelector('purchaseList')} [product-id="${
-      purchase.productId
-    }"]`;
+  getSelectorForPurchase(purchase?: Purchase): string {
+    if (purchase) {
+      return `${this.getSelector('purchaseList')} [product-id="${
+        purchase.productId
+      }"]`;
+    } else {
+      return `${this.getSelector('purchaseList')} [product-id]`;
+    }
   }
 
   getSelectorForProduct(productId: string): string {

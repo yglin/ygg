@@ -5,7 +5,8 @@ import {
 } from '@ygg/shopping/ui';
 import {
   ImageThumbnailItemPageObjectCypress,
-  YggDialogPageObjectCypress
+  YggDialogPageObjectCypress,
+  ConfirmDialogPageObjectCypress
 } from '@ygg/shared/ui/test';
 import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
 import { Purchase } from '@ygg/shopping/core';
@@ -37,6 +38,10 @@ export class PurchaseRowPageObjectCypress extends PurchaseRowPageObject {
     cy.get(this.getSelector('inputQuantity'))
       .clear()
       .type(quantity.toString());
+  }
+
+  clickDelete() {
+    cy.get(this.getSelector('buttonDelete')).click();
   }
 }
 
@@ -109,5 +114,27 @@ export class ShoppingCartEditorPageObjectCypress extends ShoppingCartEditorPageO
     });
     const totalCharge = sum(purchases.map(p => p.charge));
     this.expectTotalCharge(totalCharge);
+  }
+
+  removePurchase(purchase: Purchase) {
+    const purchaseRowPO = new PurchaseRowPageObjectCypress(
+      this.getSelectorForPurchase(purchase)
+    );
+    purchaseRowPO.clickDelete();
+    const confirmDialogPO = new ConfirmDialogPageObjectCypress();
+    const product = theMockDatabase.getEntity(
+      `${TheThing.collection}/${purchase.productId}`
+    );
+    confirmDialogPO.expectMessage(`確定要移除購買項目：${product.name}？`);
+    confirmDialogPO.confirm();
+    cy.get(this.getSelectorForPurchase(purchase)).should('not.be.visible');
+  }
+
+  removeAll() {
+    cy.get(this.getSelector('buttonClear')).click();
+    const confirmDialogPO = new ConfirmDialogPageObjectCypress();
+    confirmDialogPO.expectMessage(`確定要移除所有購買項目？`);
+    confirmDialogPO.confirm();
+    cy.get(this.getSelectorForPurchase()).should('not.be.visible');
   }
 }

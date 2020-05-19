@@ -87,9 +87,12 @@ export class ShoppingCartService {
   }
 
   async removeAll() {
-    this.purchases = {};
-    this.purchases$.next([]);
-    this.evaluateTotalCharge();
+    const confirm = await this.emcee.confirm('確定要移除所有購買項目？');
+    if (confirm) {
+      this.purchases = {};
+      this.purchases$.next([]);
+      this.evaluateTotalCharge();
+    }
   }
 
   submit() {

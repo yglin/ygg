@@ -74,6 +74,7 @@
         <td mat-cell *matCellDef="let purchase; let idx = index">
           <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
             <button
+              class="delete"
               type="button"
               mat-mini-fab
               (click)="removePurchase(purchase)"
