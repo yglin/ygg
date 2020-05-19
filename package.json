@@ -97,6 +97,7 @@
     "@angular-devkit/build-ng-packagr": "~0.901.1",
     "@angular/cli": "~9.1.1",
     "@angular/compiler-cli": "~9.1.1",
+    "@angular/language-service": "^9.1.0",
     "@nestjs/schematics": "^6.7.0",
     "@nestjs/testing": "^6.8.3",
     "@ngrx/store-devtools": "9.1.0",
@@ -115,7 +116,7 @@
     "async": "^3.1.0",
     "child-process-promise": "^2.2.1",
     "codelyzer": "~5.1.0",
-    "cypress": "^4.4.0",
+    "cypress": "^4.5.0",
     "cypress-firebase": "^1.0.0",
     "cypress-promise": "^1.0.2",
     "dotenv": "8.0.0",
@@ -127,13 +128,12 @@
     "jest-preset-angular": "8.0.0",
     "ng-packagr": "^9.1.0",
     "prettier": "1.19.1",
+    "ts-jest": "25.2.1",
     "ts-node": "~8.3.0",
     "tsickle": "0.38.1",
     "tslib": "^1.10.0",
     "tslint": "6.0.0",
-    "typescript": "~3.8.3",
-    "ts-jest": "25.2.1",
-    "@angular/language-service": "^9.1.0"
+    "typescript": "~3.8.3"
   },
   "main": "./dist/apps/firebase-functions/main.js",
   "engines": {

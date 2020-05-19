@@ -1,0 +1,12 @@
+<div class="shopping-cart-button" *ngIf="purchaseCount > 0">
+  <button
+    mat-mini-fab
+    matTooltip="前往購物車"
+    [routerLink]="['/', 'shopping', 'cart']"
+    [matBadge]="purchaseCount"
+    [matBadgeHidden]="!showBadge"
+    matBadgeColor="warn"
+  >
+    <mat-icon>shopping_cart</mat-icon>
+  </button>
+</div>

@@ -1,13 +1,18 @@
 <div class="homepage" *ngIf="reloader">
-  <div
-    fxLayout="row wrap"
-    fxLayoutAlign="space-around center"
-    fxLayoutGap="10px"
-  >
-    <div *ngFor="let link of links" class="link-card">
-      <a [routerLink]="link.path" [ngClass]="link.class">
-        <ygg-image-thumbnail [item]="link" size="big"></ygg-image-thumbnail>
-      </a>
+  <div fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="space-around start" fxLayoutGap="50px">
+    <div>
+      <ygg-image-thumbnail-list [items$]="plays$" size="big"></ygg-image-thumbnail-list>
+    </div>
+    <div
+      fxLayout="row wrap"
+      fxLayoutAlign="space-around center"
+      fxLayoutGap="10px"
+    >
+      <div *ngFor="let link of links" class="link-card">
+        <a [routerLink]="link.path" [ngClass]="link.class">
+          <ygg-image-thumbnail [item]="link" size="big"></ygg-image-thumbnail>
+        </a>
+      </div>
     </div>
   </div>
   <!-- <div class="exhibits">

@@ -5,9 +5,16 @@ import {
   LocationViewPageObjectCypress,
   BusinessHoursViewPageObjectCypress
 } from '@ygg/shared/omni-types/test';
-import { CellNamePrice } from '@ygg/shopping/core';
-import { AdditionViewPageObjectCypress } from '@ygg/shopping/test';
-import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
+import { CellNamePrice, Purchase } from '@ygg/shopping/core';
+import {
+  AdditionViewPageObjectCypress,
+  PurchaseListPageObjectCypress,
+  PurchaseProductPageObjectCypress
+} from '@ygg/shopping/test';
+import {
+  ImageThumbnailListPageObjectCypress,
+  YggDialogPageObjectCypress
+} from '@ygg/shared/ui/test';
 import { ImitationPlay } from '@ygg/playwhat/core';
 
 export class PlayViewPageObjectCypress extends PlayViewPageObject {
@@ -16,6 +23,16 @@ export class PlayViewPageObjectCypress extends PlayViewPageObject {
     this.albumViewPO = new AlbumViewPageObjectCypress(
       this.getSelector('album')
     );
+  }
+
+  purchase(purchases: Purchase[] = []) {
+    cy.get(this.getSelector('buttonAddToCart')).click();
+    const dialogPO = new YggDialogPageObjectCypress();
+    const purchasePO = new PurchaseProductPageObjectCypress(
+      dialogPO.getSelector()
+    );
+    purchasePO.setValue(purchases);
+    dialogPO.confirm();
   }
 
   expectVisible(): Cypress.Chainable<any> {

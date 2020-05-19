@@ -18,7 +18,7 @@ export class OmniTypeViewControlPageObjectCypress extends OmniTypeViewControlPag
     );
     controlPO.setValue(type, value);
     dialogPO.confirm();
-    dialogPO.expectClosed();
+    // dialogPO.expectClosed();
     this.expectValue(type, value);
   }
 

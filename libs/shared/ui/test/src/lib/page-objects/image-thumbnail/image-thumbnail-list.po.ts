@@ -1,10 +1,19 @@
 import {
   ImageThumbnailListPageObject,
-  ImageThumbnailItem
+  ImageThumbnailItem,
+  ImageThumbnailItemPageObject
 } from '@ygg/shared/ui/widgets';
 import { ImageThumbnailItemPageObjectCypress } from './image-thumbnail-item.po';
 
 export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageObject {
+  getItemPageObject(
+    item: ImageThumbnailItem
+  ): ImageThumbnailItemPageObjectCypress {
+    return new ImageThumbnailItemPageObjectCypress(
+      this.getSelectorForItem(item)
+    );
+  }
+
   getItem(item: ImageThumbnailItem): Cypress.Chainable<JQuery<HTMLElement>> {
     return cy.get(this.getSelectorForItem(item)).first();
     // .contains('.item', item.name)
@@ -27,7 +36,9 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
   }
 
   expectItem(item: ImageThumbnailItem) {
-    this.getItem(item).scrollIntoView().should('be.visible');
+    this.getItem(item)
+      .scrollIntoView()
+      .should('be.visible');
   }
 
   expectItems(items: ImageThumbnailItem[]) {

@@ -11,6 +11,7 @@ import { ImageThumbnailItem } from '../image-thumbnail';
 import { Observable, Subscription, Subject } from 'rxjs';
 import { YggDialogContentComponent } from '../../dialog';
 import { ImageThumbnailListPageObject } from './image-thumbnail-list.component.po';
+import { ImageThumbnailItemSize } from '../image-thumbnail-item/image-thumbnail.component.po';
 
 @Component({
   selector: 'ygg-image-thumbnail-list',
@@ -21,6 +22,7 @@ export class ImageThumbnailListComponent
   implements OnInit, OnDestroy, YggDialogContentComponent {
   @Input() items: ImageThumbnailItem[];
   @Input() items$: Observable<ImageThumbnailItem[]>;
+  @Input() size: ImageThumbnailItemSize;
   @Input() readonly: boolean;
   @Output() clickItem: EventEmitter<ImageThumbnailItem> = new EventEmitter();
   @Output() clickAdd: EventEmitter<any> = new EventEmitter();

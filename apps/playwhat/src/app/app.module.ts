@@ -24,6 +24,7 @@ import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
 // import { ResourceUiModule } from '@ygg/resource/ui';
 import { TheThingUiModule } from '@ygg/the-thing/ui';
 import { PlaywhatUiModule } from '@ygg/playwhat/ui';
+import { ShoppingUiModule } from '@ygg/shopping/ui';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { PlaywhatUiModule } from '@ygg/playwhat/ui';
     // PlaywhatPlayFrontendModule,
     // PlaywhatPlayAdminModule,
     TagsAdminModule,
+    ShoppingUiModule,
     PlaywhatUiModule,
     PlaywhatAdminModule,
     RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })

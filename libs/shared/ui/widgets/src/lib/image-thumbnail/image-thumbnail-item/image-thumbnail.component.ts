@@ -1,6 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { ImageThumbnailItem } from '../image-thumbnail';
+import { Router } from '@angular/router';
+import { ImageThumbnailItemSize } from './image-thumbnail.component.po';
 
 @Component({
   selector: 'ygg-image-thumbnail',
@@ -10,10 +12,10 @@ import { ImageThumbnailItem } from '../image-thumbnail';
 export class ImageThumbnailComponent implements OnInit, OnDestroy {
   @Input() item: ImageThumbnailItem;
   @Input() item$: Observable<ImageThumbnailItem>;
-  @Input() size;
+  @Input() size: ImageThumbnailItemSize;
   subscriptions: Subscription[] = [];
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit() {
     this.size = !!this.size ? this.size : 'medium';
@@ -32,8 +34,8 @@ export class ImageThumbnailComponent implements OnInit, OnDestroy {
 
   onClickLink(item: ImageThumbnailItem) {
     if (item.link) {
-      window.open(item.link, item.id);
+      // window.open(item.link, item.id);
+      this.router.navigateByUrl(item.link);
     }
   }
-
 }

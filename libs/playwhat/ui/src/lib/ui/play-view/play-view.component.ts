@@ -6,6 +6,7 @@ import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { isEmpty } from 'lodash';
 import { Observable, of, Subscription } from 'rxjs';
 import { tap, switchMap, filter } from 'rxjs/operators';
+import { ShoppingCartService } from '@ygg/shopping/ui';
 
 @Component({
   selector: 'ygg-play-view',
@@ -20,7 +21,10 @@ export class PlayViewComponent
   RelationAddition = RelationAddition;
   additions: TheThing[];
 
-  constructor(private theThingAccessService: TheThingAccessService) {}
+  constructor(
+    private theThingAccessService: TheThingAccessService,
+    private cartService: ShoppingCartService
+  ) {}
 
   ngOnInit() {
     if (!this.theThing$) {
@@ -54,5 +58,9 @@ export class PlayViewComponent
     for (const subcsription of this.subscriptions) {
       subcsription.unsubscribe();
     }
+  }
+
+  purchase() {
+    this.cartService.add(this.theThing);
   }
 }

@@ -4,6 +4,10 @@ import {
 } from '@ygg/shared/ui/widgets';
 
 export class ImageThumbnailItemPageObjectCypress extends ImageThumbnailItemPageObject {
+  clickLink() {
+    cy.get(this.getSelector('buttonOpenLink')).click();
+  }
+
   expectVisible(): void {
     cy.get(this.getSelector()).should('be.visible');
   }

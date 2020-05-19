@@ -1,5 +1,6 @@
 import { PageObject } from '@ygg/shared/test/page-object';
 import { ImageThumbnailItem } from '../image-thumbnail';
+import { ImageThumbnailItemPageObject } from '../image-thumbnail-item/image-thumbnail.component.po';
 
 export abstract class ImageThumbnailListPageObject extends PageObject {
   selectors = {
@@ -20,9 +21,11 @@ export abstract class ImageThumbnailListPageObject extends PageObject {
     if (item === undefined) {
       return `${this.getSelector()} .item`;
     } else if (item.image) {
-      return `${this.getSelector()} .item[item-image="${item.image}"]:contains("${item.name}")`;
+      return `${this.getSelector()} .item[item-image="${
+        item.image
+      }"]:contains("${item.name}")`;
     } else {
-      return `${this.getSelector()} .item:contains("${item.name}")`
+      return `${this.getSelector()} .item:contains("${item.name}")`;
     }
   }
 
@@ -35,6 +38,9 @@ export abstract class ImageThumbnailListPageObject extends PageObject {
   // }
 
   abstract getItem(item: ImageThumbnailItem): any;
+  abstract getItemPageObject(
+    item: ImageThumbnailItem
+  ): ImageThumbnailItemPageObject;
   abstract expectItem(item: ImageThumbnailItem): void;
   abstract expectItems(items: ImageThumbnailItem[]): void;
   abstract expectNoItems(objects: ImageThumbnailItem[]): void;

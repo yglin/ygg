@@ -6,25 +6,30 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 // import { ProductThumbnailComponent } from './product/product-thumbnail/product-thumbnail.component';
 // import { PurchaseThumbnailComponent } from './purchase/purchase-thumbnail/purchase-thumbnail.component';
 import { ShoppingCartEditorComponent } from './cart/shopping-cart-editor/shopping-cart-editor.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TheThingUiModule } from '@ygg/the-thing/ui';
 import { AdditionViewComponent } from './addition/addition-view/addition-view.component';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { ImitationProduct } from '@ygg/shopping/core';
 import { IncomeRecordDataTableComponent } from './accounting/income-data-table/income-data-table.component';
-import { SharedUserUiModule } from "@ygg/shared/user/ui";
+import { SharedUserUiModule } from '@ygg/shared/user/ui';
 import { RouterModule } from '@angular/router';
 import { routes } from './routes';
+import { PurchaseProductComponent } from './purchase/purchase-product/purchase-product.component';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
+import { ShoppingCartButtonComponent } from './cart/shopping-cart-button/shopping-cart-button.component';
 // import { PurchaseControlComponent } from './purchase/purchase-control/purchase-control.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
     SharedUserUiModule,
     TheThingUiModule,
+    SharedOmniTypesUiModule,
     RouterModule.forChild(routes)
   ],
   declarations: [
@@ -33,14 +38,17 @@ import { routes } from './routes';
     // PurchaseThumbnailComponent,
     ShoppingCartEditorComponent,
     AdditionViewComponent,
-    IncomeRecordDataTableComponent
+    IncomeRecordDataTableComponent,
+    PurchaseProductComponent,
+    ShoppingCartButtonComponent
     // PurchaseControlComponent
   ],
   exports: [
     PurchaseListComponent,
     ShoppingCartEditorComponent,
     AdditionViewComponent,
-    IncomeRecordDataTableComponent
+    IncomeRecordDataTableComponent,
+    ShoppingCartButtonComponent
     // PurchaseControlComponent
   ],
   entryComponents: [

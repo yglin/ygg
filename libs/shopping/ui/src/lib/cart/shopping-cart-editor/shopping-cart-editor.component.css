@@ -1,10 +1,12 @@
 .mat-table {
   width: 100%;
   background-color: rgba(255, 255, 255, 0.25);
+  border-radius: 2%;
 }
 
 .mat-header-cell {
   font-weight: 800;
+  font-size: 24px;
 }
 
 .mat-table .mat-row,

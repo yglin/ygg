@@ -7,9 +7,17 @@
   >
     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
       <div>
-        <button [routerLink]="['/home']" id="to-home" mat-mini-fab matTooltip="回首頁">
+        <button
+          [routerLink]="['/home']"
+          id="to-home"
+          mat-mini-fab
+          matTooltip="回首頁"
+        >
           <mat-icon>home</mat-icon>
         </button>
+      </div>
+      <div class="shopping-cart">
+        <ygg-shopping-cart-button></ygg-shopping-cart-button>
       </div>
       <!-- <div>
         <button

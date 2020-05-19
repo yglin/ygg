@@ -1,5 +1,17 @@
 <div class="play-view" *ngIf="theThing">
-  <h1 class="name">{{ theThing.name }}</h1>
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="30px">
+    <h1 class="name">{{ theThing.name }}</h1>
+    <div>
+      <button
+        class="add-to-cart"
+        mat-fab
+        matTooltip="加入購物車"
+        (click)="purchase()"
+      >
+        <mat-icon>add_shopping_cart</mat-icon>
+      </button>
+    </div>
+  </div>
   <h3 class="subtitle">{{ theThing.getCellValue('副標題') }}</h3>
   <ygg-user-thumbnail [id]="theThing.ownerId"></ygg-user-thumbnail>
   <br />

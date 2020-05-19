@@ -2,7 +2,9 @@ import { YggDialogPageObject } from '@ygg/shared/ui/widgets';
 
 export class YggDialogPageObjectCypress extends YggDialogPageObject {
   confirm(): void {
-    cy.get(this.getSelector('buttonConfirm')).click();
+    cy.get(this.getSelector('buttonConfirm'))
+      .last()
+      .click();
   }
 
   cancel(): void {

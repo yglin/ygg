@@ -44,8 +44,8 @@ export class ShoppingCartEditorPageObjectCypress extends ShoppingCartEditorPageO
   submit(): void {
     cy.get(this.getSelector('buttonSubmit')).click();
   }
-  expectVisible() {
-    cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
+  expectVisible(): Cypress.Chainable<any> {
+    return cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
   }
 
   expectTotalCharge(totalCharge: number): void {

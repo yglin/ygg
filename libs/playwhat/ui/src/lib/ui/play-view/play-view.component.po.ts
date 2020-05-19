@@ -13,7 +13,8 @@ export abstract class PlayViewPageObject extends PageObject {
     limitOnNumber: '.limit-on-number',
     location: '.location',
     businessHours: '.business-hours',
-    additionList: '.addition-list'
+    additionList: '.addition-list',
+    buttonAddToCart: 'button.add-to-cart'
   };
   albumViewPO: AlbumViewPageObject;
 

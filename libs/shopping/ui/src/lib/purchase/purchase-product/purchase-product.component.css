@@ -1,0 +1,18 @@
+.purchase-product {
+  min-width: 50vw;
+  max-width: 600px;
+}
+
+.purchase-line {
+  text-align: center;
+}
+
+.quantity {
+  font-size: x-large;
+  font-style: italic;
+  color: darkred;
+}
+
+.mat-divider {
+  margin: 20px 10px;
+}

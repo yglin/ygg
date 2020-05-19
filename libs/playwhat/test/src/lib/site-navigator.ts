@@ -31,8 +31,8 @@ export class SiteNavigator {
       this.gotoTheThings(path);
     } else if (route === 'tour-plans') {
       this.gotoTourPlans(path);
-    } else {
-      cy.visit(fullPathName);
+    } else if (route === 'shopping') {
+      this.gotoShopping(path);
     }
     return targetPage.expectVisible();
   }
@@ -89,6 +89,13 @@ export class SiteNavigator {
     const route = path.shift();
     if (route === 'schedule-plans') {
       this.gotoSchedulePlans(path);
+    }
+  }
+
+  private gotoShopping(path: string[]) {
+    const route = path.shift();
+    if (route === 'cart') {
+      cy.get('.pw-header .shopping-cart-button button').click();
     }
   }
 
