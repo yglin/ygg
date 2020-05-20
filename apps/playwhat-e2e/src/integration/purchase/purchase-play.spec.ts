@@ -34,7 +34,7 @@ import {
   RelationAddition
 } from '@ygg/shopping/core';
 import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
-import { sum, keyBy, values, random, last, remove } from 'lodash';
+import { sum, keyBy, values, random, last, remove, cloneDeep } from 'lodash';
 import { randomBytes } from 'crypto';
 
 describe('Tour-plan builder', () => {
@@ -182,7 +182,21 @@ describe('Tour-plan builder', () => {
     cartPO.expectTotalCharge(totalCharge);
   });
 
-  // it('Change quantity of purchases in cart page', () => {});
+  it('Change quantity of purchases in cart page', () => {
+    const purchases = cloneDeep(purchasePlays(PlaysWithoutAddition));
+    // Change quantity;
+    for (const purchase of purchases) {
+      purchase.quantity = random(20, 50);
+    }
+    const totalCharge = sum(values(purchases).map(p => p.charge));
+    const cartPO = new ShoppingCartEditorPageObjectCypress();
+    siteNavigator.goto(['shopping', 'cart'], cartPO);
+    cy.wrap(purchases).each((p: any) => {
+      cartPO.setQuantity(p.productId, p.quantity);
+    });
+    cartPO.expectPurchases(values(purchases));
+    cartPO.expectTotalCharge(totalCharge);
+  });
 
   // it('Submit purchases to tour-plan creation page', () => {});
 
