@@ -19,7 +19,17 @@ import {
 import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
 import { TheThing } from '@ygg/the-thing/core';
 import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
-import { keyBy, sum, values, sample, sampleSize, last, remove, random, cloneDeep } from 'lodash';
+import {
+  keyBy,
+  sum,
+  values,
+  sample,
+  sampleSize,
+  last,
+  remove,
+  random,
+  cloneDeep
+} from 'lodash';
 import { HeaderPageObjectCypress } from '../../support/header.po';
 import {
   SampleAdditions,
@@ -237,28 +247,4 @@ describe('Tour-plan builder', () => {
     cartPO.expectPurchases(purchases);
     cartPO.expectTotalCharge(totalCharge);
   });
-
-  // ==================== Deprecte Below ======================
-
-  // it('Build a tour-plan, book a few plays', () => {
-  //   tourPlanViewPO.setValue(TourPlanWithPlaysNoAddition, {
-  //     freshNew: true
-  //   });
-  //   tourPlanViewPO.save(TourPlanWithPlaysNoAddition);
-
-  //   // Expect redirect to tour-plan view page, and check selected plays
-  //   tourPlanViewPO.expectShowAsPage();
-  //   tourPlanViewPO.expectValue(TourPlanWithPlaysNoAddition);
-  // });
-
-  // it('Book a few plays, then fill the tour-plan', () => {});
-
-  // it('Book a few plays with additions', () => {
-  //   tourPlanBuilderPO.setValue(TourPlanWithPlaysAndAdditions);
-  //   tourPlanBuilderPO.tourPlanPreviewPO.save(TourPlanWithPlaysAndAdditions);
-
-  //   // Expect redirect to tour-plan view page, and check selected plays
-  //   tourPlanViewPO.expectShowAsPage();
-  //   tourPlanViewPO.expectValue(TourPlanWithPlaysAndAdditions);
-  // });
 });
