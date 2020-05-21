@@ -18,7 +18,10 @@ import {
 } from '@ygg/shopping/core';
 import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
 import { TheThing } from '@ygg/the-thing/core';
-import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
+import {
+  MyThingsDataTablePageObjectCypress,
+  MyThingsPageObjectCypress
+} from '@ygg/the-thing/test';
 import {
   keyBy,
   sum,
@@ -37,7 +40,11 @@ import {
   PlaysWithoutAddition,
   PlaysWithAddition
 } from '../play/sample-plays';
-import { TourPlanWithPlaysNoAddition } from '../tour-plan/sample-tour-plan';
+import {
+  TourPlanWithPlaysNoAddition,
+  TourPlanWithPlaysAndAdditions,
+  TourPlanFull
+} from '../tour-plan/sample-tour-plan';
 
 describe('Tour-plan builder', () => {
   const siteNavigator = new SiteNavigator();
@@ -92,11 +99,6 @@ describe('Tour-plan builder', () => {
   });
 
   after(() => {
-    // Goto my-things page and delete all test things
-    // const myThingsPO = new MyThingsPageObjectCypress();
-    // siteNavigator.goto(['the-things', 'my'], myThingsPO);
-    // cy.wait(3000);
-    // myThingsPO.deleteAll();
     theMockDatabase.clear();
   });
 
@@ -246,5 +248,36 @@ describe('Tour-plan builder', () => {
     cartPO.expectVisible();
     cartPO.expectPurchases(purchases);
     cartPO.expectTotalCharge(totalCharge);
+  });
+
+  it('Save tour plan with purchased plays', () => {
+    const resultTourPlan = TourPlanFull.clone();
+    resultTourPlan.name = '測試遊程(預定體驗)';
+    const plays = PlaysWithoutAddition;
+    const purchases = purchasePlays(plays);
+    resultTourPlan.setRelation(
+      RelationNamePurchase,
+      purchases.map(p => p.toRelation())
+    );
+    const totalCharge = sum(purchases.map(p => p.charge));
+    siteNavigator.goto(['shopping', 'cart'], cartPO);
+    cartPO.submit();
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.setValue(resultTourPlan, {
+      freshNew: true
+    });
+    tourPlanViewPO.save(resultTourPlan);
+    const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(resultTourPlan);
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectValue(resultTourPlan);
+    tourPlanViewPO.expectPurchases(purchases);
+    tourPlanViewPO.expectTotalCharge(totalCharge);
+    // Goto my-things page and delete all test things
+    const myThingsPO = new MyThingsPageObjectCypress();
+    siteNavigator.goto(['the-things', 'my'], myThingsPO);
+    cy.wait(3000);
+    myThingsPO.deleteAll();
   });
 });

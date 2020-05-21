@@ -260,25 +260,25 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
       });
     }
 
-    // Edit purchases
-    const purchaseRelations = tourPlan.getRelations(RelationNamePurchase);
-    const purchases: Purchase[] = purchaseRelations.map(pr =>
-      Purchase.fromRelation(pr)
-    );
-    if (options.freshNew && !isEmpty(purchases)) {
-      this.gotoEditPurchases();
-      const cartEditorPO = new ShoppingCartEditorPageObjectCypress();
-      cartEditorPO.expectVisible();
-      cartEditorPO.purchasePack({
-        filter: ImitationPlay.filter,
-        purchases
-      });
-      cartEditorPO.expectPurchases(purchases);
-      cartEditorPO.submit();
-      this.expectVisible();
-    }
+    // // Edit purchases
+    // const purchaseRelations = tourPlan.getRelations(RelationNamePurchase);
+    // const purchases: Purchase[] = purchaseRelations.map(pr =>
+    //   Purchase.fromRelation(pr)
+    // );
+    // if (options.freshNew && !isEmpty(purchases)) {
+    //   this.gotoEditPurchases();
+    //   const cartEditorPO = new ShoppingCartEditorPageObjectCypress();
+    //   cartEditorPO.expectVisible();
+    //   cartEditorPO.purchasePack({
+    //     filter: ImitationPlay.filter,
+    //     purchases
+    //   });
+    //   cartEditorPO.expectPurchases(purchases);
+    //   cartEditorPO.submit();
+    //   this.expectVisible();
+    // }
 
-    this.expectValue(tourPlan);
+    // this.expectValue(tourPlan);
   }
 
   expectError(selector: string, errorMessage: string) {
