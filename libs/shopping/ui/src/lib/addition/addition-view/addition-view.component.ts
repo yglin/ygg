@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TheThing } from '@ygg/the-thing/core';
-import { CellNamePrice, CellNameStock } from '@ygg/shopping/core';
+import { CellNames } from '@ygg/shopping/core';
 
 @Component({
   selector: 'ygg-addition-view',
@@ -9,8 +9,7 @@ import { CellNamePrice, CellNameStock } from '@ygg/shopping/core';
 })
 export class AdditionViewComponent implements OnInit {
   @Input() theThing: TheThing;
-  CellNamePrice = CellNamePrice;
-  CellNameStock = CellNameStock;
+  CellNames = CellNames;
 
   constructor() {}
 

@@ -1,48 +1,42 @@
 import {
+  PlayViewPageObjectCypress,
   SiteNavigator,
-  TourPlanAdminPageObjectCypress,
-  TourPlanBuilderPageObjectCypress,
-  TourPlanViewPageObjectCypress,
-  PlayViewPageObjectCypress
+  TourPlanViewPageObjectCypress
 } from '@ygg/playwhat/test';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
+import {
+  ImageThumbnailListPageObjectCypress,
+  ConfirmDialogPageObjectCypress
+} from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
 import { waitForLogin } from '@ygg/shared/user/test';
-import { TheThing } from '@ygg/the-thing/core';
 import {
-  MyThingsDataTablePageObjectCypress,
-  MyThingsPageObjectCypress
-} from '@ygg/the-thing/test';
+  CellNames as ShoppingCellNames,
+  Purchase,
+  RelationNamePurchase,
+  RelationAddition
+} from '@ygg/shopping/core';
+import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
+import { TheThing } from '@ygg/the-thing/core';
+import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
+import { keyBy, sum, values, sample, sampleSize, last, remove, random, cloneDeep } from 'lodash';
+import { HeaderPageObjectCypress } from '../../support/header.po';
 import {
   SampleAdditions,
   SamplePlays,
   PlaysWithoutAddition,
   PlaysWithAddition
 } from '../play/sample-plays';
-import {
-  TourPlanWithPlaysAndAdditions,
-  TourPlanWithPlaysNoAddition
-} from '../tour-plan/sample-tour-plan';
-import {
-  ImageThumbnailListPageObjectCypress,
-  ImageThumbnailItemPageObjectCypress
-} from '@ygg/shared/ui/test';
-import { HeaderPageObjectCypress } from '../../support/header.po';
-import {
-  Purchase,
-  CellNames as ShoppingCellNames,
-  RelationAddition
-} from '@ygg/shopping/core';
-import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
-import { sum, keyBy, values, random, last, remove, cloneDeep } from 'lodash';
-import { randomBytes } from 'crypto';
+import { TourPlanWithPlaysNoAddition } from '../tour-plan/sample-tour-plan';
 
 describe('Tour-plan builder', () => {
   const siteNavigator = new SiteNavigator();
-  const SampleThings = SamplePlays.concat(SampleAdditions);
+  const SampleThings = SamplePlays.concat(SampleAdditions).concat([
+    TourPlanWithPlaysNoAddition
+  ]);
   const imageThumbnailListPO = new ImageThumbnailListPageObjectCypress();
+  const cartPO = new ShoppingCartEditorPageObjectCypress();
   const headerPO = new HeaderPageObjectCypress();
-
   const tourPlanViewPO = new TourPlanViewPageObjectCypress();
   let currentUser: User;
 
@@ -106,7 +100,6 @@ describe('Tour-plan builder', () => {
     purchasePlays([PlaysWithoutAddition[0]]);
     // Show cart button with count of purchases as badge
     headerPO.shoppingCartButtonPO.expectBadge(1);
-    const cartPO = new ShoppingCartEditorPageObjectCypress();
     siteNavigator.goto(['shopping', 'cart'], cartPO);
     //Hide badge of shopping cart button after visit shopping cart page
     headerPO.shoppingCartButtonPO.expectBadge('hide');
@@ -115,7 +108,6 @@ describe('Tour-plan builder', () => {
   it('Show purchased plays in cart page', () => {
     const purchases = purchasePlays(PlaysWithoutAddition);
     const totalCharge = sum(values(purchases).map(p => p.charge));
-    const cartPO = new ShoppingCartEditorPageObjectCypress();
     siteNavigator.goto(['shopping', 'cart'], cartPO);
     cartPO.expectPurchases(values(purchases));
     cartPO.expectTotalCharge(totalCharge);
@@ -129,7 +121,6 @@ describe('Tour-plan builder', () => {
       p => p.productId === playToBeRemoved.id
     );
     const totalCharge = sum(values(purchases).map(p => p.charge));
-    const cartPO = new ShoppingCartEditorPageObjectCypress();
     siteNavigator.goto(['shopping', 'cart'], cartPO);
     cartPO.removePurchase(purchaseToBeRemoved);
     cartPO.expectTotalCharge(totalCharge);
@@ -137,7 +128,6 @@ describe('Tour-plan builder', () => {
 
   it('Remove all in cart page', () => {
     const purchases = purchasePlays(PlaysWithoutAddition);
-    const cartPO = new ShoppingCartEditorPageObjectCypress();
     siteNavigator.goto(['shopping', 'cart'], cartPO);
     cartPO.removeAll();
     cartPO.expectTotalCharge(0);
@@ -176,7 +166,6 @@ describe('Tour-plan builder', () => {
     const playViewPO = new PlayViewPageObjectCypress();
     playViewPO.expectVisible();
     playViewPO.purchase(purchases);
-    const cartPO = new ShoppingCartEditorPageObjectCypress();
     siteNavigator.goto(['shopping', 'cart'], cartPO);
     cartPO.expectPurchases(values(purchases));
     cartPO.expectTotalCharge(totalCharge);
@@ -189,7 +178,6 @@ describe('Tour-plan builder', () => {
       purchase.quantity = random(20, 50);
     }
     const totalCharge = sum(values(purchases).map(p => p.charge));
-    const cartPO = new ShoppingCartEditorPageObjectCypress();
     siteNavigator.goto(['shopping', 'cart'], cartPO);
     cy.wrap(purchases).each((p: any) => {
       cartPO.setQuantity(p.productId, p.quantity);
@@ -198,9 +186,57 @@ describe('Tour-plan builder', () => {
     cartPO.expectTotalCharge(totalCharge);
   });
 
-  // it('Submit purchases to tour-plan creation page', () => {});
+  it('Submit purchases to tour-plan creation page', () => {
+    const purchases = purchasePlays(PlaysWithoutAddition);
+    const totalCharge = sum(purchases.map(p => p.charge));
+    siteNavigator.goto(['shopping', 'cart'], cartPO);
+    cartPO.submit();
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectPurchases(purchases);
+    tourPlanViewPO.expectTotalCharge(totalCharge);
+  });
 
-  // it('Import purchases in tour-plan creation page', () => {});
+  it('Import purchases from tour-plan to cart page', () => {
+    const purchases: Purchase[] = TourPlanWithPlaysNoAddition.getRelations(
+      RelationNamePurchase
+    ).map(r => Purchase.fromRelation(r));
+    const totalCharge = sum(purchases.map(p => p.charge));
+    const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(
+      TourPlanWithPlaysNoAddition
+    );
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.expectPurchases(purchases);
+    tourPlanViewPO.importToCart();
+    cartPO.expectVisible();
+    cartPO.expectPurchases(purchases);
+    cartPO.expectTotalCharge(totalCharge);
+  });
+
+  it('On import, confirm clear purchases already in cart', () => {
+    const samplePlays = sampleSize(PlaysWithoutAddition, 2);
+    // Purchase some plays in advance, make cart not empty
+    purchasePlays(samplePlays);
+
+    const purchases: Purchase[] = TourPlanWithPlaysNoAddition.getRelations(
+      RelationNamePurchase
+    ).map(r => Purchase.fromRelation(r));
+    const totalCharge = sum(purchases.map(p => p.charge));
+    const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(
+      TourPlanWithPlaysNoAddition
+    );
+    tourPlanViewPO.expectVisible();
+    tourPlanViewPO.importToCart();
+    const confirmPO = new ConfirmDialogPageObjectCypress();
+    confirmPO.expectMessage('原本在購物車中的購買項目將會被清除，是否繼續？');
+    confirmPO.confirm();
+    cartPO.expectVisible();
+    cartPO.expectPurchases(purchases);
+    cartPO.expectTotalCharge(totalCharge);
+  });
 
   // ==================== Deprecte Below ======================
 

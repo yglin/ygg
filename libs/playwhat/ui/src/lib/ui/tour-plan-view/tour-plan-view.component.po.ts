@@ -24,11 +24,12 @@ export abstract class TourPlanViewPageObject extends PageObject {
     buttonCancelApplied: 'button.cancel-applied',
     state: '.state',
     buttonGotoEditOptionalCells: 'button.goto-edit-optional-cells',
-    buttonGotoEditPurchases: 'button.goto-edit-purchases',
+    buttonImportToCart: 'button.import-to-cart',
     buttonAddCell: 'button.add-cell',
     buttonSave: 'button.save',
     editButtons: 'button.edit',
-    optionals: '.optionals'
+    optionals: '.optionals',
+    totalCharge: '.total-charge'
   };
   dayTimeRangePO: DayTimeRangeViewPageObject;
   dateRangeViewPO: DateRangeViewPageObject;

@@ -21,17 +21,19 @@ import { AuthorizeService } from '@ygg/shared/user/ui';
 import {
   ImitationOrder,
   Purchase,
-  RelationNamePurchase
+  RelationNamePurchase,
+  CellNames as ShoppingCellNames,
+  evalTotalChargeFromRelations
 } from '@ygg/shopping/core';
-import { IInputShoppingCart } from '@ygg/shopping/ui';
-import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import { IInputShoppingCart, ShoppingCartService } from '@ygg/shopping/ui';
+import { TheThing, TheThingCell, TheThingRelation } from '@ygg/the-thing/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import {
   CellCreatorComponent,
   TheThingFactoryService,
   TheThingImitationViewInterface
 } from '@ygg/the-thing/ui';
-import { get, isEmpty, keys, mapValues, omit, values, find } from 'lodash';
+import { get, isEmpty, keys, mapValues, omit, values, find, sum } from 'lodash';
 import { from, merge, Observable, of, Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import {
@@ -54,7 +56,7 @@ export class TourPlanViewComponent
   // dayTimeRange: DayTimeRange;
   // numParticipants: number;
   // contact: Contact;
-  purchases: Purchase[] = [];
+  purchaseRelations: TheThingRelation[] = [];
   requiredCells: TheThingCell[] = [];
   otherCells: TheThingCell[] = [];
   subscriptions: Subscription[] = [];
@@ -70,6 +72,7 @@ export class TourPlanViewComponent
     'font-size': '24px',
     'text-shadow': '3px 3px 3px #FDFFC7'
   };
+  totalCharge: number = 0;
 
   constructor(
     private authorizeService: AuthorizeService,
@@ -79,7 +82,8 @@ export class TourPlanViewComponent
     private router: Router,
     private dialog: YggDialogService,
     private emcee: EmceeService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private shoppingCart: ShoppingCartService
   ) {
     const controlsConfig: { [key: string]: any } = {
       name: [null, Validators.required]
@@ -147,6 +151,11 @@ export class TourPlanViewComponent
         // console.log('update from factory');
         // console.log(this.theThing);
 
+        // console.info(this.theThing);
+        this.purchaseRelations = this.theThing.getRelations(
+          RelationNamePurchase
+        );
+
         this.formGroup.get('name').setValue(this.theThing.name, {
           emitEvent: false
         });
@@ -207,6 +216,9 @@ export class TourPlanViewComponent
             ImitationOrder.stateName,
             ImitationOrder.states.new.value
           );
+      }),
+      tap(async () => {
+        this.totalCharge = await evalTotalChargeFromRelations(this.purchaseRelations);
       })
     );
     const isAdmin$ = this.authorizeService.isAdmin().pipe(
@@ -410,6 +422,13 @@ export class TourPlanViewComponent
       cell.value = this.formGroup.get(cell.name).value;
       this.theThing.upsertCell(cell);
     }
+  }
+
+  importToCart() {
+    const purchases = this.theThing
+      .getRelations(RelationNamePurchase)
+      .map(r => Purchase.fromRelation(r));
+    this.shoppingCart.importPurchases(purchases);
   }
 
   async save() {

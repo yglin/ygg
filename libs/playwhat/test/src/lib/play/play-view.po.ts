@@ -5,7 +5,7 @@ import {
   LocationViewPageObjectCypress,
   BusinessHoursViewPageObjectCypress
 } from '@ygg/shared/omni-types/test';
-import { CellNamePrice, Purchase } from '@ygg/shopping/core';
+import { Purchase } from '@ygg/shopping/core';
 import {
   AdditionViewPageObjectCypress,
   PurchaseListPageObjectCypress,

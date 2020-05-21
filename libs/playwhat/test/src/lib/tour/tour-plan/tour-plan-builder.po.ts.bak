@@ -19,9 +19,9 @@ import { TourPlanViewPageObjectCypress } from './tour-plan-view.po';
 import {
   Purchase,
   RelationAddition,
-  CellNameStock,
+  CellNames.stock,
   RelationNamePurchase,
-  CellNameQuantity
+  CellNames.quantity
 } from '@ygg/shopping/core';
 import { isEmpty, find, values } from 'lodash';
 

@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
   Purchase,
-  CellNamePrice,
+  CellNames,
   RelationAddition,
-  CellNames
 } from '@ygg/shopping/core';
-import { LogService } from '@ygg/shared/infra/log';
-import { take } from 'rxjs/operators';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { TheThing } from '@ygg/the-thing/core';
 import { castArray, isEmpty, flatten, pick, values } from 'lodash';

@@ -1,11 +1,6 @@
 import { TheThingImitation, TheThing } from '@ygg/the-thing/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import {
-  RelationNamePurchase,
-  CellNameCharge,
-  Purchase,
-  CellNamePrice,
-  CellNameQuantity,
   ImitationOrder
 } from '@ygg/shopping/core';
 import { keyBy } from 'lodash';
@@ -139,8 +134,8 @@ ImitationTourPlan.dataTableConfig = {
 //   const relations = tourPlan.getRelations(RelationNamePurchase);
 //   for (const relation of relations) {
 //     const charge =
-//       relation.getCellValue(CellNamePrice) *
-//       relation.getCellValue(CellNameQuantity);
+//       relation.getCellValue(CellNames.price) *
+//       relation.getCellValue(CellNames.quantity);
 //     if (charge) {
 //       totalCharge += charge;
 //     }

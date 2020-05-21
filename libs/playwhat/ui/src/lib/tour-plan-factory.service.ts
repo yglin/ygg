@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 import { TheThingFactoryService } from '@ygg/the-thing/ui';
 import {
@@ -11,6 +11,8 @@ import { set } from 'lodash';
 import { Router } from '@angular/router';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import { AlertType } from '@ygg/shared/infra/core';
+import { ShoppingCartService } from '@ygg/shopping/ui';
+import { Purchase, RelationNamePurchase } from '@ygg/shopping/core';
 
 export interface IModifyRequest {
   command: 'update' | 'add' | 'delete';
@@ -23,15 +25,38 @@ export interface IModifyRequest {
 @Injectable({
   providedIn: 'root'
 })
-export class TourPlanFactoryService {
+export class TourPlanFactoryService implements OnDestroy {
   tourPlan$: BehaviorSubject<TheThing> = new BehaviorSubject(null);
   tourPlan: TheThing;
+  subscriptions: Subscription[] = [];
 
   constructor(
     private theThingFactory: TheThingFactoryService,
+    private shoppingCart: ShoppingCartService,
     private emcee: EmceeService,
     private router: Router
-  ) {}
+  ) {
+    // console.info('Subscribe to Shopping cart~!!!');
+    this.subscriptions.push(
+      this.shoppingCart.submit$.subscribe(async (purchases: Purchase[]) => {
+        // console.info(
+        //   '==================================== GOTU~ =================================='
+        // );
+        await this.loadTheOne();
+        this.tourPlan.setRelation(
+          RelationNamePurchase,
+          purchases.map(p => p.toRelation())
+        );
+        this.router.navigate(['/', 'tour-plans', 'create']);
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
 
   async loadTheOne(): Promise<Observable<TheThing>> {
     // console.log('loadTheOne!!!');

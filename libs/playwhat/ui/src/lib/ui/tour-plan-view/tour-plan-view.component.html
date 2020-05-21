@@ -16,6 +16,37 @@
       <mat-icon>save</mat-icon>
     </button>
   </div>
+  <div class="purchases">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <div>
+        <h2>預訂項目</h2>
+      </div>
+      <div>
+        <button
+          class="import-to-cart"
+          mat-mini-fab
+          matTooltip="匯入購物車"
+          (click)="importToCart()"
+        >
+          <mat-icon>add_shopping_cart </mat-icon>
+        </button>
+      </div>
+    </div>
+    <div fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="10px">
+      <div *ngFor="let pr of purchaseRelations" [attr.object-id]="pr.objectId">
+        <the-thing-thumbnail
+          [id]="pr.objectId"
+          size="small"
+        ></the-thing-thumbnail>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end end">
+      <h4 class="total-charge">
+        總價：<ygg-price [price]="totalCharge"></ygg-price>
+      </h4>
+    </div>
+  </div>
+  <br /><br />
   <ygg-omni-type-view-control
     class="tour-plan-name"
     formControlName="name"
@@ -105,25 +136,6 @@
     </div>
   </div>
   <div class="optionals" [hidden]="!isRequiredCellsFilled()">
-    <br /><br />
-    <div class="purchases">
-      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-        <div>
-          <h2>預訂品項</h2>
-        </div>
-        <div *ngIf="!readonly">
-          <button
-            type="button"
-            mat-mini-fab
-            class="goto-edit-purchases edit"
-            (click)="gotoEditPurchases()"
-          >
-            <mat-icon>edit</mat-icon>
-          </button>
-        </div>
-      </div>
-      <ygg-purchase-list [purchases]="purchases"></ygg-purchase-list>
-    </div>
     <br /><br />
     <div class="optional-cells">
       <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">

@@ -8,16 +8,12 @@ import {
   generateID
 } from '@ygg/shared/infra/data-access';
 import { TheThing, TheThingRelation, TheThingCell } from '@ygg/the-thing/core';
-import { CellNamePrice } from './product';
 import { IDataAccessor } from '@ygg/shared/infra/core';
 import { RelationAddition } from './addition';
 import { IConsumer } from './consumer';
+import { CellNames } from './cell-names';
 
 export const RelationNamePurchase = '訂購';
-
-export const CellNameQuantity = '數量/人數';
-
-export const CellNameCharge = '費用';
 
 export enum PurchaseState {
   Unknown = -1,
@@ -58,7 +54,7 @@ export class Purchase implements SerializableJSON {
     const newPurchase = new Purchase({
       consumerId: consumer.id,
       productId: product.id,
-      price: product.getCellValue(CellNamePrice),
+      price: product.getCellValue(CellNames.price),
       quantity
     });
     return newPurchase;
@@ -68,8 +64,8 @@ export class Purchase implements SerializableJSON {
     const newPurchase = new Purchase({
       consumerId: relation.subjectId,
       productId: relation.objectId,
-      price: relation.getCellValue(CellNamePrice),
-      quantity: relation.getCellValue(CellNameQuantity)
+      price: relation.getCellValue(CellNames.price),
+      quantity: relation.getCellValue(CellNames.quantity)
     });
     return newPurchase;
   }
@@ -95,12 +91,12 @@ export class Purchase implements SerializableJSON {
       objectId: this.productId,
       cells: [
         new TheThingCell({
-          name: CellNamePrice,
+          name: CellNames.price,
           type: 'number',
           value: this.price
         }),
         new TheThingCell({
-          name: CellNameQuantity,
+          name: CellNames.quantity,
           type: 'number',
           value: this.quantity
         })

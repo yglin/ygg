@@ -43,7 +43,7 @@ import {
 import {
   Purchase,
   RelationNamePurchase,
-  CellNameQuantity,
+  CellNames.quantity,
   CellNameCharge,
   ImitationOrder
 } from '@ygg/shopping/core';

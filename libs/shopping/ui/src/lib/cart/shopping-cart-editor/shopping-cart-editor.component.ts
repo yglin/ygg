@@ -52,7 +52,7 @@ export class ShoppingCartEditorComponent implements OnInit, OnDestroy {
   // asyncPurchasesData: { [purchaseId: string]: { price?: number } } = {};
   subscriptions: Subscription[] = [];
   clearButtonDisabled = true;
-  isPage = false;
+  canSubmit = false;
 
   constructor(
     private pageResolver: PageResolverService,
@@ -68,6 +68,7 @@ export class ShoppingCartEditorComponent implements OnInit, OnDestroy {
       tap(purchases => {
         this.purchasesDataSource.data = purchases;
         this.clearButtonDisabled = purchases.length < 3;
+        this.canSubmit = !isEmpty(purchases);
       })
     );
     const totalCharge$ = this.shoppingCart.totalCharge$.pipe(

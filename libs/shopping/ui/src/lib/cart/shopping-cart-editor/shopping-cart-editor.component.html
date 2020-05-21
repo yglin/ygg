@@ -11,12 +11,13 @@
         <mat-icon>add_shopping_cart</mat-icon>
       </button>
     </div> -->
-    <div *ngIf="isPage">
+    <div>
       <button
         type="button"
         class="submit"
         mat-fab
         (click)="submit()"
+        [disabled]="!canSubmit"
         matTooltip="確認並送出購買項目"
       >
         <mat-icon>check</mat-icon>

@@ -12,7 +12,8 @@ import {
   YggDialogPageObjectCypress,
   ConfirmDialogPageObjectCypress,
   AlertDialogPageObjectCypress,
-  EmceePageObjectCypress
+  EmceePageObjectCypress,
+  ImageThumbnailItemPageObjectCypress
 } from '@ygg/shared/ui/test';
 import { ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
 import {
@@ -23,13 +24,7 @@ import {
   PurchaseListPageObjectCypress,
   ShoppingCartEditorPageObjectCypress
 } from '@ygg/shopping/test';
-import {
-  RelationNamePurchase,
-  Purchase,
-  CellNameQuantity,
-  ImitationOrder,
-  RelationAddition
-} from '@ygg/shopping/core';
+import { RelationNamePurchase, Purchase } from '@ygg/shopping/core';
 import { isEmpty, find, values } from 'lodash';
 import { MockDatabase, theMockDatabase } from '@ygg/shared/test/cypress';
 import { IPurchasePack } from '@ygg/shopping/ui';
@@ -109,19 +104,31 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
         this.expectCell(cell);
       }
     }
-    if (tourPlan.hasRelation(RelationNamePurchase)) {
-      // tslint:disable-next-line: no-unused-expression
-      const purchases = tourPlan.getRelations(RelationNamePurchase).map(r => {
-        const product: TheThing = theMockDatabase.getEntity(
-          `${TheThing.collection}/${r.objectId}`
-        ) as TheThing;
-        return Purchase.purchase(
-          tourPlan,
-          product,
-          r.getCellValue(CellNameQuantity)
-        );
-      });
-      this.purchaseListPO.expectPurchases(purchases);
+    // if (tourPlan.hasRelation(RelationNamePurchase)) {
+    //   // tslint:disable-next-line: no-unused-expression
+    //   const purchases = tourPlan.getRelations(RelationNamePurchase).map(r => {
+    //     const product: TheThing = theMockDatabase.getEntity(
+    //       `${TheThing.collection}/${r.objectId}`
+    //     ) as TheThing;
+    //     return Purchase.purchase(
+    //       tourPlan,
+    //       product,
+    //       r.getCellValue(CellNames.quantity)
+    //     );
+    //   });
+    //   this.purchaseListPO.expectPurchases(purchases);
+    // }
+  }
+
+  expectPurchases(purchases: Purchase[]) {
+    for (const purchase of purchases) {
+      const product: TheThing = theMockDatabase.getEntity(
+        `${TheThing.collection}/${purchase.productId}`
+      );
+      const itemPO = new ImageThumbnailItemPageObjectCypress(
+        `${this.getSelector()} .purchases [object-id="${purchase.productId}"]`
+      );
+      itemPO.expectValue(product);
     }
   }
 
@@ -314,5 +321,16 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
 
   expectNoCell(cell: TheThingCell) {
     cy.get(this.getSelectorForCell(cell.name)).should('not.exist');
+  }
+
+  importToCart() {
+    cy.get(this.getSelector('buttonImportToCart')).click();
+  }
+
+  expectTotalCharge(totalCharge: number) {
+    cy.get(this.getSelector('totalCharge')).should(
+      'include.text',
+      `總價：NTD ${totalCharge}`
+    );
   }
 }

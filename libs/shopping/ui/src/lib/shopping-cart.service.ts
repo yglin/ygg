@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { TheThing } from '@ygg/the-thing/core';
-import { Purchase } from '@ygg/shopping/core';
+import { Purchase, evalTotalChargeFromPurchases } from '@ygg/shopping/core';
 import { EmceeService, YggDialogService } from '@ygg/shared/ui/widgets';
 import { PurchaseProductComponent } from './purchase/purchase-product/purchase-product.component';
 import { PurchaseProductComponentInput } from './purchase';
-import { isEmpty, values } from 'lodash';
+import { isEmpty, values, keyBy } from 'lodash';
 import { PurchaseService } from '@ygg/shopping/factory';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, Observable, merge } from 'rxjs';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { map, switchMap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,8 @@ import { TheThingAccessService } from '@ygg/the-thing/data-access';
 export class ShoppingCartService {
   purchases: { [productId: string]: Purchase } = {};
   purchases$: BehaviorSubject<Purchase[]> = new BehaviorSubject([]);
-  totalCharge$: BehaviorSubject<number> = new BehaviorSubject(0);
+  quantityChange$: Subject<any> = new Subject();
+  totalCharge$: Observable<number>;
   shoppingCartVisited$: Subject<boolean> = new Subject();
   submit$: Subject<Purchase[]> = new Subject();
 
@@ -23,8 +26,13 @@ export class ShoppingCartService {
     private emcee: EmceeService,
     private purchaseService: PurchaseService,
     private theThingAccessor: TheThingAccessService,
-    private dialog: YggDialogService
-  ) {}
+    private dialog: YggDialogService,
+    private router: Router
+  ) {
+    this.totalCharge$ = merge(this.purchases$, this.quantityChange$).pipe(
+      switchMap(() => evalTotalChargeFromPurchases(values(this.purchases)))
+    );
+  }
 
   async add(product: TheThing) {
     if (product.id in this.purchases) {
@@ -55,7 +63,7 @@ export class ShoppingCartService {
   async changeQuantity(purchase: Purchase, value: number) {
     if (purchase.productId in this.purchases) {
       this.purchases[purchase.productId].quantity = value;
-      this.evaluateTotalCharge();
+      this.quantityChange$.next();
     }
   }
 
@@ -69,21 +77,9 @@ export class ShoppingCartService {
         delete this.purchases[purchase.productId];
       }
       this.purchases$.next(values(this.purchases));
-      this.evaluateTotalCharge();
     } catch (error) {
       this.emcee.error(`移除購買項目發生錯誤，錯誤訊息：\n${error.message}`);
     }
-  }
-
-  async evaluateTotalCharge() {
-    let totalCharge = 0;
-    for (const productId in this.purchases) {
-      if (this.purchases.hasOwnProperty(productId)) {
-        const purchase = this.purchases[productId];
-        totalCharge += purchase.charge;
-      }
-    }
-    this.totalCharge$.next(totalCharge);
   }
 
   async removeAll() {
@@ -91,11 +87,27 @@ export class ShoppingCartService {
     if (confirm) {
       this.purchases = {};
       this.purchases$.next([]);
-      this.evaluateTotalCharge();
     }
   }
 
+  async importPurchases(purchases: Purchase[]) {
+    if (!isEmpty(this.purchases)) {
+      const confirm = await this.emcee.confirm(
+        '原本在購物車中的購買項目將會被清除，是否繼續？'
+      );
+      if (confirm) {
+        this.purchases = {};
+      } else {
+        return;
+      }
+    }
+    this.purchases = keyBy(purchases, 'productId');
+    this.purchases$.next(values(this.purchases));
+    this.router.navigate(['/', 'shopping', 'cart']);
+  }
+
   submit() {
+    // console.info('Submit shopping cart~!!!');
     this.submit$.next(values(this.purchases));
   }
 }

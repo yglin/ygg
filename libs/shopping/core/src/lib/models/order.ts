@@ -1,6 +1,6 @@
 import { TheThingImitation, TheThing } from '@ygg/the-thing/core';
-import { RelationNamePurchase, CellNameQuantity } from './purchase';
-import { CellNamePrice } from './product';
+import { RelationNamePurchase } from './purchase';
+import { CellNames } from "./cell-names";
 
 export const ImitationOrder = new TheThingImitation({
   id: '7cNQdeD6VZxZshH9A7Law9',
@@ -45,8 +45,8 @@ export function getTotalCharge(order: TheThing): number {
   let totalCharge = 0;
   const relations = order.getRelations(RelationNamePurchase);
   for (const relation of relations) {
-    const quantity = relation.getCellValue(CellNameQuantity);
-    const price = relation.getCellValue(CellNamePrice);
+    const quantity = relation.getCellValue(CellNames.quantity);
+    const price = relation.getCellValue(CellNames.price);
     const charge = price * quantity;
     // console.log(`${price} x ${quantity} = ${charge}`);
     if (charge) {

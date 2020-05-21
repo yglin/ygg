@@ -3,7 +3,11 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { ImitationPlay, ImitationTour, ImitationTourPlan } from '@ygg/playwhat/core';
+import {
+  ImitationPlay,
+  ImitationTour,
+  ImitationTourPlan
+} from '@ygg/playwhat/core';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
@@ -20,6 +24,8 @@ import { PlayViewComponent } from './ui/play-view/play-view.component';
 // import { TourPlanBuilderComponent } from './ui/tour-plan-builder/tour-plan-builder.component';
 import { TourPlanViewComponent } from './ui/tour-plan-view/tour-plan-view.component';
 import { TourViewComponent } from './ui/tour-view/tour-view.component';
+import { TourPlanFactoryService } from './tour-plan-factory.service';
+import { noop } from 'lodash';
 
 @NgModule({
   imports: [
@@ -47,7 +53,7 @@ import { TourViewComponent } from './ui/tour-view/tour-view.component';
   entryComponents: [
     TourViewComponent,
     TourPlanViewComponent,
-    PlayViewComponent,
+    PlayViewComponent
     // TourPlanBuilderComponent
   ],
   providers: [
@@ -66,11 +72,22 @@ import { TourViewComponent } from './ui/tour-view/tour-view.component';
       useFactory: configUserMenu,
       deps: [UserMenuService],
       multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initTourPlanFactory,
+      deps: [TourPlanFactoryService],
+      multi: true
     }
   ],
   exports: [TourViewComponent, TourPlanViewComponent]
 })
 export class PlaywhatUiModule {}
+
+export function initTourPlanFactory(tourPlanFactory: TourPlanFactoryService) {
+  // Do nothing, just to call TourPlanFactoryService.constructor() in advance
+  return noop;
+}
 
 export function configTheThingImitation(
   imitationAccessService: TheThingImitationAccessService,

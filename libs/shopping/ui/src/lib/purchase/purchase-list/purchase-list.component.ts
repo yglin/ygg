@@ -7,7 +7,7 @@ import {
   SimpleChanges,
   OnDestroy
 } from '@angular/core';
-import { Purchase, CellNameQuantity, CellNameCharge } from '@ygg/shopping/core';
+import { Purchase, CellNames } from '@ygg/shopping/core';
 // import { ShoppingCartService } from '@ygg/shopping/factory';
 import { Subscription, Observable, of, BehaviorSubject } from 'rxjs';
 import { tap, switchMap } from 'rxjs/operators';
@@ -22,7 +22,7 @@ import { TheThingAccessService } from '@ygg/the-thing/data-access';
 export class PurchaseListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() purchases: Purchase[];
   totalPrice = 0;
-  CellNameQuantity = CellNameQuantity;
+  CellNames = CellNames;
   subscriptions: Subscription[] = [];
 
   constructor(private theThingAccessService: TheThingAccessService) {}
@@ -30,10 +30,7 @@ export class PurchaseListComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {}
 
   evalTotalPrice() {
-    this.totalPrice = sumBy(
-      this.purchases,
-      purchase => purchase.charge
-    );
+    this.totalPrice = sumBy(this.purchases, purchase => purchase.charge);
   }
 
   ngOnChanges(changes: SimpleChanges) {

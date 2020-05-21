@@ -16,8 +16,7 @@
 // }
 
 import { TheThingImitation } from '@ygg/the-thing/core';
-export const CellNamePrice = '費用';
-export const CellNameStock = '庫存量';
+import { CellNames } from './cell-names';
 
 export const ImitationProduct: TheThingImitation = new TheThingImitation().fromJSON(
   {
@@ -28,12 +27,12 @@ export const ImitationProduct: TheThingImitation = new TheThingImitation().fromJ
     tags: ['product', '商品'],
     cellsDef: [
       {
-        name: CellNamePrice,
+        name: CellNames.price,
         type: 'number',
         userInput: 'required'
       },
       {
-        name: CellNameStock,
+        name: CellNames.stock,
         type: 'number',
         userInput: 'required'
       }

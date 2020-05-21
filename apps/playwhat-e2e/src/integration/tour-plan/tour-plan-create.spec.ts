@@ -21,7 +21,6 @@ import {
 } from '@ygg/the-thing/test';
 import {
   TourPlanViewPageObjectCypress,
-  TourPlanBuilderPageObjectCypress,
   TourPlanAdminPageObjectCypress
 } from '@ygg/playwhat/test';
 import { SiteNavigator } from '@ygg/playwhat/test';
@@ -54,7 +53,6 @@ describe('Tour-plan builder', () => {
   const siteNavigator = new SiteNavigator();
   const SampleThings = SamplePlays.concat(SampleAdditions);
 
-  const tourPlanBuilderPO = new TourPlanBuilderPageObjectCypress();
   const tourPlanViewPO = new TourPlanViewPageObjectCypress();
   const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();
   const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
