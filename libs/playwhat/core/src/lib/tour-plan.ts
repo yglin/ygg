@@ -1,8 +1,6 @@
 import { TheThingImitation, TheThing } from '@ygg/the-thing/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
-import {
-  ImitationOrder
-} from '@ygg/shopping/core';
+import { ImitationOrder } from '@ygg/shopping/core';
 import { keyBy } from 'lodash';
 
 export const CellNames = {
@@ -91,6 +89,7 @@ export const ImitationTourPlan: TheThingImitation = ImitationOrder.extend({
   image: '/assets/images/tour/tour-plans.svg',
   view: 'tour-plan',
   editor: 'tour-plan',
+  routePath: 'tour-plans',
   // templateId: TemplateTourPlan.id,
   cellsDef,
   cellsOrder,

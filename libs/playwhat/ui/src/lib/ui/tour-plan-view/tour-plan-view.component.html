@@ -21,9 +21,9 @@
       <div>
         <h2>預訂項目</h2>
       </div>
-      <div>
+      <div *ngIf="!readonly">
         <button
-          class="import-to-cart"
+          class="import-to-cart edit"
           mat-mini-fab
           matTooltip="匯入購物車"
           (click)="importToCart()"

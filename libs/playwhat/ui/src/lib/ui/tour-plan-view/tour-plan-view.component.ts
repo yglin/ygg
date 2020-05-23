@@ -136,7 +136,7 @@ export class TourPlanViewComponent
   async ngOnInit() {
     // console.log('Tour View Init~!!!');
     this.readonly = this.readonly !== undefined && this.readonly !== false;
-    console.log(this.readonly);
+    // console.log(this.readonly);
     if (!this.theThing$) {
       if (!!this.theThing) {
         this.theThing$ = of(this.theThing);
@@ -199,7 +199,7 @@ export class TourPlanViewComponent
         // this.isOwner = this.authorizeService.isOwner(this.theThing);
         this.readonly =
           this.readonly || !this.authorizeService.canModify(this.theThing);
-        console.log(this.readonly);
+        // console.log(this.readonly);
 
         this.state = this.theThing.getState(ImitationOrder.stateName);
         this.states = mapValues(ImitationOrder.states, s => s.value);

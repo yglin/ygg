@@ -29,12 +29,6 @@ import { isEmpty, find, values } from 'lodash';
 import { MockDatabase, theMockDatabase } from '@ygg/shared/test/cypress';
 import { IPurchasePack } from '@ygg/shopping/ui';
 
-export interface IOptionsSetValue {
-  freshNew?: boolean;
-  newCells?: TheThingCell[];
-  newPurchases?: IPurchasePack;
-}
-
 export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
   constructor(parentSelector?: string) {
     super(parentSelector);
@@ -50,7 +44,8 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
   }
 
   expectShowAsPage() {
-    cy.url().should('match', /the-things\/[^\/]+\/?/);
+    const regex = new RegExp(`${ImitationTourPlan.routePath}\/[^\/]+\/?`, 'g');
+    cy.url().should('match', regex);
     this.expectVisible();
   }
 
@@ -210,7 +205,14 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     });
   }
 
-  setValue(tourPlan: TheThing, options: IOptionsSetValue = {}) {
+  setValue(
+    tourPlan: TheThing,
+    options: {
+      freshNew?: boolean;
+      newCells?: TheThingCell[];
+      newPurchases?: IPurchasePack;
+    } = {}
+  ) {
     if (options.freshNew) {
       this.expectFreshNew();
     }
@@ -255,6 +257,11 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     );
     if (options.freshNew) {
       cy.wrap(additionalCells).each((cell: any) => {
+        this.addOptionalCell(cell);
+        this.expectCell(cell);
+      });
+    } else if (options.newCells) {
+      cy.wrap(options.newCells).each((cell: any) => {
         this.addOptionalCell(cell);
         this.expectCell(cell);
       });
@@ -321,6 +328,10 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
 
   expectNoCell(cell: TheThingCell) {
     cy.get(this.getSelectorForCell(cell.name)).should('not.exist');
+  }
+
+  expectNoCells(cells: TheThingCell[]) {
+    cy.wrap(cells).each((cell: TheThingCell) => this.expectNoCell(cell));
   }
 
   importToCart() {

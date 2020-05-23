@@ -139,17 +139,14 @@ describe('Tour-plan builder', () => {
   });
 
   it('Build a tour-plan plus includes all optional data fields', () => {
-    const optionalCells = TourPlanFull.getCellsByNames(
-      ImitationTourPlan.getOptionalCellNames()
-    );
+    // const optionalCells = TourPlanFull.getCellsByNames(
+    //   ImitationTourPlan.getOptionalCellNames()
+    // );
     tourPlanViewPO.setValue(TourPlanFull, {
-      freshNew: true,
-      newCells: optionalCells
+      freshNew: true
     });
-    // cy.pause();
     tourPlanViewPO.save(TourPlanFull);
     tourPlanViewPO.expectShowAsPage();
-    // cy.pause();
     tourPlanViewPO.expectValue(TourPlanFull);
   });
 

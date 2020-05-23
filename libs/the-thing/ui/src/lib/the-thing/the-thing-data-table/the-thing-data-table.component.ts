@@ -138,7 +138,11 @@ export class TheThingDataTableComponent
   }
 
   onClickTheThing(theThing: TheThing) {
-    this.router.navigate(['/', 'the-things', theThing.id]);
+    if (this.imitation.routePath) {
+      this.router.navigate(['/', this.imitation.routePath, theThing.id]);
+    } else {
+      this.router.navigate(['/', 'the-things', theThing.id]);
+    }
   }
 
   selectAll() {

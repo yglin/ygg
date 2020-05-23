@@ -289,6 +289,11 @@ export const SampleAdditions = [
         name: ShoppingCellNames.stock,
         type: 'number',
         value: 6
+      },
+      {
+        name: '照片',
+        type: 'album',
+        value: Album.forge().toJSON()
       }
     ]
   },
@@ -305,6 +310,11 @@ export const SampleAdditions = [
         name: ShoppingCellNames.stock,
         type: 'number',
         value: 5
+      },
+      {
+        name: '照片',
+        type: 'album',
+        value: Album.forge().toJSON()
       }
     ]
   }

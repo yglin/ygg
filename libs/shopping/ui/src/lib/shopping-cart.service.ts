@@ -85,7 +85,7 @@ export class ShoppingCartService {
   async removeAll() {
     const confirm = await this.emcee.confirm('確定要移除所有購買項目？');
     if (confirm) {
-      this.purchases = {};
+      this.clear();
       this.purchases$.next([]);
     }
   }
@@ -96,7 +96,7 @@ export class ShoppingCartService {
         '原本在購物車中的購買項目將會被清除，是否繼續？'
       );
       if (confirm) {
-        this.purchases = {};
+        this.clear();
       } else {
         return;
       }
@@ -109,5 +109,10 @@ export class ShoppingCartService {
   submit() {
     // console.info('Submit shopping cart~!!!');
     this.submit$.next(values(this.purchases));
+    this.clear();
+  }
+
+  clear() {
+    this.purchases = {};
   }
 }

@@ -12,6 +12,7 @@ import {
 import { TheThingImitationViewInterface } from './the-thing/the-thing-imitation-view/imitation-view-interface.component';
 import { YggDialogService, EmceeService } from '@ygg/shared/ui/widgets';
 import { AlertType } from '@ygg/shared/infra/core';
+import { Observable } from 'rxjs';
 
 export interface ITheThingCreateOptions {
   imitation?: string;
@@ -91,6 +92,10 @@ export class TheThingFactoryService {
     return newThing;
   }
 
+  load$(id: string): Observable<TheThing> {
+    return this.theThingAccessService.get$(id);
+  }
+
   async save(theThing: TheThing, options: ITheThingSaveOptions = {}) {
     if (options.requireOwner && !theThing.ownerId) {
       try {
@@ -101,9 +106,7 @@ export class TheThingFactoryService {
       }
     }
     try {
-      return await this.theThingAccessService.upsert(
-        theThing
-      );
+      return await this.theThingAccessService.upsert(theThing);
     } catch (error) {
       await this.emceeService.alert(
         `儲存失敗，錯誤原因：${error.message}`,

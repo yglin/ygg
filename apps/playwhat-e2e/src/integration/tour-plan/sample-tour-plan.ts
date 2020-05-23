@@ -73,6 +73,10 @@ delete MinimalTourPlanWithoutName.name;
 
 export const TourPlanFull = MinimalTourPlan.clone();
 TourPlanFull.name = '測試遊程(完整資料欄位)';
+TourPlanFull.setState(
+  ImitationTourPlan.stateName,
+  ImitationTourPlan.states.new
+);
 TourPlanFull.addCells(
   [
     {
@@ -125,6 +129,10 @@ TourPlanFull.addCells(
 // }
 
 export const TourPlanWithPlaysNoAddition = MinimalTourPlan.clone();
+TourPlanWithPlaysNoAddition.setState(
+  ImitationTourPlan.stateName,
+  ImitationTourPlan.states.new
+);
 for (const play of PlaysWithoutAddition) {
   const purchase = Purchase.purchase(
     TourPlanWithPlaysNoAddition,
@@ -136,6 +144,10 @@ for (const play of PlaysWithoutAddition) {
 TourPlanWithPlaysNoAddition.name = '測試遊程(預訂體驗, 無加購項目)';
 
 export const TourPlanWithPlaysAndAdditions = MinimalTourPlan.clone();
+TourPlanWithPlaysAndAdditions.setState(
+  ImitationTourPlan.stateName,
+  ImitationTourPlan.states.new
+);
 for (const play of PlaysWithAddition) {
   const purchase = Purchase.purchase(
     TourPlanWithPlaysAndAdditions,

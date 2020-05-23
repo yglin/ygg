@@ -93,7 +93,7 @@ export class ShoppingCartEditorComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Initially get evaluated total charge
-    this.shoppingCart.evaluateTotalCharge();
+    // this.shoppingCart.evaluateTotalCharge();
     this.shoppingCart.shoppingCartVisited$.next(true);
     // if (this.pageResolver.isPending()) {
     //   this.isPage = true;

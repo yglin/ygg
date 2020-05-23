@@ -1,7 +1,7 @@
 import { PageObject } from '@ygg/shared/test/page-object';
 
 export abstract class YggDialogPageObject extends PageObject {
-  static selector = '.ygg-dialog';
+  static selector = '.ygg-dialog.active';
 
   selectors = {
     main: YggDialogPageObject.selector,

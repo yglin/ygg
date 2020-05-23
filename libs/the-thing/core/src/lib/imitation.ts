@@ -60,6 +60,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   description: string;
   view: string;
   editor: string;
+  routePath?: string;
   // templateId: string;
   filter: TheThingFilter;
   cellsDef: { [name: string]: TheThingCellDefine } = {};

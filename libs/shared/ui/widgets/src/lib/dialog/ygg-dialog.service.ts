@@ -1,10 +1,12 @@
 import { Injectable, TemplateRef, Type } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { YggDialogComponentData } from './ygg-dialog';
 import { YggDialogComponent } from './ygg-dialog.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
+import { Subscription } from 'rxjs';
+import { find } from 'lodash';
 
 export interface IYggDialogOpenConfig {
   title?: string;
@@ -16,7 +18,19 @@ export interface IYggDialogOpenConfig {
 export class YggDialogService {
   constructor(private dialog: MatDialog) {}
 
-  open(component: Type<any>, config: IYggDialogOpenConfig = {}) {
+  open(
+    component: Type<any>,
+    config: IYggDialogOpenConfig = {}
+  ): MatDialogRef<any> {
+    // Get currently active dialog
+    const dialogRefPreviousActive: MatDialogRef<any> = find<MatDialogRef<any>>(
+      this.dialog.openDialogs,
+      dialogRef => dialogRef.componentInstance.isActive
+    );
+    // Deactivate all opened dialogs
+    for (const dialogRef of this.dialog.openDialogs) {
+      dialogRef.componentInstance.isActive = false;
+    }
     const wrappingData: YggDialogComponentData = {
       contentComponent: component,
       title: config.title,
@@ -24,7 +38,18 @@ export class YggDialogService {
     };
     config.data = wrappingData;
     config.panelClass = ['ygg-dialog'];
-    return this.dialog.open(YggDialogComponent, config);
+    const newDialogRef = this.dialog.open(YggDialogComponent, config);
+    // Activate new dialog
+    newDialogRef.componentInstance.isActive = true;
+    // Re-activate previous dialog after new one closed
+    if (!!dialogRefPreviousActive) {
+      newDialogRef
+        .afterClosed()
+        .subscribe(
+          () => (dialogRefPreviousActive.componentInstance.isActive = true)
+        );
+    }
+    return newDialogRef;
   }
 
   async confirm(content: string): Promise<boolean> {

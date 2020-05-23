@@ -8,11 +8,17 @@ import {
   defaultTourPlanName
 } from '@ygg/playwhat/core';
 import { set } from 'lodash';
-import { Router } from '@angular/router';
+import {
+  Router,
+  Resolve,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot
+} from '@angular/router';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import { AlertType } from '@ygg/shared/infra/core';
 import { ShoppingCartService } from '@ygg/shopping/ui';
 import { Purchase, RelationNamePurchase } from '@ygg/shopping/core';
+import { take, tap } from 'rxjs/operators';
 
 export interface IModifyRequest {
   command: 'update' | 'add' | 'delete';
@@ -25,9 +31,10 @@ export interface IModifyRequest {
 @Injectable({
   providedIn: 'root'
 })
-export class TourPlanFactoryService implements OnDestroy {
+export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
   tourPlan$: BehaviorSubject<TheThing> = new BehaviorSubject(null);
   tourPlan: TheThing;
+  createInProgress: TheThing;
   subscriptions: Subscription[] = [];
 
   constructor(
@@ -47,15 +54,41 @@ export class TourPlanFactoryService implements OnDestroy {
           RelationNamePurchase,
           purchases.map(p => p.toRelation())
         );
-        this.router.navigate(['/', 'tour-plans', 'create']);
+        this.router.navigate(['/', ImitationTourPlan.routePath, 'edit']);
       })
     );
+  }
+
+  resolve(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<any> | Promise<any> | any {
+    const id = route.paramMap.get('id');
+    if (id === 'create') {
+      return this.create();
+    } else if (id === 'edit') {
+      return this.loadTheOne();
+    } else if (!!id) {
+      return this.load(id);
+    }
   }
 
   ngOnDestroy(): void {
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
     }
+  }
+
+  async load(id: string): Promise<TheThing> {
+    return this.load$(id)
+      .pipe(take(1))
+      .toPromise();
+  }
+
+  load$(id: string): Observable<TheThing> {
+    return this.theThingFactory
+      .load$(id)
+      .pipe(tap(tourPlan => (this.tourPlan = tourPlan)));
   }
 
   async loadTheOne(): Promise<Observable<TheThing>> {
@@ -70,9 +103,14 @@ export class TourPlanFactoryService implements OnDestroy {
   }
 
   async create(): Promise<Observable<TheThing>> {
-    this.tourPlan = await this.theThingFactory.create({
-      imitation: ImitationTourPlan.id
-    });
+    console.log('Create tour-plan');
+    console.log(this.createInProgress);
+    if (!this.createInProgress) {
+      this.createInProgress = await this.theThingFactory.create({
+        imitation: ImitationTourPlan.id
+      });
+    }
+    this.tourPlan = this.createInProgress;
     this.tourPlan$.next(this.tourPlan);
     return this.tourPlan$;
   }
@@ -142,8 +180,14 @@ export class TourPlanFactoryService implements OnDestroy {
       }
     }
     await this.emcee.alert(`已成功儲存 ${this.tourPlan.name}`, AlertType.Info);
-    this.router.navigate(['/', 'the-things', this.tourPlan.id]);
-    this.tourPlan = undefined;
+    // this.tourPlan = undefined;
+    if (
+      !!this.createInProgress &&
+      this.tourPlan.id === this.createInProgress.id
+    ) {
+      this.createInProgress = undefined;
+    }
+    this.router.navigate(['/', ImitationTourPlan.routePath, this.tourPlan.id]);
     return;
   }
 }

@@ -32,12 +32,14 @@ export class YggDialogContentHostDirective {
 })
 export class YggDialogComponent implements OnInit {
   title: string;
+  id: string | number;
   @ViewChild(YggDialogContentHostDirective, { static: true })
   contentHost: YggDialogContentHostDirective;
   contentComponent: YggDialogContentComponent;
   hasOutput = false;
   hasOutputValue = false;
   output: any;
+  isActive = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private dialogData: YggDialogComponentData,
@@ -76,9 +78,11 @@ export class YggDialogComponent implements OnInit {
 
   confirmOutput() {
     this.dialogRef.close(this.output);
+    this.isActive = false;
   }
 
   cancel() {
     this.dialogRef.close();
+    this.isActive = false;
   }
 }
