@@ -1,5 +1,5 @@
 /// <reference types="@types/googlemaps" />
-import { random } from 'lodash';
+import { random, sample } from 'lodash';
 import { SerializableJSON } from '@ygg/shared/infra/data-access';
 
 export class GeoPoint implements SerializableJSON {
@@ -37,9 +37,14 @@ export class GeoPoint implements SerializableJSON {
   }
 
   static forge(): GeoPoint {
+    const center = sample([
+      [24.6794, 121.374],
+      [23.8043, 120.9],
+      [23.0485, 120.4926]
+    ]);
     return GeoPoint.fromLatLng(
-      random(21.9, 25.28, true),
-      random(119.5, 122.0, true)
+      center[0] + random(-0.6, 0.6, true),
+      center[1] + random(-0.4, 0.4, true)
     );
   }
 

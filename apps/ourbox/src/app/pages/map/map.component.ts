@@ -1,13 +1,35 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import * as leaflet from 'leaflet';
-import { range, random } from 'lodash';
-import { GeoPoint } from '@ygg/shared/omni-types/core';
-import { forgeItems } from '@ygg/ourbox/core';
+import { range, random, extend } from 'lodash';
+import { GeoPoint, Location } from '@ygg/shared/omni-types/core';
+import {
+  forgeItems,
+  Item,
+  ItemFilter,
+  CellNames,
+  GeoBound
+} from '@ygg/ourbox/core';
 import 'leaflet/dist/images/marker-icon-2x.png';
 import 'leaflet/dist/images/marker-shadow.png';
+import { BehaviorSubject, Subject, Observable, merge } from 'rxjs';
+import { switchMap, tap, map } from 'rxjs/operators';
+import { ItemFactoryService } from '../../item-factory.service';
 
-interface Marker {
-  location: GeoPoint;
+class Marker {
+  static fromItem(item: Item): Marker {
+    return new Marker({
+      id: item.id,
+      name: item.name,
+      imgUrl: item.image,
+      geoPoint: (item.getCellValue(CellNames.location) as Location).geoPoint
+    });
+  }
+
+  constructor(options: any = {}) {
+    extend(this, options);
+  }
+
+  geoPoint: GeoPoint;
   name: string;
   imgUrl: string;
   id: string;
@@ -20,9 +42,33 @@ interface Marker {
 })
 export class MapComponent implements OnInit, AfterViewInit {
   private map: any;
-  markers: Marker[] = [];
+  markersLayer = leaflet.layerGroup();
   center: GeoPoint;
-  constructor() {}
+  filter: ItemFilter = new ItemFilter();
+  filter$: Observable<ItemFilter>;
+  boundChange$: Subject<GeoBound> = new Subject();
+  keywordSearch$: Subject<string> = new Subject();
+
+  constructor(private itemFactory: ItemFactoryService) {
+    this.filter$ = merge(
+      this.boundChange$.pipe(
+        tap((bound: GeoBound) => (this.filter.geoBound = bound))
+      ),
+      this.keywordSearch$.pipe(
+        tap(keyword => (this.filter.keywordName = keyword))
+      )
+    ).pipe(map(() => this.filter));
+
+    this.filter$
+      .pipe(
+        switchMap(filter => this.itemFactory.find(filter)),
+        tap((items: Item[]) => {
+          this.clearMarkers();
+          this.addMarkers(items.map(item => Marker.fromItem(item)));
+        })
+      )
+      .subscribe();
+  }
 
   async getUserLocation(): Promise<GeoPoint> {
     if (navigator && navigator.geolocation) {
@@ -42,12 +88,25 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {}
 
+  async ngAfterViewInit() {
+    this.center = await this.getUserLocation();
+    this.initMap(this.center);
+    this.onMapBoundChange();
+    // const filter = new ItemFilter();
+    // filter.setGeoBoundary(this.map.getBounds());
+    // this.filter$.next(filter);
+  }
+
+  clearMarkers() {
+    this.markersLayer.clearLayers();
+  }
+
   addMarkers(markers: Marker[]) {
-    console.dir(markers);
     for (const marker of markers) {
-      const lfMarker = leaflet
-        .marker([marker.location.latitude, marker.location.longitude])
-        .addTo(this.map);
+      const lfMarker = leaflet.marker([
+        marker.geoPoint.latitude,
+        marker.geoPoint.longitude
+      ]);
       const link = `/items/${marker.id}`;
       const target = `ourbox_item_${marker.id}`;
       lfMarker.bindPopup(
@@ -59,29 +118,14 @@ export class MapComponent implements OnInit, AfterViewInit {
         </a>
         `
       );
+      lfMarker.addTo(this.markersLayer);
     }
   }
 
-  async loadItems(center: GeoPoint): Promise<Marker[]> {
-    return forgeItems().map(item => {
-      const marker: GeoPoint = new GeoPoint({
-        latitude: this.center.latitude + random(-0.01, 0.01, true),
-        longitude: this.center.longitude + random(-0.01, 0.01, true)
-      });
-      return {
-        id: item.id,
-        name: item.name,
-        imgUrl: item.image,
-        location: marker
-      };
-    });
-  }
-
-  async ngAfterViewInit() {
-    this.center = await this.getUserLocation();
-    this.markers = await this.loadItems(this.center);
-    this.initMap(this.center);
-    this.addMarkers(this.markers);
+  onMapBoundChange() {
+    const leafletBound = this.map.getBounds();
+    const geoBound = new GeoBound({ bound: leafletBound });
+    this.boundChange$.next(geoBound);
   }
 
   initMap(center: GeoPoint): void {
@@ -98,5 +142,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       }
     );
     tiles.addTo(this.map);
+    this.markersLayer.addTo(this.map);
+    this.map.on('zoomlevelschange', () => this.onMapBoundChange());
+    this.map.on('moveend', () => this.onMapBoundChange());
   }
 }

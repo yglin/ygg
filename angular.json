@@ -2066,7 +2066,7 @@
             "aot": true,
             "assets": ["apps/ourbox/src/favicon.ico", "apps/ourbox/src/assets"],
             "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "apps/ourbox/src/custom-theme.scss",
               "apps/ourbox/src/styles.css"
             ],
             "scripts": []
