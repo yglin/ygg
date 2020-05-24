@@ -12,8 +12,9 @@ import {
 import 'leaflet/dist/images/marker-icon-2x.png';
 import 'leaflet/dist/images/marker-shadow.png';
 import { BehaviorSubject, Subject, Observable, merge } from 'rxjs';
-import { switchMap, tap, map } from 'rxjs/operators';
+import { switchMap, tap, map, debounceTime } from 'rxjs/operators';
 import { ItemFactoryService } from '../../item-factory.service';
+import { FormControl } from '@angular/forms';
 
 class Marker {
   static fromItem(item: Item): Marker {
@@ -47,14 +48,16 @@ export class MapComponent implements OnInit, AfterViewInit {
   filter: ItemFilter = new ItemFilter();
   filter$: Observable<ItemFilter>;
   boundChange$: Subject<GeoBound> = new Subject();
-  keywordSearch$: Subject<string> = new Subject();
+  // keywordSearch$: Subject<string> = new Subject();
+  formControlKeyword: FormControl = new FormControl();
 
   constructor(private itemFactory: ItemFactoryService) {
     this.filter$ = merge(
       this.boundChange$.pipe(
         tap((bound: GeoBound) => (this.filter.geoBound = bound))
       ),
-      this.keywordSearch$.pipe(
+      this.formControlKeyword.valueChanges.pipe(
+        debounceTime(500),
         tap(keyword => (this.filter.keywordName = keyword))
       )
     ).pipe(map(() => this.filter));

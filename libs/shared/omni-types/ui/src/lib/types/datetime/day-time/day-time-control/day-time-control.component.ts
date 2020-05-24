@@ -89,7 +89,7 @@ export class DayTimeControlComponent
     });
     amazingTimePicker.afterClose().subscribe(timeToken => {
       if (timeToken) {
-        this.dayTime = new DayTime(timeToken);
+        this.dayTime = new DayTime().fromMoment(moment(timeToken, 'HH:mm'));
         this.formGroup.setValue(
           {
             hour: this.dayTime.hour,

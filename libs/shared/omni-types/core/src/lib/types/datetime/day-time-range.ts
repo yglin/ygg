@@ -25,12 +25,20 @@ export class DayTimeRange implements SerializableJSON {
   }
 
   static isDayTimeRange(value: any): value is DayTimeRange {
-    return !!(
-      value &&
-      DayTime.isDayTime(value.start) &&
-      DayTime.isDayTime(value.end) &&
-      value.end.isAfter(value.start)
-    );
+    // console.dir(value.start);
+    // console.dir(value.end);
+    if (
+      !(
+        value &&
+        DayTime.isDayTime(value.start) &&
+        DayTime.isDayTime(value.end) &&
+        (value.end.isSame(value.start) || value.end.isAfter(value.start))
+      )
+    ) {
+      console.warn(`Not a valid DayTimeRange: ${value}`);
+      return false;
+    }
+    return true;
   }
 
   static compare(tr1: DayTimeRange, tr2: DayTimeRange, isAsc: boolean): number {
@@ -42,20 +50,9 @@ export class DayTimeRange implements SerializableJSON {
     return (tr1.start.isAfter(tr2.start) ? 1 : -1) * (isAsc ? 1 : -1);
   }
 
-  constructor(...args: any[]) {
-    let start: DayTime = new DayTime();
-    let end: DayTime = new DayTime();
-    if (args.length >= 1) {
-      if (DayTimeRange.isDayTimeRange(args[0])) {
-        start = new DayTime(args[0].start);
-        end = new DayTime(args[0].end);
-      } else if (args.length >= 2) {
-        start = new DayTime(args[0]);
-        end = new DayTime(args[1]);
-      }
-    }
-    this._start = start;
-    this._end = end;
+  constructor(start?: DayTime, end?: DayTime) {
+    this._start = DayTime.isDayTime(start) ? start : new DayTime(0, 0);
+    this._end = DayTime.isDayTime(end) ? end : new DayTime(23, 59);
     this.justifyOrder();
   }
 
@@ -75,6 +72,10 @@ export class DayTimeRange implements SerializableJSON {
     }
   }
 
+  clone(): DayTimeRange {
+    return new DayTimeRange(this.start.clone(), this.end.clone());
+  }
+
   merge(that: DayTimeRange, options: any = {}): DayTimeRange {
     const thisMomentRange = moment.range(
       this.start.toMoment(),
@@ -86,7 +87,10 @@ export class DayTimeRange implements SerializableJSON {
     );
     const merged = thisMomentRange.add(thatMomentRange, options);
     if (merged) {
-      return new DayTimeRange(merged.start, merged.end);
+      return new DayTimeRange(
+        new DayTime().fromMoment(merged.start),
+        new DayTime().fromMoment(merged.end)
+      );
     } else {
       return null;
     }
@@ -104,7 +108,13 @@ export class DayTimeRange implements SerializableJSON {
     const subtracted = thisMomentRange.subtract(thatMomentRange);
     return subtracted
       .filter(momentRange => !!momentRange)
-      .map(momentRange => new DayTimeRange(momentRange.start, momentRange.end));
+      .map(
+        momentRange =>
+          new DayTimeRange(
+            new DayTime().fromMoment(momentRange.start),
+            new DayTime().fromMoment(momentRange.end)
+          )
+      );
   }
 
   format(startTokenString: string = 'HH:mm', endTokenString?: string): string {

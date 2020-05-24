@@ -72,7 +72,7 @@ export class DayTimeRangeControlComponent
           filter(value => value && DayTimeRange.isDayTimeRange(value))
         )
         .subscribe((value: DayTimeRange) => {
-          this.emitChange(new DayTimeRange(value));
+          this.emitChange(new DayTimeRange(value.start, value.end));
         })
     );
   }

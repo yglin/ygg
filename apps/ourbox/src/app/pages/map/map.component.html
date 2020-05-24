@@ -3,7 +3,12 @@
   <div>
     <div class="search">
       <mat-form-field>
-        <input matInput placeholder="搜尋" />
+        <input
+          matInput
+          name="ourbox-map-search-keyword"
+          placeholder="搜尋"
+          [formControl]="formControlKeyword"
+        />
         <mat-icon matSuffix color="accent">search</mat-icon>
       </mat-form-field>
     </div>

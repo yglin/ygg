@@ -28,9 +28,9 @@ export class BusinessHours implements SerializableJSON {
   }
 
   addOpenHour(newOpenHour: OpenHour) {
-    // console.log('new open-hour');
-    // console.dir(newOpenHour);
-    if (isEmpty(this.openHours)) {
+    if (!OpenHour.isOpenHour(newOpenHour)) {
+      return;
+    } else if (isEmpty(this.openHours)) {
       this.openHours.push(newOpenHour);
     } else {
       let mergedOpenHour: OpenHour;

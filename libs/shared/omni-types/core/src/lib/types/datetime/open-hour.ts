@@ -15,31 +15,29 @@ export class OpenHour implements SerializableJSON {
   }
 
   static isOpenHour(value: any): value is OpenHour {
-    return !!(
-      value &&
-      value.weekDay >= 0 &&
-      value.weekDay < 7 &&
-      DayTimeRange.isDayTimeRange(value.dayTimeRange)
-    );
+    if (
+      !(
+        value &&
+        value.weekDay >= 0 &&
+        value.weekDay < 7 &&
+        DayTimeRange.isDayTimeRange(value.dayTimeRange)
+      )
+    ) {
+      console.warn(`Not a valid open-hour: ${value}`);
+      return false;
+    }
+    return true;
   }
 
-  constructor(...args: any[]) {
-    if (args.length >= 1 && OpenHour.isOpenHour(args[0])) {
-      this.weekDay = args[0].weekDay;
-      this.dayTimeRange = new DayTimeRange(args[0].dayTimeRange);
-    } else if (args.length >= 2 && typeof args[0] === 'number') {
-      this.weekDay = args[0];
-      if (args.length === 2 && DayTimeRange.isDayTimeRange(args[1])) {
-        // console.dir(args[1]);
-        this.dayTimeRange = new DayTimeRange(args[1]);
-        // console.dir(this.dayTimeRange);
-      } else if (args.length >= 3) {
-        this.dayTimeRange = new DayTimeRange(args[1], args[2]);
-      }
-    } else {
-      this.weekDay = 0;
-      this.dayTimeRange = new DayTimeRange();
-    }
+  constructor(weekDay?: WeekDay, dayTimeRange?: DayTimeRange) {
+    this.weekDay = typeof weekDay === 'number' ? weekDay : 0;
+    this.dayTimeRange = DayTimeRange.isDayTimeRange(dayTimeRange)
+      ? dayTimeRange
+      : new DayTimeRange();
+  }
+
+  clone(): OpenHour {
+    return new OpenHour(this.weekDay, this.dayTimeRange);
   }
 
   isAfter(that: OpenHour): boolean {

@@ -14,9 +14,9 @@ import { By } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AmazingTimePickerService } from 'amazing-time-picker';
-import { DayTimeRange } from '../day-time-range';
 import { MockComponent } from 'ng-mocks';
 import { DayTimeControlComponent } from '../../day-time/day-time-control/day-time-control.component';
+import { DayTimeRange } from '@ygg/shared/omni-types/core';
 
 describe('DayTimeRangeControlComponent as Reactive Form Controller(ControlValueAccessor)', () => {
   @Component({
@@ -78,7 +78,10 @@ describe('DayTimeRangeControlComponent as Reactive Form Controller(ControlValueA
     formComponent.formGroup.get('myDayTimeRange').setValue(testTimeRange);
     await fixture.whenStable();
     fixture.detectChanges();
-    expect(component.dayTimeRange.toJSON()).toEqual(testTimeRange.toJSON());
+    const start = component.formGroup.value.start;
+    const end = component.formGroup.value.end;
+    const dayTimeRange = new DayTimeRange(start, end);
+    expect(dayTimeRange.toJSON()).toEqual(testTimeRange.toJSON());
     done();
   });
 
@@ -90,9 +93,8 @@ describe('DayTimeRangeControlComponent as Reactive Form Controller(ControlValueA
     });
     await fixture.whenStable();
     fixture.detectChanges();
-    const result: DayTimeRange = new DayTimeRange(
-      formComponent.formGroup.get('myDayTimeRange').value
-    );
+    const result: DayTimeRange = (formComponent.formGroup.get('myDayTimeRange')
+      .value as DayTimeRange).clone();
     expect(result.toJSON()).toEqual(testTimeRange.toJSON());
     done();
   });
