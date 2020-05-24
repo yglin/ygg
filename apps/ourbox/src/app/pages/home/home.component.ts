@@ -7,7 +7,7 @@ import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  hasMyBoxes: boolean = true;
+  hasMyBoxes: boolean = false;
 
   links: ImageThumbnailItem[] = [
     {

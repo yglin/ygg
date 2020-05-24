@@ -13,11 +13,13 @@ import {
 export type OmniTypeComparator = (a: any, b: any, isAsc: boolean) => number;
 
 export type OmniTypeID =
+  | 'boolean'
   | 'text'
   | 'longtext'
   | 'number'
   | 'album'
   | 'html'
+  | 'email'
   | 'address'
   | 'location'
   | 'date-range'
@@ -34,6 +36,15 @@ interface OmniType {
 }
 
 export const OmniTypes: { [id: string]: OmniType } = {
+  boolean: {
+    id: 'boolean',
+    label: '二元勾選',
+    forge: () => false,
+    comparator: (a: boolean, b: boolean, isAsc: boolean) => {
+      return a === b ? -1 : 1;
+    },
+    default: false
+  },
   text: {
     id: 'text',
     label: '文字',
@@ -111,6 +122,12 @@ export const OmniTypes: { [id: string]: OmniType } = {
     forge: (options: any = {}): Html => {
       return Html.forge(options);
     },
+    default: ''
+  },
+  email: {
+    id: 'email',
+    label: 'E-mail',
+    forge: () => 'yggisfkinggy@ygmail.com',
     default: ''
   },
   address: {

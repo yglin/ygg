@@ -10,8 +10,21 @@ export class TheThingCellDefine implements SerializableJSON {
   type: OmniTypeID;
   userInput: UserInputType;
 
-  constructor(options: any = {}) {
-    this.fromJSON(options);
+  static isTheThingCellDefine(value: any): value is TheThingCellDefine {
+    if (!(value && value.name && value.type)) {
+      console.warn(`Not a valid TheThingCellDefine: ${value}`);
+      return false;
+    }
+    return true;
+  }
+
+  constructor(options: {
+    name: string;
+    type: OmniTypeID;
+    userInput?: UserInputType;
+  }) {
+    this.userInput = 'optional';
+    extend(this, options);
   }
 
   createCell(value?: any): TheThingCell {

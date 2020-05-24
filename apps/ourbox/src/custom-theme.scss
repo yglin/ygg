@@ -12,7 +12,7 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $playwhat-primary: mat-palette($mat-orange);
-$playwhat-accent: mat-palette($mat-amber, 100, 100, 600);
+$playwhat-accent: mat-palette($mat-amber, 700, 100, A200);
 
 // The warn palette is optional (defaults to red).
 $playwhat-warn: mat-palette($mat-red);

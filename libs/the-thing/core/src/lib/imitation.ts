@@ -9,7 +9,8 @@ import {
   keyBy,
   clone,
   uniq,
-  find
+  find,
+  values
 } from 'lodash';
 import {
   generateID,
@@ -53,6 +54,7 @@ export interface DataTableConfig {
 type TheThingCreator = (thing: TheThing) => TheThing;
 
 export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
+  collection: string = 'the-things';
   id: string;
   name: string;
   icon: string;
@@ -85,12 +87,23 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     );
   }
 
-  constructor(options: any = {}) {
+  constructor(
+    options: {
+      collection?: string;
+      cellsDef?: TheThingCellDefine[];
+    } = {}
+  ) {
     this.id = generateID();
     this.createAt = new Date().valueOf();
     this.view = 'basic';
 
     this.fromJSON(options);
+  }
+
+  setRequiredCells(cellDefs: TheThingCellDefine[]) {
+    for (const cellDef of cellDefs) {
+      this.cellsDef[cellDef.name] = cellDef;
+    }
   }
 
   createCell(name: string, value: any): TheThingCell {
@@ -246,13 +259,16 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     extend(this, data);
     if (!isEmpty(data.cellsDef)) {
       let cellsDef = data.cellsDef;
-      if (isArray(data.cellsDef)) {
-        cellsDef = keyBy(data.cellsDef, 'name');
+      if (!isArray(data.cellsDef)) {
+        cellsDef = values(data.cellsDef);
       }
-      this.cellsDef = mapValues(
-        cellsDef,
-        cellDef => new TheThingCellDefine(cellDef)
+      this.cellsDef = keyBy(
+        cellsDef
+          .filter(cd => TheThingCellDefine.isTheThingCellDefine(cd))
+          .map(cd => new TheThingCellDefine(cd)),
+        'name'
       );
+      // mapValues(cellsDef, cellDef => new TheThingCellDefine(cellDef));
     }
     if (data.filter) {
       this.filter = new TheThingFilter().fromJSON(data.filter);

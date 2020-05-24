@@ -8,11 +8,12 @@
           <ng-template matStepLabel>寶箱名稱</ng-template>
           <div
             class="tab-content"
-            fxLayout="row wrap"
+            fxLayout="row"
+            fxLayout.xs="column"
             fxLayoutAlign="center center"
             fxLayoutGap="10px"
           >
-            <div class="icon"><img src="/assets/images/box/create.png" /></div>
+            <div class="icon"><img src="/assets/images/box/box.png" /></div>
             <mat-form-field>
               <input
                 matInput
@@ -28,33 +29,88 @@
             fxLayoutGap="20px"
           >
             <div></div>
-            <button mat-button matStepperNext>下一步</button>
+            <button mat-fab matStepperNext>
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </button>
+            <!-- <button mat-button matStepperNext>下一步</button> -->
           </div>
         </form>
       </mat-step>
-      <mat-step [stepControl]="secondFormGroup">
-        <form [formGroup]="secondFormGroup">
+      <mat-step>
+        <form>
           <ng-template matStepLabel>邀請好友加入</ng-template>
-
           <div
             class="tab-content"
-            fxLayout="row wrap"
+            fxLayout="row"
+            fxLayout.xs="column"
             fxLayoutAlign="center center"
             fxLayoutGap="10px"
           >
             <div class="icon"><img src="/assets/images/box/share.png" /></div>
 
-            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-              <mat-form-field>
-                <input
-                  matInput
-                  formControlName="emails"
-                  placeholder="輸入email"
-                />
-              </mat-form-field>
-              <button mat-mini-fab>
-                <mat-icon>add</mat-icon>
-              </button>
+            <div>
+              <div
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="10px"
+              >
+                <div>
+                  <mat-form-field>
+                    <input
+                      matInput
+                      type="email"
+                      placeholder="輸入好友Email"
+                      [formControl]="formControlFriendEmail"
+                      [matAutocomplete]="users"
+                    />
+                  </mat-form-field>
+                  <mat-autocomplete #users="matAutocomplete">
+                    <mat-option
+                      *ngFor="let user of foundUsers"
+                      [value]="user.email"
+                    >
+                      <ygg-user-thumbnail [id]="user.id"></ygg-user-thumbnail>
+                    </mat-option>
+                  </mat-autocomplete>
+                </div>
+                <div>
+                  <button
+                    mat-mini-fab
+                    [disabled]="formControlFriendEmail.invalid"
+                    (click)="addFriend()"
+                  >
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="friend-list">
+                <div *ngFor="let friendIdOrEmail of friends" class="friend">
+                  <div
+                    fxLayout="row"
+                    fxLayoutAlign="space-between center"
+                    fxLayoutGap="50px"
+                  >
+                    <div>
+                      <div *ngIf="!isEmail(friendIdOrEmail)">
+                        <ygg-user-thumbnail
+                          [id]="friendIdOrEmail"
+                        ></ygg-user-thumbnail>
+                      </div>
+                      <div *ngIf="isEmail(friendIdOrEmail)">
+                        <h3>{{ friendIdOrEmail }}</h3>
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        mat-mini-fab
+                        (click)="deleteFriend(friendIdOrEmail)"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div
@@ -62,8 +118,15 @@
             fxLayoutAlign="space-between center"
             fxLayoutGap="20px"
           >
-            <button mat-button matStepperPrevious>上一步</button>
-            <button mat-button matStepperNext>下一步</button>
+            <button mat-fab matStepperPrevious>
+              <mat-icon>keyboard_arrow_left</mat-icon>
+            </button>
+            <button mat-fab matStepperNext>
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </button>
+
+            <!-- <button mat-button matStepperPrevious>上一步</button> -->
+            <!-- <button mat-button matStepperNext>下一步</button> -->
           </div>
         </form>
       </mat-step>
@@ -85,8 +148,12 @@
           fxLayoutAlign="space-between center"
           fxLayoutGap="10px"
         >
-          <button mat-button matStepperPrevious>上一步</button>
-          <button mat-button (click)="submit()">完成</button>
+          <button mat-fab matStepperPrevious>
+            <mat-icon>keyboard_arrow_left</mat-icon>
+          </button>
+          <button mat-fab (click)="submit()">
+            <mat-icon>done_outline</mat-icon>
+          </button>
         </div>
       </mat-step>
     </mat-horizontal-stepper>

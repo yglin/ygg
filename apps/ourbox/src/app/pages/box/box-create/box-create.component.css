@@ -11,3 +11,14 @@
   width: 100%;
   height: 100%;
 }
+
+.friend-list {
+  height: 25vh;
+  overflow-y: auto;
+}
+
+.friend {
+  width: 20vw;
+  min-width: 250px;
+  margin-bottom: 20px;
+}

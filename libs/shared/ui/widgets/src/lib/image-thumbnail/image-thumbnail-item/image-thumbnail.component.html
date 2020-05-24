@@ -2,7 +2,7 @@
   <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
     <ygg-image-icon class="image" [src]="item.image"></ygg-image-icon>
     <div class="name" *ngIf="item.name">
-      <div fittext minFontSize="20" maxFontSize="32">{{ item.name }}</div>
+      <span fittext minFontSize="20" maxFontSize="32">{{ item.name }}</span>
     </div>
   </div>
   <div class="open-link" [hidden]="!item.link">
