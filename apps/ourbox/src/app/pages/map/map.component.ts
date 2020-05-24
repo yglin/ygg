@@ -112,7 +112,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       ]);
       const link = `/items/${marker.id}`;
       const target = `ourbox_item_${marker.id}`;
-      lfMarker.bindPopup(
+      const popup = lfMarker.bindPopup(
         `<a href="${link}" target="${target}">
           <div class="map-popup">
             <img src='${marker.imgUrl}' />
@@ -121,6 +121,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         </a>
         `
       );
+      lfMarker.on('mouseover', () => popup.openPopup());
       lfMarker.addTo(this.markersLayer);
     }
   }
