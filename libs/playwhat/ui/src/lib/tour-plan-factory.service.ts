@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import { TheThing, TheThingCell, TheThingState } from '@ygg/the-thing/core';
 import { TheThingFactoryService } from '@ygg/the-thing/ui';
 import {
   ImitationTourPlan,
@@ -151,6 +151,17 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     //   this.tourPlan$.next(this.tourPlan);
     // }
     if (request.emit) {
+      this.tourPlan$.next(this.tourPlan);
+    }
+  }
+
+  async setState(state: TheThingState) {
+    const confirm = await this.emcee.confirm(
+      `要將 ${this.tourPlan.name} 的狀態設為 ${state.label}？`
+    );
+    if (confirm) {
+      ImitationTourPlan.setState(this.tourPlan, state);
+      await this.theThingFactory.save(this.tourPlan);
       this.tourPlan$.next(this.tourPlan);
     }
   }

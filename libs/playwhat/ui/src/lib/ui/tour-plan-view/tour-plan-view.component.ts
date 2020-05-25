@@ -1,21 +1,48 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { Router } from '@angular/router';
-import { CellNames, defaultTourPlanName, ImitationPlay, ImitationTourPlan } from '@ygg/playwhat/core';
+import {
+  CellNames,
+  defaultTourPlanName,
+  ImitationPlay,
+  ImitationTourPlan
+} from '@ygg/playwhat/core';
 import { AlertType } from '@ygg/shared/infra/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import { PageResolverService } from '@ygg/shared/ui/navigation';
 import { EmceeService, YggDialogService } from '@ygg/shared/ui/widgets';
 import { AuthorizeService } from '@ygg/shared/user/ui';
-import { evalTotalChargeFromRelations, ImitationOrder, Purchase, RelationPurchase } from '@ygg/shopping/core';
+import {
+  evalTotalChargeFromRelations,
+  ImitationOrder,
+  Purchase,
+  RelationPurchase
+} from '@ygg/shopping/core';
 import { IInputShoppingCart, ShoppingCartService } from '@ygg/shopping/ui';
-import { TheThing, TheThingCell, TheThingRelation } from '@ygg/the-thing/core';
+import {
+  TheThing,
+  TheThingCell,
+  TheThingRelation,
+  TheThingState,
+  TheThingImitation
+} from '@ygg/the-thing/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { CellCreatorComponent, TheThingImitationViewInterface } from '@ygg/the-thing/ui';
+import {
+  CellCreatorComponent,
+  TheThingImitationViewInterface
+} from '@ygg/the-thing/ui';
 import { find, get, isEmpty, mapValues, values } from 'lodash';
 import { merge, Observable, of, Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
-import { IModifyRequest, TourPlanFactoryService } from '../../tour-plan-factory.service';
+import {
+  IModifyRequest,
+  TourPlanFactoryService
+} from '../../tour-plan-factory.service';
 
 @Component({
   selector: 'ygg-tour-plan-view',
@@ -32,6 +59,7 @@ export class TourPlanViewComponent
   // dayTimeRange: DayTimeRange;
   // numParticipants: number;
   // contact: Contact;
+  imitation: TheThingImitation = ImitationTourPlan;
   purchaseRelations: TheThingRelation[] = [];
   requiredCells: TheThingCell[] = [];
   otherCells: TheThingCell[] = [];
@@ -39,9 +67,9 @@ export class TourPlanViewComponent
   canSubmitApplication = false;
   isAdmin = false;
   // isOwner = false;
-  state: number;
-  stateLabel: string;
-  states: { [key: string]: number } = {};
+  state: TheThingState;
+  // stateLabel: string;
+  // states: { [key: string]: number } = {};
   canCancelApplied = false;
   formGroup: FormGroup;
   nameStyle = {
@@ -124,8 +152,8 @@ export class TourPlanViewComponent
       filter(theThing => !!theThing),
       tap(theThing => {
         this.theThing = theThing;
-        // console.log('update from factory');
-        // console.log(this.theThing);
+        console.log('update from factory');
+        console.log(this.theThing);
 
         // console.info(this.theThing);
         this.purchaseRelations = this.theThing.getRelations(
@@ -177,24 +205,21 @@ export class TourPlanViewComponent
           this.readonly || !this.authorizeService.canModify(this.theThing);
         // console.log(this.readonly);
 
-        this.state = this.theThing.getState(ImitationOrder.stateName);
-        this.states = mapValues(ImitationOrder.states, s => s.value);
-        this.stateLabel = ImitationTourPlan.getStateLabel(this.state);
+        this.state = this.imitation.getState(this.theThing);
+        console.log(this.state);
+        // this.states = mapValues(ImitationOrder.states, s => s.value);
+        // this.stateLabel = ImitationTourPlan.getStateLabel(this.state);
         this.canCancelApplied =
           this.authorizeService.isOwner(this.theThing) &&
-          this.theThing.isState(
-            ImitationOrder.stateName,
-            ImitationOrder.states.applied.value
-          );
+          this.isState(this.imitation.states.applied);
         this.canSubmitApplication =
           this.authorizeService.isOwner(this.theThing) &&
-          this.theThing.isState(
-            ImitationOrder.stateName,
-            ImitationOrder.states.new.value
-          );
+          this.isState(this.imitation.states.new);
       }),
       tap(async () => {
-        this.totalCharge = await evalTotalChargeFromRelations(this.purchaseRelations);
+        this.totalCharge = await evalTotalChargeFromRelations(
+          this.purchaseRelations
+        );
       })
     );
     const isAdmin$ = this.authorizeService.isAdmin().pipe(
@@ -301,20 +326,21 @@ export class TourPlanViewComponent
     }
   }
 
-  async cancelApplied() {
-    const confirmMessage = `取消此遊程規劃的申請？`;
-    if (confirm(confirmMessage)) {
-      try {
-        this.theThing.setState(
-          ImitationOrder.stateName,
-          ImitationOrder.states.new
-        );
-        await this.theThingAccessService.upsert(this.theThing);
-        alert(`已取消遊程規劃申請`);
-      } catch (error) {
-        alert(`送出失敗，錯誤原因：${error.message}`);
-      }
-    }
+  async setState(state: TheThingState) {
+    this.tourPlanFactory.setState(state);
+    // const confirmMessage = `取消此遊程規劃的申請？`;
+    // if (confirm(confirmMessage)) {
+    //   try {
+    //     this.theThing.setState(
+    //       ImitationOrder.stateName,
+    //       ImitationOrder.states.new
+    //     );
+    //     await this.theThingAccessService.upsert(this.theThing);
+    //     alert(`已取消遊程規劃申請`);
+    //   } catch (error) {
+    //     alert(`送出失敗，錯誤原因：${error.message}`);
+    //   }
+    // }
   }
 
   isPreviousCellInvalid(index: number): boolean {
@@ -413,6 +439,10 @@ export class TourPlanViewComponent
 
   isValidTourPlan(): boolean {
     return !!this.theThing;
+  }
+
+  isState(state: TheThingState): boolean {
+    return !!this.state && this.state.value === state.value;
   }
 
   // getOptionalCells(): TheThingCell[] {

@@ -1,5 +1,9 @@
 import { ImitationTourPlan } from '@ygg/playwhat/core';
-import { SiteNavigator, TourPlanAdminPageObjectCypress, TourPlanViewPageObjectCypress } from '@ygg/playwhat/test';
+import {
+  SiteNavigator,
+  TourPlanAdminPageObjectCypress,
+  TourPlanViewPageObjectCypress
+} from '@ygg/playwhat/test';
 import { Month } from '@ygg/shared/omni-types/core';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import { ImitationOrder } from '@ygg/shopping/core';
@@ -7,7 +11,11 @@ import { TheThing } from '@ygg/the-thing/core';
 import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
 import { flatten, keys, values } from 'lodash';
 import { SampleAdditions, SamplePlays } from '../play/sample-plays';
-import { stubTourPlansByStateAndMonth, TourPlanInApplication, TourPlanPaid } from './sample-tour-plan';
+import {
+  stubTourPlansByStateAndMonth,
+  TourPlanInApplication,
+  TourPlanPaid
+} from './sample-tour-plan';
 
 const tourPlansByStateAndMonth: {
   [state: string]: TheThing[];
@@ -31,10 +39,7 @@ describe('Tour-plan administration', () => {
     login().then(user => {
       cy.wrap(SampleThings).each((thing: any) => {
         thing.ownerId = user.id;
-        theMockDatabase.insert(
-          `${TheThing.collection}/${thing.id}`,
-          thing
-        );
+        theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
       });
 
       // const purchases: Purchase[] = TourPlanCompleted.getRelations(
@@ -66,7 +71,7 @@ describe('Tour-plan administration', () => {
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanInApplication);
     tourPlanView.expectState(ImitationTourPlan.states.applied.label);
     tourPlanView.expectVisible();
-    tourPlanView.cancelApplied();
+    tourPlanView.setState(TourPlanInApplication, ImitationTourPlan.states.new);
     tourPlanView.expectState(ImitationTourPlan.states.new.label);
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
     tourPlanAdminPO.switchToTab(ImitationOrder.states.applied.name);
@@ -86,8 +91,8 @@ describe('Tour-plan administration', () => {
       ImitationOrder.states.applied.name
     ].gotoTheThingView(TourPlanInApplication);
     tourPlanView.expectVisible();
-    tourPlanView.expectState(ImitationOrder.states.applied.label)
-    tourPlanView.adminPaid();
+    tourPlanView.expectState(ImitationOrder.states.applied.label);
+    tourPlanView.setState(TourPlanInApplication, ImitationTourPlan.states.paid);
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
     tourPlanAdminPO.switchToTab(ImitationOrder.states.applied.name);
     tourPlanAdminPO.theThingDataTables[
@@ -104,7 +109,7 @@ describe('Tour-plan administration', () => {
       ImitationOrder.states.paid.name
     ].gotoTheThingView(TourPlanInApplication);
     tourPlanView.expectVisible();
-    tourPlanView.expectState(ImitationOrder.states.paid.label)
+    tourPlanView.expectState(ImitationOrder.states.paid.label);
   });
 
   it('Complete tour-plan to set it state Completed', () => {
@@ -113,8 +118,8 @@ describe('Tour-plan administration', () => {
       ImitationOrder.states.paid.name
     ].gotoTheThingView(TourPlanPaid);
     tourPlanView.expectVisible();
-    tourPlanView.expectState(ImitationOrder.states.paid.label)
-    tourPlanView.adminComplete();
+    tourPlanView.expectState(ImitationOrder.states.paid.label);
+    tourPlanView.setState(TourPlanPaid, ImitationTourPlan.states.completed);
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
     tourPlanAdminPO.switchToTab(ImitationOrder.states.paid.name);
     tourPlanAdminPO.theThingDataTables[
@@ -131,7 +136,7 @@ describe('Tour-plan administration', () => {
       ImitationOrder.states.completed.name
     ].gotoTheThingView(TourPlanPaid);
     tourPlanView.expectVisible();
-    tourPlanView.expectState(ImitationOrder.states.completed.label)
+    tourPlanView.expectState(ImitationOrder.states.completed.label);
   });
 
   it('Filter tour-plans by month', () => {

@@ -6,7 +6,7 @@ import {
 } from '@ygg/shared/omni-types/ui';
 import { ImageThumbnailListPageObject } from '@ygg/shared/ui/widgets';
 import { PurchaseListPageObject } from '@ygg/shopping/ui';
-import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import { TheThing, TheThingCell, TheThingState } from '@ygg/the-thing/core';
 import { DateRange, Contact } from '@ygg/shared/omni-types/core';
 
 export abstract class TourPlanViewPageObject extends PageObject {
@@ -40,14 +40,19 @@ export abstract class TourPlanViewPageObject extends PageObject {
     return `${this.getSelector()} [cell-name="${cellName}"]`;
   }
 
+  getSelectorForButtonState(state: TheThingState): string {
+    return `${this.getSelector()} .state [state-name="${state.name}"] button`;
+  }
+
   abstract setName(name: string);
   abstract expectName(name: string);
   abstract expectVisible(): any;
   abstract expectValue(value: TheThing): void;
-  abstract submitApplication(): void;
-  abstract adminComplete(): void;
+  // abstract submitApplication(): void;
+  // abstract adminComplete(): void;
+  abstract setState(tourPlan: TheThing, state: TheThingState): void;
   abstract expectState(stateLabel: string): void;
-  abstract cancelApplied(): void;
+  // abstract cancelApplied(tourPlan: TheThing): void;
   abstract gotoEditOptionalCells(): void;
   abstract gotoEditPurchases(): void;
   abstract setCell(cell: TheThingCell): void;

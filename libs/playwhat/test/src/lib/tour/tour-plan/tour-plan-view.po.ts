@@ -1,12 +1,21 @@
 import { ImitationTourPlan } from '@ygg/playwhat/core';
 import { TourPlanViewPageObject } from '@ygg/playwhat/ui';
-import { ContactViewPageObjectCypress, DateRangeViewPageObjectCypress, OmniTypeViewControlPageObjectCypress } from '@ygg/shared/omni-types/test';
+import {
+  ContactViewPageObjectCypress,
+  DateRangeViewPageObjectCypress,
+  OmniTypeViewControlPageObjectCypress
+} from '@ygg/shared/omni-types/test';
 import { theMockDatabase } from '@ygg/shared/test/cypress';
-import { EmceePageObjectCypress, ImageThumbnailItemPageObjectCypress, YggDialogPageObjectCypress } from '@ygg/shared/ui/test';
+import {
+  EmceePageObjectCypress,
+  ImageThumbnailItemPageObjectCypress,
+  YggDialogPageObjectCypress,
+  ConfirmDialogPageObjectCypress
+} from '@ygg/shared/ui/test';
 import { Purchase } from '@ygg/shopping/core';
 import { PurchaseListPageObjectCypress } from '@ygg/shopping/test';
 import { IPurchasePack } from '@ygg/shopping/ui';
-import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import { TheThing, TheThingCell, TheThingState } from '@ygg/the-thing/core';
 import { CellCreatorPageObjectCypress } from '@ygg/the-thing/test';
 import { values } from 'lodash';
 
@@ -120,8 +129,13 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     cy.get(this.getSelector('buttonAdminPaid')).click();
   }
 
-  cancelApplied() {
-    cy.get(this.getSelector('buttonCancelApplied')).click();
+  setState(tourPlan: TheThing, state: TheThingState) {
+    cy.get(this.getSelectorForButtonState(state)).click();
+    const confirmDialogPO = new ConfirmDialogPageObjectCypress();
+    confirmDialogPO.expectMessage(
+      `要將 ${tourPlan.name} 的狀態設為 ${state.label}？`
+    );
+    confirmDialogPO.confirm();
   }
 
   gotoEditOptionalCells(): void {

@@ -9,3 +9,4 @@ export * from './lib/imitation-dog';
 export * from './lib/view';
 export * from './lib/editor';
 export * from './lib/validator';
+export * from './lib/state';

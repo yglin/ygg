@@ -61,11 +61,19 @@
     </div>
   </ygg-omni-type-view-control>
 
-  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+  <div
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    fxLayoutGap="10px"
+    class="state"
+  >
     <div>
-      <h4 class="state">{{ stateLabel }}</h4>
+      <h4>{{ state?.label }}</h4>
     </div>
-    <div *ngIf="canSubmitApplication && !readonly">
+    <div
+      *ngIf="canSubmitApplication && !readonly"
+      [attr.state-name]="imitation.states.applied.name"
+    >
       <button
         type="button"
         mat-mini-fab
@@ -75,41 +83,49 @@
         <mat-icon>send</mat-icon>
       </button>
     </div>
-    <div *ngIf="canCancelApplied && !readonly">
+    <div
+      *ngIf="canCancelApplied && !readonly"
+      [attr.state-name]="imitation.states.new.name"
+    >
       <button
         type="button"
         mat-mini-fab
         class="cancel-applied edit"
-        (click)="cancelApplied()"
+        (click)="setState(imitation.states.new)"
         matTooltip="取消此遊程申請"
       >
         <mat-icon>backspace</mat-icon>
       </button>
     </div>
-    <div *ngIf="isAdmin && !readonly" [ngSwitch]="state">
-      <div *ngSwitchCase="states.applied">
+    <div *ngIf="isAdmin && !readonly">
+      <div
+        *ngIf="isState(imitation.states.applied)"
+        [attr.state-name]="imitation.states.paid.name"
+      >
         <button
           type="button"
           mat-mini-fab
           class="admin-paid edit"
-          (click)="adminPaid()"
+          (click)="setState(imitation.states.paid)"
           matTooltip="標記此遊程已付款完成"
         >
           <mat-icon>payment</mat-icon>
         </button>
       </div>
-      <div *ngSwitchCase="states.paid">
+      <div
+        *ngIf="isState(imitation.states.paid)"
+        [attr.state-name]="imitation.states.completed.name"
+      >
         <button
           type="button"
           mat-mini-fab
           class="admin-complete edit"
-          (click)="adminComplete()"
+          (click)="setState(imitation.states.completed)"
           matTooltip="標記此遊程已全部完成"
         >
           <mat-icon>done_all</mat-icon>
         </button>
       </div>
-      <div *ngSwitchDefault></div>
     </div>
   </div>
   <div *ngFor="let cell of requiredCells; let idx = index">

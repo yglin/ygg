@@ -230,6 +230,12 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     return imitation;
   }
 
+  getState(theThing: TheThing): TheThingState {
+    return this.stateName in theThing.states
+      ? find(this.states, st => st.value === theThing.states[this.stateName])
+      : null;
+  }
+
   getStateLabel(stateValue: number): string {
     const state = find(this.states, s => s.value === stateValue);
     return !!state ? state.label : '未知狀態';
@@ -247,6 +253,11 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
         return true;
       }
     });
+  }
+
+  setState(theThing: TheThing, state: TheThingState) {
+    theThing.states[this.stateName] = state.value;
+    theThing.stateTimestamps[`${this.stateName}__${state.value}`] = new Date();
   }
 
   isState(theThing: TheThing, state: TheThingState) {
