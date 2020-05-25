@@ -11,6 +11,7 @@ import {
 import { Subscription } from 'rxjs';
 import { AmazingTimePickerService } from 'amazing-time-picker';
 import { DayTime } from '@ygg/shared/omni-types/core';
+import { tap, filter } from 'rxjs/operators';
 @Component({
   selector: 'ygg-day-time-control',
   templateUrl: './day-time-control.component.html',
@@ -29,17 +30,18 @@ export class DayTimeControlComponent
   emitChange: (value: DayTime) => any = noop;
   subscriptions: Subscription[] = [];
   formGroup: FormGroup;
+  dayTime: DayTime;
 
-  _dayTime: DayTime = null;
-  set dayTime(value: DayTime) {
-    if (DayTime.isDayTime(value)) {
-      this._dayTime = value;
-      this.emitChange(this._dayTime);
-    }
-  }
-  get dayTime(): DayTime {
-    return this._dayTime;
-  }
+  // _dayTime: DayTime = null;
+  // set dayTime(value: DayTime) {
+  //   if (DayTime.isDayTime(value)) {
+  //     this._dayTime = value;
+  //     this.emitChange(this._dayTime);
+  //   }
+  // }
+  // get dayTime(): DayTime {
+  //   return this._dayTime;
+  // }
 
   constructor(
     private formBuilder: FormBuilder,
@@ -51,17 +53,30 @@ export class DayTimeControlComponent
     });
 
     this.subscriptions.push(
-      this.formGroup.valueChanges.subscribe(value => {
-        if (DayTime.isDayTime(value)) {
-          this.dayTime = new DayTime(value.hour, value.minute);
-          if (value.hour !== this.dayTime.hour) {
-            this.formGroup.get('hour').setValue(this.dayTime.hour);
-          }
-          if (value.minute !== this.dayTime.minute) {
-            this.formGroup.get('minute').setValue(this.dayTime.minute);
-          }
-        }
-      })
+      this.formGroup.valueChanges
+        .pipe(
+          tap(value => {
+            let hour = value.hour;
+            if (typeof value.hour === 'string') {
+              hour = parseInt(value.hour);
+            }
+            let minute = value.minute;
+            if (typeof value.minute === 'string') {
+              minute = parseInt(value.minute);
+            }
+            // console.log(hour);
+            // console.log(minute);
+            if (typeof hour === 'number' && typeof minute === 'number') {
+              this.dayTime = new DayTime(hour, minute);
+            } else {
+              this.dayTime = null;
+            }
+            if (DayTime.isDayTime(this.dayTime)) {
+              this.emitChange(this.dayTime);
+            }
+          })
+        )
+        .subscribe()
     );
   }
 
@@ -71,9 +86,9 @@ export class DayTimeControlComponent
     }
   }
 
-  writeValue(value: Date) {
+  writeValue(value: DayTime) {
     if (DayTime.isDayTime(value)) {
-      this._dayTime = value;
+      this.formGroup.patchValue(value);
     }
   }
 
@@ -85,18 +100,21 @@ export class DayTimeControlComponent
 
   openTimePicker() {
     const amazingTimePicker = this.amazingTimePickerService.open({
-      time: !!this.dayTime ? this.dayTime.format('HH:mm') : '12:00'
+      time: !!this.dayTime ? this.dayTime.format('HH:mm') : '10:00'
     });
     amazingTimePicker.afterClose().subscribe(timeToken => {
       if (timeToken) {
-        this.dayTime = new DayTime().fromMoment(moment(timeToken, 'HH:mm'));
-        this.formGroup.setValue(
-          {
-            hour: this.dayTime.hour,
-            minute: this.dayTime.minute
-          },
-          { emitEvent: false }
-        );
+        try {
+          const tokens = timeToken.split(':');
+          const hour = parseInt(tokens[0]);
+          const minute = parseInt(tokens[1]);
+          this.formGroup.setValue({
+            hour,
+            minute
+          });
+        } catch (error) {
+          console.warn(`Failed to parse time token: ${timeToken} `);
+        }
       }
     });
   }

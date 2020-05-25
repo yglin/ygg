@@ -62,6 +62,8 @@ export class DayTimeRangeControlComponent
             this.errorMessages = [];
           }),
           tap(value => {
+            // console.log('DayTimeRangeControlComponent value change !!');
+            // console.dir(value);
             if (!(value && value.start && value.end)) {
               this.errorMessages.push(`請輸入開始時間和結束時間`);
             } else if (value.start.isAfter(value.end)) {
@@ -69,11 +71,12 @@ export class DayTimeRangeControlComponent
             }
             this.stateShowError = isEmpty(this.errorMessages) ? 'out' : 'in';
           }),
-          filter(value => value && DayTimeRange.isDayTimeRange(value))
+          filter(value => value && DayTimeRange.isDayTimeRange(value)),
+          tap(value =>
+            this.emitChange(new DayTimeRange(value.start, value.end))
+          )
         )
-        .subscribe((value: DayTimeRange) => {
-          this.emitChange(new DayTimeRange(value.start, value.end));
-        })
+        .subscribe()
     );
   }
 

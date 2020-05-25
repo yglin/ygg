@@ -154,7 +154,7 @@
         </div>
       </div>
       <div *ngFor="let cell of otherCells">
-        <div [attr.cell-name]="cell.name" *ngIf="cell.value">
+        <div [attr.cell-name]="cell.name">
           <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
             <h4>{{ cell.name }}</h4>
             <div>

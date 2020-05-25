@@ -91,6 +91,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     options: {
       collection?: string;
       cellsDef?: TheThingCellDefine[];
+      [key: string]: any;
     } = {}
   ) {
     this.id = generateID();
