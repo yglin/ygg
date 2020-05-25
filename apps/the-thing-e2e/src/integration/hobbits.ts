@@ -1,4 +1,4 @@
-import { TheThing, TheThingImitation, RelationDef } from '@ygg/the-thing/core';
+import { TheThing, TheThingImitation, RelationDefine } from '@ygg/the-thing/core';
 
 export const Sam = new TheThing().fromJSON({
   name: 'Samwise Gamgee',
@@ -114,16 +114,16 @@ export const ImitationGollum = new TheThingImitation().fromJSON({
   ]
 });
 
-export const relationGollumToFrodo = new RelationDef({
+export const relationGollumToFrodo = new RelationDefine({
   name: "Psychopath keeps calling me master",
   imitationId: ImitationGollum.id
 });
 
-ImitationFrodo.addRelationDef(relationGollumToFrodo);
+ImitationFrodo.addRelationDefine(relationGollumToFrodo);
 
-export const relationSamToGollum = new RelationDef({
+export const relationSamToGollum = new RelationDefine({
   name: "Masters gay fwend"
 });
 
-ImitationGollum.addRelationDef(relationSamToGollum);
+ImitationGollum.addRelationDefine(relationSamToGollum);
 

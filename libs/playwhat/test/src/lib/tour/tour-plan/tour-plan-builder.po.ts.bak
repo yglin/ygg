@@ -20,7 +20,7 @@ import {
   Purchase,
   RelationAddition,
   CellNames.stock,
-  RelationNamePurchase,
+  RelationPurchase.name,
   CellNames.quantity
 } from '@ygg/shopping/core';
 import { isEmpty, find, values } from 'lodash';
@@ -83,8 +83,8 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
     const purchasePlays: TheThing[] = [];
     const purchaseAdditions: TheThing[] = [];
     const finalPurchases: Purchase[] = [];
-    if (tourPlan.hasRelation(RelationNamePurchase)) {
-      const relations = tourPlan.getRelations(RelationNamePurchase);
+    if (tourPlan.hasRelation(RelationPurchase.name)) {
+      const relations = tourPlan.getRelations(RelationPurchase.name);
       purchasePlays.push.apply(
         purchasePlays,
         relations
@@ -113,7 +113,7 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
 
       finalPurchases.push.apply(
         finalPurchases,
-        this.fromRelations(tourPlan.getRelations(RelationNamePurchase))
+        this.fromRelations(tourPlan.getRelations(RelationPurchase.name))
       );
     }
 

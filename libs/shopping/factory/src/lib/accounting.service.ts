@@ -5,19 +5,17 @@ import { Observable, of } from 'rxjs';
 import {
   IncomeRecord,
   Purchase,
-  RelationNamePurchase,
+  RelationPurchase,
   ImitationOrder
 } from '@ygg/shopping/core';
 import { map, switchMap } from 'rxjs/operators';
 import { isEmpty, keys } from 'lodash';
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class AccountingService {
-
-  constructor(private theThingAccessService: TheThingAccessService) { }
+  constructor(private theThingAccessService: TheThingAccessService) {}
 
   listIncomeRecords$(filter: TheThingFilter): Observable<IncomeRecord[]> {
     filter.addState(
@@ -31,9 +29,7 @@ export class AccountingService {
         const byProductPurchases: { [productId: string]: Purchase[] } = {};
         if (!isEmpty(orders)) {
           for (const order of orders) {
-            const purchaseRelations = order.getRelations(
-              RelationNamePurchase
-            );
+            const purchaseRelations = order.getRelations(RelationPurchase.name);
             for (const pr of purchaseRelations) {
               if (!(pr.objectId in byProductPurchases)) {
                 byProductPurchases[pr.objectId] = [];

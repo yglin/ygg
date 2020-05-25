@@ -1,42 +1,32 @@
 // import { sampleSize, values, pick, sum, sumBy, random, find } from 'lodash';
+import { ImitationTourPlan } from '@ygg/playwhat/core';
 import {
-  MockDatabase,
-  login,
-  theMockDatabase,
-  logout
-} from '@ygg/shared/test/cypress';
+  PlayViewPageObjectCypress,
+  SiteNavigator,
+  TourPlanViewPageObjectCypress
+} from '@ygg/playwhat/test';
+import { login, logout, theMockDatabase } from '@ygg/shared/test/cypress';
+import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
+import {
+  Purchase,
+  RelationAddition,
+  RelationPurchase
+} from '@ygg/shopping/core';
+import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
+import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
+import { chunk, find, isEmpty, sum } from 'lodash';
+import {
+  PlaysWithAddition,
+  SampleAdditions,
+  SamplePlays
+} from '../play/sample-plays';
 import {
   MinimalTourPlan,
   TourPlanFull,
   TourPlanWithPlaysAndAdditions,
   TourPlanWithPlaysNoAddition
 } from './sample-tour-plan';
-import {
-  SamplePlays,
-  SampleAdditions,
-  PlaysWithoutAddition,
-  PlaysWithAddition
-} from '../play/sample-plays';
-import {
-  MyThingsDataTablePageObjectCypress,
-  MyThingsPageObjectCypress
-} from '@ygg/the-thing/test';
-import {
-  TourPlanViewPageObjectCypress,
-  PlayViewPageObjectCypress
-} from '@ygg/playwhat/test';
-import { SiteNavigator } from '@ygg/playwhat/test';
-import { TheThing, TheThingCell, TheThingRelation } from '@ygg/the-thing/core';
-import { ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
-import {
-  RelationNamePurchase,
-  Purchase,
-  RelationAddition
-} from '@ygg/shopping/core';
-import { IPurchasePack } from '@ygg/shopping/ui';
-import { find, isEmpty, sum, chunk } from 'lodash';
-import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
-import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
 
 describe('Edit exist tour-plans from my-tour-plans page', () => {
   const siteNavigator = new SiteNavigator();
@@ -113,7 +103,7 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     const resultTourPlan = MinimalTourPlan.clone();
     resultTourPlan.name = '測試遊程修改(加購體驗)';
     const purchaseRelations = TourPlanWithPlaysAndAdditions.getRelations(
-      RelationNamePurchase
+      RelationPurchase.name
     );
     const purchases: Purchase[] = purchaseRelations.map(r =>
       Purchase.fromRelation(r)
@@ -153,7 +143,7 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
 
   it('Remove purchases', () => {
     const purchaseRelations = TourPlanWithPlaysNoAddition.getRelations(
-      RelationNamePurchase
+      RelationPurchase.name
     );
     const [toBeRemoved, remains] = chunk(purchaseRelations, 2);
     const removePurchases = toBeRemoved.map(pr => Purchase.fromRelation(pr));

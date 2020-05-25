@@ -1,33 +1,14 @@
-import { DateRange, DayTimeRange } from '@ygg/shared/omni-types/core';
-import { TheThing, TheThingCell, TheThingFilter } from '@ygg/the-thing/core';
+import { ImitationTourPlan } from '@ygg/playwhat/core';
 import { TourPlanViewPageObject } from '@ygg/playwhat/ui';
-import {
-  DateRangeViewPageObjectCypress,
-  DayTimeRangeViewPageObjectCypress,
-  ContactViewPageObjectCypress,
-  OmniTypeViewControlPageObjectCypress
-} from '@ygg/shared/omni-types/test';
-import {
-  ControlViewSwitchPageObjectCypress,
-  YggDialogPageObjectCypress,
-  ConfirmDialogPageObjectCypress,
-  AlertDialogPageObjectCypress,
-  EmceePageObjectCypress,
-  ImageThumbnailItemPageObjectCypress
-} from '@ygg/shared/ui/test';
-import { ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
-import {
-  TheThingCellViewPageObjectCypress,
-  CellCreatorPageObjectCypress
-} from '@ygg/the-thing/test';
-import {
-  PurchaseListPageObjectCypress,
-  ShoppingCartEditorPageObjectCypress
-} from '@ygg/shopping/test';
-import { RelationNamePurchase, Purchase } from '@ygg/shopping/core';
-import { isEmpty, find, values } from 'lodash';
-import { MockDatabase, theMockDatabase } from '@ygg/shared/test/cypress';
+import { ContactViewPageObjectCypress, DateRangeViewPageObjectCypress, OmniTypeViewControlPageObjectCypress } from '@ygg/shared/omni-types/test';
+import { theMockDatabase } from '@ygg/shared/test/cypress';
+import { EmceePageObjectCypress, ImageThumbnailItemPageObjectCypress, YggDialogPageObjectCypress } from '@ygg/shared/ui/test';
+import { Purchase } from '@ygg/shopping/core';
+import { PurchaseListPageObjectCypress } from '@ygg/shopping/test';
 import { IPurchasePack } from '@ygg/shopping/ui';
+import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import { CellCreatorPageObjectCypress } from '@ygg/the-thing/test';
+import { values } from 'lodash';
 
 export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
   constructor(parentSelector?: string) {
@@ -99,9 +80,9 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
         this.expectCell(cell);
       }
     }
-    // if (tourPlan.hasRelation(RelationNamePurchase)) {
+    // if (tourPlan.hasRelation(RelationPurchase.name)) {
     //   // tslint:disable-next-line: no-unused-expression
-    //   const purchases = tourPlan.getRelations(RelationNamePurchase).map(r => {
+    //   const purchases = tourPlan.getRelations(RelationPurchase.name).map(r => {
     //     const product: TheThing = theMockDatabase.getEntity(
     //       `${TheThing.collection}/${r.objectId}`
     //     ) as TheThing;
@@ -268,7 +249,7 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     }
 
     // // Edit purchases
-    // const purchaseRelations = tourPlan.getRelations(RelationNamePurchase);
+    // const purchaseRelations = tourPlan.getRelations(RelationPurchase.name);
     // const purchases: Purchase[] = purchaseRelations.map(pr =>
     //   Purchase.fromRelation(pr)
     // );

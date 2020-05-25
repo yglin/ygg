@@ -1,17 +1,16 @@
 import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
-import { TheThingImitation } from './imitation';
 import { extend } from 'lodash';
 
-interface IRelationDef {
+interface IRelationDefine {
   name: string;
   imitationId?: string;
 }
 
-export class RelationDef implements SerializableJSON {
+export class RelationDefine implements SerializableJSON {
   name: string;
   imitationId: string;
 
-  constructor(options?: IRelationDef) {
+  constructor(options?: IRelationDefine) {
     this.fromJSON(options);
   }
 

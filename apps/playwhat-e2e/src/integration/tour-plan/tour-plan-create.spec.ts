@@ -1,53 +1,16 @@
-import { sampleSize, random } from 'lodash';
+import { CellNames, defaultTourPlanName, ImitationTourPlan } from '@ygg/playwhat/core';
+import { SiteNavigator, TourPlanAdminPageObjectCypress, TourPlanViewPageObjectCypress } from '@ygg/playwhat/test';
+import { Contact } from '@ygg/shared/omni-types/core';
+import { ContactControlPageObjectCypress, OmniTypeViewControlPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
-import {
-  LoginDialogPageObjectCypress,
-  waitForLogin,
-  logout
-} from '@ygg/shared/user/test';
-import {
-  MinimalTourPlan,
-  TourPlanFull,
-  // TourPlanFullWithPlays,
-  MinimalTourPlanWithoutName,
-  TourPlanWithPlaysNoAddition,
-  TourPlanWithPlaysAndAdditions
-} from './sample-tour-plan';
-import { SamplePlays, SampleAdditions } from '../play/sample-plays';
-import {
-  TheThingDataTablePageObjectCypress,
-  MyThingsDataTablePageObjectCypress,
-  MyThingsPageObjectCypress
-} from '@ygg/the-thing/test';
-import {
-  TourPlanViewPageObjectCypress,
-  TourPlanAdminPageObjectCypress
-} from '@ygg/playwhat/test';
-import { SiteNavigator } from '@ygg/playwhat/test';
-import { TheThing, TheThingCell, TheThingRelation } from '@ygg/the-thing/core';
-import {
-  ImitationOrder,
-  Purchase,
-  RelationNamePurchase
-} from '@ygg/shopping/core';
-import {
-  ContactControlPageObjectCypress,
-  OmniTypeViewControlPageObjectCypress
-} from '@ygg/shared/omni-types/test';
+import { EmceePageObjectCypress, YggDialogPageObjectCypress } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
-import { Contact, DateRange } from '@ygg/shared/omni-types/core';
-import {
-  defaultTourPlanName,
-  CellNames,
-  ImitationTourPlan,
-  ImitationPlay
-} from '@ygg/playwhat/core';
-import { randomBytes } from 'crypto';
-import {
-  YggDialogPageObjectCypress,
-  EmceePageObjectCypress
-} from '@ygg/shared/ui/test';
-import { IPurchasePack } from '@ygg/shopping/ui';
+import { LoginDialogPageObjectCypress, logout, waitForLogin } from '@ygg/shared/user/test';
+import { ImitationOrder } from '@ygg/shopping/core';
+import { TheThingCell } from '@ygg/the-thing/core';
+import { MyThingsDataTablePageObjectCypress, MyThingsPageObjectCypress } from '@ygg/the-thing/test';
+import { SampleAdditions, SamplePlays } from '../play/sample-plays';
+import { MinimalTourPlan, TourPlanFull } from './sample-tour-plan';
 
 describe('Tour-plan builder', () => {
   const siteNavigator = new SiteNavigator();

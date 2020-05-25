@@ -1,4 +1,4 @@
-import { TheThingImitation, TheThing, RelationDef } from '@ygg/the-thing/core';
+import { TheThingImitation, TheThing, RelationDefine } from '@ygg/the-thing/core';
 import { RelationAddition } from '@ygg/shopping/core';
 
 export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON(
@@ -88,4 +88,4 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
   }
 );
 
-ImitationPlay.addRelationDef(RelationAddition);
+ImitationPlay.addRelationDefine(RelationAddition);

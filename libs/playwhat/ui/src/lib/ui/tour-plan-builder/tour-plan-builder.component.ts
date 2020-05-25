@@ -1,64 +1,26 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  ViewChild,
-  AfterViewInit
-} from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormControl
-} from '@angular/forms';
-import {
-  TheThingFilter,
-  TheThing,
-  TheThingCell,
-  TheThingRelation,
-  ITheThingEditorComponent
-} from '@ygg/the-thing/core';
-import {
-  TheThingImitationAccessService,
-  TheThingAccessService
-} from '@ygg/the-thing/data-access';
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 // import { take } from 'rxjs/operators';
 import {
-  ImitationTourPlan,
-  ImitationPlay,
+  CellNames,
   defaultTourPlanName,
-  CellNames
+  ImitationPlay,
+  ImitationTourPlan
 } from '@ygg/playwhat/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
-import { isEmpty, keyBy, flatten, find, remove, get } from 'lodash';
-import { Subject, Subscription, BehaviorSubject } from 'rxjs';
-import {
-  Router,
-  ActivatedRouteSnapshot,
-  ActivatedRoute
-} from '@angular/router';
-import {
-  Purchase,
-  RelationNamePurchase,
-  CellNames.quantity,
-  CellNameCharge,
-  ImitationOrder
-} from '@ygg/shopping/core';
-import { PurchaseService } from '@ygg/shopping/factory';
-import { tap, first, map } from 'rxjs/operators';
-import { TourPlanBuilderService } from './tour-plan-builder.service';
-import {
-  AuthenticateService,
-  AuthenticateUiService
-} from '@ygg/shared/user/ui';
-import { MatStepper } from '@angular/material/stepper';
-import { TheThingFactoryService } from '@ygg/the-thing/ui';
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { PageStashService } from '@ygg/shared/infra/data-access';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
+import { Purchase, RelationPurchase } from '@ygg/shopping/core';
+import { PurchaseService } from '@ygg/shopping/factory';
+import {
+  ITheThingEditorComponent,
+  TheThing,
+  TheThingFilter
+} from '@ygg/the-thing/core';
+import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { TheThingFactoryService } from '@ygg/the-thing/ui';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'ygg-tour-plan-builder',
@@ -133,11 +95,9 @@ export class TourPlanBuilderComponent
     const selectedPlays = this.firstFormGroup.get('selectedPlays').value || [];
     for (const play of selectedPlays) {
       try {
-        const purchaseThePlay = await this.purchaseService.purchase(
-          this.theThing,
-          play,
+        const purchaseThePlay = await this.purchaseService.purchase(play, {
           quantity
-        );
+        });
         const newPurchases = this.purchaseService.listDescendantsIncludeMe(
           purchaseThePlay
         );
@@ -227,12 +187,12 @@ export class TourPlanBuilderComponent
     //   name: this.theThing.name,
     //   optionalCells: keyBy(optionalCells, 'name')
     // });
-    // if (this.theThing.hasRelation(RelationNamePurchase)) {
+    // if (this.theThing.hasRelation(RelationPurchase.name)) {
     //   this.purchases = this.theThing
-    //     .getRelations(RelationNamePurchase)
+    //     .getRelations(RelationPurchase.name)
     //     .map(r => Purchase.fromRelation(r));
     //   this.theThingAccessService
-    //     .listByIds$(this.theThing.getRelationObjectIds(RelationNamePurchase))
+    //     .listByIds$(this.theThing.getRelationObjectIds(RelationPurchase.name))
     //     .pipe(
     //       first(),
     //       map(products => {
@@ -268,7 +228,7 @@ export class TourPlanBuilderComponent
           );
         }
         this.theThing.setRelation(
-          RelationNamePurchase,
+          RelationPurchase.name,
           this.purchases.map(p => p.toRelation())
         );
         break;
@@ -277,7 +237,7 @@ export class TourPlanBuilderComponent
         this.theThing.cells['聯絡資訊'].value = contact;
         break;
       // case startIndex + 2:
-      //   this.theThing.removeRelation(RelationNamePurchase);
+      //   this.theThing.removeRelation(RelationPurchase.name);
       //   const purchases: Purchase[] = this.formControlPurchases.value;
       //   for (const purchase of purchases) {
       //     this.theThing.addRelation(purchase.toRelation());

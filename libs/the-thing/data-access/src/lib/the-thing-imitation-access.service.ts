@@ -77,8 +77,8 @@ export class TheThingImitationAccessService {
     imitation: TheThingImitation,
     relationName: string
   ): Observable<TheThingImitation> {
-    const relationDef = imitation.getRelationDef(relationName);
-    if (!relationDef) {
+    const RelationDefine = imitation.getRelationDefine(relationName);
+    if (!RelationDefine) {
       return throwError(
         new Error(
           `Imitation ${imitation.name} has no relation define ${relationName}`
@@ -86,13 +86,13 @@ export class TheThingImitationAccessService {
       );
     }
 
-    if (!relationDef.imitationId) {
+    if (!RelationDefine.imitationId) {
       return throwError(
         new Error(`Relation define ${relationName} has no related imitation`)
       );
     }
 
-    return this.get$(relationDef.imitationId);
+    return this.get$(RelationDefine.imitationId);
   }
   // getTemplate$(id: string): Observable<TheThing> {
   //   return this.get$(id).pipe(

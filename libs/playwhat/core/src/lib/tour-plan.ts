@@ -130,7 +130,7 @@ ImitationTourPlan.dataTableConfig = {
 
 // export function getTotalCharge(tourPlan: TheThing): number {
 //   let totalCharge = 0;
-//   const relations = tourPlan.getRelations(RelationNamePurchase);
+//   const relations = tourPlan.getRelations(RelationPurchase.name);
 //   for (const relation of relations) {
 //     const charge =
 //       relation.getCellValue(CellNames.price) *

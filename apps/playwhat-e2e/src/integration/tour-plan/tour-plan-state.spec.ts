@@ -1,33 +1,13 @@
-import { sampleSize, flatten, values, keys } from 'lodash';
-import { MockDatabase, login, getCurrentUser, theMockDatabase } from '@ygg/shared/test/cypress';
-import {
-  TourPlanInApplication,
-  TourPlanPaid,
-  TourPlanCompleted,
-  stubTourPlansByStateAndMonth
-} from './sample-tour-plan';
-import { SamplePlays, SampleAdditions } from '../play/sample-plays';
-import {
-  MyThingsPageObjectCypress,
-  TheThingDataTablePageObjectCypress,
-  MyThingsDataTablePageObjectCypress
-} from '@ygg/the-thing/test';
-import {
-  TourPlanViewPageObjectCypress,
-  TourPlanBuilderPageObjectCypress,
-  TourPlanAdminPageObjectCypress
-} from '@ygg/playwhat/test';
-import { SiteNavigator } from '@ygg/playwhat/test';
-import { TheThing } from '@ygg/the-thing/core';
-import {
-  Purchase,
-  RelationNamePurchase,
-  IncomeRecord,
-  ImitationOrder
-} from '@ygg/shopping/core';
-import { TourPlanAdminPageObject } from '@ygg/playwhat/admin';
-import { Month } from '@ygg/shared/omni-types/core';
 import { ImitationTourPlan } from '@ygg/playwhat/core';
+import { SiteNavigator, TourPlanAdminPageObjectCypress, TourPlanViewPageObjectCypress } from '@ygg/playwhat/test';
+import { Month } from '@ygg/shared/omni-types/core';
+import { login, theMockDatabase } from '@ygg/shared/test/cypress';
+import { ImitationOrder } from '@ygg/shopping/core';
+import { TheThing } from '@ygg/the-thing/core';
+import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
+import { flatten, keys, values } from 'lodash';
+import { SampleAdditions, SamplePlays } from '../play/sample-plays';
+import { stubTourPlansByStateAndMonth, TourPlanInApplication, TourPlanPaid } from './sample-tour-plan';
 
 const tourPlansByStateAndMonth: {
   [state: string]: TheThing[];
@@ -58,7 +38,7 @@ describe('Tour-plan administration', () => {
       });
 
       // const purchases: Purchase[] = TourPlanCompleted.getRelations(
-      //   RelationNamePurchase
+      //   RelationPurchase.name
       // ).map(r => Purchase.fromRelation(r));
 
       // incomeRecord = new IncomeRecord({
@@ -75,12 +55,6 @@ describe('Tour-plan administration', () => {
   });
 
   after(() => {
-    // // Goto my-things page and delete all test things
-    // const myThingsPO = new MyThingsPageObjectCypress();
-    // siteNavigator.goto(['the-things', 'my'], myThingsPO);
-    // cy.wait(3000);
-    // myThingsPO.deleteAll();
-
     theMockDatabase.clear();
     theMockDatabase.restoreRTDB();
   });

@@ -7,13 +7,20 @@ import {
   toJSONDeep,
   generateID
 } from '@ygg/shared/infra/data-access';
-import { TheThing, TheThingRelation, TheThingCell } from '@ygg/the-thing/core';
+import {
+  TheThing,
+  TheThingRelation,
+  TheThingCell,
+  RelationDefine
+} from '@ygg/the-thing/core';
 import { IDataAccessor } from '@ygg/shared/infra/core';
 import { RelationAddition } from './addition';
 import { IConsumer } from './consumer';
 import { CellNames } from './cell-names';
 
-export const RelationNamePurchase = '訂購';
+export const RelationPurchase = new RelationDefine({
+  name: '訂購'
+});
 
 export enum PurchaseState {
   Unknown = -1,
@@ -86,7 +93,7 @@ export class Purchase implements SerializableJSON {
 
   toRelation(): TheThingRelation {
     return new TheThingRelation({
-      name: RelationNamePurchase,
+      name: RelationPurchase.name,
       subjectId: this.consumerId,
       objectId: this.productId,
       cells: [

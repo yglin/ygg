@@ -1,45 +1,21 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-  FormArray
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  CellNames,
-  defaultTourPlanName,
-  ImitationPlay,
-  ImitationTourPlan
-} from '@ygg/playwhat/core';
+import { CellNames, defaultTourPlanName, ImitationPlay, ImitationTourPlan } from '@ygg/playwhat/core';
 import { AlertType } from '@ygg/shared/infra/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import { PageResolverService } from '@ygg/shared/ui/navigation';
 import { EmceeService, YggDialogService } from '@ygg/shared/ui/widgets';
 import { AuthorizeService } from '@ygg/shared/user/ui';
-import {
-  ImitationOrder,
-  Purchase,
-  RelationNamePurchase,
-  CellNames as ShoppingCellNames,
-  evalTotalChargeFromRelations
-} from '@ygg/shopping/core';
+import { evalTotalChargeFromRelations, ImitationOrder, Purchase, RelationPurchase } from '@ygg/shopping/core';
 import { IInputShoppingCart, ShoppingCartService } from '@ygg/shopping/ui';
 import { TheThing, TheThingCell, TheThingRelation } from '@ygg/the-thing/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import {
-  CellCreatorComponent,
-  TheThingFactoryService,
-  TheThingImitationViewInterface
-} from '@ygg/the-thing/ui';
-import { get, isEmpty, keys, mapValues, omit, values, find, sum } from 'lodash';
-import { from, merge, Observable, of, Subscription } from 'rxjs';
+import { CellCreatorComponent, TheThingImitationViewInterface } from '@ygg/the-thing/ui';
+import { find, get, isEmpty, mapValues, values } from 'lodash';
+import { merge, Observable, of, Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
-import {
-  TourPlanFactoryService,
-  IModifyRequest
-} from '../../tour-plan-factory.service';
+import { IModifyRequest, TourPlanFactoryService } from '../../tour-plan-factory.service';
 
 @Component({
   selector: 'ygg-tour-plan-view',
@@ -153,7 +129,7 @@ export class TourPlanViewComponent
 
         // console.info(this.theThing);
         this.purchaseRelations = this.theThing.getRelations(
-          RelationNamePurchase
+          RelationPurchase.name
         );
 
         this.formGroup.get('name').setValue(this.theThing.name, {
@@ -193,7 +169,7 @@ export class TourPlanViewComponent
         // }
 
         // this.purchases = this.theThing
-        //   .getRelations(RelationNamePurchase)
+        //   .getRelations(RelationPurchase.name)
         //   .map(r => Purchase.fromRelation(r));
 
         // this.isOwner = this.authorizeService.isOwner(this.theThing);
@@ -249,7 +225,7 @@ export class TourPlanViewComponent
     }
     if (!isEmpty(purchases)) {
       theThing.setRelation(
-        RelationNamePurchase,
+        RelationPurchase.name,
         purchases.map(p => p.toRelation())
       );
     }
@@ -265,7 +241,7 @@ export class TourPlanViewComponent
 
   gotoEditPurchases() {
     const purchases: Purchase[] = this.theThing
-      .getRelations(RelationNamePurchase)
+      .getRelations(RelationPurchase.name)
       .map(r => Purchase.fromRelation(r));
     // console.log(purchases);
 
@@ -426,7 +402,7 @@ export class TourPlanViewComponent
 
   importToCart() {
     const purchases = this.theThing
-      .getRelations(RelationNamePurchase)
+      .getRelations(RelationPurchase.name)
       .map(r => Purchase.fromRelation(r));
     this.shoppingCart.importPurchases(purchases);
   }

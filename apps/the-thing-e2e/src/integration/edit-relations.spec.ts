@@ -1,7 +1,7 @@
 import {
   TheThing,
   TheThingCell,
-  RelationDef,
+  RelationDefine,
   ImitationsDataPath
 } from '@ygg/the-thing/core';
 import { login, MockDatabase } from '@ygg/shared/test/cypress';
@@ -56,7 +56,7 @@ describe('Edit relations to other the-things', () => {
   it('Can remove certain relation', () => {
     const relationName = 'Dumb ass followers';
     Frodo.addRelations(relationName, [Sam, Gollum]);
-    mockDatabase.upsert(`${TheThing.collection}/${Frodo.id}`, Frodo.toJSON());
+    mockDatabase.insert(`${TheThing.collection}/${Frodo.id}`, Frodo.toJSON());
     cy.visit(`the-things/${Frodo.id}/edit`);
     const theThingEditorPO = new TheThingEditorPageObjectCypress();
     theThingEditorPO.expectVisible();

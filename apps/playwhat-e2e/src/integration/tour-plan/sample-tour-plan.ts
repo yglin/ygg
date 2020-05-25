@@ -9,7 +9,7 @@ import {
   PlaysWithAddition
 } from '../play/sample-plays';
 import {
-  RelationNamePurchase,
+  RelationPurchase,
   RelationAddition,
   Purchase,
   ImitationOrder

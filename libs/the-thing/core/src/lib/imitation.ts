@@ -27,7 +27,7 @@ import {
   TheThingValidateError
 } from './validator';
 import { Tags } from '@ygg/tags/core';
-import { RelationDef } from './relation-def';
+import { RelationDefine } from './relation-def';
 import { TheThingCellDefine } from './cell-define';
 import { OmniTypeComparator, OmniTypes } from '@ygg/shared/omni-types/core';
 import { TheThingState } from './state';
@@ -68,7 +68,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   cellsDef: { [name: string]: TheThingCellDefine } = {};
   dataTableConfig?: DataTableConfig;
   validators: TheThingValidator[] = [];
-  relationsDef: { [name: string]: RelationDef } = {};
+  relationsDef: { [name: string]: RelationDefine } = {};
   valueFunctions: { [name: string]: ValueFunction } = {};
   stateName: string;
   states: { [name: string]: TheThingState };
@@ -187,16 +187,16 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     return errors;
   }
 
-  addRelationDef(rDef: RelationDef) {
+  addRelationDefine(rDef: RelationDefine) {
     this.relationsDef[rDef.name] = rDef;
   }
 
-  hasRelationDef(relationName: string): boolean {
+  hasRelationDefine(relationName: string): boolean {
     return !isEmpty(this.relationsDef) && relationName in this.relationsDef;
   }
 
-  getRelationDef(relationName: string): RelationDef {
-    return this.hasRelationDef(relationName)
+  getRelationDefine(relationName: string): RelationDefine {
+    return this.hasRelationDefine(relationName)
       ? this.relationsDef[relationName]
       : null;
   }
@@ -281,7 +281,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       }
       this.relationsDef = mapValues(
         relationsDef,
-        rDef => new RelationDef(rDef)
+        rDef => new RelationDefine(rDef)
       );
     }
     return this;

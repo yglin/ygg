@@ -17,7 +17,7 @@ import {
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import { AlertType } from '@ygg/shared/infra/core';
 import { ShoppingCartService } from '@ygg/shopping/ui';
-import { Purchase, RelationNamePurchase } from '@ygg/shopping/core';
+import { Purchase, RelationPurchase } from '@ygg/shopping/core';
 import { take, tap } from 'rxjs/operators';
 
 export interface IModifyRequest {
@@ -51,7 +51,7 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
         // );
         await this.loadTheOne();
         this.tourPlan.setRelation(
-          RelationNamePurchase,
+          RelationPurchase.name,
           purchases.map(p => p.toRelation())
         );
         this.router.navigate(['/', ImitationTourPlan.routePath, 'edit']);

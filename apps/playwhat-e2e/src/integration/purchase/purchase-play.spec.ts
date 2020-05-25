@@ -13,7 +13,7 @@ import { waitForLogin } from '@ygg/shared/user/test';
 import {
   CellNames as ShoppingCellNames,
   Purchase,
-  RelationNamePurchase,
+  RelationPurchase,
   RelationAddition
 } from '@ygg/shopping/core';
 import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
@@ -210,7 +210,7 @@ describe('Tour-plan builder', () => {
 
   it('Import purchases from tour-plan to cart page', () => {
     const purchases: Purchase[] = TourPlanWithPlaysNoAddition.getRelations(
-      RelationNamePurchase
+      RelationPurchase.name
     ).map(r => Purchase.fromRelation(r));
     const totalCharge = sum(purchases.map(p => p.charge));
     const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
@@ -232,7 +232,7 @@ describe('Tour-plan builder', () => {
     purchasePlays(samplePlays);
 
     const purchases: Purchase[] = TourPlanWithPlaysNoAddition.getRelations(
-      RelationNamePurchase
+      RelationPurchase.name
     ).map(r => Purchase.fromRelation(r));
     const totalCharge = sum(purchases.map(p => p.charge));
     const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
@@ -256,7 +256,7 @@ describe('Tour-plan builder', () => {
     const plays = PlaysWithoutAddition;
     const purchases = purchasePlays(plays);
     resultTourPlan.setRelation(
-      RelationNamePurchase,
+      RelationPurchase.name,
       purchases.map(p => p.toRelation())
     );
     const totalCharge = sum(purchases.map(p => p.charge));
