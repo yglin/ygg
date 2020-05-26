@@ -1,0 +1,27 @@
+<div
+  class="the-thing-state"
+  fxLayout="row"
+  fxLayoutAlign="start center"
+  fxLayoutGap="10px"
+  *ngIf="theThing && imitation"
+>
+  <h3 class="label">{{ currentState.label }}</h3>
+  <div
+    *ngIf="!readonly"
+    class="actions"
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    fxLayoutGap="5px"
+  >
+    <div *ngFor="let stateName of enabledStates">
+      <div
+        [attr.state-name]="stateName"
+        *ngIf="imitation.states[stateName] as state"
+      >
+        <button mat-mini-fab (click)="setState(state)">
+          <mat-icon>{{ state.icon }}</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

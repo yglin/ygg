@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { TheThing, TheThingImitation, TheThingCell } from '@ygg/the-thing/core';
+import {
+  TheThing,
+  TheThingImitation,
+  TheThingCell,
+  TheThingState,
+  stateConfirmMessage
+} from '@ygg/the-thing/core';
 import {
   AuthenticateService,
   AuthenticateUiService
@@ -94,6 +100,23 @@ export class TheThingFactoryService {
 
   load$(id: string): Observable<TheThing> {
     return this.theThingAccessService.get$(id);
+  }
+
+  async setState(
+    theThing: TheThing,
+    imitation: TheThingImitation,
+    state: TheThingState
+  ) {
+    try {
+      const confirmMessage = stateConfirmMessage(theThing, state);
+      const confirm = await this.emceeService.confirm(confirmMessage);
+      if (confirm) {
+        imitation.setState(theThing, state);
+        await this.theThingAccessService.upsert(theThing);
+      }
+    } catch (error) {
+      this.emceeService.error(`狀態設定失敗，錯誤原因：${error.message}`);
+    }
   }
 
   async save(theThing: TheThing, options: ITheThingSaveOptions = {}) {

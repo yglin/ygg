@@ -12,7 +12,7 @@ import { MyThingsDataTablePageObjectCypress, MyThingsPageObjectCypress } from '@
 import { SampleAdditions, SamplePlays } from '../play/sample-plays';
 import { MinimalTourPlan, TourPlanFull } from './sample-tour-plan';
 
-describe('Tour-plan builder', () => {
+describe('Tour-plan create', () => {
   const siteNavigator = new SiteNavigator();
   const SampleThings = SamplePlays.concat(SampleAdditions);
 
@@ -176,23 +176,5 @@ describe('Tour-plan builder', () => {
     // tourPlanViewPO.expectValue(MinimalTourPlan);
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
-  });
-
-  it('Save a tour-plan and send it for application as well', () => {
-    const MinimalTourPlan2 = MinimalTourPlan.clone();
-    MinimalTourPlan2.name = '測試遊程(儲存順便送出申請)';
-    tourPlanViewPO.setValue(MinimalTourPlan2);
-    tourPlanViewPO.save(MinimalTourPlan2, {
-      freshNew: true,
-      sendApplication: true
-    });
-    tourPlanViewPO.expectShowAsPage();
-
-    // Expect the submitted tour-plan show up in administrator's list
-    siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
-    // tourPlanDataTablePO.expectTheThing(MinimalTourPlan);
-    tourPlanAdminPO.theThingDataTables[
-      ImitationOrder.states.applied.name
-    ].expectTheThing(MinimalTourPlan2);
   });
 });

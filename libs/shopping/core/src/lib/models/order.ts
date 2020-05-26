@@ -1,6 +1,11 @@
-import { TheThingImitation, TheThing } from '@ygg/the-thing/core';
+import {
+  TheThingImitation,
+  TheThing,
+  TheThingState
+} from '@ygg/the-thing/core';
 import { RelationPurchase } from './purchase';
 import { CellNames } from './cell-names';
+import { keyBy } from 'lodash';
 
 export const ImitationOrder = new TheThingImitation({
   id: '7cNQdeD6VZxZshH9A7Law9',
@@ -10,31 +15,49 @@ export const ImitationOrder = new TheThingImitation({
   image: '/assets/images/shopping/order.png',
   filter: {
     tags: ['order', ' 訂單']
-  },
-  stateName: '訂購狀態',
-  states: {
-    new: {
-      name: 'new',
-      label: '新建立',
-      value: 1
-    },
-    applied: {
-      name: 'applied',
-      label: '已提交',
-      value: 3
-    },
-    paid: {
-      name: 'paid',
-      label: '已付款',
-      value: 5
-    },
-    completed: {
-      name: 'completed',
-      label: '已完成',
-      value: 9
-    }
   }
 });
+
+const states: TheThingState[] = [
+  {
+    name: 'new',
+    label: '新建立',
+    value: 1,
+    icon: 'undo',
+    permissions: ['isOwner', 'applied'],
+    confirmMessage: (theThing: TheThing) =>
+      `取消訂單 ${theThing.name} 回到新建立狀態？`
+  },
+  {
+    name: 'applied',
+    label: '已提交',
+    value: 3,
+    icon: 'send',
+    permissions: ['isOwner', 'new'],
+    confirmMessage: (theThing: TheThing) => `送出訂單 ${theThing.name} 的申請？`
+  },
+  {
+    name: 'paid',
+    label: '已付款',
+    value: 5,
+    icon: 'payment',
+    permissions: ['isAdmin', 'applied'],
+    confirmMessage: (theThing: TheThing) =>
+      `已收到訂單 ${theThing.name} 的所有款項？`
+  },
+  {
+    name: 'completed',
+    label: '已完成',
+    value: 9,
+    icon: 'done_all',
+    permissions: ['isAdmin', 'paid'],
+    confirmMessage: (theThing: TheThing) =>
+      `此訂單 ${theThing.name} 的所有活動及商品已交付完成？`
+  }
+];
+
+ImitationOrder.stateName = '訂購狀態';
+ImitationOrder.states = keyBy(states, 'name');
 
 ImitationOrder.creators.push((order: TheThing) => {
   order.setState(ImitationOrder.stateName, ImitationOrder.states.new);

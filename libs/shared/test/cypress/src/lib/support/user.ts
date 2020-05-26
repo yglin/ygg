@@ -1,4 +1,4 @@
-import { User } from "@ygg/shared/user/core";
+import { User } from '@ygg/shared/user/core';
 
 const aliasCurrrentLoginUser = 'current-login-user';
 
@@ -22,5 +22,7 @@ export function logout(): Cypress.Chainable<any> {
 }
 
 export function getCurrentUser(): Cypress.Chainable<User> {
-  return cy.get<User>(`@${aliasCurrrentLoginUser}`);
+  // @ts-ignore
+  return cy.getCurrentUser().then(firebaseUser => cy.wrap(User.fromFirebase(firebaseUser)));
+  // return cy.get<User>(`@${aliasCurrrentLoginUser}`);
 }

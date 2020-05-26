@@ -15,3 +15,4 @@ export * from './the-thing-filter/the-thing-filter.component.po';
 export * from './the-thing-data-table/the-thing-data-table.component';
 export * from './the-thing-data-table/the-thing-data-table.component.po';
 export * from './my-things-data-table/my-things-data-table.component.po';
+export * from './the-thing-state/the-thing-state.component.po';

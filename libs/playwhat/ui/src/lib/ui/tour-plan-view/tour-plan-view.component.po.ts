@@ -8,6 +8,7 @@ import { ImageThumbnailListPageObject } from '@ygg/shared/ui/widgets';
 import { PurchaseListPageObject } from '@ygg/shopping/ui';
 import { TheThing, TheThingCell, TheThingState } from '@ygg/the-thing/core';
 import { DateRange, Contact } from '@ygg/shared/omni-types/core';
+import { TheThingStatePageObject } from '@ygg/the-thing/ui';
 
 export abstract class TourPlanViewPageObject extends PageObject {
   selectors = {
@@ -17,12 +18,12 @@ export abstract class TourPlanViewPageObject extends PageObject {
     // dateRange: '.date-range',
     // numParticipants: '.num-participants .number',
     // contact: '.contact',
+    state: '.state',
     purchases: '.purchases',
     buttonSubmitApplication: 'button.submit-application',
     buttonAdminComplete: 'button.admin-complete',
     buttonAdminPaid: 'button.admin-paid',
     buttonCancelApplied: 'button.cancel-applied',
-    state: '.state',
     buttonGotoEditOptionalCells: 'button.goto-edit-optional-cells',
     buttonImportToCart: 'button.import-to-cart',
     buttonAddCell: 'button.add-cell',
@@ -31,6 +32,7 @@ export abstract class TourPlanViewPageObject extends PageObject {
     optionals: '.optionals',
     totalCharge: '.total-charge'
   };
+  statePO: TheThingStatePageObject;
   dayTimeRangePO: DayTimeRangeViewPageObject;
   dateRangeViewPO: DateRangeViewPageObject;
   contactViewPO: ContactViewPageObject;
@@ -44,14 +46,19 @@ export abstract class TourPlanViewPageObject extends PageObject {
     return `${this.getSelector()} .state [state-name="${state.name}"] button`;
   }
 
+  setState(tourPlan: TheThing, state: TheThingState) {
+    this.statePO.setValue(tourPlan, state);
+  }
+  expectState(state: TheThingState) {
+    this.statePO.expectValue(state);
+  }
+
   abstract setName(name: string);
   abstract expectName(name: string);
   abstract expectVisible(): any;
   abstract expectValue(value: TheThing): void;
   // abstract submitApplication(): void;
   // abstract adminComplete(): void;
-  abstract setState(tourPlan: TheThing, state: TheThingState): void;
-  abstract expectState(stateLabel: string): void;
   // abstract cancelApplied(tourPlan: TheThing): void;
   abstract gotoEditOptionalCells(): void;
   abstract gotoEditPurchases(): void;

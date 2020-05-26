@@ -32,7 +32,7 @@ describe('AuthorizeService', () => {
     const authorizeService: AuthorizeService = TestBed.get(AuthorizeService);
     const dataAccessService: MockDataAccessService = TestBed.get(DataAccessService);
     jest.spyOn(dataAccessService, 'getDataObject$');
-    authorizeService.isAdmin(testUser1.id).subscribe(isAdmin => {
+    authorizeService.isAdmin$(testUser1.id).subscribe(isAdmin => {
       expect(dataAccessService.getDataObject$).toHaveBeenCalledWith('admin/users/roles/admin');
       expect(isAdmin).toBe(true);
     });

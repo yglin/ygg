@@ -24,6 +24,12 @@ export class MockDatabase {
     this.documents[path] = { path, data };
   }
 
+  setAdmins(ids: string[]): Cypress.Chainable<any> {
+    const path = 'admin/users/roles/admins';
+    this.backupRTDB(path);
+    return this.insertRTDB(path, ids);
+  }
+
   insert(path: string, data: any): Cypress.Chainable<any> {
     // @ts-ignore
     cy.callFirestore('set', path, data).then(() => {

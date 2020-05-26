@@ -128,11 +128,12 @@ export class TheThingDataTablePageObjectCypress
 
   select(theThings: TheThing[]) {
     cy.wrap(theThings).each((thing: any) => {
-      this.setSearchText(thing.id);
-      cy.get(`${this.getSelector}`)
+      this.setSearchText(thing.name);
+      cy.get(`${this.getSelector()}`)
         .contains('tr.row', thing.name)
         .find('input[type="checkbox"]')
         .click({
+          force: true,
           multiple: true
         });
     });

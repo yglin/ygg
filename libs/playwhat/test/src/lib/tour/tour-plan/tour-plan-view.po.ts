@@ -1,27 +1,21 @@
 import { ImitationTourPlan } from '@ygg/playwhat/core';
 import { TourPlanViewPageObject } from '@ygg/playwhat/ui';
-import {
-  ContactViewPageObjectCypress,
-  DateRangeViewPageObjectCypress,
-  OmniTypeViewControlPageObjectCypress
-} from '@ygg/shared/omni-types/test';
+import { ContactViewPageObjectCypress, DateRangeViewPageObjectCypress, OmniTypeViewControlPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { theMockDatabase } from '@ygg/shared/test/cypress';
-import {
-  EmceePageObjectCypress,
-  ImageThumbnailItemPageObjectCypress,
-  YggDialogPageObjectCypress,
-  ConfirmDialogPageObjectCypress
-} from '@ygg/shared/ui/test';
+import { EmceePageObjectCypress, ImageThumbnailItemPageObjectCypress, YggDialogPageObjectCypress } from '@ygg/shared/ui/test';
 import { Purchase } from '@ygg/shopping/core';
 import { PurchaseListPageObjectCypress } from '@ygg/shopping/test';
 import { IPurchasePack } from '@ygg/shopping/ui';
-import { TheThing, TheThingCell, TheThingState } from '@ygg/the-thing/core';
-import { CellCreatorPageObjectCypress } from '@ygg/the-thing/test';
+import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import { CellCreatorPageObjectCypress, TheThingStatePageObjectCypress } from '@ygg/the-thing/test';
 import { values } from 'lodash';
 
 export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
   constructor(parentSelector?: string) {
     super(parentSelector);
+    this.statePO = new TheThingStatePageObjectCypress(
+      this.getSelector('state')
+    );
     this.dateRangeViewPO = new DateRangeViewPageObjectCypress(
       this.getSelector('dateRange')
     );
@@ -71,9 +65,10 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     cellViewPagePO.expectValue(cell.type, cell.value);
   }
 
-  expectState(stateLabel: string): void {
-    cy.get(this.getSelector('state')).should('include.text', stateLabel);
-  }
+  // expectState(state: TheThingState): void {
+  //   this.statePO.expectState(state);
+  //   // cy.get(this.getSelector('state')).should('include.text', stateLabel);
+  // }
 
   expectValue(tourPlan: TheThing) {
     this.expectName(tourPlan.name);
@@ -129,14 +124,19 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     cy.get(this.getSelector('buttonAdminPaid')).click();
   }
 
-  setState(tourPlan: TheThing, state: TheThingState) {
-    cy.get(this.getSelectorForButtonState(state)).click();
-    const confirmDialogPO = new ConfirmDialogPageObjectCypress();
-    confirmDialogPO.expectMessage(
-      `要將 ${tourPlan.name} 的狀態設為 ${state.label}？`
-    );
-    confirmDialogPO.confirm();
-  }
+  // setState(tourPlan: TheThing, state: TheThingState) {
+  //   this.statePO.setState(tourPlan, state);
+  //   // cy.get(this.getSelectorForButtonState(state)).click();
+  //   // const confirmDialogPO = new ConfirmDialogPageObjectCypress();
+  //   // let confirmMessage = `要將 ${tourPlan.name} 的狀態設為 ${state.label}？`;
+  //   // if (typeof state.confirmMessage === 'string') {
+  //   //   confirmMessage = state.confirmMessage;
+  //   // } else if (typeof state.confirmMessage === 'function') {
+  //   //   confirmMessage = state.confirmMessage(tourPlan);
+  //   // }
+  //   // confirmDialogPO.expectMessage(confirmMessage);
+  //   // confirmDialogPO.confirm();
+  // }
 
   gotoEditOptionalCells(): void {
     cy.get(this.getSelector('buttonGotoEditOptionalCells')).click();

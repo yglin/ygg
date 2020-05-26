@@ -60,7 +60,13 @@
       </div>
     </div>
   </ygg-omni-type-view-control>
-
+  <div class="state">
+    <the-thing-state
+      [id]="theThing.id"
+      [imitation]="imitation"
+    ></the-thing-state>
+  </div>
+<!-- 
   <div
     fxLayout="row"
     fxLayoutAlign="start center"
@@ -127,7 +133,7 @@
         </button>
       </div>
     </div>
-  </div>
+  </div> -->
   <div *ngFor="let cell of requiredCells; let idx = index">
     <div
       [attr.cell-name]="cell.name"

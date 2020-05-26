@@ -222,7 +222,7 @@ export class TourPlanViewComponent
         );
       })
     );
-    const isAdmin$ = this.authorizeService.isAdmin().pipe(
+    const isAdmin$ = this.authorizeService.isAdmin$().pipe(
       tap(isAdmin => {
         this.isAdmin = isAdmin;
       })

@@ -29,8 +29,8 @@ export class AdminGuard implements CanActivateChild {
   }
 
   async checkAdmin(): Promise<boolean> {
-    const currentUser = await this.authenticateService.currentUser$.pipe(take(1)).toPromise();
-    const isAdmin = await this.authorizeService.isAdmin(currentUser.id).pipe(take(1)).toPromise();
+    // const currentUser = await this.authenticateService.currentUser$.pipe(take(1)).toPromise();
+    const isAdmin = await this.authorizeService.isAdmin$().pipe(take(1)).toPromise();
     if (!isAdmin) {
       alert('請用管理者身份登入才能繼續喔');
       this.router.navigate(['home']);

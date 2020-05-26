@@ -59,7 +59,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
           if (User.isUser(currentUser)) {
             this.loggedIn = true;
             // Check user admin
-            return this.authorizeService.isAdmin(currentUser.id);
+            return this.authorizeService.isAdmin$(currentUser.id);
           } else {
             if (this.loggedIn) {
               this.loggedIn = false;

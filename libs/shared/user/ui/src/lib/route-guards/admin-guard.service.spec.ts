@@ -39,7 +39,7 @@ describe('AdminGuardService', () => {
     })
   );
 
-  it('should implement canActivateChild(), call AdminGuard.isAdmin() directly', done => {
+  it('should implement canActivateChild(), call AdminGuard.isAdmin$() directly', done => {
     const adminGuard: AdminGuard = TestBed.get(AdminGuard);
     jest.spyOn(adminGuard, 'isAdmin').mockImplementation(() => of(true));
     adminGuard.canActivateChild().subscribe(can => {
@@ -50,13 +50,13 @@ describe('AdminGuardService', () => {
   });
   
 
-  it('should implement AdminGuard.isAdmin(), pipe AuthenticateService.currentUser$, AuthorizeService.isAdmin() and return the result', done => {
+  it('should implement AdminGuard.isAdmin$(), pipe AuthenticateService.currentUser$, AuthorizeService.isAdmin$() and return the result', done => {
     const adminGuard: AdminGuard = TestBed.get(AdminGuard);
     // const mockAuthenticateService = TestBed.get(AuthenticateService);
     const mockAuthorizeService: MockAuthorizeService = TestBed.get(AuthorizeService);
 
     jest.spyOn(mockAuthorizeService, 'isAdmin');
-    adminGuard.isAdmin().subscribe(isAdmin => {
+    adminGuard.isAdmin$().subscribe(isAdmin => {
       expect(isAdmin).toBe(true);
       expect(mockAuthorizeService.isAdmin).toHaveBeenCalledWith(testUser.id);
       done();
@@ -71,7 +71,7 @@ describe('AdminGuardService', () => {
     jest.spyOn(window, 'alert').mockImplementation(() => {});
     jest.spyOn(mockRouter, 'navigate');
     // expect(false).toBe(true);
-    adminGuard.isAdmin().subscribe(isAdmin => {
+    adminGuard.isAdmin$().subscribe(isAdmin => {
       expect(isAdmin).toBe(false);
       expect(window.alert).toHaveBeenCalledWith('請用管理者身份登入才能繼續喔');
       expect(mockRouter.navigate).toHaveBeenCalledWith(['home']);
