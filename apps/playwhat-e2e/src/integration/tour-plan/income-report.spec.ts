@@ -1,31 +1,16 @@
-import { sampleSize, flatten, values, keys } from 'lodash';
-import { MockDatabase, login, getCurrentUser, theMockDatabase } from '@ygg/shared/test/cypress';
+import { TourPlanAdminPageObject } from '@ygg/playwhat/admin';
 import {
-  TourPlanInApplication,
-  TourPlanPaid,
-  TourPlanCompleted,
-  stubTourPlansByStateAndMonth
-} from './sample-tour-plan';
-import { SamplePlays, SampleAdditions } from '../play/sample-plays';
-import {
-  MyThingsPageObjectCypress,
-  TheThingDataTablePageObjectCypress
-} from '@ygg/the-thing/test';
-import {
-  TourPlanViewPageObjectCypress,
-  TourPlanBuilderPageObjectCypress,
+  SiteNavigator,
   TourPlanAdminPageObjectCypress
 } from '@ygg/playwhat/test';
-import { SiteNavigator } from '@ygg/playwhat/test';
+import { login, theMockDatabase } from '@ygg/shared/test/cypress';
+import { IncomeRecord, Purchase, RelationPurchase } from '@ygg/shopping/core';
 import { TheThing } from '@ygg/the-thing/core';
+import { SampleAdditions, SamplePlays } from '../play/sample-plays';
 import {
-  Purchase,
-  RelationPurchase.name,
-  IncomeRecord,
-  ImitationOrder
-} from '@ygg/shopping/core';
-import { TourPlanAdminPageObject } from '@ygg/playwhat/admin';
-import { Month } from '@ygg/shared/omni-types/core';
+  stubTourPlansByStateAndMonth,
+  TourPlanCompleted
+} from './sample-tour-plan';
 
 const tourPlansByStateAndMonth: {
   [state: string]: TheThing[];
@@ -44,12 +29,10 @@ let incomeRecord: IncomeRecord;
 describe('Tour-plan administration', () => {
   before(() => {
     login().then(user => {
+      theMockDatabase.setAdmins([user.id]);
       cy.wrap(SampleThings).each((thing: any) => {
         thing.ownerId = user.id;
-        theMockDatabase.insert(
-          `${TheThing.collection}/${thing.id}`,
-          thing
-        );
+        theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
       });
 
       const purchases: Purchase[] = TourPlanCompleted.getRelations(
@@ -86,5 +69,4 @@ describe('Tour-plan administration', () => {
     tourPlanAdminPO.incomeDataTablePO.expectVisible();
     tourPlanAdminPO.incomeDataTablePO.expectRecord(incomeRecord);
   });
-
 });
