@@ -103,8 +103,8 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
   }
 
   async create(): Promise<Observable<TheThing>> {
-    console.log('Create tour-plan');
-    console.log(this.createInProgress);
+    // console.log('Create tour-plan');
+    // console.log(this.createInProgress);
     if (!this.createInProgress) {
       this.createInProgress = await this.theThingFactory.create({
         imitation: ImitationTourPlan.id

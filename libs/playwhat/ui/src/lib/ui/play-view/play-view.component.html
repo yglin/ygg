@@ -1,54 +1,81 @@
 <div class="play-view" *ngIf="theThing">
-  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="30px">
-    <h1 class="name">{{ theThing.name }}</h1>
-    <div>
-      <button
-        class="add-to-cart"
-        mat-fab
-        matTooltip="加入購物車"
-        (click)="purchase()"
-      >
-        <mat-icon>add_shopping_cart</mat-icon>
-      </button>
+  <div
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+    fxLayoutGap="30px"
+    [formGroup]="formGroup"
+  >
+    <ygg-omni-type-view-control
+      class="name"
+      formControlName="name"
+      type="text"
+      [editable]="!readonly"
+      [viewStyle]="nameStyle"
+    >
+      <div errors>
+        <div *ngIf="formGroup.get('name').errors?.required">
+          請填入體驗名稱
+        </div>
+      </div>
+    </ygg-omni-type-view-control>
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
+      <div>
+        <button
+          class="add-to-cart"
+          mat-fab
+          matTooltip="加入購物車"
+          (click)="purchase()"
+        >
+          <mat-icon>add_shopping_cart</mat-icon>
+        </button>
+      </div>
+      <div *ngIf="!readonly">
+        <button
+          type="button"
+          mat-fab
+          class="save edit"
+          matTooltip="儲存體驗"
+          [disabled]="!isThingValid()"
+          (click)="save()"
+        >
+          <mat-icon>save</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
-  <h3 class="subtitle">{{ theThing.getCellValue('副標題') }}</h3>
-  <ygg-user-thumbnail [id]="theThing.ownerId"></ygg-user-thumbnail>
-  <br />
-  <div class="album">
-    <ygg-album-view [album]="theThing.getCellValue('照片')"></ygg-album-view>
+  <div [formGroup]="formGroupCells">
+    <div *ngFor="let cellName of orderedCellNames">
+      <div
+        [attr.cell-name]="cellName"
+        [hidden]="!isCellControlShown(cellName)"
+      >
+        <h3>{{ cellName }}</h3>
+        <the-thing-cell
+          [formControlName]="cellName"
+          [readonly]="readonly"
+          [required]="isCellRequired(cellName)"
+        ></the-thing-cell>
+      </div>
+    </div>
   </div>
-  <br />
-  <div class="introduction">
-    <p>{{ theThing.getCellValue('簡介') }}</p>
-  </div>
-  <div class="price">
-    <h3>每人費用：NTD {{ theThing.getCellValue('費用') }}</h3>
-  </div>
-  <div>
-    <h3 class="time-length">體驗時長：{{ theThing.getCellValue('時長') }}</h3>
-  </div>
-  <div>
-    <h3 class="limit-on-number">
-      人數限制：{{ theThing.getCellValue('人數下限') }} -
-      {{ theThing.getCellValue('人數上限') }} 人
-    </h3>
-  </div>
-  <div class="location" *ngIf="theThing.getCellValue('地點') as location">
-    <ygg-location-view [location]="location"></ygg-location-view>
-  </div>
-  <br />
   <div
-    class="business-hours"
-    *ngIf="theThing.getCellValue('服務時段') as businessHours"
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    fxLayoutGap="10px"
+    *ngIf="!readonly && isThingValid()"
   >
-    <ygg-business-hours-view
-      [businessHours]="businessHours"
-    ></ygg-business-hours-view>
-  </div>
-  <br />
-  <div class="addition-list" *ngIf="additions">
-    <h3>{{ RelationAddition.name }}</h3>
-    <ygg-image-thumbnail-list [items]="additions"></ygg-image-thumbnail-list>
+    <h2>
+      增加其他資料
+    </h2>
+    <div>
+      <button
+        type="button"
+        mat-mini-fab
+        class="add-cell edit"
+        (click)="addCell()"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
   </div>
 </div>

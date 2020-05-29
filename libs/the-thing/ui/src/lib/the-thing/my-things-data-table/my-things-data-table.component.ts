@@ -1,9 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TheThingImitation, TheThing, TheThingFilter } from '@ygg/the-thing/core';
+import {
+  TheThingImitation,
+  TheThing,
+  TheThingFilter
+} from '@ygg/the-thing/core';
 import { Observable, Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { AuthenticateService } from "@ygg/shared/user/ui";
+import { AuthenticateService } from '@ygg/shared/user/ui';
 
 @Component({
   selector: 'my-things-data-table',
@@ -61,8 +65,7 @@ export class MyThingsDataTableComponent implements OnInit {
   }
 
   gotoCreate() {
-    this.router.navigate(['/', 'the-things', 'create'], {
-      queryParams: { imitation: this.imitation.id }
-    });
+    const routePath = this.imitation.routePath || 'the-things';
+    this.router.navigate(['/', routePath, 'create']);
   }
 }

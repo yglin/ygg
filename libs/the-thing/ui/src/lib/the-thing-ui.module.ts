@@ -42,6 +42,7 @@ import {
 } from './the-thing/the-thing-edit-page/the-thing-edit-page.component';
 import { CellCreatorComponent } from './cell/cell-creator/cell-creator.component';
 import { TheThingStateComponent } from './the-thing/the-thing-state/the-thing-state.component';
+import { TheThingCellComponent } from './cell/the-thing-cell/the-thing-cell.component';
 
 interface TheThingUiModuleConfig {
   imitations: TheThingImitation[];
@@ -84,7 +85,8 @@ interface TheThingUiModuleConfig {
     TheThingEditPageComponent,
     TheThingEditorHostDirective,
     CellCreatorComponent,
-    TheThingStateComponent
+    TheThingStateComponent,
+    TheThingCellComponent
   ],
   exports: [
     CellListComponent,
@@ -103,7 +105,8 @@ interface TheThingUiModuleConfig {
     MyThingsDataTableComponent,
     AdminThingsDataTableComponent,
     CellCreatorComponent,
-    TheThingStateComponent
+    TheThingStateComponent,
+    TheThingCellComponent
   ],
   entryComponents: [
     ImitationEditorComponent,

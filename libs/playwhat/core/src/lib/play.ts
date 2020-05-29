@@ -1,5 +1,64 @@
-import { TheThingImitation, TheThing, RelationDefine } from '@ygg/the-thing/core';
-import { RelationAddition } from '@ygg/shopping/core';
+import {
+  TheThingImitation,
+  TheThing,
+  RelationDefine,
+  TheThingCellDefine,
+  TheThingCell
+} from '@ygg/the-thing/core';
+import {
+  RelationAddition,
+  CellNames as CellNamesShopping
+} from '@ygg/shopping/core';
+import { __values } from 'tslib';
+import { values } from 'lodash';
+
+export const ImitationPlayCellDefines: { [key: string]: TheThingCellDefine } = {
+  album: new TheThingCellDefine({
+    name: '照片',
+    type: 'album',
+    userInput: 'required'
+  }),
+  introduction: new TheThingCellDefine({
+    name: '簡介',
+    type: 'html',
+    userInput: 'required'
+  }),
+  price: new TheThingCellDefine({
+    name: CellNamesShopping.price,
+    type: 'number',
+    userInput: 'required'
+  }),
+  timeLength: new TheThingCellDefine({
+    name: '時長',
+    type: 'number',
+    userInput: 'required'
+  }),
+  minParticipants: new TheThingCellDefine({
+    name: '人數下限',
+    type: 'number',
+    userInput: 'required'
+  }),
+  maxParticipants: new TheThingCellDefine({
+    name: '人數上限',
+    type: 'number',
+    userInput: 'required'
+  }),
+  subtitle: new TheThingCellDefine({
+    name: '副標題',
+    type: 'text',
+    userInput: 'optional'
+  }),
+  location: new TheThingCellDefine({
+    name: '地點',
+    type: 'location',
+    userInput: 'optional'
+  }),
+  businessHours: new TheThingCellDefine({
+    name: '服務時段',
+    type: 'business-hours',
+    userInput: 'optional'
+  })
+};
 
 export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON(
   {
@@ -9,65 +68,20 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
     icon: 'local_play',
     image: '/assets/images/play/play.svg',
     view: 'play',
+    routePath: 'plays',
     tags: ['play', '體驗'],
-    cellsDef: {
-      副標題: {
-        name: '副標題',
-        type: 'text',
-        userInput: 'optional'
-      },
-      簡介: {
-        name: '簡介',
-        type: 'html',
-        userInput: 'required'
-      },
-      照片: {
-        name: '照片',
-        type: 'album',
-        userInput: 'required'
-      },
-      費用: {
-        name: '費用',
-        type: 'number',
-        userInput: 'required'
-      },
-      時長: {
-        name: '時長',
-        type: 'number',
-        userInput: 'required'
-      },
-      人數下限: {
-        name: '人數下限',
-        type: 'number',
-        userInput: 'required'
-      },
-      人數上限: {
-        name: '人數上限',
-        type: 'number',
-        userInput: 'required'
-      },
-      地點: {
-        name: '地點',
-        type: 'location',
-        userInput: 'optional'
-      },
-      服務時段: {
-        name: '服務時段',
-        type: 'business-hours',
-        userInput: 'optional'
-      }
-    },
     cellsOrder: [
-      '照片',
-      '簡介',
-      '費用',
-      '時長',
-      '人數下限',
-      '人數上限',
-      '副標題',
-      '地點',
-      '服務時段'
+      ImitationPlayCellDefines.album.name,
+      ImitationPlayCellDefines.introduction.name,
+      ImitationPlayCellDefines.price.name,
+      ImitationPlayCellDefines.timeLength.name,
+      ImitationPlayCellDefines.minParticipants.name,
+      ImitationPlayCellDefines.maxParticipants.name,
+      ImitationPlayCellDefines.subtitle.name,
+      ImitationPlayCellDefines.location.name,
+      ImitationPlayCellDefines.businessHours.name
     ],
+    cellsDef: values(ImitationPlayCellDefines),
     dataTableConfig: {
       columns: {
         簡介: {

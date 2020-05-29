@@ -1,9 +1,14 @@
 import { PlayViewPageObject } from '@ygg/playwhat/ui';
-import { TheThing } from '@ygg/the-thing/core';
+import {
+  TheThing,
+  TheThingCellDefine,
+  TheThingCell
+} from '@ygg/the-thing/core';
 import {
   AlbumViewPageObjectCypress,
   LocationViewPageObjectCypress,
-  BusinessHoursViewPageObjectCypress
+  BusinessHoursViewPageObjectCypress,
+  OmniTypeViewControlPageObjectCypress
 } from '@ygg/shared/omni-types/test';
 import { Purchase } from '@ygg/shopping/core';
 import {
@@ -13,9 +18,13 @@ import {
 } from '@ygg/shopping/test';
 import {
   ImageThumbnailListPageObjectCypress,
-  YggDialogPageObjectCypress
+  YggDialogPageObjectCypress,
+  ConfirmDialogPageObjectCypress,
+  EmceePageObjectCypress
 } from '@ygg/shared/ui/test';
-import { ImitationPlay } from '@ygg/playwhat/core';
+import { ImitationPlay, ImitationPlayCellDefines } from '@ygg/playwhat/core';
+import { values } from 'lodash';
+import { CellCreatorPageObjectCypress } from '@ygg/the-thing/test';
 
 export class PlayViewPageObjectCypress extends PlayViewPageObject {
   constructor(parentSelector?: string) {
@@ -41,46 +50,104 @@ export class PlayViewPageObjectCypress extends PlayViewPageObject {
 
   expectValue(play: TheThing): void {
     cy.get(this.getSelector('name')).contains(play.name);
-    const subtitle = play.getCellValue('副標題');
-    if (subtitle) {
-      cy.get(this.getSelector('subtitle')).contains(subtitle);
-    }
-    this.albumViewPO.expectValue(play.getCellValue('照片'));
-    cy.get(this.getSelector('price')).contains(play.getCellValue('費用'));
-    cy.get(this.getSelector('timeLength')).contains(play.getCellValue('時長'));
-    cy.get(this.getSelector('limitOnNumber')).contains(
-      `人數限制：${play.getCellValue('人數下限')} - ${play.getCellValue(
-        '人數上限'
-      )} 人`
-    );
-    const location = play.getCellValue('地點');
-    if (location) {
-      const locationViewPO = new LocationViewPageObjectCypress(
-        this.getSelector('location')
+    cy.wrap(values(play.cells)).each((cell: TheThingCell) => {
+      cy.get(this.getSelectorForCell(cell))
+        .scrollIntoView()
+        .should('be.visible');
+      const omniTypeViewControlPO = new OmniTypeViewControlPageObjectCypress(
+        this.getSelectorForCell(cell)
       );
-      locationViewPO.expectValue(location);
-    }
-    const businessHours = play.getCellValue('服務時段');
-    if (businessHours) {
-      const businessHoursViewPO = new BusinessHoursViewPageObjectCypress(
-        this.getSelector('businessHours')
-      );
-      businessHoursViewPO.expectValue(businessHours);
-    }
+      omniTypeViewControlPO.expectValue(cell.type, cell.value);
+    });
+  }
 
-    // for (const optionalCellDef of ImitationPlay.getOptionalCellDefs()) {
-    //   const cell = play.getCell(optionalCellDef.name);
-    //   if (cell && cell.value) {
-    //     const cellViewPO = new TheThingCellViewPageObjectCypress(
-    //       this.getSelectorForCell(cell)
-    //     );
-    //     cellViewPO.expectValue(cell);
-    //   } else {
-    //     cy.get(this.getSelectorForCell(optionalCellDef.name)).should(
-    //       'not.exist'
-    //     );
-    //   }
-    // }
+  setCell(cell: TheThingCell) {
+    const omniTypeViewControlPO = new OmniTypeViewControlPageObjectCypress(
+      this.getSelectorForCell(cell.name)
+    );
+    omniTypeViewControlPO.setValue(cell.type, cell.value);
+  }
+
+  setValue(play: TheThing) {
+    this.setName(play.name);
+
+    const orderedRequiredCells = play.getCellsByNames(
+      ImitationPlay.getRequiredCellNames()
+    );
+
+    cy.wrap(orderedRequiredCells).each((cell: TheThingCell, index: number) =>
+      this.setCell(cell)
+    );
+
+    const additionalCells = ImitationPlay.pickNonRequiredCells(
+      values(play.cells)
+    );
+
+    console.log(additionalCells);
+
+    cy.wrap(additionalCells).each((cell: any) => {
+      this.addCell(cell);
+      this.expectCell(cell);
+    });
+  }
+
+  expectCell(cell: TheThingCell) {
+    cy.get(`${this.getSelectorForCell(cell.name)}`).contains(cell.name);
+    const cellViewPagePO = new OmniTypeViewControlPageObjectCypress(
+      this.getSelectorForCell(cell.name)
+    );
+    cellViewPagePO.expectValue(cell.type, cell.value);
+  }
+
+  addCell(cell: TheThingCell) {
+    cy.get(this.getSelector('buttonAddCell')).click();
+    const dialogPO = new YggDialogPageObjectCypress();
+    dialogPO.expectVisible();
+    const cellCreatorPO = new CellCreatorPageObjectCypress(
+      dialogPO.getSelector()
+    );
+    cellCreatorPO.setCell(cell);
+    cellCreatorPO.setCellValue(cell);
+    dialogPO.confirm();
+    dialogPO.expectClosed();
+  }
+
+  setName(name: any) {
+    const omniTypeViewControlPO = new OmniTypeViewControlPageObjectCypress(
+      this.getSelector('name')
+    );
+    omniTypeViewControlPO.setValue('text', name);
+  }
+
+  save(play: TheThing) {
+    cy.get(this.getSelector('buttonSave')).click();
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.confirm(`確定要儲存 ${play.name} ？`);
+    emceePO.alert(`已成功儲存 ${play.name}`);
+  }
+
+  expectFreshNew() {
+    this.expectError(this.getSelector('name'), '請填入體驗名稱');
+    const firstRequiredCell: TheThingCellDefine = ImitationPlay.getFirstRequiredCellDef();
+    this.expectError(
+      this.getSelectorForCell(firstRequiredCell.name),
+      `請填入${firstRequiredCell.name}資料`
+    );
+    // Only show first required cell, hide others
+    for (const key in ImitationPlayCellDefines) {
+      if (ImitationPlayCellDefines.hasOwnProperty(key)) {
+        const cellDef = ImitationPlayCellDefines[key];
+        if (cellDef.name !== firstRequiredCell.name) {
+          cy.get(this.getSelectorForCell(cellDef.name)).should(
+            'not.be.visible'
+          );
+        }
+      }
+    }
+  }
+
+  expectError(selector: string, errorMessage: string) {
+    cy.get(selector).should('include.text', errorMessage);
   }
 
   expectAdditions(additions: TheThing[]) {

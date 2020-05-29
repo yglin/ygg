@@ -144,8 +144,24 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     return theThing;
   }
 
+  getFirstRequiredCellDef(): TheThingCellDefine {
+    const requireds = this.getRequiredCellDefs();
+    return isEmpty(requireds) ? null : requireds[0];
+  }
+
   getRequiredCellDefs(): TheThingCellDefine[] {
-    return filter(this.cellsDef, cellDef => cellDef.userInput === 'required');
+    let requireds = filter(
+      this.cellsDef,
+      cellDef => cellDef.userInput === 'required'
+    );
+    if (!isEmpty(this.cellsOrder)) {
+      requireds = requireds.sort((cellA, cellB) => {
+        const indexA = this.cellsOrder.indexOf(cellA.name);
+        const indexB = this.cellsOrder.indexOf(cellB.name);
+        return indexA > indexB ? 1 : -1;
+      });
+    }
+    return requireds;
   }
 
   getRequiredCellNames(): string[] {

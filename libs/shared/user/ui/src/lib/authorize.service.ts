@@ -37,10 +37,24 @@ export class AuthorizeService {
     }
   }
 
+  isOwner$(property: Property): Observable<boolean> {
+    return this.authenticateService.currentUser$.pipe(
+      startWith(this.isOwner(property)),
+      map(() => this.isOwner(property))
+    );
+  }
+
   isOwner(property: Property): boolean {
     return (
       this.authenticateService.currentUser &&
       this.authenticateService.currentUser.id === property.ownerId
+    );
+  }
+
+  canModify$(property: Property): Observable<boolean> {
+    return this.authenticateService.currentUser$.pipe(
+      startWith(this.canModify(property)),
+      map(() => this.canModify(property))
     );
   }
 

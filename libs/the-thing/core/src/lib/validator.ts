@@ -28,9 +28,23 @@ export class TheThingValidatorBasic extends TheThingValidator {
         new TheThingValidateError('TheThing undefined or NULL', { theThing })
       );
     } else {
-      for (const cell of this.requiredCells) {
-        if (!theThing.hasCell(cell.name, cell.type)) {
-          errors.push(new TheThingValidateError(`缺少資料欄位：${cell.name}, 資料類型：${cell.type}`, { requiredCell: cell }))
+      for (const cellDef of this.requiredCells) {
+        if (!theThing.hasCell(cellDef.name, cellDef.type)) {
+          errors.push(
+            new TheThingValidateError(
+              `缺少資料欄位：${cellDef.name}, 資料類型：${cellDef.type}`,
+              { requiredCell: cellDef }
+            )
+          );
+        } else {
+          const cell = theThing.getCell(cellDef.name);
+          if (!cell.value) {
+            errors.push(
+              new TheThingValidateError(`資料欄位 ${cell.name} 必須有值`, {
+                requiredCell: cell
+              })
+            );
+          }
         }
       }
     }

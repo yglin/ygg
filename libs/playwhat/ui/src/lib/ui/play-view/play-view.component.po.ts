@@ -6,15 +6,10 @@ export abstract class PlayViewPageObject extends PageObject {
   selectors = {
     main: '.play-view',
     name: '.name',
-    subtitle: '.subtitle',
-    album: '.album',
-    price: '.price',
-    timeLength: '.time-length',
-    limitOnNumber: '.limit-on-number',
-    location: '.location',
-    businessHours: '.business-hours',
     additionList: '.addition-list',
-    buttonAddToCart: 'button.add-to-cart'
+    buttonAddToCart: 'button.add-to-cart',
+    buttonAddCell: 'button.add-cell',
+    buttonSave: 'button.save'
   };
   albumViewPO: AlbumViewPageObject;
 
