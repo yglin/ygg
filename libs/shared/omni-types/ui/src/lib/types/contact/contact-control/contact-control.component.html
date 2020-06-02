@@ -12,7 +12,12 @@
         <mat-icon>assignment_ind</mat-icon>
       </button>
     </div>
-    <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="20px">
+    <div
+      fxLayout="row"
+      fxLayout.xs="column"
+      fxLayoutAlign="start center"
+      fxLayoutGap="20px"
+    >
       <div class="form-control">
         <mat-form-field>
           <mat-label>姓名</mat-label>
@@ -21,25 +26,6 @@
           <mat-error *ngIf="contactForm.get('name').hasError('required')"
             >請填入姓名</mat-error
           >
-        </mat-form-field>
-      </div>
-      <div class="form-control">
-        <mat-form-field>
-          <mat-label>電話</mat-label>
-          <input
-            id="phone"
-            matInput
-            type="tel"
-            formControlName="phone"
-            [errorStateMatcher]="leastRequireErrorMatcher"
-          />
-          <span matPrefix><mat-icon>phone</mat-icon></span>
-          <!--
-              <mat-error *ngIf="contactForm.get('phone').invalid">{{ getErrorMessage('phone') }}</mat-error>
-            -->
-          <mat-error *ngIf="contactForm.hasError('leastRequire')">{{
-            leastRequireErrorMatcher.errorMessage
-          }}</mat-error>
         </mat-form-field>
       </div>
       <div class="form-control">
@@ -64,6 +50,32 @@
           <mat-error *ngIf="contactForm.get('email').hasError('email')"
             >不是正確的email格式</mat-error
           >
+        </mat-form-field>
+      </div>
+    </div>
+    <div
+      fxLayout="row"
+      fxLayout.xs="column"
+      fxLayoutAlign="start center"
+      fxLayoutGap="20px"
+    >
+      <div class="form-control">
+        <mat-form-field>
+          <mat-label>電話</mat-label>
+          <input
+            id="phone"
+            matInput
+            type="tel"
+            formControlName="phone"
+            [errorStateMatcher]="leastRequireErrorMatcher"
+          />
+          <span matPrefix><mat-icon>phone</mat-icon></span>
+          <!--
+              <mat-error *ngIf="contactForm.get('phone').invalid">{{ getErrorMessage('phone') }}</mat-error>
+            -->
+          <mat-error *ngIf="contactForm.hasError('leastRequire')">{{
+            leastRequireErrorMatcher.errorMessage
+          }}</mat-error>
         </mat-form-field>
       </div>
       <div class="form-control">

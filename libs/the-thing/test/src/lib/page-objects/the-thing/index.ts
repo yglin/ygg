@@ -8,3 +8,4 @@ export * from './the-thing-data-table.po';
 export * from './my-things.po';
 export * from './my-things-data-table.po';
 export * from './the-thing-state.po';
+export * from './the-thing-thumbnail.po';

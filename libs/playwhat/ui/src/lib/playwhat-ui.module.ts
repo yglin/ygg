@@ -6,7 +6,8 @@ import { RouterModule } from '@angular/router';
 import {
   ImitationPlay,
   ImitationTour,
-  ImitationTourPlan
+  ImitationTourPlan,
+  ImitationEquipment
 } from '@ygg/playwhat/core';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
@@ -26,6 +27,7 @@ import { TourPlanViewComponent } from './ui/tour-plan-view/tour-plan-view.compon
 import { TourViewComponent } from './ui/tour-view/tour-view.component';
 import { TourPlanFactoryService } from './tour-plan-factory.service';
 import { noop } from 'lodash';
+import { EquipmentViewComponent } from './ui/equipment/equipment-view/equipment-view.component';
 
 @NgModule({
   imports: [
@@ -48,7 +50,8 @@ import { noop } from 'lodash';
     // TourPlanBuilderComponent,
     PlayViewComponent,
     MyPlayListComponent,
-    MyTourPlanListComponent
+    MyTourPlanListComponent,
+    EquipmentViewComponent
   ],
   entryComponents: [
     TourViewComponent,
@@ -98,7 +101,8 @@ export function configTheThingImitation(
     imitationAccessService.addLocal([
       ImitationPlay,
       ImitationTour,
-      ImitationTourPlan
+      ImitationTourPlan,
+      ImitationEquipment
     ]);
     theThingViewsService.addView('play', {
       id: 'play',

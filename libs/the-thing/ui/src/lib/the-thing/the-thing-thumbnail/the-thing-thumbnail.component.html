@@ -1,3 +1,19 @@
 <div class="the-thing-thumbnail" *ngIf="theThing">
-  <ygg-image-thumbnail [item]='theThing'></ygg-image-thumbnail>
+  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px">
+    <div>
+      <ygg-image-thumbnail [item]="theThing"></ygg-image-thumbnail>
+    </div>
+    <div *ngIf="display">
+      <div *ngFor="let cellName of display.cells">
+        <div
+          *ngIf="theThing.cells[cellName] as cell"
+          [attr.cell-name]="cellName"
+        >
+          <h4>{{ cellName }}</h4>
+          <the-thing-cell readonly [cell]="cell"></the-thing-cell>
+        </div>
+        <br />
+      </div>
+    </div>
+  </div>
 </div>

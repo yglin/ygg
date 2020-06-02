@@ -6,7 +6,7 @@ import {
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import { IncomeRecord, Purchase, RelationPurchase } from '@ygg/shopping/core';
 import { TheThing } from '@ygg/the-thing/core';
-import { SampleAdditions, SamplePlays } from '../play/sample-plays';
+import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import {
   stubTourPlansByStateAndMonth,
   TourPlanCompleted
@@ -18,7 +18,7 @@ const tourPlansByStateAndMonth: {
 
 const siteNavigator = new SiteNavigator();
 const SampleTourPlans = [TourPlanCompleted];
-const SampleThings = SamplePlays.concat(SampleAdditions).concat(
+const SampleThings = SamplePlays.concat(SampleEquipments).concat(
   SampleTourPlans
 );
 

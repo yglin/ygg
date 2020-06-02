@@ -1,79 +1,69 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators
-} from '@angular/forms';
-import {
-  ImitationPlay,
-  ImitationEquipment,
-  ImitationEquipmentCellDefines
-} from '@ygg/playwhat/core';
-import { ShoppingCartService } from '@ygg/shopping/ui';
-import {
-  TheThing,
-  TheThingCell,
-  TheThingImitation,
-  TheThingRelation
-} from '@ygg/the-thing/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   TheThingImitationViewInterface,
   validateCellRequired,
   CellCreatorComponent
 } from '@ygg/the-thing/ui';
-import { isEmpty, values, extend } from 'lodash';
-import { Observable, Subscription } from 'rxjs';
-import { tap, switchMap } from 'rxjs/operators';
-import { PlayFactoryService } from '../../play-factory.service';
+import { Subscription, Observable } from 'rxjs';
+import {
+  TheThing,
+  TheThingImitation,
+  TheThingRelation,
+  TheThingCell
+} from '@ygg/the-thing/core';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl
+} from '@angular/forms';
+import { ImitationEquipment } from '@ygg/playwhat/core';
+import { EquipmentFactoryService } from '../../../equipment-factory.service';
 import { AuthorizeService } from '@ygg/shared/user/ui';
 import { YggDialogService, EmceeService } from '@ygg/shared/ui/widgets';
+import { tap, switchMap } from 'rxjs/operators';
+import { values, isEmpty } from 'lodash';
 import { AlertType } from '@ygg/shared/infra/core';
-import { Router } from '@angular/router';
-import { RelationAddition } from '@ygg/shopping/core';
 
 @Component({
-  selector: 'ygg-play-view',
-  templateUrl: './play-view.component.html',
-  styleUrls: ['./play-view.component.css']
+  selector: 'ygg-equipment-view',
+  templateUrl: './equipment-view.component.html',
+  styleUrls: ['./equipment-view.component.css']
 })
-export class PlayViewComponent
+export class EquipmentViewComponent
   implements OnInit, OnDestroy, TheThingImitationViewInterface {
   subscriptions: Subscription[] = [];
   theThing$: Observable<TheThing>;
   theThing: TheThing;
   formGroup: FormGroup;
   formGroupCells: FormGroup;
-  imitation: TheThingImitation = ImitationPlay;
+  imitation: TheThingImitation = ImitationEquipment;
   readonly = true;
   nameStyle = {
     'font-size': '24px',
     'text-shadow': '3px 3px 3px #FDFFC7'
   };
   orderedCellNames: string[] = [];
-  ImitationEquipment = ImitationEquipment;
   equipmentRelations: TheThingRelation[] = [];
 
   constructor(
-    private playFactory: PlayFactoryService,
-    private cartService: ShoppingCartService,
+    private equipmentFactory: EquipmentFactoryService,
     private formBuilder: FormBuilder,
     private authorizeService: AuthorizeService,
     private dialog: YggDialogService,
-    private emcee: EmceeService,
-    private router: Router
+    private emcee: EmceeService
   ) {
     this.formGroup = this.formBuilder.group({
       name: ['', Validators.required]
     });
     this.formGroup.valueChanges.subscribe(value =>
-      this.playFactory.setMeta(value)
+      this.equipmentFactory.setMeta(value)
     );
     this.formGroupCells = this.formBuilder.group({});
   }
 
   async ngOnInit() {
-    this.theThing$ = await this.playFactory.loadTheOne();
+    this.theThing$ = await this.equipmentFactory.loadTheOne();
     this.theThing$
       .pipe(
         tap(theThing => (this.theThing = theThing)),
@@ -128,7 +118,7 @@ export class PlayViewComponent
       this.formGroupCells.setControl(cell.name, control);
       this.subscriptions.push(
         control.valueChanges.subscribe((cell: TheThingCell) =>
-          this.playFactory.setCell(cell)
+          this.equipmentFactory.setCell(cell)
         )
       );
     }
@@ -168,14 +158,14 @@ export class PlayViewComponent
   }
 
   save() {
-    this.playFactory.save();
+    this.equipmentFactory.save();
   }
 
   addCell() {
     const dialogRef = this.dialog.open(CellCreatorComponent, {
       title: '新增其他資料',
       data: {
-        presetCells: ImitationPlay.createOptionalCells()
+        presetCells: ImitationEquipment.createOptionalCells()
       }
     });
     dialogRef.afterClosed().subscribe(cell => {
@@ -184,22 +174,14 @@ export class PlayViewComponent
           this.emcee.alert(`資料欄位 ${cell.name} 已存在`, AlertType.Warning);
         } else {
           this.addCellControl(cell);
-          this.playFactory.setCell(cell);
+          this.equipmentFactory.setCell(cell);
         }
       }
     });
   }
 
   async deleteCell(cellName: string) {
-    await this.playFactory.deleteCell(cellName);
+    await this.equipmentFactory.deleteCell(cellName);
     this.formGroupCells.removeControl(cellName);
-  }
-
-  gotoEquipmentCreate() {
-    this.playFactory.createRelationObject(ImitationEquipment);
-  }
-
-  purchase() {
-    this.cartService.add(this.theThing);
   }
 }

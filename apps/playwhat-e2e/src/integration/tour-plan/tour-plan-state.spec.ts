@@ -18,7 +18,7 @@ import {
   MyThingsPageObjectCypress
 } from '@ygg/the-thing/test';
 import { flatten, keys, values } from 'lodash';
-import { SampleAdditions, SamplePlays } from '../play/sample-plays';
+import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import {
   stubTourPlansByStateAndMonth,
   TourPlanInApplication,
@@ -34,7 +34,7 @@ const siteNavigator = new SiteNavigator();
 const SampleTourPlans = [TourPlanInApplication, TourPlanPaid].concat(
   flatten(values(tourPlansByStateAndMonth))
 );
-const SampleThings = SamplePlays.concat(SampleAdditions).concat(
+const SampleThings = SamplePlays.concat(SampleEquipments).concat(
   SampleTourPlans
 );
 

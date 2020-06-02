@@ -1,7 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
 
 .debug {
   display: none;
@@ -15,6 +21,20 @@ div {
   margin-bottom: 20px;
 }
 
-h1, h2, h3, h4, h5, h6, .title {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.title {
   color: rgb(0, 61, 0);
+}
+
+.edit {
+  opacity: 0.25;
+}
+
+.edit :hover {
+  opacity: 1;
 }

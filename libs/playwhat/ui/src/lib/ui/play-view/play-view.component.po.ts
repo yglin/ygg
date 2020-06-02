@@ -9,7 +9,9 @@ export abstract class PlayViewPageObject extends PageObject {
     additionList: '.addition-list',
     buttonAddToCart: 'button.add-to-cart',
     buttonAddCell: 'button.add-cell',
-    buttonSave: 'button.save'
+    buttonSave: 'button.save',
+    equipments: '.equipments',
+    buttonCreateEquipment: 'button.create-equipment'
   };
   albumViewPO: AlbumViewPageObject;
 
@@ -20,7 +22,17 @@ export abstract class PlayViewPageObject extends PageObject {
     } else {
       cellName = cell.name;
     }
-    return `${this.getSelector()} [cell-name="${cellName}"]`;
+    return `${this.getSelector()} .cells [cell-name="${cellName}"]`;
+  }
+
+  getSelectorForCellDeleteButton(cellName: string): any {
+    return `${this.getSelectorForCell(cellName)} button.delete`;
+  }
+
+  getSelectorForEquipment(equip: TheThing): string {
+    return `${this.getSelector('equipments')} .equipment:contains("${
+      equip.name
+    }")`;
   }
 
   abstract expectVisible(): void;

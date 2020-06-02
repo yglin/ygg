@@ -1,69 +1,24 @@
-import { PlayViewPageObject } from '@ygg/playwhat/ui';
-import {
-  TheThing,
-  TheThingCellDefine,
-  TheThingCell
-} from '@ygg/the-thing/core';
-import {
-  AlbumViewPageObjectCypress,
-  LocationViewPageObjectCypress,
-  BusinessHoursViewPageObjectCypress,
-  OmniTypeViewControlPageObjectCypress
-} from '@ygg/shared/omni-types/test';
-import { Purchase } from '@ygg/shopping/core';
-import {
-  AdditionViewPageObjectCypress,
-  PurchaseListPageObjectCypress,
-  PurchaseProductPageObjectCypress
-} from '@ygg/shopping/test';
-import {
-  ImageThumbnailListPageObjectCypress,
-  YggDialogPageObjectCypress,
-  ConfirmDialogPageObjectCypress,
-  EmceePageObjectCypress
-} from '@ygg/shared/ui/test';
-import {
-  ImitationPlay,
-  ImitationPlayCellDefines,
-  ImitationEquipmentCellDefines,
-  ImitationEquipment
-} from '@ygg/playwhat/core';
+import { EquipmentViewPageObject } from '@ygg/playwhat/ui';
+import { TheThing, TheThingCell, TheThingCellDefine } from '@ygg/the-thing/core';
 import { values } from 'lodash';
-import {
-  CellCreatorPageObjectCypress,
-  TheThingThumbnailPageObjectCypress
-} from '@ygg/the-thing/test';
+import { OmniTypeViewControlPageObjectCypress } from '@ygg/shared/omni-types/test';
+import { ImitationEquipment, ImitationEquipmentCellDefines } from '@ygg/playwhat/core';
+import { YggDialogPageObjectCypress, EmceePageObjectCypress, ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
+import { CellCreatorPageObjectCypress } from '@ygg/the-thing/test';
 
-export class PlayViewPageObjectCypress extends PlayViewPageObject {
-  constructor(parentSelector?: string) {
-    super(parentSelector);
-    this.albumViewPO = new AlbumViewPageObjectCypress(
-      this.getSelector('album')
-    );
-  }
-
-  purchase(purchases: Purchase[] = []) {
-    cy.get(this.getSelector('buttonAddToCart')).click();
-    const dialogPO = new YggDialogPageObjectCypress();
-    const purchasePO = new PurchaseProductPageObjectCypress(
-      dialogPO.getSelector()
-    );
-    purchasePO.setValue(purchases);
-    dialogPO.confirm();
-  }
-
+export class EquipmentViewPageObjectCypress extends EquipmentViewPageObject {
   expectVisible(): Cypress.Chainable<any> {
-    return cy.get(this.getSelector()).should('be.visible');
+    return cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
   }
 
   expectValue(play: TheThing): void {
     cy.get(this.getSelector('name')).contains(play.name);
     cy.wrap(values(play.cells)).each((cell: TheThingCell) => {
-      cy.get(this.getSelectorForCell(cell))
+      cy.get(this.getSelectorForCell(cell.name))
         .scrollIntoView()
         .should('be.visible');
       const omniTypeViewControlPO = new OmniTypeViewControlPageObjectCypress(
-        this.getSelectorForCell(cell)
+        this.getSelectorForCell(cell.name)
       );
       omniTypeViewControlPO.expectValue(cell.type, cell.value);
     });
@@ -80,14 +35,14 @@ export class PlayViewPageObjectCypress extends PlayViewPageObject {
     this.setName(play.name);
 
     const orderedRequiredCells = play.getCellsByNames(
-      ImitationPlay.getRequiredCellNames()
+      ImitationEquipment.getRequiredCellNames()
     );
 
     cy.wrap(orderedRequiredCells).each((cell: TheThingCell, index: number) =>
       this.setCell(cell)
     );
 
-    const additionalCells = ImitationPlay.pickNonRequiredCells(
+    const additionalCells = ImitationEquipment.pickNonRequiredCells(
       values(play.cells)
     );
 
@@ -134,15 +89,15 @@ export class PlayViewPageObjectCypress extends PlayViewPageObject {
 
   expectFreshNew() {
     this.expectError(this.getSelector('name'), '請填入體驗名稱');
-    const firstRequiredCell: TheThingCellDefine = ImitationPlay.getFirstRequiredCellDef();
+    const firstRequiredCell: TheThingCellDefine = ImitationEquipment.getFirstRequiredCellDef();
     this.expectError(
       this.getSelectorForCell(firstRequiredCell.name),
       `請填入${firstRequiredCell.name}資料`
     );
     // Only show first required cell, hide others
-    for (const key in ImitationPlayCellDefines) {
-      if (ImitationPlayCellDefines.hasOwnProperty(key)) {
-        const cellDef = ImitationPlayCellDefines[key];
+    for (const key in ImitationEquipmentCellDefines) {
+      if (ImitationEquipmentCellDefines.hasOwnProperty(key)) {
+        const cellDef = ImitationEquipmentCellDefines[key];
         if (cellDef.name !== firstRequiredCell.name) {
           cy.get(this.getSelectorForCell(cellDef.name)).should(
             'not.be.visible'
@@ -169,18 +124,7 @@ export class PlayViewPageObjectCypress extends PlayViewPageObject {
 
   expectNoCells(cells: TheThingCell[]) {
     cy.wrap(cells).each((cell: TheThingCell) => {
-      cy.get(this.getSelectorForCell(cell)).should('not.be.visible');
-    });
-  }
-
-  expectEquipments(equipments: TheThing[]) {
-    cy.wrap(equipments).each((equip: TheThing) => {
-      const equipSelector = this.getSelectorForEquipment(equip);
-      const theThingThumbnailPO = new TheThingThumbnailPageObjectCypress(
-        equipSelector,
-        ImitationEquipment
-      );
-      theThingThumbnailPO.expectValue(equip);
+      cy.get(this.getSelectorForCell(cell.name)).should('not.be.visible');
     });
   }
 

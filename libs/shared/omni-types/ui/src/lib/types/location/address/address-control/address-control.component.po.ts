@@ -20,7 +20,7 @@ import { PageObject } from "@ygg/shared/test/page-object";
 export abstract class AddressControlPageObject extends PageObject {
   selectors = {
     main: '.address-control',
-    rawInput: 'input#raw'
+    rawInput: 'input.raw'
   }
 
   abstract setValue(value: Address): void;

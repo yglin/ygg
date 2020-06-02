@@ -35,10 +35,10 @@ import {
 } from 'lodash';
 import { HeaderPageObjectCypress } from '../../support/header.po';
 import {
-  SampleAdditions,
+  SampleEquipments,
   SamplePlays,
-  PlaysWithoutAddition,
-  PlaysWithAddition
+  PlaysWithoutEquipment,
+  PlaysWithEquipment
 } from '../play/sample-plays';
 import {
   TourPlanWithPlaysNoAddition,
@@ -48,7 +48,7 @@ import {
 
 describe('Tour-plan builder', () => {
   const siteNavigator = new SiteNavigator();
-  const SampleThings = SamplePlays.concat(SampleAdditions).concat([
+  const SampleThings = SamplePlays.concat(SampleEquipments).concat([
     TourPlanWithPlaysNoAddition
   ]);
   const imageThumbnailListPO = new ImageThumbnailListPageObjectCypress();
@@ -109,7 +109,7 @@ describe('Tour-plan builder', () => {
   it('Show purchase count in badge of shopping cart button', () => {
     // Hide cart button when no purchase in cart
     headerPO.expectCartButtonHidden();
-    purchasePlays([PlaysWithoutAddition[0]]);
+    purchasePlays([PlaysWithoutEquipment[0]]);
     // Show cart button with count of purchases as badge
     headerPO.shoppingCartButtonPO.expectBadge(1);
     siteNavigator.goto(['shopping', 'cart'], cartPO);
@@ -118,7 +118,7 @@ describe('Tour-plan builder', () => {
   });
 
   it('Show purchased plays in cart page', () => {
-    const purchases = purchasePlays(PlaysWithoutAddition);
+    const purchases = purchasePlays(PlaysWithoutEquipment);
     const totalCharge = sum(values(purchases).map(p => p.charge));
     siteNavigator.goto(['shopping', 'cart'], cartPO);
     cartPO.expectPurchases(values(purchases));
@@ -126,8 +126,8 @@ describe('Tour-plan builder', () => {
   });
 
   it('Remove purchases in cart page', () => {
-    const purchases = purchasePlays(PlaysWithoutAddition);
-    const playToBeRemoved = last(PlaysWithoutAddition);
+    const purchases = purchasePlays(PlaysWithoutEquipment);
+    const playToBeRemoved = last(PlaysWithoutEquipment);
     const [purchaseToBeRemoved, ...rest] = remove(
       purchases,
       p => p.productId === playToBeRemoved.id
@@ -139,7 +139,7 @@ describe('Tour-plan builder', () => {
   });
 
   it('Remove all in cart page', () => {
-    const purchases = purchasePlays(PlaysWithoutAddition);
+    const purchases = purchasePlays(PlaysWithoutEquipment);
     siteNavigator.goto(['shopping', 'cart'], cartPO);
     cartPO.removeAll();
     cartPO.expectTotalCharge(0);
@@ -149,7 +149,7 @@ describe('Tour-plan builder', () => {
 
   it('Show addition purchases when play has additions', () => {
     const purchases: Purchase[] = [];
-    const play = PlaysWithAddition[0];
+    const play = PlaysWithEquipment[0];
     purchases.push(
       new Purchase({
         productId: play.id,
@@ -184,7 +184,7 @@ describe('Tour-plan builder', () => {
   });
 
   it('Change quantity of purchases in cart page', () => {
-    const purchases = cloneDeep(purchasePlays(PlaysWithoutAddition));
+    const purchases = cloneDeep(purchasePlays(PlaysWithoutEquipment));
     // Change quantity;
     for (const purchase of purchases) {
       purchase.quantity = random(20, 50);
@@ -199,7 +199,7 @@ describe('Tour-plan builder', () => {
   });
 
   it('Submit purchases to tour-plan creation page', () => {
-    const purchases = purchasePlays(PlaysWithoutAddition);
+    const purchases = purchasePlays(PlaysWithoutEquipment);
     const totalCharge = sum(purchases.map(p => p.charge));
     siteNavigator.goto(['shopping', 'cart'], cartPO);
     cartPO.submit();
@@ -227,7 +227,7 @@ describe('Tour-plan builder', () => {
   });
 
   it('On import, confirm clear purchases already in cart', () => {
-    const samplePlays = sampleSize(PlaysWithoutAddition, 2);
+    const samplePlays = sampleSize(PlaysWithoutEquipment, 2);
     // Purchase some plays in advance, make cart not empty
     purchasePlays(samplePlays);
 
@@ -253,7 +253,7 @@ describe('Tour-plan builder', () => {
   it('Save tour plan with purchased plays', () => {
     const resultTourPlan = TourPlanFull.clone();
     resultTourPlan.name = '測試遊程(預定體驗)';
-    const plays = PlaysWithoutAddition;
+    const plays = PlaysWithoutEquipment;
     const purchases = purchasePlays(plays);
     resultTourPlan.setRelation(
       RelationPurchase.name,

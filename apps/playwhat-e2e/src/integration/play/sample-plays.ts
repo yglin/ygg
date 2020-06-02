@@ -1,10 +1,13 @@
-import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import { TheThingCell } from '@ygg/the-thing/core';
 import {
   RelationAddition,
   CellNames as ShoppingCellNames
 } from '@ygg/shopping/core';
-import { ImitationPlay } from '@ygg/playwhat/core';
-import { v4 as uuid } from 'uuid';
+import {
+  ImitationPlay,
+  ImitationEquipmentCellDefines,
+  ImitationEquipment
+} from '@ygg/playwhat/core';
 import { random } from 'lodash';
 import { Album, Location, BusinessHours } from '@ygg/shared/omni-types/core';
 
@@ -275,7 +278,7 @@ export const SamplePlays = [
   }
 ].map(jsonItem => ImitationPlay.createTheThing().fromJSON(jsonItem));
 
-export const SampleAdditions = [
+export const SampleEquipments = [
   {
     name: '四人協力車',
     tags: ['addition', '設備'],
@@ -318,13 +321,15 @@ export const SampleAdditions = [
       }
     ]
   }
-].map(jsonItem => new TheThing().fromJSON(jsonItem));
+].map(jsonItem =>
+  ImitationEquipment.createTheThing().fromJSON(jsonItem)
+);
 
-SamplePlays[0].addRelations(RelationAddition.name, SampleAdditions);
+SamplePlays[0].addRelations(RelationAddition.name, SampleEquipments);
 
-export const PlaysWithAddition = SamplePlays.filter(p =>
+export const PlaysWithEquipment = SamplePlays.filter(p =>
   p.hasRelation(RelationAddition.name)
 );
-export const PlaysWithoutAddition = SamplePlays.filter(
+export const PlaysWithoutEquipment = SamplePlays.filter(
   p => !p.hasRelation(RelationAddition.name)
 );

@@ -9,12 +9,12 @@ import { LoginDialogPageObjectCypress, logout, waitForLogin } from '@ygg/shared/
 import { ImitationOrder } from '@ygg/shopping/core';
 import { TheThingCell } from '@ygg/the-thing/core';
 import { MyThingsDataTablePageObjectCypress, MyThingsPageObjectCypress } from '@ygg/the-thing/test';
-import { SampleAdditions, SamplePlays } from '../play/sample-plays';
+import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import { MinimalTourPlan, TourPlanFull } from './sample-tour-plan';
 
 describe('Tour-plan create', () => {
   const siteNavigator = new SiteNavigator();
-  const SampleThings = SamplePlays.concat(SampleAdditions);
+  const SampleThings = SamplePlays.concat(SampleEquipments);
 
   const tourPlanViewPO = new TourPlanViewPageObjectCypress();
   const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();

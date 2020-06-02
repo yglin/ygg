@@ -17,8 +17,8 @@ import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
 import { chunk, find, isEmpty, sum } from 'lodash';
 import {
-  PlaysWithAddition,
-  SampleAdditions,
+  PlaysWithEquipment,
+  SampleEquipments,
   SamplePlays
 } from '../play/sample-plays';
 import {
@@ -35,7 +35,7 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     TourPlanFull,
     TourPlanWithPlaysNoAddition
   ];
-  const SampleThings = SamplePlays.concat(SampleAdditions).concat(
+  const SampleThings = SamplePlays.concat(SampleEquipments).concat(
     SampleTourPlans
   );
 
@@ -109,7 +109,7 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
       Purchase.fromRelation(r)
     );
     const totalCharge = sum(purchases.map(p => p.charge));
-    const purchasedPlays: TheThing[] = PlaysWithAddition;
+    const purchasedPlays: TheThing[] = PlaysWithEquipment;
 
     cy.wrap(purchasedPlays).each((play: TheThing) => {
       const playPurchases: Purchase[] = [];

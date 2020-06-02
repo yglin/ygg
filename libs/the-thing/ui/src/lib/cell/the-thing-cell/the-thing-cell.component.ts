@@ -24,7 +24,7 @@ export class TheThingCellComponent
   implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() readonly: boolean;
   @Input() required: boolean;
-  cell: TheThingCell;
+  @Input() cell: TheThingCell;
   onChange: (cell: TheThingCell) => any = noop;
   onTouched: () => any = noop;
   formControl: FormControl = new FormControl(null);
@@ -59,6 +59,9 @@ export class TheThingCellComponent
   ngOnInit(): void {
     this.readonly = this.readonly !== undefined && this.readonly !== false;
     this.required = this.required !== undefined && this.required !== false;
+    if (this.cell) {
+      this.writeValue(this.cell);
+    }
   }
 
   ngOnDestroy(): void {

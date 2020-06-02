@@ -1,39 +1,38 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription, Subject } from 'rxjs';
 import {
   TheThing,
   TheThingCell,
-  TheThingImitation,
-  TheThingRelation
+  TheThingRelation,
+  TheThingImitation
 } from '@ygg/the-thing/core';
 import { TheThingFactoryService } from '@ygg/the-thing/ui';
-import { ImitationPlay } from '@ygg/playwhat/core';
+import { ImitationEquipment } from '@ygg/playwhat/core';
 import {
   Resolve,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   Router
 } from '@angular/router';
-import { tap, take } from 'rxjs/operators';
+import { tap, take, map } from 'rxjs/operators';
 import { extend } from 'lodash';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import { AlertType } from '@ygg/shared/infra/core';
-import { EquipmentFactoryService } from './equipment-factory.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PlayFactoryService implements OnDestroy, Resolve<TheThing> {
+export class EquipmentFactoryService implements OnDestroy, Resolve<TheThing> {
   theThing$: BehaviorSubject<TheThing> = new BehaviorSubject(null);
   theThing: TheThing;
   cacheCreated: TheThing;
+  createFor$: Subject<TheThing>;
   subscriptions: Subscription[] = [];
 
   constructor(
     private theThingFactory: TheThingFactoryService,
     private emcee: EmceeService,
-    private router: Router,
-    private equipmentFactory: EquipmentFactoryService
+    private router: Router
   ) {}
 
   resolve(
@@ -42,6 +41,7 @@ export class PlayFactoryService implements OnDestroy, Resolve<TheThing> {
   ): Observable<any> | Promise<any> | any {
     const id = route.paramMap.get('id');
     if (id === 'create') {
+      console.log(id);
       return this.create();
     } else if (id === 'edit') {
       return this.loadTheOne();
@@ -68,14 +68,47 @@ export class PlayFactoryService implements OnDestroy, Resolve<TheThing> {
     return this.theThing$;
   }
 
+  async createForRelation(
+    subject: TheThing,
+    imitation: TheThingImitation
+  ): Promise<TheThing> {
+    console.log(imitation.routePath);
+    const routeChange: boolean = await this.router.navigate([
+      '/',
+      imitation.routePath,
+      'create'
+    ]);
+    if (!routeChange) {
+      throw new Error(`Faied to route to /${imitation.routePath}/create`);
+    }
+    if (!this.createFor$) {
+      this.createFor$ = new Subject();
+    }
+    return this.createFor$
+      .pipe(
+        take(1),
+        map(object => {
+          subject.addRelation(
+            new TheThingRelation({
+              name: imitation.name,
+              subjectId: this.theThing.id,
+              objectId: object.id
+            })
+          );
+          return subject;
+        })
+      )
+      .toPromise();
+  }
+
   async create(): Promise<TheThing> {
     if (!this.cacheCreated) {
       this.cacheCreated = await this.theThingFactory.create({
-        imitation: ImitationPlay.id
+        imitation: ImitationEquipment.id
       });
     }
     this.theThing = this.cacheCreated;
-    return this.cacheCreated;
+    return this.theThing;
   }
 
   setCell(cell: TheThingCell): void {
@@ -105,41 +138,27 @@ export class PlayFactoryService implements OnDestroy, Resolve<TheThing> {
     await this.theThingFactory.save(this.theThing, {
       requireOwner: true
     });
-    // if (
-    //   ImitationTourPlan.isState(this.theThing, ImitationTourPlan.states.new)
-    // ) {
-    //   const confirm = await this.emcee.confirm(`順便將遊程計畫送出申請？`);
-    //   if (confirm) {
-    //     this.theThing.setState(
-    //       ImitationTourPlan.stateName,
-    //       ImitationTourPlan.states.applied
-    //     );
-    //     await this.theThingFactory.save(this.theThing, {
-    //       requireOwner: true
-    //     });
-    //   }
-    // }
     await this.emcee.alert(`已成功儲存 ${this.theThing.name}`, AlertType.Info);
     // this.theThing = undefined;
     if (!!this.cacheCreated && this.theThing.id === this.cacheCreated.id) {
       this.cacheCreated = undefined;
     }
-    this.router.navigate(['/', ImitationPlay.routePath, this.theThing.id]);
+    if (this.createFor$) {
+      this.createFor$.next(this.theThing);
+      this.createFor$.complete();
+      this.createFor$ = undefined;
+      console.log('Save for relation create');
+    } else {
+      this.router.navigate([
+        '/',
+        ImitationEquipment.routePath,
+        this.theThing.id
+      ]);
+    }
     return;
   }
 
   deleteCell(cellName: string) {
     this.theThing.deleteCell(cellName);
-  }
-
-  async createRelationObject(imitation: TheThingImitation) {
-    const currentUrl = this.router.url;
-    // console.log(currentUrl);
-    try {
-      await this.equipmentFactory.createForRelation(this.theThing, imitation);
-      this.router.navigateByUrl(currentUrl);
-    } catch (error) {
-      console.warn(error.message);
-    }
   }
 }

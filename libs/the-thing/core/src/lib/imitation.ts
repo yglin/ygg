@@ -51,6 +51,10 @@ export interface DataTableConfig {
   };
 }
 
+export interface DisplayThumbnail {
+  cells: string[];
+}
+
 type TheThingCreator = (thing: TheThing) => TheThing;
 
 export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
@@ -74,6 +78,9 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   states: { [name: string]: TheThingState };
   creators: TheThingCreator[] = [];
   cellsOrder: string[] = [];
+  displays: {
+    thumbnail?: DisplayThumbnail;
+  } = {};
 
   /** Create time */
   createAt: number;
@@ -130,6 +137,9 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
           theThing.addCell(newCell);
         }
       }
+    }
+    if (!!this.routePath) {
+      theThing.link = `/${this.routePath}/${theThing.id}`;
     }
     // for (const name in this.relationsDef) {
     //   if (this.relationsDef.hasOwnProperty(name)) {

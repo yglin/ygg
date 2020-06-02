@@ -10,7 +10,7 @@ import {
   AuthenticateService,
   AuthenticateUiService
 } from '@ygg/shared/user/ui';
-import { take, first } from 'rxjs/operators';
+import { take, first, timeout } from 'rxjs/operators';
 import {
   TheThingImitationAccessService,
   TheThingAccessService
@@ -78,10 +78,14 @@ export class TheThingFactoryService {
   async create(options: ITheThingCreateOptions = {}): Promise<TheThing> {
     let newThing: TheThing;
     if (options.imitation) {
-      this.imitation = await this.imitationAccessServcie
-        .get$(options.imitation)
-        .pipe(first())
-        .toPromise();
+      try {
+        this.imitation = await this.imitationAccessServcie
+          .get$(options.imitation)
+          .pipe(first(), timeout(3000))
+          .toPromise();
+      } catch (error) {
+        console.error(error.message);
+      }
     }
     if (this.imitation) {
       newThing = this.imitation.createTheThing();

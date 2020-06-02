@@ -4,9 +4,9 @@ import { randomBytes } from 'crypto';
 import { random, find, omit } from 'lodash';
 import {
   SamplePlays,
-  SampleAdditions,
-  PlaysWithoutAddition,
-  PlaysWithAddition
+  SampleEquipments,
+  PlaysWithoutEquipment,
+  PlaysWithEquipment
 } from '../play/sample-plays';
 import {
   RelationPurchase,
@@ -133,7 +133,7 @@ TourPlanWithPlaysNoAddition.setState(
   ImitationTourPlan.stateName,
   ImitationTourPlan.states.new
 );
-for (const play of PlaysWithoutAddition) {
+for (const play of PlaysWithoutEquipment) {
   const purchase = Purchase.purchase(
     TourPlanWithPlaysNoAddition,
     play,
@@ -148,7 +148,7 @@ TourPlanWithPlaysAndAdditions.setState(
   ImitationTourPlan.stateName,
   ImitationTourPlan.states.new
 );
-for (const play of PlaysWithAddition) {
+for (const play of PlaysWithEquipment) {
   const purchase = Purchase.purchase(
     TourPlanWithPlaysAndAdditions,
     play,
@@ -157,7 +157,7 @@ for (const play of PlaysWithAddition) {
   TourPlanWithPlaysAndAdditions.addRelation(purchase.toRelation());
   if (play.hasRelation(RelationAddition.name)) {
     for (const relation of play.getRelations(RelationAddition.name)) {
-      const addition = find(SampleAdditions, ad => ad.id === relation.objectId);
+      const addition = find(SampleEquipments, ad => ad.id === relation.objectId);
       if (addition) {
         const purchaseAd = Purchase.purchase(
           TourPlanWithPlaysAndAdditions,
