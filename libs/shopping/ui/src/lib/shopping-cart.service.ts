@@ -1,37 +1,67 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { TheThing } from '@ygg/the-thing/core';
-import { Purchase, evalTotalChargeFromPurchases } from '@ygg/shopping/core';
+import {
+  Purchase,
+  evalTotalChargeFromPurchases,
+  PurchaseAction
+} from '@ygg/shopping/core';
 import { EmceeService, YggDialogService } from '@ygg/shared/ui/widgets';
 import { PurchaseProductComponent } from './purchase/purchase-product/purchase-product.component';
 import { PurchaseProductComponentInput } from './purchase';
 import { isEmpty, values, keyBy } from 'lodash';
 import { PurchaseService } from '@ygg/shopping/factory';
-import { BehaviorSubject, Subject, Observable, merge } from 'rxjs';
+import {
+  BehaviorSubject,
+  Subject,
+  Observable,
+  merge,
+  Subscription
+} from 'rxjs';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { TheThingFactoryService } from '@ygg/the-thing/ui';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ShoppingCartService {
+export class ShoppingCartService implements OnDestroy {
   purchases: { [productId: string]: Purchase } = {};
   purchases$: BehaviorSubject<Purchase[]> = new BehaviorSubject([]);
   quantityChange$: Subject<any> = new Subject();
   totalCharge$: Observable<number>;
   shoppingCartVisited$: Subject<boolean> = new Subject();
   submit$: Subject<Purchase[]> = new Subject();
+  subscriptions: Subscription[] = [];
 
   constructor(
     private emcee: EmceeService,
     private purchaseService: PurchaseService,
     private theThingAccessor: TheThingAccessService,
+    private theThingFactory: TheThingFactoryService,
     private dialog: YggDialogService,
     private router: Router
   ) {
     this.totalCharge$ = merge(this.purchases$, this.quantityChange$).pipe(
       switchMap(() => evalTotalChargeFromPurchases(values(this.purchases)))
     );
+
+    // console.log('Subscribe to theThingFactory.runAction$');
+    const addToCart$ = this.theThingFactory.runAction$.pipe(
+      tap(actionPack => {
+        // console.log(actionPack);
+        if (actionPack.action.id === PurchaseAction.id) {
+          this.add(actionPack.theThing);
+        }
+      })
+    );
+    this.subscriptions.push(addToCart$.subscribe());
+  }
+
+  ngOnDestroy() {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
   async add(product: TheThing) {

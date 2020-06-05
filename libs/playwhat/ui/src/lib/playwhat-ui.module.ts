@@ -7,7 +7,8 @@ import {
   ImitationPlay,
   ImitationTour,
   ImitationTourPlan,
-  ImitationEquipment
+  ImitationEquipment,
+  RelationshipEquipment
 } from '@ygg/playwhat/core';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
@@ -28,13 +29,14 @@ import { TourViewComponent } from './ui/tour-view/tour-view.component';
 import { TourPlanFactoryService } from './tour-plan-factory.service';
 import { noop } from 'lodash';
 import { EquipmentViewComponent } from './ui/equipment/equipment-view/equipment-view.component';
+import { PurchaseService } from '@ygg/shopping/factory';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forChild(routes),
+    // RouterModule.forChild(routes),
     FlexLayoutModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
@@ -80,6 +82,12 @@ import { EquipmentViewComponent } from './ui/equipment/equipment-view/equipment-
       provide: APP_INITIALIZER,
       useFactory: initTourPlanFactory,
       deps: [TourPlanFactoryService],
+      multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: configShoppingModule,
+      deps: [PurchaseService],
       multi: true
     }
   ],
@@ -132,14 +140,22 @@ export function configUserMenu(userMenuService: UserMenuService) {
     userMenuService.addItem({
       id: 'play',
       label: '我的體驗',
-      link: `the-things/my/${ImitationPlay.id}`,
+      link: `the-things/${ImitationPlay.id}/my`,
       icon: ImitationPlay.icon
     });
     userMenuService.addItem({
       id: 'tour-plan',
       label: '我的遊程',
-      link: `the-things/my/${ImitationTourPlan.id}`,
+      link: `the-things/${ImitationTourPlan.id}/my`,
       icon: ImitationTourPlan.icon
     });
+  };
+}
+
+export function configShoppingModule(purchaseService: PurchaseService) {
+  return () => {
+    purchaseService.registerAdditionalPurchaseRelations([
+      RelationshipEquipment.name
+    ]);
   };
 }

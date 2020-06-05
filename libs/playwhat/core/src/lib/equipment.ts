@@ -24,13 +24,12 @@ export const ImitationEquipmentCellDefines = {
 };
 
 export const ImitationEquipment: TheThingImitation = new TheThingImitation({
-  id: 'equipements',
+  id: 'equipment',
   name: '設備',
   description: '體驗租借用的設備或器具',
   icon: 'headset_mic',
   image: '/assets/images/equipment/equipment.png',
   view: 'equipment',
-  routePath: 'equipments',
   tags: ['equipment', '設備'],
   cellsDef: values(ImitationEquipmentCellDefines),
   displays: {

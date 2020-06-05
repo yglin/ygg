@@ -1,8 +1,8 @@
 import { includes } from 'lodash';
 import { Injectable } from '@angular/core';
 import { DataAccessService } from '@ygg/shared/infra/data-access';
-import { map, startWith } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { map, startWith, switchMap } from 'rxjs/operators';
+import { Observable, of, combineLatest } from 'rxjs';
 import { AuthenticateService } from './authenticate.service';
 import { LogService } from '@ygg/shared/infra/log';
 import { Property } from '@ygg/shared/user/core';
@@ -17,24 +17,46 @@ export class AuthorizeService {
     private logService: LogService
   ) {}
 
+  getAdminUsers$(): Observable<string[]> {
+    return this.dataAccessService
+      .getDataObject$<Array<string>>('admin/users/roles/admins')
+      .pipe(startWith([]));
+  }
+
   isAdmin$(userId?: string): Observable<boolean> {
-    if (!userId && this.authenticateService.currentUser) {
-      userId = this.authenticateService.currentUser.id;
-    }
-    if (!userId) {
-      this.logService.warning(
-        `No given user or current user, AuthorizeService.isAdmin$() failed.`
-      );
-      return of(false);
+    let userId$: Observable<string>;
+    if (userId) {
+      userId$ = of(userId);
     } else {
-      return this.dataAccessService
-        .getDataObject$<Array<string>>('admin/users/roles/admins')
-        .pipe(
-          map(adminUserIds => {
-            return includes(adminUserIds, userId);
-          })
-        );
+      userId$ = this.authenticateService.currentUser$.pipe(
+        map(user => (!!user ? user.id : null))
+      );
     }
+    return combineLatest([userId$, this.getAdminUsers$()]).pipe(
+      map(([_userId, adminUserIds]) => {
+        if (!!_userId && includes(adminUserIds, _userId)) {
+          return true;
+        }
+        return false;
+      })
+    );
+    // if (!userId && this.authenticateService.currentUser) {
+    //   userId = this.authenticateService.currentUser.id;
+    // }
+    // if (!userId) {
+    //   this.logService.warning(
+    //     `No given user or current user, AuthorizeService.isAdmin$() failed.`
+    //   );
+    //   return of(false);
+    // } else {
+    //   return this.dataAccessService
+    //     .getDataObject$<Array<string>>('admin/users/roles/admins')
+    //     .pipe(
+    //       map(adminUserIds => {
+    //         return includes(adminUserIds, userId);
+    //       })
+    //     );
+    // }
   }
 
   isOwner$(property: Property): Observable<boolean> {

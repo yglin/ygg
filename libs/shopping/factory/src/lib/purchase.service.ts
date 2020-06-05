@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Purchase,
-  CellNames,
-  RelationAddition,
-} from '@ygg/shopping/core';
+import { Purchase, CellNames, RelationAddition } from '@ygg/shopping/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { TheThing } from '@ygg/the-thing/core';
 import { castArray, isEmpty, flatten, pick, values } from 'lodash';
@@ -13,8 +9,17 @@ import { castArray, isEmpty, flatten, pick, values } from 'lodash';
 })
 export class PurchaseService {
   purchasePool: { [purchaseId: string]: Purchase } = {};
+  additionalPurchaseRelations: string[] = [RelationAddition.name];
 
   constructor(private theThingAccessService: TheThingAccessService) {}
+
+  registerAdditionalPurchaseRelations(relationNames: string[]) {
+    for (const relationName of relationNames) {
+      if (this.additionalPurchaseRelations.indexOf(relationName) < 0) {
+        this.additionalPurchaseRelations.push(relationName);
+      }
+    }
+  }
 
   listDescendantsIncludeMe(purchases: Purchase | Purchase[]): Purchase[] {
     purchases = castArray(purchases);
@@ -43,17 +48,22 @@ export class PurchaseService {
       price: product.getCellValue(CellNames.price)
     });
     purchases.push(mainPurchase);
-    const additionalPurchases: Purchase[] = [];
-    if (product.hasRelation(RelationAddition.name)) {
-      for (const relation of product.getRelations(RelationAddition.name)) {
-        const additionProduct: TheThing = await this.theThingAccessService.get(
-          relation.objectId
-        );
-        const followedPurchases = await this.purchase(additionProduct, options);
-        additionalPurchases.push(...followedPurchases);
+    for (const relationName of this.additionalPurchaseRelations) {
+      const additionalPurchases: Purchase[] = [];
+      if (product.hasRelation(relationName)) {
+        for (const relation of product.getRelations(relationName)) {
+          const additionProduct: TheThing = await this.theThingAccessService.get(
+            relation.objectId
+          );
+          const followedPurchases = await this.purchase(
+            additionProduct,
+            options
+          );
+          additionalPurchases.push(...followedPurchases);
+        }
       }
+      purchases.push(...additionalPurchases);
     }
-    purchases.push(...additionalPurchases);
     return purchases;
   }
 

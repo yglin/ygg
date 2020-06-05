@@ -15,40 +15,56 @@ import { AdminThingsDataTableComponent } from './the-thing/admin-things-data-tab
 import { ImitationResolver } from './imitation/imitation-resolver.service';
 import { TheThingEditPageComponent } from './the-thing/the-thing-edit-page/the-thing-edit-page.component';
 import { TheThingCellsEditorComponent } from './cell/cells-editor/cells-editor.component';
+import { TheThingComponent } from './the-thing/the-thing/the-thing.component';
+import { TheThingFactoryService } from './the-thing-factory.service';
 
 export const routes: Route[] = [
   {
     path: 'the-things',
     children: [
       {
-        path: '',
-        pathMatch: 'full',
-        component: TheThingFinderComponent
-      },
-      {
-        path: 'create',
-        children: [
-          { path: '', pathMatch: 'full', component: TheThingEditorComponent }
-        ]
-      },
-      {
         path: 'my',
+        component: MyThingsComponent,
+        canActivate: [LoggedInGuard]
+      },
+      {
+        path: ':imitation',
         children: [
           {
-            path: '',
-            pathMatch: 'full',
-            component: MyThingsComponent
-          },
-          {
-            path: ':imitation',
+            path: 'my',
             component: MyThingsDataTableComponent,
             resolve: {
               imitation: ImitationResolver
+            },
+            canActivate: [LoggedInGuard]
+          },
+          {
+            path: ':id',
+            component: TheThingComponent,
+            resolve: {
+              theThing$: TheThingFactoryService
             }
           }
-        ],
-        canActivateChild: [LoggedInGuard]
+        ]
       },
+      // {
+      //   path: 'my',
+      //   children: [
+      //     {
+      //       path: '',
+      //       pathMatch: 'full',
+      //       component: MyThingsComponent
+      //     },
+      //     {
+      //       path: ':imitation',
+      //       component: MyThingsDataTableComponent,
+      //       resolve: {
+      //         imitation: ImitationResolver
+      //       }
+      //     }
+      //   ],
+      //   canActivateChild: [LoggedInGuard]
+      // },
       {
         path: 'admin',
         children: [
@@ -61,48 +77,95 @@ export const routes: Route[] = [
           }
         ],
         canActivateChild: [AdminGuard]
-      },
-      {
-        path: 'imitations',
-        component: ImitationManagerComponent
-        // canActivate: [LoggedInGuard, AdminGuard]
-      },
-      {
-        path: 'cells',
-        children: [
-          {
-            path: 'edit',
-            component: TheThingCellsEditorComponent
-          }
-        ]
-      },
-      {
-        path: ':id',
-        children: [
-          {
-            path: '',
-            pathMatch: 'full',
-            component: TheThingViewComponent,
-            resolve: {
-              theThing: TheThingResolver
-            }
-          },
-          {
-            path: 'edit',
-            component: TheThingEditPageComponent,
-            resolve: {
-              theThing: TheThingResolver
-            }
-          },
-          {
-            path: 'clone',
-            component: TheThingEditorComponent,
-            resolve: {
-              clone: TheThingResolver
-            }
-          }
-        ]
       }
     ]
   }
+  // {
+  //   path: 'the-things',
+  //   children: [
+  //     {
+  //       path: '',
+  //       pathMatch: 'full',
+  //       component: TheThingFinderComponent
+  //     },
+  //     {
+  //       path: 'create',
+  //       children: [
+  //         { path: '', pathMatch: 'full', component: TheThingEditorComponent }
+  //       ]
+  //     },
+  //     {
+  //       path: 'my',
+  //       children: [
+  //         {
+  //           path: '',
+  //           pathMatch: 'full',
+  //           component: MyThingsComponent
+  //         },
+  //         {
+  //           path: ':imitation',
+  //           component: MyThingsDataTableComponent,
+  //           resolve: {
+  //             imitation: ImitationResolver
+  //           }
+  //         }
+  //       ],
+  //       canActivateChild: [LoggedInGuard]
+  //     },
+  //     {
+  //       path: 'admin',
+  //       children: [
+  //         {
+  //           path: ':imitation',
+  //           component: AdminThingsDataTableComponent,
+  //           resolve: {
+  //             imitation: ImitationResolver
+  //           }
+  //         }
+  //       ],
+  //       canActivateChild: [AdminGuard]
+  //     },
+  //     {
+  //       path: 'imitations',
+  //       component: ImitationManagerComponent
+  //       // canActivate: [LoggedInGuard, AdminGuard]
+  //     },
+  //     {
+  //       path: 'cells',
+  //       children: [
+  //         {
+  //           path: 'edit',
+  //           component: TheThingCellsEditorComponent
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       path: ':id',
+  //       children: [
+  //         {
+  //           path: '',
+  //           pathMatch: 'full',
+  //           component: TheThingViewComponent,
+  //           resolve: {
+  //             theThing: TheThingResolver
+  //           }
+  //         },
+  //         {
+  //           path: 'edit',
+  //           component: TheThingEditPageComponent,
+  //           resolve: {
+  //             theThing: TheThingResolver
+  //           }
+  //         },
+  //         {
+  //           path: 'clone',
+  //           component: TheThingEditorComponent,
+  //           resolve: {
+  //             clone: TheThingResolver
+  //           }
+  //         }
+  //       ]
+  //     }
+  //   ]
+  // }
 ];

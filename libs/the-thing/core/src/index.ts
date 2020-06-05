@@ -10,3 +10,5 @@ export * from './lib/view';
 export * from './lib/editor';
 export * from './lib/validator';
 export * from './lib/state';
+export * from './lib/relationship';
+export * from './lib/action';

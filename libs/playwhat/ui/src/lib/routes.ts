@@ -21,7 +21,7 @@ export const routes: Route[] = [
   {
     path: ImitationTourPlan.routePath,
     children: [
-      { path: 'my', component: MyTourPlanListComponent },
+      // { path: 'my', component: MyTourPlanListComponent },
       // {
       //   path: 'create',
       //   component: TourPlanViewComponent,
@@ -38,29 +38,29 @@ export const routes: Route[] = [
       }
     ]
   },
-  {
-    path: ImitationPlay.routePath,
-    children: [
-      { path: 'my', component: MyPlayListComponent },
-      {
-        path: ':id',
-        component: PlayViewComponent,
-        resolve: {
-          play: PlayFactoryService
-        }
-      }
-    ]
-  },
-  {
-    path: ImitationEquipment.routePath,
-    children: [
-      {
-        path: ':id',
-        component: EquipmentViewComponent,
-        resolve: {
-          equipment: EquipmentFactoryService
-        }
-      }
-    ]
-  }  
+  // {
+  //   path: ImitationPlay.routePath,
+  //   children: [
+  //     { path: 'my', component: MyPlayListComponent },
+  //     {
+  //       path: ':id',
+  //       component: PlayViewComponent,
+  //       resolve: {
+  //         play: PlayFactoryService
+  //       }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: ImitationEquipment.routePath,
+  //   children: [
+  //     {
+  //       path: ':id',
+  //       component: EquipmentViewComponent,
+  //       resolve: {
+  //         equipment: EquipmentFactoryService
+  //       }
+  //     }
+  //   ]
+  // }  
 ];

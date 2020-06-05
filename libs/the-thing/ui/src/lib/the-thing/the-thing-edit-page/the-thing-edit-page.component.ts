@@ -87,7 +87,7 @@ export class TheThingEditPageComponent implements OnInit {
         return fromRouteId;
       } else {
         // create a new one
-        const options = !!imitation ? { imitation: imitation.id } : {};
+        const options = !!imitation ? { imitationId: imitation.id } : {};
         return this.theThingFactory.create(options);
       }
     });

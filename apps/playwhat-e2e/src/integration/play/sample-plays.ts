@@ -6,7 +6,8 @@ import {
 import {
   ImitationPlay,
   ImitationEquipmentCellDefines,
-  ImitationEquipment
+  ImitationEquipment,
+  RelationshipEquipment
 } from '@ygg/playwhat/core';
 import { random } from 'lodash';
 import { Album, Location, BusinessHours } from '@ygg/shared/omni-types/core';
@@ -321,15 +322,13 @@ export const SampleEquipments = [
       }
     ]
   }
-].map(jsonItem =>
-  ImitationEquipment.createTheThing().fromJSON(jsonItem)
-);
+].map(jsonItem => ImitationEquipment.createTheThing().fromJSON(jsonItem));
 
-SamplePlays[0].addRelations(RelationAddition.name, SampleEquipments);
+SamplePlays[0].addRelations(RelationshipEquipment.name, SampleEquipments);
 
 export const PlaysWithEquipment = SamplePlays.filter(p =>
-  p.hasRelation(RelationAddition.name)
+  p.hasRelation(RelationshipEquipment.name)
 );
 export const PlaysWithoutEquipment = SamplePlays.filter(
-  p => !p.hasRelation(RelationAddition.name)
+  p => !p.hasRelation(RelationshipEquipment.name)
 );

@@ -104,7 +104,7 @@ export class EquipmentFactoryService implements OnDestroy, Resolve<TheThing> {
   async create(): Promise<TheThing> {
     if (!this.cacheCreated) {
       this.cacheCreated = await this.theThingFactory.create({
-        imitation: ImitationEquipment.id
+        imitationId: ImitationEquipment.id
       });
     }
     this.theThing = this.cacheCreated;

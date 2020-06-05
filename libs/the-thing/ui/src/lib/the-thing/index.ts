@@ -17,3 +17,4 @@ export * from './the-thing-data-table/the-thing-data-table.component.po';
 export * from './my-things-data-table/my-things-data-table.component.po';
 export * from './the-thing-state/the-thing-state.component.po';
 export * from './the-thing-thumbnail/the-thing-thumbnail.component.po';
+export * from './the-thing/the-thing.component.po';

@@ -3,14 +3,17 @@ import {
   TheThing,
   RelationDefine,
   TheThingCellDefine,
-  TheThingCell
+  TheThingCell,
+  Relationship
 } from '@ygg/the-thing/core';
 import {
   RelationAddition,
-  CellNames as CellNamesShopping
+  CellNames as CellNamesShopping,
+  PurchaseAction
 } from '@ygg/shopping/core';
 import { __values } from 'tslib';
 import { values } from 'lodash';
+import { ImitationEquipment } from './equipment';
 
 export const ImitationPlayCellDefines: { [key: string]: TheThingCellDefine } = {
   album: new TheThingCellDefine({
@@ -62,13 +65,12 @@ export const ImitationPlayCellDefines: { [key: string]: TheThingCellDefine } = {
 
 export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON(
   {
-    id: 'dSoAfEnTUUCAeAMJT3Ob2w',
-    name: '體驗範本',
+    id: 'play',
+    name: '體驗',
     description: '體驗項目，包含簡介、照片、費用、體驗時長和人數限制...等',
     icon: 'local_play',
     image: '/assets/images/play/play.svg',
     view: 'play',
-    routePath: 'plays',
     tags: ['play', '體驗'],
     cellsOrder: [
       ImitationPlayCellDefines.album.name,
@@ -102,4 +104,13 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
   }
 );
 
-ImitationPlay.addRelationDefine(RelationAddition);
+export const RelationshipEquipment: Relationship = {
+  name: ImitationEquipment.name,
+  imitation: ImitationEquipment
+};
+
+ImitationPlay.relationships[RelationshipEquipment.name] = RelationshipEquipment;
+
+ImitationPlay.actions[PurchaseAction.id] = PurchaseAction;
+
+// ImitationPlay.addRelationDefine(RelationAddition);

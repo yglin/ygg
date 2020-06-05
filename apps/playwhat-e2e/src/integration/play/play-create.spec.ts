@@ -1,30 +1,34 @@
-import { ImitationPlay } from '@ygg/playwhat/core';
 import {
-  PlayViewPageObjectCypress,
-  SiteNavigator,
-  EquipmentViewPageObjectCypress
-} from '@ygg/playwhat/test';
+  ImitationPlay,
+  RelationshipEquipment,
+  ImitationEquipment
+} from '@ygg/playwhat/core';
+import { SiteNavigator } from '@ygg/playwhat/test';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
-import { ImitationProduct, RelationAddition } from '@ygg/shopping/core';
+import {
+  TheThingCell,
+  TheThingCellDefine,
+  Relationship
+} from '@ygg/the-thing/core';
 import {
   MyThingsDataTablePageObjectCypress,
   MyThingsPageObjectCypress,
-  TheThingEditorPageObjectCypress
+  TheThingPageObjectCypress
 } from '@ygg/the-thing/test';
-import { find, values } from 'lodash';
+import { values } from 'lodash';
 import {
   MinimumPlay,
   PlayFull,
   PlaysWithEquipment,
   SampleEquipments
 } from './sample-plays';
-import { TheThingCellDefine, TheThingCell } from '@ygg/the-thing/core';
 
 describe('Create play', () => {
   const siteNavigator = new SiteNavigator();
   const myPlayListPO = new MyThingsDataTablePageObjectCypress();
-  const playViewPO = new PlayViewPageObjectCypress();
-  const equipmentViewPO = new EquipmentViewPageObjectCypress();
+  const playPO = new TheThingPageObjectCypress('', ImitationPlay);
+  const equipPO = new TheThingPageObjectCypress('', ImitationEquipment);
+  // const equipPO = new EquipmentViewPageObjectCypress();
 
   before(() => {
     login().then(user => {});
@@ -34,7 +38,7 @@ describe('Create play', () => {
     cy.visit('/');
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
     myPlayListPO.clickCreate();
-    playViewPO.expectVisible();
+    playPO.expectVisible();
   });
 
   after(() => {
@@ -53,11 +57,11 @@ describe('Create play', () => {
     cy.wrap(requiredCellDefs).each(
       (cellDef: TheThingCellDefine, index: number) => {
         if (index === 0) {
-          cy.get(playViewPO.getSelectorForCell(cellDef.name))
+          cy.get(playPO.getSelectorForCell(cellDef.name))
             .scrollIntoView()
             .should('be.visible');
         } else {
-          cy.get(playViewPO.getSelectorForCell(cellDef.name)).should(
+          cy.get(playPO.getSelectorForCell(cellDef.name)).should(
             'not.be.visible'
           );
         }
@@ -67,14 +71,14 @@ describe('Create play', () => {
     // Filling a required cell will reveal next one
     cy.wrap(requiredCellDefs).each(
       (cellDef: TheThingCellDefine, index: number) => {
-        playViewPO.expectError(
-          playViewPO.getSelectorForCell(cellDef.name),
+        playPO.expectError(
+          playPO.getSelectorForCell(cellDef.name),
           `請填入${cellDef.name}資料`
         );
-        playViewPO.setCell(MinimumPlay.getCell(cellDef.name));
+        playPO.setCell(MinimumPlay.getCell(cellDef.name));
         if (index < requiredCellDefs.length - 1) {
           const nextCellDef = requiredCellDefs[index + 1];
-          cy.get(playViewPO.getSelectorForCell(nextCellDef.name))
+          cy.get(playPO.getSelectorForCell(nextCellDef.name))
             .scrollIntoView()
             .should('be.visible');
         }
@@ -83,36 +87,36 @@ describe('Create play', () => {
   });
 
   it('Show add-cell button only if name set and all required cells filled', () => {
-    cy.get(playViewPO.getSelector('buttonAddCell')).should('not.be.visible');
+    cy.get(playPO.getSelector('buttonAddCell')).should('not.be.visible');
     const requiredCellDefs = ImitationPlay.getRequiredCellDefs();
-    playViewPO.setName('青菜蝦米碗糕體驗');
+    playPO.setName('青菜蝦米碗糕體驗');
     cy.wrap(requiredCellDefs).each(
       (cellDef: TheThingCellDefine, index: number) => {
-        playViewPO.setCell(MinimumPlay.getCell(cellDef.name));
+        playPO.setCell(MinimumPlay.getCell(cellDef.name));
       }
     );
-    cy.get(playViewPO.getSelector('buttonAddCell')).should('be.visible');
+    cy.get(playPO.getSelector('buttonAddCell')).should('be.visible');
   });
 
   it('Create a minimum play with all required cells', () => {
-    playViewPO.expectFreshNew();
-    playViewPO.setValue(MinimumPlay);
-    playViewPO.save(MinimumPlay);
+    playPO.expectFreshNew();
+    playPO.setValue(MinimumPlay);
+    playPO.save(MinimumPlay);
 
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
     myPlayListPO.theThingDataTablePO.gotoTheThingView(MinimumPlay);
-    playViewPO.expectVisible();
-    playViewPO.expectValue(MinimumPlay);
+    playPO.expectVisible();
+    playPO.expectValue(MinimumPlay);
   });
 
   it('Create a play with all fields, required and optional', () => {
-    playViewPO.setValue(PlayFull);
-    playViewPO.save(PlayFull);
+    playPO.setValue(PlayFull);
+    playPO.save(PlayFull);
 
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
     myPlayListPO.theThingDataTablePO.gotoTheThingView(PlayFull);
-    playViewPO.expectVisible();
-    playViewPO.expectValue(PlayFull);
+    playPO.expectVisible();
+    playPO.expectValue(PlayFull);
   });
 
   it('Can delete non-required cells', () => {
@@ -122,30 +126,30 @@ describe('Create play', () => {
     const additionalCells = ImitationPlay.pickNonRequiredCells(
       values(PlayFull.cells)
     );
-    playViewPO.expectFreshNew();
-    playViewPO.setValue(play);
+    playPO.expectFreshNew();
+    playPO.setValue(play);
 
     // Required cell does not show delete button
     cy.wrap(requiredCellNames).each((cellName: string) => {
-      cy.get(playViewPO.getSelectorForCellDeleteButton(cellName)).should(
+      cy.get(playPO.getSelectorForCellDeleteButton(cellName)).should(
         'not.be.visible'
       );
     });
 
     // Add additional cells
     cy.wrap(additionalCells).each((additionalCell: TheThingCell) => {
-      playViewPO.addCell(additionalCell);
+      playPO.addCell(additionalCell);
     });
     // Delete additional cells
     cy.wrap(additionalCells).each((additionalCell: TheThingCell) => {
-      playViewPO.deleteCell(additionalCell);
+      playPO.deleteCell(additionalCell);
     });
-    playViewPO.save(play);
+    playPO.save(play);
 
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
     myPlayListPO.theThingDataTablePO.gotoTheThingView(play);
-    playViewPO.expectVisible();
-    playViewPO.expectNoCells(additionalCells);
+    playPO.expectVisible();
+    playPO.expectNoCells(additionalCells);
   });
 
   it('Create a play with some equipments', () => {
@@ -153,29 +157,37 @@ describe('Create play', () => {
     const equipment1 = SampleEquipments[0];
     const equipment2 = SampleEquipments[1];
     // Show equipments section after all required cells filled
-    cy.get(playViewPO.getSelector('equipments')).should('not.be.visible');
-    playViewPO.setValue(play);
-    playViewPO.gotoCreateEquipment();
-    equipmentViewPO.expectVisible();
-    equipmentViewPO.setValue(equipment1);
-    equipmentViewPO.save(equipment1);
-    playViewPO.expectVisible();
-    cy.get(playViewPO.getSelector('equipments'))
+    cy.get(playPO.getSelectorForRelation(RelationshipEquipment.name)).should(
+      'not.be.visible'
+    );
+    playPO.setValue(play);
+    playPO.gotoCreateRelationObject(RelationshipEquipment);
+    equipPO.expectVisible();
+    equipPO.setValue(equipment1);
+    equipPO.save(equipment1);
+    playPO.expectVisible();
+    cy.get(playPO.getSelectorForRelation(RelationshipEquipment.name))
       .scrollIntoView()
       .should('be.visible');
-    playViewPO.expectEquipments([equipment1]);
-    playViewPO.gotoCreateEquipment();
-    equipmentViewPO.expectVisible();
-    equipmentViewPO.setValue(equipment2);
-    equipmentViewPO.save(equipment2);
-    playViewPO.expectVisible();
-    playViewPO.expectEquipments([equipment1, equipment2]);
-    playViewPO.save(play);
+    playPO.expectRelationObjects(RelationshipEquipment, [equipment1]);
+    playPO.gotoCreateRelationObject(RelationshipEquipment);
+    equipPO.expectVisible();
+    equipPO.setValue(equipment2);
+    equipPO.save(equipment2);
+    playPO.expectVisible();
+    playPO.expectRelationObjects(RelationshipEquipment, [
+      equipment1,
+      equipment2
+    ]);
+    playPO.save(play);
 
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
     myPlayListPO.theThingDataTablePO.gotoTheThingView(play);
-    playViewPO.expectVisible();
-    playViewPO.expectValue(play);
-    playViewPO.expectEquipments([equipment1, equipment2]);
+    playPO.expectVisible();
+    playPO.expectValue(play);
+    playPO.expectRelationObjects(RelationshipEquipment, [
+      equipment1,
+      equipment2
+    ]);
   });
 });

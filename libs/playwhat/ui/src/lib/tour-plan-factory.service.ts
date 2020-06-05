@@ -46,15 +46,19 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     // console.info('Subscribe to Shopping cart~!!!');
     this.subscriptions.push(
       this.shoppingCart.submit$.subscribe(async (purchases: Purchase[]) => {
-        // console.info(
-        //   '==================================== GOTU~ =================================='
-        // );
-        await this.loadTheOne();
-        this.tourPlan.setRelation(
+        const newTourPlan = await this.theThingFactory.create({
+          imitationId: ImitationTourPlan.id
+        });
+        newTourPlan.setRelation(
           RelationPurchase.name,
           purchases.map(p => p.toRelation())
         );
-        this.router.navigate(['/', ImitationTourPlan.routePath, 'edit']);
+        this.router.navigate([
+          '/',
+          'the-things',
+          ImitationTourPlan.id,
+          newTourPlan.id
+        ]);
       })
     );
   }
@@ -107,7 +111,7 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     // console.log(this.createInProgress);
     if (!this.createInProgress) {
       this.createInProgress = await this.theThingFactory.create({
-        imitation: ImitationTourPlan.id
+        imitationId: ImitationTourPlan.id
       });
     }
     this.tourPlan = this.createInProgress;

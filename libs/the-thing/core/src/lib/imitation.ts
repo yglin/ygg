@@ -32,6 +32,8 @@ import { TheThingCellDefine } from './cell-define';
 import { OmniTypeComparator, OmniTypes } from '@ygg/shared/omni-types/core';
 import { TheThingState } from './state';
 import { stat } from 'fs';
+import { Relationship } from './relationship';
+import { TheThingAction } from './action';
 
 export const ImitationsDataPath = 'the-thing/imitations';
 
@@ -73,6 +75,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   dataTableConfig?: DataTableConfig;
   validators: TheThingValidator[] = [];
   relationsDef: { [name: string]: RelationDefine } = {};
+  relationships: { [name: string]: Relationship } = {};
   valueFunctions: { [name: string]: ValueFunction } = {};
   stateName: string;
   states: { [name: string]: TheThingState };
@@ -81,6 +84,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   displays: {
     thumbnail?: DisplayThumbnail;
   } = {};
+  actions: { [id: string]: TheThingAction } = {};
 
   /** Create time */
   createAt: number;
@@ -139,7 +143,9 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       }
     }
     if (!!this.routePath) {
-      theThing.link = `/${this.routePath}/${theThing.id}`;
+      theThing.link = `/the-things/${this.routePath}/${theThing.id}`;
+    } else {
+      theThing.link = `/the-things/${this.id}/${theThing.id}`;
     }
     // for (const name in this.relationsDef) {
     //   if (this.relationsDef.hasOwnProperty(name)) {

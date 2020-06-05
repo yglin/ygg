@@ -65,7 +65,7 @@ export class MyThingsDataTableComponent implements OnInit {
   }
 
   gotoCreate() {
-    const routePath = this.imitation.routePath || 'the-things';
-    this.router.navigate(['/', routePath, 'create']);
+    const routePath = this.imitation.id || 'the-things';
+    this.router.navigate(['/', 'the-things', routePath, 'create']);
   }
 }

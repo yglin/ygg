@@ -11,7 +11,7 @@ import { Tags } from '@ygg/tags/core';
   providedIn: 'root'
 })
 export class TheThingAccessService implements IDataAccessor<TheThing> {
-  cache: { [id: string]: Observable<TheThing> } = {};
+  // cache: { [id: string]: Observable<TheThing> } = {};
   constructor(private dataAccessService: DataAccessService) {}
 
   get(id: string): Promise<TheThing> {
@@ -21,18 +21,18 @@ export class TheThingAccessService implements IDataAccessor<TheThing> {
   }
 
   get$(id: string): Observable<TheThing> {
-    if (!(id in this.cache)) {
+    // if (!(id in this.cache)) {
       // console.log(`To fetch ${id}`);
-      this.cache[id] = this.dataAccessService
+      return this.dataAccessService
         .get$(TheThing.collection, id)
         .pipe(
-          map(data => new TheThing().fromJSON(data)),
+          map(data => new TheThing().fromJSON(data))
           // tap(thing => console.log(`Get new version thing ${thing.id}`)),
-          shareReplay(1)
+          // shareReplay(1)
           // tap(thing => console.log(`Get the thing ${thing.id}`))
         );
-    }
-    return this.cache[id];
+    // }
+    // return this.cache[id];
   }
 
   list$(): Observable<TheThing[]> {
@@ -91,10 +91,11 @@ export class TheThingAccessService implements IDataAccessor<TheThing> {
   }
 
   async upsert(theThing: TheThing): Promise<TheThing> {
-    return this.dataAccessService.upsert(
-      theThing.collection,
-      theThing.toJSON()
-    );
+    await this.dataAccessService.upsert(theThing.collection, theThing.toJSON());
+    // if (theThing.id in this.cache) {
+      // delete this.cache[theThing.id];
+    // }
+    return this.get(theThing.id);
   }
 
   async delete(

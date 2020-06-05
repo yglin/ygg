@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import {
   TheThing,
   TheThingImitation,
@@ -8,19 +8,22 @@ import { Album } from '@ygg/shared/omni-types/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { take } from 'rxjs/operators';
 import { get } from 'lodash';
+import { Subscription } from 'rxjs';
+import { TheThingFactoryService } from '../../the-thing-factory.service';
 
 @Component({
   selector: 'the-thing-thumbnail',
   templateUrl: './the-thing-thumbnail.component.html',
   styleUrls: ['./the-thing-thumbnail.component.css']
 })
-export class TheThingThumbnailComponent implements OnInit {
+export class TheThingThumbnailComponent implements OnInit, OnDestroy {
   @Input() imitation: TheThingImitation;
   @Input() theThing: TheThing;
   @Input() id: string;
   display: DisplayThumbnail;
+  subscriptions: Subscription[] = [];
 
-  constructor(private theThingAccessServcie: TheThingAccessService) {}
+  constructor(private theThingFactory: TheThingFactoryService) {}
 
   ngOnInit() {
     if (this.imitation) {
@@ -28,11 +31,22 @@ export class TheThingThumbnailComponent implements OnInit {
     }
     if (!this.theThing) {
       if (this.id) {
-        this.theThingAccessServcie
-          .get$(this.id)
-          .pipe(take(1))
-          .subscribe(theThing => (this.theThing = theThing));
+        // console.log(`the-thing-thumbnail: ${this.id}`);
+        this.subscriptions.push(
+          this.theThingFactory.load$(this.id).subscribe(theThing => {
+            this.theThing = theThing;
+            // console.log(this.theThing);
+          })
+        );
       }
+    }
+  }
+
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
     }
   }
 }
