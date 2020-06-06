@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -17,7 +17,7 @@ import {
   TheThingRelation,
   TheThingAction
 } from '@ygg/the-thing/core';
-import { isEmpty, values } from 'lodash';
+import { isEmpty, values, remove } from 'lodash';
 import { Observable, Subscription, merge } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { TheThingImitationViewInterface } from '..';
@@ -25,12 +25,13 @@ import { CellCreatorComponent, validateCellRequired } from '../../cell';
 import { TheThingFactoryService } from '../../the-thing-factory.service';
 
 @Component({
-  selector: 'the-thing-the-thing',
+  selector: 'the-thing',
   templateUrl: './the-thing.component.html',
   styleUrls: ['./the-thing.component.css']
 })
 export class TheThingComponent implements OnInit, OnDestroy {
-  imitation: TheThingImitation;
+  @Input() id: string;
+  @Input() imitation: TheThingImitation;
   subscriptions: Subscription[] = [];
   // theThing$: Observable<TheThing>;
   focusSubscription: Subscription;
@@ -69,7 +70,11 @@ export class TheThingComponent implements OnInit, OnDestroy {
     );
   }
 
-  async ngOnInit() {}
+  async ngOnInit() {
+    if (this.id) {
+      this.resetFocus(this.theThingFactory.load$(this.id));
+    }
+  }
 
   async resetFocus(theThing$: Observable<TheThing>) {
     // Clear form
@@ -106,6 +111,15 @@ export class TheThingComponent implements OnInit, OnDestroy {
           );
           for (const additionalCell of additionalCells) {
             this.addCellControl(additionalCell);
+          }
+
+          // Remove redundant controls
+          for (const cellName in this.formGroupCells) {
+            if (this.formGroupCells.hasOwnProperty(cellName)) {
+              if (!this.theThing.hasCell(cellName)) {
+                this.formGroupCells.removeControl(cellName);
+              }
+            }
           }
 
           // Extract relations
@@ -168,7 +182,7 @@ export class TheThingComponent implements OnInit, OnDestroy {
       this.formGroupCells.setControl(cell.name, control);
       this.subscriptions.push(
         control.valueChanges.subscribe((cell: TheThingCell) =>
-          this.theThingFactory.setCell(this.theThing, cell)
+          this.theThingFactory.setCell(this.theThing, cell, this.imitation)
         )
       );
     }
@@ -220,11 +234,11 @@ export class TheThingComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(cell => {
       if (!!cell) {
-        if (!!this.formGroup.get(cell.name)) {
+        if (cell.name in this.formGroupCells.controls) {
           this.emcee.alert(`資料欄位 ${cell.name} 已存在`, AlertType.Warning);
         } else {
           this.addCellControl(cell);
-          this.theThingFactory.setCell(this.theThing, cell);
+          this.theThingFactory.setCell(this.theThing, cell, this.imitation);
         }
       }
     });
@@ -233,6 +247,7 @@ export class TheThingComponent implements OnInit, OnDestroy {
   async deleteCell(cellName: string) {
     await this.theThingFactory.deleteCell(this.theThing, cellName);
     this.formGroupCells.removeControl(cellName);
+    remove(this.orderedCellNames, _name => _name === cellName);
   }
 
   async gotoRelateObjectCreate(relationship: Relationship) {

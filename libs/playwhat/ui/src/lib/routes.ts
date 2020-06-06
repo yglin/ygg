@@ -2,12 +2,17 @@ import { Route } from '@angular/router';
 import { MyPlayListComponent } from './ui/my-play-list/my-play-list.component';
 import { MyTourPlanListComponent } from './ui/my-tour-plan-list/my-tour-plan-list.component';
 import { TourPlanViewComponent } from './ui/tour-plan-view/tour-plan-view.component';
-import { ImitationTourPlan, ImitationPlay, ImitationEquipment } from '@ygg/playwhat/core';
+import {
+  ImitationTourPlan,
+  ImitationPlay,
+  ImitationEquipment
+} from '@ygg/playwhat/core';
 import { TourPlanFactoryService } from './tour-plan-factory.service';
 import { PlayViewComponent } from './ui/play-view/play-view.component';
 import { PlayFactoryService } from './play-factory.service';
 import { EquipmentViewComponent } from './ui/equipment/equipment-view/equipment-view.component';
 import { EquipmentFactoryService } from './equipment-factory.service';
+import { TourPlanComponent } from './tour-plan/tour-plan.component';
 
 export const routes: Route[] = [
   // { path: 'plays', children: [{ path: 'my', component: MyPlayListComponent }] },
@@ -31,13 +36,13 @@ export const routes: Route[] = [
       // },
       {
         path: ':id',
-        component: TourPlanViewComponent,
+        component: TourPlanComponent,
         resolve: {
           tourPlan: TourPlanFactoryService
         }
       }
     ]
-  },
+  }
   // {
   //   path: ImitationPlay.routePath,
   //   children: [
@@ -62,5 +67,5 @@ export const routes: Route[] = [
   //       }
   //     }
   //   ]
-  // }  
+  // }
 ];

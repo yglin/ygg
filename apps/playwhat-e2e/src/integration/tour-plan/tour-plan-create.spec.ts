@@ -1,14 +1,36 @@
-import { CellNames, defaultTourPlanName, ImitationTourPlan } from '@ygg/playwhat/core';
-import { SiteNavigator, TourPlanAdminPageObjectCypress, TourPlanViewPageObjectCypress } from '@ygg/playwhat/test';
+import {
+  CellNames,
+  defaultTourPlanName,
+  ImitationTourPlan
+} from '@ygg/playwhat/core';
+import {
+  SiteNavigator,
+  TourPlanAdminPageObjectCypress,
+  TourPlanViewPageObjectCypress,
+  TourPlanPageObjectCypress
+} from '@ygg/playwhat/test';
 import { Contact } from '@ygg/shared/omni-types/core';
-import { ContactControlPageObjectCypress, OmniTypeViewControlPageObjectCypress } from '@ygg/shared/omni-types/test';
+import {
+  ContactControlPageObjectCypress,
+  OmniTypeViewControlPageObjectCypress
+} from '@ygg/shared/omni-types/test';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
-import { EmceePageObjectCypress, YggDialogPageObjectCypress } from '@ygg/shared/ui/test';
+import {
+  EmceePageObjectCypress,
+  YggDialogPageObjectCypress
+} from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
-import { LoginDialogPageObjectCypress, logout, waitForLogin } from '@ygg/shared/user/test';
+import {
+  LoginDialogPageObjectCypress,
+  logout,
+  waitForLogin
+} from '@ygg/shared/user/test';
 import { ImitationOrder } from '@ygg/shopping/core';
 import { TheThingCell } from '@ygg/the-thing/core';
-import { MyThingsDataTablePageObjectCypress, MyThingsPageObjectCypress } from '@ygg/the-thing/test';
+import {
+  MyThingsDataTablePageObjectCypress,
+  MyThingsPageObjectCypress
+} from '@ygg/the-thing/test';
 import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import { MinimalTourPlan, TourPlanFull } from './sample-tour-plan';
 
@@ -16,7 +38,7 @@ describe('Tour-plan create', () => {
   const siteNavigator = new SiteNavigator();
   const SampleThings = SamplePlays.concat(SampleEquipments);
 
-  const tourPlanViewPO = new TourPlanViewPageObjectCypress();
+  const tourPlanPO = new TourPlanPageObjectCypress();
   const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();
   const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
   let currentUser: User;
@@ -35,7 +57,7 @@ describe('Tour-plan create', () => {
   beforeEach(() => {
     cy.visit('/');
     waitForLogin();
-    siteNavigator.goto(['tour-plans', 'create'], tourPlanViewPO);
+    siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
     // tourPlanBuilderPO.reset();
     // siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
   });
@@ -50,23 +72,23 @@ describe('Tour-plan create', () => {
   });
 
   it('Build a tour-plan with minimal required data fields: dateRange, numParticipants, contact', () => {
-    tourPlanViewPO.setValue(MinimalTourPlan, { freshNew: true });
-    tourPlanViewPO.save(MinimalTourPlan);
-    tourPlanViewPO.expectShowAsPage();
-    tourPlanViewPO.expectValue(MinimalTourPlan);
+    tourPlanPO.theThingPO.setValue(MinimalTourPlan);
+    tourPlanPO.theThingPO.save(MinimalTourPlan);
+    tourPlanPO.expectShowAsPage();
+    tourPlanPO.theThingPO.expectValue(MinimalTourPlan);
   });
 
   it('A tour-plan without user input name should have default name', () => {
     const dateRangeCell = MinimalTourPlan.getCell(CellNames.dateRange);
-    tourPlanViewPO.setCell(dateRangeCell);
-    tourPlanViewPO.expectName(defaultTourPlanName(dateRangeCell.value));
+    tourPlanPO.theThingPO.setCell(dateRangeCell);
+    tourPlanPO.theThingPO.expectName(defaultTourPlanName(dateRangeCell.value));
   });
 
   it('Logged-in user can automatically fill contact info', () => {
-    tourPlanViewPO.setCell(MinimalTourPlan.getCell(CellNames.dateRange));
-    tourPlanViewPO.setCell(MinimalTourPlan.getCell(CellNames.numParticipants));
+    tourPlanPO.theThingPO.setCell(MinimalTourPlan.getCell(CellNames.dateRange));
+    tourPlanPO.theThingPO.setCell(MinimalTourPlan.getCell(CellNames.numParticipants));
     const omniTypeViewControl = new OmniTypeViewControlPageObjectCypress(
-      tourPlanViewPO.getSelectorForCell(CellNames.contact)
+      tourPlanPO.theThingPO.getSelectorForCell(CellNames.contact)
     );
     omniTypeViewControl.openControl();
     const dialogPO = new YggDialogPageObjectCypress();
@@ -83,77 +105,70 @@ describe('Tour-plan create', () => {
   });
 
   it('Can not add duplicate named cell', () => {
-    tourPlanViewPO.setCell(MinimalTourPlan.getCell(CellNames.dateRange));
-    tourPlanViewPO.setCell(MinimalTourPlan.getCell(CellNames.numParticipants));
-    tourPlanViewPO.setCell(MinimalTourPlan.getCell(CellNames.contact));
+    tourPlanPO.theThingPO.setCell(MinimalTourPlan.getCell(CellNames.dateRange));
+    tourPlanPO.theThingPO.setCell(MinimalTourPlan.getCell(CellNames.numParticipants));
+    tourPlanPO.theThingPO.setCell(MinimalTourPlan.getCell(CellNames.contact));
     const cell = new TheThingCell({
       name: '兩顆子彈',
       type: 'text',
       value: '肚皮'
     });
-    tourPlanViewPO.addCell(cell);
-    tourPlanViewPO.addCell(cell);
+    tourPlanPO.theThingPO.addCell(cell);
+    tourPlanPO.theThingPO.addCell(cell);
     const emceePO = new EmceePageObjectCypress();
     emceePO.alert(`資料欄位 ${cell.name} 已存在`);
-    cy.get(tourPlanViewPO.getSelectorForCell(cell.name)).should(
+    cy.get(tourPlanPO.getSelectorForCell(cell.name)).should(
       'have.length',
       1
     );
   });
 
   it('Build a tour-plan plus includes all optional data fields', () => {
-    // const optionalCells = TourPlanFull.getCellsByNames(
-    //   ImitationTourPlan.getOptionalCellNames()
-    // );
-    tourPlanViewPO.setValue(TourPlanFull, {
-      freshNew: true
-    });
-    tourPlanViewPO.save(TourPlanFull);
-    tourPlanViewPO.expectShowAsPage();
-    tourPlanViewPO.expectValue(TourPlanFull);
+    tourPlanPO.theThingPO.setValue(TourPlanFull);
+    tourPlanPO.theThingPO.save(TourPlanFull);
+    tourPlanPO.expectShowAsPage();
+    tourPlanPO.theThingPO.expectValue(TourPlanFull);
   });
 
   it('Can delete cells', () => {
     const optionalCells = TourPlanFull.getCellsByNames(
       ImitationTourPlan.getOptionalCellNames()
     );
-    tourPlanViewPO.setValue(MinimalTourPlan, {
-      freshNew: true
+    tourPlanPO.theThingPO.setValue(MinimalTourPlan);
+    cy.wrap(optionalCells).each((cell: TheThingCell) => {
+      tourPlanPO.theThingPO.addCell(cell);
+      tourPlanPO.theThingPO.expectCell(cell);
     });
-    for (const cell of optionalCells) {
-      tourPlanViewPO.addCell(cell);
-      tourPlanViewPO.expectCell(cell);
-    }
-    for (const cell of optionalCells) {
-      tourPlanViewPO.deleteCell(cell);
-      tourPlanViewPO.expectNoCell(cell);
-    }
-    tourPlanViewPO.save(MinimalTourPlan);
-    tourPlanViewPO.expectShowAsPage();
-    for (const cell of optionalCells) {
-      tourPlanViewPO.expectNoCell(cell);
-    }
+    cy.wrap(optionalCells).each((cell: TheThingCell) => {
+      tourPlanPO.theThingPO.deleteCell(cell);
+      tourPlanPO.theThingPO.expectNoCell(cell);
+    });
+    tourPlanPO.theThingPO.save(MinimalTourPlan);
+    tourPlanPO.expectShowAsPage();
+    cy.wrap(optionalCells).each((cell: TheThingCell) => {
+      tourPlanPO.theThingPO.expectNoCell(cell);
+    });
   });
 
   it('Save tour-plan on leave page, restore on back', () => {
-    tourPlanViewPO.setValue(TourPlanFull, { freshNew: true });
+    tourPlanPO.theThingPO.setValue(TourPlanFull);
     // goto other page and back immediately
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    siteNavigator.goto(['tour-plans', 'create'], tourPlanViewPO);
-    tourPlanViewPO.save(TourPlanFull);
+    siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
+    tourPlanPO.theThingPO.save(TourPlanFull);
 
     // Expect redirect to tour-plan view page, and check selected plays
-    tourPlanViewPO.expectShowAsPage();
-    tourPlanViewPO.expectValue(TourPlanFull);
+    tourPlanPO.expectShowAsPage();
+    tourPlanPO.theThingPO.expectValue(TourPlanFull);
 
     // After save, reset tour-plan
-    siteNavigator.goto(['tour-plans', 'create'], tourPlanViewPO);
-    tourPlanViewPO.expectFreshNew();
+    siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
+    tourPlanPO.theThingPO.expectFreshNew();
   });
 
   it('Show saved tour-plan in /tour-plans/my', () => {
-    tourPlanViewPO.setValue(MinimalTourPlan);
-    tourPlanViewPO.save(MinimalTourPlan);
+    tourPlanPO.theThingPO.setValue(MinimalTourPlan);
+    tourPlanPO.theThingPO.save(MinimalTourPlan);
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
   });
@@ -163,17 +178,17 @@ describe('Tour-plan create', () => {
     // // Logout will redirect user back to home, cause re-render of tour-plan-builder
     // // So we wait several seconds here for tour-plan-builder to be stable
     // cy.wait(3000);
-    siteNavigator.goto(['tour-plans', 'create'], tourPlanViewPO);
-    tourPlanViewPO.setValue(MinimalTourPlan);
-    tourPlanViewPO.issueSave(MinimalTourPlan);
+    siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
+    tourPlanPO.theThingPO.setValue(MinimalTourPlan);
+    tourPlanPO.theThingPO.clickSave();
     const loginDialogPO = new LoginDialogPageObjectCypress();
     loginDialogPO.expectVisible();
     login();
     loginDialogPO.expectClosed();
-    tourPlanViewPO.sendApplication(false);
-    tourPlanViewPO.alertSaved(MinimalTourPlan);
-    tourPlanViewPO.expectShowAsPage();
-    // tourPlanViewPO.expectValue(MinimalTourPlan);
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.confirm(`確定要儲存 ${MinimalTourPlan.name} ？`);
+    emceePO.alert(`已成功儲存 ${MinimalTourPlan.name}`);
+    // tourPlanPO.theThingPO.expectValue(MinimalTourPlan);
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
   });

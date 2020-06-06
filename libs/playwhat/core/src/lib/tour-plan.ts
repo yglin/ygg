@@ -82,8 +82,8 @@ const cellsOrder = [
 ];
 
 export const ImitationTourPlan: TheThingImitation = ImitationOrder.extend({
-  id: 'BvyVkzRIxEuYoPjxIjHVOA',
-  name: '旅遊行程規劃',
+  id: 'tour-plan',
+  name: '旅遊',
   description: '規劃你想玩的體驗組合，預計出遊日期、參加人數，以及其他細節',
   icon: 'directions_bike',
   image: '/assets/images/tour/tour-plans.svg',
@@ -141,6 +141,43 @@ ImitationTourPlan.dataTableConfig = {
 //   }
 //   return totalCharge;
 // }
+
+ImitationTourPlan.actions = {
+  'send-application': {
+    id: 'send-application',
+    tooltip: '將此遊程計畫送出管理者審核',
+    icon: 'send',
+    permissions: ['new', 'requireOwner']
+  },
+  'cancel-application': {
+    id: 'cancel-application',
+    tooltip: '取消此遊程計畫的申請',
+    icon: 'backspace',
+    permissions: ['applied', 'requireOwner']
+  },
+  'confirm-paid': {
+    id: 'confirm-paid',
+    tooltip: '標記此遊程的款項已付清',
+    icon: 'payment',
+    permissions: ['applied', 'requireAdmin']
+  },
+  'confirm-completed': {
+    id: 'confirm-completed',
+    tooltip: '標記此遊程的所有活動流程已完成',
+    icon: 'done_all',
+    permissions: ['paid', 'requireAdmin']
+  }
+};
+
+ImitationTourPlan.pipes[`cell.${CellNames.dateRange}`] = (
+  theThing: TheThing
+) => {
+  if (!theThing.name) {
+    theThing.name = defaultTourPlanName(
+      theThing.getCellValue(CellNames.dateRange)
+    );
+  }
+};
 
 export function defaultTourPlanName(dateRange: DateRange): string {
   return `深度遊趣${dateRange.days() + 1}日遊`;

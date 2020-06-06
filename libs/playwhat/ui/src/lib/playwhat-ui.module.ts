@@ -30,20 +30,21 @@ import { TourPlanFactoryService } from './tour-plan-factory.service';
 import { noop } from 'lodash';
 import { EquipmentViewComponent } from './ui/equipment/equipment-view/equipment-view.component';
 import { PurchaseService } from '@ygg/shopping/factory';
+import { TourPlanComponent } from './tour-plan/tour-plan.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    // RouterModule.forChild(routes),
     FlexLayoutModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
     SharedOmniTypesUiModule,
     SharedUserUiModule,
     TheThingUiModule,
-    ShoppingUiModule
+    ShoppingUiModule,
+    RouterModule.forChild(routes)
   ],
   declarations: [
     TourViewComponent,
@@ -53,7 +54,8 @@ import { PurchaseService } from '@ygg/shopping/factory';
     PlayViewComponent,
     MyPlayListComponent,
     MyTourPlanListComponent,
-    EquipmentViewComponent
+    EquipmentViewComponent,
+    TourPlanComponent
   ],
   entryComponents: [
     TourViewComponent,

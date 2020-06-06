@@ -1,7 +1,7 @@
 import { includes } from 'lodash';
 import { Injectable } from '@angular/core';
 import { DataAccessService } from '@ygg/shared/infra/data-access';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { map, startWith, switchMap, catchError } from 'rxjs/operators';
 import { Observable, of, combineLatest } from 'rxjs';
 import { AuthenticateService } from './authenticate.service';
 import { LogService } from '@ygg/shared/infra/log';
@@ -20,7 +20,12 @@ export class AuthorizeService {
   getAdminUsers$(): Observable<string[]> {
     return this.dataAccessService
       .getDataObject$<Array<string>>('admin/users/roles/admins')
-      .pipe(startWith([]));
+      .pipe(
+        catchError(error => {
+          this.logService.error(error.message);
+          return of([]);
+        })
+      );
   }
 
   isAdmin$(userId?: string): Observable<boolean> {

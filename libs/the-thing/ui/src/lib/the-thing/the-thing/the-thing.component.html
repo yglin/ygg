@@ -5,31 +5,43 @@
     fxLayoutGap="30px"
     [formGroup]="formGroup"
   >
-    <ygg-omni-type-view-control
-      class="name"
-      formControlName="name"
-      type="text"
-      [editable]="!readonly"
-      [viewStyle]="nameStyle"
-    >
-      <div errors>
-        <div *ngIf="formGroup.get('name').errors?.required">
-          請填入{{ imitation.name }}名稱
-        </div>
+    <div>
+      <div>
+        <ygg-omni-type-view-control
+          class="name"
+          formControlName="name"
+          type="text"
+          [editable]="!readonly"
+          [viewStyle]="nameStyle"
+        >
+          <div errors>
+            <div *ngIf="formGroup.get('name').errors?.required">
+              請填入{{ imitation.name }}名稱
+            </div>
+          </div>
+        </ygg-omni-type-view-control>
       </div>
-    </ygg-omni-type-view-control>
+      <div class="state">
+        <the-thing-state
+          [id]="theThing.id"
+          [imitation]="imitation"
+        ></the-thing-state>
+      </div>
+    </div>
     <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
       <div *ngFor="let action of actions">
-        <button
-          type="button"
-          mat-fab
-          class="action"
-          [ngClass]="action.id"
-          [matTooltip]="action.tooltip"
-          (click)="runAction(action)"
-        >
-          <mat-icon>{{ action.icon }}</mat-icon>
-        </button>
+        <div *ngIf="isThingValid()">
+          <button
+            type="button"
+            mat-fab
+            class="action"
+            [ngClass]="action.id"
+            [matTooltip]="action.tooltip"
+            (click)="runAction(action)"
+          >
+            <mat-icon>{{ action.icon }}</mat-icon>
+          </button>
+        </div>
       </div>
       <div *ngIf="!readonly">
         <button
@@ -47,26 +59,31 @@
   </div>
   <div [formGroup]="formGroupCells" class="cells">
     <div *ngFor="let cellName of orderedCellNames">
-      <div [attr.cell-name]="cellName" [hidden]="!isCellControlShown(cellName)">
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-          <ygg-title-divider [level]="4">{{ cellName }}</ygg-title-divider>
-          <div *ngIf="!isCellRequired(cellName)">
-            <button
-              type="button"
-              class="delete edit"
-              mat-mini-fab
-              [matTooltip]="'移除資料欄位 ' + cellName"
-              (click)="deleteCell(cellName)"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
+      <div *ngIf="formGroupCells.get(cellName) as cellControl">
+        <div
+          [attr.cell-name]="cellName"
+          [hidden]="!isCellControlShown(cellName)"
+        >
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+            <ygg-title-divider [level]="4">{{ cellName }}</ygg-title-divider>
+            <div *ngIf="!isCellRequired(cellName)">
+              <button
+                type="button"
+                class="delete edit"
+                mat-mini-fab
+                [matTooltip]="'移除資料欄位 ' + cellName"
+                (click)="deleteCell(cellName)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
           </div>
+          <the-thing-cell
+            [formControlName]="cellName"
+            [readonly]="readonly"
+            [required]="isCellRequired(cellName)"
+          ></the-thing-cell>
         </div>
-        <the-thing-cell
-          [formControlName]="cellName"
-          [readonly]="readonly"
-          [required]="isCellRequired(cellName)"
-        ></the-thing-cell>
       </div>
     </div>
   </div>

@@ -2,7 +2,8 @@ import { ImitationTourPlan } from '@ygg/playwhat/core';
 import {
   SiteNavigator,
   TourPlanAdminPageObjectCypress,
-  TourPlanViewPageObjectCypress
+  TourPlanViewPageObjectCypress,
+  TourPlanPageObjectCypress
 } from '@ygg/playwhat/test';
 import { Month } from '@ygg/shared/omni-types/core';
 import {
@@ -39,7 +40,7 @@ const SampleThings = SamplePlays.concat(SampleEquipments).concat(
 );
 
 const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();
-const tourPlanViewPO = new TourPlanViewPageObjectCypress();
+const tourPlanPO = new TourPlanPageObjectCypress();
 const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
 // let incomeRecord: IncomeRecord;
 
@@ -72,13 +73,12 @@ describe('Tour-plan state manipulation', () => {
     MinimalTourPlan2.name = '測試遊程(儲存順便送出申請)';
 
     siteNavigator.goto([ImitationTourPlan.routePath, 'create']);
-    tourPlanViewPO.expectVisible();
-    tourPlanViewPO.setValue(MinimalTourPlan2);
-    tourPlanViewPO.save(MinimalTourPlan2, {
-      freshNew: true,
-      sendApplication: true
-    });
-    tourPlanViewPO.expectShowAsPage();
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.setValue(MinimalTourPlan2);
+    tourPlanPO.theThingPO.save(MinimalTourPlan2);
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.new);
+    tourPlanPO.sendApplication(MinimalTourPlan2);
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.applied);
 
     // Expect the submitted tour-plan show up in administrator's list
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
@@ -92,13 +92,10 @@ describe('Tour-plan state manipulation', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.expectTheThing(TourPlanInApplication);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanInApplication);
-    tourPlanViewPO.expectState(ImitationTourPlan.states.applied);
-    tourPlanViewPO.expectVisible();
-    tourPlanViewPO.setState(
-      TourPlanInApplication,
-      ImitationTourPlan.states.new
-    );
-    tourPlanViewPO.expectState(ImitationTourPlan.states.new);
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.applied);
+    tourPlanPO.cancelApplication(TourPlanInApplication);
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.new);
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
     tourPlanAdminPO.switchToTab(ImitationOrder.states.applied.name);
     tourPlanAdminPO.theThingDataTables[
@@ -117,12 +114,10 @@ describe('Tour-plan state manipulation', () => {
     tourPlanAdminPO.theThingDataTables[
       ImitationOrder.states.applied.name
     ].gotoTheThingView(TourPlanInApplication);
-    tourPlanViewPO.expectVisible();
-    tourPlanViewPO.expectState(ImitationOrder.states.applied);
-    tourPlanViewPO.setState(
-      TourPlanInApplication,
-      ImitationTourPlan.states.paid
-    );
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.expectState(ImitationOrder.states.applied);
+    tourPlanPO.confirmPaid(TourPlanInApplication);
+    tourPlanPO.theThingPO.expectState(ImitationOrder.states.paid);
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
     tourPlanAdminPO.switchToTab(ImitationOrder.states.applied.name);
     tourPlanAdminPO.theThingDataTables[
@@ -138,8 +133,8 @@ describe('Tour-plan state manipulation', () => {
     tourPlanAdminPO.theThingDataTables[
       ImitationOrder.states.paid.name
     ].gotoTheThingView(TourPlanInApplication);
-    tourPlanViewPO.expectVisible();
-    tourPlanViewPO.expectState(ImitationOrder.states.paid);
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.expectState(ImitationOrder.states.paid);
   });
 
   it('Complete tour-plan to set it state Completed', () => {
@@ -148,9 +143,10 @@ describe('Tour-plan state manipulation', () => {
     tourPlanAdminPO.theThingDataTables[
       ImitationOrder.states.paid.name
     ].gotoTheThingView(TourPlanPaid);
-    tourPlanViewPO.expectVisible();
-    tourPlanViewPO.expectState(ImitationOrder.states.paid);
-    tourPlanViewPO.setState(TourPlanPaid, ImitationTourPlan.states.completed);
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.expectState(ImitationOrder.states.paid);
+    tourPlanPO.confirmCompleted(TourPlanPaid);
+    tourPlanPO.theThingPO.expectState(ImitationOrder.states.completed);
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
     tourPlanAdminPO.switchToTab(ImitationOrder.states.paid.name);
     tourPlanAdminPO.theThingDataTables[
@@ -166,8 +162,8 @@ describe('Tour-plan state manipulation', () => {
     tourPlanAdminPO.theThingDataTables[
       ImitationOrder.states.completed.name
     ].gotoTheThingView(TourPlanPaid);
-    tourPlanViewPO.expectVisible();
-    tourPlanViewPO.expectState(ImitationOrder.states.completed);
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.expectState(ImitationOrder.states.completed);
   });
 
   it('Filter tour-plans by month', () => {
@@ -184,6 +180,7 @@ describe('Tour-plan state manipulation', () => {
       });
     });
   });
+
 });
 
 describe('States button accessibility', () => {
@@ -209,10 +206,14 @@ describe('States button accessibility', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.expectTheThing(TourPlanInApplication);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanInApplication);
-    tourPlanViewPO.expectState(ImitationTourPlan.states.applied);
-    tourPlanViewPO.statePO.expectNoStateButton(ImitationTourPlan.states.paid);
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.applied);
+    tourPlanPO.theThingPO.expectNoActionButton(
+      ImitationTourPlan.actions['confirm-paid']
+    );
     getCurrentUser().then(user => theMockDatabase.setAdmins([user.id]));
-    tourPlanViewPO.statePO.expectStateButton(ImitationTourPlan.states.paid);
+    tourPlanPO.theThingPO.expectActionButton(
+      ImitationTourPlan.actions['confirm-paid']
+    );
     theMockDatabase.restoreRTDB();
   });
 
@@ -221,12 +222,14 @@ describe('States button accessibility', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.expectTheThing(TourPlanPaid);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanPaid);
-    tourPlanViewPO.expectState(ImitationTourPlan.states.paid);
-    tourPlanViewPO.statePO.expectNoStateButton(
-      ImitationTourPlan.states.completed
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.paid);
+    tourPlanPO.theThingPO.expectNoActionButton(
+      ImitationTourPlan.actions['confirm-completed']
     );
     getCurrentUser().then(user => theMockDatabase.setAdmins([user.id]));
-    tourPlanViewPO.statePO.expectStateButton(ImitationTourPlan.states.completed);
+    tourPlanPO.theThingPO.expectActionButton(
+      ImitationTourPlan.actions['confirm-completed']
+    );
     theMockDatabase.restoreRTDB();
   });
 
@@ -239,9 +242,11 @@ describe('States button accessibility', () => {
       tourPlanNotMine
     );
     cy.visit(`${ImitationTourPlan.routePath}/${tourPlanNotMine.id}`);
-    tourPlanViewPO.expectVisible();
-    tourPlanViewPO.expectState(ImitationTourPlan.states.new);
-    tourPlanViewPO.statePO.expectNoStateButton(ImitationTourPlan.states.applied);
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.new);
+    tourPlanPO.theThingPO.expectNoActionButton(
+      ImitationTourPlan.actions['send-application']
+    );
   });
 
   it('Can not cancel tour plan apply if not owner', () => {
@@ -256,8 +261,10 @@ describe('States button accessibility', () => {
       tourPlanNotMine
     );
     cy.visit(`${ImitationTourPlan.routePath}/${tourPlanNotMine.id}`);
-    tourPlanViewPO.expectVisible();
-    tourPlanViewPO.expectState(ImitationTourPlan.states.applied);
-    tourPlanViewPO.statePO.expectNoStateButton(ImitationTourPlan.states.new);
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.applied);
+    tourPlanPO.theThingPO.expectNoActionButton(
+      ImitationTourPlan.actions['cancel-application']
+    );
   });
 });

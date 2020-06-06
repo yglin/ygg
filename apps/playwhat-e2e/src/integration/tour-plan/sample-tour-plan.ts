@@ -10,12 +10,11 @@ import {
 } from '../play/sample-plays';
 import {
   RelationPurchase,
-  RelationAddition,
   Purchase,
   ImitationOrder
 } from '@ygg/shopping/core';
 import {
-  ApplicationState,
+  RelationshipEquipment,
   ImitationTourPlan,
   CellNames
 } from '@ygg/playwhat/core';
@@ -128,50 +127,50 @@ TourPlanFull.addCells(
 //   TourPlanFullWithPlays.addRelation(purchase.toRelation());
 // }
 
-export const TourPlanWithPlaysNoAddition = MinimalTourPlan.clone();
-TourPlanWithPlaysNoAddition.setState(
+export const TourPlanWithPlaysNoEquipment = MinimalTourPlan.clone();
+TourPlanWithPlaysNoEquipment.setState(
   ImitationTourPlan.stateName,
   ImitationTourPlan.states.new
 );
 for (const play of PlaysWithoutEquipment) {
   const purchase = Purchase.purchase(
-    TourPlanWithPlaysNoAddition,
+    TourPlanWithPlaysNoEquipment,
     play,
     random(10, 50)
   );
-  TourPlanWithPlaysNoAddition.addRelation(purchase.toRelation());
+  TourPlanWithPlaysNoEquipment.addRelation(purchase.toRelation());
 }
-TourPlanWithPlaysNoAddition.name = '測試遊程(預訂體驗, 無加購項目)';
+TourPlanWithPlaysNoEquipment.name = '測試遊程(預訂體驗, 無設備加購)';
 
-export const TourPlanWithPlaysAndAdditions = MinimalTourPlan.clone();
-TourPlanWithPlaysAndAdditions.setState(
+export const TourPlanWithPlaysAndEquipments = MinimalTourPlan.clone();
+TourPlanWithPlaysAndEquipments.setState(
   ImitationTourPlan.stateName,
   ImitationTourPlan.states.new
 );
 for (const play of PlaysWithEquipment) {
   const purchase = Purchase.purchase(
-    TourPlanWithPlaysAndAdditions,
+    TourPlanWithPlaysAndEquipments,
     play,
     random(10, 50)
   );
-  TourPlanWithPlaysAndAdditions.addRelation(purchase.toRelation());
-  if (play.hasRelation(RelationAddition.name)) {
-    for (const relation of play.getRelations(RelationAddition.name)) {
+  TourPlanWithPlaysAndEquipments.addRelation(purchase.toRelation());
+  if (play.hasRelation(RelationshipEquipment.name)) {
+    for (const relation of play.getRelations(RelationshipEquipment.name)) {
       const addition = find(SampleEquipments, ad => ad.id === relation.objectId);
       if (addition) {
         const purchaseAd = Purchase.purchase(
-          TourPlanWithPlaysAndAdditions,
+          TourPlanWithPlaysAndEquipments,
           addition,
           random(1, 10)
         );
-        TourPlanWithPlaysAndAdditions.addRelation(purchaseAd.toRelation());
+        TourPlanWithPlaysAndEquipments.addRelation(purchaseAd.toRelation());
       }
     }
   }
 }
-TourPlanWithPlaysAndAdditions.name = '測試遊程(預訂體驗, 有加購項目)';
+TourPlanWithPlaysAndEquipments.name = '測試遊程(預訂體驗, 有加購項目)';
 
-export const TourPlanInApplication = TourPlanWithPlaysAndAdditions.clone();
+export const TourPlanInApplication = TourPlanWithPlaysAndEquipments.clone();
 TourPlanInApplication.name = '測試遊程(預訂體驗, 有加購項目，已提交申請)';
 TourPlanInApplication.setState(
   ImitationOrder.stateName,

@@ -138,9 +138,10 @@ export class TheThingDataTableComponent
   }
 
   onClickTheThing(theThing: TheThing) {
-    const routePath = this.imitation.routePath || this.imitation.id;
-    if (routePath) {
-      this.router.navigate(['/', 'the-things', routePath, theThing.id]);
+    if (this.imitation.routePath) {
+      this.router.navigate(['/', this.imitation.routePath, theThing.id]);
+    } else if (theThing.link) {
+      this.router.navigateByUrl(theThing.link);
     } else {
       this.router.navigate(['/', 'the-things', theThing.id]);
     }

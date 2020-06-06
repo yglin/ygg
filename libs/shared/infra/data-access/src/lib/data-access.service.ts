@@ -5,8 +5,8 @@ import {
   AngularFirestoreCollection
 } from '@angular/fire/firestore';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { combineLatest, Observable, of } from 'rxjs';
-import { map, catchError, filter, take } from 'rxjs/operators';
+import { combineLatest, Observable, of, race, never } from 'rxjs';
+import { map, catchError, filter, take, timeout } from 'rxjs/operators';
 import { LogService } from '@ygg/shared/infra/log';
 import { DataItem } from './data-item';
 import { DataAccessError, DataAccessErrorCode } from './error';
@@ -19,6 +19,11 @@ type FireQueryRef =
 
 @Injectable({ providedIn: 'root' })
 export class DataAccessService {
+  config: {
+    dataLoadingTimeout: number;
+  } = {
+    dataLoadingTimeout: 5000
+  };
   collections: { [name: string]: AngularFirestoreCollection };
 
   // TO BE DEPRECATED: For back compatibilty
@@ -194,12 +199,15 @@ export class DataAccessService {
   }
 
   getDataObject$<T>(path: string): Observable<T> {
-    return this.fireRealDB
-      .object<T>(path)
-      .valueChanges()
-      .pipe(
-        // tap(data => console.dir(data)),
-        filter(data => !!data)
-      );
+    return race(
+      this.fireRealDB
+        .object<T>(path)
+        .valueChanges()
+        .pipe(
+          // tap(data => console.dir(data)),
+          filter(data => !!data)
+        ),
+      never().pipe(timeout(this.config.dataLoadingTimeout))
+    );
   }
 }

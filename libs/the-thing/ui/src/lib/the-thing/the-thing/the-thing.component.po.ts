@@ -4,17 +4,22 @@ import {
   TheThingCell,
   Relationship,
   TheThingImitation,
-  TheThingAction
+  TheThingAction,
+  TheThingState
 } from '@ygg/the-thing/core';
+import { TheThingStatePageObject } from '../the-thing-state/the-thing-state.component.po';
 
 export abstract class TheThingPageObject extends PageObject {
   selectors = {
     main: '.the-thing',
     name: '.name',
     buttonAddCell: 'button.add-cell',
-    buttonSave: 'button.save'
+    buttonSave: 'button.save',
+    state: '.state'
   };
   imitation: TheThingImitation;
+
+  statePO: TheThingStatePageObject;
 
   constructor(parentSelector: string, imitation: TheThingImitation) {
     super(parentSelector);
@@ -54,12 +59,26 @@ export abstract class TheThingPageObject extends PageObject {
   getSelectorForActionButton(action: TheThingAction): string {
     return `${this.getSelector()} button.action.${action.id}`;
   }
+
   // getSelectorForEquipment(equip: TheThing): string {
   //   return `${this.getSelector('equipments')} .equipment:contains("${
   //     equip.name
   //   }")`;
   // }
+  expectState(state: TheThingState) {
+    this.statePO.expectValue(state);
+  }
 
+  abstract clickSave(): void;
+  abstract expectFreshNew(): void;
+  abstract expectName(value: string): void;
+  abstract setCell(cell: TheThingCell): void;
+  abstract addCell(cell: TheThingCell): void;
+  abstract expectNoCell(cell: TheThingCell): void;
+  abstract deleteCell(cell: TheThingCell): void;
+  abstract expectCell(cell: TheThingCell): void;
+  abstract setValue(theThing: TheThing): void;
+  abstract save(theThing: TheThing): void;
   abstract expectVisible(): void;
   abstract expectValue(theThing: TheThing): void;
   abstract gotoCreateRelationObject(relationship: Relationship): void;
@@ -67,4 +86,7 @@ export abstract class TheThingPageObject extends PageObject {
     relationship: Relationship,
     objects: TheThing[]
   ): void;
+  abstract runAction(action: TheThingAction);
+  abstract expectActionButton(action: TheThingAction);
+  abstract expectNoActionButton(action: TheThingAction);
 }

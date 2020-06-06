@@ -85,6 +85,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     thumbnail?: DisplayThumbnail;
   } = {};
   actions: { [id: string]: TheThingAction } = {};
+  pipes: { [source: string]: (theThing: TheThing) => void } = {};
 
   /** Create time */
   createAt: number;
@@ -143,7 +144,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       }
     }
     if (!!this.routePath) {
-      theThing.link = `/the-things/${this.routePath}/${theThing.id}`;
+      theThing.link = `/${this.routePath}/${theThing.id}`;
     } else {
       theThing.link = `/the-things/${this.id}/${theThing.id}`;
     }

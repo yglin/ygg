@@ -1,0 +1,36 @@
+<div class="tour-plan" *ngIf="tourPlan">
+  <div class="purchases">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <div>
+        <h2>預訂項目</h2>
+      </div>
+      <div *ngIf="!readonly">
+        <button
+          class="import-to-cart edit"
+          mat-mini-fab
+          matTooltip="匯入購物車"
+          (click)="importToCart()"
+        >
+          <mat-icon>add_shopping_cart </mat-icon>
+        </button>
+      </div>
+    </div>
+    <div fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="10px">
+      <div *ngFor="let pr of purchaseRelations" [attr.object-id]="pr.objectId">
+        <the-thing-thumbnail
+          [id]="pr.objectId"
+          size="small"
+        ></the-thing-thumbnail>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end end">
+      <h4 class="total-charge">
+        總價：<ygg-price [price]="totalCharge"></ygg-price>
+      </h4>
+    </div>
+  </div>
+  <br />
+  <div class="the-thing">
+    <the-thing [id]="tourPlan.id" [imitation]="imitation"></the-thing>
+  </div>
+</div>

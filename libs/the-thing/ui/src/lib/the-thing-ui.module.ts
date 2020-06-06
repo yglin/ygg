@@ -108,7 +108,8 @@ interface TheThingUiModuleConfig {
     AdminThingsDataTableComponent,
     CellCreatorComponent,
     TheThingStateComponent,
-    TheThingCellComponent
+    TheThingCellComponent,
+    TheThingComponent
   ],
   entryComponents: [
     ImitationEditorComponent,

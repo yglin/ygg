@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import {
   TheThing,
   TheThingImitation,
@@ -14,7 +14,15 @@ import {
   AuthenticateUiService,
   AuthorizeService
 } from '@ygg/shared/user/ui';
-import { take, first, timeout, shareReplay, map } from 'rxjs/operators';
+import {
+  take,
+  first,
+  timeout,
+  shareReplay,
+  map,
+  filter,
+  catchError
+} from 'rxjs/operators';
 import {
   TheThingImitationAccessService,
   TheThingAccessService
@@ -22,14 +30,25 @@ import {
 import { TheThingImitationViewInterface } from './the-thing/the-thing-imitation-view/imitation-view-interface.component';
 import { YggDialogService, EmceeService } from '@ygg/shared/ui/widgets';
 import { AlertType } from '@ygg/shared/infra/core';
-import { Observable, BehaviorSubject, Subject, combineLatest, of } from 'rxjs';
+import {
+  Observable,
+  BehaviorSubject,
+  Subject,
+  combineLatest,
+  of,
+  Subscription,
+  throwError,
+  ReplaySubject,
+  isObservable,
+  never
+} from 'rxjs';
 import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   Resolve,
   Router
 } from '@angular/router';
-import { extend, values, isEmpty, get } from 'lodash';
+import { extend, values, isEmpty, get, keys } from 'lodash';
 
 export interface ITheThingCreateOptions {
   imitation?: string;
@@ -42,17 +61,26 @@ export interface ITheThingSaveOptions {
 @Injectable({
   providedIn: 'root'
 })
-export class TheThingFactoryService implements Resolve<Observable<TheThing>> {
+export class TheThingFactoryService
+  implements OnDestroy, Resolve<Observable<TheThing>> {
   imitation: TheThingImitation;
   // theThing$: BehaviorSubject<TheThing> = new BehaviorSubject(null);
-  focusChange$: BehaviorSubject<Observable<TheThing>> = new BehaviorSubject(null);
+  focusChange$: BehaviorSubject<Observable<TheThing>> = new BehaviorSubject(
+    null
+  );
   createCache: { [imitationId: string]: TheThing } = {};
-  theThingSources$: { [id: string]: Observable<TheThing> } = {};
+  theThingSources$: {
+    [id: string]: {
+      local$: Subject<TheThing>;
+      remote$?: Observable<TheThing>;
+    };
+  } = {};
   creationChainStack: Subject<TheThing>[] = [];
   runAction$: Subject<{
     theThing: TheThing;
     action: TheThingAction;
   }> = new Subject();
+  subscriptions: Subscription[] = [];
 
   constructor(
     private authService: AuthenticateService,
@@ -63,6 +91,12 @@ export class TheThingFactoryService implements Resolve<Observable<TheThing>> {
     private emceeService: EmceeService,
     private router: Router
   ) {}
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
 
   resolve(
     route: ActivatedRouteSnapshot,
@@ -87,7 +121,7 @@ export class TheThingFactoryService implements Resolve<Observable<TheThing>> {
         } else if (!!id) {
           // console.log(`load ${this.imitation.id}:${id}`);
           theThing = await this.load(id);
-          const focus$ = this.load$(theThing.id)
+          const focus$ = this.load$(theThing.id);
           resolve(focus$);
           this.focusChange$.next(focus$);
         } else {
@@ -138,9 +172,11 @@ export class TheThingFactoryService implements Resolve<Observable<TheThing>> {
   //   this.subjectThing.addCells(cells);
   // }
 
-  async create(options: {
-    imitationId?: string
-  } = {}): Promise<TheThing> {
+  async create(
+    options: {
+      imitationId?: string;
+    } = {}
+  ): Promise<TheThing> {
     let newThing: TheThing;
     if (
       options.imitationId &&
@@ -168,7 +204,10 @@ export class TheThingFactoryService implements Resolve<Observable<TheThing>> {
     }
 
     if (!(newThing.id in this.theThingSources$)) {
-      this.theThingSources$[newThing.id] = new BehaviorSubject(newThing);
+      this.theThingSources$[newThing.id] = {
+        local$: new BehaviorSubject(newThing)
+      };
+      this.theThingSources$[newThing.id].local$.next(newThing);
     }
     return newThing;
   }
@@ -179,25 +218,61 @@ export class TheThingFactoryService implements Resolve<Observable<TheThing>> {
       .toPromise();
   }
 
+  connectRemoteSource(id: string) {
+    if (!(id in this.theThingSources$)) {
+      // Not created, directly load from remote
+      this.theThingSources$[id] = {
+        local$: new ReplaySubject(1)
+      };
+    }
+    if (!this.theThingSources$[id].remote$) {
+      this.theThingSources$[id].remote$ = this.theThingAccessService.get$(id);
+      this.subscriptions.push(
+        this.theThingSources$[id].remote$.subscribe(theThing => {
+          console.log(`Remote change of theThing ${theThing.id}`);
+          this.theThingSources$[id].local$.next(theThing);
+        })
+      );
+    }
+  }
+
   load$(id: string): Observable<TheThing> {
     if (!(id in this.theThingSources$)) {
-      this.theThingSources$[id] = this.theThingAccessService
-        .get$(id)
-        .pipe(shareReplay(1));
+      // Not created, directly load from remote
+      this.connectRemoteSource(id);
     }
-    return this.theThingSources$[id];
+    return this.theThingSources$[id].local$;
   }
 
   setMeta(theThing: TheThing, value: any): void {
     extend(theThing, value);
   }
 
-  setCell(theThing: TheThing, cell: TheThingCell): void {
+  setCell(
+    theThing: TheThing,
+    cell: TheThingCell,
+    imitation: TheThingImitation
+  ): void {
     theThing.upsertCell(cell);
+    if (!isEmpty(imitation.pipes)) {
+      for (const source in imitation.pipes) {
+        if (
+          source === `cell.${cell.name}` &&
+          imitation.pipes.hasOwnProperty(source)
+        ) {
+          const pipe = imitation.pipes[source];
+          pipe(theThing);
+          if (theThing.id in this.theThingSources$) {
+            this.theThingSources$[theThing.id].local$.next(theThing);
+          }
+        }
+      }
+    }
   }
 
-  deleteCell(theThing: TheThing, cellName: string) {
+  async deleteCell(theThing: TheThing, cellName: string) {
     theThing.deleteCell(cellName);
+    return;
   }
 
   async setState(
@@ -236,6 +311,9 @@ export class TheThingFactoryService implements Resolve<Observable<TheThing>> {
         `確定要儲存 ${theThing.name} ？`
       );
       await this.theThingAccessService.upsert(theThing);
+      // Connect to remote source
+      this.connectRemoteSource(theThing.id);
+
       // Clear create cache
       for (const imitationId in this.createCache) {
         if (this.createCache.hasOwnProperty(imitationId)) {
@@ -250,13 +328,16 @@ export class TheThingFactoryService implements Resolve<Observable<TheThing>> {
         const topSubject = this.creationChainStack.pop();
         topSubject.next(theThing);
       }
-      // Refresh source$
-      if (theThing.id in this.theThingSources$) {
-        delete this.theThingSources$[theThing.id];
-      }
+      console.log(`TheThing ${theThing.id} saved`);
       const result = await this.load(theThing.id);
+      // this.theThingSources$[result.id].local$.next(result);
       if (!!result) {
         await this.emceeService.info(`已成功儲存 ${result.name}`);
+        // if (theThing.id in this.theThingSources$) {
+        //   this.theThingSources$[theThing.id].next(result);
+        // }
+      } else {
+        throw new Error(`Failed to load back ${theThing.id}`);
       }
       return result;
     } catch (error) {
@@ -315,21 +396,39 @@ export class TheThingFactoryService implements Resolve<Observable<TheThing>> {
             return true;
           }
           for (const permission of action.permissions) {
-            if (permission === 'requireOwner' && !isOwner) {
-              return false;
-            } else if (permission === 'requireAdmin' && !isAdmin) {
-              return false;
-            } else {
-              // permission indicate a specific state
-              const state = get(imitation.states, permission, null);
-              if (!state) {
-                return false;
-              }
-              if (!imitation.isState(theThing, state)) {
-                return false;
-              }
+            // console.log(permission);
+            switch (permission) {
+              case 'requireOwner':
+                if (!isOwner) {
+                  console.warn(
+                    `action ${action.id} requires owner but isOwner = ${isOwner}!!`
+                  );
+                  return false;
+                }
+                break;
+              case 'requireAdmin':
+                if (!isAdmin) {
+                  console.warn(
+                    `action ${action.id} requires owner but isAdmin = ${isAdmin}!!`
+                  );
+                  return false;
+                }
+                break;
+
+              default:
+                // permission indicate a specific state
+                const state = get(imitation.states, permission, null);
+                if (!state || !imitation.isState(theThing, state)) {
+                  console.warn(
+                    `action ${action.id} require state ${permission}`
+                  );
+                  return false;
+                }
+                break;
             }
           }
+          // console.log(`action ${action.id} granted`);
+          return true;
         });
       })
     );

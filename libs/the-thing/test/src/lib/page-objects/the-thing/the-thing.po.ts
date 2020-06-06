@@ -9,7 +9,8 @@ import {
   TheThingCell,
   TheThingCellDefine,
   Relationship,
-  TheThingAction
+  TheThingAction,
+  TheThingImitation
 } from '@ygg/the-thing/core';
 import {
   CellCreatorPageObjectCypress,
@@ -17,24 +18,25 @@ import {
 } from '@ygg/the-thing/test';
 import { TheThingPageObject } from '@ygg/the-thing/ui';
 import { values } from 'lodash';
+import { TheThingStatePageObjectCypress } from './the-thing-state.po';
 
 export class TheThingPageObjectCypress extends TheThingPageObject {
-  // purchase(purchases: Purchase[] = []) {
-  //   cy.get(this.getSelector('buttonAddToCart')).click();
-  //   const dialogPO = new YggDialogPageObjectCypress();
-  //   const purchasePO = new PurchaseProductPageObjectCypress(
-  //     dialogPO.getSelector()
-  //   );
-  //   purchasePO.setValue(purchases);
-  //   dialogPO.confirm();
-  // }
-
+  constructor(parentSelector: string, imitation: TheThingImitation) {
+    super(parentSelector, imitation);
+    this.statePO = new TheThingStatePageObjectCypress(
+      this.getSelector('state')
+    );
+  }
   expectVisible(): Cypress.Chainable<any> {
     return cy.get(this.getSelector()).should('be.visible');
   }
 
+  expectName(value: string): void {
+    cy.get(this.getSelector('name')).contains(value);
+  }
+
   expectValue(theThing: TheThing): void {
-    cy.get(this.getSelector('name')).contains(theThing.name);
+    this.expectName(theThing.name);
     cy.wrap(values(theThing.cells)).each((cell: TheThingCell) => {
       cy.get(this.getSelectorForCell(cell))
         .scrollIntoView()
@@ -82,6 +84,10 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
     cellViewPagePO.expectValue(cell.type, cell.value);
   }
 
+  expectNoCell(cell: TheThingCell): void {
+    cy.get(`${this.getSelectorForCell(cell.name)}`).should('not.be.visible');
+  }
+
   addCell(cell: TheThingCell) {
     cy.get(this.getSelector('buttonAddCell')).click();
     const dialogPO = new YggDialogPageObjectCypress();
@@ -102,8 +108,12 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
     omniTypeViewControlPO.setValue('text', name);
   }
 
-  save(theThing: TheThing) {
+  clickSave(): void {
     cy.get(this.getSelector('buttonSave')).click();
+  }
+
+  save(theThing: TheThing) {
+    this.clickSave();
     const emceePO = new EmceePageObjectCypress();
     emceePO.confirm(`確定要儲存 ${theThing.name} ？`);
     emceePO.alert(`已成功儲存 ${theThing.name}`);
@@ -184,5 +194,13 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
 
   runAction(action: TheThingAction) {
     cy.get(this.getSelectorForActionButton(action)).click();
+  }
+
+  expectActionButton(action: TheThingAction) {
+    cy.get(this.getSelectorForActionButton(action)).should('be.visible');
+  }
+
+  expectNoActionButton(action: TheThingAction) {
+    cy.get(this.getSelectorForActionButton(action)).should('not.be.visible');
   }
 }

@@ -22,6 +22,11 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { TheThingFactoryService } from '@ygg/the-thing/ui';
 
+export interface CartSubmitPack {
+  order?: TheThing;
+  purchases: Purchase[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -31,8 +36,9 @@ export class ShoppingCartService implements OnDestroy {
   quantityChange$: Subject<any> = new Subject();
   totalCharge$: Observable<number>;
   shoppingCartVisited$: Subject<boolean> = new Subject();
-  submit$: Subject<Purchase[]> = new Subject();
+  submit$: Subject<CartSubmitPack> = new Subject();
   subscriptions: Subscription[] = [];
+  order: TheThing;
 
   constructor(
     private emcee: EmceeService,
@@ -136,9 +142,17 @@ export class ShoppingCartService implements OnDestroy {
     this.router.navigate(['/', 'shopping', 'cart']);
   }
 
+  import(order: TheThing, purchases: Purchase[]) {
+    this.order = order;
+    this.importPurchases(purchases);
+  }
+
   submit() {
     // console.info('Submit shopping cart~!!!');
-    this.submit$.next(values(this.purchases));
+    this.submit$.next({
+      order: this.order,
+      purchases: values(this.purchases)
+    });
     this.clear();
   }
 

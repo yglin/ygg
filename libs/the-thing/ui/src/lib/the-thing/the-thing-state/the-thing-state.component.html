@@ -3,10 +3,11 @@
   fxLayout="row"
   fxLayoutAlign="start center"
   fxLayoutGap="10px"
-  *ngIf="theThing && imitation"
+  *ngIf="currentState"
 >
   <h3 class="label">{{ currentState.label }}</h3>
-  <div
+  <!-- 
+    <div
     *ngIf="!readonly"
     class="actions"
     fxLayout="row"
@@ -24,4 +25,4 @@
       </div>
     </div>
   </div>
-</div>
+--></div>
