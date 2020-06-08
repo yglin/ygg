@@ -6,7 +6,7 @@ import {
   DataAccessErrorCode
 } from '@ygg/shared/infra/data-access';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, take } from 'rxjs/operators';
 
 import { UserError, UserErrorCode } from './error';
 import { User } from '@ygg/shared/user/core';
@@ -27,6 +27,10 @@ export class UserService {
 
   listAll$(): Observable<User[]> {
     return this.dataAccessService.list$(this.collection, User);
+  }
+
+  async get(id: string): Promise<User> {
+    return this.get$(id).pipe(take(1)).toPromise();
   }
 
   get$(id: string): Observable<User> {

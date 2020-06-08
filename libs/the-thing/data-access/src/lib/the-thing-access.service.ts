@@ -1,7 +1,7 @@
 import { isEmpty, every, castArray } from 'lodash';
 import { Injectable } from '@angular/core';
-import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
-import { IDataAccessor } from '@ygg/shared/infra/core';
+import { TheThing, TheThingFilter, TheThingAccessor } from '@ygg/the-thing/core';
+// import { IDataAccessor } from '@ygg/shared/infra/core';
 import { DataAccessService, Query } from '@ygg/shared/infra/data-access';
 import { Observable, throwError } from 'rxjs';
 import { map, shareReplay, tap, take } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { Tags } from '@ygg/tags/core';
 @Injectable({
   providedIn: 'root'
 })
-export class TheThingAccessService implements IDataAccessor<TheThing> {
+export class TheThingAccessService implements TheThingAccessor {
   // cache: { [id: string]: Observable<TheThing> } = {};
   constructor(private dataAccessService: DataAccessService) {}
 

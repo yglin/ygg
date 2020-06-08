@@ -22,6 +22,7 @@ import { generateID, toJSONDeep, Entity } from '@ygg/shared/infra/data-access';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 import { TheThingRelation } from './relation';
 import { TheThingState } from './state';
+import { DeserializerJSON, SerializerJSON } from '@ygg/shared/infra/core';
 
 export class TheThing implements Entity, ImageThumbnailItem {
   static collection = 'the-things';
@@ -81,6 +82,58 @@ export class TheThing implements Entity, ImageThumbnailItem {
    */
   states: { [name: string]: number } = {};
   stateTimestamps: { [name: string]: Date } = {};
+
+  static serializerJSON: SerializerJSON = (item: TheThing): any => {
+    const data = toJSONDeep(item);
+    for (const name in data.relations) {
+      if (data.relations.hasOwnProperty(name)) {
+        const relations = data.relations[name];
+        if (isEmpty(relations)) {
+          delete data.relations[name];
+        }
+      }
+    }
+    return data;
+  };
+
+  static deserializerJSON: DeserializerJSON = (data: any): TheThing => {
+    const theThing = new TheThing();
+    if (data) {
+      extend(theThing, data);
+
+      if (data.tags) {
+        theThing.tags = Tags.fromJSON(data.tags);
+      }
+      if (!isEmpty(data.cells)) {
+        if (isArray(data.cells)) {
+          data.cells = keyBy(data.cells, 'name');
+        }
+        theThing.cells = mapValues(data.cells, cellData =>
+          new TheThingCell().fromJSON(cellData)
+        );
+      }
+      if (data.relations) {
+        theThing.relations = mapValues(data.relations, relations =>
+          relations.map(relation => new TheThingRelation(relation))
+        );
+      }
+      // console.log(`TheThing.fromJSON: ${theThing.image}`);
+      if (!theThing.image) {
+        theThing.image = theThing.resolveImage();
+      }
+
+      if (data.stateTimestamps) {
+        theThing.stateTimestamps = mapValues(
+          data.stateTimestamps,
+          t => new Date(t)
+        );
+      }
+    }
+    if (!theThing.link) {
+      theThing.link = `/the-things/${theThing.id}`;
+    }
+    return theThing;
+  };
 
   static forge(options: any = {}): TheThing {
     const thing = new TheThing();

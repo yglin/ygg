@@ -6,3 +6,4 @@ export * from './lib/user.service';
 export * from './lib/account-provider.service';
 export * from './lib/components';
 export * from './lib/route-guards';
+export * from './lib/invitation-factory.service';

@@ -12,6 +12,12 @@ import { DataItem } from './data-item';
 import { DataAccessError, DataAccessErrorCode } from './error';
 // import { DataAccessModule } from './data-access.module';
 import { Query } from './query';
+import {
+  DataAccessor,
+  // SerializerJSON,
+  Entity,
+  // DeserializerJSON
+} from '@ygg/shared/infra/core';
 
 type FireQueryRef =
   | firebase.firestore.CollectionReference
@@ -187,6 +193,23 @@ export class DataAccessService {
       throw error;
     }
   }
+
+  // async save(collection: string, entity: Entity, serializer?: SerializerJSON) {
+  //   const dataItem =
+  //     typeof serializer === 'function' ? serializer(entity) : entity;
+  //   return this.upsert(collection, dataItem);
+  // }
+
+  // async load(
+  //   collection: string,
+  //   id: string,
+  //   deserializer?: DeserializerJSON
+  // ): Promise<any> {
+  //   const entity = await this.get$(collection, id)
+  //     .pipe(take(1))
+  //     .toPromise();
+  //   return typeof deserializer === 'function' ? deserializer(entity) : entity;
+  // }
 
   async delete(collection: string, itemId: string) {
     return this.getCollection(collection)

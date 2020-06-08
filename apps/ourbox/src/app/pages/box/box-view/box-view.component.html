@@ -1,6 +1,6 @@
-<div class="box-view">
-  <ygg-page-title icon="inbox">寶箱X</ygg-page-title>
+<div class="box-view" *ngIf="box">
+  <ygg-page-title icon="inbox">{{ box.name }}</ygg-page-title>
   <div class="panel">
-    <ygg-image-thumbnail-list [items$]="items$"></ygg-image-thumbnail-list>
+    <ygg-image-thumbnail-list [items]="items"></ygg-image-thumbnail-list>
   </div>
 </div>

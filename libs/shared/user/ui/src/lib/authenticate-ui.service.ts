@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { LoginDialogComponent } from './components/login-dialog/login-dialog.component';
-import { User } from '@ygg/shared/user/core';
+import { User, Authenticator } from '@ygg/shared/user/core';
 import { AuthenticateService } from './authenticate.service';
 import {
   timeout,
@@ -19,13 +19,19 @@ import { Observable, throwError, of } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthenticateUiService {
+export class AuthenticateUiService extends Authenticator {
   loginDialogRef: MatDialogRef<any>;
+  requestLogin = this.requireLogin;
 
   constructor(
     private dialog: YggDialogService,
     private authenticateService: AuthenticateService
-  ) {}
+  ) {
+    super();
+    this.authenticateService.currentUser$.subscribe(
+      user => (this.currentUser = user)
+    );
+  }
 
   async requireLogin(): Promise<User> {
     if (!!this.authenticateService.currentUser) {

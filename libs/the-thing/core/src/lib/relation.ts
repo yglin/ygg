@@ -2,6 +2,16 @@ import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { TheThing } from './the-thing';
 import { TheThingCell } from './cell';
 import { extend, isEmpty, mapValues, get, isArray, keyBy } from 'lodash';
+import { Entity } from '@ygg/shared/infra/core';
+
+export interface RelationRecord extends Entity {
+  id: string;
+  subjectCollection: string;
+  subjectId: string;
+  objectCollection: string;
+  objectId: string;
+  objectRole: string;
+}
 
 export interface ITheThingRelation {
   name: string;

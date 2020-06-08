@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit {
         id: 'create-box',
         name: '開新寶箱',
         image: '/assets/images/box/create.png',
-        path: '/boxes/create'
+        path: '/ourbox/create'
       });
     }
   }

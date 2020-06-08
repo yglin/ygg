@@ -5,3 +5,5 @@ export * from './lib/imitation';
 export * from './lib/the-thing-views.service';
 export * from './lib/relation';
 export * from './lib/the-thing-factory.service';
+export * from './lib/relation-factory.service';
+export * from './lib/relation-access.service';

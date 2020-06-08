@@ -9,3 +9,4 @@ export * from './lib/cache.service';
 export * from './lib/site-config.service';
 export * from './lib/page-stash.service';
 export * from './lib/shared-infra-data-access.module';
+export * from './lib/fire-store-access.service';

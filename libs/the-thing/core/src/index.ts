@@ -12,3 +12,6 @@ export * from './lib/validator';
 export * from './lib/state';
 export * from './lib/relationship';
 export * from './lib/action';
+export * from './lib/the-thing-accessor';
+export * from './lib/relation-factory';
+export * from './lib/relation-accessor';

@@ -13,11 +13,12 @@ import {
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import { UserError, UserErrorCode } from './error';
-import { User } from "@ygg/shared/user/core";
+import { User, Authenticator } from '@ygg/shared/user/core';
 import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticateService {
+  
   currentUser: User;
   currentUser$: BehaviorSubject<User>;
 

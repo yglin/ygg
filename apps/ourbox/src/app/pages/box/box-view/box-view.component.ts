@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { TheThing } from '@ygg/the-thing/core';
-import { range } from 'lodash';
+import { range, get } from 'lodash';
+import { BoxAccessService } from '../../../box-access.service';
+import { ItemAccessService } from '../../../item-access.service';
 
 function forgeItems(): TheThing[] {
   return range(10).map(() => {
@@ -17,16 +19,29 @@ function forgeItems(): TheThing[] {
   templateUrl: './box-view.component.html',
   styleUrls: ['./box-view.component.css']
 })
-export class BoxViewComponent implements OnInit {
-  items$: Observable<TheThing[]>;
+export class BoxViewComponent implements OnInit, OnDestroy {
+  box: TheThing;
+  items: TheThing[] = [];
+  subscriptions: Subscription[] = [];
 
-  constructor(private route: ActivatedRoute) {}
-
-  ngOnInit(): void {
-    this.items$ = this.fetchItems();
+  constructor(
+    private route: ActivatedRoute,
+    private itemAccessService: ItemAccessService
+  ) {
+    this.box = get(this.route.snapshot.data, 'box', null);
+    // console.log(this.box);
+    this.subscriptions.push(
+      this.itemAccessService
+        .listItemsInBox$(this.box.id)
+        .subscribe(items => (this.items = items))
+    );
   }
 
-  fetchItems(): Observable<TheThing[]> {
-    return of(forgeItems());
+  ngOnInit(): void {}
+
+  ngOnDestroy() {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 }

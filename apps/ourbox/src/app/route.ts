@@ -5,6 +5,7 @@ import { BoxCreateComponent } from './pages/box/box-create/box-create.component'
 import { BoardComponent } from './pages/board/board.component';
 import { BoxViewComponent } from './pages/box/box-view/box-view.component';
 import { ItemViewComponent } from './pages/item/item-view/item-view.component';
+import { BoxFactoryService } from './box-factory.service';
 
 export const routes: Routes = [
   {
@@ -21,7 +22,7 @@ export const routes: Routes = [
     component: MapComponent
   },
   {
-    path: 'boxes',
+    path: 'ourbox',
     children: [
       {
         path: 'create',
@@ -29,7 +30,10 @@ export const routes: Routes = [
       },
       {
         path: ':id',
-        component: BoxViewComponent
+        component: BoxViewComponent,
+        resolve: {
+          box: BoxFactoryService
+        }
       }
     ]
   },
