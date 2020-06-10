@@ -4,7 +4,8 @@ import {
   TheThing,
   TheThingCell,
   TheThingImitation,
-  TheThingRelation
+  TheThingRelation,
+  TheThingAction
 } from '@ygg/the-thing/core';
 import { TheThingFactoryService } from '@ygg/the-thing/ui';
 import { ImitationPlay } from '@ygg/playwhat/core';
@@ -15,10 +16,11 @@ import {
   Router
 } from '@angular/router';
 import { tap, take } from 'rxjs/operators';
-import { extend } from 'lodash';
+import { extend, get } from 'lodash';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import { AlertType } from '@ygg/shared/infra/core';
 import { EquipmentFactoryService } from './equipment-factory.service';
+import { TheThingAccessService } from '@ygg/the-thing/data-access';
 
 @Injectable({
   providedIn: 'root'
@@ -30,11 +32,19 @@ export class PlayFactoryService implements OnDestroy, Resolve<TheThing> {
   subscriptions: Subscription[] = [];
 
   constructor(
+    private theThingAccessor: TheThingAccessService,
     private theThingFactory: TheThingFactoryService,
     private emcee: EmceeService,
     private router: Router,
     private equipmentFactory: EquipmentFactoryService
-  ) {}
+  ) {
+    theThingFactory.runAction$.subscribe(actionData => {
+      const action = get(ImitationPlay.actions, actionData.action.id, null);
+      if (!!action) {
+        this.runAction(action, actionData.theThing);
+      }
+    });
+  }
 
   resolve(
     route: ActivatedRouteSnapshot,
@@ -140,6 +150,50 @@ export class PlayFactoryService implements OnDestroy, Resolve<TheThing> {
       this.router.navigateByUrl(currentUrl);
     } catch (error) {
       console.warn(error.message);
+    }
+  }
+
+  async requestAssess(theThing: TheThing) {
+    const confirm = await this.emcee.confirm(
+      `送出 ${theThing.name} 給管理者審核？審核成功即可上架販售`
+    );
+    if (confirm) {
+      try {
+        ImitationPlay.setState(theThing, ImitationPlay.states.assess);
+        await this.theThingAccessor.upsert(theThing);
+        this.emcee.info(`${theThing.name} 已送出，請等待管理者審核`);
+      } catch (error) {
+        this.emcee.error(`送出審核失敗，錯誤原因：${error.message}`);
+      }
+    }
+  }
+
+  async approveForSale(theThing: TheThing) {
+    const confirm = await this.emcee.confirm(
+      `體驗 ${theThing.name} 已通過審核，確定上架？`
+    );
+    if (confirm) {
+      try {
+        ImitationPlay.setState(theThing, ImitationPlay.states.forSale);
+        await this.theThingAccessor.upsert(theThing);
+        this.emcee.info(`體驗 ${theThing.name} 已上架`);
+      } catch (error) {
+        this.emcee.error(`送出審核失敗，錯誤原因：${error.message}`);
+      }
+    }
+  }
+
+  runAction(action: TheThingAction, theThing: TheThing) {
+    switch (action.id) {
+      case 'request-assess':
+        this.requestAssess(theThing);
+        break;
+      case 'approve-for-sale':
+        this.approveForSale(theThing);
+        break;
+
+      default:
+        break;
     }
   }
 }

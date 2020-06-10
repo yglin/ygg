@@ -13,6 +13,6 @@ export abstract class ConfirmDialogPageObject extends PageObject {
   };
 
   abstract expectMessage(message: string): void;
-  abstract confirm(): void;
-  abstract cancel(): void;
+  // abstract confirm(): void;
+  // abstract cancel(): void;
 }

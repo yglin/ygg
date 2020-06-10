@@ -12,5 +12,5 @@ export abstract class AlertDialogPageObject extends PageObject {
   };
 
   abstract expectMessage(message: string): void;
-  abstract confirm(): void;
+  // abstract confirm(): void;
 }

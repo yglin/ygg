@@ -6,7 +6,7 @@ export interface TheThingState {
   name: string;
   label: string;
   value: number;
-  icon: string;
+  icon?: string;
   confirmMessage?: TheThingStateConfirmMessage;
   permissions?: string[];
 }

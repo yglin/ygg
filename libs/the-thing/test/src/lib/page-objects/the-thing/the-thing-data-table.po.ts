@@ -54,12 +54,7 @@ export class TheThingDataRowPageObjectCypress extends TheThingDataRowPageObject 
 export class TheThingDataTablePageObjectCypress
   extends TheThingDataTablePageObject
   implements PageObjectCypress {
-  imitation: TheThingImitation;
-
-  constructor(
-    parentSelector: string = '',
-    imitation: TheThingImitation = null
-  ) {
+  constructor(parentSelector: string = '', imitation: TheThingImitation) {
     super(parentSelector);
     this.imitation = imitation;
   }

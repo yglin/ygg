@@ -1,19 +1,10 @@
-import {
-  ShoppingCartEditorPageObject,
-  PurchaseRowPageObject,
-  IPurchasePack
-} from '@ygg/shopping/ui';
-import {
-  ImageThumbnailItemPageObjectCypress,
-  YggDialogPageObjectCypress,
-  ConfirmDialogPageObjectCypress
-} from '@ygg/shared/ui/test';
-import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
-import { Purchase } from '@ygg/shopping/core';
-import { sum } from 'lodash';
-import { IDataAccessor } from '@ygg/shared/infra/core';
-import { TheThingFinderPageObjectCypress } from '@ygg/the-thing/test';
 import { theMockDatabase } from '@ygg/shared/test/cypress';
+import { EmceePageObjectCypress, YggDialogPageObjectCypress } from '@ygg/shared/ui/test';
+import { Purchase } from '@ygg/shopping/core';
+import { IPurchasePack, PurchaseRowPageObject, ShoppingCartEditorPageObject } from '@ygg/shopping/ui';
+import { TheThing } from '@ygg/the-thing/core';
+import { TheThingFinderPageObjectCypress } from '@ygg/the-thing/test';
+import { sum } from 'lodash';
 
 export class PurchaseRowPageObjectCypress extends PurchaseRowPageObject {
   expectValue(purchase: Purchase): void {
@@ -121,20 +112,24 @@ export class ShoppingCartEditorPageObjectCypress extends ShoppingCartEditorPageO
       this.getSelectorForPurchase(purchase)
     );
     purchaseRowPO.clickDelete();
-    const confirmDialogPO = new ConfirmDialogPageObjectCypress();
     const product = theMockDatabase.getEntity(
       `${TheThing.collection}/${purchase.productId}`
     );
-    confirmDialogPO.expectMessage(`確定要移除購買項目：${product.name}？`);
-    confirmDialogPO.confirm();
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.confirm(`確定要移除購買項目：${product.name}？`);
+    // const confirmDialogPO = new ConfirmDialogPageObjectCypress();
+    // confirmDialogPO.expectMessage(`確定要移除購買項目：${product.name}？`);
+    // confirmDialogPO.confirm();
     cy.get(this.getSelectorForPurchase(purchase)).should('not.be.visible');
   }
 
   removeAll() {
     cy.get(this.getSelector('buttonClear')).click();
-    const confirmDialogPO = new ConfirmDialogPageObjectCypress();
-    confirmDialogPO.expectMessage(`確定要移除所有購買項目？`);
-    confirmDialogPO.confirm();
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.confirm(`確定要移除所有購買項目？`);
+    // const confirmDialogPO = new ConfirmDialogPageObjectCypress();
+    // confirmDialogPO.expectMessage(`確定要移除所有購買項目？`);
+    // confirmDialogPO.confirm();
     cy.get(this.getSelectorForPurchase()).should('not.be.visible');
   }
 }

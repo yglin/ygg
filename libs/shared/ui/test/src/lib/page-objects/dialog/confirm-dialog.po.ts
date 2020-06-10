@@ -9,13 +9,13 @@ export class ConfirmDialogPageObjectCypress extends ConfirmDialogPageObject {
     cy.get(this.getSelector(), { timeout: 10000 }).should('not.be.visible');
   }
 
-  confirm(): void {
-    cy.get(this.getSelector('buttonConfirm')).click();
-    // cy.get(this.getSelector()).should('not.be.visible');
-  }
+  // confirm(): void {
+  //   cy.get(this.getSelector('buttonConfirm')).click();
+  //   // cy.get(this.getSelector()).should('not.be.visible');
+  // }
 
-  cancel(): void {
-    cy.get(this.getSelector('buttonCancel')).click();
-    // cy.get(this.getSelector()).should('not.be.visible');
-  }
+  // cancel(): void {
+  //   cy.get(this.getSelector('buttonCancel')).click();
+  //   // cy.get(this.getSelector()).should('not.be.visible');
+  // }
 }

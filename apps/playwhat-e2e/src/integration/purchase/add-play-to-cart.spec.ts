@@ -1,57 +1,22 @@
-import {
-  SiteNavigator,
-  TourPlanViewPageObjectCypress
-} from '@ygg/playwhat/test';
+import { ImitationPlay, RelationshipEquipment } from '@ygg/playwhat/core';
+import { SiteNavigator, TourPlanViewPageObjectCypress } from '@ygg/playwhat/test';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
-import {
-  ImageThumbnailListPageObjectCypress,
-  ConfirmDialogPageObjectCypress,
-  YggDialogPageObjectCypress
-} from '@ygg/shared/ui/test';
+import { ImageThumbnailListPageObjectCypress, YggDialogPageObjectCypress } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
 import { waitForLogin } from '@ygg/shared/user/test';
-import {
-  CellNames as ShoppingCellNames,
-  Purchase,
-  PurchaseAction
-} from '@ygg/shopping/core';
-import {
-  ShoppingCartEditorPageObjectCypress,
-  PurchaseProductPageObjectCypress
-} from '@ygg/shopping/test';
+import { CellNames as ShoppingCellNames, Purchase, PurchaseAction } from '@ygg/shopping/core';
+import { PurchaseProductPageObjectCypress, ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
 import { TheThing } from '@ygg/the-thing/core';
-import {
-  MyThingsDataTablePageObjectCypress,
-  MyThingsPageObjectCypress,
-  TheThingPageObjectCypress
-} from '@ygg/the-thing/test';
-import {
-  keyBy,
-  sum,
-  values,
-  sample,
-  sampleSize,
-  last,
-  remove,
-  random,
-  cloneDeep
-} from 'lodash';
+import { TheThingPageObjectCypress } from '@ygg/the-thing/test';
+import { cloneDeep, keyBy, last, random, remove, sum, values } from 'lodash';
 import { HeaderPageObjectCypress } from '../../support/header.po';
-import {
-  SampleEquipments,
-  SamplePlays,
-  PlaysWithoutEquipment,
-  PlaysWithEquipment
-} from '../play/sample-plays';
-import {
-  // TourPlanWithPlaysNoEquipment,
-  // TourPlanWithPlaysAndEquipments,
-  TourPlanFull
-} from '../tour-plan/sample-tour-plan';
-import { ImitationPlay, RelationshipEquipment } from '@ygg/playwhat/core';
+import { PlaysWithEquipment, PlaysWithoutEquipment, SampleEquipments, SamplePlays } from '../play/sample-plays';
 
 describe('Purchase plays and add to cart', () => {
   const siteNavigator = new SiteNavigator();
+  for (const play of SamplePlays) {
+    ImitationPlay.setState(play, ImitationPlay.states.forSale);
+  }
   const SampleThings = SamplePlays.concat(SampleEquipments);
   // .concat([
   //   TourPlanWithPlaysNoEquipment
@@ -215,5 +180,4 @@ describe('Purchase plays and add to cart', () => {
     cartPO.expectPurchases(values(purchases));
     cartPO.expectTotalCharge(totalCharge);
   });
-
 });

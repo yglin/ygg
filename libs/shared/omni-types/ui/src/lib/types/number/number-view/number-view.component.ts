@@ -16,6 +16,7 @@ import { tap, takeWhile } from 'rxjs/operators';
 export class NumberViewComponent implements OnInit, OnChanges {
   @Input() number: number;
   _number: number;
+  isValidNumber = false;
 
   constructor() {}
 
@@ -28,26 +29,28 @@ export class NumberViewComponent implements OnInit, OnChanges {
 
     if (typeof this.number === 'number') {
       this._number = this.number;
-      if (this.number > 0) {
-        this._number = 0;
-        const timeStep = 15;
-        const timeLength = 300;
-        const increment =
-          ((this.number - this._number) * timeStep) / timeLength;
-        interval(timeStep)
-          .pipe(
-            tap(() => {
-              this._number = Math.min(
-                Math.ceil(this._number + increment),
-                this.number
-              );
-            }),
-            takeWhile(() => this._number < this.number)
-          )
-          .subscribe();
-      }
+      this.isValidNumber = true;
+      // if (this.number > 0) {
+      //   this._number = 0;
+      //   const timeStep = 15;
+      //   const timeLength = 300;
+      //   const increment =
+      //     ((this.number - this._number) * timeStep) / timeLength;
+      //   interval(timeStep)
+      //     .pipe(
+      //       tap(() => {
+      //         this._number = Math.min(
+      //           Math.ceil(this._number + increment),
+      //           this.number
+      //         );
+      //       }),
+      //       takeWhile(() => this._number < this.number)
+      //     )
+      //     .subscribe();
+      // }
     } else {
       this._number = undefined;
+      this.isValidNumber = false;
     }
   }
 }

@@ -12,7 +12,7 @@ import {
   PurchaseAction
 } from '@ygg/shopping/core';
 import { __values } from 'tslib';
-import { values } from 'lodash';
+import { values, extend } from 'lodash';
 import { ImitationEquipment } from './equipment';
 
 export const ImitationPlayCellDefines: { [key: string]: TheThingCellDefine } = {
@@ -84,25 +84,50 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
       ImitationPlayCellDefines.businessHours.name
     ],
     cellsDef: values(ImitationPlayCellDefines),
-    dataTableConfig: {
-      columns: {
-        簡介: {
-          label: '簡介'
-        },
-        費用: {
-          label: '每人費用'
-        },
-        時長: {
-          label: '體驗時長(分鐘)'
-        }
-      }
-    },
     filter: {
       name: '搜尋體驗',
       tags: ['play', '體驗']
     }
   }
 );
+
+const dataTableColumns = {};
+dataTableColumns[ImitationPlayCellDefines.introduction.name] = {
+  name: ImitationPlayCellDefines.introduction.name,
+  label: '簡介',
+  valueSource: 'cell'
+};
+dataTableColumns[ImitationPlayCellDefines.price.name] = {
+  name: ImitationPlayCellDefines.price.name,
+  label: '費用(每人)',
+  valueSource: 'cell'
+};
+dataTableColumns[ImitationPlayCellDefines.timeLength.name] = {
+  name: ImitationPlayCellDefines.timeLength.name,
+  label: '體驗時長(分鐘)',
+  valueSource: 'cell'
+};
+
+ImitationPlay.dataTableConfig = { columns: dataTableColumns };
+
+ImitationPlay.stateName = 'playwhat-play-state';
+ImitationPlay.states = {
+  new: {
+    name: 'new',
+    label: '新建立',
+    value: 10
+  },
+  assess: {
+    name: 'assess',
+    label: '審核中',
+    value: 20
+  },
+  forSale: {
+    name: 'forSale',
+    label: '上架品',
+    value: 30
+  }
+};
 
 export const RelationshipEquipment: Relationship = {
   name: ImitationEquipment.name,
@@ -111,6 +136,28 @@ export const RelationshipEquipment: Relationship = {
 
 ImitationPlay.relationships[RelationshipEquipment.name] = RelationshipEquipment;
 
-ImitationPlay.actions[PurchaseAction.id] = PurchaseAction;
+ImitationPlay.actions = {
+  'request-assess': {
+    id: 'request-assess',
+    icon: 'fact_check',
+    tooltip: '送出審核，審核成功即能上架販售',
+    permissions: ['requireOwner', 'new']
+  },
+  'approve-for-sale': {
+    id: 'approve-for-sale',
+    icon: 'shopping_cart',
+    tooltip: '上架體驗，作為商品可公開訂購',
+    permissions: ['requireAdmin', 'assess']
+  }
+};
+ImitationPlay.actions[PurchaseAction.id] = extend(PurchaseAction, {
+  permissions: ['forSale']
+});
 
+ImitationPlay.preSave = (theThing: TheThing): TheThing => {
+  if (!ImitationPlay.getState(theThing)) {
+    ImitationPlay.setState(theThing, ImitationPlay.states.new);
+  }
+  return theThing;
+};
 // ImitationPlay.addRelationDefine(RelationAddition);

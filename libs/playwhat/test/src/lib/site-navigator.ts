@@ -106,7 +106,7 @@ export class SiteNavigator {
     cy.get('.user-menu-item button#admin').click({ force: true });
     const route = path.shift();
     if (route === 'play') {
-      this.gotoAdminPlay(path);
+      cy.get('#plays').click();
     } else if (route === 'tags') {
       this.gotoAdminTags(path);
     } else if (route === 'scheduler') {

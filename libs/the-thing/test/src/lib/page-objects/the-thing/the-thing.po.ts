@@ -193,7 +193,7 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
   }
 
   runAction(action: TheThingAction) {
-    cy.get(this.getSelectorForActionButton(action)).click();
+    cy.get(this.getSelectorForActionButton(action), { timeout: 10000 }).click();
   }
 
   expectActionButton(action: TheThingAction) {

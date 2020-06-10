@@ -25,7 +25,10 @@ import {
 
 describe('Create play', () => {
   const siteNavigator = new SiteNavigator();
-  const myPlayListPO = new MyThingsDataTablePageObjectCypress();
+  const myPlayListPO = new MyThingsDataTablePageObjectCypress(
+    '',
+    ImitationPlay
+  );
   const playPO = new TheThingPageObjectCypress('', ImitationPlay);
   const equipPO = new TheThingPageObjectCypress('', ImitationEquipment);
   // const equipPO = new EquipmentViewPageObjectCypress();

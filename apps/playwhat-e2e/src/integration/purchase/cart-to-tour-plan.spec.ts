@@ -7,7 +7,8 @@ import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import {
   ImageThumbnailListPageObjectCypress,
   ConfirmDialogPageObjectCypress,
-  YggDialogPageObjectCypress
+  YggDialogPageObjectCypress,
+  EmceePageObjectCypress
 } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
 import { waitForLogin } from '@ygg/shared/user/test';
@@ -56,10 +57,13 @@ import {
   MinimalTourPlan,
   TourPlanWithPlaysAndEquipments
 } from '../tour-plan/sample-tour-plan';
-import { ImitationPlay, RelationshipEquipment } from '@ygg/playwhat/core';
+import { ImitationPlay, RelationshipEquipment, ImitationTourPlan } from '@ygg/playwhat/core';
 
 describe('Import/export purchases between cart and tour-plan', () => {
   const siteNavigator = new SiteNavigator();
+  for (const play of SamplePlays) {
+    ImitationPlay.setState(play, ImitationPlay.states.forSale);
+  }
   const SampleThings = SamplePlays.concat(SampleEquipments).concat([
     MinimalTourPlan,
     TourPlanFull,
@@ -71,7 +75,7 @@ describe('Import/export purchases between cart and tour-plan', () => {
   const headerPO = new HeaderPageObjectCypress();
   const tourPlanPO = new TourPlanPageObjectCypress();
   const playPO = new TheThingPageObjectCypress('', ImitationPlay);
-  const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
+  const myTourPlansPO = new MyThingsDataTablePageObjectCypress('', ImitationTourPlan);
 
   let currentUser: User;
 
@@ -175,7 +179,6 @@ describe('Import/export purchases between cart and tour-plan', () => {
       RelationPurchase.name
     ).map(r => Purchase.fromRelation(r));
     const totalCharge = sum(purchases.map(p => p.charge));
-    const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(
       TourPlanWithPlaysNoEquipment
@@ -197,16 +200,17 @@ describe('Import/export purchases between cart and tour-plan', () => {
       RelationPurchase.name
     ).map(r => Purchase.fromRelation(r));
     const totalCharge = sum(purchases.map(p => p.charge));
-    const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(
       TourPlanWithPlaysNoEquipment
     );
     tourPlanPO.expectVisible();
     tourPlanPO.importToCart();
-    const confirmPO = new ConfirmDialogPageObjectCypress();
-    confirmPO.expectMessage('原本在購物車中的購買項目將會被清除，是否繼續？');
-    confirmPO.confirm();
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.confirm('原本在購物車中的購買項目將會被清除，是否繼續？');
+    // const confirmPO = new ConfirmDialogPageObjectCypress();
+    // confirmPO.expectMessage('原本在購物車中的購買項目將會被清除，是否繼續？');
+    // confirmPO.confirm();
     cartPO.expectVisible();
     cartPO.expectPurchases(purchases);
     cartPO.expectTotalCharge(totalCharge);
@@ -229,7 +233,6 @@ describe('Import/export purchases between cart and tour-plan', () => {
       tourPlanPO.expectVisible();
       tourPlanPO.theThingPO.setValue(resultTourPlan);
       tourPlanPO.theThingPO.save(resultTourPlan);
-      const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
       siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
       myTourPlansPO.theThingDataTablePO.gotoTheThingView(resultTourPlan);
       tourPlanPO.expectVisible();

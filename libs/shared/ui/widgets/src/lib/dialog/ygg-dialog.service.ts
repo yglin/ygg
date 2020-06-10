@@ -7,6 +7,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
 import { Subscription } from 'rxjs';
 import { find } from 'lodash';
+import { AlertType } from '@ygg/shared/infra/core';
 
 export interface IYggDialogOpenConfig {
   title?: string;
@@ -54,13 +55,14 @@ export class YggDialogService {
 
   async confirm(content: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const confirmDialogRef = this.dialog.open(ConfirmDialogComponent, {
+      const confirmDialogRef = this.open(ConfirmDialogComponent, {
+        title: '確認並繼續',
         data: {
           content
         }
       });
       confirmDialogRef.afterClosed().subscribe(isConfirmed => {
-        if (isConfirmed) {
+        if (!!isConfirmed) {
           resolve(true);
         } else {
           resolve(false);
@@ -69,16 +71,18 @@ export class YggDialogService {
     });
   }
 
-  async alert(content: string): Promise<boolean> {
+  async alert(content: string, type: AlertType): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const alertDialogRef = this.dialog.open(AlertDialogComponent, {
+      const alertDialogRef = this.open(AlertDialogComponent, {
+        title: '訊息',
         data: {
-          content
+          content,
+          type
         }
       });
       alertDialogRef.afterClosed().subscribe(
         () => {
-          resolve();
+          resolve(true);
         },
         error => {
           console.error(error);

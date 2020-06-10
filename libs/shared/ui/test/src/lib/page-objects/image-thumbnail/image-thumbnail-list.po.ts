@@ -35,6 +35,10 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
     imageThumbnailPO.expectValue(item);
   }
 
+  expectSomeItem() {
+    cy.get(this.getSelectorForItem(), { timeout: 10000 }).should('exist');
+  }
+
   expectItem(item: ImageThumbnailItem) {
     this.getItem(item)
       .scrollIntoView()

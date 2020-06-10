@@ -41,7 +41,7 @@ const SampleThings = SamplePlays.concat(SampleEquipments).concat(
 
 const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();
 const tourPlanPO = new TourPlanPageObjectCypress();
-const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
+const myTourPlansPO = new MyThingsDataTablePageObjectCypress('', ImitationTourPlan);
 // let incomeRecord: IncomeRecord;
 
 describe('Tour-plan state manipulation', () => {

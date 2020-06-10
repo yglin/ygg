@@ -1,0 +1,18 @@
+<div class="play-admin">
+  <mat-tab-group>
+    <mat-tab *ngFor="let stateConfig of stateConfigs">
+      <ng-template mat-tab-label
+        ><div class="tab-header" [attr.tab-name]="stateConfig.name">
+          <h3>{{ stateConfig.label }}</h3>
+        </div></ng-template
+      >
+      <div class="tab-content" [attr.tab-name]="stateConfig.name">
+        <the-thing-data-table
+          [imitation]="imitation"
+          [theThings$]="stateConfig.theThings$"
+          readonly
+        ></the-thing-data-table>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

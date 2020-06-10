@@ -1,7 +1,8 @@
 import { PageObject } from '@ygg/shared/test/page-object';
 import {
   ConfirmDialogPageObjectCypress,
-  AlertDialogPageObjectCypress
+  AlertDialogPageObjectCypress,
+  YggDialogPageObjectCypress
 } from '../dialog';
 
 export class EmceePageObjectCypress extends PageObject {
@@ -13,15 +14,19 @@ export class EmceePageObjectCypress extends PageObject {
     message: string,
     options: {
       doConfirm?: boolean;
-      hasFollowedDialog?: boolean;
+      // hasFollowedDialog?: boolean;
     } = { doConfirm: true }
   ) {
-    const confirmDialogPO = new ConfirmDialogPageObjectCypress();
+    const dialogPO = new YggDialogPageObjectCypress();
+    const confirmDialogPO = new ConfirmDialogPageObjectCypress(
+      dialogPO.getSelector()
+    );
     confirmDialogPO.expectMessage(message);
+    // cy.pause();
     if (options.doConfirm) {
-      confirmDialogPO.confirm();
+      dialogPO.confirm();
     } else {
-      confirmDialogPO.cancel();
+      dialogPO.cancel();
     }
     // // console.log(options);
     // if (!options.hasFollowedDialog) {
@@ -30,9 +35,13 @@ export class EmceePageObjectCypress extends PageObject {
   }
 
   alert(message: string) {
-    const alertDialogPO = new AlertDialogPageObjectCypress();
+    const dialogPO = new YggDialogPageObjectCypress();
+    const alertDialogPO = new AlertDialogPageObjectCypress(
+      dialogPO.getSelector()
+    );
     alertDialogPO.expectMessage(message);
-    alertDialogPO.confirm();
+    // cy.pause();
+    dialogPO.confirm();
     // alertDialogPO.expectClosed();
   }
 }

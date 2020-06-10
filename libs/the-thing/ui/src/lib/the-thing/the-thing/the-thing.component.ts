@@ -46,6 +46,7 @@ export class TheThingComponent implements OnInit, OnDestroy {
   orderedCellNames: string[] = [];
   relationsMap: { [name: string]: TheThingRelation[] } = {};
   actions: TheThingAction[] = [];
+  actions$Subscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -140,28 +141,20 @@ export class TheThingComponent implements OnInit, OnDestroy {
         tap(canModify => (this.readonly = !canModify))
       );
 
-      // this.actions = values(this.imitation.actions);
-      const actions$ = updateTheThing$.pipe(
-        switchMap(() =>
-          this.theThingFactory.getPermittedActions$(
-            this.theThing,
-            this.imitation
-          )
-        ),
-        tap(actions => (this.actions = actions))
-      );
-
       if (this.focusSubscription) {
         this.focusSubscription.unsubscribe();
       }
-      this.focusSubscription = merge(
-        updateTheThing$,
-        canModify$,
-        actions$
-      ).subscribe();
+      this.focusSubscription = merge(updateTheThing$, canModify$).subscribe();
     } else {
       console.error(`theThing$ is empty: ${theThing$}`);
     }
+
+    if (this.actions$Subscription) {
+      this.actions$Subscription.unsubscribe();
+    }
+    this.actions$Subscription = this.theThingFactory
+      .getPermittedActions$(theThing$, this.imitation)
+      .subscribe(actions => (this.actions = actions));
   }
 
   ngOnDestroy(): void {
@@ -169,6 +162,7 @@ export class TheThingComponent implements OnInit, OnDestroy {
       subcsription.unsubscribe();
     }
     this.focusSubscription.unsubscribe();
+    this.actions$Subscription.unsubscribe();
   }
 
   addCellControl(cell: TheThingCell, options: { required?: boolean } = {}) {

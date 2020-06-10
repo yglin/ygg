@@ -7,17 +7,18 @@ import { Router } from '@angular/router';
 // import { routes } from './routes';
 import { MenuTree } from '@ygg/shared/ui/navigation';
 import { Image } from '@ygg/shared/omni-types/core';
-import { LoggedInGuard, AdminGuard } from "@ygg/shared/user/ui";
+import { LoggedInGuard, AdminGuard } from '@ygg/shared/user/ui';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { TheThingUiModule } from '@ygg/the-thing/ui';
 
 import { PlaywhatAdminService } from './playwhat-admin.service';
 import { HomepageManageComponent } from './homepage-manage/homepage-manage.component';
-import { ImitationTourPlan } from '@ygg/playwhat/core';
+import { ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
 import { TourPlanAdminComponent } from './tour-plan-admin/tour-plan-admin.component';
 import { ShoppingUiModule } from '@ygg/shopping/ui';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PlayAdminComponent } from './play-admin/play-admin.component';
 
 @NgModule({
   imports: [
@@ -31,7 +32,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     // SchedulerAdminRoutingModule,
     // RouterModule.forChild(routes)
   ],
-  declarations: [HomepageManageComponent, TourPlanAdminComponent],
+  declarations: [
+    HomepageManageComponent,
+    TourPlanAdminComponent,
+    PlayAdminComponent
+  ],
   providers: [
     {
       provide: APP_INITIALIZER,
@@ -52,16 +57,16 @@ export function configRouting(
   return () => {
     // console.log('Init module PlaywhatAdminModule');
     const router = injector.get(Router);
-    playwhatAdminService.menu.addItem({
-      id: 'homepage-manage',
-      link: 'homepage',
-      label: '首頁管理',
-      icon: new Image('/assets/images/admin/homepage-manage.png'),
-      tooltip: '管理首頁展示的物件',
-      routeConfig: {
-        component: HomepageManageComponent
-      }
-    });
+    // playwhatAdminService.menu.addItem({
+    //   id: 'homepage-manage',
+    //   link: 'homepage',
+    //   label: '首頁管理',
+    //   icon: new Image('/assets/images/admin/homepage-manage.png'),
+    //   tooltip: '管理首頁展示的物件',
+    //   routeConfig: {
+    //     component: HomepageManageComponent
+    //   }
+    // });
     playwhatAdminService.menu.addItem({
       id: 'tour-plans',
       link: 'tour-plans',
@@ -72,16 +77,16 @@ export function configRouting(
         component: TourPlanAdminComponent
       }
     });
-    // playwhatAdminService.menu.addItem({
-    //   id: 'tour-plans',
-    //   link: 'tour-plans',
-    //   label: '遊程規劃清單',
-    //   icon: new Image(ImitationTourPlan.image),
-    //   tooltip: '遊程規劃清單管理頁面',
-    //   routeConfig: {
-    //     redirectTo: `/the-things/admin/${ImitationTourPlan.id}`
-    //   }
-    // });
+    playwhatAdminService.menu.addItem({
+      id: 'plays',
+      link: 'plays',
+      label: '體驗管理',
+      icon: new Image(ImitationPlay.image),
+      tooltip: '體驗的審核上架',
+      routeConfig: {
+        component: PlayAdminComponent
+      }
+    });
     const adminRoute = playwhatAdminService.menu.toRoute();
     // console.dir(adminRoute);
     router.config.unshift(adminRoute);

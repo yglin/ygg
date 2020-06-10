@@ -138,12 +138,21 @@ export class TheThingDataTableComponent
   }
 
   onClickTheThing(theThing: TheThing) {
-    if (this.imitation.routePath) {
-      this.router.navigate(['/', this.imitation.routePath, theThing.id]);
+    // console.log(theThing.link);
+    // console.log(this.imitation.routePath);
+    if (this.imitation) {
+      if (this.imitation.routePath) {
+        this.router.navigate(['/', this.imitation.routePath, theThing.id]);
+      } else {
+        this.router.navigate([
+          '/',
+          'the-things',
+          this.imitation.id,
+          theThing.id
+        ]);
+      }
     } else if (theThing.link) {
       this.router.navigateByUrl(theThing.link);
-    } else {
-      this.router.navigate(['/', 'the-things', theThing.id]);
     }
   }
 
