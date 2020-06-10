@@ -7,7 +7,8 @@ import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import {
   ImageThumbnailListPageObjectCypress,
   ConfirmDialogPageObjectCypress,
-  YggDialogPageObjectCypress
+  YggDialogPageObjectCypress,
+  EmceePageObjectCypress
 } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
 import { waitForLogin } from '@ygg/shared/user/test';
@@ -205,9 +206,11 @@ describe('Import/export purchases between cart and tour-plan', () => {
     );
     tourPlanPO.expectVisible();
     tourPlanPO.importToCart();
-    const confirmPO = new ConfirmDialogPageObjectCypress();
-    confirmPO.expectMessage('原本在購物車中的購買項目將會被清除，是否繼續？');
-    confirmPO.confirm();
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.confirm('原本在購物車中的購買項目將會被清除，是否繼續？');
+    // const confirmPO = new ConfirmDialogPageObjectCypress();
+    // confirmPO.expectMessage('原本在購物車中的購買項目將會被清除，是否繼續？');
+    // confirmPO.confirm();
     cartPO.expectVisible();
     cartPO.expectPurchases(purchases);
     cartPO.expectTotalCharge(totalCharge);

@@ -1,10 +1,6 @@
+import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
+import { stateConfirmMessage, TheThing, TheThingState } from '@ygg/the-thing/core';
 import { TheThingStatePageObject } from '@ygg/the-thing/ui';
-import {
-  TheThing,
-  TheThingState,
-  stateConfirmMessage
-} from '@ygg/the-thing/core';
-import { ConfirmDialogPageObjectCypress } from '@ygg/shared/ui/test';
 
 export class TheThingStatePageObjectCypress extends TheThingStatePageObject {
   
@@ -18,9 +14,11 @@ export class TheThingStatePageObjectCypress extends TheThingStatePageObject {
 
   setValue(theThing: TheThing, state: TheThingState) {
     cy.get(this.getSelectorForButtonState(state)).click();
-    const confirmDialogPO = new ConfirmDialogPageObjectCypress();
-    confirmDialogPO.expectMessage(stateConfirmMessage(theThing, state));
-    confirmDialogPO.confirm();
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.confirm(stateConfirmMessage(theThing, state));
+    // const confirmDialogPO = new ConfirmDialogPageObjectCypress();
+    // confirmDialogPO.expectMessage(stateConfirmMessage(theThing, state));
+    // confirmDialogPO.confirm();
   }
 
   expectValue(state: TheThingState) {

@@ -31,6 +31,36 @@ h6,
   color: rgb(0, 61, 0);
 }
 
+.ygg-dialog .mat-dialog-title {
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    62deg,
+    rgba(2, 0, 36, 0.20258525773590685) 0%,
+    rgba(9, 121, 10, 0.4322771344866071) 20%,
+    rgba(7, 146, 78, 1) 35%,
+    rgba(29, 159, 5, 0.19698301683954833) 51%,
+    rgba(30, 171, 4, 1) 59%,
+    rgba(18, 131, 0, 1) 80%,
+    rgba(31, 255, 0, 0.19698301683954833) 100%
+  );
+  color: bisque;
+  text-shadow: 2px 2px 2px darkgreen;
+}
+
+.ygg-dialog .mat-dialog-container {
+  background: rgb(255, 241, 219);
+  background: linear-gradient(
+    62deg,
+    rgba(255, 241, 219, 0.9) 0%,
+    rgba(255, 242, 230, 0.9) 31%,
+    rgba(255, 255, 255, 1) 41%,
+    rgba(255, 243, 229, 0.9) 45%,
+    rgba(255, 254, 253, 1) 80%,
+    rgba(255, 246, 233, 0.9) 100%
+  );
+}
+
+
 /* .edit {
   opacity: 0.25;
 }

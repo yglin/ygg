@@ -11,7 +11,7 @@ export class EmceeService extends Emcee {
   }
 
   async alert(message: string, type: AlertType) {
-    return this.dialog.alert(message);
+    return this.dialog.alert(message, type);
   }
 
   async confirm(message: string): Promise<boolean> {
