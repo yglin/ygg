@@ -27,6 +27,9 @@
           [imitation]="imitation"
         ></the-thing-state>
       </div>
+      <div class="owner">
+        <ygg-user-thumbnail [id]="theThing.ownerId"></ygg-user-thumbnail>
+      </div>
     </div>
     <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
       <div *ngFor="let action of actions">

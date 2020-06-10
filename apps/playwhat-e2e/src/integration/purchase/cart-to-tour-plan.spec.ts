@@ -56,10 +56,13 @@ import {
   MinimalTourPlan,
   TourPlanWithPlaysAndEquipments
 } from '../tour-plan/sample-tour-plan';
-import { ImitationPlay, RelationshipEquipment } from '@ygg/playwhat/core';
+import { ImitationPlay, RelationshipEquipment, ImitationTourPlan } from '@ygg/playwhat/core';
 
 describe('Import/export purchases between cart and tour-plan', () => {
   const siteNavigator = new SiteNavigator();
+  for (const play of SamplePlays) {
+    ImitationPlay.setState(play, ImitationPlay.states.forSale);
+  }
   const SampleThings = SamplePlays.concat(SampleEquipments).concat([
     MinimalTourPlan,
     TourPlanFull,
@@ -71,7 +74,7 @@ describe('Import/export purchases between cart and tour-plan', () => {
   const headerPO = new HeaderPageObjectCypress();
   const tourPlanPO = new TourPlanPageObjectCypress();
   const playPO = new TheThingPageObjectCypress('', ImitationPlay);
-  const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
+  const myTourPlansPO = new MyThingsDataTablePageObjectCypress('', ImitationTourPlan);
 
   let currentUser: User;
 
@@ -175,7 +178,6 @@ describe('Import/export purchases between cart and tour-plan', () => {
       RelationPurchase.name
     ).map(r => Purchase.fromRelation(r));
     const totalCharge = sum(purchases.map(p => p.charge));
-    const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(
       TourPlanWithPlaysNoEquipment
@@ -197,7 +199,6 @@ describe('Import/export purchases between cart and tour-plan', () => {
       RelationPurchase.name
     ).map(r => Purchase.fromRelation(r));
     const totalCharge = sum(purchases.map(p => p.charge));
-    const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(
       TourPlanWithPlaysNoEquipment
@@ -229,7 +230,6 @@ describe('Import/export purchases between cart and tour-plan', () => {
       tourPlanPO.expectVisible();
       tourPlanPO.theThingPO.setValue(resultTourPlan);
       tourPlanPO.theThingPO.save(resultTourPlan);
-      const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
       siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
       myTourPlansPO.theThingDataTablePO.gotoTheThingView(resultTourPlan);
       tourPlanPO.expectVisible();

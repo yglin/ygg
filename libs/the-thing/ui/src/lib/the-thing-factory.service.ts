@@ -21,7 +21,8 @@ import {
   shareReplay,
   map,
   filter,
-  catchError
+  catchError,
+  switchMap
 } from 'rxjs/operators';
 import {
   TheThingImitationAccessService,
@@ -294,10 +295,14 @@ export class TheThingFactoryService
 
   async save(
     theThing: TheThing,
-    options: ITheThingSaveOptions = {
+    options: {
+      requireOwner: boolean;
+      imitation?: TheThingImitation;
+    } = {
       requireOwner: true
     }
   ): Promise<TheThing> {
+    const imitation: TheThingImitation = options.imitation || this.imitation;
     if (options.requireOwner && !theThing.ownerId) {
       try {
         const currentUser = await this.authUiService.requireLogin();
@@ -310,6 +315,12 @@ export class TheThingFactoryService
       const confirm = await this.emceeService.confirm(
         `確定要儲存 ${theThing.name} ？`
       );
+      if (!confirm) {
+        return;
+      }
+      if (imitation && typeof imitation.preSave === 'function') {
+        theThing = imitation.preSave(theThing);
+      }
       await this.theThingAccessService.upsert(theThing);
       // Connect to remote source
       this.connectRemoteSource(theThing.id);
@@ -384,13 +395,18 @@ export class TheThingFactoryService
   }
 
   getPermittedActions$(
-    theThing: TheThing,
+    theThing$: Observable<TheThing>,
     imitation: TheThingImitation
   ): Observable<TheThingAction[]> {
-    const isOwner$ = this.authorizeService.isOwner$(theThing);
+    const isOwner$ = theThing$.pipe(
+      switchMap(theThing => this.authorizeService.isOwner$(theThing))
+    );
     const isAdmin$ = this.authorizeService.isAdmin$();
-    return combineLatest([isOwner$, isAdmin$]).pipe(
-      map(([isOwner, isAdmin]) => {
+    return combineLatest([theThing$, isOwner$, isAdmin$]).pipe(
+      map(([theThing, isOwner, isAdmin]) => {
+        console.log(
+          `theThing ${theThing.id}, theThing owner ${theThing.ownerId}, isOwner = ${isOwner}`
+        );
         return values(imitation.actions).filter(action => {
           if (isEmpty(action.permissions)) {
             return true;

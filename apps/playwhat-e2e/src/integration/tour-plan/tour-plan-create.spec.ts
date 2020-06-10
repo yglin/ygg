@@ -31,7 +31,7 @@ import {
   MyThingsDataTablePageObjectCypress,
   MyThingsPageObjectCypress
 } from '@ygg/the-thing/test';
-import { SampleEquipments, SamplePlays } from '../play/sample-plays';
+import { SampleEquipments, SamplePlays, MinimumPlay } from '../play/sample-plays';
 import { MinimalTourPlan, TourPlanFull } from './sample-tour-plan';
 
 describe('Tour-plan create', () => {
@@ -40,7 +40,7 @@ describe('Tour-plan create', () => {
 
   const tourPlanPO = new TourPlanPageObjectCypress();
   const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();
-  const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
+  const myTourPlansPO = new MyThingsDataTablePageObjectCypress('', ImitationTourPlan);
   let currentUser: User;
 
   before(() => {
@@ -167,10 +167,12 @@ describe('Tour-plan create', () => {
   });
 
   it('Show saved tour-plan in /tour-plans/my', () => {
-    tourPlanPO.theThingPO.setValue(MinimalTourPlan);
-    tourPlanPO.theThingPO.save(MinimalTourPlan);
+    const tourPlan = MinimalTourPlan.clone();
+    tourPlan.name = '測試遊程（儲存後顯示在我的遊程清單中）';
+    tourPlanPO.theThingPO.setValue(tourPlan);
+    tourPlanPO.theThingPO.save(tourPlan);
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
+    myTourPlansPO.theThingDataTablePO.expectTheThing(tourPlan);
   });
 
   it('Require login when save', () => {
@@ -178,18 +180,20 @@ describe('Tour-plan create', () => {
     // // Logout will redirect user back to home, cause re-render of tour-plan-builder
     // // So we wait several seconds here for tour-plan-builder to be stable
     // cy.wait(3000);
+    const tourPlan = MinimalTourPlan.clone();
+    tourPlan.name = '測試遊程（需要登入才能儲存）';
     siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
-    tourPlanPO.theThingPO.setValue(MinimalTourPlan);
+    tourPlanPO.theThingPO.setValue(tourPlan);
     tourPlanPO.theThingPO.clickSave();
     const loginDialogPO = new LoginDialogPageObjectCypress();
     loginDialogPO.expectVisible();
     login();
     loginDialogPO.expectClosed();
     const emceePO = new EmceePageObjectCypress();
-    emceePO.confirm(`確定要儲存 ${MinimalTourPlan.name} ？`);
-    emceePO.alert(`已成功儲存 ${MinimalTourPlan.name}`);
+    emceePO.confirm(`確定要儲存 ${tourPlan.name} ？`);
+    emceePO.alert(`已成功儲存 ${tourPlan.name}`);
     // tourPlanPO.theThingPO.expectValue(MinimalTourPlan);
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
+    myTourPlansPO.theThingDataTablePO.expectTheThing(tourPlan);
   });
 });

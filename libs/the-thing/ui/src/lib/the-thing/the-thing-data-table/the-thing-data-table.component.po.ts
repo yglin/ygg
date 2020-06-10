@@ -19,6 +19,7 @@ export abstract class TheThingDataTablePageObject extends PageObject {
     inputSearch: '.search input',
     checkboxSelectAll: '.toggle-select-all label input[type="checkbox"]'
   };
+  imitation: TheThingImitation;
 
   getSelectorForFirst(): string {
     return `${this.getSelector()} tr.first`;
@@ -29,10 +30,7 @@ export abstract class TheThingDataTablePageObject extends PageObject {
   }
 
   abstract expectVisible(): void;
-  abstract expectTheThing(
-    theThing: TheThing,
-    imitation?: TheThingImitation
-  ): void;
+  abstract expectTheThing(theThing: TheThing): void;
   abstract gotoTheThingView(theThing: TheThing): void;
   abstract gotoTheThingEdit(theThing: TheThing): void;
   abstract expectNotTheThing(theThings: TheThing | TheThing[]): void;

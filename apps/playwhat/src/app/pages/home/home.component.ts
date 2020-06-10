@@ -24,8 +24,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     private router: Router,
     private theThingAccessService: TheThingAccessService
   ) {
-    this.plays$ = theThingAccessService.listByFilter$(ImitationPlay.filter);
-    
+    const filter = ImitationPlay.filter.clone();
+    filter.addState(
+      ImitationPlay.stateName,
+      ImitationPlay.states.forSale.value
+    );
+    this.plays$ = theThingAccessService.listByFilter$(filter);
+
     this.links.push({
       id: 'create-tour-plan',
       name: '新增一個遊程計畫',

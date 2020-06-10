@@ -31,6 +31,7 @@ import { noop } from 'lodash';
 import { EquipmentViewComponent } from './ui/equipment/equipment-view/equipment-view.component';
 import { PurchaseService } from '@ygg/shopping/factory';
 import { TourPlanComponent } from './tour-plan/tour-plan.component';
+import { PlayFactoryService } from './play-factory.service';
 
 @NgModule({
   imports: [
@@ -82,8 +83,8 @@ import { TourPlanComponent } from './tour-plan/tour-plan.component';
     },
     {
       provide: APP_INITIALIZER,
-      useFactory: initTourPlanFactory,
-      deps: [TourPlanFactoryService],
+      useFactory: initFactoryServices,
+      deps: [TourPlanFactoryService, PlayFactoryService],
       multi: true
     },
     {
@@ -97,8 +98,11 @@ import { TourPlanComponent } from './tour-plan/tour-plan.component';
 })
 export class PlaywhatUiModule {}
 
-export function initTourPlanFactory(tourPlanFactory: TourPlanFactoryService) {
-  // Do nothing, just to call TourPlanFactoryService.constructor() in advance
+export function initFactoryServices(
+  tourPlanFactory: TourPlanFactoryService,
+  playFactory: PlayFactoryService
+) {
+  // Do nothing, just to instantiate factory services in advance
   return noop;
 }
 

@@ -45,7 +45,7 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
   const cartPO = new ShoppingCartEditorPageObjectCypress();
   const imageThumbnailListPO = new ImageThumbnailListPageObjectCypress();
   const tourPlanPO = new TourPlanPageObjectCypress();
-  const myTourPlansPO = new MyThingsDataTablePageObjectCypress();
+  const myTourPlansPO = new MyThingsDataTablePageObjectCypress('', ImitationTourPlan);
   const playPO = new TheThingPageObjectCypress('', ImitationPlay);
 
   before(() => {

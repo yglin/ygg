@@ -1,12 +1,13 @@
 import { MyThingsDataTablePageObject } from '@ygg/the-thing/ui';
 import { TheThingDataTablePageObjectCypress } from './the-thing-data-table.po';
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingImitation } from '@ygg/the-thing/core';
 
 export class MyThingsDataTablePageObjectCypress extends MyThingsDataTablePageObject {
-  constructor(parentSelector?: string) {
+  constructor(parentSelector: string, imitation: TheThingImitation) {
     super(parentSelector);
     this.theThingDataTablePO = new TheThingDataTablePageObjectCypress(
-      this.getSelector()
+      this.getSelector(),
+      imitation
     );
   }
 

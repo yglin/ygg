@@ -86,6 +86,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   } = {};
   actions: { [id: string]: TheThingAction } = {};
   pipes: { [source: string]: (theThing: TheThing) => void } = {};
+  preSave?: (theThing: TheThing) => TheThing;
 
   /** Create time */
   createAt: number;
