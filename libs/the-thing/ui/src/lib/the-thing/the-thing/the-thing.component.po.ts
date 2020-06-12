@@ -60,11 +60,10 @@ export abstract class TheThingPageObject extends PageObject {
     return `${this.getSelector()} button.action.${action.id}`;
   }
 
-  // getSelectorForEquipment(equip: TheThing): string {
-  //   return `${this.getSelector('equipments')} .equipment:contains("${
-  //     equip.name
-  //   }")`;
-  // }
+  getSelectorForModifyButtons(): string {
+    return `${this.getSelector()} button.edit`;
+  }
+
   expectState(state: TheThingState) {
     this.statePO.expectValue(state);
   }
@@ -89,4 +88,6 @@ export abstract class TheThingPageObject extends PageObject {
   abstract runAction(action: TheThingAction);
   abstract expectActionButton(action: TheThingAction);
   abstract expectNoActionButton(action: TheThingAction);
+  abstract expectModifiable(): void;
+  abstract expectReadonly(): void;
 }

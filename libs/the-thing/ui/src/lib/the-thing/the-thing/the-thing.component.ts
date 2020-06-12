@@ -142,7 +142,11 @@ export class TheThingComponent implements OnInit, OnDestroy {
 
       const canModify$ = updateTheThing$.pipe(
         switchMap(() => this.authorizeService.canModify$(this.theThing)),
-        tap(canModify => (this.readonly = !canModify))
+        tap(canModify => {
+          this.readonly = !(
+            canModify && this.imitation.canModify(this.theThing)
+          );
+        })
       );
 
       if (this.focusSubscription) {

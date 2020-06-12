@@ -155,7 +155,7 @@ export class PlayFactoryService implements OnDestroy, Resolve<TheThing> {
 
   async requestAssess(theThing: TheThing) {
     const confirm = await this.emcee.confirm(
-      `送出 ${theThing.name} 給管理者審核？審核成功即可上架販售`
+      `送出 ${theThing.name} 給管理者審核？送出後資料便無法修改，審核成功即可上架販售`
     );
     if (confirm) {
       try {
@@ -183,6 +183,24 @@ export class PlayFactoryService implements OnDestroy, Resolve<TheThing> {
     }
   }
 
+  async backToEditing(theThing: TheThing) {
+    const confirmMessage = `將體驗 ${theThing.name} 退回資料修改？${
+      ImitationPlay.isState(theThing, ImitationPlay.states.forSale)
+        ? '會一併下架體驗'
+        : ''
+    }`;
+    const confirm = await this.emcee.confirm(confirmMessage);
+    if (confirm) {
+      try {
+        ImitationPlay.setState(theThing, ImitationPlay.states.editing);
+        await this.theThingAccessor.upsert(theThing);
+        this.emcee.info(`體驗 ${theThing.name} 已退回資料修改狀態`);
+      } catch (error) {
+        this.emcee.error(`已退回資料修改失敗，錯誤原因：${error.message}`);
+      }
+    }
+  }
+
   runAction(action: TheThingAction, theThing: TheThing) {
     switch (action.id) {
       case 'request-assess':
@@ -191,8 +209,13 @@ export class PlayFactoryService implements OnDestroy, Resolve<TheThing> {
       case 'approve-for-sale':
         this.approveForSale(theThing);
         break;
-
+      case 'back-to-editing':
+        this.backToEditing(theThing);
+        break;
       default:
+        console.error(
+          `Not supported action: ${action.id} on play ${theThing.id}`
+        );
         break;
     }
   }

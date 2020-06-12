@@ -117,6 +117,11 @@ ImitationPlay.states = {
     label: '新建立',
     value: 10
   },
+  editing: {
+    name: 'editing',
+    label: '修改中',
+    value: 15
+  },
   assess: {
     name: 'assess',
     label: '審核中',
@@ -141,22 +146,43 @@ ImitationPlay.actions = {
     id: 'request-assess',
     icon: 'fact_check',
     tooltip: '送出審核，審核成功即能上架販售',
-    permissions: ['requireOwner', 'new']
+    permissions: ['requireOwner', 'editing']
   },
   'approve-for-sale': {
     id: 'approve-for-sale',
     icon: 'shopping_cart',
     tooltip: '上架體驗，作為商品可公開訂購',
     permissions: ['requireAdmin', 'assess']
+  },
+  'back-to-editing': {
+    id: 'back-to-editing',
+    icon: 'undo',
+    tooltip: '將體驗撤回修改',
+    permissions: ['requireAdmin', 'assess,forSale']
   }
 };
+
 ImitationPlay.actions[PurchaseAction.id] = extend(PurchaseAction, {
   permissions: ['forSale']
 });
 
-ImitationPlay.preSave = (theThing: TheThing): TheThing => {
-  if (!ImitationPlay.getState(theThing)) {
+ImitationPlay.canModify = (theThing: TheThing): boolean => {
+  return (
+    ImitationPlay.isState(theThing, ImitationPlay.states.new) ||
+    ImitationPlay.isState(theThing, ImitationPlay.states.editing)
+  );
+};
+
+ImitationPlay.creators.push(
+  (theThing: TheThing): TheThing => {
     ImitationPlay.setState(theThing, ImitationPlay.states.new);
+    return theThing;
+  }
+);
+
+ImitationPlay.preSave = (theThing: TheThing): TheThing => {
+  if (ImitationPlay.isState(theThing, ImitationPlay.states.new)) {
+    ImitationPlay.setState(theThing, ImitationPlay.states.editing);
   }
   return theThing;
 };

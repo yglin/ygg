@@ -203,4 +203,12 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
   expectNoActionButton(action: TheThingAction) {
     cy.get(this.getSelectorForActionButton(action)).should('not.be.visible');
   }
+
+  expectModifiable(): void {
+    cy.get(this.getSelectorForModifyButtons()).should('be.visible');
+  }
+
+  expectReadonly(): void {
+    cy.get(this.getSelectorForModifyButtons()).should('not.be.visible');
+  }
 }
