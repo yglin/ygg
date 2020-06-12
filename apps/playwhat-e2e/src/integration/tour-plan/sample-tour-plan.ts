@@ -1,18 +1,14 @@
 import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 import { DateRange, DayTimeRange, Contact } from '@ygg/shared/omni-types/core';
 import { randomBytes } from 'crypto';
-import { random, find, omit } from 'lodash';
+import { random, find, omit, pick } from 'lodash';
 import {
   SamplePlays,
   SampleEquipments,
   PlaysWithoutEquipment,
   PlaysWithEquipment
 } from '../play/sample-plays';
-import {
-  RelationPurchase,
-  Purchase,
-  ImitationOrder
-} from '@ygg/shopping/core';
+import { RelationPurchase, Purchase, ImitationOrder } from '@ygg/shopping/core';
 import {
   RelationshipEquipment,
   ImitationTourPlan,
@@ -156,7 +152,10 @@ for (const play of PlaysWithEquipment) {
   TourPlanWithPlaysAndEquipments.addRelation(purchase.toRelation());
   if (play.hasRelation(RelationshipEquipment.name)) {
     for (const relation of play.getRelations(RelationshipEquipment.name)) {
-      const addition = find(SampleEquipments, ad => ad.id === relation.objectId);
+      const addition = find(
+        SampleEquipments,
+        ad => ad.id === relation.objectId
+      );
       if (addition) {
         const purchaseAd = Purchase.purchase(
           TourPlanWithPlaysAndEquipments,
@@ -192,7 +191,10 @@ export function stubTourPlansByStateAndMonth(): {
   [state: string]: TheThing[];
 } {
   const result = {};
-  for (const name in omit(ImitationOrder.states, 'new')) {
+  for (const name in pick(
+    ImitationOrder.states,
+    ImitationTourPlan.admin.states
+  )) {
     if (ImitationOrder.states.hasOwnProperty(name)) {
       const state = ImitationOrder.states[name];
 

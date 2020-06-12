@@ -253,7 +253,7 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
   }
 
   async sendApplication(tourPlan: TheThing) {
-    const confirm = await this.emcee.confirm(`將此遊程 ${tourPlan.name} 送出申請？`);
+    const confirm = await this.emcee.confirm(`將此遊程 ${tourPlan.name} 送出申請？一旦送出便無法再修改資料`);
     if (confirm) {
       ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.applied);
       await this.theThingAccessor.upsert(tourPlan);
@@ -262,11 +262,11 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
   }
 
   async cancelApplication(tourPlan: TheThing) {
-    const confirm = await this.emcee.confirm(`取消此遊程 ${tourPlan.name} 的申請？`);
+    const confirm = await this.emcee.confirm(`取消此遊程 ${tourPlan.name} 的申請並退回修改狀態？`);
     if (confirm) {
-      ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.new);
+      ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.editing);
       await this.theThingAccessor.upsert(tourPlan);
-      this.emcee.info(`遊程 ${tourPlan.name} 已取消申請。`);
+      this.emcee.info(`遊程 ${tourPlan.name} 已取消申請並退回修改`);
     }
   }
 

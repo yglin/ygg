@@ -43,7 +43,12 @@ export class TourPlanComponent implements OnInit, OnDestroy {
             );
           }),
           switchMap(tourPlan => this.authorizeService.canModify$(tourPlan)),
-          tap(canModify => (this.readonly = !canModify))
+          tap(
+            canModify =>
+              (this.readonly = !(
+                canModify && ImitationTourPlan.canModify(this.tourPlan)
+              ))
+          )
         )
         .subscribe()
     );

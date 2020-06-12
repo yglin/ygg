@@ -227,14 +227,18 @@ export class TourPlanPageObjectCypress extends TourPlanPageObject {
   confirmPaid(tourPlan: TheThing) {
     this.theThingPO.runAction(ImitationTourPlan.actions['confirm-paid']);
     const emceePO = new EmceePageObjectCypress();
-    emceePO.confirm(`確定此遊程 ${tourPlan.name} 的所有款項已付清，標記為已付款？`);
+    emceePO.confirm(
+      `確定此遊程 ${tourPlan.name} 的所有款項已付清，標記為已付款？`
+    );
     emceePO.alert(`遊程 ${tourPlan.name} 標記為已付款。`);
   }
 
   confirmCompleted(tourPlan: TheThing) {
     this.theThingPO.runAction(ImitationTourPlan.actions['confirm-completed']);
     const emceePO = new EmceePageObjectCypress();
-    emceePO.confirm(`確定此遊程 ${tourPlan.name} 的所有活動流程已結束，標記為已完成？`);
+    emceePO.confirm(
+      `確定此遊程 ${tourPlan.name} 的所有活動流程已結束，標記為已完成？`
+    );
     emceePO.alert(`遊程 ${tourPlan.name} 標記為已完成。`);
   }
 
@@ -351,6 +355,10 @@ export class TourPlanPageObjectCypress extends TourPlanPageObject {
     cellCreatorPO.setCellValue(cell);
     dialogPO.confirm();
     dialogPO.expectClosed();
+  }
+
+  expectModifiable() {
+    cy.get(this.getSelector('editButtons')).should('be.visible');
   }
 
   expectReadonly() {

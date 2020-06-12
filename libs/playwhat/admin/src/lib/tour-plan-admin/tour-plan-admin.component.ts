@@ -35,7 +35,7 @@ export class TourPlanAdminComponent implements OnInit {
   ) {
     this.months = range(12).map(offset => Month.fromMonthOffset(-offset));
     this.formControlSelectMonth = new FormControl(0);
-    this.stateConfigs = ['applied', 'paid', 'completed'].map(name => {
+    this.stateConfigs = ImitationTourPlan.admin.states.map(name => {
       const filter = ImitationTourPlan.filter.clone();
       filter.addState(
         ImitationOrder.stateName,

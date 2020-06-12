@@ -22,16 +22,21 @@ const states: TheThingState[] = [
   {
     name: 'new',
     label: '新建立',
-    value: 1,
+    value: 10,
     icon: 'undo',
     permissions: ['isOwner', 'applied'],
     confirmMessage: (theThing: TheThing) =>
       `取消訂單 ${theThing.name} 回到新建立狀態？`
   },
   {
+    name: 'editing',
+    label: '修改中',
+    value: 20,
+  },
+  {
     name: 'applied',
     label: '已提交',
-    value: 3,
+    value: 30,
     icon: 'send',
     permissions: ['isOwner', 'new'],
     confirmMessage: (theThing: TheThing) => `送出訂單 ${theThing.name} 的申請？`
@@ -39,7 +44,7 @@ const states: TheThingState[] = [
   {
     name: 'paid',
     label: '已付款',
-    value: 5,
+    value: 50,
     icon: 'payment',
     permissions: ['isAdmin', 'applied'],
     confirmMessage: (theThing: TheThing) =>
@@ -48,7 +53,7 @@ const states: TheThingState[] = [
   {
     name: 'completed',
     label: '已完成',
-    value: 9,
+    value: 100,
     icon: 'done_all',
     permissions: ['isAdmin', 'paid'],
     confirmMessage: (theThing: TheThing) =>

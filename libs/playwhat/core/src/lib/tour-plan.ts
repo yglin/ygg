@@ -128,6 +128,12 @@ ImitationTourPlan.dataTableConfig = {
   )
 };
 
+ImitationTourPlan.admin.states = [
+  'applied',
+  'paid',
+  'completed'
+]
+
 // export function getTotalCharge(tourPlan: TheThing): number {
 //   let totalCharge = 0;
 //   const relations = tourPlan.getRelations(RelationPurchase.name);
@@ -147,13 +153,13 @@ ImitationTourPlan.actions = {
     id: 'send-application',
     tooltip: '將此遊程計畫送出管理者審核',
     icon: 'send',
-    permissions: ['new', 'requireOwner']
+    permissions: ['editing', 'requireOwner']
   },
   'cancel-application': {
     id: 'cancel-application',
     tooltip: '取消此遊程計畫的申請',
-    icon: 'backspace',
-    permissions: ['applied', 'requireOwner']
+    icon: 'undo',
+    permissions: ['applied', 'requireAdmin']
   },
   'confirm-paid': {
     id: 'confirm-paid',
@@ -182,3 +188,25 @@ ImitationTourPlan.pipes[`cell.${CellNames.dateRange}`] = (
 export function defaultTourPlanName(dateRange: DateRange): string {
   return `深度遊趣${dateRange.days() + 1}日遊`;
 }
+
+ImitationTourPlan.creators.push(
+  (theThing: TheThing): TheThing => {
+    ImitationTourPlan.setState(theThing, ImitationTourPlan.states.new);
+    return theThing;
+  }
+);
+
+ImitationTourPlan.preSave = (theThing: TheThing): TheThing => {
+  if (ImitationTourPlan.isState(theThing, ImitationTourPlan.states.new)) {
+    ImitationTourPlan.setState(theThing, ImitationTourPlan.states.editing);
+  }
+  return theThing;
+};
+
+ImitationTourPlan.canModify = (theThing: TheThing): boolean => {
+  return (
+    ImitationTourPlan.isState(theThing, ImitationTourPlan.states.new) ||
+    ImitationTourPlan.isState(theThing, ImitationTourPlan.states.editing)
+  );
+};
+

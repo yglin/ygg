@@ -88,6 +88,9 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   pipes: { [source: string]: (theThing: TheThing) => void } = {};
   preSave?: (theThing: TheThing) => TheThing;
   canModify?: (theThing: TheThing) => boolean = () => true;
+  admin: {
+    states?: string[];
+  } = {};
 
   /** Create time */
   createAt: number;
