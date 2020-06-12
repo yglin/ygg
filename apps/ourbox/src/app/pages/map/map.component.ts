@@ -1,28 +1,25 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import * as leaflet from 'leaflet';
-import { range, random, extend } from 'lodash';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { GeoBound, ImitationItemCells, ItemFilter } from '@ygg/ourbox/core';
 import { GeoPoint, Location } from '@ygg/shared/omni-types/core';
-import {
-  forgeItems,
-  Item,
-  ItemFilter,
-  CellNames,
-  GeoBound
-} from '@ygg/ourbox/core';
+import { TheThing } from '@ygg/the-thing/core';
+import * as leaflet from 'leaflet';
 import 'leaflet/dist/images/marker-icon-2x.png';
 import 'leaflet/dist/images/marker-shadow.png';
-import { BehaviorSubject, Subject, Observable, merge } from 'rxjs';
-import { switchMap, tap, map, debounceTime } from 'rxjs/operators';
-import { ItemFactoryService } from '../../item-factory.service';
-import { FormControl } from '@angular/forms';
+import { extend } from 'lodash';
+import { merge, Observable, Subject } from 'rxjs';
+import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
+import { BoxFactoryService } from '../../box-factory.service';
 
 class Marker {
-  static fromItem(item: Item): Marker {
+  static fromItem(item: TheThing): Marker {
     return new Marker({
       id: item.id,
       name: item.name,
       imgUrl: item.image,
-      geoPoint: (item.getCellValue(CellNames.location) as Location).geoPoint
+      geoPoint: (item.getCellValue(
+        ImitationItemCells.location.name
+      ) as Location).geoPoint
     });
   }
 
@@ -51,7 +48,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   // keywordSearch$: Subject<string> = new Subject();
   formControlKeyword: FormControl = new FormControl();
 
-  constructor(private itemFactory: ItemFactoryService) {
+  constructor(private boxFactory: BoxFactoryService) {
     this.filter$ = merge(
       this.boundChange$.pipe(
         tap((bound: GeoBound) => (this.filter.geoBound = bound))
@@ -64,8 +61,8 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     this.filter$
       .pipe(
-        switchMap(filter => this.itemFactory.find(filter)),
-        tap((items: Item[]) => {
+        switchMap(filter => this.boxFactory.findItemsOnMap(filter)),
+        tap((items: TheThing[]) => {
           this.clearMarkers();
           this.addMarkers(items.map(item => Marker.fromItem(item)));
         })

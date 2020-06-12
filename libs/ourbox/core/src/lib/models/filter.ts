@@ -1,8 +1,7 @@
-import { TheThingFilter } from '@ygg/the-thing/core';
-import { Item } from './item';
+import { TheThingFilter, TheThing } from '@ygg/the-thing/core';
+import { ImitationItemCells } from './item';
 import { GeoPoint } from '@ygg/shared/omni-types/core';
 import * as leaflet from 'leaflet';
-import { CellNames } from './cell-names';
 
 export class GeoBound {
   leafletBound: any;
@@ -28,11 +27,11 @@ export class ItemFilter extends TheThingFilter {
     this.geoBound = bound;
   }
 
-  test(item: Item): boolean {
+  test(item: TheThing): boolean {
     if (!super.test(item)) {
       return false;
     }
-    const location = item.getCellValue(CellNames.location);
+    const location = item.getCellValue(ImitationItemCells.location.name);
     if (
       !!this.geoBound &&
       !!location &&

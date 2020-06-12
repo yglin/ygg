@@ -15,3 +15,4 @@ export * from './lib/action';
 export * from './lib/the-thing-accessor';
 export * from './lib/relation-factory';
 export * from './lib/relation-accessor';
+export * from './lib/factory';

@@ -32,6 +32,7 @@ import { TheThingFactoryService } from '../../the-thing-factory.service';
 export class TheThingComponent implements OnInit, OnDestroy {
   @Input() id: string;
   @Input() imitation: TheThingImitation;
+  @Input() theThing$: Observable<TheThing>;
   subscriptions: Subscription[] = [];
   // theThing$: Observable<TheThing>;
   focusSubscription: Subscription;
@@ -74,6 +75,9 @@ export class TheThingComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     if (this.id) {
       this.resetFocus(this.theThingFactory.load$(this.id));
+    }
+    if (!!this.theThing$) {
+      this.resetFocus(this.theThing$);
     }
   }
 
@@ -146,7 +150,7 @@ export class TheThingComponent implements OnInit, OnDestroy {
       }
       this.focusSubscription = merge(updateTheThing$, canModify$).subscribe();
     } else {
-      console.error(`theThing$ is empty: ${theThing$}`);
+      console.error(`TheThingComponent: theThing$ is empty: ${theThing$}`);
     }
 
     if (this.actions$Subscription) {

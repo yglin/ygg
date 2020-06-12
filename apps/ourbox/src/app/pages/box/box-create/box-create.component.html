@@ -16,6 +16,7 @@
             <div class="icon"><img src="/assets/images/box/box.png" /></div>
             <mat-form-field>
               <input
+                name="ourbox-create-box-name"
                 matInput
                 placeholder="請輸入寶箱名稱"
                 formControlName="name"
@@ -89,7 +90,10 @@
                 </div>
               </div>
               <div class="friend-list">
-                <div *ngFor="let friendMap of friends | keyvalue" class="friend">
+                <div
+                  *ngFor="let friendMap of friends | keyvalue"
+                  class="friend"
+                >
                   <div
                     fxLayout="row"
                     fxLayoutAlign="space-between center"

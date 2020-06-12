@@ -6,6 +6,8 @@ import { BoardComponent } from './pages/board/board.component';
 import { BoxViewComponent } from './pages/box/box-view/box-view.component';
 import { ItemViewComponent } from './pages/item/item-view/item-view.component';
 import { BoxFactoryService } from './box-factory.service';
+import { ImitationItem } from '@ygg/ourbox/core';
+import { ItemFactoryService } from './item-factory.service';
 
 export const routes: Routes = [
   {
@@ -42,11 +44,14 @@ export const routes: Routes = [
     component: BoardComponent
   },
   {
-    path: 'items',
+    path: ImitationItem.routePath,
     children: [
       {
         path: ':id',
-        component: ItemViewComponent
+        component: ItemViewComponent,
+        resolve: {
+          item$: ItemFactoryService
+        }
       }
     ]
   }

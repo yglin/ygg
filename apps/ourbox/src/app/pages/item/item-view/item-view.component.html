@@ -1,7 +1,12 @@
-<div class="item-view">
+<div class="item-view" *ngIf="item">
   <ygg-page-title icon="category">{{ item.name }}</ygg-page-title>
   <br />
-  <div fxLayout="row" fxLayoutAlign="space-between end" fxLayoutGap="20px">
+  <div
+    fxLayout="row"
+    fxLayoutAlign="space-between end"
+    fxLayoutGap="20px"
+    *ngIf="ImitationItem.isValid(item)"
+  >
     <div>
       <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
         <h2>
@@ -29,5 +34,5 @@
     </button>
   </div>
   <br /><br />
-  <the-thing-view [theThing]="item"></the-thing-view>
+  <the-thing [theThing$]="item$" [imitation]="ImitationItem"></the-thing>
 </div>

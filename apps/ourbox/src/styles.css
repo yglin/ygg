@@ -75,3 +75,24 @@ pre {
 .mat-form-field .mat-input-element {
   color: bisque;
 }
+
+.ygg-dialog .mat-dialog-title {
+  background: rgb(39, 24, 0);
+  background: radial-gradient(
+    circle,
+    rgba(39, 24, 0, 1) 0%,
+    rgba(48, 29, 0, 0.9) 49%,
+    rgba(77, 46, 0, 0.9) 100%
+  );
+  color: bisque;
+  text-shadow: 2px 2px 2px darkgreen;
+}
+
+.ygg-dialog .mat-dialog-container {
+  background: rgb(49, 30, 0);
+  background: radial-gradient(
+    circle,
+    rgba(49, 30, 0, 0.9028653697807247) 0%,
+    rgba(0, 0, 0, 1) 100%
+  );
+}

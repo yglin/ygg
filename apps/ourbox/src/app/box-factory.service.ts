@@ -1,28 +1,30 @@
 import { Injectable } from '@angular/core';
-import { BoxFactory } from '@ygg/ourbox/core';
 import {
-  AuthenticateService,
-  InvitationFactoryService,
-  UserService,
-  AuthenticateUiService
-} from '@ygg/shared/user/ui';
-import { EmceeService } from '@ygg/shared/ui/widgets';
-import {
-  Router,
-  Resolve,
-  ActivatedRouteSnapshot,
+  ActivatedRouteSnapshot, Resolve, Router,
+
+
   RouterStateSnapshot
 } from '@angular/router';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { RelationFactoryService } from '@ygg/the-thing/ui';
-import { BoxAccessService } from './box-access.service';
+import { BoxFactory, ItemFilter } from '@ygg/ourbox/core';
+import { EmceeService } from '@ygg/shared/ui/widgets';
+import {
+  AuthenticateUiService, InvitationFactoryService,
+  UserService
+} from '@ygg/shared/user/ui';
 import { TheThing } from '@ygg/the-thing/core';
+import { RelationFactoryService } from '@ygg/the-thing/ui';
 import { Observable } from 'rxjs';
+import { BoxAccessService } from './box-access.service';
+import { ItemAccessService } from './item-access.service';
+import { ItemFactoryService } from './item-factory.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BoxFactoryService extends BoxFactory implements Resolve<TheThing> {
+  findItemsOnMap(filter: ItemFilter): any {
+    throw new Error("Method not implemented.");
+  }
   constructor(
     authenticator: AuthenticateUiService,
     emcee: EmceeService,
@@ -30,7 +32,9 @@ export class BoxFactoryService extends BoxFactory implements Resolve<TheThing> {
     userAccessor: UserService,
     BoxAccessor: BoxAccessService,
     relationFactory: RelationFactoryService,
-    router: Router
+    router: Router,
+    itemFactory: ItemFactoryService,
+    itemAccessor: ItemAccessService
   ) {
     super(
       authenticator,
@@ -39,7 +43,9 @@ export class BoxFactoryService extends BoxFactory implements Resolve<TheThing> {
       userAccessor,
       BoxAccessor,
       relationFactory,
-      router
+      router,
+      itemFactory,
+      itemAccessor
     );
   }
 

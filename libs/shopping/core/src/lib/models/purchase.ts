@@ -13,7 +13,7 @@ import {
   TheThingCell,
   RelationDefine
 } from '@ygg/the-thing/core';
-import { IDataAccessor } from '@ygg/shared/infra/core';
+// import { IDataAccessor } from '@ygg/shared/infra/core';
 import { RelationAddition } from './addition';
 import { IConsumer } from './consumer';
 import { CellNames } from './cell-names';

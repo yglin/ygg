@@ -26,4 +26,14 @@ export abstract class RelationFactory {
       throw wrapError;
     }
   }
+
+  findBySubjectAndRole$(
+    subjectId: string,
+    objectRole: string
+  ): Observable<RelationRecord[]> {
+    const queries = [];
+    queries.push(new Query('subjectId', '==', subjectId));
+    queries.push(new Query('objectRole', '==', objectRole));
+    return this.relationAccessor.find$(queries);
+  }
 }

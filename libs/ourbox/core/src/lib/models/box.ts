@@ -10,6 +10,10 @@ export const RelationshipBoxMember = {
   role: 'member'
 };
 
+export const RelationshipBoxItem = {
+  role: 'boxitem'
+};
+
 export const ImitationBoxCells = {
   public: new TheThingCellDefine({
     name: '公開',
@@ -25,6 +29,8 @@ export const ImitationBoxCells = {
 
 export const ImitationBox = new TheThingImitation({
   collection: 'ourboxes',
+  id: 'ourbox-box',
+  name: '我們的寶箱',
   cellsDef: values(ImitationBoxCells),
   routePath: 'ourbox'
 });

@@ -129,8 +129,27 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     return name in this.cellsDef ? this.cellsDef[name] : null;
   }
 
+  forgeTheThing(): any {
+    const theThing = this.createTheThing();
+    for (const name in this.cellsDef) {
+      if (this.cellsDef.hasOwnProperty(name)) {
+        const cellDef = this.cellsDef[name];
+        if (cellDef.userInput === 'required') {
+          const cell = theThing.getCell(name);
+          if (!cell || !cell.value) {
+            theThing.upsertCell(cellDef.forgeCell());
+          }
+        }
+      }
+    }
+    return theThing;
+  }
+
   createTheThing(): TheThing {
     let theThing = new TheThing();
+    if (this.collection) {
+      theThing.collection = this.collection;
+    }
     if (this.filter && this.filter.tags) {
       theThing.tags = new Tags(this.filter.tags);
     }
@@ -219,6 +238,10 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       errors = errors.concat(validator.validate(theThing));
     }
     return errors;
+  }
+
+  isValid(theThing: TheThing): boolean {
+    return isEmpty(this.validate(theThing));
   }
 
   addRelationDefine(rDef: RelationDefine) {

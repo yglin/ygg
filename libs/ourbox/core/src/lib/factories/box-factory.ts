@@ -7,7 +7,9 @@ import {
   ImitationBox,
   ImitationBoxCells,
   ActivateTicket,
-  RelationshipBoxMember
+  RelationshipBoxMember,
+  ImitationItem,
+  RelationshipBoxItem
 } from '../models';
 import { Emcee, DataAccessor, Router } from '@ygg/shared/infra/core';
 import { URL } from 'url';
@@ -18,10 +20,13 @@ import {
   User,
   config as UserConfig
 } from '@ygg/shared/user/core';
-import { Subscription } from 'rxjs';
-import { get } from 'lodash';
+import { Subscription, Observable } from 'rxjs';
+import { get, isEmpty, tap } from 'lodash';
 import { UserAccessor } from 'libs/shared/user/core/src/lib/user-accessor';
 import { BoxAccessor, BoxCollection } from './box-accessor';
+import { ItemFactory } from './item-factory';
+import { switchMap } from 'rxjs/operators';
+import { ItemAccessor } from './item-accessor';
 
 export const InvitationJoinBox = {
   type: 'join-box'
@@ -44,7 +49,9 @@ export class BoxFactory {
     protected userAccessor: UserAccessor,
     protected boxAccessor: BoxAccessor,
     protected relationFactory: RelationFactory,
-    protected router: Router
+    protected router: Router,
+    protected itemFactory: ItemFactory,
+    protected itemAccessor: ItemAccessor
   ) {
     this.subscriptions.push(
       this.invitationFactory.confirm$.subscribe(invitation => {
@@ -67,6 +74,17 @@ export class BoxFactory {
       return;
     }
     try {
+      let mailsMessage = '';
+      if (!isEmpty(options.friendEmails)) {
+        mailsMessage =
+          '<h3>將會寄出加入邀請信給以下信箱</h3>' +
+          options.friendEmails.map(email => '<h4>' + email + '</h4>').join('');
+      }
+      const confirmMessage = `<h2>新增寶箱：${options.name}？<br>${mailsMessage}`;
+      const confirm = await this.emcee.confirm(confirmMessage);
+      if (!confirm) {
+        return;
+      }
       const friendEmails = options.friendEmails || [];
       const isPublic = !!options.isPublic;
       const box = ImitationBox.createTheThing();
@@ -110,6 +128,25 @@ export class BoxFactory {
     });
   }
 
+  async createItem(boxId: string) {
+    const item = await this.itemFactory.create();
+    if (item) {
+      try {
+        this.relationFactory.create({
+          subjectCollection: BoxCollection,
+          subjectId: boxId,
+          objectCollection: ImitationItem.collection,
+          objectId: item.id,
+          objectRole: RelationshipBoxItem.role
+        });
+      } catch (error) {
+        this.emcee.error(
+          `建立寶箱${boxId}與寶物${item.id}關係失敗，錯誤原因：${error.message}`
+        );
+      }
+    }
+  }
+
   async confirm(invitation: Invitation) {
     const inviteeId = get(invitation, 'inviteeId', null);
     const invitee: User = await this.userAccessor.get(inviteeId);
@@ -128,6 +165,16 @@ export class BoxFactory {
     } catch (error) {
       this.emcee.error(`加入寶箱失敗：錯誤原因：${error.message}`);
     }
+  }
+
+  listItemsInBox$(boxId: string): Observable<TheThing[]> {
+    return this.relationFactory
+      .findBySubjectAndRole$(boxId, RelationshipBoxItem.role)
+      .pipe(
+        switchMap(relationRecords =>
+          this.itemAccessor.listByIds$(relationRecords.map(rr => rr.objectId))
+        )
+      );
   }
 
   // async createInvitation(box: TheThing, mail: string): Promise<string> {

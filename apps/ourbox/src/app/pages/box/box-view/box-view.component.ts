@@ -1,10 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, Subscription } from 'rxjs';
 import { TheThing } from '@ygg/the-thing/core';
 import { range, get } from 'lodash';
 import { BoxAccessService } from '../../../box-access.service';
 import { ItemAccessService } from '../../../item-access.service';
+import { ItemFactoryService } from '../../../item-factory.service';
+import { BoxFactoryService } from '../../../box-factory.service';
+import { ImitationItem } from '@ygg/ourbox/core';
 
 function forgeItems(): TheThing[] {
   return range(10).map(() => {
@@ -23,15 +26,16 @@ export class BoxViewComponent implements OnInit, OnDestroy {
   box: TheThing;
   items: TheThing[] = [];
   subscriptions: Subscription[] = [];
+  ImitationItem = ImitationItem;
 
   constructor(
     private route: ActivatedRoute,
-    private itemAccessService: ItemAccessService
+    private boxFactory: BoxFactoryService
   ) {
     this.box = get(this.route.snapshot.data, 'box', null);
     // console.log(this.box);
     this.subscriptions.push(
-      this.itemAccessService
+      this.boxFactory
         .listItemsInBox$(this.box.id)
         .subscribe(items => (this.items = items))
     );
@@ -43,5 +47,9 @@ export class BoxViewComponent implements OnInit, OnDestroy {
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
     }
+  }
+
+  createItem() {
+    this.boxFactory.createItem(this.box.id);
   }
 }

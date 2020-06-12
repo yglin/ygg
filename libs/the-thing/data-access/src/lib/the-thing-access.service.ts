@@ -1,6 +1,10 @@
 import { isEmpty, every, castArray } from 'lodash';
 import { Injectable } from '@angular/core';
-import { TheThing, TheThingFilter, TheThingAccessor } from '@ygg/the-thing/core';
+import {
+  TheThing,
+  TheThingFilter,
+  TheThingAccessor
+} from '@ygg/the-thing/core';
 // import { IDataAccessor } from '@ygg/shared/infra/core';
 import { DataAccessService, Query } from '@ygg/shared/infra/data-access';
 import { Observable, throwError } from 'rxjs';
@@ -14,23 +18,24 @@ export class TheThingAccessService implements TheThingAccessor {
   // cache: { [id: string]: Observable<TheThing> } = {};
   constructor(private dataAccessService: DataAccessService) {}
 
-  get(id: string): Promise<TheThing> {
-    return this.get$(id)
+  get(id: string, collection: string = TheThing.collection): Promise<TheThing> {
+    return this.get$(id, collection)
       .pipe(take(1))
       .toPromise();
   }
 
-  get$(id: string): Observable<TheThing> {
+  get$(
+    id: string,
+    collection: string = TheThing.collection
+  ): Observable<TheThing> {
     // if (!(id in this.cache)) {
-      // console.log(`To fetch ${id}`);
-      return this.dataAccessService
-        .get$(TheThing.collection, id)
-        .pipe(
-          map(data => new TheThing().fromJSON(data))
-          // tap(thing => console.log(`Get new version thing ${thing.id}`)),
-          // shareReplay(1)
-          // tap(thing => console.log(`Get the thing ${thing.id}`))
-        );
+    // console.log(`To fetch ${id}`);
+    return this.dataAccessService.get$(collection, id).pipe(
+      map(data => new TheThing().fromJSON(data))
+      // tap(thing => console.log(`Get new version thing ${thing.id}`)),
+      // shareReplay(1)
+      // tap(thing => console.log(`Get the thing ${thing.id}`))
+    );
     // }
     // return this.cache[id];
   }
@@ -93,9 +98,9 @@ export class TheThingAccessService implements TheThingAccessor {
   async upsert(theThing: TheThing): Promise<TheThing> {
     await this.dataAccessService.upsert(theThing.collection, theThing.toJSON());
     // if (theThing.id in this.cache) {
-      // delete this.cache[theThing.id];
+    // delete this.cache[theThing.id];
     // }
-    return this.get(theThing.id);
+    return this.get(theThing.id, theThing.collection);
   }
 
   async delete(

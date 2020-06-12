@@ -1,30 +1,14 @@
-import { isEmpty, noop, remove, sumBy, get } from 'lodash';
-import { Component, OnInit, OnDestroy, Input, forwardRef } from '@angular/core';
-import { Purchase, PurchaseAgent } from '@ygg/shopping/core';
-import {
-  Subscription,
-  Observable,
-  of,
-  combineLatest,
-  Subject,
-  merge
-} from 'rxjs';
-// import { ShoppingCartService } from '@ygg/shopping/factory';
-import { tap, switchMap, startWith } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { YggDialogService } from '@ygg/shared/ui/widgets';
-// import { PurchaseControlComponent } from '../../purchase';
-import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { PageResolverService } from '@ygg/shared/ui/navigation';
-import { IInputShoppingCart } from './shopping-cart-editor.component.po';
-import {
-  TheThingFinderComponent,
-  IInputTheThingFinder
-} from '@ygg/the-thing/ui';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { IConsumer } from 'libs/shopping/core/src/lib/models/consumer';
 import { AuthenticateService } from '@ygg/shared/user/ui';
+import { Purchase } from '@ygg/shopping/core';
+// import { PurchaseControlComponent } from '../../purchase';
+import { TheThingFilter } from '@ygg/the-thing/core';
+import { IConsumer } from 'libs/shopping/core/src/lib/models/consumer';
+import { isEmpty, noop } from 'lodash';
+import { merge, Subscription } from 'rxjs';
+// import { ShoppingCartService } from '@ygg/shopping/factory';
+import { tap } from 'rxjs/operators';
 import { ShoppingCartService } from '../../shopping-cart.service';
 
 @Component({
@@ -45,7 +29,7 @@ export class ShoppingCartEditorComponent implements OnInit, OnDestroy {
   // purchases: Purchase[] = [];
   consumer: IConsumer;
   productFilter: TheThingFilter;
-  purchaseAgent: PurchaseAgent;
+  // purchaseAgent: PurchaseAgent;
   totalCharge: number;
   purchasesDataSource: MatTableDataSource<Purchase>;
   displayedColumns: string[];
@@ -55,11 +39,8 @@ export class ShoppingCartEditorComponent implements OnInit, OnDestroy {
   canSubmit = false;
 
   constructor(
-    private pageResolver: PageResolverService,
-    private theThingAccessService: TheThingAccessService,
     private authService: AuthenticateService,
     private shoppingCart: ShoppingCartService,
-    private dialog: YggDialogService
   ) {
     this.totalCharge = 0;
     this.displayedColumns = ['product', 'quantity', 'charge', 'management'];

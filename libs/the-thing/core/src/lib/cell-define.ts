@@ -27,6 +27,12 @@ export class TheThingCellDefine implements SerializableJSON {
     extend(this, options);
   }
 
+  forgeCell(): TheThingCell {
+    const cell = this.createCell();
+    cell.value = OmniTypes[cell.type].forge();
+    return cell;
+  }
+
   createCell(value?: any): TheThingCell {
     value =
       value === undefined

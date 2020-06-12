@@ -26,17 +26,23 @@ export class TheThingThumbnailComponent implements OnInit, OnDestroy {
   constructor(private theThingFactory: TheThingFactoryService) {}
 
   ngOnInit() {
+    let collection = TheThing.collection;
     if (this.imitation) {
       this.display = get(this.imitation, 'displays.thumbnail', null);
+      if (this.imitation.collection) {
+        collection = this.imitation.collection;
+      }
     }
     if (!this.theThing) {
       if (this.id) {
         // console.log(`the-thing-thumbnail: ${this.id}`);
         this.subscriptions.push(
-          this.theThingFactory.load$(this.id).subscribe(theThing => {
-            this.theThing = theThing;
-            // console.log(this.theThing);
-          })
+          this.theThingFactory
+            .load$(this.id, collection)
+            .subscribe(theThing => {
+              this.theThing = theThing;
+              // console.log(this.theThing);
+            })
         );
       }
     }

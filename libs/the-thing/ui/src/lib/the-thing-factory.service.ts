@@ -7,7 +7,8 @@ import {
   stateConfirmMessage,
   Relationship,
   TheThingRelation,
-  TheThingAction
+  TheThingAction,
+  TheThingFactory
 } from '@ygg/the-thing/core';
 import {
   AuthenticateService,
@@ -22,7 +23,8 @@ import {
   map,
   filter,
   catchError,
-  switchMap
+  switchMap,
+  tap
 } from 'rxjs/operators';
 import {
   TheThingImitationAccessService,
@@ -41,7 +43,8 @@ import {
   throwError,
   ReplaySubject,
   isObservable,
-  never
+  never,
+  race
 } from 'rxjs';
 import {
   ActivatedRouteSnapshot,
@@ -59,16 +62,21 @@ export interface ITheThingSaveOptions {
   requireOwner?: boolean;
 }
 
+export const config = {
+  loadTimeout: 5000
+};
+
 @Injectable({
   providedIn: 'root'
 })
-export class TheThingFactoryService
+export class TheThingFactoryService extends TheThingFactory
   implements OnDestroy, Resolve<Observable<TheThing>> {
   imitation: TheThingImitation;
   // theThing$: BehaviorSubject<TheThing> = new BehaviorSubject(null);
   focusChange$: BehaviorSubject<Observable<TheThing>> = new BehaviorSubject(
     null
   );
+  onSave$: Subject<TheThing> = new Subject();
   createCache: { [imitationId: string]: TheThing } = {};
   theThingSources$: {
     [id: string]: {
@@ -91,7 +99,9 @@ export class TheThingFactoryService
     private imitationAccessServcie: TheThingImitationAccessService,
     private emceeService: EmceeService,
     private router: Router
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnDestroy(): void {
     for (const subscription of this.subscriptions) {
@@ -176,23 +186,30 @@ export class TheThingFactoryService
   async create(
     options: {
       imitationId?: string;
+      imitation?: TheThingImitation;
     } = {}
   ): Promise<TheThing> {
     let newThing: TheThing;
-    if (
+    if (options.imitation) {
+      this.imitation = options.imitation;
+    } else if (
       options.imitationId &&
       !(this.imitation && this.imitation.id === options.imitationId)
     ) {
       try {
-        this.imitation = await this.imitationAccessServcie
-          .get$(options.imitationId)
-          .pipe(first(), timeout(3000))
-          .toPromise();
+        this.imitation = await race(
+          this.imitationAccessServcie.get$(options.imitationId).pipe(take(1)),
+          never().pipe(timeout(config.loadTimeout))
+        ).toPromise();
       } catch (error) {
-        console.error(error.message);
-        throw error;
+        const wrapError = new Error(
+          `Failed to load imitation: ${options.imitationId};\n${error.message}`
+        );
+        console.error(wrapError.message);
+        throw wrapError;
       }
     }
+
     if (this.imitation) {
       if (this.imitation.id in this.createCache) {
         newThing = this.createCache[this.imitation.id];
@@ -213,13 +230,27 @@ export class TheThingFactoryService
     return newThing;
   }
 
-  async load(id: string): Promise<TheThing> {
-    return this.load$(id)
-      .pipe(take(1))
-      .toPromise();
+  async load(
+    id: string,
+    collection: string = TheThing.collection
+  ): Promise<TheThing> {
+    console.log(collection);
+    console.log(id);
+    // return this.load$(id, collection).pipe(take(1)).toPromise();
+    return race(
+      this.load$(id, collection).pipe(take(1)),
+      never().pipe(
+        timeout(config.loadTimeout),
+        tap(() => {
+          this.emceeService.error(
+            `讀取 ${collection}/${id} 失敗，超過${config.loadTimeout / 1000}秒`
+          );
+        })
+      )
+    ).toPromise();
   }
 
-  connectRemoteSource(id: string) {
+  connectRemoteSource(id: string, collection: string = TheThing.collection) {
     if (!(id in this.theThingSources$)) {
       // Not created, directly load from remote
       this.theThingSources$[id] = {
@@ -227,7 +258,10 @@ export class TheThingFactoryService
       };
     }
     if (!this.theThingSources$[id].remote$) {
-      this.theThingSources$[id].remote$ = this.theThingAccessService.get$(id);
+      this.theThingSources$[id].remote$ = this.theThingAccessService.get$(
+        id,
+        collection
+      );
       this.subscriptions.push(
         this.theThingSources$[id].remote$.subscribe(theThing => {
           console.log(`Remote change of theThing ${theThing.id}`);
@@ -237,10 +271,13 @@ export class TheThingFactoryService
     }
   }
 
-  load$(id: string): Observable<TheThing> {
+  load$(
+    id: string,
+    collection: string = TheThing.collection
+  ): Observable<TheThing> {
     if (!(id in this.theThingSources$)) {
       // Not created, directly load from remote
-      this.connectRemoteSource(id);
+      this.connectRemoteSource(id, collection);
     }
     return this.theThingSources$[id].local$;
   }
@@ -318,13 +355,16 @@ export class TheThingFactoryService
       if (!confirm) {
         return;
       }
+      console.log('幹');
       if (imitation && typeof imitation.preSave === 'function') {
         theThing = imitation.preSave(theThing);
       }
       await this.theThingAccessService.upsert(theThing);
+      console.log('林');
       // Connect to remote source
-      this.connectRemoteSource(theThing.id);
+      this.connectRemoteSource(theThing.id, theThing.collection);
 
+      console.log('老');
       // Clear create cache
       for (const imitationId in this.createCache) {
         if (this.createCache.hasOwnProperty(imitationId)) {
@@ -339,18 +379,20 @@ export class TheThingFactoryService
         const topSubject = this.creationChainStack.pop();
         topSubject.next(theThing);
       }
-      console.log(`TheThing ${theThing.id} saved`);
-      const result = await this.load(theThing.id);
+      // console.log(`TheThing ${theThing.id} saved`);
+      const result = await this.load(theThing.id, theThing.collection);
+      console.log('師');
       // this.theThingSources$[result.id].local$.next(result);
       if (!!result) {
         await this.emceeService.info(`已成功儲存 ${result.name}`);
         // if (theThing.id in this.theThingSources$) {
         //   this.theThingSources$[theThing.id].next(result);
         // }
+        this.onSave$.next(result);
+        return result;
       } else {
         throw new Error(`Failed to load back ${theThing.id}`);
       }
-      return result;
     } catch (error) {
       await this.emceeService.alert(
         `儲存失敗，錯誤原因：${error.message}`,
