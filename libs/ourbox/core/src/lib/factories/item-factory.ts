@@ -25,13 +25,8 @@ export class ItemFactory {
       const newItem = await this.theThingFactory.create({
         imitation: ImitationItem
       });
-      // const local$ = new BehaviorSubject(newItem);
-      // const onSave$ = new Subject<TheThing>();
-      // this.creatingPool[newItem.id] = {
-      //   local$
-      //   // onSave$
-      // };
-      const resultPromise = this.theThingFactory.onSave$
+      this.router.navigate(['/', ImitationItem.routePath, newItem.id]);
+      return this.theThingFactory.onSave$
         .pipe(
           filter(thing => thing.id === newItem.id),
           take(1)
@@ -40,8 +35,6 @@ export class ItemFactory {
         .then(result => {
           return result;
         });
-      this.router.navigate(['/', ImitationItem.routePath, newItem.id]);
-      return resultPromise;
     } catch (error) {
       this.emcee.error(`新增寶物失敗，錯誤原因：${error.message}`);
       return;

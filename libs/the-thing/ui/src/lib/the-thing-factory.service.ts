@@ -355,16 +355,16 @@ export class TheThingFactoryService extends TheThingFactory
       if (!confirm) {
         return;
       }
-      console.log('幹');
+      // console.log('幹');
       if (imitation && typeof imitation.preSave === 'function') {
         theThing = imitation.preSave(theThing);
       }
       await this.theThingAccessService.upsert(theThing);
-      console.log('林');
+      // console.log('林');
       // Connect to remote source
       this.connectRemoteSource(theThing.id, theThing.collection);
 
-      console.log('老');
+      // console.log('老');
       // Clear create cache
       for (const imitationId in this.createCache) {
         if (this.createCache.hasOwnProperty(imitationId)) {
@@ -381,7 +381,7 @@ export class TheThingFactoryService extends TheThingFactory
       }
       // console.log(`TheThing ${theThing.id} saved`);
       const result = await this.load(theThing.id, theThing.collection);
-      console.log('師');
+      // console.log('師');
       // this.theThingSources$[result.id].local$.next(result);
       if (!!result) {
         await this.emceeService.info(`已成功儲存 ${result.name}`);

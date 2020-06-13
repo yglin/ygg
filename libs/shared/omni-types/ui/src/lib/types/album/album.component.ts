@@ -1,4 +1,4 @@
-import { isEmpty } from "lodash";
+import { isEmpty } from 'lodash';
 import {
   Component,
   OnInit,
@@ -26,6 +26,13 @@ export class AlbumComponent implements OnInit, OnDestroy, OnChanges {
   fxLayout = 'row wrap';
   subscriptions: Subscription[] = [];
 
+  get coverSrc(): string {
+    return (
+      (this.album && this.album.cover && this.album.cover.src) ||
+      'https://firebasestorage.googleapis.com/v0/b/localhost-146909.appspot.com/o/images%2Fno-image.jpg?alt=media&token=d6182b16-e1b5-4719-b19d-7530a480e472'
+    );
+  }
+
   constructor(protected yggDialog: YggDialogService) {
     this.subscriptions.push(
       fromEvent(window, 'resize').subscribe(() => {
@@ -35,7 +42,7 @@ export class AlbumComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit() {
-    this.readonly = (this.readonly !== undefined && this.readonly !== false);
+    this.readonly = this.readonly !== undefined && this.readonly !== false;
     if (this.album && this.readonly) {
       this.album = this.album.clone();
     }
@@ -50,7 +57,7 @@ export class AlbumComponent implements OnInit, OnDestroy, OnChanges {
       } else {
         this.album = newAlbum;
       }
-    }    
+    }
   }
 
   ngOnDestroy() {
@@ -66,7 +73,7 @@ export class AlbumComponent implements OnInit, OnDestroy, OnChanges {
 
   deletePhoto(index) {
     if (confirm('確定刪除這張照片？')) {
-      this.album.photos.splice(index, 1);
+      this.album.deletePhoto(index);
       this.albumChanged.emit(this.album);
     }
   }
@@ -78,7 +85,7 @@ export class AlbumComponent implements OnInit, OnDestroy, OnChanges {
     this.subscriptions.push(
       dialogRef.afterClosed().subscribe(images => {
         if (!isEmpty(images)) {
-          this.album.photos.push(...images);
+          this.album.addPhotos(images);
           this.albumChanged.emit(this.album);
         }
       })

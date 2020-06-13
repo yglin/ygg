@@ -27,17 +27,28 @@ export class Album implements SerializableJSON {
   }
 
   constructor() {
-    this.cover = new Image();
+    // this.cover = new Image();
     this.photos = [];
   }
 
   clear() {
-    this.cover = new Image();
+    this.cover = undefined;// = new Image();
     this.photos = [];
   }
 
   clone(): Album {
     return new Album().fromJSON(this.toJSON());
+  }
+
+  addPhotos(images: Image[]) {
+    this.photos.push(...images);
+    if (!this.cover) {
+      this.cover = this.photos[0];
+    }
+  }
+
+  deletePhoto(index: number) {
+    this.photos.splice(index, 1);
   }
 
   fromJSON(data: any): this {

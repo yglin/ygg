@@ -30,6 +30,7 @@ export class BoxViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private boxFactory: BoxFactoryService
   ) {
     this.box = get(this.route.snapshot.data, 'box', null);
@@ -50,6 +51,6 @@ export class BoxViewComponent implements OnInit, OnDestroy {
   }
 
   createItem() {
-    this.boxFactory.createItem(this.box.id);
+    this.boxFactory.createItem(this.box.id, { backUrl: this.router.url });
   }
 }

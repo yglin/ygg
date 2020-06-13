@@ -1,10 +1,10 @@
 <div class="image-thumbnail" *ngIf="item" [ngClass]="size">
-  <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
-    <ygg-image-icon class="image" [src]="item.image"></ygg-image-icon>
-    <div class="name" *ngIf="item.name">
-      <span fittext minFontSize="20" maxFontSize="32">{{ item.name }}</span>
-    </div>
+  <div class="image" [ngClass]="size">
+    <ygg-image-icon [src]="item.image"></ygg-image-icon>
   </div>
+  <h3 class="name" *ngIf="item.name" [matTooltip]="item.name">
+    {{ item.name }}
+  </h3>
   <div class="open-link" [hidden]="!item.link">
     <button
       type="button"

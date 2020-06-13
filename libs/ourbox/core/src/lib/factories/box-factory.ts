@@ -128,7 +128,12 @@ export class BoxFactory {
     });
   }
 
-  async createItem(boxId: string) {
+  async createItem(
+    boxId: string,
+    options: {
+      backUrl?: string;
+    } = {}
+  ) {
     const item = await this.itemFactory.create();
     if (item) {
       try {
@@ -139,6 +144,9 @@ export class BoxFactory {
           objectId: item.id,
           objectRole: RelationshipBoxItem.role
         });
+        if (options.backUrl) {
+          this.router.navigateByUrl(options.backUrl);
+        }
       } catch (error) {
         this.emcee.error(
           `建立寶箱${boxId}與寶物${item.id}關係失敗，錯誤原因：${error.message}`
