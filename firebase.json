@@ -1,8 +1,10 @@
 {
   "functions": {
     "predeploy": [
+      "ng build functions --prod",
+      "node tools/scripts/firebase/build-firebase-functions-package-json.js"
     ],
-    "source": "/"
+    "source": "dist/apps/functions"
   },
   "hosting": {
     "public": "dist/apps/playwhat",

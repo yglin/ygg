@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { InvitationFactoryService } from './invitation-factory.service';
+import { InvitationComponent } from './invitation/invitation/invitation.component';
 
 export const routes: Routes = [
   {
@@ -7,6 +8,7 @@ export const routes: Routes = [
     children: [
       {
         path: ':id',
+        component: InvitationComponent,
         resolve: {
           invitation: InvitationFactoryService
         }

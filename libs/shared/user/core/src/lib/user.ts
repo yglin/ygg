@@ -1,6 +1,7 @@
-import {DataItem, toJSONDeep} from '@ygg/shared/infra/data-access';
+// import {DataItem, toJSONDeep} from '@ygg/shared/infra/data-access';
 import {extend, sample} from 'lodash';
 import * as firebase from 'firebase/app';
+import { Entity, toJSONDeep } from '@ygg/shared/infra/core';
 
 export enum UserState {
   Unknown = 0,
@@ -10,7 +11,7 @@ export enum UserState {
   Suspended
 }
 
-export class User implements DataItem {
+export class User implements Entity {
   id: string;
   isAnonymous: boolean;
   createAt: Date;

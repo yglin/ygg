@@ -5,3 +5,4 @@ export * from './lib/router';
 export * from './lib/entity-accessor';
 export * from './lib/dialog';
 export * from './lib/site-config';
+export * from './lib/serialize';

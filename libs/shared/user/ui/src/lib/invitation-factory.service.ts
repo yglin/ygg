@@ -48,7 +48,7 @@ export class InvitationFactoryService extends InvitationFactory
     state: RouterStateSnapshot
   ): Promise<Invitation> {
     try {
-      const id = route.paramMap.get(':id');
+      const id = route.paramMap.get('id');
       return this.confirm(id);
     } catch (error) {
       this.router.navigate(['/']);
