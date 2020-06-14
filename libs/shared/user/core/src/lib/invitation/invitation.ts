@@ -18,7 +18,12 @@ export interface Invitation extends Entity {
 }
 
 export function deserializer(data: any): Invitation {
+  if (!data) {
+    return null;
+  }
   const invitation: Invitation = cloneDeep(data);
-  invitation.expireDate = new Date(invitation.expireDate);
+  if (data.expireDate) {
+    invitation.expireDate = new Date(data.expireDate);
+  }
   return invitation;
 }

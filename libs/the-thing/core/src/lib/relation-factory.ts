@@ -36,4 +36,19 @@ export abstract class RelationFactory {
     queries.push(new Query('objectRole', '==', objectRole));
     return this.relationAccessor.find$(queries);
   }
+
+  async hasRelation(
+    subjectId: string,
+    objectId: string,
+    objectRole: string
+  ): Promise<boolean> {
+    try {
+      const id = `${subjectId}_${objectRole}_${objectId}`;
+      const relationRecord = await this.relationAccessor.load(id);
+      return !!relationRecord;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
 }

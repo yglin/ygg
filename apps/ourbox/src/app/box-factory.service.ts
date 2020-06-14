@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import {
-  ActivatedRouteSnapshot, Resolve, Router,
-
-
+  ActivatedRouteSnapshot,
+  Resolve,
+  Router,
   RouterStateSnapshot
 } from '@angular/router';
 import { BoxFactory, ItemFilter } from '@ygg/ourbox/core';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import {
-  AuthenticateUiService, InvitationFactoryService,
+  AuthenticateUiService,
+  InvitationFactoryService,
   UserService
 } from '@ygg/shared/user/ui';
 import { TheThing } from '@ygg/the-thing/core';
@@ -23,7 +24,7 @@ import { ItemFactoryService } from './item-factory.service';
 })
 export class BoxFactoryService extends BoxFactory implements Resolve<TheThing> {
   findItemsOnMap(filter: ItemFilter): any {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
   constructor(
     authenticator: AuthenticateUiService,
@@ -49,15 +50,24 @@ export class BoxFactoryService extends BoxFactory implements Resolve<TheThing> {
     );
   }
 
-  resolve(
+  async resolve(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): TheThing | Observable<TheThing> | Promise<TheThing> {
+  ): Promise<TheThing> {
     const id = route.paramMap.get('id');
     try {
-      return this.boxAccessor.load(id);
+      await this.authenticator.requestLogin();
+      const box = await this.boxAccessor.load(id);
+      if (!box) {
+        throw new Error(`找不到寶箱，id: ${id}`);
+      }
+      const meMember = await this.isMember(id);
+      if (!meMember) {
+        throw new Error(`非寶箱成員無法檢視寶箱 ${box.name} 的內容`);
+      }
+      return box;
     } catch (error) {
-      this.emcee.error(`找不到寶箱，id = ${id}`);
+      await this.emcee.error(`頁面載入失敗，錯誤原因：${error.message}`);
       this.router.navigate(['/']);
       return;
     }

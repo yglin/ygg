@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppComponent } from './app.component';
@@ -19,6 +19,8 @@ import { BoxViewComponent } from './pages/box/box-view/box-view.component';
 import { ItemViewComponent } from './pages/item/item-view/item-view.component';
 import { TheThingUiModule } from '@ygg/the-thing/ui';
 import { ItemThumbnailComponent } from './pages/item/item-thumbnail/item-thumbnail.component';
+import { BoxFactoryService } from './box-factory.service';
+import { noop } from 'lodash';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,19 @@ import { ItemThumbnailComponent } from './pages/item/item-thumbnail/item-thumbna
     BrowserAnimationsModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initFactoryServices,
+      deps: [BoxFactoryService],
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
+
+export function initFactoryServices(boxFactory: BoxFactoryService) {
+  // Do nothing, just to call constructors of factories
+  return noop;
+}

@@ -63,44 +63,47 @@ export abstract class InvitationFactory {
   }
 
   async confirm(id: string): Promise<Invitation> {
-    if (!id) {
-      const error = new Error(`錯誤的id: ${id}`);
-      this.emcee.error(error.message);
-      throw error;
+    try {
+      if (!id) {
+        throw new Error(`錯誤的id: ${id}`);
+      }
+
+      const invitation: Invitation = await this.invitationAccessor.load(id);
+      if (!invitation) {
+        throw new Error(`遺失邀請資料，id: ${id}`);
+      }
+      console.log(invitation);
+
+      const inviter: User = await this.userAccessor.get(invitation.inviterId);
+      if (!inviter) {
+        throw new Error(`找不到邀請者，id: ${invitation.inviterId}`);
+      }
+
+      const now = new Date();
+      if (now > invitation.expireDate) {
+        throw new Error(
+          `抱歉，已超過邀請有效期限：${config.invitation.expireDays}天，請${inviter.name}再邀請一次`
+        );
+      }
+
+      const currentUser = await this.authenticator.requestLogin();
+
+      const confirm = await this.emcee.confirm(invitation.confirmMessage);
+      if (confirm) {
+        invitation.inviteeId = currentUser.id;
+        this.confirm$.next(invitation);
+        // this.dataAccessor.delete(config.invitation.collection, invitation.id);
+      }
+
+      if (invitation.landingUrl) {
+        this.router.navigateByUrl(invitation.landingUrl);
+      }
+
+      return invitation;
+    } catch (error) {
+      this.emcee.error(`確認邀請失敗，錯誤原因：${error.message}`);
+      return null;
     }
-
-    const invitation: Invitation = await this.invitationAccessor.load(id);
-    const inviter: User = await this.userAccessor.get(invitation.inviterId);
-
-    if (!inviter) {
-      const error = new Error(`找不到邀請者，id = ${invitation.inviterId}`);
-      this.emcee.error(error.message);
-      throw error;
-    }
-
-    const now = new Date();
-    if (now > invitation.expireDate) {
-      const error = new Error(
-        `抱歉，已超過邀請有效期限：${config.invitation.expireDays}天，請${inviter.name}再邀請一次`
-      );
-      this.emcee.error(error.message);
-      throw error;
-    }
-
-    const currentUser = await this.authenticator.requestLogin();
-
-    const confirm = await this.emcee.confirm(invitation.confirmMessage);
-    if (confirm) {
-      invitation.inviteeId = currentUser.id;
-      this.confirm$.next(invitation);
-      this.dataAccessor.delete(config.invitation.collection, invitation.id);
-    }
-
-    if (invitation.landingUrl) {
-      this.router.navigateByUrl(invitation.landingUrl);
-    }
-
-    return invitation;
   }
 
   async inquireEmails(): Promise<string[]> {

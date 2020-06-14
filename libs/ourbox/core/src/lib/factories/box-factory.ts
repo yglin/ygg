@@ -57,6 +57,8 @@ export class BoxFactory {
     this.subscriptions.push(
       this.invitationFactory.confirm$.subscribe(invitation => {
         if (invitation.type === InvitationJoinBox.type) {
+          console.log('Confirm invitation');
+          console.log(invitation);
           this.confirm(invitation);
         }
       })
@@ -201,6 +203,21 @@ export class BoxFactory {
           this.itemAccessor.listByIds$(relationRecords.map(rr => rr.objectId))
         )
       );
+  }
+
+  async isMember(boxId: string, userId?: string): Promise<boolean> {
+    if (!userId) {
+      userId =
+        this.authenticator.currentUser && this.authenticator.currentUser.id;
+    }
+    if (!userId) {
+      return false;
+    }
+    return this.relationFactory.hasRelation(
+      boxId,
+      userId,
+      RelationshipBoxMember.role
+    );
   }
 
   // async createInvitation(box: TheThing, mail: string): Promise<string> {
