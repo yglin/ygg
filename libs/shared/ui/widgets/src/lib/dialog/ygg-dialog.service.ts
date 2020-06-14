@@ -7,7 +7,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
 import { Subscription } from 'rxjs';
 import { find } from 'lodash';
-import { AlertType } from '@ygg/shared/infra/core';
+import { AlertType, Dialog } from '@ygg/shared/infra/core';
 
 export interface IYggDialogOpenConfig {
   title?: string;
@@ -16,8 +16,10 @@ export interface IYggDialogOpenConfig {
 }
 
 @Injectable({ providedIn: 'root' })
-export class YggDialogService {
-  constructor(private dialog: MatDialog) {}
+export class YggDialogService extends Dialog {
+  constructor(private dialog: MatDialog) {
+    super();
+  }
 
   open(
     component: Type<any>,

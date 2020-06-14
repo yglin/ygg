@@ -69,7 +69,8 @@
       "@ygg/shared/user/core": ["libs/shared/user/core/src/index.ts"],
       "@ygg/shared/user/test": ["libs/shared/user/test/src/index.ts"],
       "@ygg/shared/infra/core": ["libs/shared/infra/core/src/index.ts"],
-      "@ygg/ourbox/core": ["libs/ourbox/core/src/index.ts"]
+      "@ygg/ourbox/core": ["libs/ourbox/core/src/index.ts"],
+      "@ygg/shared/user/functions": ["libs/shared/user/functions/src/index.ts"]
     },
     "rootDir": "."
   },

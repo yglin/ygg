@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017",
+    "outDir": "../../dist/functions",
+    "types": []
+  },
+  "files": ["src/functions/main.ts"]
+}

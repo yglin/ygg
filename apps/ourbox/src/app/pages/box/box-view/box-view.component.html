@@ -14,11 +14,17 @@
     <div *ngIf="items?.length > 0">
       <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
         <div>
+          <button mat-fab (click)="inviteMember()" matTooltip="邀請好友">
+            <mat-icon>group_add</mat-icon>
+          </button>
+        </div>
+        <div>
           <button mat-fab (click)="createItem()" matTooltip="新增寶物">
             <mat-icon>add</mat-icon>
           </button>
         </div>
       </div>
+      <br>
       <div fxLayout="row wrap" fxLayoutAlign="space-around start" fxLayoutGap="30px">
         <div *ngFor="let item of items">
           <the-thing-thumbnail [theThing]="item" [imitation]="ImitationItem"></the-thing-thumbnail>

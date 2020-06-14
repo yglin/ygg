@@ -33,6 +33,9 @@
       "tags": [],
       "implicitDependencies": ["sandbox"]
     },
+    "playwhat": {
+      "tags": ["scope:playwhat", "type:app"]
+    },
     "playwhat-e2e": {
       "tags": ["scope:playwhat", "type:e2e", "platform:mobile"],
       "implicitDependencies": ["playwhat"]
@@ -209,6 +212,9 @@
       "implicitDependencies": ["ourbox"]
     },
     "ourbox-core": {
+      "tags": []
+    },
+    "shared-user-functions": {
       "tags": []
     }
   },

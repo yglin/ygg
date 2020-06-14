@@ -1,0 +1,55 @@
+<div class="mail-list-contorl">
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+    <div>
+      <div *ngIf="foundUsers.length === 1">
+        <ygg-user-thumbnail [id]="foundUsers[0].id"></ygg-user-thumbnail>
+      </div>
+      <mat-form-field>
+        <input
+          matInput
+          type="email"
+          placeholder="輸入Email"
+          [formControl]="formControlEmail"
+          [matAutocomplete]="users"
+        />
+      </mat-form-field>
+      <mat-autocomplete #users="matAutocomplete">
+        <mat-option *ngFor="let user of foundUsers" [value]="user.email">
+          <ygg-user-thumbnail [id]="user.id"></ygg-user-thumbnail>
+        </mat-option>
+      </mat-autocomplete>
+    </div>
+    <div>
+      <button
+        mat-mini-fab
+        [disabled]="formControlEmail.invalid"
+        (click)="addEmail()"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="email-list">
+    <div *ngFor="let emailMap of emails | keyvalue" class="email">
+      <div
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+        fxLayoutGap="50px"
+      >
+        <div>
+          <div *ngIf="emailMap.value.id">
+            <ygg-user-thumbnail [id]="emailMap.value.id"></ygg-user-thumbnail>
+          </div>
+          <div *ngIf="!emailMap.value.id">
+            <h3>{{ emailMap.key }}</h3>
+          </div>
+        </div>
+        <div>
+          <button mat-mini-fab (click)="deleteEmail(emailMap.key)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

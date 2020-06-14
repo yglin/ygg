@@ -1,8 +1,6 @@
 {
   "functions": {
     "predeploy": [
-      "npm run lint firebase-functions",
-      "npm run build firebase-functions"
     ],
     "source": "/"
   },

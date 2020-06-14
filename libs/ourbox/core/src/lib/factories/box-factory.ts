@@ -9,7 +9,8 @@ import {
   ActivateTicket,
   RelationshipBoxMember,
   ImitationItem,
-  RelationshipBoxItem
+  RelationshipBoxItem,
+  ImitationBoxFlags
 } from '../models';
 import { Emcee, DataAccessor, Router } from '@ygg/shared/infra/core';
 import { URL } from 'url';
@@ -90,31 +91,48 @@ export class BoxFactory {
       const box = ImitationBox.createTheThing();
       box.ownerId = this.authenticator.currentUser.id;
       box.name = options.name;
-      box.upsertCell(ImitationBoxCells.public.createCell(isPublic));
-      box.upsertCell(
-        ImitationBoxCells.friends.createCell(friendEmails.join(','))
-      );
+      box.setFlag(ImitationBoxFlags.isPublic.id, isPublic);
+      // box.upsertCell(
+      //   ImitationBoxCells.friends.createCell(friendEmails.join(','))
+      // );
 
       await this.boxAccessor.save(box);
-
       await this.addBoxMember(box.id, this.authenticator.currentUser.id);
-
-      for (const mail of friendEmails) {
-        const invitation = await this.invitationFactory.create({
-          type: InvitationJoinBox.type,
-          inviterId: this.authenticator.currentUser.id,
-          email: mail,
-          confirmMessage: `來自 ${this.authenticator.currentUser.name} 的邀請，是否要加入我們的寶箱：${box.name}？`,
-          data: {
-            boxId: box.id
-          }
-        });
-      }
+      await this.inviteBoxMembers(box, friendEmails);
 
       this.router.navigate(['/', 'ourbox', box.id]);
       return box;
     } catch (error) {
       this.emcee.error(`開寶箱失敗，錯誤原因：${error.message}`);
+    }
+  }
+
+  async inviteBoxMembers(box: TheThing, emails: string[]) {
+    try {
+      const mailSubject = `${location.hostname}：邀請您加入寶箱${box.name}`;
+      const mailContent = `<pre><b>${this.authenticator.currentUser.name}</b>邀請您加入他的寶箱<b>${box.name}</b>，共享寶箱內的所有寶物</pre>`;
+      for (const mail of emails) {
+        const invitation = await this.invitationFactory.create({
+          type: InvitationJoinBox.type,
+          inviterId: this.authenticator.currentUser.id,
+          email: mail,
+          mailSubject,
+          mailContent,
+          confirmMessage: `${this.authenticator.currentUser.name} 邀請您，是否要加入我們的寶箱：${box.name}？`,
+          landingUrl: `/${ImitationBox.routePath}/${box.id}`,
+          data: {
+            boxId: box.id
+          }
+        });
+      }
+      const mailsMessage = emails
+        .map(email => '<h4>' + email + '</h4>')
+        .join('');
+      this.emcee.info(
+        `<h3>已送出寶箱成員的邀請給以下email：</h3><br>${mailsMessage}`
+      );
+    } catch (error) {
+      this.emcee.error(`邀請寶箱成員失敗，錯誤原因：${error.message}`);
     }
   }
 

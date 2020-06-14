@@ -14,6 +14,14 @@ export const RelationshipBoxItem = {
   role: 'boxitem'
 };
 
+export const ImitationBoxFlags = {
+  isPublic: {
+    id: 'isPublic',
+    label: '公開',
+    description: '寶箱資訊以及寶箱內的寶物是否能被公開搜尋找到，例如地圖搜尋'
+  }
+};
+
 export const ImitationBoxCells = {
   public: new TheThingCellDefine({
     name: '公開',

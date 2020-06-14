@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { LayoutModule } from "@angular/cdk/layout";
+import { LayoutModule } from '@angular/cdk/layout';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
 import { SharedInfraDataAccessModule } from '@ygg/shared/infra/data-access';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-import { SharedUiWidgetsModule } from "@ygg/shared/ui/widgets";
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 import { AccountWidgetComponent } from './components/account-widget/account-widget.component';
 import { LoginDialogComponent } from './components/login-dialog/login-dialog.component';
@@ -21,6 +21,8 @@ import { UserStateComponent } from './components/user-state/user-state.component
 import { UserThumbnailComponent } from './components/user-thumbnail/user-thumbnail.component';
 import { UserViewComponent } from './components/user-view/user-view.component';
 import { UserSelectorComponent } from './components/user-selector/user-selector.component';
+import { MailListControlComponent } from './components/mail-list/mail-list-control/mail-list-control.component';
+import { routes } from './routes';
 
 // import { SharedUiWidgetsModule } from '@ygg/shared/ui-widgets';
 // import { ContactFormComponent } from './contact/contact-form/contact-form.component';
@@ -48,7 +50,8 @@ import { UserSelectorComponent } from './components/user-selector/user-selector.
     AngularFireAuthModule,
     SharedInfraDataAccessModule,
     SharedUiNgMaterialModule,
-    SharedUiWidgetsModule
+    SharedUiWidgetsModule,
+    RouterModule.forChild(routes)
   ],
   declarations: [
     AccountWidgetComponent,
@@ -61,9 +64,15 @@ import { UserSelectorComponent } from './components/user-selector/user-selector.
     UserEmailComponent,
     UserPhoneComponent,
     UserViewComponent,
-    UserSelectorComponent
+    UserSelectorComponent,
+    MailListControlComponent
   ],
   entryComponents: [LoginDialogComponent],
-  exports: [AccountWidgetComponent, UserThumbnailComponent, UserSelectorComponent]
+  exports: [
+    AccountWidgetComponent,
+    UserThumbnailComponent,
+    UserSelectorComponent,
+    MailListControlComponent
+  ]
 })
 export class SharedUserUiModule {}
