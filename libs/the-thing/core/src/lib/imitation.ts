@@ -10,7 +10,8 @@ import {
   clone,
   uniq,
   find,
-  values
+  values,
+  noop
 } from 'lodash';
 import {
   generateID,
@@ -86,8 +87,6 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   } = {};
   actions: { [id: string]: TheThingAction } = {};
   pipes: { [source: string]: (theThing: TheThing) => void } = {};
-  preSave?: (theThing: TheThing) => TheThing;
-  canModify?: (theThing: TheThing) => boolean = () => true;
   admin: {
     states?: string[];
   } = {};
@@ -104,6 +103,9 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     );
   }
 
+  preSave?: (theThing: TheThing) => TheThing = (theThing: TheThing) => theThing;
+  canModify?: (theThing: TheThing) => boolean = () => true;
+
   constructor(
     options: {
       collection?: string;
@@ -117,6 +119,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
 
     this.fromJSON(options);
   }
+
 
   setRequiredCells(cellDefs: TheThingCellDefine[]) {
     for (const cellDef of cellDefs) {

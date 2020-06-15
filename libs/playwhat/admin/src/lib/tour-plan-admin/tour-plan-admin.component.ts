@@ -3,7 +3,7 @@ import { ImitationTourPlan } from '@ygg/playwhat/core';
 import { Observable } from 'rxjs';
 import { TheThing } from '@ygg/the-thing/core';
 import { TourPlanAdminPageObject } from './tour-plan-admin.component.po';
-import { IncomeRecord, ImitationOrder } from '@ygg/shopping/core';
+import { IncomeRecord } from '@ygg/shopping/core';
 import { AccountingService } from '@ygg/shopping/factory';
 import { Month } from '@ygg/shared/omni-types/core';
 import { switchMap, startWith } from 'rxjs/operators';
@@ -38,12 +38,12 @@ export class TourPlanAdminComponent implements OnInit {
     this.stateConfigs = ImitationTourPlan.admin.states.map(name => {
       const filter = ImitationTourPlan.filter.clone();
       filter.addState(
-        ImitationOrder.stateName,
-        ImitationOrder.states[name].value
+        ImitationTourPlan.stateName,
+        ImitationTourPlan.states[name].value
       );
       const stateConfig = {
         name,
-        label: ImitationOrder.states[name].label,
+        label: ImitationTourPlan.states[name].label,
         theThings$: this.formControlSelectMonth.valueChanges.pipe(
           startWith(0),
           switchMap((idx: number) => {

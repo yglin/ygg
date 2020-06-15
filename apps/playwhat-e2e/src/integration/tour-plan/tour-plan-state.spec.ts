@@ -2,31 +2,29 @@ import { ImitationTourPlan } from '@ygg/playwhat/core';
 import {
   SiteNavigator,
   TourPlanAdminPageObjectCypress,
-  TourPlanViewPageObjectCypress,
   TourPlanPageObjectCypress
 } from '@ygg/playwhat/test';
 import { Month } from '@ygg/shared/omni-types/core';
 import {
+  getCurrentUser,
   login,
-  theMockDatabase,
-  getCurrentUser
+  theMockDatabase
 } from '@ygg/shared/test/cypress';
+import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 import { ImitationOrder } from '@ygg/shopping/core';
 import { TheThing, TheThingState } from '@ygg/the-thing/core';
 import {
   MyThingsDataTablePageObjectCypress,
-  TheThingStatePageObjectCypress,
   MyThingsPageObjectCypress
 } from '@ygg/the-thing/test';
-import { flatten, keys, values, mapValues } from 'lodash';
+import { flatten, keys, mapValues, values } from 'lodash';
 import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import {
+  MinimalTourPlan,
   stubTourPlansByStateAndMonth,
   TourPlanInApplication,
-  TourPlanPaid,
-  MinimalTourPlan
+  TourPlanPaid
 } from './sample-tour-plan';
-import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 
 const tourPlansByStateAndMonth: {
   [state: string]: TheThing[];
@@ -118,16 +116,16 @@ describe('Tour-plan state manipulation', () => {
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
     // tourPlanDataTablePO.expectTheThing(MinimalTourPlan);
     tourPlanAdminPO.theThingDataTables[
-      ImitationOrder.states.applied.name
+      ImitationTourPlan.states.applied.name
     ].expectTheThing(tourPlan);
   });
 
   it('Cancel applied tour-plan, set it back to state "editing"', () => {
     const tourPlan = tourPlansByState[ImitationTourPlan.states.applied.name];
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
-    tourPlanAdminPO.switchToTab(ImitationOrder.states.applied.name);
+    tourPlanAdminPO.switchToTab(ImitationTourPlan.states.applied.name);
     tourPlanAdminPO.theThingDataTables[
-      ImitationOrder.states.applied.name
+      ImitationTourPlan.states.applied.name
     ].gotoTheThingView(tourPlan);
     tourPlanPO.expectVisible();
     tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.applied);
@@ -135,60 +133,93 @@ describe('Tour-plan state manipulation', () => {
       ImitationTourPlan.actions['cancel-application']
     );
     const emceePO = new EmceePageObjectCypress();
-    emceePO.confirm(
-      `取消此遊程 ${tourPlan.name} 的申請並退回修改狀態？`
-    );
+    emceePO.confirm(`取消此遊程 ${tourPlan.name} 的申請並退回修改狀態？`);
     emceePO.alert(`遊程 ${tourPlan.name} 已取消申請並退回修改`);
     tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.editing);
   });
 
-  it('Approve tour-plan as paid by set it state Paid', () => {
+  it('Approve tour-plan by set it state approved', () => {
     const tourPlan = tourPlansByState[ImitationTourPlan.states.applied.name];
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
-    tourPlanAdminPO.switchToTab(ImitationOrder.states.applied.name);
+    tourPlanAdminPO.switchToTab(ImitationTourPlan.states.applied.name);
     tourPlanAdminPO.theThingDataTables[
-      ImitationOrder.states.applied.name
+      ImitationTourPlan.states.applied.name
     ].gotoTheThingView(tourPlan);
     tourPlanPO.expectVisible();
-    tourPlanPO.theThingPO.expectState(ImitationOrder.states.applied);
-    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['confirm-paid'])
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.applied);
+    tourPlanPO.theThingPO.runAction(
+      ImitationTourPlan.actions['approve-available']
+    );
     const emceePO = new EmceePageObjectCypress();
-    emceePO.confirm(`確定此遊程 ${tourPlan.name} 的所有款項已付清，標記為已付款？`);
-    emceePO.alert(`遊程 ${tourPlan.name} 標記為已付款。`);
-    tourPlanPO.theThingPO.expectState(ImitationOrder.states.paid);
+    emceePO.confirm(
+      `確定遊程 ${tourPlan.name} 有充分的資源和時間可成團，標記為可成行並等待付款？`
+    );
+    emceePO.alert(`遊程 ${tourPlan.name} 已標記為可成行。`);
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.approved);
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
-    tourPlanAdminPO.switchToTab(ImitationOrder.states.applied.name);
+    tourPlanAdminPO.switchToTab(ImitationTourPlan.states.applied.name);
     tourPlanAdminPO.theThingDataTables[
-      ImitationOrder.states.applied.name
+      ImitationTourPlan.states.applied.name
     ].expectNotTheThing(tourPlan);
-    tourPlanAdminPO.switchToTab(ImitationOrder.states.paid.name);
+    tourPlanAdminPO.switchToTab(ImitationTourPlan.states.approved.name);
     tourPlanAdminPO.theThingDataTables[
-      ImitationOrder.states.paid.name
+      ImitationTourPlan.states.approved.name
+    ].expectTheThing(tourPlan);
+  });
+
+  it('Approve tour-plan as paid by set it state Paid', () => {
+    const tourPlan = tourPlansByState[ImitationTourPlan.states.approved.name];
+    siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
+    tourPlanAdminPO.switchToTab(ImitationTourPlan.states.approved.name);
+    tourPlanAdminPO.theThingDataTables[
+      ImitationTourPlan.states.approved.name
+    ].gotoTheThingView(tourPlan);
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.approved);
+    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['confirm-paid']);
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.confirm(
+      `確定此遊程 ${tourPlan.name} 的所有款項已付清，標記為已付款？`
+    );
+    emceePO.alert(`遊程 ${tourPlan.name} 標記為已付款。`);
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.paid);
+    siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
+    tourPlanAdminPO.switchToTab(ImitationTourPlan.states.approved.name);
+    tourPlanAdminPO.theThingDataTables[
+      ImitationTourPlan.states.approved.name
+    ].expectNotTheThing(tourPlan);
+    tourPlanAdminPO.switchToTab(ImitationTourPlan.states.paid.name);
+    tourPlanAdminPO.theThingDataTables[
+      ImitationTourPlan.states.paid.name
     ].expectTheThing(tourPlan);
   });
 
   it('Complete tour-plan by set it state Completed', () => {
     const tourPlan = tourPlansByState[ImitationTourPlan.states.paid.name];
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
-    tourPlanAdminPO.switchToTab(ImitationOrder.states.paid.name);
+    tourPlanAdminPO.switchToTab(ImitationTourPlan.states.paid.name);
     tourPlanAdminPO.theThingDataTables[
-      ImitationOrder.states.paid.name
+      ImitationTourPlan.states.paid.name
     ].gotoTheThingView(tourPlan);
     tourPlanPO.expectVisible();
-    tourPlanPO.theThingPO.expectState(ImitationOrder.states.paid);
-    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['confirm-completed']);
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.paid);
+    tourPlanPO.theThingPO.runAction(
+      ImitationTourPlan.actions['confirm-completed']
+    );
     const emceePO = new EmceePageObjectCypress();
-    emceePO.confirm(`確定此遊程 ${tourPlan.name} 的所有活動流程已結束，標記為已完成？`);
+    emceePO.confirm(
+      `確定此遊程 ${tourPlan.name} 的所有活動流程已結束，標記為已完成？`
+    );
     emceePO.alert(`遊程 ${tourPlan.name} 標記為已完成。`);
-    tourPlanPO.theThingPO.expectState(ImitationOrder.states.completed);
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.completed);
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
-    tourPlanAdminPO.switchToTab(ImitationOrder.states.paid.name);
+    tourPlanAdminPO.switchToTab(ImitationTourPlan.states.paid.name);
     tourPlanAdminPO.theThingDataTables[
-      ImitationOrder.states.paid.name
+      ImitationTourPlan.states.paid.name
     ].expectNotTheThing(tourPlan);
-    tourPlanAdminPO.switchToTab(ImitationOrder.states.completed.name);
+    tourPlanAdminPO.switchToTab(ImitationTourPlan.states.completed.name);
     tourPlanAdminPO.theThingDataTables[
-      ImitationOrder.states.completed.name
+      ImitationTourPlan.states.completed.name
     ].expectTheThing(tourPlan);
   });
 
@@ -228,13 +259,48 @@ describe('States button accessibility', () => {
     theMockDatabase.restoreRTDB();
   });
 
-  it('Can not set states paid if not admin', () => {
-    const tourPlan = tourPlansByState[ImitationTourPlan.states.applied.name];
+  it('Can set state approved only if admin and state applied', () => {
     theMockDatabase.setAdmins([]);
+    cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
+      const tourPlan = tourPlansByState[state.name];
+      cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
+      tourPlanPO.expectVisible();
+      tourPlanPO.theThingPO.expectName(tourPlan.name);
+      tourPlanPO.theThingPO.expectNoActionButton(
+        ImitationTourPlan.actions['approve-available']
+      );
+    });
+    const tourPlanApplied =
+      tourPlansByState[ImitationTourPlan.states.applied.name];
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.expectTheThing(tourPlan);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(tourPlan);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(tourPlanApplied);
     tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.applied);
+    tourPlanPO.theThingPO.expectNoActionButton(
+      ImitationTourPlan.actions['approve-available']
+    );
+    getCurrentUser().then(user => theMockDatabase.setAdmins([user.id]));
+    tourPlanPO.theThingPO.expectActionButton(
+      ImitationTourPlan.actions['approve-available']
+    );
+    // theMockDatabase.restoreRTDB();
+  });
+
+  it('Can set state paid only if admin and state approved', () => {
+    theMockDatabase.setAdmins([]);
+    cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
+      const tourPlan = tourPlansByState[state.name];
+      cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
+      tourPlanPO.expectVisible();
+      tourPlanPO.theThingPO.expectName(tourPlan.name);
+      tourPlanPO.theThingPO.expectNoActionButton(
+        ImitationTourPlan.actions['confirm-paid']
+      );
+    });
+    const tourPlanApproved =
+      tourPlansByState[ImitationTourPlan.states.approved.name];
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(tourPlanApproved);
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.approved);
     tourPlanPO.theThingPO.expectNoActionButton(
       ImitationTourPlan.actions['confirm-paid']
     );
@@ -242,15 +308,24 @@ describe('States button accessibility', () => {
     tourPlanPO.theThingPO.expectActionButton(
       ImitationTourPlan.actions['confirm-paid']
     );
-    theMockDatabase.restoreRTDB();
+    // theMockDatabase.restoreRTDB();
   });
 
-  it('Can not set states completed if not admin', () => {
-    const tourPlan = tourPlansByState[ImitationTourPlan.states.paid.name];
+  it('Can set state completed only if admin and state paid', () => {
     theMockDatabase.setAdmins([]);
+    cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
+      const tourPlan = tourPlansByState[state.name];
+      cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
+      tourPlanPO.expectVisible();
+      tourPlanPO.theThingPO.expectName(tourPlan.name);
+      tourPlanPO.theThingPO.expectNoActionButton(
+        ImitationTourPlan.actions['confirm-completed']
+      );
+    });
+    const tourPlanPaid = tourPlansByState[ImitationTourPlan.states.paid.name];
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.expectTheThing(tourPlan);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(tourPlan);
+    myTourPlansPO.theThingDataTablePO.expectTheThing(tourPlanPaid);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(tourPlanPaid);
     tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.paid);
     tourPlanPO.theThingPO.expectNoActionButton(
       ImitationTourPlan.actions['confirm-completed']
@@ -262,34 +337,65 @@ describe('States button accessibility', () => {
     theMockDatabase.restoreRTDB();
   });
 
-  it('Can not apply tour plan if not owner', () => {
+  it('Can send application tour plan only if owner and state editing', () => {
     const tourPlanNotMine = MinimalTourPlan.clone();
     tourPlanNotMine.name = '測試遊程(不是我的)';
-    ImitationTourPlan.setState(tourPlanNotMine, ImitationTourPlan.states.new);
+    ImitationTourPlan.setState(
+      tourPlanNotMine,
+      ImitationTourPlan.states.editing
+    );
     theMockDatabase.insert(
       `${TheThing.collection}/${tourPlanNotMine.id}`,
       tourPlanNotMine
     );
+    cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
+      const tourPlan = tourPlansByState[state.name];
+      cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
+      tourPlanPO.expectVisible();
+      tourPlanPO.theThingPO.expectName(tourPlan.name);
+      if (state.name === ImitationTourPlan.states.editing.name) {
+        tourPlanPO.theThingPO.expectActionButton(
+          ImitationTourPlan.actions['send-application']
+        );
+      } else {
+        tourPlanPO.theThingPO.expectNoActionButton(
+          ImitationTourPlan.actions['send-application']
+        );
+      }
+    });
     cy.visit(`${ImitationTourPlan.routePath}/${tourPlanNotMine.id}`);
     tourPlanPO.expectVisible();
-    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.new);
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.editing);
     tourPlanPO.theThingPO.expectNoActionButton(
       ImitationTourPlan.actions['send-application']
     );
   });
 
-  it('Can not withdraw tour-plan to editing if not admin', () => {
+  it('Can withdraw tour-plan to editing only if admin and state applied', () => {
     theMockDatabase.setAdmins([]);
-    const tourPlan = tourPlansByState[ImitationTourPlan.states.applied.name];
-    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.expectTheThing(tourPlan);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(tourPlan);
-    tourPlanPO.expectVisible();
+    cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
+      const tourPlan = tourPlansByState[state.name];
+      cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
+      tourPlanPO.expectVisible();
+      tourPlanPO.theThingPO.expectNoActionButton(
+        ImitationTourPlan.actions['cancel-application']
+      );
+    });
     getCurrentUser().then(user => theMockDatabase.setAdmins([user.id]));
-    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.applied);
-    tourPlanPO.theThingPO.expectNoActionButton(
-      ImitationTourPlan.actions['cancel-application']
-    );
+    cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
+      const tourPlan = tourPlansByState[state.name];
+      cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
+      tourPlanPO.expectVisible();
+      if (state.name === ImitationTourPlan.states.applied.name) {
+        tourPlanPO.theThingPO.expectActionButton(
+          ImitationTourPlan.actions['cancel-application']
+        );
+      } else {
+        tourPlanPO.theThingPO.expectNoActionButton(
+          ImitationTourPlan.actions['cancel-application']
+        );
+      }
+    });
   });
 
   it('Only tour-plans of state "new", "editing" are modifiable', () => {

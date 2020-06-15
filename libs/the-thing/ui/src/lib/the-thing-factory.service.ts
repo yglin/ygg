@@ -475,21 +475,27 @@ export class TheThingFactoryService extends TheThingFactory
 
               default:
                 // permission indicate a specific state
-                const permittedStates: string[] = permission.split(',');
-                // console.log(permittedStates);
-                let matchAny = false;
-                for (const stateName of permittedStates) {
-                  const state = get(imitation.states, stateName, null);
-                  if (state && imitation.isState(theThing, state)) {
-                    matchAny = true;
-                    break;
+                if (typeof permission === 'string') {
+                  const permittedStates: string[] = permission.split(',');
+                  // console.log(permittedStates);
+                  let matchAny = false;
+                  for (const stateName of permittedStates) {
+                    const state = get(imitation.states, stateName, null);
+                    if (state && imitation.isState(theThing, state)) {
+                      matchAny = true;
+                      break;
+                    }
                   }
-                }
-                if (!matchAny) {
-                  console.warn(
-                    `action ${action.id} require states: ${permission}`
-                  );
-                  return false;
+                  if (!matchAny) {
+                    console.warn(
+                      `action ${action.id} require states: ${permission}`
+                    );
+                    return false;
+                  }
+                } else if (typeof permission === 'function') {
+                  if (!permission(theThing)) {
+                    return false;
+                  }
                 }
                 break;
             }

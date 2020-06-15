@@ -253,7 +253,9 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
   }
 
   async sendApplication(tourPlan: TheThing) {
-    const confirm = await this.emcee.confirm(`將此遊程 ${tourPlan.name} 送出申請？一旦送出便無法再修改資料`);
+    const confirm = await this.emcee.confirm(
+      `將此遊程 ${tourPlan.name} 送出申請？一旦送出便無法再修改資料`
+    );
     if (confirm) {
       ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.applied);
       await this.theThingAccessor.upsert(tourPlan);
@@ -262,11 +264,24 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
   }
 
   async cancelApplication(tourPlan: TheThing) {
-    const confirm = await this.emcee.confirm(`取消此遊程 ${tourPlan.name} 的申請並退回修改狀態？`);
+    const confirm = await this.emcee.confirm(
+      `取消此遊程 ${tourPlan.name} 的申請並退回修改狀態？`
+    );
     if (confirm) {
       ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.editing);
       await this.theThingAccessor.upsert(tourPlan);
       this.emcee.info(`遊程 ${tourPlan.name} 已取消申請並退回修改`);
+    }
+  }
+
+  async approveAvailable(tourPlan: TheThing) {
+    const confirm = await this.emcee.confirm(
+      `確定遊程 ${tourPlan.name} 有充分的資源和時間可成團，標記為可成行並等待付款？`
+    );
+    if (confirm) {
+      ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.approved);
+      await this.theThingAccessor.upsert(tourPlan);
+      this.emcee.info(`遊程 ${tourPlan.name} 已標記為可成行。`);
     }
   }
 
@@ -300,6 +315,9 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
           break;
         case 'cancel-application':
           this.cancelApplication(tourPlan);
+          break;
+        case 'approve-available':
+          this.approveAvailable(tourPlan);
           break;
         case 'confirm-paid':
           this.confirmPaid(tourPlan);

@@ -10,11 +10,11 @@ import { Month } from '@ygg/shared/omni-types/core';
 export class TourPlanAdminPageObjectCypress extends TourPlanAdminPageObject {
   constructor(parentSelector?: string) {
     super(parentSelector);
-    for (const state of values(omit(ImitationOrder.states, 'new'))) {
+    for (const stateName of ImitationTourPlan.admin.states) {
       this.theThingDataTables[
-        state.name
+        stateName
       ] = new TheThingDataTablePageObjectCypress(
-        this.getSelectorForTabContent(state.name),
+        this.getSelectorForTabContent(stateName),
         ImitationTourPlan
       );
     }

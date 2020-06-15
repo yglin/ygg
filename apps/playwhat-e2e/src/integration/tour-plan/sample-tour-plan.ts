@@ -173,18 +173,18 @@ export const TourPlanInApplication = TourPlanWithPlaysAndEquipments.clone();
 TourPlanInApplication.name = '測試遊程(預訂體驗, 有加購項目，已提交申請)';
 TourPlanInApplication.setState(
   ImitationOrder.stateName,
-  ImitationOrder.states.applied
+  ImitationTourPlan.states.applied
 );
 
 export const TourPlanPaid = TourPlanInApplication.clone();
 TourPlanPaid.name = '測試遊程(預訂體驗, 有加購項目，已付款完成)';
-TourPlanPaid.setState(ImitationOrder.stateName, ImitationOrder.states.paid);
+TourPlanPaid.setState(ImitationOrder.stateName, ImitationTourPlan.states.paid);
 
 export const TourPlanCompleted = TourPlanPaid.clone();
 TourPlanCompleted.name = '測試遊程(預訂體驗, 有加購項目，已全部完成)';
 TourPlanCompleted.setState(
   ImitationOrder.stateName,
-  ImitationOrder.states.completed
+  ImitationTourPlan.states.completed
 );
 
 export function stubTourPlansByStateAndMonth(): {
@@ -192,11 +192,11 @@ export function stubTourPlansByStateAndMonth(): {
 } {
   const result = {};
   for (const name in pick(
-    ImitationOrder.states,
+    ImitationTourPlan.states,
     ImitationTourPlan.admin.states
   )) {
-    if (ImitationOrder.states.hasOwnProperty(name)) {
-      const state = ImitationOrder.states[name];
+    if (ImitationTourPlan.states.hasOwnProperty(name)) {
+      const state = ImitationTourPlan.states[name];
 
       const tourPlanThisMonth = TourPlanInApplication.clone();
       tourPlanThisMonth.name = `測試遊程， ${state.label}(這個月)`;

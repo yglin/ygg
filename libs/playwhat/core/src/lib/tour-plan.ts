@@ -99,6 +99,15 @@ export const ImitationTourPlan: TheThingImitation = ImitationOrder.extend({
   }
 });
 
+ImitationTourPlan.states['approved'] = {
+  name: 'approved',
+  label: '可成行',
+  value:
+    (ImitationTourPlan.states.applied.value +
+      ImitationTourPlan.states.paid.value) /
+    2
+};
+
 ImitationTourPlan.dataTableConfig = {
   columns: keyBy(
     [
@@ -128,11 +137,7 @@ ImitationTourPlan.dataTableConfig = {
   )
 };
 
-ImitationTourPlan.admin.states = [
-  'applied',
-  'paid',
-  'completed'
-]
+ImitationTourPlan.admin.states = ['applied', 'approved', 'paid', 'completed'];
 
 // export function getTotalCharge(tourPlan: TheThing): number {
 //   let totalCharge = 0;
@@ -157,15 +162,21 @@ ImitationTourPlan.actions = {
   },
   'cancel-application': {
     id: 'cancel-application',
-    tooltip: '取消此遊程計畫的申請',
+    tooltip: '取消此遊程計畫的審核申請',
     icon: 'undo',
+    permissions: ['applied', 'requireAdmin']
+  },
+  'approve-available': {
+    id: 'approve-available',
+    tooltip: '標記此遊程計畫可成行',
+    icon: 'fact_check',
     permissions: ['applied', 'requireAdmin']
   },
   'confirm-paid': {
     id: 'confirm-paid',
     tooltip: '標記此遊程的款項已付清',
     icon: 'payment',
-    permissions: ['applied', 'requireAdmin']
+    permissions: ['approved', 'requireAdmin']
   },
   'confirm-completed': {
     id: 'confirm-completed',
@@ -209,4 +220,3 @@ ImitationTourPlan.canModify = (theThing: TheThing): boolean => {
     ImitationTourPlan.isState(theThing, ImitationTourPlan.states.editing)
   );
 };
-

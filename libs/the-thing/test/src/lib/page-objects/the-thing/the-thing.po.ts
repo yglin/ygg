@@ -197,7 +197,9 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
   }
 
   expectActionButton(action: TheThingAction) {
-    cy.get(this.getSelectorForActionButton(action)).should('be.visible');
+    cy.get(this.getSelectorForActionButton(action), { timeout: 10000 }).should(
+      'be.visible'
+    );
   }
 
   expectNoActionButton(action: TheThingAction) {
