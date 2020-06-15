@@ -18,7 +18,6 @@ import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticateService {
-  
   currentUser: User;
   currentUser$: BehaviorSubject<User>;
 
@@ -33,7 +32,7 @@ export class AuthenticateService {
           if (!firebaseUser) {
             return of(null);
           } else {
-            return this.findOrCreateUser$(firebaseUser);
+            return this.syncUser$(firebaseUser);
           }
         })
       )
@@ -73,9 +72,15 @@ export class AuthenticateService {
     }
   }
 
-  findOrCreateUser$(firebaseUser: firebase.User): Observable<User> {
+  syncUser$(firebaseUser: firebase.User): Observable<User> {
     const userId = firebaseUser.uid;
     return this.userService.get$(userId).pipe(
+      switchMap(user => {
+        if (user) {
+          this.syncFromFirebase(user, firebaseUser);
+          return this.userService.upsert(user);
+        }
+      }),
       catchError(error => {
         const userError: UserError = error;
         if (userError.code === UserErrorCode.UserNotFound) {
@@ -89,6 +94,18 @@ export class AuthenticateService {
         }
       })
     );
+  }
+
+  syncFromFirebase(user: User, firebaseUser: firebase.User) {
+    if (firebaseUser.photoURL) {
+      user.avatarUrl = new URL(firebaseUser.photoURL);
+    }
+    if (firebaseUser.displayName) {
+      user.name = firebaseUser.displayName;
+    }
+    if (firebaseUser.phoneNumber) {
+      user.phone = firebaseUser.phoneNumber;
+    }
   }
 
   async logout() {
