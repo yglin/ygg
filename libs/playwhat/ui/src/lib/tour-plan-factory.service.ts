@@ -38,9 +38,9 @@ export interface IModifyRequest {
   providedIn: 'root'
 })
 export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
-  tourPlan$: BehaviorSubject<TheThing> = new BehaviorSubject(null);
-  tourPlan: TheThing;
-  createInProgress: TheThing;
+  tourPlan$: Observable<TheThing>;
+  // tourPlan: TheThing;
+  // createInProgress: TheThing;
   subscriptions: Subscription[] = [];
 
   constructor(
@@ -100,12 +100,13 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
             ImitationTourPlan.routePath,
             newTourPlan.id
           ]);
-          this.tourPlan$.next(newTourPlan);
+          // this.tourPlan$.next(newTourPlan);
           resolve(newTourPlan);
         } else if (!!id) {
           this.theThingFactory.imitation = ImitationTourPlan;
           const tourPlan = await this.theThingFactory.load(id);
-          this.tourPlan$.next(tourPlan);
+          this.tourPlan$ = this.theThingFactory.load$(id);
+          // this.tourPlan$.next(tourPlan);
           resolve(tourPlan);
         } else reject(new Error(`Require id in route path, got ${id}`));
       } catch (error) {
@@ -129,128 +130,128 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     this.shoppingCart.import(tourPlan, purchases);
   }
 
-  async load(id: string): Promise<TheThing> {
-    return this.load$(id)
-      .pipe(take(1))
-      .toPromise();
-  }
+  // async load(id: string): Promise<TheThing> {
+  //   return this.load$(id)
+  //     .pipe(take(1))
+  //     .toPromise();
+  // }
 
-  load$(id: string): Observable<TheThing> {
-    return this.theThingFactory
-      .load$(id)
-      .pipe(tap(tourPlan => (this.tourPlan = tourPlan)));
-  }
+  // load$(id: string): Observable<TheThing> {
+  //   return this.theThingFactory
+  //     .load$(id)
+  //     .pipe(tap(tourPlan => (this.tourPlan = tourPlan)));
+  // }
 
-  async loadTheOne(): Promise<Observable<TheThing>> {
-    // console.log('loadTheOne!!!');
-    // console.log(this.tourPlan);
-    if (!!this.tourPlan) {
-      this.tourPlan$.next(this.tourPlan);
-      return this.tourPlan$;
-    } else {
-      return this.create();
-    }
-  }
+  // async loadTheOne(): Promise<Observable<TheThing>> {
+  //   // console.log('loadTheOne!!!');
+  //   // console.log(this.tourPlan);
+  //   if (!!this.tourPlan) {
+  //     this.tourPlan$.next(this.tourPlan);
+  //     return this.tourPlan$;
+  //   } else {
+  //     return this.create();
+  //   }
+  // }
 
-  async create(): Promise<Observable<TheThing>> {
-    // console.log('Create tour-plan');
-    // console.log(this.createInProgress);
-    if (!this.createInProgress) {
-      this.createInProgress = await this.theThingFactory.create({
-        imitationId: ImitationTourPlan.id
-      });
-    }
-    this.tourPlan = this.createInProgress;
-    this.tourPlan$.next(this.tourPlan);
-    return this.tourPlan$;
-  }
+  // async create(): Promise<Observable<TheThing>> {
+  //   // console.log('Create tour-plan');
+  //   // console.log(this.createInProgress);
+  //   if (!this.createInProgress) {
+  //     this.createInProgress = await this.theThingFactory.create({
+  //       imitationId: ImitationTourPlan.id
+  //     });
+  //   }
+  //   this.tourPlan = this.createInProgress;
+  //   this.tourPlan$.next(this.tourPlan);
+  //   return this.tourPlan$;
+  // }
 
-  modify(request: IModifyRequest) {
-    if (!this.tourPlan) {
-      console.error(`The one tour-plan not exists`);
-      return;
-    }
-    switch (request.target) {
-      case 'meta':
-        set(this.tourPlan, request.field, request.value);
-        break;
-      case 'cell':
-        if (request.command === 'update') {
-          if (this.tourPlan.hasCell(request.field)) {
-            this.tourPlan.updateCellValue(request.field, request.value);
-          }
-        } else if (request.command === 'add') {
-          this.tourPlan.addCell(request.value);
-        } else if (request.command === 'delete') {
-          this.tourPlan.deleteCell(request.field);
-        }
-        break;
-      default:
-        break;
-    }
-    // if (
-    //   !this.tourPlan.name &&
-    //   request.command === 'update' &&
-    //   request.target === 'cell' &&
-    //   request.field === CellNames.dateRange
-    // ) {
-    //   const dateRange = this.tourPlan.getCellValue(CellNames.dateRange);
-    //   if (!!dateRange && !this.tourPlan.name) {
-    //     this.tourPlan.name = defaultTourPlanName(dateRange);
-    //   }
-    //   this.tourPlan$.next(this.tourPlan);
-    // }
-    if (request.emit) {
-      this.tourPlan$.next(this.tourPlan);
-    }
-  }
+  // modify(request: IModifyRequest) {
+  //   if (!this.tourPlan) {
+  //     console.error(`The one tour-plan not exists`);
+  //     return;
+  //   }
+  //   switch (request.target) {
+  //     case 'meta':
+  //       set(this.tourPlan, request.field, request.value);
+  //       break;
+  //     case 'cell':
+  //       if (request.command === 'update') {
+  //         if (this.tourPlan.hasCell(request.field)) {
+  //           this.tourPlan.updateCellValue(request.field, request.value);
+  //         }
+  //       } else if (request.command === 'add') {
+  //         this.tourPlan.addCell(request.value);
+  //       } else if (request.command === 'delete') {
+  //         this.tourPlan.deleteCell(request.field);
+  //       }
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  //   // if (
+  //   //   !this.tourPlan.name &&
+  //   //   request.command === 'update' &&
+  //   //   request.target === 'cell' &&
+  //   //   request.field === CellNames.dateRange
+  //   // ) {
+  //   //   const dateRange = this.tourPlan.getCellValue(CellNames.dateRange);
+  //   //   if (!!dateRange && !this.tourPlan.name) {
+  //   //     this.tourPlan.name = defaultTourPlanName(dateRange);
+  //   //   }
+  //   //   this.tourPlan$.next(this.tourPlan);
+  //   // }
+  //   if (request.emit) {
+  //     this.tourPlan$.next(this.tourPlan);
+  //   }
+  // }
 
-  async setState(state: TheThingState) {
-    const confirm = await this.emcee.confirm(
-      `要將 ${this.tourPlan.name} 的狀態設為 ${state.label}？`
-    );
-    if (confirm) {
-      ImitationTourPlan.setState(this.tourPlan, state);
-      await this.theThingFactory.save(this.tourPlan);
-      this.tourPlan$.next(this.tourPlan);
-    }
-  }
+  // async setState(state: TheThingState) {
+  //   const confirm = await this.emcee.confirm(
+  //     `要將 ${this.tourPlan.name} 的狀態設為 ${state.label}？`
+  //   );
+  //   if (confirm) {
+  //     ImitationTourPlan.setState(this.tourPlan, state);
+  //     await this.theThingFactory.save(this.tourPlan);
+  //     this.tourPlan$.next(this.tourPlan);
+  //   }
+  // }
 
-  async save() {
-    const confirm = await this.emcee.confirm(
-      `確定要儲存 ${this.tourPlan.name} ？`
-    );
-    if (!confirm) {
-      return;
-    }
-    await this.theThingFactory.save(this.tourPlan, {
-      requireOwner: true
-    });
-    if (
-      ImitationTourPlan.isState(this.tourPlan, ImitationTourPlan.states.new)
-    ) {
-      const confirm = await this.emcee.confirm(`順便將遊程計畫送出申請？`);
-      if (confirm) {
-        this.tourPlan.setState(
-          ImitationTourPlan.stateName,
-          ImitationTourPlan.states.applied
-        );
-        await this.theThingFactory.save(this.tourPlan, {
-          requireOwner: true
-        });
-      }
-    }
-    await this.emcee.alert(`已成功儲存 ${this.tourPlan.name}`, AlertType.Info);
-    // this.tourPlan = undefined;
-    if (
-      !!this.createInProgress &&
-      this.tourPlan.id === this.createInProgress.id
-    ) {
-      this.createInProgress = undefined;
-    }
-    this.router.navigate(['/', ImitationTourPlan.routePath, this.tourPlan.id]);
-    return;
-  }
+  // async save() {
+  //   const confirm = await this.emcee.confirm(
+  //     `確定要儲存 ${this.tourPlan.name} ？`
+  //   );
+  //   if (!confirm) {
+  //     return;
+  //   }
+  //   await this.theThingFactory.save(this.tourPlan, {
+  //     requireOwner: true
+  //   });
+  //   if (
+  //     ImitationTourPlan.isState(this.tourPlan, ImitationTourPlan.states.new)
+  //   ) {
+  //     const confirm = await this.emcee.confirm(`順便將遊程計畫送出申請？`);
+  //     if (confirm) {
+  //       this.tourPlan.setState(
+  //         ImitationTourPlan.stateName,
+  //         ImitationTourPlan.states.applied
+  //       );
+  //       await this.theThingFactory.save(this.tourPlan, {
+  //         requireOwner: true
+  //       });
+  //     }
+  //   }
+  //   await this.emcee.alert(`已成功儲存 ${this.tourPlan.name}`, AlertType.Info);
+  //   // this.tourPlan = undefined;
+  //   if (
+  //     !!this.createInProgress &&
+  //     this.tourPlan.id === this.createInProgress.id
+  //   ) {
+  //     this.createInProgress = undefined;
+  //   }
+  //   this.router.navigate(['/', ImitationTourPlan.routePath, this.tourPlan.id]);
+  //   return;
+  // }
 
   async sendApplication(tourPlan: TheThing) {
     const confirm = await this.emcee.confirm(

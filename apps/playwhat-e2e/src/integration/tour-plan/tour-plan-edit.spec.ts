@@ -1,33 +1,18 @@
 // import { sampleSize, values, pick, sum, sumBy, random, find } from 'lodash';
-import {
-  ImitationTourPlan,
-  RelationshipEquipment,
-  ImitationPlay
-} from '@ygg/playwhat/core';
-import {
-  SiteNavigator,
-  TourPlanViewPageObjectCypress,
-  TourPlanPageObjectCypress
-} from '@ygg/playwhat/test';
+import { ImitationPlay, ImitationTourPlan } from '@ygg/playwhat/core';
+import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
 import { login, logout, theMockDatabase } from '@ygg/shared/test/cypress';
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
-import { Purchase, RelationPurchase } from '@ygg/shopping/core';
 import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
 import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 import {
   MyThingsDataTablePageObjectCypress,
   TheThingPageObjectCypress
 } from '@ygg/the-thing/test';
-import { chunk, find, isEmpty, sum } from 'lodash';
-import {
-  PlaysWithEquipment,
-  SampleEquipments,
-  SamplePlays
-} from '../play/sample-plays';
+import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import {
   MinimalTourPlan,
   TourPlanFull,
-  TourPlanWithPlaysAndEquipments,
   TourPlanWithPlaysNoEquipment
 } from './sample-tour-plan';
 
@@ -45,7 +30,10 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
   const cartPO = new ShoppingCartEditorPageObjectCypress();
   const imageThumbnailListPO = new ImageThumbnailListPageObjectCypress();
   const tourPlanPO = new TourPlanPageObjectCypress();
-  const myTourPlansPO = new MyThingsDataTablePageObjectCypress('', ImitationTourPlan);
+  const myTourPlansPO = new MyThingsDataTablePageObjectCypress(
+    '',
+    ImitationTourPlan
+  );
   const playPO = new TheThingPageObjectCypress('', ImitationPlay);
 
   before(() => {

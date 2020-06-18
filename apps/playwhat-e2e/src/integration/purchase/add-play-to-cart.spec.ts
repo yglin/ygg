@@ -1,5 +1,5 @@
 import { ImitationPlay, RelationshipEquipment } from '@ygg/playwhat/core';
-import { SiteNavigator, TourPlanViewPageObjectCypress } from '@ygg/playwhat/test';
+import { SiteNavigator } from '@ygg/playwhat/test';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import { ImageThumbnailListPageObjectCypress, YggDialogPageObjectCypress } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
@@ -24,7 +24,7 @@ describe('Purchase plays and add to cart', () => {
   const imageThumbnailListPO = new ImageThumbnailListPageObjectCypress();
   const cartPO = new ShoppingCartEditorPageObjectCypress();
   const headerPO = new HeaderPageObjectCypress();
-  const tourPlanViewPO = new TourPlanViewPageObjectCypress();
+  // const tourPlanViewPO = new TourPlanViewPageObjectCypress();
   const playPO = new TheThingPageObjectCypress('', ImitationPlay);
   let currentUser: User;
 

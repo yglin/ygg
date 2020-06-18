@@ -24,7 +24,7 @@ import { MyTourPlanListComponent } from './ui/my-tour-plan-list/my-tour-plan-lis
 import { PlayCardComponent } from './ui/play-card/play-card.component';
 import { PlayViewComponent } from './ui/play-view/play-view.component';
 // import { TourPlanBuilderComponent } from './ui/tour-plan-builder/tour-plan-builder.component';
-import { TourPlanViewComponent } from './ui/tour-plan-view/tour-plan-view.component';
+// import { TourPlanViewComponent } from './ui/tour-plan-view/tour-plan-view.component';
 import { TourViewComponent } from './ui/tour-view/tour-view.component';
 import { TourPlanFactoryService } from './tour-plan-factory.service';
 import { noop } from 'lodash';
@@ -50,7 +50,7 @@ import { PlayFactoryService } from './play-factory.service';
   declarations: [
     TourViewComponent,
     PlayCardComponent,
-    TourPlanViewComponent,
+    // TourPlanViewComponent,
     // TourPlanBuilderComponent,
     PlayViewComponent,
     MyPlayListComponent,
@@ -60,7 +60,7 @@ import { PlayFactoryService } from './play-factory.service';
   ],
   entryComponents: [
     TourViewComponent,
-    TourPlanViewComponent,
+    // TourPlanViewComponent,
     PlayViewComponent
     // TourPlanBuilderComponent
   ],
@@ -94,7 +94,7 @@ import { PlayFactoryService } from './play-factory.service';
       multi: true
     }
   ],
-  exports: [TourViewComponent, TourPlanViewComponent]
+  exports: [TourViewComponent, /* TourPlanViewComponent */]
 })
 export class PlaywhatUiModule {}
 
@@ -128,11 +128,11 @@ export function configTheThingImitation(
       label: '體驗組合',
       component: TourViewComponent
     });
-    theThingViewsService.addView('tour-plan', {
-      id: 'tour-plan',
-      label: '遊程規劃',
-      component: TourPlanViewComponent
-    });
+    // theThingViewsService.addView('tour-plan', {
+    //   id: 'tour-plan',
+    //   label: '遊程規劃',
+    //   component: TourPlanViewComponent
+    // });
     // theThingEditorService.addEditor({
     //   id: 'tour-plan',
     //   label: '遊程規劃',

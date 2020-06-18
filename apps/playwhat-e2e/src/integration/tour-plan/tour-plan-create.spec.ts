@@ -3,12 +3,7 @@ import {
   defaultTourPlanName,
   ImitationTourPlan
 } from '@ygg/playwhat/core';
-import {
-  SiteNavigator,
-  TourPlanAdminPageObjectCypress,
-  TourPlanViewPageObjectCypress,
-  TourPlanPageObjectCypress
-} from '@ygg/playwhat/test';
+import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
 import { Contact } from '@ygg/shared/omni-types/core';
 import {
   ContactControlPageObjectCypress,
@@ -25,17 +20,12 @@ import {
   logout,
   waitForLogin
 } from '@ygg/shared/user/test';
-import { ImitationOrder } from '@ygg/shopping/core';
-import { TheThingCell, TheThing } from '@ygg/the-thing/core';
+import { TheThingCell } from '@ygg/the-thing/core';
 import {
   MyThingsDataTablePageObjectCypress,
   MyThingsPageObjectCypress
 } from '@ygg/the-thing/test';
-import {
-  SampleEquipments,
-  SamplePlays,
-  MinimumPlay
-} from '../play/sample-plays';
+import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import { MinimalTourPlan, TourPlanFull } from './sample-tour-plan';
 
 describe('Tour-plan create', () => {
@@ -43,7 +33,7 @@ describe('Tour-plan create', () => {
   const SampleThings = SamplePlays.concat(SampleEquipments);
 
   const tourPlanPO = new TourPlanPageObjectCypress();
-  const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();
+  // const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();
   const myTourPlansPO = new MyThingsDataTablePageObjectCypress(
     '',
     ImitationTourPlan
@@ -93,7 +83,9 @@ describe('Tour-plan create', () => {
 
   it('Logged-in user can automatically fill contact info', () => {
     tourPlanPO.theThingPO.setCell(MinimalTourPlan.getCell(CellNames.dateRange));
-    tourPlanPO.theThingPO.setCell(MinimalTourPlan.getCell(CellNames.numParticipants));
+    tourPlanPO.theThingPO.setCell(
+      MinimalTourPlan.getCell(CellNames.numParticipants)
+    );
     const omniTypeViewControl = new OmniTypeViewControlPageObjectCypress(
       tourPlanPO.theThingPO.getSelectorForCell(CellNames.contact)
     );
@@ -113,7 +105,9 @@ describe('Tour-plan create', () => {
 
   it('Can not add duplicate named cell', () => {
     tourPlanPO.theThingPO.setCell(MinimalTourPlan.getCell(CellNames.dateRange));
-    tourPlanPO.theThingPO.setCell(MinimalTourPlan.getCell(CellNames.numParticipants));
+    tourPlanPO.theThingPO.setCell(
+      MinimalTourPlan.getCell(CellNames.numParticipants)
+    );
     tourPlanPO.theThingPO.setCell(MinimalTourPlan.getCell(CellNames.contact));
     const cell = new TheThingCell({
       name: '兩顆子彈',
@@ -124,10 +118,7 @@ describe('Tour-plan create', () => {
     tourPlanPO.theThingPO.addCell(cell);
     const emceePO = new EmceePageObjectCypress();
     emceePO.alert(`資料欄位 ${cell.name} 已存在`);
-    cy.get(tourPlanPO.getSelectorForCell(cell.name)).should(
-      'have.length',
-      1
-    );
+    cy.get(tourPlanPO.getSelectorForCell(cell.name)).should('have.length', 1);
   });
 
   it('Build a tour-plan plus includes all optional data fields', () => {

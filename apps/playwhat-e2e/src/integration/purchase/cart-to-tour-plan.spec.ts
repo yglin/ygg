@@ -1,14 +1,14 @@
 import {
-  SiteNavigator,
-  TourPlanViewPageObjectCypress,
-  TourPlanPageObjectCypress
-} from '@ygg/playwhat/test';
+  ImitationPlay,
+  ImitationTourPlan,
+  RelationshipEquipment
+} from '@ygg/playwhat/core';
+import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import {
+  EmceePageObjectCypress,
   ImageThumbnailListPageObjectCypress,
-  ConfirmDialogPageObjectCypress,
-  YggDialogPageObjectCypress,
-  EmceePageObjectCypress
+  YggDialogPageObjectCypress
 } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
 import { waitForLogin } from '@ygg/shared/user/test';
@@ -19,8 +19,8 @@ import {
   RelationPurchase
 } from '@ygg/shopping/core';
 import {
-  ShoppingCartEditorPageObjectCypress,
-  PurchaseProductPageObjectCypress
+  PurchaseProductPageObjectCypress,
+  ShoppingCartEditorPageObjectCypress
 } from '@ygg/shopping/test';
 import { TheThing } from '@ygg/the-thing/core';
 import {
@@ -28,36 +28,22 @@ import {
   MyThingsPageObjectCypress,
   TheThingPageObjectCypress
 } from '@ygg/the-thing/test';
-import {
-  keyBy,
-  sum,
-  values,
-  sample,
-  sampleSize,
-  last,
-  remove,
-  random,
-  cloneDeep,
-  find,
-  isEmpty,
-  chunk
-} from 'lodash';
+import { chunk, isEmpty, keyBy, random, sampleSize, sum } from 'lodash';
 import { HeaderPageObjectCypress } from '../../support/header.po';
 import {
-  SampleEquipments,
-  SamplePlays,
+  PlaysWithEquipment,
   PlaysWithoutEquipment,
-  PlaysWithEquipment
+  SampleEquipments,
+  SamplePlays
 } from '../play/sample-plays';
 import {
+  MinimalTourPlan,
   // TourPlanWithPlaysNoEquipment,
   // TourPlanWithPlaysAndEquipments,
   TourPlanFull,
-  TourPlanWithPlaysNoEquipment,
-  MinimalTourPlan,
-  TourPlanWithPlaysAndEquipments
+  TourPlanWithPlaysAndEquipments,
+  TourPlanWithPlaysNoEquipment
 } from '../tour-plan/sample-tour-plan';
-import { ImitationPlay, RelationshipEquipment, ImitationTourPlan } from '@ygg/playwhat/core';
 
 describe('Import/export purchases between cart and tour-plan', () => {
   const siteNavigator = new SiteNavigator();
@@ -75,7 +61,10 @@ describe('Import/export purchases between cart and tour-plan', () => {
   const headerPO = new HeaderPageObjectCypress();
   const tourPlanPO = new TourPlanPageObjectCypress();
   const playPO = new TheThingPageObjectCypress('', ImitationPlay);
-  const myTourPlansPO = new MyThingsDataTablePageObjectCypress('', ImitationTourPlan);
+  const myTourPlansPO = new MyThingsDataTablePageObjectCypress(
+    '',
+    ImitationTourPlan
+  );
 
   let currentUser: User;
 
