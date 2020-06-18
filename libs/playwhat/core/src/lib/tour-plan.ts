@@ -1,7 +1,7 @@
 import { TheThingImitation, TheThing } from '@ygg/the-thing/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import { ImitationOrder } from '@ygg/shopping/core';
-import { keyBy } from 'lodash';
+import { keyBy, values } from 'lodash';
 
 export const CellNames = {
   dateRange: '預計出遊日期',
@@ -15,53 +15,53 @@ export enum States {
   Completed = '已完成'
 }
 
-const cellsDef = {
-  預計出遊日期: {
+export const CellDefinesTourPlan = {
+  dateRange: {
     name: '預計出遊日期',
     type: 'date-range',
     userInput: 'required'
   },
-  預計參加人數: {
+  numParticipants: {
     name: '預計參加人數',
     type: 'number',
     userInput: 'required'
   },
-  聯絡資訊: {
+  contact: {
     name: '聯絡資訊',
     type: 'contact',
     userInput: 'required'
   },
-  預計遊玩時間: {
+  dayTimeRange: {
     name: '預計遊玩時間',
     type: 'day-time-range',
     userInput: 'optional'
   },
-  用餐需求: {
+  aboutMeals: {
     name: '用餐需求',
     type: 'longtext',
     userInput: 'optional'
   },
-  交通需求: {
+  aboutTransport: {
     name: '交通需求',
     type: 'longtext',
     userInput: 'optional'
   },
-  長輩人數: {
+  numElders: {
     name: '長輩人數',
     type: 'number',
     userInput: 'optional'
   },
-  孩童人數: {
+  numKids: {
     name: '孩童人數',
     type: 'number',
     userInput: 'optional'
   },
-  司領人數: {
+  numPartTimes: {
     name: '司領人數',
     type: 'number',
     userInput: 'optional'
   },
-  其他: {
+  misc: {
     name: CellNames.misc,
     type: 'html',
     userInput: 'optional'
@@ -69,16 +69,16 @@ const cellsDef = {
 };
 
 const cellsOrder = [
-  '預計出遊日期',
-  '預計參加人數',
-  '聯絡資訊',
-  '預計遊玩時間',
-  '用餐需求',
-  '交通需求',
-  '長輩人數',
-  '孩童人數',
-  '司領人數',
-  CellNames.misc
+  CellDefinesTourPlan.dateRange.name,
+  CellDefinesTourPlan.contact.name,
+  CellDefinesTourPlan.numParticipants.name,
+  CellDefinesTourPlan.dayTimeRange.name,
+  CellDefinesTourPlan.aboutMeals.name,
+  CellDefinesTourPlan.aboutTransport.name,
+  CellDefinesTourPlan.numElders.name,
+  CellDefinesTourPlan.numKids.name,
+  CellDefinesTourPlan.numPartTimes.name,
+  CellDefinesTourPlan.misc.name
 ];
 
 export const ImitationTourPlan: TheThingImitation = ImitationOrder.extend({
@@ -91,7 +91,7 @@ export const ImitationTourPlan: TheThingImitation = ImitationOrder.extend({
   editor: 'tour-plan',
   routePath: 'tour-plans',
   // templateId: TemplateTourPlan.id,
-  cellsDef,
+  cellsDef: values(CellDefinesTourPlan),
   cellsOrder,
   filter: {
     name: '搜尋旅遊行程',
@@ -183,6 +183,12 @@ ImitationTourPlan.actions = {
     tooltip: '標記此遊程的所有活動流程已完成',
     icon: 'done_all',
     permissions: ['paid', 'requireAdmin']
+  },
+  schedule: {
+    id: 'schedule',
+    tooltip: '為體驗活動編排行程表',
+    icon: 'schedule',
+    permissions: ['applied', 'requireAdmin']
   }
 };
 

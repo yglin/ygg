@@ -230,6 +230,16 @@ export class TheThingFactoryService extends TheThingFactory
     return newThing;
   }
 
+  emitChange(theThing: TheThing) {
+    if (!(theThing.id in this.theThingSources$)) {
+      this.theThingSources$[theThing.id] = {
+        local$: new BehaviorSubject(theThing)
+      };
+    } else {
+      this.theThingSources$[theThing.id].local$.next(theThing);
+    }
+  }
+
   async load(
     id: string,
     collection: string = TheThing.collection
@@ -333,8 +343,9 @@ export class TheThingFactoryService extends TheThingFactory
   async save(
     theThing: TheThing,
     options: {
-      requireOwner: boolean;
+      requireOwner?: boolean;
       imitation?: TheThingImitation;
+      force?: boolean;
     } = {
       requireOwner: true
     }
@@ -349,9 +360,14 @@ export class TheThingFactoryService extends TheThingFactory
       }
     }
     try {
-      const confirm = await this.emceeService.confirm(
-        `確定要儲存 ${theThing.name} ？`
-      );
+      let confirm: boolean;
+      if (options.force) {
+        confirm = true;
+      } else {
+        confirm = await this.emceeService.confirm(
+          `確定要儲存 ${theThing.name} ？`
+        );
+      }
       if (!confirm) {
         return;
       }
@@ -384,7 +400,9 @@ export class TheThingFactoryService extends TheThingFactory
       // console.log('師');
       // this.theThingSources$[result.id].local$.next(result);
       if (!!result) {
-        await this.emceeService.info(`已成功儲存 ${result.name}`);
+        if (!options.force) {
+          await this.emceeService.info(`已成功儲存 ${result.name}`);
+        }
         // if (theThing.id in this.theThingSources$) {
         //   this.theThingSources$[theThing.id].next(result);
         // }

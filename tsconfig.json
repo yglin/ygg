@@ -70,7 +70,10 @@
       "@ygg/shared/user/test": ["libs/shared/user/test/src/index.ts"],
       "@ygg/shared/infra/core": ["libs/shared/infra/core/src/index.ts"],
       "@ygg/ourbox/core": ["libs/ourbox/core/src/index.ts"],
-      "@ygg/shared/user/functions": ["libs/shared/user/functions/src/index.ts"]
+      "@ygg/shared/user/functions": ["libs/shared/user/functions/src/index.ts"],
+      "@ygg/schedule/core": ["libs/schedule/core/src/index.ts"],
+      "@ygg/schedule/ui": ["libs/schedule/ui/src/index.ts"],
+      "@ygg/schedule/test": ["libs/schedule/test/src/index.ts"]
     },
     "rootDir": "."
   },

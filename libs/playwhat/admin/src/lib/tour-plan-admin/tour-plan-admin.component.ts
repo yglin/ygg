@@ -47,11 +47,11 @@ export class TourPlanAdminComponent implements OnInit {
         theThings$: this.formControlSelectMonth.valueChanges.pipe(
           startWith(0),
           switchMap((idx: number) => {
-            const dateRange = this.months[idx];
-            if (dateRange) {
+            const timeRange = this.months[idx];
+            if (timeRange) {
               // console.log('Set new date range');
-              // console.dir(dateRange);
-              filter.setStateDateRange(dateRange);
+              // console.dir(timeRange);
+              filter.setStateTimeRange(timeRange);
             }
             return this.theThingAccessService.listByFilter$(filter);
           })
@@ -62,10 +62,10 @@ export class TourPlanAdminComponent implements OnInit {
     this.incomeRecords$ = this.formControlSelectMonth.valueChanges.pipe(
       startWith(0),
       switchMap((idx: number) => {
-        const dateRange = this.months[idx];
+        const timeRange = this.months[idx];
         const filter = ImitationTourPlan.filter.clone();
-        if (dateRange) {
-          filter.setStateDateRange(dateRange);
+        if (timeRange) {
+          filter.setStateTimeRange(timeRange);
         }
         return this.accountingService.listIncomeRecords$(filter);
       })

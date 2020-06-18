@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { SchedulePlan } from '@ygg/schedule/core';
-import { Schedule } from '../../../core/src/lib/schedule/schedule';
+import { SchedulePlan, ScheduleFactory, Schedule } from '@ygg/schedule/core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ScheduleFactoryService {
+export class ScheduleFactoryService extends ScheduleFactory {
 
-  constructor() { }
+  constructor() {
+    super();
+  }
 
   async createSchedule(schedulePlan: SchedulePlan): Promise<Schedule> {
     // TODO: implement

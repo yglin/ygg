@@ -3,7 +3,7 @@ import { TheThing } from './the-thing';
 import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { Tags } from '@ygg/tags/core';
 import { __assign } from 'tslib';
-import { DateRange } from '@ygg/shared/omni-types/core';
+import { DateRange, TimeRange } from '@ygg/shared/omni-types/core';
 
 export class TheThingFilter implements SerializableJSON {
   name: string;
@@ -12,7 +12,7 @@ export class TheThingFilter implements SerializableJSON {
   keywordName: string;
   flags: { [name: string]: boolean } = {};
   states: { [name: string]: number } = {};
-  stateDateRange: DateRange;
+  stateTimeRange: TimeRange;
 
   constructor(...args: any[]) {
     if (!isEmpty(args)) {
@@ -49,7 +49,7 @@ export class TheThingFilter implements SerializableJSON {
         keywordName: keywordName,
         flags,
         states,
-        stateDateRange: filter.stateDateRange
+        stateTimeRange: filter.stateTimeRange
       });
     }
   }
@@ -90,11 +90,11 @@ export class TheThingFilter implements SerializableJSON {
         }
         const stateTimestamp = theThing.stateTimestamps[`${name}__${value}`];
         if (
-          this.stateDateRange &&
+          this.stateTimeRange &&
           stateTimestamp &&
-          !this.stateDateRange.isBetweenIn(stateTimestamp)
+          !this.stateTimeRange.isBetweenIn(stateTimestamp)
         ) {
-          // console.dir(this.stateDateRange);
+          // console.dir(this.stateTimeRange);
           // console.log(stateTimestamp);
           // console.log('Filter false~!!');
           return false;
@@ -112,8 +112,8 @@ export class TheThingFilter implements SerializableJSON {
     this.states[stateName] = value;
   }
 
-  setStateDateRange(dateRange: DateRange) {
-    this.stateDateRange = dateRange;
+  setStateTimeRange(timeRange: TimeRange) {
+    this.stateTimeRange = timeRange;
   }
 
   clone(): TheThingFilter {
@@ -122,8 +122,8 @@ export class TheThingFilter implements SerializableJSON {
 
   fromJSON(data: any): this {
     extend(this, data);
-    if (data.stateDateRange) {
-      this.stateDateRange = new DateRange().fromJSON(data.stateDateRange);
+    if (data.stateTimeRange) {
+      this.stateTimeRange = new DateRange().fromJSON(data.stateTimeRange);
     }
     return this;
   }

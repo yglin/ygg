@@ -17,7 +17,7 @@ import { SharedUserUiModule, UserMenuService } from '@ygg/shared/user/ui';
 import { ShoppingUiModule } from '@ygg/shopping/ui';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { TheThingUiModule, TheThingViewsService } from '@ygg/the-thing/ui';
-import { TheThingEditorService } from 'libs/the-thing/ui/src/lib/the-thing-editor.service';
+// import { TheThingEditorService } from 'libs/the-thing/ui/src/lib/the-thing-editor.service';
 import { routes } from './routes';
 import { MyPlayListComponent } from './ui/my-play-list/my-play-list.component';
 import { MyTourPlanListComponent } from './ui/my-tour-plan-list/my-tour-plan-list.component';
@@ -71,7 +71,7 @@ import { PlayFactoryService } from './play-factory.service';
       deps: [
         TheThingImitationAccessService,
         TheThingViewsService,
-        TheThingEditorService
+        // TheThingEditorService
       ],
       multi: true
     },
@@ -109,7 +109,7 @@ export function initFactoryServices(
 export function configTheThingImitation(
   imitationAccessService: TheThingImitationAccessService,
   theThingViewsService: TheThingViewsService,
-  theThingEditorService: TheThingEditorService
+  // theThingEditorService: TheThingEditorService
 ) {
   return () => {
     imitationAccessService.addLocal([

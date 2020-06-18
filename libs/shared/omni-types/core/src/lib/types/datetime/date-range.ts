@@ -1,5 +1,4 @@
-import { SerializableJSON } from '@ygg/shared/infra/data-access';
-import { isArray, random } from 'lodash';
+import { random } from 'lodash';
 import * as moment from 'moment';
 import { TimeRange } from './time-range';
 
@@ -42,5 +41,16 @@ export class DateRange extends TimeRange {
     this._end = moment(value)
       .startOf('day')
       .toDate();
+  }
+
+  toTimeRange(): TimeRange {
+    return new TimeRange(
+      moment(this.start)
+        .startOf('day')
+        .toDate(),
+      moment(this.end)
+        .endOf('day')
+        .toDate()
+    );
   }
 }

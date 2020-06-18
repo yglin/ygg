@@ -25,6 +25,8 @@ import { ShoppingCartService, CartSubmitPack } from '@ygg/shopping/ui';
 import { Purchase, RelationPurchase } from '@ygg/shopping/core';
 import { take, tap } from 'rxjs/operators';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { ScheduleAdapterService } from './schedule-adapter.service';
+import { ScheduleFactoryService } from '@ygg/schedule/ui';
 
 export interface IModifyRequest {
   command: 'update' | 'add' | 'delete';
@@ -48,7 +50,9 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     private theThingFactory: TheThingFactoryService,
     private shoppingCart: ShoppingCartService,
     private emcee: EmceeService,
-    private router: Router
+    private router: Router,
+    private scheduleAdapter: ScheduleAdapterService,
+    private scheduleFactory: ScheduleFactoryService
   ) {
     this.subscriptions.push(
       this.theThingFactory.runAction$.subscribe(actionSubmit => {
@@ -62,6 +66,14 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
         }
       })
     );
+    // this.subscriptions.push(
+    //   this.theThingFactory.onSave$.subscribe(savedThing => {
+    //     if (savedThing && this.tourPlan && savedThing.id === this.tourPlan.id) {
+    //       this.tourPlan = savedThing;
+    //       this.tourPlan$.next(this.tourPlan);
+    //     }
+    //   })
+    // );
     // console.info('Subscribe to Shopping cart~!!!');
     this.subscriptions.push(
       this.shoppingCart.submit$.subscribe(
@@ -259,7 +271,7 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     );
     if (confirm) {
       ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.applied);
-      await this.theThingAccessor.upsert(tourPlan);
+      await this.theThingFactory.save(tourPlan, { force: true });
       this.emcee.info(`遊程 ${tourPlan.name} 已送出申請，等待管理者審核。`);
     }
   }
@@ -270,7 +282,7 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     );
     if (confirm) {
       ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.editing);
-      await this.theThingAccessor.upsert(tourPlan);
+      await this.theThingFactory.save(tourPlan, { force: true });
       this.emcee.info(`遊程 ${tourPlan.name} 已取消申請並退回修改`);
     }
   }
@@ -281,7 +293,7 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     );
     if (confirm) {
       ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.approved);
-      await this.theThingAccessor.upsert(tourPlan);
+      await this.theThingFactory.save(tourPlan, { force: true });
       this.emcee.info(`遊程 ${tourPlan.name} 已標記為可成行。`);
     }
   }
@@ -292,7 +304,7 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     );
     if (confirm) {
       ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.paid);
-      await this.theThingAccessor.upsert(tourPlan);
+      await this.theThingFactory.save(tourPlan, { force: true });
       this.emcee.info(`遊程 ${tourPlan.name} 標記為已付款。`);
     }
   }
@@ -303,9 +315,22 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     );
     if (confirm) {
       ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.completed);
-      await this.theThingAccessor.upsert(tourPlan);
+      await this.theThingFactory.save(tourPlan, { force: true });
       this.emcee.info(`遊程 ${tourPlan.name} 標記為已完成。`);
     }
+  }
+
+  async schedule(tourPlan: TheThing) {
+    const inSchedule = await this.scheduleAdapter.deduceScheduleFromTourPlan(
+      tourPlan
+    );
+    const outSchedule = await this.scheduleFactory.edit(inSchedule);
+    await this.scheduleAdapter.attachScheduleWithTourPlan(
+      tourPlan,
+      outSchedule
+    );
+    this.theThingFactory.emitChange(tourPlan);
+    this.router.navigate(['/', ImitationTourPlan.routePath, tourPlan.id]);
   }
 
   runAction(action: TheThingAction, tourPlan: TheThing) {
@@ -326,7 +351,9 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
         case 'confirm-completed':
           this.confirmCompleted(tourPlan);
           break;
-
+        case 'schedule':
+          this.schedule(tourPlan);
+          break;
         default:
           break;
       }

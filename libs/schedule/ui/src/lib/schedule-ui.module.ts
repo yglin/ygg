@@ -1,5 +1,13 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
+import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
+import { SharedUserUiModule } from "@ygg/shared/user/ui";
+import { ShoppingUiModule } from '@ygg/shopping/ui';
+import { TagsUiModule } from '@ygg/tags/ui';
 import {
   SchedulePlanControlComponent,
   SchedulePlanListComponent,
@@ -7,26 +15,10 @@ import {
   SchedulePlanThumbnailComponent,
   SchedulePlanViewComponent
 } from './schedule-plan';
-import { RouterModule } from '@angular/router';
-import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-import { SharedUserUiModule } from "@ygg/shared/user/ui";
-import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
-import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
-import { TagsUiModule } from '@ygg/tags/ui';
-import { PlaywhatPlayModule } from '@ygg/playwhat/play';
-import { ShoppingUiModule } from '@ygg/shopping/ui';
-import { ResourceUiModule } from '@ygg/resource/ui';
+import { ScheduleComponent } from './schedule/schedule/schedule.component';
 
 @NgModule({
-  declarations: [
-    SchedulePlanControlComponent,
-    SchedulePlanListComponent,
-    SchedulePlanTableComponent,
-    SchedulePlanThumbnailComponent,
-    SchedulePlanViewComponent
-  ],
+  declarations: [ScheduleComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -35,20 +27,8 @@ import { ResourceUiModule } from '@ygg/resource/ui';
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
     SharedUserUiModule,
-    SharedTypesModule,
     SharedOmniTypesUiModule,
-    TagsUiModule,
-    PlaywhatPlayModule,
-    ShoppingUiModule,
-    ResourceUiModule,
-    SharedOmniTypesUiModule
   ],
-  exports: [
-    SchedulePlanControlComponent,
-    SchedulePlanListComponent,
-    SchedulePlanTableComponent,
-    SchedulePlanThumbnailComponent,
-    SchedulePlanViewComponent
-  ]
+  exports: []
 })
 export class ScheduleUiModule {}
