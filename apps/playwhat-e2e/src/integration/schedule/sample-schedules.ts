@@ -1,4 +1,4 @@
-import { TourPlanWithPlaysAndEquipments } from '../tour-plan/sample-tour-plan';
+import { TourPlanWithPlaysAndEquipments, TourPlanWithPlaysNoEquipment } from '../tour-plan/sample-tour-plan';
 import { Schedule, ServiceEvent } from '@ygg/schedule/core';
 import {
   CellDefinesTourPlan,
@@ -11,9 +11,9 @@ import {
   CellNames as CellNamesShopping
 } from '@ygg/shopping/core';
 import { find } from 'lodash';
-import { PlaysWithEquipment } from '../play/sample-plays';
+import { PlaysWithEquipment, PlaysWithoutEquipment } from '../play/sample-plays';
 
-const dateRange: DateRange = TourPlanWithPlaysAndEquipments.getCellValue(
+let dateRange: DateRange = TourPlanWithPlaysAndEquipments.getCellValue(
   CellDefinesTourPlan.dateRange.name
 );
 export const ScheduleFromTourPlanWithPlaysAndEquipments: Schedule = new Schedule(
@@ -31,5 +31,26 @@ for (const relation of TourPlanWithPlaysAndEquipments.getRelations(
       }
     );
     ScheduleFromTourPlanWithPlaysAndEquipments.addEvent(event);
+  }
+}
+
+dateRange = TourPlanWithPlaysNoEquipment.getCellValue(
+  CellDefinesTourPlan.dateRange.name
+);
+export const ScheduleFromTourPlanWithPlaysNoEquipment: Schedule = new Schedule(
+  dateRange.toTimeRange()
+);
+for (const relation of TourPlanWithPlaysNoEquipment.getRelations(
+  RelationPurchase.name
+)) {
+  const play = find(PlaysWithoutEquipment, p => p.id === relation.objectId);
+  if (ImitationPlay.isValid(play)) {
+    const event = new ServiceEvent(
+      ScheduleAdapter.deduceServiceFromPlay(play),
+      {
+        numParticipants: relation.getCellValue(CellNamesShopping.quantity)
+      }
+    );
+    ScheduleFromTourPlanWithPlaysNoEquipment.addEvent(event);
   }
 }

@@ -134,10 +134,10 @@ ImitationPlay.states = {
   }
 };
 
-export const RelationshipEquipment: Relationship = {
+export const RelationshipEquipment = new Relationship({
   name: ImitationEquipment.name,
   imitation: ImitationEquipment
-};
+});
 
 ImitationPlay.relationships[RelationshipEquipment.name] = RelationshipEquipment;
 

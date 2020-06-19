@@ -17,7 +17,7 @@ import {
 } from 'lodash';
 import { Tags } from '@ygg/tags/core';
 import { TheThingCell } from './cell';
-import { OmniTypeID, Image } from '@ygg/shared/omni-types/core';
+import { OmniTypeID, Image, TimeRange } from '@ygg/shared/omni-types/core';
 import { generateID, toJSONDeep, Entity } from '@ygg/shared/infra/data-access';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 import { TheThingRelation } from './relation';
@@ -276,6 +276,14 @@ export class TheThing implements Entity, ImageThumbnailItem {
     } catch (error) {
       console.warn(`Failed to get cell from ${cellName}: ${error.message}`);
       return null;
+    }
+  }
+
+  setCellValue(cellName: string, value: any) {
+    if (this.hasCell(cellName)) {
+      this.cells[cellName].value = value;
+    } else {
+      console.warn(`Failed to setCellValue ${cellName}, cell not exists`);
     }
   }
 

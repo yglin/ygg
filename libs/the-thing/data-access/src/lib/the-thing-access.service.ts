@@ -15,6 +15,8 @@ import { Tags } from '@ygg/tags/core';
   providedIn: 'root'
 })
 export class TheThingAccessService implements TheThingAccessor {
+  save = this.upsert;
+
   // cache: { [id: string]: Observable<TheThing> } = {};
   constructor(private dataAccessService: DataAccessService) {}
 
@@ -94,6 +96,7 @@ export class TheThingAccessService implements TheThingAccessor {
       return throwError(new Error(`Require arguments tags, but get ${tags}`));
     }
   }
+
 
   async upsert(theThing: TheThing): Promise<TheThing> {
     await this.dataAccessService.upsert(theThing.collection, theThing.toJSON());

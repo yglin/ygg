@@ -6,7 +6,7 @@ import {
   FormControl
 } from '@angular/forms';
 import * as moment from 'moment';
-import { DateRange, DATE_FORMATS } from '@ygg/shared/omni-types/core';
+import { TimeRange, DATE_FORMATS, DayTime } from '@ygg/shared/omni-types/core';
 import { Subscription, merge } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
@@ -14,13 +14,13 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { SlideInOutAnimation } from '@ygg/shared/ui/themes';
 
 @Component({
-  selector: 'ygg-date-range-control',
-  templateUrl: './date-range-control.component.html',
-  styleUrls: ['./date-range-control.component.css'],
+  selector: 'ygg-time-range-control',
+  templateUrl: './time-range-control.component.html',
+  styleUrls: ['./time-range-control.component.css'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DateRangeControlComponent),
+      useExisting: forwardRef(() => TimeRangeControlComponent),
       multi: true
     },
     { provide: DateAdapter, useClass: MomentDateAdapter },
@@ -31,13 +31,15 @@ import { SlideInOutAnimation } from '@ygg/shared/ui/themes';
   ],
   animations: [SlideInOutAnimation]
 })
-export class DateRangeControlComponent
+export class TimeRangeControlComponent
   implements ControlValueAccessor, OnDestroy {
   @Input() label = '';
-  emitChange: (value: DateRange) => any = noop;
+  emitChange: (value: TimeRange) => any = noop;
   emitTouched: () => any = noop;
   startFormControl: FormControl;
+  startDayTimeControl: FormControl;
   endFormControl: FormControl;
+  endDayTimeControl: FormControl;
   subscriptions: Subscription[] = [];
   errorMessages: string[] = [];
   stateShowError = 'out';
@@ -52,51 +54,77 @@ export class DateRangeControlComponent
     this.dateAdapter.setLocale(locale_id);
 
     // Initialize some value
-    // const initialValue = DateRange.forge();
+    // const initialValue = TimeRange.forge();
     this.startFormControl = new FormControl(null);
+    this.startDayTimeControl = new FormControl(null);
     this.endFormControl = new FormControl(null);
+    this.endDayTimeControl = new FormControl(null);
 
     this.subscriptions.push(
       merge(
         this.startFormControl.valueChanges,
-        this.endFormControl.valueChanges
+        this.startDayTimeControl.valueChanges,
+        this.endFormControl.valueChanges,
+        this.endDayTimeControl.valueChanges
       )
         .pipe(
-          map(() => [this.startFormControl.value, this.endFormControl.value]),
           tap(() => (this.errorMessages = [])),
-          tap(([startValue, endValue]) => {
+          filter(() => {
+            const start: moment.Moment = this.startFormControl.value;
+            const end: moment.Moment = this.endFormControl.value;
             if (
               !(
-                startValue &&
-                startValue.isValid() &&
-                endValue &&
-                endValue.isValid()
+                start &&
+                start.isValid() &&
+                end &&
+                end.isValid()
               )
             ) {
               this.errorMessages.push(`請填入開始日期與結束日期`);
-            } else if (startValue.isAfter(endValue)) {
-              this.errorMessages.push(`開始日期必須在結束日期之前`);
+              return false;
+            } else {
+              return true;
             }
-            this.stateShowError = isEmpty(this.errorMessages) ? 'out' : 'in';
+          }),
+          filter(() => {
+            const startTime: DayTime = this.startDayTimeControl.value;
+            const endTime: DayTime = this.endDayTimeControl.value;
+            if (
+              !(DayTime.isDayTime(startTime) && DayTime.isDayTime(endTime))
+            ) {
+              this.errorMessages.push(`請填入開始時間與結束時間`);
+              return false;
+            } else {
+              return true;
+            }            
+          }),
+          map(() => {
+            const start: moment.Moment = this.startFormControl.value;
+            const end: moment.Moment = this.endFormControl.value;
+            const startTime: DayTime = this.startDayTimeControl.value;
+            const endTime: DayTime = this.endDayTimeControl.value;
+            start.hour(startTime.hour).minute(startTime.minute);
+            end.hour(endTime.hour).minute(endTime.minute);
+            return [start, end];
           }),
           filter(([startValue, endValue]) => {
-            return (
-              startValue &&
-              startValue.isValid() &&
-              endValue &&
-              endValue.isValid() &&
-              startValue.isSameOrBefore(endValue)
-            );
+            if (startValue.isAfter(endValue)) {
+              this.errorMessages.push(`開始時間必須在結束時間之前`);
+              return false;
+            } else {
+              return true;
+            }
           })
         )
         // this.startFormControl.valueChanges
         .subscribe(([startValue, endValue]) => {
-          const dateRange = new DateRange(
+          this.stateShowError = isEmpty(this.errorMessages) ? 'out' : 'in';
+          const timeRange = new TimeRange(
             startValue.toDate(),
             endValue.toDate()
           );
-          this.emitChange(dateRange);
-          // console.log(`Emit Change: ${dateRange.format()}`);
+          this.emitChange(timeRange);
+          // console.log(`Emit Change: ${TimeRange.format()}`);
         })
     );
   }
@@ -107,10 +135,10 @@ export class DateRangeControlComponent
     }
   }
 
-  writeValue(value: DateRange) {
+  writeValue(value: TimeRange) {
     // console.log(value);
-    // console.log(DateRange.isDateRange(value));
-    if (DateRange.isDateRange(value)) {
+    // console.log(TimeRange.isTimeRange(value));
+    if (TimeRange.isTimeRange(value)) {
       this.startFormControl.setValue(moment(value.start), {
         emitEvent: false
       });
@@ -129,15 +157,15 @@ export class DateRangeControlComponent
   }
 
   // openPicker() {
-  //   const dialogData: DateRangeControlDialogData = {
-  //     dateRange: this.dateRange
+  //   const dialogData: TimeRangeControlDialogData = {
+  //     TimeRange: this.TimeRange
   //   };
-  //   const dialogRef = this.yggDialog.open(DateRangeControlDialogComponent, {
+  //   const dialogRef = this.yggDialog.open(TimeRangeControlDialogComponent, {
   //     title: '請選擇日期',
   //     data: dialogData
   //   });
-  //   const subscription = dialogRef.afterClosed().subscribe(dateRange => {
-  //     this.dateRange = dateRange;
+  //   const subscription = dialogRef.afterClosed().subscribe(TimeRange => {
+  //     this.TimeRange = TimeRange;
   //     subscription.unsubscribe();
   //   });
   // }
@@ -152,17 +180,17 @@ export class DateRangeControlComponent
   //     this.endFormControl.setValue(startValue, {
   //       emitEvent: false
   //     });
-  //     const dateRange = new DateRange().fromMoment({
+  //     const TimeRange = new TimeRange().fromMoment({
   //       start: endValue,
   //       end: startValue
   //     });
-  //     this.emitChange(dateRange);
+  //     this.emitChange(TimeRange);
   //   }
   // }
 
-  // onChange(dateRange: DateRange) {
-  //   if (DateRange.isDateRange(dateRange)) {
-  //     this.emitChange(dateRange);
+  // onChange(TimeRange: TimeRange) {
+  //   if (TimeRange.isTimeRange(TimeRange)) {
+  //     this.emitChange(TimeRange);
   //   }
   // }
 

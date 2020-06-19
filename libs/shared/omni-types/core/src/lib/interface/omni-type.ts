@@ -7,7 +7,8 @@ import {
   Html,
   DateRange,
   DayTimeRange,
-  Contact
+  Contact,
+  TimeRange
 } from '../types';
 
 export type OmniTypeComparator = (a: any, b: any, isAsc: boolean) => number;
@@ -23,6 +24,7 @@ export type OmniTypeID =
   | 'address'
   | 'location'
   | 'date-range'
+  | 'time-range'
   | 'day-time-range'
   | 'business-hours'
   | 'contact';
@@ -153,6 +155,15 @@ export const OmniTypes: { [id: string]: OmniType } = {
       return DateRange.forge();
     },
     comparator: DateRange.compare,
+    default: null
+  },
+  'time-range': {
+    id: 'time-range',
+    label: '時間段',
+    forge: (options: any = {}): TimeRange => {
+      return TimeRange.forge();
+    },
+    comparator: TimeRange.compare,
     default: null
   },
   'day-time-range': {

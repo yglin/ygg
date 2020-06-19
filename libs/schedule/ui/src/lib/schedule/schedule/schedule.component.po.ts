@@ -3,9 +3,11 @@ import { Schedule } from '@ygg/schedule/core';
 
 export abstract class SchedulePageObject extends PageObject {
   selectors = {
-    main: '.schedule'
+    main: '.schedule-page',
+    buttonSubmit: 'button.submit'
   };
 
   abstract expectVisible(): any;
   abstract expectSchedule(schedule: Schedule): any;
+  abstract submit();
 }

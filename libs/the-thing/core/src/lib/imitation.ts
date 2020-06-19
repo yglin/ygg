@@ -58,6 +58,10 @@ export interface DisplayThumbnail {
   cells: string[];
 }
 
+export interface ImitationDisplayConfig {
+  thumbnail?: DisplayThumbnail;
+}
+
 type TheThingCreator = (thing: TheThing) => TheThing;
 
 export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
@@ -82,9 +86,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   states: { [name: string]: TheThingState };
   creators: TheThingCreator[] = [];
   cellsOrder: string[] = [];
-  displays: {
-    thumbnail?: DisplayThumbnail;
-  } = {};
+  displays: ImitationDisplayConfig = {};
   actions: { [id: string]: TheThingAction } = {};
   pipes: { [source: string]: (theThing: TheThing) => void } = {};
   admin: {
@@ -110,6 +112,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     options: {
       collection?: string;
       cellsDef?: TheThingCellDefine[];
+      displays?: ImitationDisplayConfig;
       [key: string]: any;
     } = {}
   ) {
@@ -119,7 +122,6 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
 
     this.fromJSON(options);
   }
-
 
   setRequiredCells(cellDefs: TheThingCellDefine[]) {
     for (const cellDef of cellDefs) {

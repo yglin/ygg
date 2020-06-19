@@ -43,6 +43,8 @@ import { NumberViewComponent } from './types/number/number-view/number-view.comp
 import { TextViewComponent } from './types/text/text-view/text-view.component';
 import { LongTextViewComponent } from './types/long-text/long-text-view/long-text-view.component';
 import { LongTextControlComponent } from './types/long-text/long-text-control/long-text-control.component';
+import { TimeRangeViewComponent } from './types/datetime/time-range/time-range-view/time-range-view.component';
+import { TimeRangeControlComponent } from './types/datetime/time-range/time-range-control/time-range-control.component';
 
 @NgModule({
   imports: [
@@ -89,7 +91,9 @@ import { LongTextControlComponent } from './types/long-text/long-text-control/lo
     NumberViewComponent,
     TextViewComponent,
     LongTextViewComponent,
-    LongTextControlComponent
+    LongTextControlComponent,
+    TimeRangeControlComponent,
+    TimeRangeViewComponent
   ],
   exports: [
     HtmlControlComponent,

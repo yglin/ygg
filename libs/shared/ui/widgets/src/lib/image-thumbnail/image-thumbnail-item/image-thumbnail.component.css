@@ -17,28 +17,40 @@
   /* max-height: 300px; */
 }
 
+.big .name {
+  font-size: 28px;
+}
+
 .image-thumbnail.medium {
-  width: 10vw;
+  width: 15vw;
 }
 
 .image.medium {
-  width: 10vw;
-  height: 10vw;
+  width: 15vw;
+  height: 15vw;
   /* min-width: 150px;
   max-width: 200px;
   min-height: 10vw; */
   /* max-height: 200px; */
 }
 
+.medium .name {
+  font-size: 20px;
+}
+
 .image-thumbnail.small {
-  width: 5vw;
+  width: 7vw;
 }
 
 .image.small {
-  width: 5vw;
-  height: 5vw;
+  width: 7vw;
+  height: 7vw;
   /* min-width: 100px;
   min-height: 5vw; */
+}
+
+.small .name {
+  font-size: 16px;
 }
 
 /* .image {
@@ -50,6 +62,7 @@
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
   text-align: center;
 }
 

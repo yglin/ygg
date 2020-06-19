@@ -17,6 +17,10 @@ export class DayTime implements SerializableJSON {
     return this._minute;
   }
 
+  static fromDate(date: Date): DayTime {
+    return new DayTime(date.getHours(), date.getMinutes());
+  }
+
   static isDayTime(value: any): value is DayTime {
     if (
       !(

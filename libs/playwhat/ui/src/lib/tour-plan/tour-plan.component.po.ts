@@ -42,10 +42,14 @@ export abstract class TourPlanPageObject extends PageObject {
     return `${this.getSelector()} .state [state-name="${state.name}"] button`;
   }
 
+  getSelectorForEvent(event: TheThing): string {
+    return `${this.getSelector()} .schedule .event:contains("${event.name}")`;
+  }
+
   // setState(tourPlan: TheThing, state: TheThingState) {
   //   this.statePO.setValue(tourPlan, state);
   // }
-  
+
   // expectState(state: TheThingState) {
   //   this.statePO.expectValue(state);
   // }

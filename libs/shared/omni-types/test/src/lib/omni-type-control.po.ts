@@ -13,6 +13,7 @@ import { ContactControlPageObjectCypress } from './contact';
 import { AlbumControlPageObjectCypress } from './album';
 import { LocationControlPageObjectCypress } from './location';
 import { HtmlControlPageObjectCypress } from './html';
+import { TimeRangeControlPageObjectCypress } from './datetime/time-range/time-range-control.po';
 
 export class OmniTypeControlPageObjectCypress extends OmniTypeControlPageObject {
   setValue(type: OmniTypeID, value: any): void {
@@ -26,6 +27,9 @@ export class OmniTypeControlPageObjectCypress extends OmniTypeControlPageObject 
         break;
       case 'date-range':
         controlPO = new DateRangeControlPageObjectCypress(this.getSelector());
+        break;
+      case 'time-range':
+        controlPO = new TimeRangeControlPageObjectCypress(this.getSelector());
         break;
       case 'number':
         controlPO = new NumberControlPageObjectCypress(this.getSelector());

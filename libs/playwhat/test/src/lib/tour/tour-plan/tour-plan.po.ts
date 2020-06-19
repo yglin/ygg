@@ -1,4 +1,4 @@
-import { ImitationTourPlan } from '@ygg/playwhat/core';
+import { ImitationTourPlan, ImitationEvent } from '@ygg/playwhat/core';
 import { TourPlanPageObject } from '@ygg/playwhat/ui';
 import {
   ContactViewPageObjectCypress,
@@ -18,9 +18,9 @@ import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 import {
   CellCreatorPageObjectCypress,
   TheThingStatePageObjectCypress,
-  TheThingPageObjectCypress
+  TheThingPageObjectCypress,
+  TheThingThumbnailPageObjectCypress
 } from '@ygg/the-thing/test';
-import { values } from 'lodash';
 
 export class TourPlanPageObjectCypress extends TourPlanPageObject {
   constructor(parentSelector?: string) {
@@ -386,5 +386,15 @@ export class TourPlanPageObjectCypress extends TourPlanPageObject {
       'include.text',
       `總價：NTD ${totalCharge}`
     );
+  }
+
+  expectEvents(events: TheThing[]) {
+    for (const event of events) {
+      const theThingThumbnailPO = new TheThingThumbnailPageObjectCypress(
+        this.getSelectorForEvent(event),
+        ImitationEvent
+      );
+      theThingThumbnailPO.expectValue(event);
+    }
   }
 }

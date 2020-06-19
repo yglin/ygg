@@ -22,7 +22,7 @@ export class ScheduleFactoryService extends ScheduleFactory
     state: RouterStateSnapshot
   ): Promise<Schedule> {
     const id = route.paramMap.get('id');
-    if (!(id in this.schedulePool[id])) {
+    if (!(id in this.schedulePool)) {
       await this.emcee.error(`找不到行程資料，id: ${id}`);
       this.router.navigate([]);
     }

@@ -5,15 +5,44 @@ import {
 } from '@ygg/the-thing/core';
 
 import { Schedule, ServiceEvent, Service } from '@ygg/schedule/core';
-import { ImitationTourPlan, CellDefinesTourPlan } from '../tour-plan';
+import {
+  ImitationTourPlan,
+  CellDefinesTourPlan,
+  RelationshipScheduleEvent
+} from '../tour-plan';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import {
   RelationPurchase,
   CellNames as CellNamesShopping
 } from '@ygg/shopping/core';
 import { ImitationPlay, ImitationPlayCellDefines } from '../play';
+import {
+  ImitationEvent,
+  RelationshipPlay,
+  ImitationEventCellDefines
+} from '../imitations';
 
 export class ScheduleAdapter {
+  static deriveEventFromServiceEvent(serviceEvent: ServiceEvent): TheThing {
+    const event = ImitationEvent.createTheThing();
+    event.name = serviceEvent.service.name;
+    event.image = serviceEvent.service.image;
+    event.setCellValue(
+      ImitationEventCellDefines.timeRange.name,
+      serviceEvent.timeRange
+    );
+    event.setCellValue(
+      ImitationEventCellDefines.numParticipants.name,
+      serviceEvent.numParticipants
+    );
+    event.addRelation(
+      RelationshipPlay.createRelation(event.id, serviceEvent.service.id)
+    );
+    // console.log('deriveEventFromServiceEvent');
+    // console.log(event);
+    return event;
+  }
+
   static deduceServiceFromPlay(play: TheThing): Service {
     const service = new Service();
     service.id = play.id;
@@ -71,7 +100,19 @@ export class ScheduleAdapter {
     return event;
   }
 
-  async attachScheduleWithTourPlan(theThing: TheThing, schedule: Schedule) {
-    throw new Error('Method not implemented.');
+  async attachScheduleWithTourPlan(tourPlan: TheThing, schedule: Schedule) {
+    const events: TheThing[] = [];
+    const relations: TheThingRelation[] = [];
+    for (const serviceEvent of schedule.events) {
+      const event = ScheduleAdapter.deriveEventFromServiceEvent(serviceEvent);
+      events.push(event);
+      await this.theThingAccessor.save(event);
+      const relation = RelationshipScheduleEvent.createRelation(
+        tourPlan.id,
+        event.id
+      );
+      relations.push(relation);
+    }
+    tourPlan.setRelation(RelationshipScheduleEvent.name, relations);
   }
 }

@@ -34,6 +34,13 @@ export class TimeRange implements SerializableJSON {
     );
   }
 
+  static compare(a: TimeRange, b: TimeRange, isAsc: boolean): number {
+    if (!(TimeRange.isTimeRange(a) && TimeRange.isTimeRange(b))) {
+      return 0;
+    }
+    return (a.start > b.start ? 1 : -1) * (isAsc ? 1 : -1);
+  }
+
   static forge(): TimeRange {
     const start = moment().add(random(6), 'month');
     const end = moment(start).add(random(7), 'day');

@@ -1,0 +1,56 @@
+<div class="ygg-time-range-control">
+  <div *ngIf="label">
+    <h4>{{ label }}</h4>
+  </div>
+  <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="20px">
+    <div>
+      <mat-form-field>
+        <input
+          matInput
+          [matDatepicker]="pickerStart"
+          placeholder="開始"
+          class="start-date"
+          [formControl]="startFormControl"
+          (blur)="onBlur()"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="pickerStart"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #pickerStart></mat-datepicker>
+      </mat-form-field>
+      <div>
+        <ygg-day-time-control
+          [formControl]="startDayTimeControl"
+        ></ygg-day-time-control>
+      </div>
+    </div>
+    <div>
+      <mat-form-field>
+        <input
+          matInput
+          [matDatepicker]="pickerEnd"
+          placeholder="結束"
+          class="end-date"
+          [formControl]="endFormControl"
+          (blur)="onBlur()"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="pickerEnd"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #pickerEnd></mat-datepicker>
+      </mat-form-field>
+      <div>
+        <ygg-day-time-control
+          [formControl]="endDayTimeControl"
+        ></ygg-day-time-control>
+      </div>
+    </div>
+  </div>
+  <div class="error-messages" [@slideInOut]="stateShowError">
+    <div *ngFor="let message of errorMessages">
+      <div class="error">{{ message }}</div>
+    </div>
+  </div>
+</div>

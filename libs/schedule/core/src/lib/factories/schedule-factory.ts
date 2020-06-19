@@ -11,6 +11,7 @@ export abstract class ScheduleFactory {
 
   async edit(schedule: Schedule): Promise<Schedule> {
     this.schedulePool[schedule.id] = schedule;
+    console.log(`Edit schedule ${schedule.id}`);
     this.router.navigate(['/', 'schedule', schedule.id]);
     return this.onSave$
       .pipe(
@@ -18,5 +19,12 @@ export abstract class ScheduleFactory {
         take(1)
       )
       .toPromise();
+  }
+
+  async submit(schedule: Schedule) {
+    const confirm = await this.emcee.confirm('行程安排完成，送出此行程表？');
+    if (confirm) {
+      this.onSave$.next(schedule);
+    }
   }
 }

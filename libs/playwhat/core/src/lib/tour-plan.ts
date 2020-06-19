@@ -1,7 +1,8 @@
-import { TheThingImitation, TheThing } from '@ygg/the-thing/core';
+import { TheThingImitation, TheThing, Relationship } from '@ygg/the-thing/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import { ImitationOrder } from '@ygg/shopping/core';
 import { keyBy, values } from 'lodash';
+import { ImitationEvent } from './imitations';
 
 export const CellNames = {
   dateRange: '預計出遊日期',
@@ -226,3 +227,8 @@ ImitationTourPlan.canModify = (theThing: TheThing): boolean => {
     ImitationTourPlan.isState(theThing, ImitationTourPlan.states.editing)
   );
 };
+
+export const RelationshipScheduleEvent: Relationship = new Relationship({
+  name: '體驗行程',
+  imitation: ImitationEvent
+});

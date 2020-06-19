@@ -29,6 +29,7 @@ export class TheThingThumbnailComponent implements OnInit, OnDestroy {
     let collection = TheThing.collection;
     if (this.imitation) {
       this.display = get(this.imitation, 'displays.thumbnail', null);
+      // console.log(this.display);
       if (this.imitation.collection) {
         collection = this.imitation.collection;
       }

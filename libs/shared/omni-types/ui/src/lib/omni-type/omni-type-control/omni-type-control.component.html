@@ -14,6 +14,11 @@
           [formControl]="formControl"
         ></ygg-date-range-control>
       </div>
+      <div *ngSwitchCase="'time-range'">
+        <ygg-time-range-control
+          [formControl]="formControl"
+        ></ygg-time-range-control>
+      </div>
       <div *ngSwitchCase="'day-time-range'">
         <ygg-day-time-range-control
           [formControl]="formControl"

@@ -5,16 +5,8 @@ import { RouterModule } from '@angular/router';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
-import { SharedUserUiModule } from "@ygg/shared/user/ui";
-import { ShoppingUiModule } from '@ygg/shopping/ui';
-import { TagsUiModule } from '@ygg/tags/ui';
-import {
-  SchedulePlanControlComponent,
-  SchedulePlanListComponent,
-  SchedulePlanTableComponent,
-  SchedulePlanThumbnailComponent,
-  SchedulePlanViewComponent
-} from './schedule-plan';
+import { SharedUserUiModule } from '@ygg/shared/user/ui';
+import { routes } from './routes';
 import { ScheduleComponent } from './schedule/schedule/schedule.component';
 
 @NgModule({
@@ -28,6 +20,7 @@ import { ScheduleComponent } from './schedule/schedule/schedule.component';
     SharedUiWidgetsModule,
     SharedUserUiModule,
     SharedOmniTypesUiModule,
+    RouterModule.forChild(routes)
   ],
   exports: []
 })

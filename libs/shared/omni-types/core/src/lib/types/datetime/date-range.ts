@@ -4,10 +4,7 @@ import { TimeRange } from './time-range';
 
 export class DateRange extends TimeRange {
   static compare(a: DateRange, b: DateRange, isAsc: boolean): number {
-    if (!(DateRange.isDateRange(a) && DateRange.isDateRange(b))) {
-      return 0;
-    }
-    return (a.start > b.start ? 1 : -1) * (isAsc ? 1 : -1);
+    return TimeRange.compare(a, b, isAsc);
   }
 
   static isDateRange(value: any): value is DateRange {

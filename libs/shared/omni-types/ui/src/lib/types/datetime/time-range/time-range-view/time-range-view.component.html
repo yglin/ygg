@@ -1,0 +1,19 @@
+<div class="time-range-view" *ngIf="timeRange">
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+    <div>
+      <span class="start-date">{{ startDate }}</span>
+    </div>
+    <div>
+      <span class="end-date">{{ endDate }}</span>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+    <div class="start-day-time">
+      <ygg-day-time-view [dayTime]="startDayTime"></ygg-day-time-view>
+    </div>
+    <div><mat-icon>fast_forward</mat-icon></div>
+    <div class="end-day-time">
+      <ygg-day-time-view [dayTime]="endDayTime"></ygg-day-time-view>
+    </div>
+  </div>
+</div>

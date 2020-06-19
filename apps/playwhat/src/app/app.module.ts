@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { SharedInfraLogModule } from '@ygg/shared/infra/log';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-import { SharedUserUiModule } from "@ygg/shared/user/ui";
+import { SharedUserUiModule } from '@ygg/shared/user/ui';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 
 import { PlaywhatAdminModule } from '@ygg/playwhat/admin';
@@ -25,6 +25,7 @@ import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
 import { TheThingUiModule } from '@ygg/the-thing/ui';
 import { PlaywhatUiModule } from '@ygg/playwhat/ui';
 import { ShoppingUiModule } from '@ygg/shopping/ui';
+import { ScheduleUiModule } from '@ygg/schedule/ui';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { ShoppingUiModule } from '@ygg/shopping/ui';
     ShoppingUiModule,
     PlaywhatUiModule,
     PlaywhatAdminModule,
+    ScheduleUiModule,
     RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })
   ],
   providers: [],

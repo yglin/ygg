@@ -8,7 +8,7 @@
         <button
           class="import-to-cart edit"
           mat-mini-fab
-          matTooltip="匯入購物車"
+          matTooltip="修改購物車"
           (click)="importToCart()"
         >
           <mat-icon>add_shopping_cart </mat-icon>
@@ -30,6 +30,19 @@
     </div>
   </div>
   <br />
+  <div class="schedule" *ngIf="eventIds && eventIds.length > 0">
+    <h2>行程表</h2>
+    <div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="50px">
+      <ng-container *ngFor="let eventId of eventIds">
+        <the-thing-thumbnail
+          class="event"
+          [id]="eventId"
+          [imitation]="ImitationEvent"
+        ></the-thing-thumbnail>
+        <mat-divider [vertical]="true"></mat-divider>
+      </ng-container>
+    </div>
+  </div>
   <div class="the-thing">
     <the-thing [id]="tourPlan.id" [imitation]="imitation"></the-thing>
   </div>
