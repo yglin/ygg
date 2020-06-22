@@ -19,7 +19,7 @@ export const ImitationItem = new TheThingImitation().fromJSON({
   collection: 'ourbox-items',
   id: 'ourbox-item',
   name: '我們的寶物',
-  routePath: 'ouritem',
+  routePath: 'ouritems',
   cellsDef: values(ImitationItemCells)
 });
 

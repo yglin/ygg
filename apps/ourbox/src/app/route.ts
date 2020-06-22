@@ -8,6 +8,7 @@ import { ItemViewComponent } from './pages/item/item-view/item-view.component';
 import { BoxFactoryService } from './box-factory.service';
 import { ImitationItem } from '@ygg/ourbox/core';
 import { ItemFactoryService } from './item-factory.service';
+import { MyBoxesComponent } from './pages/box/my-boxes/my-boxes.component';
 
 export const routes: Routes = [
   {
@@ -29,6 +30,10 @@ export const routes: Routes = [
       {
         path: 'create',
         component: BoxCreateComponent
+      },
+      {
+        path: 'my',
+        component: MyBoxesComponent
       },
       {
         path: ':id',

@@ -1,33 +1,33 @@
+import { Emcee, Router } from '@ygg/shared/infra/core';
 import {
+  Authenticator,
+  config as UserConfig,
+  Invitation,
+  InvitationFactory,
+  User
+} from '@ygg/shared/user/core';
+import {
+  RelationFactory,
+  RelationRecord,
   TheThing,
-  TheThingAccessor,
-  RelationFactory
+  TheThingAccessor
 } from '@ygg/the-thing/core';
+import { UserAccessor } from 'libs/shared/user/core/src/lib/user-accessor';
+import { flatten, get, isEmpty, uniq, uniqBy } from 'lodash';
+import { combineLatest, Observable, of, Subscription } from 'rxjs';
+import { filter, map, switchMap, startWith } from 'rxjs/operators';
 import {
   ImitationBox,
-  ImitationBoxCells,
-  ActivateTicket,
-  RelationshipBoxMember,
+  ImitationBoxFlags,
   ImitationItem,
+  ItemFilter,
   RelationshipBoxItem,
-  ImitationBoxFlags
+  RelationshipBoxMember,
+  ImitationBoxThumbnailImages
 } from '../models';
-import { Emcee, DataAccessor, Router } from '@ygg/shared/infra/core';
-import { URL } from 'url';
-import {
-  InvitationFactory,
-  Authenticator,
-  Invitation,
-  User,
-  config as UserConfig
-} from '@ygg/shared/user/core';
-import { Subscription, Observable } from 'rxjs';
-import { get, isEmpty, tap } from 'lodash';
-import { UserAccessor } from 'libs/shared/user/core/src/lib/user-accessor';
-import { BoxAccessor, BoxCollection } from './box-accessor';
-import { ItemFactory } from './item-factory';
-import { switchMap } from 'rxjs/operators';
+import { BoxCollection } from './box-accessor';
 import { ItemAccessor } from './item-accessor';
+import { ItemFactory } from './item-factory';
 
 export const InvitationJoinBox = {
   type: 'join-box'
@@ -48,11 +48,12 @@ export class BoxFactory {
     protected emcee: Emcee,
     protected invitationFactory: InvitationFactory,
     protected userAccessor: UserAccessor,
-    protected boxAccessor: BoxAccessor,
+    // protected boxAccessor: BoxAccessor,
     protected relationFactory: RelationFactory,
     protected router: Router,
     protected itemFactory: ItemFactory,
-    protected itemAccessor: ItemAccessor
+    protected itemAccessor: ItemAccessor,
+    protected theThingAccessor: TheThingAccessor
   ) {
     this.subscriptions.push(
       this.invitationFactory.confirm$.subscribe(invitation => {
@@ -67,7 +68,8 @@ export class BoxFactory {
 
   async create(options: {
     name: string;
-    friendEmails?: string[];
+    image?: string;
+    memberEmails?: string[];
     isPublic?: boolean;
   }): Promise<TheThing> {
     try {
@@ -78,29 +80,32 @@ export class BoxFactory {
     }
     try {
       let mailsMessage = '';
-      if (!isEmpty(options.friendEmails)) {
+      if (!isEmpty(options.memberEmails)) {
         mailsMessage =
           '<h3>將會寄出加入邀請信給以下信箱</h3>' +
-          options.friendEmails.map(email => '<h4>' + email + '</h4>').join('');
+          options.memberEmails.map(email => '<h4>' + email + '</h4>').join('');
       }
       const confirmMessage = `<h2>新增寶箱：${options.name}？<br>${mailsMessage}`;
       const confirm = await this.emcee.confirm(confirmMessage);
       if (!confirm) {
         return;
       }
-      const friendEmails = options.friendEmails || [];
+      const memberEmails = options.memberEmails || [];
       const isPublic = !!options.isPublic;
       const box = ImitationBox.createTheThing();
       box.ownerId = this.authenticator.currentUser.id;
       box.name = options.name;
+      box.image = options.image || ImitationBoxThumbnailImages[0];
       box.setFlag(ImitationBoxFlags.isPublic.id, isPublic);
       // box.upsertCell(
-      //   ImitationBoxCells.friends.createCell(friendEmails.join(','))
+      //   ImitationBoxCells.members.createCell(memberEmails.join(','))
       // );
 
-      await this.boxAccessor.save(box);
+      await this.theThingAccessor.save(box);
       await this.addBoxMember(box.id, this.authenticator.currentUser.id);
-      await this.inviteBoxMembers(box, friendEmails);
+      if (!isEmpty(memberEmails)) {
+        await this.inviteBoxMembers(box, memberEmails);
+      }
 
       this.router.navigate(['/', 'ourbox', box.id]);
       return box;
@@ -183,7 +188,10 @@ export class BoxFactory {
       return;
     }
     const boxId = get(invitation, 'data.boxId', null);
-    const box: TheThing = await this.boxAccessor.load(boxId);
+    const box: TheThing = await this.theThingAccessor.get(
+      boxId,
+      ImitationBox.collection
+    );
     if (!box) {
       this.emcee.error(`找不到寶箱，id = ${boxId}`);
       return;
@@ -195,14 +203,16 @@ export class BoxFactory {
     }
   }
 
-  listItemsInBox$(boxId: string): Observable<TheThing[]> {
+  listItemIdsInBox$(boxId: string): Observable<string[]> {
     return this.relationFactory
       .findBySubjectAndRole$(boxId, RelationshipBoxItem.role)
-      .pipe(
-        switchMap(relationRecords =>
-          this.itemAccessor.listByIds$(relationRecords.map(rr => rr.objectId))
-        )
-      );
+      .pipe(map(relationRecords => relationRecords.map(rr => rr.objectId)));
+  }
+
+  listItemsInBox$(boxId: string): Observable<TheThing[]> {
+    return this.listItemIdsInBox$(boxId).pipe(
+      switchMap(itemIds => this.itemAccessor.listByIds$(itemIds))
+    );
   }
 
   async isMember(boxId: string, userId?: string): Promise<boolean> {
@@ -217,6 +227,104 @@ export class BoxFactory {
       boxId,
       userId,
       RelationshipBoxMember.role
+    );
+  }
+
+  listPublicBoxes$(): Observable<TheThing[]> {
+    const publicBoxFilter = ImitationBox.filter;
+    const flags = {};
+    flags[ImitationBoxFlags.isPublic.id] = true;
+    publicBoxFilter.addFlags(flags);
+    return this.theThingAccessor.listByFilter$(
+      publicBoxFilter,
+      ImitationBox.collection
+    );
+  }
+
+  listMyBoxes$(userId?: string): Observable<TheThing[]> {
+    let userId$: Observable<string>;
+    if (userId) {
+      userId$ = of(userId);
+    } else {
+      userId$ = this.authenticator.currentUser$.pipe(
+        filter(user => !!user),
+        map(user => user.id)
+      );
+    }
+    return userId$.pipe(
+      switchMap(_userId => {
+        // console.log(_userId);
+        return this.relationFactory.findByObjectAndRole$(
+          _userId,
+          RelationshipBoxMember.role
+        );
+      }),
+      switchMap((relaitonRecords: RelationRecord[]) => {
+        // console.log(relaitonRecords);
+        return this.theThingAccessor.listByIds$(
+          relaitonRecords.map(rr => rr.subjectId),
+          ImitationBox.collection
+        );
+      })
+    );
+  }
+
+  findItems$(itemFilter: ItemFilter): Observable<TheThing[]> {
+    // const itemIdsFromMyBoxes$: Observable<string[]> = this.listMyBoxes$().pipe(
+    //   switchMap((boxes: TheThing[]) => {
+    //     if (isEmpty(boxes)) {
+    //       return of([]);
+    //     } else {
+    //       const observableItemIds: Observable<string[]>[] = [];
+    //       for (const box of boxes) {
+    //         observableItemIds.push(this.listItemIdsInBox$(box.id));
+    //       }
+    //       return combineLatest(observableItemIds);
+    //     }
+    //   }),
+    //   map(itemIds => uniq(itemIds))
+    // );
+    // const itemIdsFromPublicBoxes$: Observable<string[]> = this.listPublicBoxes$().pipe(
+    //   switchMap((boxes: TheThing[]) => {
+    //     if (isEmpty(boxes)) {
+    //       return of([]);
+    //     } else {
+    //       const observableItemIds: Observable<string[]>[] = [];
+    //       for (const box of boxes) {
+    //         observableItemIds.push(this.listItemIdsInBox$(box.id));
+    //       }
+    //       return combineLatest(observableItemIds);
+    //     }
+    //   })
+    // );
+
+    return combineLatest([
+      this.listMyBoxes$().pipe(startWith([])),
+      this.listPublicBoxes$()
+    ]).pipe(
+      map(([myBoxes, publicBoxes]) => {
+        // console.log(myBoxes);
+        // console.log(publicBoxes);
+        return uniqBy(myBoxes.concat(publicBoxes), 'id');
+      }),
+      switchMap(boxes => {
+        if (isEmpty(boxes)) {
+          return of([]);
+        } else {
+          const observableItemIds: Observable<string[]>[] = [];
+          for (const box of boxes) {
+            observableItemIds.push(this.listItemIdsInBox$(box.id));
+          }
+          return combineLatest(observableItemIds);
+        }
+      }),
+      switchMap((itemIds: string[][]) => {
+        itemFilter.ids = uniq(flatten(itemIds));
+        return this.theThingAccessor.listByFilter$(
+          itemFilter,
+          ImitationItem.collection
+        );
+      })
     );
   }
 

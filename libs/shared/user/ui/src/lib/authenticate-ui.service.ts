@@ -28,7 +28,8 @@ export class AuthenticateUiService extends Authenticator {
     private authenticateService: AuthenticateService
   ) {
     super();
-    this.authenticateService.currentUser$.subscribe(
+    this.currentUser$ = this.authenticateService.currentUser$;
+    this.currentUser$.subscribe(
       user => (this.currentUser = user)
     );
   }

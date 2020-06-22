@@ -7,6 +7,7 @@ import { DateRange, TimeRange } from '@ygg/shared/omni-types/core';
 
 export class TheThingFilter implements SerializableJSON {
   name: string;
+  ids: string[] = [];
   tags: string[] = [];
   ownerId: string;
   keywordName: string;
@@ -39,7 +40,9 @@ export class TheThingFilter implements SerializableJSON {
       const tags = new Tags(this.tags)
         .merge(new Tags(filter.tags))
         .toNameArray();
-      const keywordName = `${!!this.keywordName ? this.keywordName : ''} ${!!filter.keywordName ? filter.keywordName : ''}`.trim();
+      const keywordName = `${!!this.keywordName ? this.keywordName : ''} ${
+        !!filter.keywordName ? filter.keywordName : ''
+      }`.trim();
       const ownerId = !!filter.ownerId ? filter.ownerId : this.ownerId;
       const flags = assign({}, this.flags, filter.flags);
       const states = assign({}, this.states, filter.states);
@@ -55,6 +58,11 @@ export class TheThingFilter implements SerializableJSON {
   }
 
   test(theThing: TheThing): boolean {
+    if (!isEmpty(this.ids)) {
+      if (this.ids.indexOf(theThing.id) < 0) {
+        return false;
+      }
+    }
     if (!!this.ownerId && theThing.ownerId !== this.ownerId) {
       return false;
     }

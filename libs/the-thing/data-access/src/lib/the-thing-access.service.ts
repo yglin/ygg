@@ -42,15 +42,20 @@ export class TheThingAccessService implements TheThingAccessor {
     // return this.cache[id];
   }
 
-  list$(): Observable<TheThing[]> {
+  list$(collection: string = TheThing.collection): Observable<TheThing[]> {
     return this.dataAccessService
-      .list$(TheThing.collection)
+      .list$(collection)
       .pipe(map(items => items.map(item => new TheThing().fromJSON(item))));
   }
 
-  listByFilter$(filter: TheThingFilter): Observable<TheThing[]> {
+  listByFilter$(
+    filter: TheThingFilter,
+    collection: string = TheThing.collection
+  ): Observable<TheThing[]> {
     // TODO: Apply more efficient query on server side
-    return this.list$().pipe(map(theThings => filter.filter(theThings)));
+    return this.list$(collection).pipe(
+      map(theThings => filter.filter(theThings))
+    );
   }
 
   listByOwner$(ownerId: string): Observable<TheThing[]> {
@@ -60,9 +65,9 @@ export class TheThingAccessService implements TheThingAccessor {
       .pipe(map(items => items.map(item => new TheThing().fromJSON(item))));
   }
 
-  listByIds$(ids: string[]): Observable<TheThing[]> {
+  listByIds$(ids: string[], collection: string = TheThing.collection): Observable<TheThing[]> {
     return this.dataAccessService
-      .listByIds$(TheThing.collection, ids)
+      .listByIds$(collection, ids)
       .pipe(map(items => items.map(item => new TheThing().fromJSON(item))));
   }
 
@@ -96,7 +101,6 @@ export class TheThingAccessService implements TheThingAccessor {
       return throwError(new Error(`Require arguments tags, but get ${tags}`));
     }
   }
-
 
   async upsert(theThing: TheThing): Promise<TheThing> {
     await this.dataAccessService.upsert(theThing.collection, theThing.toJSON());

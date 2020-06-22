@@ -5,7 +5,7 @@ import {
   Router,
   RouterStateSnapshot
 } from '@angular/router';
-import { BoxFactory, ItemFilter } from '@ygg/ourbox/core';
+import { BoxFactory, ItemFilter, ImitationBox } from '@ygg/ourbox/core';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import {
   AuthenticateUiService,
@@ -18,35 +18,35 @@ import { Observable } from 'rxjs';
 import { BoxAccessService } from './box-access.service';
 import { ItemAccessService } from './item-access.service';
 import { ItemFactoryService } from './item-factory.service';
+import { TheThingAccessService } from '@ygg/the-thing/data-access';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BoxFactoryService extends BoxFactory implements Resolve<TheThing> {
-  findItemsOnMap(filter: ItemFilter): any {
-    throw new Error('Method not implemented.');
-  }
   constructor(
     authenticator: AuthenticateUiService,
     emcee: EmceeService,
     invitationFactory: InvitationFactoryService,
     userAccessor: UserService,
-    BoxAccessor: BoxAccessService,
+    // BoxAccessor: BoxAccessService,
     relationFactory: RelationFactoryService,
     router: Router,
     itemFactory: ItemFactoryService,
-    itemAccessor: ItemAccessService
+    itemAccessor: ItemAccessService,
+    theThingAccessor: TheThingAccessService
   ) {
     super(
       authenticator,
       emcee,
       invitationFactory,
       userAccessor,
-      BoxAccessor,
+      // BoxAccessor,
       relationFactory,
       router,
       itemFactory,
-      itemAccessor
+      itemAccessor,
+      theThingAccessor
     );
   }
 
@@ -57,7 +57,7 @@ export class BoxFactoryService extends BoxFactory implements Resolve<TheThing> {
     const id = route.paramMap.get('id');
     try {
       await this.authenticator.requestLogin();
-      const box = await this.boxAccessor.load(id);
+      const box = await this.theThingAccessor.get(id, ImitationBox.collection);
       if (!box) {
         throw new Error(`找不到寶箱，id: ${id}`);
       }

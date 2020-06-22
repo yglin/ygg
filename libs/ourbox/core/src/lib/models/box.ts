@@ -1,7 +1,8 @@
 import {
   TheThingImitation,
   TheThingCellDefine,
-  Relationship
+  Relationship,
+  TheThingFilter
 } from '@ygg/the-thing/core';
 import { OmniTypes } from '@ygg/shared/omni-types/core';
 import { values } from 'lodash';
@@ -22,6 +23,17 @@ export const ImitationBoxFlags = {
   }
 };
 
+export const ImitationBoxThumbnailImages = [
+  '/assets/images/box/thumbnails/01.png',
+  '/assets/images/box/thumbnails/02.png',
+  '/assets/images/box/thumbnails/03.png',
+  '/assets/images/box/thumbnails/04.png',
+  '/assets/images/box/thumbnails/05.png',
+  '/assets/images/box/thumbnails/06.png',
+  '/assets/images/box/thumbnails/07.png',
+  '/assets/images/box/thumbnails/08.png'
+];
+
 export const ImitationBoxCells = {
   public: new TheThingCellDefine({
     name: '公開',
@@ -40,5 +52,9 @@ export const ImitationBox = new TheThingImitation({
   id: 'ourbox-box',
   name: '我們的寶箱',
   cellsDef: values(ImitationBoxCells),
-  routePath: 'ourbox'
+  routePath: 'ourbox',
+  filter: new TheThingFilter({
+    name: 'ourbox-box',
+    tags: []
+  })
 });

@@ -1,7 +1,8 @@
 import {
   TheThingImitation,
   TheThing,
-  TheThingState
+  TheThingState,
+  TheThingFilter
 } from '@ygg/the-thing/core';
 import { RelationPurchase } from './purchase';
 import { CellNames } from './cell-names';
@@ -13,9 +14,9 @@ export const ImitationOrder = new TheThingImitation({
   description: '定義交易訂單所需的資料欄位及功能',
   icon: 'shop',
   image: '/assets/images/shopping/order.png',
-  filter: {
+  filter: new TheThingFilter({
     tags: ['order', ' 訂單']
-  }
+  })
 });
 
 const states: TheThingState[] = [
@@ -31,7 +32,7 @@ const states: TheThingState[] = [
   {
     name: 'editing',
     label: '修改中',
-    value: 20,
+    value: 20
   },
   {
     name: 'applied',

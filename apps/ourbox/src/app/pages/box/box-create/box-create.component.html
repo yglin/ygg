@@ -9,20 +9,23 @@
           <div
             class="tab-content"
             fxLayout="row"
-            fxLayout.xs="column"
             fxLayoutAlign="center center"
-            fxLayoutGap="10px"
+            fxLayoutGap="30px"
           >
-            <div class="icon"><img src="/assets/images/box/box.png" /></div>
-            <mat-form-field>
-              <input
-                name="ourbox-create-box-name"
-                matInput
-                placeholder="請輸入寶箱名稱"
-                formControlName="name"
-                required
-              />
-            </mat-form-field>
+            <div class="icon" fxHide.xs="true">
+              <img src="/assets/images/box/box.png" />
+            </div>
+            <div>
+              <mat-form-field>
+                <input
+                  name="ourbox-create-box-name"
+                  matInput
+                  placeholder="請輸入寶箱名稱"
+                  formControlName="name"
+                  required
+                />
+              </mat-form-field>
+            </div>
           </div>
           <div
             fxLayout="row"
@@ -38,16 +41,64 @@
         </form>
       </mat-step>
       <mat-step>
+        <ng-template matStepLabel>選擇寶箱圖示</ng-template>
+        <div
+          class="tab-content"
+          fxLayout="row"
+          fxLayoutAlign="center center"
+          fxLayoutGap="30px"
+        >
+          <div class="icon" fxHide.xs="true">
+            <img src="/assets/images/box/thumbnail.png" />
+          </div>
+          <div
+            fxLayout="row wrap"
+            fxLayoutAlign="space-around start"
+            fxLayoutGap="20px"
+          >
+            <div
+              *ngFor="let thumbImage of thumbnailImages"
+              class="thumbnail-image"
+              [ngClass]="{
+                selected: thumbImage === thumbSelected
+              }"
+              (click)="thumbSelected = thumbImage"
+            >
+              <img [src]="thumbImage" />
+            </div>
+            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="0px">
+              <button mat-fab matTooltip="上傳圖片" (click)="addImages()">
+                <mat-icon>add_photo_alternate </mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          fxLayout="row"
+          fxLayoutAlign="space-between center"
+          fxLayoutGap="20px"
+        >
+          <button mat-fab matStepperPrevious>
+            <mat-icon>keyboard_arrow_left</mat-icon>
+          </button>
+          <button mat-fab matStepperNext>
+            <mat-icon>keyboard_arrow_right</mat-icon>
+          </button>
+          <!-- <button mat-button matStepperNext>下一步</button> -->
+        </div>
+      </mat-step>
+      <mat-step>
         <form>
           <ng-template matStepLabel>邀請好友加入</ng-template>
           <div
             class="tab-content"
             fxLayout="row"
-            fxLayout.xs="column"
             fxLayoutAlign="center center"
-            fxLayoutGap="10px"
+            fxLayoutGap="30px"
           >
-            <div class="icon"><img src="/assets/images/box/share.png" /></div>
+            <div class="icon" fxHide.xs="true">
+              <img src="/assets/images/box/share.png" />
+            </div>
 
             <div>
               <div
@@ -143,15 +194,21 @@
         <ng-template matStepLabel>公開寶箱</ng-template>
         <div
           class="tab-content"
-          fxLayout="row wrap"
+          fxLayout="row"
           fxLayoutAlign="center center"
-          fxLayoutGap="10px"
+          fxLayoutGap="30px"
         >
-          <div class="icon"><img src="/assets/images/box/publish.png" /></div>
-          <div>
+          <div class="icon" fxHide.xs="true">
+            <img src="/assets/images/box/publish.png" />
+          </div>
+          <div fxFlex="300px">
             <mat-checkbox [formControl]="formControlPublic"
               >公開這個寶箱的內容？</mat-checkbox
             >
+            <br /><br />
+            <p style="font-size: smaller;">
+              <mat-icon>info</mat-icon>{{ isPublicDescription }}
+            </p>
           </div>
         </div>
         <div

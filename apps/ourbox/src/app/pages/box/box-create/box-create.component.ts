@@ -10,9 +10,16 @@ import { filter, tap, switchMap, debounceTime } from 'rxjs/operators';
 import { UserService } from '@ygg/shared/user/ui';
 import { isEmpty, find, remove, keys } from 'lodash';
 import { User } from '@ygg/shared/user/core';
-import { ImitationBox, ImitationBoxCells } from '@ygg/ourbox/core';
+import {
+  ImitationBox,
+  ImitationBoxCells,
+  ImitationBoxFlags,
+  ImitationBoxThumbnailImages
+} from '@ygg/ourbox/core';
 import { BoxFactoryService } from '../../../box-factory.service';
 import { combineLatest, Subscription } from 'rxjs';
+import { Image } from '@ygg/shared/omni-types/core';
+import { ImageUploaderService } from '@ygg/shared/omni-types/ui';
 
 @Component({
   selector: 'ygg-box-create',
@@ -27,12 +34,16 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
   friends: { [email: string]: { id: string } } = {};
   foundUsers: User[] = [];
   isEmail = isEmail;
+  isPublicDescription = ImitationBoxFlags.isPublic.description;
   subscriptions: Subscription[] = [];
+  thumbnailImages = ImitationBoxThumbnailImages;
+  thumbSelected: string;
 
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
-    private boxFactory: BoxFactoryService
+    private boxFactory: BoxFactoryService,
+    private imageUploader: ImageUploaderService
   ) {
     this.firstFormGroup = this.formBuilder.group({
       name: [null, Validators.required]
@@ -87,7 +98,8 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
   submit() {
     this.boxFactory.create({
       name: this.firstFormGroup.get('name').value,
-      friendEmails: keys(this.friends),
+      image: this.thumbSelected,
+      memberEmails: keys(this.friends),
       isPublic: this.formControlPublic.value
     });
   }
@@ -104,6 +116,13 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
   deleteFriend(email: string) {
     if (email in this.friends) {
       delete this.friends[email];
+    }
+  }
+
+  async addImages() {
+    const images: Image[] = await this.imageUploader.uploadImages();
+    if (!isEmpty(images)) {
+      this.thumbnailImages.push(...images.map(img => img.src));
     }
   }
 }

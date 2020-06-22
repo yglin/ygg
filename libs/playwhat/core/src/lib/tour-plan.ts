@@ -71,8 +71,8 @@ export const CellDefinesTourPlan = {
 
 const cellsOrder = [
   CellDefinesTourPlan.dateRange.name,
-  CellDefinesTourPlan.contact.name,
   CellDefinesTourPlan.numParticipants.name,
+  CellDefinesTourPlan.contact.name,
   CellDefinesTourPlan.dayTimeRange.name,
   CellDefinesTourPlan.aboutMeals.name,
   CellDefinesTourPlan.aboutTransport.name,

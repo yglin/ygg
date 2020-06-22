@@ -110,16 +110,18 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
 
   constructor(
     options: {
+      id?: string;
+      name?: string;
       collection?: string;
       cellsDef?: TheThingCellDefine[];
       displays?: ImitationDisplayConfig;
+      filter?: TheThingFilter;
       [key: string]: any;
     } = {}
   ) {
     this.id = generateID();
     this.createAt = new Date().valueOf();
     this.view = 'basic';
-
     this.fromJSON(options);
   }
 

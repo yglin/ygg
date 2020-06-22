@@ -21,6 +21,7 @@ import { TheThingUiModule } from '@ygg/the-thing/ui';
 import { ItemThumbnailComponent } from './pages/item/item-thumbnail/item-thumbnail.component';
 import { BoxFactoryService } from './box-factory.service';
 import { noop } from 'lodash';
+import { MyBoxesComponent } from './pages/box/my-boxes/my-boxes.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { noop } from 'lodash';
     BoardComponent,
     BoxViewComponent,
     ItemViewComponent,
-    ItemThumbnailComponent
+    ItemThumbnailComponent,
+    MyBoxesComponent
   ],
   imports: [
     BrowserModule,

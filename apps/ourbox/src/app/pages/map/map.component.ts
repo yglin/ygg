@@ -1,6 +1,11 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { GeoBound, ImitationItemCells, ItemFilter } from '@ygg/ourbox/core';
+import {
+  GeoBound,
+  ImitationItemCells,
+  ItemFilter,
+  ImitationItem
+} from '@ygg/ourbox/core';
 import { GeoPoint, Location } from '@ygg/shared/omni-types/core';
 import { TheThing } from '@ygg/the-thing/core';
 import * as leaflet from 'leaflet';
@@ -61,7 +66,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     this.filter$
       .pipe(
-        switchMap(filter => this.boxFactory.findItemsOnMap(filter)),
+        switchMap(filter => this.boxFactory.findItems$(filter)),
         tap((items: TheThing[]) => {
           this.clearMarkers();
           this.addMarkers(items.map(item => Marker.fromItem(item)));
@@ -107,7 +112,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         marker.geoPoint.latitude,
         marker.geoPoint.longitude
       ]);
-      const link = `/items/${marker.id}`;
+      const link = `/${ImitationItem.routePath}/${marker.id}`;
       const target = `ourbox_item_${marker.id}`;
       const popup = lfMarker.bindPopup(
         `<a href="${link}" target="${target}">
