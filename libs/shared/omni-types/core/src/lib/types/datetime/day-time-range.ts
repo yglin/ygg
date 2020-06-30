@@ -4,6 +4,7 @@ import { extendMoment } from 'moment-range';
 const moment = extendMoment(Moment);
 import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { DayTime } from './day-time';
+import { TimeRange } from './time-range';
 
 export class DayTimeRange implements SerializableJSON {
   private _start: DayTime;
@@ -64,6 +65,13 @@ export class DayTimeRange implements SerializableJSON {
     }
   }
 
+  getLength(): number {
+    return (
+      (this.end.hour - this.start.hour) * 60 +
+      (this.end.minute - this.start.minute)
+    );
+  }
+
   isAfter(that: DayTimeRange): boolean {
     if (this.start.isSame(that.start)) {
       return this.end.isAfter(that.end);
@@ -115,6 +123,40 @@ export class DayTimeRange implements SerializableJSON {
             new DayTime().fromMoment(momentRange.end)
           )
       );
+  }
+
+  include(
+    value: DayTime | TimeRange,
+    options: {
+      inclusiveEnd?: boolean;
+    } = {}
+  ): boolean {
+    if (DayTime.isDayTime(value)) {
+      return (
+        (value.isSame(this.start) || value.isAfter(this.start)) &&
+        (value.isBefore(this.end) ||
+          (options.inclusiveEnd ? value.isSame(this.end) : false))
+      );
+    } else if (TimeRange.isTimeRange(value)) {
+      return (
+        this.include(DayTime.fromDate(value.start)) &&
+        this.include(DayTime.fromDate(value.end), { inclusiveEnd: true })
+      );
+    } else {
+      return false;
+    }
+  }
+
+  alignHalfHour(): DayTimeRange {
+    const start = new DayTime(
+      this.start.hour,
+      this.start.minute >= 30 ? 30 : 0
+    );
+    const end = new DayTime(
+      this.end.hour + (this.end.minute > 30 ? 1 : 0),
+      this.end.minute > 30 ? 0 : 30
+    );
+    return new DayTimeRange(start, end);
   }
 
   format(startTokenString: string = 'HH:mm', endTokenString?: string): string {

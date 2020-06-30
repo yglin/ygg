@@ -1,0 +1,25 @@
+.event-span {
+  position: relative;
+  overflow: visible;
+}
+
+.span-bar {
+  height: 20px;
+  border-radius: 10px;
+}
+
+.thumbnail {
+  position: absolute;
+  top: -110px;
+  left: 0;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0);
+  width: 100%;
+}
+
+.thumbnail img {
+  overflow: hidden;
+  border-radius: 5px;
+  width: 100px;
+  height: 100px;
+}

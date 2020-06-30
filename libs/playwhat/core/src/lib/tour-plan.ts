@@ -1,7 +1,7 @@
-import { TheThingImitation, TheThing, Relationship } from '@ygg/the-thing/core';
+import { TheThingImitation, TheThing, Relationship, TheThingCellDefine } from '@ygg/the-thing/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import { ImitationOrder } from '@ygg/shopping/core';
-import { keyBy, values } from 'lodash';
+import { keyBy, values, mapValues } from 'lodash';
 import { ImitationEvent } from './imitations';
 
 export const CellNames = {
@@ -16,7 +16,7 @@ export enum States {
   Completed = '已完成'
 }
 
-export const CellDefinesTourPlan = {
+export const CellDefinesTourPlan = mapValues({
   dateRange: {
     name: '預計出遊日期',
     type: 'date-range',
@@ -67,7 +67,7 @@ export const CellDefinesTourPlan = {
     type: 'html',
     userInput: 'optional'
   }
-};
+}, (data: any) => new TheThingCellDefine(data));
 
 const cellsOrder = [
   CellDefinesTourPlan.dateRange.name,

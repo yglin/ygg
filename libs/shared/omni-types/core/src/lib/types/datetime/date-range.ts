@@ -3,6 +3,11 @@ import * as moment from 'moment';
 import { TimeRange } from './time-range';
 
 export class DateRange extends TimeRange {
+  
+  static fromTimeRange(timeRange: TimeRange): DateRange {
+    return new DateRange(timeRange.start, timeRange.end);
+  }
+
   static compare(a: DateRange, b: DateRange, isAsc: boolean): number {
     return TimeRange.compare(a, b, isAsc);
   }
@@ -38,6 +43,16 @@ export class DateRange extends TimeRange {
     this._end = moment(value)
       .startOf('day')
       .toDate();
+  }
+
+  forEachDay(handler: (date: Date, index: number) => void) {
+    const dayIterator = moment(this.start).startOf('day');
+    const endDate = moment(this.end).endOf('day');
+    let index = 0;
+    for (; dayIterator.isSameOrBefore(endDate); dayIterator.add(1, 'day')) {
+      handler(dayIterator.toDate(), index);
+      index += 1;
+    }
   }
 
   toTimeRange(): TimeRange {

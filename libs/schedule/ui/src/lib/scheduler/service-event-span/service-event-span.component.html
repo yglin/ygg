@@ -1,0 +1,18 @@
+<div *ngIf="event" class="event-span" [style.width]="width + 'px'">
+  <div
+    class="thumbnail"
+    *ngIf="event.image"
+    fxLayout="row"
+    fxLayoutAlign="center center"
+    fxLayoutGap="10px"
+  >
+    <img [src]="event.image" [hidden]="!showThumbnail" />
+  </div>
+  <div
+    class="span-bar"
+    [ngStyle]="barStyle"
+    [matTooltip]="event.name"
+    (mouseenter)="onMouseOver()"
+    (mouseleave)="onMouseLeave()"
+  ></div>
+</div>

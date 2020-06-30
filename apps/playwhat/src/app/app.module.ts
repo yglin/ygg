@@ -26,6 +26,7 @@ import { TheThingUiModule } from '@ygg/the-thing/ui';
 import { PlaywhatUiModule } from '@ygg/playwhat/ui';
 import { ShoppingUiModule } from '@ygg/shopping/ui';
 import { ScheduleUiModule } from '@ygg/schedule/ui';
+import { DragulaModule } from 'ng2-dragula';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { ScheduleUiModule } from '@ygg/schedule/ui';
     PlaywhatUiModule,
     PlaywhatAdminModule,
     ScheduleUiModule,
+    // DragulaModule.forRoot(),
     RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })
   ],
   providers: [],

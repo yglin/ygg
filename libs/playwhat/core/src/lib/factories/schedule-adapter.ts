@@ -75,7 +75,9 @@ export class ScheduleAdapter {
     const dateRange: DateRange = tourPlan.getCellValue(
       CellDefinesTourPlan.dateRange.name
     );
-    const schedule = new Schedule(dateRange.toTimeRange());
+    const schedule = new Schedule(dateRange.toTimeRange(), {
+      dayTimeRange: tourPlan.getCellValue(CellDefinesTourPlan.dayTimeRange.name)
+    });
     const purchaseRelations = tourPlan.getRelations(RelationPurchase.name);
     for (const purchase of purchaseRelations) {
       const event: ServiceEvent = await this.deduceEventFromPurchase(purchase);

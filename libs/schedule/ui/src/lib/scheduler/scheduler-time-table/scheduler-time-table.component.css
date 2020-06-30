@@ -1,0 +1,48 @@
+.event-pool {
+  padding-top: 30px;
+}
+
+.event-pool .event-span {
+  margin-bottom: 20px;
+}
+
+.time-table {
+  max-width: 90vw;
+}
+
+th.date-name {
+  width: 100px;
+  padding: 5px;
+}
+
+.time-table td,
+.time-table th {
+  height: 50px;
+}
+
+.time-slots {
+  overflow-x: auto;
+}
+
+.time-slots table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-left: 30px;
+}
+
+.time-slots table th.day-time-name {
+  overflow: visible;
+}
+.time-slots table th.day-time-name span {
+  margin-left: -50px;
+}
+
+.time-slots table th,
+.time-slots table td {
+  padding: 2px;
+  overflow: visible;
+}
+
+.time-slots table td {
+  border: 1px solid rgb(78, 78, 78);
+}

@@ -1,0 +1,100 @@
+<div class="scheduler-time-table" *ngIf="schedule">
+  <!-- <app-error-popup [messages]="errorMessages"> -->
+  <div
+    fxLayout="row wrap"
+    fxLayoutAlign="start center"
+    fxLayoutGap="10px"
+    [dragula]="'event-slot'"
+    [(dragulaModel)]="eventPool"
+    class="event-pool"
+  >
+    <div
+      *ngFor="let eventId of eventPool"
+      class="event-span"
+      [attr.eventId]="eventId"
+    >
+      <div *ngIf="events[eventId] as event" [attr.event-name]="event.name">
+        <ygg-service-event-span
+          [event]="event"
+          (click)="onClickEvent($event)"
+        ></ygg-service-event-span>
+      </div>
+    </div>
+  </div>
+  <br />
+  <div
+    *ngIf="timeTable"
+    fxLayout="row"
+    fxLayoutAlign="start start"
+    fxLayoutGap="0px"
+    class="time-table"
+  >
+    <div fxFlex="100px" style="padding-top: 40px;">
+      <table class="date-axis">
+        <!-- <thead>
+                <tr>
+                  <th></th>
+                </tr>
+              </thead> -->
+        <tbody>
+          <tr *ngFor="let day of timeTable.days; let idx = index">
+            <th class="date-name" [attr.dayIndex]="idx">
+              <span>{{ day.date | date: 'M/d EEE' }}</span>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div fxFlex class="time-slots">
+      <table [ngStyle]="timeTable.style">
+        <thead>
+          <tr>
+            <th
+              *ngFor="
+                let timeSlot of timeTable.days[0].timeSlots;
+                let idx = index
+              "
+              class="day-time-name"
+              [attr.index]="idx"
+              [style.width]="tableCellWidth + 'px'"
+              [style.max-width]="tableCellWidth + 'px'"
+              [style.min-width]="tableCellWidth + 'px'"
+            >
+              <span>{{ timeSlot.start | date: 'HH:mm' }}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let day of timeTable.days; let dayIndex = index">
+            <td
+              *ngFor="let timeSlot of day.timeSlots; let timeIndex = index"
+              class="time-slot"
+              [attr.start]="timeSlot.start.format()"
+              [attr.time]="timeSlot.start.valueOf()"
+              [ngStyle]="timeSlot.style"
+              [dragula]="'event-slot'"
+              [(dragulaModel)]="timeSlot.events"
+              [style.width]="tableCellWidth + 'px'"
+              [style.max-width]="tableCellWidth + 'px'"
+              [style.min-width]="tableCellWidth + 'px'"
+            >
+              <div *ngFor="let eventId of timeSlot.events">
+                <div
+                  *ngIf="events[eventId] as event"
+                  [attr.event-name]="event.name"
+                >
+                  <ygg-service-event-span
+                    [event]="event"
+                    (click)="onClickEvent(eventId)"
+                    [attr.eventId]="eventId"
+                  ></ygg-service-event-span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- </app-error-popup> -->
+</div>

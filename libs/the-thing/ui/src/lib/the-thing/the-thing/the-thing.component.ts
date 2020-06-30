@@ -154,15 +154,17 @@ export class TheThingComponent implements OnInit, OnDestroy {
       }
       this.focusSubscription = merge(updateTheThing$, canModify$).subscribe();
     } else {
-      console.error(`TheThingComponent: theThing$ is empty: ${theThing$}`);
+      console.warn(`TheThingComponent: theThing$ is empty: ${theThing$}`);
     }
 
     if (this.actions$Subscription) {
       this.actions$Subscription.unsubscribe();
     }
-    this.actions$Subscription = this.theThingFactory
-      .getPermittedActions$(theThing$, this.imitation)
-      .subscribe(actions => (this.actions = actions));
+    if (theThing$ && this.imitation) {
+      this.actions$Subscription = this.theThingFactory
+        .getPermittedActions$(theThing$, this.imitation)
+        .subscribe(actions => (this.actions = actions));
+    }
   }
 
   ngOnDestroy(): void {

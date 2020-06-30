@@ -1,11 +1,11 @@
 import { TourPlanPageObjectCypress, SiteNavigator } from '@ygg/playwhat/test';
-import { ImitationTourPlan, ScheduleAdapter } from '@ygg/playwhat/core';
-import { Schedule } from '@ygg/schedule/core';
-
 import {
-  ScheduleFromTourPlanWithPlaysAndEquipments,
-  ScheduleFromTourPlanWithPlaysNoEquipment
-} from './sample-schedules';
+  ImitationTourPlan,
+  ScheduleAdapter,
+  CellDefinesTourPlan
+} from '@ygg/playwhat/core';
+import { Schedule } from '@ygg/schedule/core';
+import { TourPlanUnscheduled, ScheduleTrivial } from './sample-schedules';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import { SamplePlays, SampleEquipments } from '../play/sample-plays';
 import { waitForLogin } from '@ygg/shared/user/test';
@@ -13,17 +13,14 @@ import {
   MyThingsPageObjectCypress,
   MyThingsDataTablePageObjectCypress
 } from '@ygg/the-thing/test';
-import {
-  TourPlanWithPlaysAndEquipments,
-  TourPlanWithPlaysNoEquipment
-} from '../tour-plan/sample-tour-plan';
 import { SchedulePageObjectCypress } from '@ygg/schedule/test';
 import { TheThing } from '@ygg/the-thing/core';
+import { CellNames } from '@ygg/shopping/core';
 
 describe('Create/Attach schedule data from/to tour-plan', () => {
   const siteNavigator = new SiteNavigator();
   const SampleThings = SamplePlays.concat(SampleEquipments).concat([
-    TourPlanWithPlaysNoEquipment
+    TourPlanUnscheduled
   ]);
   const tourPlanPO = new TourPlanPageObjectCypress();
   const myTourPlansPO = new MyThingsDataTablePageObjectCypress(
@@ -35,11 +32,7 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
   before(() => {
     // Only tour-plans of state applied can make schedule
     ImitationTourPlan.setState(
-      TourPlanWithPlaysAndEquipments,
-      ImitationTourPlan.states.applied
-    );
-    ImitationTourPlan.setState(
-      TourPlanWithPlaysNoEquipment,
+      TourPlanUnscheduled,
       ImitationTourPlan.states.applied
     );
 
@@ -67,20 +60,51 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
     theMockDatabase.clear();
   });
 
-  it('Create a trivial schedule from tour-plan', () => {
-    const scheduleEvents: TheThing[] = ScheduleFromTourPlanWithPlaysNoEquipment.events.map(
-      se => ScheduleAdapter.deriveEventFromServiceEvent(se)
-    );
+  it('Apply date-range from tour-plan', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(
-      TourPlanWithPlaysNoEquipment
+      TourPlanUnscheduled
     );
     tourPlanPO.expectVisible();
     tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
     schedulePO.expectVisible();
-    schedulePO.expectSchedule(ScheduleFromTourPlanWithPlaysNoEquipment);
+    schedulePO.expectDateRange(
+      TourPlanUnscheduled.getCellValue(
+        CellDefinesTourPlan.dateRange.name
+      )
+    );
+  });
+
+  it('Apply day-time-range from tour-plan', () => {
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(
+      TourPlanUnscheduled
+    );
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
+    schedulePO.expectVisible();
+    const dayTimeRange = TourPlanUnscheduled.getCellValue(
+      CellDefinesTourPlan.dayTimeRange.name
+    );
+    console.log(dayTimeRange);
+    schedulePO.expectDayTimeRange(dayTimeRange);
+  });  
+
+  it('Create a trivial schedule from tour-plan', () => {
+    const scheduleEvents: TheThing[] = ScheduleTrivial.events.map(
+      se => ScheduleAdapter.deriveEventFromServiceEvent(se)
+    );
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(
+      TourPlanUnscheduled
+    );
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
+    schedulePO.expectVisible();
+    schedulePO.expectSchedule(ScheduleTrivial);
     schedulePO.submit();
     tourPlanPO.expectVisible();
     tourPlanPO.expectEvents(scheduleEvents);
   });
+
 });

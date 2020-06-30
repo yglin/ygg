@@ -79,12 +79,27 @@ export class DayTime implements SerializableJSON {
     return this.hour * 60 + this.minute - (that.hour * 60 + that.minute) > 0;
   }
 
+  isBefore(that: DayTime): boolean {
+    return this.hour * 60 + this.minute - (that.hour * 60 + that.minute) < 0;
+  }
+
   clone(): DayTime {
     return new DayTime(this.hour, this.minute);
   }
 
   format(tokensString: string = 'HH:mm'): string {
     return this.toMoment().format(tokensString);
+  }
+
+  add(amount: number, unit: 'minute'): this {
+    const resultMinutes = this.hour * 60 + this.minute + amount;
+    this._hour = resultMinutes / 60;
+    this._minute = resultMinutes % 60;
+    return this;
+  }
+
+  isAlreadyNextDay(): boolean {
+    return this.hour >= 24;
   }
 
   fromMoment(mmt: moment.Moment): DayTime {
