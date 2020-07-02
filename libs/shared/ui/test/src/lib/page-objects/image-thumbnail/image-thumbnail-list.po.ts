@@ -15,7 +15,7 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
   }
 
   getItem(item: ImageThumbnailItem): Cypress.Chainable<JQuery<HTMLElement>> {
-    return cy.get(this.getSelectorForItem(item)).first();
+    return cy.get(this.getSelectorForItem(item), { timeout: 10000 }).first();
     // .contains('.item', item.name)
     // .find(`img[src="${item.image}"]`)
     // .parentsUntil('.item-list', '.item');

@@ -19,7 +19,8 @@
  * Otherwise it throws below error whenever some external class from shared library imported, and used.
  * TypeError: Reflect.defineMetadata is not a function
  */
-import "reflect-metadata";
+import 'reflect-metadata';
+import 'cypress-mailosaur';
 
 // Import commands.js using ES2015 syntax:
 import './commands';

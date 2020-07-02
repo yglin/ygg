@@ -32,6 +32,7 @@ import { EquipmentViewComponent } from './ui/equipment/equipment-view/equipment-
 import { PurchaseService } from '@ygg/shopping/factory';
 import { TourPlanComponent } from './tour-plan/tour-plan.component';
 import { PlayFactoryService } from './play-factory.service';
+import { EventComponent } from './event/event.component';
 
 @NgModule({
   imports: [
@@ -56,7 +57,8 @@ import { PlayFactoryService } from './play-factory.service';
     MyPlayListComponent,
     MyTourPlanListComponent,
     EquipmentViewComponent,
-    TourPlanComponent
+    TourPlanComponent,
+    EventComponent
   ],
   entryComponents: [
     TourViewComponent,

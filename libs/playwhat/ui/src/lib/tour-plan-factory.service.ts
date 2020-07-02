@@ -1,32 +1,29 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import {
-  TheThing,
-  TheThingCell,
-  TheThingState,
-  TheThingAction
-} from '@ygg/the-thing/core';
-import { TheThingFactoryService } from '@ygg/the-thing/ui';
-import {
-  ImitationTourPlan,
-  CellNames,
-  defaultTourPlanName
-} from '@ygg/playwhat/core';
-import { set } from 'lodash';
-import {
-  Router,
-  Resolve,
   ActivatedRouteSnapshot,
+  Resolve,
+  Router,
   RouterStateSnapshot
 } from '@angular/router';
-import { EmceeService } from '@ygg/shared/ui/widgets';
-import { AlertType } from '@ygg/shared/infra/core';
-import { ShoppingCartService, CartSubmitPack } from '@ygg/shopping/ui';
-import { Purchase, RelationPurchase } from '@ygg/shopping/core';
-import { take, tap } from 'rxjs/operators';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { ScheduleAdapterService } from './schedule-adapter.service';
+import {
+  ImitationEvent,
+  ImitationTourPlan,
+  RelationshipScheduleEvent
+} from '@ygg/playwhat/core';
 import { ScheduleFactoryService } from '@ygg/schedule/ui';
+import { EmceeService } from '@ygg/shared/ui/widgets';
+import { Purchase, RelationPurchase } from '@ygg/shopping/core';
+import { CartSubmitPack, ShoppingCartService } from '@ygg/shopping/ui';
+import {
+  TheThing,
+  TheThingAction,
+  TheThingRelation
+} from '@ygg/the-thing/core';
+import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { TheThingFactoryService } from '@ygg/the-thing/ui';
+import { Observable, Subscription } from 'rxjs';
+import { EventFactoryService } from './event-factory.service';
+import { ScheduleAdapterService } from './schedule-adapter.service';
 
 export interface IModifyRequest {
   command: 'update' | 'add' | 'delete';
@@ -52,7 +49,8 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     private emcee: EmceeService,
     private router: Router,
     private scheduleAdapter: ScheduleAdapterService,
-    private scheduleFactory: ScheduleFactoryService
+    private scheduleFactory: ScheduleFactoryService,
+    private eventFactory: EventFactoryService
   ) {
     this.subscriptions.push(
       this.theThingFactory.runAction$.subscribe(actionSubmit => {
@@ -325,12 +323,62 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
       tourPlan
     );
     const outSchedule = await this.scheduleFactory.edit(inSchedule);
-    await this.scheduleAdapter.attachScheduleWithTourPlan(
-      tourPlan,
+    const events: TheThing[] = await this.scheduleAdapter.deriveEventsFromSchedule(
       outSchedule
     );
+
+    const relations: TheThingRelation[] = [];
+    for (const event of events) {
+      // Save event
+      await this.theThingFactory.save(event, {
+        requireOwner: true,
+        imitation: ImitationEvent,
+        force: true
+      });
+      // Attach event to tour-plan
+      const relation = RelationshipScheduleEvent.createRelation(
+        tourPlan.id,
+        event.id
+      );
+      relations.push(relation);
+    }
+    tourPlan.setRelation(RelationshipScheduleEvent.name, relations);
+
+    // Save tour-plan
+    this.theThingFactory.save(tourPlan, {
+      requireOwner: true,
+      imitation: ImitationTourPlan,
+      force: true
+    });
     this.theThingFactory.emitChange(tourPlan);
     this.router.navigate(['/', ImitationTourPlan.routePath, tourPlan.id]);
+  }
+
+  async sendApprovalRequests(tourPlan: TheThing) {
+    const confirm = await this.emcee.confirm(
+      `<h3>將送出行程中各活動時段資訊給各活動負責人，並等待負責人確認。</h3><br><h3>等待期間無法修改行程表，請確認行程中各活動時段已安排妥善，確定送出？</h3>`
+    );
+    if (confirm) {
+      try {
+        ImitationTourPlan.setState(
+          tourPlan,
+          ImitationTourPlan.states.waitApproval
+        );
+        await this.theThingFactory.save(tourPlan, { force: true });
+        const relations: TheThingRelation[] = tourPlan.getRelations(
+          RelationshipScheduleEvent.name
+        );
+        for (const relation of relations) {
+          const event: TheThing = await this.theThingFactory.load(
+            relation.objectId
+          );
+          await this.eventFactory.sendApprovalRequest(event);
+        }
+        this.emcee.info(`<h3>已送出行程確認，等待各活動負責人確認中</h3>`);
+      } catch (error) {
+        this.emcee.error(`送出失敗，錯誤原因：${error.message}`);
+      }
+    }
   }
 
   runAction(action: TheThingAction, tourPlan: TheThing) {
@@ -353,6 +401,9 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
           break;
         case 'schedule':
           this.schedule(tourPlan);
+          break;
+        case 'send-approval-requests':
+          this.sendApprovalRequests(tourPlan);
           break;
         default:
           break;

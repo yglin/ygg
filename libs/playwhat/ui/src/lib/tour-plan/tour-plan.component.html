@@ -30,8 +30,32 @@
     </div>
   </div>
   <br />
-  <div class="schedule" *ngIf="eventIds && eventIds.length > 0">
-    <h2>行程表</h2>
+  <div class="schedule">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <h2>行程表</h2>
+      <div *ngIf="canSchedule">
+        <button
+          type="button"
+          mat-fab
+          class="action-schedule"
+          [matTooltip]="actionSchedule.tooltip"
+          (click)="runAction(actionSchedule)"
+        >
+          <mat-icon>{{ actionSchedule.icon }}</mat-icon>
+        </button>
+      </div>
+      <div *ngIf="canSendApprovalRequests">
+        <button
+          type="button"
+          mat-fab
+          class="send-approval-requests"
+          [matTooltip]="actionSAR.tooltip"
+          (click)="runAction(actionSAR)"
+        >
+          <mat-icon>{{ actionSAR.icon }}</mat-icon>
+        </button>
+      </div>
+    </div>
     <div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="50px">
       <ng-container *ngFor="let eventId of eventIds">
         <the-thing-thumbnail

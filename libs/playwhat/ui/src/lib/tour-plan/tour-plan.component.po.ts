@@ -25,7 +25,9 @@ export abstract class TourPlanPageObject extends PageObject {
     editButtons: 'button.edit',
     optionals: '.optionals',
     totalCharge: '.total-charge',
-    theThing: '.the-thing'
+    theThing: '.the-thing',
+    buttonSchedule: 'button.action-schedule',
+    buttonSendApprovalRequests: 'button.send-approval-requests'
   };
   theThingPO: TheThingPageObject;
   statePO: TheThingStatePageObject;

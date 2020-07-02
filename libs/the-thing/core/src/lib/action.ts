@@ -8,4 +8,7 @@ export interface TheThingAction {
   icon: string;
   tooltip: string;
   permissions?: (PermissionName | PermissionFunction)[];
+  display?: {
+    position: 'custom';
+  };
 }

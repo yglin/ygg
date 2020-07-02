@@ -1,30 +1,26 @@
-import {
-  TheThing,
-  TheThingRelation,
-  TheThingAccessor
-} from '@ygg/the-thing/core';
-
-import { Schedule, ServiceEvent, Service } from '@ygg/schedule/core';
-import {
-  ImitationTourPlan,
-  CellDefinesTourPlan,
-  RelationshipScheduleEvent
-} from '../tour-plan';
+import { Schedule, Service, ServiceEvent } from '@ygg/schedule/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import {
-  RelationPurchase,
-  CellNames as CellNamesShopping
+  CellNames as CellNamesShopping,
+  RelationPurchase
 } from '@ygg/shopping/core';
-import { ImitationPlay, ImitationPlayCellDefines } from '../play';
+import {
+  TheThing,
+  TheThingAccessor,
+  TheThingRelation
+} from '@ygg/the-thing/core';
 import {
   ImitationEvent,
-  RelationshipPlay,
-  ImitationEventCellDefines
+  ImitationEventCellDefines,
+  RelationshipPlay
 } from '../imitations';
+import { ImitationPlay, ImitationPlayCellDefines } from '../play';
+import { CellDefinesTourPlan, ImitationTourPlan } from '../tour-plan';
 
 export class ScheduleAdapter {
   static deriveEventFromServiceEvent(serviceEvent: ServiceEvent): TheThing {
     const event = ImitationEvent.createTheThing();
+    event.id = serviceEvent.id;
     event.name = serviceEvent.service.name;
     event.image = serviceEvent.service.image;
     event.setCellValue(
@@ -102,19 +98,28 @@ export class ScheduleAdapter {
     return event;
   }
 
-  async attachScheduleWithTourPlan(tourPlan: TheThing, schedule: Schedule) {
+  async deriveEventsFromSchedule(schedule: Schedule): Promise<TheThing[]> {
     const events: TheThing[] = [];
-    const relations: TheThingRelation[] = [];
     for (const serviceEvent of schedule.events) {
       const event = ScheduleAdapter.deriveEventFromServiceEvent(serviceEvent);
       events.push(event);
-      await this.theThingAccessor.save(event);
-      const relation = RelationshipScheduleEvent.createRelation(
-        tourPlan.id,
-        event.id
-      );
-      relations.push(relation);
     }
-    tourPlan.setRelation(RelationshipScheduleEvent.name, relations);
+    return events;
   }
+
+  // async attachScheduleWithTourPlan(tourPlan: TheThing, schedule: Schedule) {
+  //   const relations: TheThingRelation[] = [];
+  //   const events = this.deriveEventsFromSchedule(schedule);
+  //   for (const serviceEvent of schedule.events) {
+  //     const event = ScheduleAdapter.deriveEventFromServiceEvent(serviceEvent);
+  //     events.push(event);
+  //     await this.theThingAccessor.save(event);
+  //     const relation = RelationshipScheduleEvent.createRelation(
+  //       tourPlan.id,
+  //       event.id
+  //     );
+  //     relations.push(relation);
+  //   }
+  //   tourPlan.setRelation(RelationshipScheduleEvent.name, relations);
+  // }
 }

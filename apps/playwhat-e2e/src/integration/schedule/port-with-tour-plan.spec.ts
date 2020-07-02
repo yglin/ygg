@@ -66,7 +66,7 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
       TourPlanUnscheduled
     );
     tourPlanPO.expectVisible();
-    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
+    tourPlanPO.runSchedule();
     schedulePO.expectVisible();
     schedulePO.expectDateRange(
       TourPlanUnscheduled.getCellValue(
@@ -81,25 +81,22 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
       TourPlanUnscheduled
     );
     tourPlanPO.expectVisible();
-    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
+    tourPlanPO.runSchedule();
     schedulePO.expectVisible();
     const dayTimeRange = TourPlanUnscheduled.getCellValue(
       CellDefinesTourPlan.dayTimeRange.name
     );
-    console.log(dayTimeRange);
     schedulePO.expectDayTimeRange(dayTimeRange);
-  });  
+  });
 
   it('Create a trivial schedule from tour-plan', () => {
-    const scheduleEvents: TheThing[] = ScheduleTrivial.events.map(
-      se => ScheduleAdapter.deriveEventFromServiceEvent(se)
+    const scheduleEvents: TheThing[] = ScheduleTrivial.events.map(se =>
+      ScheduleAdapter.deriveEventFromServiceEvent(se)
     );
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(
-      TourPlanUnscheduled
-    );
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
     tourPlanPO.expectVisible();
-    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
+    tourPlanPO.runSchedule();
     schedulePO.expectVisible();
     schedulePO.expectSchedule(ScheduleTrivial);
     schedulePO.submit();
@@ -107,4 +104,25 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
     tourPlanPO.expectEvents(scheduleEvents);
   });
 
+  it('Save schedule for tour-plan', () => {
+    const scheduleEvents: TheThing[] = ScheduleTrivial.events.map(se =>
+      ScheduleAdapter.deriveEventFromServiceEvent(se)
+    );
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
+    tourPlanPO.expectVisible();
+    tourPlanPO.runSchedule();
+    schedulePO.expectVisible();
+    schedulePO.expectSchedule(ScheduleTrivial);
+    schedulePO.submit();
+    tourPlanPO.expectVisible();
+
+    // Reload
+    cy.visit('/');
+    waitForLogin();
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
+    tourPlanPO.expectVisible();
+    tourPlanPO.expectEvents(scheduleEvents);
+  });
 });

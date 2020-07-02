@@ -163,7 +163,12 @@ export class TheThingComponent implements OnInit, OnDestroy {
     if (theThing$ && this.imitation) {
       this.actions$Subscription = this.theThingFactory
         .getPermittedActions$(theThing$, this.imitation)
-        .subscribe(actions => (this.actions = actions));
+        .subscribe(actions => {
+          this.actions = actions.filter(
+            action => !(action && action.display && action.display.position)
+          );
+          // console.dir(this.actions);
+        });
     }
   }
 

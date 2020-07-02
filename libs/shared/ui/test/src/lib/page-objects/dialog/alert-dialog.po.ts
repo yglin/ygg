@@ -6,7 +6,10 @@ export class AlertDialogPageObjectCypress extends AlertDialogPageObject {
   }
 
   expectMessage(message: string) {
-    cy.get(this.getSelector('content')).should('have.text', message);
+    cy.get(this.getSelector('content'), { timeout: 10000 }).should(
+      'have.text',
+      message
+    );
   }
 
   // confirm(): void {

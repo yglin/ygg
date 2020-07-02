@@ -43,7 +43,15 @@ export abstract class InvitationFactory {
     const invitationLink = `${location.origin}/invite/${id}`;
     const mailSubject =
       options.mailSubject || `來自 ${location.hostname} 的邀請通知`;
-    const mailContent = `<h3>來自 ${location.hostname} 的邀請，此為系統自動寄發，請勿回覆</h3><br>${options.mailContent}<br><br><h3>點擊以下網址繼續：</h3><br>${invitationLink}`;
+    const mailContent = `
+      <h3>來自 ${location.hostname} 的邀請，此為系統自動寄發，請勿回覆</h3>
+      <br>
+      ${options.mailContent}
+      <br><br>
+      <h3>點擊以下網址繼續：</h3>
+      <br>
+      <a href="${invitationLink}">${invitationLink}</a>
+    `;
     const invitation: Invitation = {
       id,
       type: options.type,

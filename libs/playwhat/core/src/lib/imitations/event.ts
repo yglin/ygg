@@ -24,6 +24,7 @@ export const ImitationEventCellDefines = {
 export const ImitationEvent: TheThingImitation = new TheThingImitation({
   id: 'event',
   collection: 'events',
+  routePath: 'event',
   cellsDef: values(ImitationEventCellDefines),
   displays: {
     thumbnail: {
@@ -34,6 +35,24 @@ export const ImitationEvent: TheThingImitation = new TheThingImitation({
     }
   }
 });
+
+ImitationEvent.states = {
+  new: {
+    name: 'new',
+    label: '新建立',
+    value: 10
+  },
+  'wait-approval': {
+    name: 'wait-approval',
+    label: '等待負責人確認中',
+    value: 50
+  },
+  'host-approved': {
+    name: 'host-approved',
+    label: '負責人已確認，可成行',
+    value: 100
+  }
+};
 
 export const RelationshipPlay: Relationship = new Relationship({
   name: '體驗項目',

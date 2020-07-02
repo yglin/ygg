@@ -26,6 +26,8 @@
 import * as firebase from 'firebase/app';
 import attachCustomCommands from './attachCustomCommands';
 import * as fbConfig from '@ygg/firebase/project-config.develop.json';
+import 'cypress-mailosaur';
+import './email';
 
 export function configCommands() {
   firebase.initializeApp(fbConfig);

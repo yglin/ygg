@@ -464,9 +464,9 @@ export class TheThingFactoryService extends TheThingFactory
     const isAdmin$ = this.authorizeService.isAdmin$();
     return combineLatest([theThing$, isOwner$, isAdmin$]).pipe(
       map(([theThing, isOwner, isAdmin]) => {
-        console.log(
-          `theThing ${theThing.id}, theThing owner ${theThing.ownerId}, isOwner = ${isOwner}`
-        );
+        // console.log(
+        //   `theThing ${theThing.id}, theThing owner ${theThing.ownerId}, isOwner = ${isOwner}`
+        // );
         return values(imitation.actions).filter(action => {
           if (isEmpty(action.permissions)) {
             return true;

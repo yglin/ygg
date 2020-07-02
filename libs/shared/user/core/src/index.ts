@@ -5,3 +5,4 @@ export * from './lib/permission';
 export * from './lib/invitation';
 export * from './lib/authenticator';
 export * from './lib/config';
+export * from './lib/user-accessor';

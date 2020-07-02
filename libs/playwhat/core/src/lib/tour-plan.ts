@@ -1,4 +1,9 @@
-import { TheThingImitation, TheThing, Relationship, TheThingCellDefine } from '@ygg/the-thing/core';
+import {
+  TheThingImitation,
+  TheThing,
+  Relationship,
+  TheThingCellDefine
+} from '@ygg/the-thing/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import { ImitationOrder } from '@ygg/shopping/core';
 import { keyBy, values, mapValues } from 'lodash';
@@ -16,58 +21,61 @@ export enum States {
   Completed = '已完成'
 }
 
-export const CellDefinesTourPlan = mapValues({
-  dateRange: {
-    name: '預計出遊日期',
-    type: 'date-range',
-    userInput: 'required'
+export const CellDefinesTourPlan = mapValues(
+  {
+    dateRange: {
+      name: '預計出遊日期',
+      type: 'date-range',
+      userInput: 'required'
+    },
+    numParticipants: {
+      name: '預計參加人數',
+      type: 'number',
+      userInput: 'required'
+    },
+    contact: {
+      name: '聯絡資訊',
+      type: 'contact',
+      userInput: 'required'
+    },
+    dayTimeRange: {
+      name: '預計遊玩時間',
+      type: 'day-time-range',
+      userInput: 'optional'
+    },
+    aboutMeals: {
+      name: '用餐需求',
+      type: 'longtext',
+      userInput: 'optional'
+    },
+    aboutTransport: {
+      name: '交通需求',
+      type: 'longtext',
+      userInput: 'optional'
+    },
+    numElders: {
+      name: '長輩人數',
+      type: 'number',
+      userInput: 'optional'
+    },
+    numKids: {
+      name: '孩童人數',
+      type: 'number',
+      userInput: 'optional'
+    },
+    numPartTimes: {
+      name: '司領人數',
+      type: 'number',
+      userInput: 'optional'
+    },
+    misc: {
+      name: CellNames.misc,
+      type: 'html',
+      userInput: 'optional'
+    }
   },
-  numParticipants: {
-    name: '預計參加人數',
-    type: 'number',
-    userInput: 'required'
-  },
-  contact: {
-    name: '聯絡資訊',
-    type: 'contact',
-    userInput: 'required'
-  },
-  dayTimeRange: {
-    name: '預計遊玩時間',
-    type: 'day-time-range',
-    userInput: 'optional'
-  },
-  aboutMeals: {
-    name: '用餐需求',
-    type: 'longtext',
-    userInput: 'optional'
-  },
-  aboutTransport: {
-    name: '交通需求',
-    type: 'longtext',
-    userInput: 'optional'
-  },
-  numElders: {
-    name: '長輩人數',
-    type: 'number',
-    userInput: 'optional'
-  },
-  numKids: {
-    name: '孩童人數',
-    type: 'number',
-    userInput: 'optional'
-  },
-  numPartTimes: {
-    name: '司領人數',
-    type: 'number',
-    userInput: 'optional'
-  },
-  misc: {
-    name: CellNames.misc,
-    type: 'html',
-    userInput: 'optional'
-  }
-}, (data: any) => new TheThingCellDefine(data));
+  (data: any) => new TheThingCellDefine(data)
+);
 
 const cellsOrder = [
   CellDefinesTourPlan.dateRange.name,
@@ -100,14 +108,24 @@ export const ImitationTourPlan: TheThingImitation = ImitationOrder.extend({
   }
 });
 
+export const RelationshipScheduleEvent: Relationship = new Relationship({
+  name: '體驗行程',
+  imitation: ImitationEvent
+});
+
+ImitationTourPlan.states['waitApproval'] = {
+  name: 'waitApproval',
+  label: '等待確認',
+  value: 100
+};
+
 ImitationTourPlan.states['approved'] = {
   name: 'approved',
   label: '可成行',
-  value:
-    (ImitationTourPlan.states.applied.value +
-      ImitationTourPlan.states.paid.value) /
-    2
+  value: 110
 };
+
+ImitationTourPlan.states['paid'].permissions = ['isAdmin', 'approved'];
 
 ImitationTourPlan.dataTableConfig = {
   columns: keyBy(
@@ -154,6 +172,10 @@ ImitationTourPlan.admin.states = ['applied', 'approved', 'paid', 'completed'];
 //   return totalCharge;
 // }
 
+function hasSchedule(tourPlan: TheThing): boolean {
+  return tourPlan.hasRelation(RelationshipScheduleEvent.name);
+}
+
 ImitationTourPlan.actions = {
   'send-application': {
     id: 'send-application',
@@ -171,7 +193,7 @@ ImitationTourPlan.actions = {
     id: 'approve-available',
     tooltip: '標記此遊程計畫可成行',
     icon: 'fact_check',
-    permissions: ['applied', 'requireAdmin']
+    permissions: ['applied, waitApproval', 'requireAdmin']
   },
   'confirm-paid': {
     id: 'confirm-paid',
@@ -189,7 +211,19 @@ ImitationTourPlan.actions = {
     id: 'schedule',
     tooltip: '為體驗活動編排行程表',
     icon: 'schedule',
-    permissions: ['applied', 'requireAdmin']
+    permissions: ['applied', 'requireAdmin'],
+    display: {
+      position: 'custom'
+    }
+  },
+  'send-approval-requests': {
+    id: 'send-approval-requests',
+    tooltip: '送出行程確認訊息給各活動負責人',
+    icon: 'email',
+    permissions: ['applied', 'requireAdmin', hasSchedule],
+    display: {
+      position: 'custom'
+    }
   }
 };
 
@@ -227,8 +261,3 @@ ImitationTourPlan.canModify = (theThing: TheThing): boolean => {
     ImitationTourPlan.isState(theThing, ImitationTourPlan.states.editing)
   );
 };
-
-export const RelationshipScheduleEvent: Relationship = new Relationship({
-  name: '體驗行程',
-  imitation: ImitationEvent
-});

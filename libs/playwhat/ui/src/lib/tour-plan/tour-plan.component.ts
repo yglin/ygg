@@ -1,5 +1,9 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { TheThing, TheThingRelation } from '@ygg/the-thing/core';
+import {
+  TheThing,
+  TheThingRelation,
+  TheThingAction
+} from '@ygg/the-thing/core';
 import {
   ImitationTourPlan,
   ImitationEvent,
@@ -15,9 +19,10 @@ import {
 } from '@ygg/shopping/core';
 import { switchMap, tap, filter } from 'rxjs/operators';
 import { AuthorizeService } from '@ygg/shared/user/ui';
-import { isEmpty } from 'lodash';
+import { isEmpty, find } from 'lodash';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { EmceeService } from '@ygg/shared/ui/widgets';
+import { TheThingFactoryService } from '@ygg/the-thing/ui';
 
 @Component({
   selector: 'ygg-tour-plan',
@@ -33,13 +38,15 @@ export class TourPlanComponent implements OnInit, OnDestroy {
   totalCharge: number = 0;
   eventIds: string[] = [];
   ImitationEvent = ImitationEvent;
+  canSchedule = false;
+  actionSchedule = ImitationTourPlan.actions['schedule'];
+  canSendApprovalRequests = false;
+  actionSAR = ImitationTourPlan.actions['send-approval-requests'];
 
   constructor(
-    private theThingAccessor: TheThingAccessService,
+    private theThingFactory: TheThingFactoryService,
     private tourPlanFactory: TourPlanFactoryService,
-    private authorizeService: AuthorizeService,
-    private shoppingCart: ShoppingCartService,
-    private emcee: EmceeService
+    private authorizeService: AuthorizeService
   ) {
     this.subscriptions.push(
       this.tourPlanFactory.tourPlan$
@@ -70,6 +77,20 @@ export class TourPlanComponent implements OnInit, OnDestroy {
         )
         .subscribe()
     );
+    this.subscriptions.push(
+      this.theThingFactory
+        .getPermittedActions$(this.tourPlanFactory.tourPlan$, ImitationTourPlan)
+        .subscribe((actions: TheThingAction[]) => {
+          this.canSchedule = !!find(
+            actions,
+            action => action.id === this.actionSchedule.id
+          );
+          this.canSendApprovalRequests = !!find(
+            actions,
+            action => (action.id === this.actionSAR.id)
+          );
+        })
+    );
   }
 
   reset() {
@@ -84,6 +105,10 @@ export class TourPlanComponent implements OnInit, OnDestroy {
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
     }
+  }
+
+  runAction(action: TheThingAction) {
+    this.theThingFactory.runAction(action, this.tourPlan);
   }
 
   importToCart() {
