@@ -63,7 +63,7 @@ export class TourPlanPageObjectCypress extends TourPlanPageObject {
   }
 
   expectVisible(): Cypress.Chainable<any> {
-    return cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
+    return cy.get(this.getSelector(), { timeout: 20000 }).should('be.visible');
   }
 
   expectName(name: string) {

@@ -54,13 +54,6 @@ describe('Manipulate play states', () => {
   before(() => {
     login().then(user => {
       theMockDatabase.setAdmins([user.id]);
-      cy.visit('/');
-    });
-  });
-
-  beforeEach(() => {
-    //Reset test data
-    getCurrentUser().then(user => {
       cy.wrap(SampleThings).each((thing: any) => {
         thing.ownerId = user.id;
         theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
@@ -69,14 +62,23 @@ describe('Manipulate play states', () => {
     });
   });
 
+  beforeEach(() => {
+    //Reset plays by states
+    getCurrentUser().then(user => {
+      cy.wrap(values(playsByState)).each((thing: any) => {
+        theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
+      });
+    });
+  });
+
   after(() => {
-    // Goto my-things page and delete all test things
-    const myThingsPO = new MyThingsPageObjectCypress();
-    siteNavigator.goto(['the-things', 'my'], myThingsPO);
-    cy.wait(3000);
-    myThingsPO.deleteAll();
+    // // Goto my-things page and delete all test things
+    // const myThingsPO = new MyThingsPageObjectCypress();
+    // siteNavigator.goto(['the-things', 'my'], myThingsPO);
+    // cy.wait(3000);
+    // myThingsPO.deleteAll();
     theMockDatabase.clear();
-    theMockDatabase.restoreRTDB();
+    // theMockDatabase.restoreRTDB();
   });
 
   it('State of just created play should be "new"', () => {
@@ -255,5 +257,4 @@ describe('Manipulate play states', () => {
     emceePO.alert(`體驗 ${playInForSale.name} 已退回資料修改狀態`);
     playPO.expectState(ImitationPlay.states.editing);
   });
-
 });

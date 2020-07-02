@@ -148,7 +148,7 @@ describe('Import/export purchases between cart and tour-plan', () => {
     cy.wait(3000);
     myThingsPO.deleteAll();
     theMockDatabase.clear();
-    theMockDatabase.restoreRTDB();
+    // theMockDatabase.restoreRTDB();
   });
 
   it('Submit purchases to tour-plan creation page', () => {

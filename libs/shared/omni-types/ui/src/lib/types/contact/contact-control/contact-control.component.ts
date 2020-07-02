@@ -17,8 +17,8 @@ import {
 } from '@angular/forms';
 import { Contact } from '@ygg/shared/omni-types/core';
 import { Subscription } from 'rxjs';
-import { User } from "@ygg/shared/user/core";
-import { AuthenticateService } from "@ygg/shared/user/ui";
+import { User } from '@ygg/shared/user/core';
+import { AuthenticateService } from '@ygg/shared/user/ui';
 
 class LeastRequireErrorMatcher implements ErrorStateMatcher {
   fields: string[];
@@ -125,11 +125,12 @@ export class ContactControlComponent
     // alert('registerOnChange!!!');
     this.subscriptions.push(
       this.contactForm.valueChanges
-        .pipe(debounceTime(500))
+        // .pipe(debounceTime(500))
         .subscribe(contactValue => {
           // console.log('Contact changed~!!!');
+          const contact = new Contact().fromJSON(contactValue);
           // console.log(contact);
-          this.emitChange(new Contact().fromJSON(contactValue));
+          this.emitChange(contact);
         })
     );
   }
@@ -139,7 +140,7 @@ export class ContactControlComponent
   importFromUser() {
     if (this.user) {
       const contact = new Contact().fromUser(this.user);
-      this.contactForm.patchValue(contact)
+      this.contactForm.patchValue(contact);
     }
   }
   // requireEmailOrPhoneValidator(formGroup: FormGroup): any {

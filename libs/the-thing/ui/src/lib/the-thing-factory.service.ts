@@ -44,7 +44,8 @@ import {
   ReplaySubject,
   isObservable,
   never,
-  race
+  race,
+  NEVER
 } from 'rxjs';
 import {
   ActivatedRouteSnapshot,
@@ -63,7 +64,7 @@ export interface ITheThingSaveOptions {
 }
 
 export const config = {
-  loadTimeout: 5000
+  loadTimeout: 10000
 };
 
 @Injectable({
@@ -244,16 +245,19 @@ export class TheThingFactoryService extends TheThingFactory
     id: string,
     collection: string = TheThing.collection
   ): Promise<TheThing> {
-    console.log(collection);
-    console.log(id);
+    // console.log(collection);
+    // console.log(id);
     // return this.load$(id, collection).pipe(take(1)).toPromise();
     return race(
       this.load$(id, collection).pipe(take(1)),
-      never().pipe(
+      NEVER.pipe(
         timeout(config.loadTimeout),
-        tap(() => {
-          this.emceeService.error(
-            `讀取 ${collection}/${id} 失敗，超過${config.loadTimeout / 1000}秒`
+        catchError(error => {
+          return throwError(
+            new Error(
+              `讀取 ${collection}/${id} 失敗，超過${config.loadTimeout /
+                1000}秒`
+            )
           );
         })
       )

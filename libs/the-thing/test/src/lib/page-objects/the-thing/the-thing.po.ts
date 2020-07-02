@@ -28,7 +28,7 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
     );
   }
   expectVisible(): Cypress.Chainable<any> {
-    return cy.get(this.getSelector()).should('be.visible');
+    return cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
   }
 
   expectName(value: string): void {
