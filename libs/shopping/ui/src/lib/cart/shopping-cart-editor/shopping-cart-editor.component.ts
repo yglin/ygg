@@ -35,7 +35,7 @@ export class ShoppingCartEditorComponent implements OnInit, OnDestroy {
   displayedColumns: string[];
   // asyncPurchasesData: { [purchaseId: string]: { price?: number } } = {};
   subscriptions: Subscription[] = [];
-  clearButtonDisabled = true;
+  clearButtonDisabled = false; // Always enable
   canSubmit = false;
 
   constructor(
@@ -48,7 +48,7 @@ export class ShoppingCartEditorComponent implements OnInit, OnDestroy {
     const purchasesChange$ = this.shoppingCart.purchases$.pipe(
       tap(purchases => {
         this.purchasesDataSource.data = purchases;
-        this.clearButtonDisabled = purchases.length < 3;
+        // this.clearButtonDisabled = purchases.length < 3;
         this.canSubmit = !isEmpty(purchases);
       })
     );

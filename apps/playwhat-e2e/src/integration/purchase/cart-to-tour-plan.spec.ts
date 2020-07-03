@@ -142,11 +142,11 @@ describe('Import/export purchases between cart and tour-plan', () => {
   });
 
   after(() => {
-    // Goto my-things page and delete all test things
-    const myThingsPO = new MyThingsPageObjectCypress();
-    siteNavigator.goto(['the-things', 'my'], myThingsPO);
-    cy.wait(3000);
-    myThingsPO.deleteAll();
+    // // Goto my-things page and delete all test things
+    // const myThingsPO = new MyThingsPageObjectCypress();
+    // siteNavigator.goto(['the-things', 'my'], myThingsPO);
+    // cy.wait(3000);
+    // myThingsPO.deleteAll();
     theMockDatabase.clear();
     // theMockDatabase.restoreRTDB();
   });
@@ -207,7 +207,7 @@ describe('Import/export purchases between cart and tour-plan', () => {
 
   it('Save tour plan with purchased plays', () => {
     const resultTourPlan = TourPlanFull.clone();
-    resultTourPlan.name = '測試遊程(從購物車中匯入購買資料)';
+    resultTourPlan.name = `測試遊程(從購物車中匯入購買資料)_${Date.now()}`;
     const plays = PlaysWithoutEquipment;
     purchasePlays(plays).then(purchases => {
       resultTourPlan.setRelation(
@@ -233,26 +233,10 @@ describe('Import/export purchases between cart and tour-plan', () => {
 
   it('Edit exist tour-plan with purchasing plays and equipments', () => {
     const resultTourPlan = MinimalTourPlan.clone();
-    resultTourPlan.name = '測試遊程修改(加購體驗，含設備)';
+    resultTourPlan.name = `測試遊程修改(加購體驗，含設備)_${Date.now()}`;
     const plays: TheThing[] = PlaysWithEquipment;
     purchasePlays(plays).then(purchases => {
       const totalCharge = sum(purchases.map(p => p.charge));
-      // cy.wrap(purchasedPlays).each((play: TheThing) => {
-      //   const playPurchases: Purchase[] = [];
-      //   playPurchases.push(find(purchases, p => p.productId === play.id));
-      //   const equipmentRelations = play.getRelations(RelationshipEquipment.name);
-      //   if (!isEmpty(equipmentRelations)) {
-      //     for (const ar of equipmentRelations) {
-      //       playPurchases.push(find(purchases, p => p.productId === ar.objectId));
-      //     }
-      //   }
-      //   siteNavigator.goto();
-      //   const playThumbnailPO = imageThumbnailListPO.getItemPageObject(play);
-      //   playThumbnailPO.clickLink();
-      //   playPO.expectVisible();
-      //   playPO.purchase(playPurchases);
-      // });
-
       siteNavigator.goto(['shopping', 'cart'], cartPO);
       cartPO.submit();
       tourPlanPO.expectVisible();

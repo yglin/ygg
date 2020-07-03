@@ -78,6 +78,7 @@ describe('States button accessibility', () => {
         );
       });
       cy.visit('/');
+      cy.pause();
     });
   });
 
@@ -112,133 +113,133 @@ describe('States button accessibility', () => {
     // theMockDatabase.restoreRTDB();
   });
 
-  it('Can set state paid only if admin and state approved', () => {
-    theMockDatabase.setAdmins([]);
-    cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
-      const tourPlan = tourPlansByState[state.name];
-      cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
-      tourPlanPO.expectVisible();
-      tourPlanPO.theThingPO.expectName(tourPlan.name);
-      tourPlanPO.theThingPO.expectNoActionButton(
-        ImitationTourPlan.actions['confirm-paid']
-      );
-    });
-    const tourPlanApproved =
-      tourPlansByState[ImitationTourPlan.states.approved.name];
-    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(tourPlanApproved);
-    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.approved);
-    tourPlanPO.theThingPO.expectNoActionButton(
-      ImitationTourPlan.actions['confirm-paid']
-    );
-    getCurrentUser().then(user => theMockDatabase.setAdmins([user.id]));
-    tourPlanPO.theThingPO.expectActionButton(
-      ImitationTourPlan.actions['confirm-paid']
-    );
-    // theMockDatabase.restoreRTDB();
-  });
+  // it('Can set state paid only if admin and state approved', () => {
+  //   theMockDatabase.setAdmins([]);
+  //   cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
+  //     const tourPlan = tourPlansByState[state.name];
+  //     cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
+  //     tourPlanPO.expectVisible();
+  //     tourPlanPO.theThingPO.expectName(tourPlan.name);
+  //     tourPlanPO.theThingPO.expectNoActionButton(
+  //       ImitationTourPlan.actions['confirm-paid']
+  //     );
+  //   });
+  //   const tourPlanApproved =
+  //     tourPlansByState[ImitationTourPlan.states.approved.name];
+  //   siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+  //   myTourPlansPO.theThingDataTablePO.gotoTheThingView(tourPlanApproved);
+  //   tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.approved);
+  //   tourPlanPO.theThingPO.expectNoActionButton(
+  //     ImitationTourPlan.actions['confirm-paid']
+  //   );
+  //   getCurrentUser().then(user => theMockDatabase.setAdmins([user.id]));
+  //   tourPlanPO.theThingPO.expectActionButton(
+  //     ImitationTourPlan.actions['confirm-paid']
+  //   );
+  //   // theMockDatabase.restoreRTDB();
+  // });
 
-  it('Can set state completed only if admin and state paid', () => {
-    theMockDatabase.setAdmins([]);
-    cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
-      const tourPlan = tourPlansByState[state.name];
-      cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
-      tourPlanPO.expectVisible();
-      tourPlanPO.theThingPO.expectName(tourPlan.name);
-      tourPlanPO.theThingPO.expectNoActionButton(
-        ImitationTourPlan.actions['confirm-completed']
-      );
-    });
-    const tourPlanPaid = tourPlansByState[ImitationTourPlan.states.paid.name];
-    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.expectTheThing(tourPlanPaid);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(tourPlanPaid);
-    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.paid);
-    tourPlanPO.theThingPO.expectNoActionButton(
-      ImitationTourPlan.actions['confirm-completed']
-    );
-    getCurrentUser().then(user => theMockDatabase.setAdmins([user.id]));
-    tourPlanPO.theThingPO.expectActionButton(
-      ImitationTourPlan.actions['confirm-completed']
-    );
-    theMockDatabase.restoreRTDB();
-  });
+  // it('Can set state completed only if admin and state paid', () => {
+  //   theMockDatabase.setAdmins([]);
+  //   cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
+  //     const tourPlan = tourPlansByState[state.name];
+  //     cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
+  //     tourPlanPO.expectVisible();
+  //     tourPlanPO.theThingPO.expectName(tourPlan.name);
+  //     tourPlanPO.theThingPO.expectNoActionButton(
+  //       ImitationTourPlan.actions['confirm-completed']
+  //     );
+  //   });
+  //   const tourPlanPaid = tourPlansByState[ImitationTourPlan.states.paid.name];
+  //   siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+  //   myTourPlansPO.theThingDataTablePO.expectTheThing(tourPlanPaid);
+  //   myTourPlansPO.theThingDataTablePO.gotoTheThingView(tourPlanPaid);
+  //   tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.paid);
+  //   tourPlanPO.theThingPO.expectNoActionButton(
+  //     ImitationTourPlan.actions['confirm-completed']
+  //   );
+  //   getCurrentUser().then(user => theMockDatabase.setAdmins([user.id]));
+  //   tourPlanPO.theThingPO.expectActionButton(
+  //     ImitationTourPlan.actions['confirm-completed']
+  //   );
+  //   theMockDatabase.restoreRTDB();
+  // });
 
-  it('Can send application tour plan only if owner and state editing', () => {
-    const tourPlanNotMine = MinimalTourPlan.clone();
-    tourPlanNotMine.name = '測試遊程(不是我的)';
-    ImitationTourPlan.setState(
-      tourPlanNotMine,
-      ImitationTourPlan.states.editing
-    );
-    theMockDatabase.insert(
-      `${TheThing.collection}/${tourPlanNotMine.id}`,
-      tourPlanNotMine
-    );
-    cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
-      const tourPlan = tourPlansByState[state.name];
-      cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
-      tourPlanPO.expectVisible();
-      tourPlanPO.theThingPO.expectName(tourPlan.name);
-      if (state.name === ImitationTourPlan.states.editing.name) {
-        tourPlanPO.theThingPO.expectActionButton(
-          ImitationTourPlan.actions['send-application']
-        );
-      } else {
-        tourPlanPO.theThingPO.expectNoActionButton(
-          ImitationTourPlan.actions['send-application']
-        );
-      }
-    });
-    cy.visit(`${ImitationTourPlan.routePath}/${tourPlanNotMine.id}`);
-    tourPlanPO.expectVisible();
-    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.editing);
-    tourPlanPO.theThingPO.expectNoActionButton(
-      ImitationTourPlan.actions['send-application']
-    );
-  });
+  // it('Can send application tour plan only if owner and state editing', () => {
+  //   const tourPlanNotMine = MinimalTourPlan.clone();
+  //   tourPlanNotMine.name = '測試遊程(不是我的)';
+  //   ImitationTourPlan.setState(
+  //     tourPlanNotMine,
+  //     ImitationTourPlan.states.editing
+  //   );
+  //   theMockDatabase.insert(
+  //     `${TheThing.collection}/${tourPlanNotMine.id}`,
+  //     tourPlanNotMine
+  //   );
+  //   cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
+  //     const tourPlan = tourPlansByState[state.name];
+  //     cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
+  //     tourPlanPO.expectVisible();
+  //     tourPlanPO.theThingPO.expectName(tourPlan.name);
+  //     if (state.name === ImitationTourPlan.states.editing.name) {
+  //       tourPlanPO.theThingPO.expectActionButton(
+  //         ImitationTourPlan.actions['send-application']
+  //       );
+  //     } else {
+  //       tourPlanPO.theThingPO.expectNoActionButton(
+  //         ImitationTourPlan.actions['send-application']
+  //       );
+  //     }
+  //   });
+  //   cy.visit(`${ImitationTourPlan.routePath}/${tourPlanNotMine.id}`);
+  //   tourPlanPO.expectVisible();
+  //   tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.editing);
+  //   tourPlanPO.theThingPO.expectNoActionButton(
+  //     ImitationTourPlan.actions['send-application']
+  //   );
+  // });
 
-  it('Can withdraw tour-plan to editing only if admin and state applied', () => {
-    theMockDatabase.setAdmins([]);
-    cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
-      const tourPlan = tourPlansByState[state.name];
-      cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
-      tourPlanPO.expectVisible();
-      tourPlanPO.theThingPO.expectNoActionButton(
-        ImitationTourPlan.actions['cancel-application']
-      );
-    });
-    getCurrentUser().then(user => theMockDatabase.setAdmins([user.id]));
-    cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
-      const tourPlan = tourPlansByState[state.name];
-      cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
-      tourPlanPO.expectVisible();
-      if (state.name === ImitationTourPlan.states.applied.name) {
-        tourPlanPO.theThingPO.expectActionButton(
-          ImitationTourPlan.actions['cancel-application']
-        );
-      } else {
-        tourPlanPO.theThingPO.expectNoActionButton(
-          ImitationTourPlan.actions['cancel-application']
-        );
-      }
-    });
-  });
+  // it('Can withdraw tour-plan to editing only if admin and state applied', () => {
+  //   theMockDatabase.setAdmins([]);
+  //   cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
+  //     const tourPlan = tourPlansByState[state.name];
+  //     cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
+  //     tourPlanPO.expectVisible();
+  //     tourPlanPO.theThingPO.expectNoActionButton(
+  //       ImitationTourPlan.actions['cancel-application']
+  //     );
+  //   });
+  //   getCurrentUser().then(user => theMockDatabase.setAdmins([user.id]));
+  //   cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
+  //     const tourPlan = tourPlansByState[state.name];
+  //     cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
+  //     tourPlanPO.expectVisible();
+  //     if (state.name === ImitationTourPlan.states.applied.name) {
+  //       tourPlanPO.theThingPO.expectActionButton(
+  //         ImitationTourPlan.actions['cancel-application']
+  //       );
+  //     } else {
+  //       tourPlanPO.theThingPO.expectNoActionButton(
+  //         ImitationTourPlan.actions['cancel-application']
+  //       );
+  //     }
+  //   });
+  // });
 
-  it('Only tour-plans of state "new", "editing" are modifiable', () => {
-    cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
-      const tourPlan = tourPlansByState[state.name];
-      cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
-      tourPlanPO.expectVisible();
-      tourPlanPO.theThingPO.expectName(tourPlan.name);
-      if (
-        state.name === ImitationTourPlan.states.new.name ||
-        state.name === ImitationTourPlan.states.editing.name
-      ) {
-        tourPlanPO.expectModifiable();
-      } else {
-        tourPlanPO.expectReadonly();
-      }
-    });
-  });
+  // it('Only tour-plans of state "new", "editing" are modifiable', () => {
+  //   cy.wrap(values(ImitationTourPlan.states)).each((state: TheThingState) => {
+  //     const tourPlan = tourPlansByState[state.name];
+  //     cy.visit(`/${ImitationTourPlan.routePath}/${tourPlan.id}`);
+  //     tourPlanPO.expectVisible();
+  //     tourPlanPO.theThingPO.expectName(tourPlan.name);
+  //     if (
+  //       state.name === ImitationTourPlan.states.new.name ||
+  //       state.name === ImitationTourPlan.states.editing.name
+  //     ) {
+  //       tourPlanPO.expectModifiable();
+  //     } else {
+  //       tourPlanPO.expectReadonly();
+  //     }
+  //   });
+  // });
 });

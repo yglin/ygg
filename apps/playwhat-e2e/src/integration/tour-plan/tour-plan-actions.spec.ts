@@ -100,7 +100,7 @@ describe('Tour-plan compatible actions', () => {
 
   it('State of saved tourPlan should be "editing"', () => {
     const tourPlan = MinimalTourPlan.clone();
-    tourPlan.name = '測試已儲存遊程的狀態=修改中';
+    tourPlan.name = `測試已儲存遊程的狀態=修改中_${Date.now()}`;
     siteNavigator.goto([ImitationTourPlan.routePath, 'create']);
     tourPlanPO.expectVisible();
     tourPlanPO.theThingPO.setValue(tourPlan);

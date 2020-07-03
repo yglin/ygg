@@ -36,6 +36,7 @@ testem.log
 .firebase/
 *.env.json
 /recycle-bin
+*.log
 
 # System Files
 .DS_Store
