@@ -278,7 +278,7 @@ export class TheThingFactoryService extends TheThingFactory
       );
       this.subscriptions.push(
         this.theThingSources$[id].remote$.subscribe(theThing => {
-          console.log(`Remote change of theThing ${theThing.id}`);
+          // console.log(`Remote change of theThing ${theThing.id}`);
           this.theThingSources$[id].local$.next(theThing);
         })
       );
@@ -465,7 +465,9 @@ export class TheThingFactoryService extends TheThingFactory
     const isOwner$ = theThing$.pipe(
       switchMap(theThing => this.authorizeService.isOwner$(theThing))
     );
-    const isAdmin$ = this.authorizeService.isAdmin$();
+    const isAdmin$ = this.authorizeService
+      .isAdmin$();
+      // .pipe(tap(isAdmin => console.log(`User admin changed: ${isAdmin}`)));
     return combineLatest([theThing$, isOwner$, isAdmin$]).pipe(
       map(([theThing, isOwner, isAdmin]) => {
         // console.log(
@@ -480,17 +482,17 @@ export class TheThingFactoryService extends TheThingFactory
             switch (permission) {
               case 'requireOwner':
                 if (!isOwner) {
-                  console.warn(
-                    `action ${action.id} requires owner but isOwner = ${isOwner}!!`
-                  );
+                  // console.warn(
+                  //   `action ${action.id} requires owner but isOwner = ${isOwner}!!`
+                  // );
                   return false;
                 }
                 break;
               case 'requireAdmin':
                 if (!isAdmin) {
-                  console.warn(
-                    `action ${action.id} requires owner but isAdmin = ${isAdmin}!!`
-                  );
+                  // console.warn(
+                  //   `action ${action.id} requires owner but isAdmin = ${isAdmin}!!`
+                  // );
                   return false;
                 }
                 break;
@@ -509,9 +511,9 @@ export class TheThingFactoryService extends TheThingFactory
                     }
                   }
                   if (!matchAny) {
-                    console.warn(
-                      `action ${action.id} require states: ${permission}`
-                    );
+                    // console.warn(
+                    //   `action ${action.id} require states: ${permission}`
+                    // );
                     return false;
                   }
                 } else if (typeof permission === 'function') {

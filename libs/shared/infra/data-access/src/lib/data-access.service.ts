@@ -5,7 +5,7 @@ import {
   AngularFirestoreCollection
 } from '@angular/fire/firestore';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { combineLatest, Observable, of, race, never } from 'rxjs';
+import { combineLatest, Observable, of, race, never, NEVER } from 'rxjs';
 import { map, catchError, filter, take, timeout } from 'rxjs/operators';
 import { LogService } from '@ygg/shared/infra/log';
 import { DataItem } from './data-item';
@@ -15,7 +15,7 @@ import { Query } from './query';
 import {
   DataAccessor,
   // SerializerJSON,
-  Entity,
+  Entity
   // DeserializerJSON
 } from '@ygg/shared/infra/core';
 
@@ -223,14 +223,13 @@ export class DataAccessService {
 
   getDataObject$<T>(path: string): Observable<T> {
     return race(
-      this.fireRealDB
-        .object<T>(path)
-        .valueChanges()
-        .pipe(
+      this.fireRealDB.object<T>(path).valueChanges(),
+      /*         .pipe(
           // tap(data => console.dir(data)),
           filter(data => !!data)
-        ),
-      never().pipe(timeout(this.config.dataLoadingTimeout))
+        ) */ NEVER.pipe(
+        timeout(this.config.dataLoadingTimeout)
+      )
     );
   }
 }

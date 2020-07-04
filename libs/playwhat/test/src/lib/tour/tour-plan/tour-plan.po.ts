@@ -357,7 +357,7 @@ export class TourPlanPageObjectCypress extends TourPlanPageObject {
     dialogPO.expectClosed();
   }
 
-  expectModifiable() {
+  expectEditable() {
     cy.get(this.getSelector('editButtons')).should('be.visible');
   }
 

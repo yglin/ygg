@@ -13,28 +13,35 @@ import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import {
   MinimalTourPlan,
   TourPlanFull,
-  TourPlanWithPlaysNoEquipment
+  TourPlanWithPlaysNoEquipment,
+  TourPlanWithPlaysAndEquipments
 } from './sample-tour-plan';
+import { waitForLogin } from '@ygg/shared/user/test';
+import { values } from 'lodash';
+import promisify from 'cypress-promise';
 
 describe('Edit exist tour-plans from my-tour-plans page', () => {
   const siteNavigator = new SiteNavigator();
-  const SampleTourPlans = [
-    MinimalTourPlan,
-    TourPlanFull,
-    TourPlanWithPlaysNoEquipment
-  ];
-  const SampleThings = SamplePlays.concat(SampleEquipments).concat(
-    SampleTourPlans
-  );
+  // const SampleTourPlans = [
+  //   MinimalTourPlan,
+  //   TourPlanWithPlaysNoEquipment
+  // ];
 
-  const cartPO = new ShoppingCartEditorPageObjectCypress();
-  const imageThumbnailListPO = new ImageThumbnailListPageObjectCypress();
+  // const cartPO = new ShoppingCartEditorPageObjectCypress();
+  // const imageThumbnailListPO = new ImageThumbnailListPageObjectCypress();
   const tourPlanPO = new TourPlanPageObjectCypress();
   const myTourPlansPO = new MyThingsDataTablePageObjectCypress(
     '',
     ImitationTourPlan
   );
-  const playPO = new TheThingPageObjectCypress('', ImitationPlay);
+  // const playPO = new TheThingPageObjectCypress('', ImitationPlay);
+  const tourPlan = TourPlanFull.clone();
+  tourPlan.name = `測試遊程(修改資料)_${Date.now()}`;
+  ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.new);
+  const SampleThings = SamplePlays.concat(SampleEquipments).concat([
+    MinimalTourPlan,
+    tourPlan
+  ]);
 
   before(() => {
     login().then(user => {
@@ -44,28 +51,22 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
         theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
       });
       cy.visit('/');
+      waitForLogin();
     });
   });
 
-  beforeEach(() => {
-    // login().then(user => {
-    //   // MinimalTourPlan.ownerId = user.id;
-    //   cy.wrap(SampleThings).each((thing: any) => {
-    //     thing.ownerId = user.id;
-    //     theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
-    //   });
-    // });
-    // Reset MinimalTourPlan
-    theMockDatabase.insert(
-      `${TheThing.collection}/${MinimalTourPlan.id}`,
-      MinimalTourPlan
-    );
-    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(MinimalTourPlan);
-    tourPlanPO.expectVisible();
-    // cy.visit('/');
-  });
+  // beforeEach(() => {
+  // login().then(user => {
+  //   // MinimalTourPlan.ownerId = user.id;
+  //   cy.wrap(SampleThings).each((thing: any) => {
+  //     thing.ownerId = user.id;
+  //     theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
+  //   });
+  // });
+  // Reset MinimalTourPlan
+  // tourPlanPO.expectVisible();
+  // cy.visit('/');
+  // });
 
   // afterEach(() => {
   //   theMockDatabase.clear();
@@ -82,10 +83,10 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
   });
 
   it('Edit exist tour-plan with full data', () => {
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.expectTheThing(MinimalTourPlan);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(MinimalTourPlan);
     tourPlanPO.expectVisible();
-    const newCells = TourPlanFull.getCellsByNames(
-      ImitationTourPlan.getOptionalCellNames()
-    );
     tourPlanPO.theThingPO.setValue(TourPlanFull);
     tourPlanPO.theThingPO.save(TourPlanFull);
     tourPlanPO.expectValue(TourPlanFull);
@@ -93,30 +94,95 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
 
   it('Edit tour-plan, remove optional cells', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanFull);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(tourPlan);
     tourPlanPO.expectVisible();
-    tourPlanPO.expectValue(TourPlanFull);
-    const cells2BDel: TheThingCell[] = TourPlanFull.getCellsByNames(
+    tourPlanPO.expectValue(tourPlan);
+    const cells2BDel: TheThingCell[] = tourPlan.getCellsByNames(
       ImitationTourPlan.getOptionalCellNames()
     );
     for (const cell of cells2BDel) {
       tourPlanPO.deleteCell(cell);
     }
-    tourPlanPO.theThingPO.save(TourPlanFull);
+    tourPlanPO.theThingPO.save(tourPlan);
 
-    // const resultTourPlan = TourPlanFull.clone();
+    // const resultTourPlan = tourPlan.clone();
     // resultTourPlan.deleteCells(cells2BDel);
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanFull);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(tourPlan);
     tourPlanPO.expectVisible();
     tourPlanPO.expectNoCells(cells2BDel);
   });
 
-  it('Can not modify if not owner', () => {
-    logout().then(() => {
-      cy.visit(`${ImitationTourPlan.routePath}/${MinimalTourPlan.id}`);
-      tourPlanPO.expectVisible();
-      tourPlanPO.expectReadonly();
-    });
+  it('Editable in state new', () => {
+    ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.new);
+    theMockDatabase
+      .insert(`${tourPlan.collection}/${tourPlan.id}`, tourPlan)
+      .then(() => {
+        tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.new);
+        tourPlanPO.expectEditable();
+      });
+  });
+
+  it('Editable in state editing', () => {
+    ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.editing);
+    theMockDatabase
+      .insert(`${tourPlan.collection}/${tourPlan.id}`, tourPlan)
+      .then(() => {
+        tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.editing);
+        tourPlanPO.expectEditable();
+      });
+  });
+
+  it('Readonly in other states', async () => {
+    const otherStates = values(ImitationTourPlan.states).filter(
+      state =>
+        !(
+          state.name === ImitationTourPlan.states.new.name ||
+          state.name === ImitationTourPlan.states.editing.name
+        )
+    );
+    for (const state of otherStates) {
+      await promisify(
+        cy.wrap(
+          new Cypress.Promise((resolve, reject) => {
+            cy.log(`Set state of ${tourPlan.id}: ${state.name}`);
+            ImitationTourPlan.setState(tourPlan, state);
+            // console.log(ImitationTourPlan.getState(tourPlan));
+            theMockDatabase
+              .insert(`${tourPlan.collection}/${tourPlan.id}`, tourPlan)
+              .then(() => {
+                tourPlanPO.theThingPO.expectState(state);
+                tourPlanPO.expectReadonly();
+                resolve();
+              });
+          }),
+          { timeout: 20000 }
+        )
+      );
+    }
+  });
+
+  it('Readonly if not owner', async () => {
+    tourPlan.ownerId = 'You not see me, am ghost';
+    // Readonly for all state
+    for (const state of values(ImitationTourPlan.states)) {
+      await promisify(
+        cy.wrap(
+          new Cypress.Promise((resolve, reject) => {
+            cy.log(`Set state of ${tourPlan.id}: ${state.name}`);
+            ImitationTourPlan.setState(tourPlan, state);
+            // console.log(ImitationTourPlan.getState(tourPlan));
+            theMockDatabase
+              .insert(`${tourPlan.collection}/${tourPlan.id}`, tourPlan)
+              .then(() => {
+                tourPlanPO.theThingPO.expectState(state);
+                tourPlanPO.expectReadonly();
+                resolve();
+              });
+          }),
+          { timeout: 20000 }
+        )
+      );
+    }
   });
 });

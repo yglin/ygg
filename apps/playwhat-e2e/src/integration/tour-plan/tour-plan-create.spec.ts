@@ -48,24 +48,29 @@ describe('Tour-plan create', () => {
         theMockDatabase.insert(`${thing.collection}/${thing.id}`, thing);
       });
       cy.visit('/');
+      waitForLogin();
     });
   });
 
-  beforeEach(() => {
-    cy.visit('/');
-    waitForLogin();
-    siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
-    // tourPlanBuilderPO.reset();
-    // siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
-  });
+  // beforeEach(() => {
+  //   siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
+  //   // tourPlanBuilderPO.reset();
+  //   // siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
+  // });
 
   after(() => {
-    // Goto my-things page and delete previously created things
-    const myThingsPO = new MyThingsPageObjectCypress();
-    siteNavigator.goto(['the-things', 'my'], myThingsPO);
-    cy.wait(3000);
-    myThingsPO.deleteAll();
+    // // Goto my-things page and delete previously created things
+    // const myThingsPO = new MyThingsPageObjectCypress();
+    // siteNavigator.goto(['the-things', 'my'], myThingsPO);
+    // cy.wait(3000);
+    // myThingsPO.deleteAll();
     theMockDatabase.clear();
+  });
+
+  it('State of just created tour-plan should be "new"', () => {
+    siteNavigator.goto([ImitationTourPlan.routePath, 'create']);
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.new);
   });
 
   it('Build a tour-plan with minimal required data fields: dateRange, numParticipants, contact', () => {
@@ -75,7 +80,12 @@ describe('Tour-plan create', () => {
     tourPlanPO.theThingPO.expectValue(MinimalTourPlan);
   });
 
+  it('State of saved tourPlan should be "editing"', () => {
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.editing);
+  });
+
   it('A tour-plan without user input name should have default name', () => {
+    siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
     const dateRangeCell = MinimalTourPlan.getCell(CellNames.dateRange);
     tourPlanPO.theThingPO.setCell(dateRangeCell);
     tourPlanPO.theThingPO.expectName(defaultTourPlanName(dateRangeCell.value));
@@ -122,6 +132,7 @@ describe('Tour-plan create', () => {
   });
 
   it('Build a tour-plan plus includes all optional data fields', () => {
+    siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
     tourPlanPO.theThingPO.setValue(TourPlanFull);
     tourPlanPO.theThingPO.save(TourPlanFull);
     tourPlanPO.expectShowAsPage();
@@ -129,6 +140,7 @@ describe('Tour-plan create', () => {
   });
 
   it('Can delete cells', () => {
+    siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
     const optionalCells = TourPlanFull.getCellsByNames(
       ImitationTourPlan.getOptionalCellNames()
     );
@@ -149,6 +161,7 @@ describe('Tour-plan create', () => {
   });
 
   it('Save tour-plan on leave page, restore on back', () => {
+    siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
     tourPlanPO.theThingPO.setValue(TourPlanFull);
     // goto other page and back immediately
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
@@ -165,6 +178,7 @@ describe('Tour-plan create', () => {
   });
 
   it('Show saved tour-plan in /tour-plans/my', () => {
+    siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
     const tourPlan = MinimalTourPlan.clone();
     tourPlan.name = '測試遊程（儲存後顯示在我的遊程清單中）';
     tourPlanPO.theThingPO.setValue(tourPlan);
@@ -174,6 +188,7 @@ describe('Tour-plan create', () => {
   });
 
   it('Require login when save', () => {
+    siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
     logout();
     // // Logout will redirect user back to home, cause re-render of tour-plan-builder
     // // So we wait several seconds here for tour-plan-builder to be stable

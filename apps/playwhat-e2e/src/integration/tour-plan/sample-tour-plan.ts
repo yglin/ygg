@@ -198,7 +198,7 @@ export function stubTourPlansByStateAndMonth(): {
     if (ImitationTourPlan.states.hasOwnProperty(name)) {
       const state = ImitationTourPlan.states[name];
 
-      const tourPlanThisMonth = TourPlanInApplication.clone();
+      const tourPlanThisMonth = TourPlanWithPlaysAndEquipments.clone();
       tourPlanThisMonth.name = `測試遊程， ${state.label}(這個月)`;
       tourPlanThisMonth.setState(
         ImitationOrder.stateName,
@@ -206,7 +206,7 @@ export function stubTourPlansByStateAndMonth(): {
         moment().toDate()
       );
 
-      const tourPlanLastMonth = TourPlanInApplication.clone();
+      const tourPlanLastMonth = TourPlanWithPlaysAndEquipments.clone();
       tourPlanLastMonth.name = `測試遊程， ${state.label}(上個月)`;
       tourPlanLastMonth.setState(
         ImitationOrder.stateName,
@@ -216,7 +216,7 @@ export function stubTourPlansByStateAndMonth(): {
           .toDate()
       );
 
-      const tourPlanTheOtherMonth = TourPlanInApplication.clone();
+      const tourPlanTheOtherMonth = TourPlanWithPlaysAndEquipments.clone();
       tourPlanTheOtherMonth.name = `測試遊程， ${state.label}(上上個月)`;
       tourPlanTheOtherMonth.setState(
         ImitationOrder.stateName,

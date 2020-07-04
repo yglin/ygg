@@ -125,7 +125,7 @@
     "cypress": "^4.9.0",
     "cypress-firebase": "^1.0.0",
     "cypress-mailosaur": "^1.0.5",
-    "cypress-promise": "^1.0.2",
+    "cypress-promise": "^1.1.0",
     "dotenv": "8.0.0",
     "eslint": "6.8.0",
     "eslint-plugin-jest-dom": "^1.1.3",
