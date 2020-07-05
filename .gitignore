@@ -37,6 +37,7 @@ testem.log
 *.env.json
 /recycle-bin
 *.log
+apps/*-e2e/data
 
 # System Files
 .DS_Store
