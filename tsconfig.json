@@ -30,7 +30,6 @@
       "@ygg/shared/infra/device-adapter": [
         "libs/shared/infra/device-adapter/src/index.ts"
       ],
-      "@ygg/firebase/*": [".firebase/*"],
       "@ygg/tags/core": ["libs/tags/core/src/index.ts"],
       "@ygg/tags/ui": ["libs/tags/ui/src/index.ts"],
       "@ygg/tags/admin": ["libs/tags/admin/src/index.ts"],
@@ -73,7 +72,9 @@
       "@ygg/shared/user/functions": ["libs/shared/user/functions/src/index.ts"],
       "@ygg/schedule/core": ["libs/schedule/core/src/index.ts"],
       "@ygg/schedule/ui": ["libs/schedule/ui/src/index.ts"],
-      "@ygg/schedule/test": ["libs/schedule/test/src/index.ts"]
+      "@ygg/schedule/test": ["libs/schedule/test/src/index.ts"],
+      "@ygg/firebase/*": [".firebase/*"],
+      "@ygg/env/*": [".env/*"]
     },
     "rootDir": "."
   },

@@ -1,9 +1,7 @@
 /// <reference types="@types/googlemaps" />
 import { Injectable, NgZone } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { flatMap, shareReplay, take } from 'rxjs/operators';
-
-import { SiteConfigService } from '@ygg/shared/infra/data-access';
+// @ts-ignore
+import { default as env } from '@ygg/env/environments.json';
 import { LogService } from '@ygg/shared/infra/log';
 
 class GoogleMapsApiSiteConfig {
@@ -21,7 +19,7 @@ export class GoogleMapsApiService {
   private googleMapsApi$: Promise<any>;
 
   constructor(
-    private siteConfigService: SiteConfigService,
+    // private siteConfigService: SiteConfigService,
     private ngZone: NgZone,
     private logService: LogService
   ) {
@@ -45,23 +43,30 @@ export class GoogleMapsApiService {
         };
 
         try {
-          const siteConfigs = await this.siteConfigService
-            .getSiteConfigurations()
-            .pipe(take(1))
-            .toPromise();
-          
-          if (!(siteConfigs && siteConfigs.google && GoogleMapsApiSiteConfig.isGoogleMapsApiSiteConfig(siteConfigs.google.mapsApi))) {
-            const error = new Error(`Incorrect config for GoogleMapsApi:\n ${JSON.stringify(siteConfigs)}`);
+          // const siteConfigs = await this.siteConfigService
+          //   .getSiteConfigurations()
+          //   .pipe(take(1))
+          //   .toPromise();
+
+          if (
+            !GoogleMapsApiSiteConfig.isGoogleMapsApiSiteConfig(
+              env.google.mapsApi
+            )
+          ) {
+            const error = new Error(
+              `Incorrect config for GoogleMapsApi:\n ${JSON.stringify(
+                env.google
+              )}`
+            );
             throw error;
           }
 
-          const url = `${siteConfigs.google.mapsApi.url}?key=${siteConfigs.google.mapsApi.key}&language=${siteConfigs.google.mapsApi.language}&callback=initGoogleMapsApi`;
+          const url = `${env.google.mapsApi.url}?key=${env.google.mapsApi.key}&language=${env.google.mapsApi.language}&callback=initGoogleMapsApi`;
           this.logService.info('Start loading google maps api...');
           const scriptElement = document.createElement('script');
           scriptElement.type = 'text/javascript';
           scriptElement.src = url;
           document.getElementsByTagName('head')[0].appendChild(scriptElement);
-
         } catch (error) {
           this.logService.error(error.message);
           reject(error);
@@ -82,13 +87,16 @@ export class GoogleMapsApiService {
     }
   }
 
-  public async getGoogleMapsApi(callback?: (any) => any ) {
-    return await this.googleMapsApi$.then(api => {
-      if (callback) {
-        this.ngZone.run(() => callback(api));
-      }
-      return Promise.resolve(api);
-    }, error => Promise.reject(error));
+  public async getGoogleMapsApi(callback?: (any) => any) {
+    return await this.googleMapsApi$.then(
+      api => {
+        if (callback) {
+          this.ngZone.run(() => callback(api));
+        }
+        return Promise.resolve(api);
+      },
+      error => Promise.reject(error)
+    );
   }
 
   // private getGoogleMapsApi(): Observable<any> {
