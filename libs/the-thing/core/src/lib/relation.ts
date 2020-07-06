@@ -11,6 +11,7 @@ export interface RelationRecord extends Entity {
   objectCollection: string;
   objectId: string;
   objectRole: string;
+  createAt: Date;
 }
 
 export interface ITheThingRelation {

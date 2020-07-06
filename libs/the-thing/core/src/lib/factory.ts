@@ -16,6 +16,7 @@ export abstract class TheThingFactory {
     imitation: TheThingImitation;
   }): Promise<TheThing>;
   abstract load$(id: string, collection: string): Observable<TheThing>;
+  abstract async load(id: string, collection: string): Promise<TheThing>;
 }
 
 // export class TheThingFactory {

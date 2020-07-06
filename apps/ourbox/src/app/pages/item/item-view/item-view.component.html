@@ -1,19 +1,14 @@
 <div class="item-view" *ngIf="item">
   <ygg-page-title icon="category">{{ item.name }}</ygg-page-title>
   <br />
-  <div
-    fxLayout="row"
-    fxLayoutAlign="space-between end"
-    fxLayoutGap="20px"
-    *ngIf="ImitationItem.isValid(item)"
-  >
+  <div *ngIf="ImitationItem.isValid(item)">
     <div>
       <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
         <h2>
           目前的保管者：
         </h2>
         <ygg-user-thumbnail
-          [id]="keeperId"
+          [id$]="holderId$"
           [showName]="false"
         ></ygg-user-thumbnail>
       </div>
@@ -22,16 +17,28 @@
         <h2>
           排隊中：
         </h2>
-        <ygg-user-thumbnail
-          *ngFor="let userId of standbyList"
-          [id]="userId"
-          [showName]="false"
-        ></ygg-user-thumbnail>
+        <div *ngFor="let userId of standbyList" class="stand-by">
+          <ygg-user-thumbnail
+            [id]="userId"
+            [showName]="false"
+          ></ygg-user-thumbnail>
+          <div class="cancel-request" *ngIf="isMe(userId)">
+            <button
+              mat-mini-fab
+              matTooltip="取消等候"
+              (click)="cancelRequest()"
+            >
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="!(amHolder || hasRequested)">
+          <button mat-fab matTooltip="我要借這個" (click)="askForIt()">
+            <mat-icon>loyalty</mat-icon>
+          </button>
+        </div>
       </div>
     </div>
-    <button mat-fab matTooltip="我要借這個" (click)="askForIt()">
-      <mat-icon>loyalty</mat-icon>
-    </button>
   </div>
   <br /><br />
   <the-thing [theThing$]="item$" [imitation]="ImitationItem"></the-thing>

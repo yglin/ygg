@@ -4,9 +4,14 @@ import { Observable } from 'rxjs';
 import { Query } from '@ygg/shared/infra/data-access';
 import { RelationCollection, RelationAccessor } from './relation-accessor';
 import { RelationRecord } from './relation';
+import { map } from 'rxjs/operators';
 
 export abstract class RelationFactory {
   constructor(protected relationAccessor: RelationAccessor) {}
+
+  constructId(subjectId: string, objectRole: string, objectId: string): string {
+    return `${subjectId}_${objectRole}_${objectId}`;
+  }
 
   async create(options: {
     subjectCollection: string;
@@ -16,8 +21,15 @@ export abstract class RelationFactory {
     objectRole: string;
   }) {
     try {
-      const id = `${options.subjectId}_${options.objectRole}_${options.objectId}`;
-      const relationRecord: RelationRecord = extend(options, { id });
+      const id = this.constructId(
+        options.subjectId,
+        options.objectRole,
+        options.objectId
+      );
+      const relationRecord: RelationRecord = extend(options, {
+        id,
+        createAt: new Date()
+      });
       await this.relationAccessor.save(relationRecord);
     } catch (error) {
       const wrapError = new Error(
@@ -25,6 +37,11 @@ export abstract class RelationFactory {
       );
       throw wrapError;
     }
+  }
+
+  async delete(subjectId: string, objectRole: string, objectId: string) {
+    const id = this.constructId(subjectId, objectRole, objectId);
+    return this.relationAccessor.delete(id);
   }
 
   findBySubjectAndRole$(
@@ -47,13 +64,24 @@ export abstract class RelationFactory {
     return this.relationAccessor.find$(queries);
   }
 
+  hasRelation$(
+    subjectId: string,
+    objectId: string,
+    objectRole: string
+  ): Observable<boolean> {
+    const id = this.constructId(subjectId, objectRole, objectId);
+    return this.relationAccessor
+      .load$(id)
+      .pipe(map(relationRecord => !!relationRecord));
+  }
+
   async hasRelation(
     subjectId: string,
     objectId: string,
     objectRole: string
   ): Promise<boolean> {
     try {
-      const id = `${subjectId}_${objectRole}_${objectId}`;
+      const id = this.constructId(subjectId, objectRole, objectId);
       const relationRecord = await this.relationAccessor.load(id);
       return !!relationRecord;
     } catch (error) {

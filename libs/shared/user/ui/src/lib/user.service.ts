@@ -9,14 +9,15 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, take } from 'rxjs/operators';
 
 import { UserError, UserErrorCode } from './error';
-import { User } from '@ygg/shared/user/core';
+import { User, UserAccessor } from '@ygg/shared/user/core';
 
 @Injectable({ providedIn: 'root' })
-export class UserService {
+export class UserService extends UserAccessor {
   collection = 'users';
   anonymousUsers: { [id: string]: User };
 
   constructor(private dataAccessService: DataAccessService) {
+    super();
     // Create 10 anonymous users
     this.anonymousUsers = {};
     while (size(this.anonymousUsers) < 10) {
@@ -30,7 +31,9 @@ export class UserService {
   }
 
   async get(id: string): Promise<User> {
-    return this.get$(id).pipe(take(1)).toPromise();
+    return this.get$(id)
+      .pipe(take(1))
+      .toPromise();
   }
 
   get$(id: string): Observable<User> {

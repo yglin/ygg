@@ -1,7 +1,8 @@
 import { Component, Input, OnChanges, OnInit, OnDestroy } from '@angular/core';
-import { User } from "@ygg/shared/user/core";
+import { User } from '@ygg/shared/user/core';
 import { UserService } from '../../user.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable, isObservable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'ygg-user-thumbnail',
@@ -9,6 +10,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./user-thumbnail.component.css']
 })
 export class UserThumbnailComponent implements OnInit, OnDestroy {
+  @Input() id$: Observable<string>;
   @Input() id: string;
   @Input() showName = true;
   user: User;
@@ -18,10 +20,16 @@ export class UserThumbnailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // console.log(`showName=${this.showName}`);
-    if (this.id) {
-      this.subscriptions.push(this.userService
-        .get$(this.id)
-        .subscribe(user => (this.user = user)));
+    if (isObservable(this.id$)) {
+      this.subscriptions.push(
+        this.id$
+          .pipe(switchMap(id => this.userService.get$(id)))
+          .subscribe(user => (this.user = user))
+      );
+    } else if (this.id) {
+      this.subscriptions.push(
+        this.userService.get$(this.id).subscribe(user => (this.user = user))
+      );
     }
   }
 

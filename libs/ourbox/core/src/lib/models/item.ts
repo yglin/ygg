@@ -1,5 +1,9 @@
 import { OmniTypes } from '@ygg/shared/omni-types/core';
-import { TheThingCellDefine, TheThingImitation } from '@ygg/the-thing/core';
+import {
+  TheThingCellDefine,
+  TheThingImitation,
+  Relationship
+} from '@ygg/the-thing/core';
 import { values } from 'lodash';
 
 export const ImitationItemCells = {
@@ -22,6 +26,14 @@ export const ImitationItem = new TheThingImitation().fromJSON({
   routePath: 'ouritems',
   cellsDef: values(ImitationItemCells)
 });
+
+export const RelationshipItemHolder = {
+  role: 'item holder'
+};
+
+export const RelationshipItemRequestBorrow = {
+  role: 'request borrow item'
+};
 
 // export class Item extends TheThing {
 //   static forge() {

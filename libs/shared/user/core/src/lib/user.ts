@@ -12,6 +12,8 @@ export enum UserState {
 }
 
 export class User implements Entity {
+  static collection = 'users';
+  
   id: string;
   isAnonymous: boolean;
   createAt: Date;

@@ -1,0 +1,15 @@
+.stand-by {
+  position: relative;
+}
+
+.cancel-request {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0.25;
+  cursor: pointer;
+}
+
+.cancel-request:hover {
+  opacity: 1;
+}

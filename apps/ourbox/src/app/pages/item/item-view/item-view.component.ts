@@ -4,9 +4,12 @@ import {
   AuthenticateService,
   AuthenticateUiService
 } from '@ygg/shared/user/ui';
-import { Observable, isObservable, Subscription } from 'rxjs';
+import { Observable, isObservable, Subscription, of, merge } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { ImitationItem } from '@ygg/ourbox/core';
+import { ItemFactoryService } from '../../../item-factory.service';
+import { tap, switchMap, map } from 'rxjs/operators';
+import { User } from '@ygg/shared/user/core';
 
 @Component({
   selector: 'ygg-item-view',
@@ -16,17 +19,17 @@ import { ImitationItem } from '@ygg/ourbox/core';
 export class ItemViewComponent implements OnInit, OnDestroy {
   @Input() item$: Observable<TheThing>;
   item: TheThing;
-  keeperId: string = 'cenKm7JFZTgqP307xmuE5SLIVtV2';
-  standbyList: string[] = [
-    'Wxnzu6zn8COBiS2UYtKEaOCUj3w2',
-    'okUwmB5of3QQceFYGOAoPw1HgWk1'
-  ];
+  holderId$: Observable<string>;
+  standbyList: string[] = [];
   subscriptions: Subscription[] = [];
   ImitationItem = ImitationItem;
+  amHolder = false;
+  hasRequested = false;
 
   constructor(
     private route: ActivatedRoute,
-    private authUiService: AuthenticateUiService
+    private authUiService: AuthenticateUiService,
+    private itemFactory: ItemFactoryService
   ) {}
 
   ngOnInit(): void {
@@ -36,7 +39,45 @@ export class ItemViewComponent implements OnInit, OnDestroy {
       // console.dir(this.item$);
     }
     if (isObservable(this.item$)) {
-      this.subscriptions.push(this.item$.subscribe(item => (this.item = item)));
+      const itemUpdate$ = this.item$.pipe(tap(item => (this.item = item)));
+
+      this.holderId$ = itemUpdate$.pipe(
+        switchMap(item => {
+          return this.itemFactory.getItemHolder$(item.id);
+        }),
+        map((holder: User) => holder.id)
+      );
+
+      const borrowers$ = itemUpdate$.pipe(
+        switchMap(item => {
+          if (item) {
+            return this.itemFactory.getItemRequestBorrowers$(item.id);
+          } else {
+            return of([]);
+          }
+        }),
+        tap(
+          (requestBorrorers: User[]) =>
+            (this.standbyList = requestBorrorers.map(rb => rb.id))
+        )
+      );
+
+      const amHolder$ = itemUpdate$.pipe(
+        switchMap(item => {
+          return this.itemFactory.isItemHolder$(item.id);
+        }),
+        tap((amHolder: boolean) => (this.amHolder = amHolder))
+      );
+
+      const hasRequested$ = itemUpdate$.pipe(
+        switchMap(item => this.itemFactory.hasRequestedBorrowItem$(item.id)),
+        tap(hasRequested => (this.hasRequested = hasRequested)),
+        // tap(hasRequested => console.log(`has requested: ${hasRequested}`))
+      );
+
+      this.subscriptions.push(
+        merge(itemUpdate$, borrowers$, amHolder$, hasRequested$).subscribe()
+      );
     }
   }
 
@@ -47,7 +88,14 @@ export class ItemViewComponent implements OnInit, OnDestroy {
   }
 
   async askForIt() {
-    const user = await this.authUiService.requireLogin();
-    this.standbyList.push(user.id);
+    this.itemFactory.requestBorrowItem(this.item.id);
+  }
+
+  isMe(userId: string): boolean {
+    return this.authUiService.isMe(userId);
+  }
+
+  cancelRequest() {
+    this.itemFactory.cancelRequest(this.item.id);
   }
 }

@@ -12,7 +12,11 @@ import {
 } from '@angular/router';
 import { ItemAccessService } from './item-access.service';
 import { TheThing } from '@ygg/the-thing/core';
-import { TheThingFactoryService } from '@ygg/the-thing/ui';
+import {
+  TheThingFactoryService,
+  RelationFactoryService
+} from '@ygg/the-thing/ui';
+import { UserService, AuthenticateUiService } from '@ygg/shared/user/ui';
 
 @Injectable({
   providedIn: 'root'
@@ -22,10 +26,21 @@ export class ItemFactoryService extends ItemFactory
   constructor(
     emcee: EmceeService,
     router: Router,
-    itemAccessor: ItemAccessService,
-    theThingFactory: TheThingFactoryService
+    authenticator: AuthenticateUiService,
+    // itemAccessor: ItemAccessService,
+    theThingFactory: TheThingFactoryService,
+    relationFactory: RelationFactoryService,
+    userAccessor: UserService
   ) {
-    super(emcee, router, itemAccessor, theThingFactory);
+    super(
+      emcee,
+      router,
+      authenticator,
+      // itemAccessor,
+      theThingFactory,
+      relationFactory,
+      userAccessor
+    );
   }
 
   resolve(
