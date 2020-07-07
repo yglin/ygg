@@ -70,7 +70,7 @@ describe('Approve scheduled events of tour-plan', () => {
       TourPlanScheduledOneEvent
     );
     tourPlanPO.expectVisible();
-    cy.pause();
+    // cy.pause();
     tourPlanPO.sendApprovalRequests();
     // @ts-ignore
     // cy.mailosaurGetMessage(serverId, {

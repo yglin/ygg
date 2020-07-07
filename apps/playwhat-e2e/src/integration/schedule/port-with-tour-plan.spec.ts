@@ -66,7 +66,7 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
       TourPlanUnscheduled
     );
     tourPlanPO.expectVisible();
-    tourPlanPO.runSchedule();
+    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
     schedulePO.expectVisible();
     schedulePO.expectDateRange(
       TourPlanUnscheduled.getCellValue(
@@ -81,7 +81,7 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
       TourPlanUnscheduled
     );
     tourPlanPO.expectVisible();
-    tourPlanPO.runSchedule();
+    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
     schedulePO.expectVisible();
     const dayTimeRange = TourPlanUnscheduled.getCellValue(
       CellDefinesTourPlan.dayTimeRange.name
@@ -96,7 +96,7 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
     tourPlanPO.expectVisible();
-    tourPlanPO.runSchedule();
+    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
     schedulePO.expectVisible();
     schedulePO.expectSchedule(ScheduleTrivial);
     schedulePO.submit();
@@ -111,7 +111,7 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
     tourPlanPO.expectVisible();
-    tourPlanPO.runSchedule();
+    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
     schedulePO.expectVisible();
     schedulePO.expectSchedule(ScheduleTrivial);
     schedulePO.submit();

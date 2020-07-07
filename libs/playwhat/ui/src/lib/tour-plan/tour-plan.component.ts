@@ -38,12 +38,12 @@ export class TourPlanComponent implements OnInit, OnDestroy {
   totalCharge: number = 0;
   eventIds: string[] = [];
   ImitationEvent = ImitationEvent;
-  actionSchedule = extend(ImitationTourPlan.actions['schedule'], {
-    granted: false
-  });
-  actionSAR = extend(ImitationTourPlan.actions['send-approval-requests'], {
-    granted: false
-  });
+  // actionSchedule = extend(ImitationTourPlan.actions['schedule'], {
+  //   granted: false
+  // });
+  // actionSAR = extend(ImitationTourPlan.actions['send-approval-requests'], {
+  //   granted: false
+  // });
 
   constructor(
     private theThingFactory: TheThingFactoryService,
@@ -79,15 +79,15 @@ export class TourPlanComponent implements OnInit, OnDestroy {
         )
         .subscribe()
     );
-    this.subscriptions.push(
-      merge(
-        ...[this.actionSchedule, this.actionSAR].map((action: any) =>
-          this.theThingFactory
-            .isActionGranted$(this.tourPlan.id, action, ImitationTourPlan)
-            .pipe(tap(isGranted => (action.granted = isGranted)))
-        )
-      ).subscribe()
-    );
+    // this.subscriptions.push(
+    //   merge(
+    //     ...[this.actionSchedule, this.actionSAR].map((action: any) =>
+    //       this.theThingFactory
+    //         .isActionGranted$(this.tourPlan.id, action, ImitationTourPlan)
+    //         .pipe(tap(isGranted => (action.granted = isGranted)))
+    //     )
+    //   ).subscribe()
+    // );
   }
 
   reset() {
@@ -104,11 +104,11 @@ export class TourPlanComponent implements OnInit, OnDestroy {
     }
   }
 
-  runAction(action: TheThingAction) {
-    this.theThingFactory.runAction(action, this.tourPlan);
-  }
+  // runAction(action: TheThingAction) {
+  //   this.theThingFactory.runAction(action, this.tourPlan);
+  // }
 
-  importToCart() {
-    this.tourPlanFactory.importToCart(this.tourPlan);
-  }
+  // importToCart() {
+  //   this.tourPlanFactory.importToCart(this.tourPlan);
+  // }
 }

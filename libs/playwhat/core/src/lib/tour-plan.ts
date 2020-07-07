@@ -211,19 +211,19 @@ ImitationTourPlan.actions = {
     id: 'schedule',
     tooltip: '為體驗活動編排行程表',
     icon: 'schedule',
-    permissions: ['state:applied', 'requireAdmin'],
-    display: {
-      position: 'custom'
-    }
+    permissions: ['state:applied', 'requireAdmin']
   },
   'send-approval-requests': {
     id: 'send-approval-requests',
     tooltip: '送出行程確認訊息給各活動負責人',
     icon: 'email',
-    permissions: ['state:applied', 'requireAdmin', hasSchedule],
-    display: {
-      position: 'custom'
-    }
+    permissions: ['state:applied', 'requireAdmin', hasSchedule]
+  },
+  'alter-shopping-cart': {
+    id: 'alter-shopping-cart',
+    tooltip: '修改預訂項目',
+    icon: 'shopping_cart',
+    permissions: ['state:new,editing', 'requireOwner']
   }
 };
 

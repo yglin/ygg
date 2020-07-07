@@ -133,7 +133,7 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     }
   }
 
-  importToCart(tourPlan: TheThing) {
+  alterShoppingCart(tourPlan: TheThing) {
     const purchases = tourPlan
       .getRelations(RelationPurchase.name)
       .map(r => Purchase.fromRelation(r));
@@ -404,6 +404,9 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
           break;
         case 'send-approval-requests':
           this.sendApprovalRequests(tourPlan);
+          break;
+        case 'alter-shopping-cart':
+          this.alterShoppingCart(tourPlan);
           break;
         default:
           break;

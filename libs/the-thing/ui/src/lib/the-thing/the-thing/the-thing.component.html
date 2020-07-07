@@ -1,11 +1,11 @@
 <div class="the-thing" *ngIf="theThing && imitation">
   <div
-    fxLayout="row"
+    fxLayout="row wrap"
     fxLayoutAlign="space-between center"
     fxLayoutGap="30px"
     [formGroup]="formGroup"
   >
-    <div>
+    <div class='flex-wrap-next'>
       <div>
         <ygg-omni-type-view-control
           class="name"
@@ -38,13 +38,8 @@
       fxLayoutGap="20px"
       *ngIf="isThingValid()"
     >
-      <div *ngFor="let actionButton of actionButtons">
-        <div
-          *ngIf="
-            actionButton.granted &&
-            !(actionButton.display && actionButton.display.position)
-          "
-        >
+      <ng-container *ngFor="let actionButton of actionButtons">
+        <div *ngIf="actionButton.granted">
           <button
             type="button"
             mat-fab
@@ -56,7 +51,7 @@
             <mat-icon>{{ actionButton.icon }}</mat-icon>
           </button>
         </div>
-      </div>
+      </ng-container>
       <div *ngIf="!readonly">
         <button
           type="button"
@@ -70,6 +65,9 @@
         </button>
       </div>
     </div>
+  </div>
+  <div class="projection-middle">
+    <ng-content select="[the-thing-projection-middle]"></ng-content>
   </div>
   <div [formGroup]="formGroupCells" class="cells">
     <div *ngFor="let cellName of orderedCellNames">

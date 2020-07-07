@@ -174,7 +174,9 @@ describe('Import/export purchases between cart and tour-plan', () => {
     );
     tourPlanPO.expectVisible();
     tourPlanPO.expectPurchases(purchases);
-    tourPlanPO.importToCart();
+    tourPlanPO.theThingPO.runAction(
+      ImitationTourPlan.actions['alter-shopping-cart']
+    );
     cartPO.expectVisible();
     cartPO.expectPurchases(purchases);
     cartPO.expectTotalCharge(totalCharge);
@@ -194,7 +196,9 @@ describe('Import/export purchases between cart and tour-plan', () => {
       TourPlanWithPlaysNoEquipment
     );
     tourPlanPO.expectVisible();
-    tourPlanPO.importToCart();
+    tourPlanPO.theThingPO.runAction(
+      ImitationTourPlan.actions['alter-shopping-cart']
+    );
     const emceePO = new EmceePageObjectCypress();
     emceePO.confirm('原本在購物車中的購買項目將會被清除，是否繼續？');
     // const confirmPO = new ConfirmDialogPageObjectCypress();
@@ -264,7 +268,9 @@ describe('Import/export purchases between cart and tour-plan', () => {
       TourPlanWithPlaysNoEquipment
     );
     tourPlanPO.expectVisible();
-    tourPlanPO.importToCart();
+    tourPlanPO.theThingPO.runAction(
+      ImitationTourPlan.actions['alter-shopping-cart']
+    );
     cartPO.expectVisible();
     cy.wrap(removePurchases).each((p: Purchase) => {
       cartPO.removePurchase(p);
