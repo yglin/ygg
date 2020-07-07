@@ -116,6 +116,11 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       cellsDef?: TheThingCellDefine[];
       displays?: ImitationDisplayConfig;
       filter?: TheThingFilter;
+      stateName?: string;
+      states?: { [name: string]: TheThingState };
+      creators?: TheThingCreator[];
+      cellsOrder?: string[];
+      actions?: { [id: string]: TheThingAction };
       [key: string]: any;
     } = {}
   ) {

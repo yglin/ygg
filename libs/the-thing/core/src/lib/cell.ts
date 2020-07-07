@@ -82,6 +82,9 @@ export class TheThingCell {
         case 'location':
           this.value = new Location().fromJSON(data.value);
           break;
+        case 'datetime':
+          this.value = new Date(data.value);
+          break;
         case 'date-range':
           this.value = new DateRange().fromJSON(data.value);
           break;

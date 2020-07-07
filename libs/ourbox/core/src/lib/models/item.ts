@@ -2,7 +2,7 @@ import { OmniTypes } from '@ygg/shared/omni-types/core';
 import {
   TheThingCellDefine,
   TheThingImitation,
-  Relationship
+  TheThingState
 } from '@ygg/the-thing/core';
 import { values } from 'lodash';
 
@@ -19,12 +19,36 @@ export const ImitationItemCells = {
   })
 };
 
-export const ImitationItem = new TheThingImitation().fromJSON({
+export const ImitationItemStates: { [name: string]: TheThingState } = {
+  new: {
+    name: 'new',
+    label: '新建立',
+    value: 10
+  },
+  editing: {
+    name: 'editing',
+    label: '修改中',
+    value: 30
+  },
+  available: {
+    name: 'available',
+    label: '開放索取',
+    value: 100
+  },
+  transfer: {
+    name: 'transfer',
+    label: '正在讓渡',
+    value: 110
+  }
+};
+
+export const ImitationItem = new TheThingImitation({
   collection: 'ourbox-items',
   id: 'ourbox-item',
   name: '我們的寶物',
   routePath: 'ouritems',
-  cellsDef: values(ImitationItemCells)
+  cellsDef: values(ImitationItemCells),
+  states: ImitationItemStates
 });
 
 export const RelationshipItemHolder = {

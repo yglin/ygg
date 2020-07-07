@@ -10,6 +10,7 @@ import { ImitationItem } from '@ygg/ourbox/core';
 import { ItemFactoryService } from '../../../item-factory.service';
 import { tap, switchMap, map } from 'rxjs/operators';
 import { User } from '@ygg/shared/user/core';
+import { ItemTransferFactoryService } from '../../../item-transfer-factory.service';
 
 @Component({
   selector: 'ygg-item-view',
@@ -29,7 +30,8 @@ export class ItemViewComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private authUiService: AuthenticateUiService,
-    private itemFactory: ItemFactoryService
+    private itemFactory: ItemFactoryService,
+    private itemTransferFactory: ItemTransferFactoryService
   ) {}
 
   ngOnInit(): void {
@@ -71,7 +73,7 @@ export class ItemViewComponent implements OnInit, OnDestroy {
 
       const hasRequested$ = itemUpdate$.pipe(
         switchMap(item => this.itemFactory.hasRequestedBorrowItem$(item.id)),
-        tap(hasRequested => (this.hasRequested = hasRequested)),
+        tap(hasRequested => (this.hasRequested = hasRequested))
         // tap(hasRequested => console.log(`has requested: ${hasRequested}`))
       );
 
@@ -97,5 +99,9 @@ export class ItemViewComponent implements OnInit, OnDestroy {
 
   cancelRequest() {
     this.itemFactory.cancelRequest(this.item.id);
+  }
+
+  giveToNext() {
+    this.itemTransferFactory.giveAway(this.item.id);
   }
 }

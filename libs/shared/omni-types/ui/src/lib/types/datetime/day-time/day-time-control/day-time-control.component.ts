@@ -87,8 +87,10 @@ export class DayTimeControlComponent
   }
 
   writeValue(value: DayTime) {
+    console.log(value);
     if (DayTime.isDayTime(value)) {
-      this.formGroup.patchValue(value);
+      this.formGroup.get('hour').setValue(value.hour, { emitEvent: false });
+      this.formGroup.get('minute').setValue(value.minute, { emitEvent: false });
     }
   }
 

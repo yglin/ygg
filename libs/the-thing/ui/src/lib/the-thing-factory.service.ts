@@ -8,7 +8,8 @@ import {
   Relationship,
   TheThingRelation,
   TheThingAction,
-  TheThingFactory
+  TheThingFactory,
+  Permission
 } from '@ygg/the-thing/core';
 import {
   AuthenticateService,
@@ -53,7 +54,8 @@ import {
   Resolve,
   Router
 } from '@angular/router';
-import { extend, values, isEmpty, get, keys } from 'lodash';
+import { extend, values, isEmpty, get, keys, every } from 'lodash';
+import { RelationFactoryService } from './relation-factory.service';
 
 export interface ITheThingCreateOptions {
   imitation?: string;
@@ -90,6 +92,7 @@ export class TheThingFactoryService extends TheThingFactory
     theThing: TheThing;
     action: TheThingAction;
   }> = new Subject();
+  isActionGranted$Cache: { [id: string]: Observable<boolean> } = {};
   subscriptions: Subscription[] = [];
 
   constructor(
@@ -99,7 +102,8 @@ export class TheThingFactoryService extends TheThingFactory
     private theThingAccessService: TheThingAccessService,
     private imitationAccessServcie: TheThingImitationAccessService,
     private emceeService: EmceeService,
-    private router: Router
+    private router: Router,
+    private relaitonFactory: RelationFactoryService
   ) {
     super();
   }
@@ -200,7 +204,7 @@ export class TheThingFactoryService extends TheThingFactory
       try {
         this.imitation = await race(
           this.imitationAccessServcie.get$(options.imitationId).pipe(take(1)),
-          never().pipe(timeout(config.loadTimeout))
+          NEVER.pipe(timeout(config.loadTimeout))
         ).toPromise();
       } catch (error) {
         const wrapError = new Error(
@@ -330,11 +334,19 @@ export class TheThingFactoryService extends TheThingFactory
   async setState(
     theThing: TheThing,
     imitation: TheThingImitation,
-    state: TheThingState
+    state: TheThingState,
+    options: {
+      force?: boolean;
+    } = {}
   ) {
     try {
-      const confirmMessage = stateConfirmMessage(theThing, state);
-      const confirm = await this.emceeService.confirm(confirmMessage);
+      let confirm: boolean;
+      if (options.force) {
+        confirm = true;
+      } else {
+        const confirmMessage = stateConfirmMessage(theThing, state);
+        confirm = await this.emceeService.confirm(confirmMessage);
+      }
       if (confirm) {
         imitation.setState(theThing, state);
         await this.theThingAccessService.upsert(theThing);
@@ -458,77 +470,181 @@ export class TheThingFactoryService extends TheThingFactory
     this.router.navigate(['/', 'the-things', routePath, 'create']);
   }
 
-  getPermittedActions$(
-    theThing$: Observable<TheThing>,
-    imitation: TheThingImitation
-  ): Observable<TheThingAction[]> {
-    const isOwner$ = theThing$.pipe(
-      switchMap(theThing => this.authorizeService.isOwner$(theThing))
-    );
-    const isAdmin$ = this.authorizeService
-      .isAdmin$();
-      // .pipe(tap(isAdmin => console.log(`User admin changed: ${isAdmin}`)));
-    return combineLatest([theThing$, isOwner$, isAdmin$]).pipe(
-      map(([theThing, isOwner, isAdmin]) => {
-        // console.log(
-        //   `theThing ${theThing.id}, theThing owner ${theThing.ownerId}, isOwner = ${isOwner}`
-        // );
-        return values(imitation.actions).filter(action => {
-          if (isEmpty(action.permissions)) {
-            return true;
-          }
-          for (const permission of action.permissions) {
-            // console.log(permission);
-            switch (permission) {
-              case 'requireOwner':
-                if (!isOwner) {
-                  // console.warn(
-                  //   `action ${action.id} requires owner but isOwner = ${isOwner}!!`
-                  // );
-                  return false;
-                }
-                break;
-              case 'requireAdmin':
-                if (!isAdmin) {
-                  // console.warn(
-                  //   `action ${action.id} requires owner but isAdmin = ${isAdmin}!!`
-                  // );
-                  return false;
-                }
-                break;
+  // getPermittedActions$(
+  //   theThing$: Observable<TheThing>,
+  //   imitation: TheThingImitation
+  // ): Observable<TheThingAction[]> {
+  //   const isOwner$ = theThing$.pipe(
+  //     switchMap(theThing => this.authorizeService.isOwner$(theThing))
+  //   );
+  //   const isAdmin$ = this.authorizeService.isAdmin$();
+  //   // .pipe(tap(isAdmin => console.log(`User admin changed: ${isAdmin}`)));
+  //   return combineLatest([theThing$, isOwner$, isAdmin$]).pipe(
+  //     map(([theThing, isOwner, isAdmin]) => {
+  //       // console.log(
+  //       //   `theThing ${theThing.id}, theThing owner ${theThing.ownerId}, isOwner = ${isOwner}`
+  //       // );
+  //       return values(imitation.actions).filter(action => {
+  //         if (isEmpty(action.permissions)) {
+  //           return true;
+  //         }
+  //         for (const permission of action.permissions) {
+  //           // console.log(permission);
+  //           switch (permission) {
+  //             case 'requireOwner':
+  //               if (!isOwner) {
+  //                 // console.warn(
+  //                 //   `action ${action.id} requires owner but isOwner = ${isOwner}!!`
+  //                 // );
+  //                 return false;
+  //               }
+  //               break;
+  //             case 'requireAdmin':
+  //               if (!isAdmin) {
+  //                 // console.warn(
+  //                 //   `action ${action.id} requires owner but isAdmin = ${isAdmin}!!`
+  //                 // );
+  //                 return false;
+  //               }
+  //               break;
 
-              default:
-                // permission indicate a specific state
-                if (typeof permission === 'string') {
-                  const permittedStates: string[] = permission.split(',');
-                  // console.log(permittedStates);
-                  let matchAny = false;
-                  for (const stateName of permittedStates) {
-                    const state = get(imitation.states, stateName, null);
-                    if (state && imitation.isState(theThing, state)) {
-                      matchAny = true;
-                      break;
-                    }
-                  }
-                  if (!matchAny) {
-                    // console.warn(
-                    //   `action ${action.id} require states: ${permission}`
-                    // );
-                    return false;
-                  }
-                } else if (typeof permission === 'function') {
-                  if (!permission(theThing)) {
-                    return false;
+  //             default:
+  //               // permission indicate a specific state
+  //               if (typeof permission === 'string') {
+  //                 const permittedStates: string[] = permission.split(',');
+  //                 // console.log(permittedStates);
+  //                 let matchAny = false;
+  //                 for (const stateName of permittedStates) {
+  //                   const state = get(imitation.states, stateName, null);
+  //                   if (state && imitation.isState(theThing, state)) {
+  //                     matchAny = true;
+  //                     break;
+  //                   }
+  //                 }
+  //                 if (!matchAny) {
+  //                   // console.warn(
+  //                   //   `action ${action.id} require states: ${permission}`
+  //                   // );
+  //                   return false;
+  //                 }
+  //               } else if (typeof permission === 'function') {
+  //                 if (!permission(theThing)) {
+  //                   return false;
+  //                 }
+  //               }
+  //               break;
+  //           }
+  //         }
+  //         // console.log(`action ${action.id} granted`);
+  //         return true;
+  //       });
+  //     })
+  //   );
+  // }
+
+  checkPermission$(
+    permission: Permission,
+    theThingId: string,
+    imitation: TheThingImitation
+  ): Observable<boolean> {
+    const theThing$ = this.load$(theThingId);
+    const user$ = this.authUiService.currentUser$;
+    return combineLatest([theThing$, user$]).pipe(
+      switchMap(([theThing, user]) => {
+        if (!theThing) {
+          return of(false);
+        }
+        if (!user) {
+          return of(false);
+        }
+        switch (permission) {
+          case 'requireOwner':
+            if (theThing.ownerId !== user.id) {
+              return of(false);
+            }
+            break;
+          case 'requireAdmin':
+            return this.authorizeService.isAdmin$(user.id);
+            break;
+
+          default:
+            // permission indicate a specific state
+            if (typeof permission === 'string') {
+              if (permission.startsWith('role')) {
+                const role = permission.split(':')[1];
+                return this.relaitonFactory.hasRelation$(
+                  theThing.id,
+                  user.id,
+                  role
+                );
+              } else if (permission.startsWith('state')) {
+                const states = permission.split(':')[1];
+                const permittedStates: string[] = states.split(',');
+                // console.log(permittedStates);
+                let matchAny = false;
+                for (const stateName of permittedStates) {
+                  const state = get(imitation.states, stateName, null);
+                  if (state && imitation.isState(theThing, state)) {
+                    matchAny = true;
+                    break;
                   }
                 }
-                break;
+                if (!matchAny) {
+                  // console.warn(
+                  //   `action ${action.id} require states: ${permission}`
+                  // );
+                  return of(false);
+                }
+              }
+            } else if (typeof permission === 'function') {
+              if (!permission(theThing)) {
+                return of(false);
+              }
             }
-          }
-          // console.log(`action ${action.id} granted`);
-          return true;
-        });
+            break;
+        }
+        return of(true);
+      }),
+      catchError(error => {
+        console.error(error);
+        return throwError(
+          new Error(
+            `Failed to check permission ${permission}, theThingId: ${theThingId}`
+          )
+        );
       })
     );
+  }
+
+  isActionGranted$(
+    theThingId: string,
+    action: TheThingAction,
+    imitation: TheThingImitation
+  ): Observable<boolean> {
+    const cacheId = `${action.id}_${theThingId}`;
+    // console.log(`FUCK!! MAMA~`);
+    if (!(cacheId in this.isActionGranted$Cache)) {
+      if (isEmpty(action.permissions)) {
+        // console.log(
+        //   `Action ${action.id} has no permissions, granted of course`
+        // );
+        this.isActionGranted$Cache[cacheId] = of(true);
+      } else {
+        const checkPermissions: Observable<boolean>[] = [];
+        for (const permission of action.permissions) {
+          checkPermissions.push(
+            this.checkPermission$(permission, theThingId, imitation)
+          );
+        }
+        this.isActionGranted$Cache[cacheId] = combineLatest(
+          checkPermissions
+        ).pipe(
+          map(permissionChecks => every(permissionChecks, Boolean)),
+          shareReplay(1)
+        );
+      }
+    }
+    return this.isActionGranted$Cache[cacheId];
   }
 
   runAction(action: TheThingAction, theThing: TheThing) {

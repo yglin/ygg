@@ -31,18 +31,29 @@
         <ygg-user-thumbnail [id]="theThing.ownerId"></ygg-user-thumbnail>
       </div>
     </div>
-    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px">
-      <div *ngFor="let action of actions">
-        <div *ngIf="isThingValid()">
+    <div
+      class="actions"
+      fxLayout="row"
+      fxLayoutAlign="end center"
+      fxLayoutGap="20px"
+      *ngIf="isThingValid()"
+    >
+      <div *ngFor="let actionButton of actionButtons">
+        <div
+          *ngIf="
+            actionButton.granted &&
+            !(actionButton.display && actionButton.display.position)
+          "
+        >
           <button
             type="button"
             mat-fab
             class="action"
-            [ngClass]="action.id"
-            [matTooltip]="action.tooltip"
-            (click)="runAction(action)"
+            [ngClass]="actionButton.id"
+            [matTooltip]="actionButton.tooltip"
+            (click)="runAction(actionButton)"
           >
-            <mat-icon>{{ action.icon }}</mat-icon>
+            <mat-icon>{{ actionButton.icon }}</mat-icon>
           </button>
         </div>
       </div>
@@ -51,7 +62,7 @@
           type="button"
           mat-fab
           class="save edit"
-          matTooltip="儲存體驗"
+          matTooltip="儲存"
           [disabled]="!isThingValid()"
           (click)="save()"
         >

@@ -45,6 +45,10 @@ import { LongTextViewComponent } from './types/long-text/long-text-view/long-tex
 import { LongTextControlComponent } from './types/long-text/long-text-control/long-text-control.component';
 import { TimeRangeViewComponent } from './types/datetime/time-range/time-range-view/time-range-view.component';
 import { TimeRangeControlComponent } from './types/datetime/time-range/time-range-control/time-range-control.component';
+import { DatetimeControlComponent } from './types/datetime/datetime/datetime-control/datetime-control.component';
+import { DatetimeViewComponent } from './types/datetime/datetime/datetime-view/datetime-view.component';
+import { DateControlComponent } from './types/datetime/date/date-control/date-control.component';
+import { DateViewComponent } from './types/datetime/date/date-view/date-view.component';
 
 @NgModule({
   imports: [
@@ -93,7 +97,11 @@ import { TimeRangeControlComponent } from './types/datetime/time-range/time-rang
     LongTextViewComponent,
     LongTextControlComponent,
     TimeRangeControlComponent,
-    TimeRangeViewComponent
+    TimeRangeViewComponent,
+    DatetimeControlComponent,
+    DatetimeViewComponent,
+    DateControlComponent,
+    DateViewComponent
   ],
   exports: [
     HtmlControlComponent,
@@ -122,7 +130,11 @@ import { TimeRangeControlComponent } from './types/datetime/time-range/time-rang
     TextControlComponent,
     OmniTypeControlComponent,
     OmniTypeViewComponent,
-    OmniTypeViewControlComponent
+    OmniTypeViewControlComponent,
+    DatetimeControlComponent,
+    DatetimeViewComponent,
+    DateControlComponent,
+    DateViewComponent
   ],
   entryComponents: [ImageUploaderComponent]
 })

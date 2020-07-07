@@ -6,9 +6,15 @@ import { BoardComponent } from './pages/board/board.component';
 import { BoxViewComponent } from './pages/box/box-view/box-view.component';
 import { ItemViewComponent } from './pages/item/item-view/item-view.component';
 import { BoxFactoryService } from './box-factory.service';
-import { ImitationItem } from '@ygg/ourbox/core';
+import {
+  ImitationItem,
+  ImitationItemTransferStates,
+  ImitationItemTransfer
+} from '@ygg/ourbox/core';
 import { ItemFactoryService } from './item-factory.service';
 import { MyBoxesComponent } from './pages/box/my-boxes/my-boxes.component';
+import { ItemTransferComponent } from './pages/item/item-transfer/item-transfer.component';
+import { ItemTransferFactoryService } from './item-transfer-factory.service';
 
 export const routes: Routes = [
   {
@@ -56,6 +62,18 @@ export const routes: Routes = [
         component: ItemViewComponent,
         resolve: {
           item$: ItemFactoryService
+        }
+      }
+    ]
+  },
+  {
+    path: ImitationItemTransfer.routePath,
+    children: [
+      {
+        path: ':id',
+        component: ItemTransferComponent,
+        resolve: {
+          itemTransfer$: ItemTransferFactoryService
         }
       }
     ]

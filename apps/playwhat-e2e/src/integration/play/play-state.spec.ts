@@ -135,10 +135,12 @@ describe('Manipulate play states', () => {
   });
 
   it('Send request for state "assess" of play', () => {
-    const playForRequestAssess = playsByState[ImitationPlay.states.editing.name];
+    const playForRequestAssess =
+      playsByState[ImitationPlay.states.editing.name];
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
     myPlayListPO.theThingDataTablePO.gotoTheThingView(playForRequestAssess);
     playPO.expectVisible();
+    // cy.pause();
     playPO.runAction(ImitationPlay.actions['request-assess']);
     const emceePO = new EmceePageObjectCypress();
     emceePO.confirm(

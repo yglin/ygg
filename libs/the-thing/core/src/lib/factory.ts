@@ -1,6 +1,7 @@
 import { Subject, Observable } from 'rxjs';
 import { TheThing } from './the-thing';
 import { TheThingImitation } from './imitation';
+import { TheThingState } from './state';
 
 // type InputAction = 'meta' | 'add-cell' | 'create' | 'save' | 'load';
 
@@ -17,6 +18,14 @@ export abstract class TheThingFactory {
   }): Promise<TheThing>;
   abstract load$(id: string, collection: string): Observable<TheThing>;
   abstract async load(id: string, collection: string): Promise<TheThing>;
+  abstract async setState(
+    thing: TheThing,
+    imitation: TheThingImitation,
+    state: TheThingState,
+    options?: {
+      force?: boolean
+    }
+  );
 }
 
 // export class TheThingFactory {

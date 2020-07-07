@@ -17,12 +17,16 @@ import {
   TheThingRelation,
   TheThingAction
 } from '@ygg/the-thing/core';
-import { isEmpty, values, remove } from 'lodash';
-import { Observable, Subscription, merge } from 'rxjs';
+import { isEmpty, values, remove, extend } from 'lodash';
+import { Observable, Subscription, merge, combineLatest } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { TheThingImitationViewInterface } from '..';
 import { CellCreatorComponent, validateCellRequired } from '../../cell';
 import { TheThingFactoryService } from '../../the-thing-factory.service';
+
+interface ActionButton extends TheThingAction {
+  granted: boolean;
+}
 
 @Component({
   selector: 'the-thing',
@@ -46,7 +50,7 @@ export class TheThingComponent implements OnInit, OnDestroy {
   };
   orderedCellNames: string[] = [];
   relationsMap: { [name: string]: TheThingRelation[] } = {};
-  actions: TheThingAction[] = [];
+  actionButtons: ActionButton[] = [];
   actions$Subscription: Subscription;
 
   constructor(
@@ -72,7 +76,7 @@ export class TheThingComponent implements OnInit, OnDestroy {
     );
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     if (this.id) {
       this.resetFocus(this.theThingFactory.load$(this.id));
     }
@@ -160,15 +164,41 @@ export class TheThingComponent implements OnInit, OnDestroy {
     if (this.actions$Subscription) {
       this.actions$Subscription.unsubscribe();
     }
-    if (theThing$ && this.imitation) {
-      this.actions$Subscription = this.theThingFactory
-        .getPermittedActions$(theThing$, this.imitation)
-        .subscribe(actions => {
-          this.actions = actions.filter(
-            action => !(action && action.display && action.display.position)
-          );
-          // console.dir(this.actions);
-        });
+    if (theThing$ && this.imitation && !isEmpty(this.imitation.actions)) {
+      this.actionButtons = values(this.imitation.actions).map(action =>
+        extend(action, { granted: false })
+      );
+      this.actions$Subscription = theThing$
+        .pipe(
+          // tap(() => console.log(`Hi~ MAMA!!`)),
+          switchMap(theThing => {
+            const actionPermissionChecks: Observable<any>[] = [];
+            for (const actionButton of this.actionButtons) {
+              actionPermissionChecks.push(
+                this.theThingFactory
+                  .isActionGranted$(theThing.id, actionButton, this.imitation)
+                  .pipe(
+                    // tap(isGranted =>
+                    //   console.log(
+                    //     `Action ${actionButton.id} is granted: ${isGranted}`
+                    //   )
+                    // ),
+                    tap(isGranted => (actionButton.granted = isGranted))
+                  )
+              );
+            }
+            return merge(...actionPermissionChecks);
+          })
+        )
+        .subscribe();
+      // this.actions$Subscription = this.theThingFactory
+      //   .getPermittedActions$(theThing$, this.imitation)
+      //   .subscribe(actions => {
+      //     this.actions = actions.filter(
+      //       action => !(action && action.display && action.display.position)
+      //     );
+      //     // console.dir(this.actions);
+      //   });
     }
   }
 
@@ -176,8 +206,12 @@ export class TheThingComponent implements OnInit, OnDestroy {
     for (const subcsription of this.subscriptions) {
       subcsription.unsubscribe();
     }
-    this.focusSubscription.unsubscribe();
-    this.actions$Subscription.unsubscribe();
+    if (this.focusSubscription) {
+      this.focusSubscription.unsubscribe();
+    }
+    if (this.actions$Subscription) {
+      this.actions$Subscription.unsubscribe();
+    }
   }
 
   addCellControl(cell: TheThingCell, options: { required?: boolean } = {}) {

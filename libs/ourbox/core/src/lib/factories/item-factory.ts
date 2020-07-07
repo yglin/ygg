@@ -17,7 +17,7 @@ import {
 import { take, filter, switchMap, tap, catchError, map } from 'rxjs/operators';
 import { ItemAccessor } from './item-accessor';
 import { User, UserAccessor, Authenticator } from '@ygg/shared/user/core';
-import { isEmpty } from 'lodash';
+import { isEmpty, first } from 'lodash';
 
 export class ItemFactory {
   // creatingPool: {

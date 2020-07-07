@@ -33,7 +33,7 @@
   <div class="schedule">
     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
       <h2>行程表</h2>
-      <div *ngIf="canSchedule">
+      <div *ngIf="actionSchedule.granted">
         <button
           type="button"
           mat-fab
@@ -44,7 +44,7 @@
           <mat-icon>{{ actionSchedule.icon }}</mat-icon>
         </button>
       </div>
-      <div *ngIf="canSendApprovalRequests">
+      <div *ngIf="actionSAR.granted">
         <button
           type="button"
           mat-fab

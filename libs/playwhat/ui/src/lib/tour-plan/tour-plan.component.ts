@@ -10,7 +10,7 @@ import {
   RelationshipScheduleEvent
 } from '@ygg/playwhat/core';
 import { TourPlanFactoryService } from '../tour-plan-factory.service';
-import { Subscription, of } from 'rxjs';
+import { Subscription, of, merge, Observable } from 'rxjs';
 import { ShoppingCartService } from '@ygg/shopping/ui';
 import {
   RelationPurchase,
@@ -19,7 +19,7 @@ import {
 } from '@ygg/shopping/core';
 import { switchMap, tap, filter } from 'rxjs/operators';
 import { AuthorizeService } from '@ygg/shared/user/ui';
-import { isEmpty, find } from 'lodash';
+import { isEmpty, find, extend } from 'lodash';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import { TheThingFactoryService } from '@ygg/the-thing/ui';
@@ -38,10 +38,12 @@ export class TourPlanComponent implements OnInit, OnDestroy {
   totalCharge: number = 0;
   eventIds: string[] = [];
   ImitationEvent = ImitationEvent;
-  canSchedule = false;
-  actionSchedule = ImitationTourPlan.actions['schedule'];
-  canSendApprovalRequests = false;
-  actionSAR = ImitationTourPlan.actions['send-approval-requests'];
+  actionSchedule = extend(ImitationTourPlan.actions['schedule'], {
+    granted: false
+  });
+  actionSAR = extend(ImitationTourPlan.actions['send-approval-requests'], {
+    granted: false
+  });
 
   constructor(
     private theThingFactory: TheThingFactoryService,
@@ -78,18 +80,13 @@ export class TourPlanComponent implements OnInit, OnDestroy {
         .subscribe()
     );
     this.subscriptions.push(
-      this.theThingFactory
-        .getPermittedActions$(this.tourPlanFactory.tourPlan$, ImitationTourPlan)
-        .subscribe((actions: TheThingAction[]) => {
-          this.canSchedule = !!find(
-            actions,
-            action => action.id === this.actionSchedule.id
-          );
-          this.canSendApprovalRequests = !!find(
-            actions,
-            action => (action.id === this.actionSAR.id)
-          );
-        })
+      merge(
+        ...[this.actionSchedule, this.actionSAR].map((action: any) =>
+          this.theThingFactory
+            .isActionGranted$(this.tourPlan.id, action, ImitationTourPlan)
+            .pipe(tap(isGranted => (action.granted = isGranted)))
+        )
+      ).subscribe()
     );
   }
 

@@ -8,6 +8,9 @@
       <div *ngSwitchCase="'longtext'">
         <ygg-long-text-view [longText]="value"></ygg-long-text-view>
       </div>
+      <div *ngSwitchCase="'datetime'">
+        <ygg-datetime-view [value]="value"></ygg-datetime-view>
+      </div>
       <div *ngSwitchCase="'date-range'">
         <ygg-date-range-view [dateRange]="value"></ygg-date-range-view>
       </div>

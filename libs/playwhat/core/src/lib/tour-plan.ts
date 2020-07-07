@@ -181,37 +181,37 @@ ImitationTourPlan.actions = {
     id: 'send-application',
     tooltip: '將此遊程計畫送出管理者審核',
     icon: 'send',
-    permissions: ['editing', 'requireOwner']
+    permissions: ['state:editing', 'requireOwner']
   },
   'cancel-application': {
     id: 'cancel-application',
     tooltip: '取消此遊程計畫的審核申請',
     icon: 'undo',
-    permissions: ['applied', 'requireAdmin']
+    permissions: ['state:applied', 'requireAdmin']
   },
   'approve-available': {
     id: 'approve-available',
     tooltip: '標記此遊程計畫可成行',
     icon: 'fact_check',
-    permissions: ['applied, waitApproval', 'requireAdmin']
+    permissions: ['state:applied,waitApproval', 'requireAdmin']
   },
   'confirm-paid': {
     id: 'confirm-paid',
     tooltip: '標記此遊程的款項已付清',
     icon: 'payment',
-    permissions: ['approved', 'requireAdmin']
+    permissions: ['state:approved', 'requireAdmin']
   },
   'confirm-completed': {
     id: 'confirm-completed',
     tooltip: '標記此遊程的所有活動流程已完成',
     icon: 'done_all',
-    permissions: ['paid', 'requireAdmin']
+    permissions: ['state:paid', 'requireAdmin']
   },
   schedule: {
     id: 'schedule',
     tooltip: '為體驗活動編排行程表',
     icon: 'schedule',
-    permissions: ['applied', 'requireAdmin'],
+    permissions: ['state:applied', 'requireAdmin'],
     display: {
       position: 'custom'
     }
@@ -220,7 +220,7 @@ ImitationTourPlan.actions = {
     id: 'send-approval-requests',
     tooltip: '送出行程確認訊息給各活動負責人',
     icon: 'email',
-    permissions: ['applied', 'requireAdmin', hasSchedule],
+    permissions: ['state:applied', 'requireAdmin', hasSchedule],
     display: {
       position: 'custom'
     }

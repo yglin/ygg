@@ -10,6 +10,7 @@ import {
   Contact,
   TimeRange
 } from '../types';
+import * as moment from 'moment';
 
 export type OmniTypeComparator = (a: any, b: any, isAsc: boolean) => number;
 
@@ -23,6 +24,7 @@ export type OmniTypeID =
   | 'email'
   | 'address'
   | 'location'
+  | 'datetime'
   | 'date-range'
   | 'time-range'
   | 'day-time-range'
@@ -145,6 +147,19 @@ export const OmniTypes: { [id: string]: OmniType } = {
     label: '地點',
     forge: (options: any = {}): Location => {
       return Location.forge();
+    },
+    default: null
+  },
+  datetime: {
+    id: 'datetime',
+    label: '日期＋時間',
+    forge: (options: any = {}): Date => {
+      return moment()
+        .add(random(30), 'day')
+        .toDate();
+    },
+    comparator: (a: Date, b: Date, isAsc: boolean) => {
+      return (a.getTime() - b.getTime()) * (isAsc ? 1 : -1);
     },
     default: null
   },

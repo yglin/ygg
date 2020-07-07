@@ -9,6 +9,11 @@
           [formControl]="formControl"
         ></ygg-long-text-control>
       </div>
+      <div *ngSwitchCase="'datetime'">
+        <ygg-datetime-control
+          [formControl]="formControl"
+        ></ygg-datetime-control>
+      </div>
       <div *ngSwitchCase="'date-range'">
         <ygg-date-range-control
           [formControl]="formControl"

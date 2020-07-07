@@ -22,6 +22,7 @@ import { ItemThumbnailComponent } from './pages/item/item-thumbnail/item-thumbna
 import { BoxFactoryService } from './box-factory.service';
 import { noop } from 'lodash';
 import { MyBoxesComponent } from './pages/box/my-boxes/my-boxes.component';
+import { ItemTransferComponent } from './pages/item/item-transfer/item-transfer.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { MyBoxesComponent } from './pages/box/my-boxes/my-boxes.component';
     BoxViewComponent,
     ItemViewComponent,
     ItemThumbnailComponent,
-    MyBoxesComponent
+    MyBoxesComponent,
+    ItemTransferComponent
   ],
   imports: [
     BrowserModule,

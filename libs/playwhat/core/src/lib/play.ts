@@ -146,24 +146,24 @@ ImitationPlay.actions = {
     id: 'request-assess',
     icon: 'fact_check',
     tooltip: '送出審核，審核成功即能上架販售',
-    permissions: ['requireOwner', 'editing']
+    permissions: ['requireOwner', 'state:editing']
   },
   'approve-for-sale': {
     id: 'approve-for-sale',
     icon: 'shopping_cart',
     tooltip: '上架體驗，作為商品可公開訂購',
-    permissions: ['requireAdmin', 'assess']
+    permissions: ['requireAdmin', 'state:assess']
   },
   'back-to-editing': {
     id: 'back-to-editing',
     icon: 'undo',
     tooltip: '將體驗撤回修改',
-    permissions: ['requireAdmin', 'assess,forSale']
+    permissions: ['requireAdmin', 'state:assess,forSale']
   }
 };
 
 ImitationPlay.actions[PurchaseAction.id] = extend(PurchaseAction, {
-  permissions: ['forSale']
+  permissions: ['state:forSale']
 });
 
 ImitationPlay.canModify = (theThing: TheThing): boolean => {

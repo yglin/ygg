@@ -1,0 +1,13 @@
+<div class="date-control">
+  <mat-form-field>
+    <input
+      matInput
+      [matDatepicker]="pickerDate"
+      placeholder="選擇日期"
+      class="date"
+      [formControl]="formControl"
+    />
+    <mat-datepicker-toggle matSuffix [for]="pickerDate"></mat-datepicker-toggle>
+    <mat-datepicker #pickerDate></mat-datepicker>
+  </mat-form-field>
+</div>

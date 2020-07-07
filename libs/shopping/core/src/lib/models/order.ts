@@ -25,7 +25,7 @@ const states: TheThingState[] = [
     label: '新建立',
     value: 10,
     icon: 'undo',
-    permissions: ['isOwner', 'applied'],
+    permissions: ['requireOwner', 'state:applied'],
     confirmMessage: (theThing: TheThing) =>
       `取消訂單 ${theThing.name} 回到新建立狀態？`
   },
@@ -39,7 +39,7 @@ const states: TheThingState[] = [
     label: '已提交',
     value: 30,
     icon: 'send',
-    permissions: ['isOwner', 'new'],
+    permissions: ['requireOwner', 'state:new'],
     confirmMessage: (theThing: TheThing) => `送出訂單 ${theThing.name} 的申請？`
   },
   {
@@ -47,7 +47,7 @@ const states: TheThingState[] = [
     label: '已付款',
     value: 50,
     icon: 'payment',
-    permissions: ['isAdmin', 'applied'],
+    permissions: ['requireAdmin', 'state:applied'],
     confirmMessage: (theThing: TheThing) =>
       `已收到訂單 ${theThing.name} 的所有款項？`
   },
@@ -56,7 +56,7 @@ const states: TheThingState[] = [
     label: '已完成',
     value: 100,
     icon: 'done_all',
-    permissions: ['isAdmin', 'paid'],
+    permissions: ['requireAdmin', 'state:paid'],
     confirmMessage: (theThing: TheThing) =>
       `此訂單 ${theThing.name} 的所有活動及商品已交付完成？`
   }
