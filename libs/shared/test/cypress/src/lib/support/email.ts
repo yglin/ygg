@@ -1,8 +1,14 @@
+import { defaults } from 'lodash';
+
 const MAX_RETRY = 5;
+export const testEmail = `yggy.${Cypress.env('MAILOSAUR_SERVER_ID')}@mailosaur.io`;
 
 Cypress.Commands.add(
   'waitEmail',
   (search: any): Cypress.Chainable<any> => {
+    search = defaults(search, {
+      sentTo: testEmail
+    })
     let retry = -1;
 
     function pollingMailosaur(): Cypress.Chainable<any> {
@@ -10,9 +16,7 @@ Cypress.Commands.add(
       return cy
         .request({
           method: 'POST',
-          url: `https://mailosaur.com/api/messages/await?server=${Cypress.env(
-            'MAILOSAUR_SERVER_ID'
-          )}`,
+          url: `https://mailosaur.com/api/messages/await?server=${Cypress.env('MAILOSAUR_SERVER_ID')}`,
           headers: {
             Authorization: `Basic ${btoa(Cypress.env('MAILOSAUR_API_KEY'))}`
           },

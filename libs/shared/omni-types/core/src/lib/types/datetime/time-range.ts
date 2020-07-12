@@ -1,4 +1,4 @@
-import { SerializableJSON } from '@ygg/shared/infra/data-access';
+import { SerializableJSON } from '@ygg/shared/infra/core';
 import { isArray, random } from 'lodash';
 import * as moment from 'moment';
 import { DATE_FORMATS } from './format';

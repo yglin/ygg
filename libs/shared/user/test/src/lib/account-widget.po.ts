@@ -17,9 +17,9 @@ export class AccountWidgetPageObjectCypress extends AccountWidgetPageObject {
       .should('exist');
   }
 
-  expectLoggedOut(): void {
-    cy.get(this.getSelector('loggedOutWidget'), { timeout: 10000 }).should(
-      'be.visible'
-    );
+  expectLoggedOut(): Cypress.Chainable<any> {
+    return cy
+      .get(this.getSelector('loggedOutWidget'), { timeout: 10000 })
+      .should('be.visible');
   }
 }

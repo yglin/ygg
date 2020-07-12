@@ -1,6 +1,6 @@
 import { isArray, range, random, sample, isEmpty } from 'lodash';
 import { Image } from '../image/image';
-import { toJSONDeep, SerializableJSON } from '@ygg/shared/infra/data-access';
+import { toJSONDeep, SerializableJSON } from '@ygg/shared/infra/core';
 
 export class Album implements SerializableJSON {
   static clone = Album.fromAlbum;

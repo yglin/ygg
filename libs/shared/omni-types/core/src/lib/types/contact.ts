@@ -1,5 +1,5 @@
-import { sample, extend, random } from 'lodash';
-import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { SerializableJSON } from '@ygg/shared/infra/core';
+import { extend, random, sample } from 'lodash';
 
 interface User {
   name: string;

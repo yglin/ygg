@@ -2299,6 +2299,84 @@
           }
         }
       }
+    },
+    "playwhat-functions": {
+      "root": "libs/playwhat/functions",
+      "sourceRoot": "libs/playwhat/functions/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/playwhat/functions/tsconfig.lib.json",
+              "libs/playwhat/functions/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/playwhat/functions/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/playwhat/functions/jest.config.js",
+            "tsConfig": "libs/playwhat/functions/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "the-thing-functions": {
+      "root": "libs/the-thing/functions",
+      "sourceRoot": "libs/the-thing/functions/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/the-thing/functions/tsconfig.lib.json",
+              "libs/the-thing/functions/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/the-thing/functions/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/the-thing/functions/jest.config.js",
+            "tsConfig": "libs/the-thing/functions/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "shared-functions": {
+      "root": "libs/shared/functions",
+      "sourceRoot": "libs/shared/functions/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/functions/tsconfig.lib.json",
+              "libs/shared/functions/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/functions/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/functions/jest.config.js",
+            "tsConfig": "libs/shared/functions/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

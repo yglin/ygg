@@ -8,7 +8,8 @@ import {
   ImitationTour,
   ImitationTourPlan,
   ImitationEquipment,
-  RelationshipEquipment
+  RelationshipEquipment,
+  ImitationEvent
 } from '@ygg/playwhat/core';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
@@ -32,7 +33,8 @@ import { EquipmentViewComponent } from './ui/equipment/equipment-view/equipment-
 import { PurchaseService } from '@ygg/shopping/factory';
 import { TourPlanComponent } from './tour-plan/tour-plan.component';
 import { PlayFactoryService } from './play-factory.service';
-import { EventComponent } from './event/event.component';
+import { EventComponent } from './event/event/event.component';
+import { MyHostEventsComponent } from './event/my-host-events/my-host-events.component';
 
 @NgModule({
   imports: [
@@ -58,7 +60,8 @@ import { EventComponent } from './event/event.component';
     MyTourPlanListComponent,
     EquipmentViewComponent,
     TourPlanComponent,
-    EventComponent
+    EventComponent,
+    MyHostEventsComponent
   ],
   entryComponents: [
     TourViewComponent,
@@ -156,6 +159,12 @@ export function configUserMenu(userMenuService: UserMenuService) {
       label: '我的遊程',
       link: `the-things/${ImitationTourPlan.id}/my`,
       icon: ImitationTourPlan.icon
+    });
+    userMenuService.addItem({
+      id: 'my-host-events',
+      label: '我的體驗活動',
+      link: `${ImitationEvent.routePath}/host`,
+      icon: ImitationEvent.icon
     });
   };
 }

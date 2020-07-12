@@ -1,6 +1,6 @@
 /// <reference types="@types/googlemaps" />
 import { random, sample } from 'lodash';
-import { SerializableJSON } from '@ygg/shared/infra/data-access';
+import { SerializableJSON } from '@ygg/shared/infra/core';
 
 export class GeoPoint implements SerializableJSON {
   private _latitude: number;

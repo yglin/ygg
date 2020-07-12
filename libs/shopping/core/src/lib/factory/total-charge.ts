@@ -5,7 +5,9 @@ import { CellNames, Purchase } from '../models';
 export async function evalTotalChargeFromRelations(
   purchaseRelations: TheThingRelation[]
 ): Promise<number> {
-  return isEmpty(purchaseRelations)
+  // console.log(`evalTotalChargeFromRelations`);
+  // console.log(purchaseRelations);
+  const totalCharge = isEmpty(purchaseRelations)
     ? 0
     : sum(
         purchaseRelations.map(
@@ -14,6 +16,8 @@ export async function evalTotalChargeFromRelations(
             pr.getCellValue(CellNames.quantity)
         )
       );
+  // console.log(totalCharge);
+  return totalCharge;
 }
 
 export async function evalTotalChargeFromPurchases(

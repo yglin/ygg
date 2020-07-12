@@ -1,5 +1,5 @@
 import { sample } from 'lodash';
-import { SerializableJSON } from '@ygg/shared/infra/data-access';
+import { SerializableJSON } from '@ygg/shared/infra/core';
 
 export enum ImageType {
   Unknown = 0,

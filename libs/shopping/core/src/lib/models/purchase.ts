@@ -6,7 +6,7 @@ import {
   SerializableJSON,
   toJSONDeep,
   generateID
-} from '@ygg/shared/infra/data-access';
+} from '@ygg/shared/infra/core';
 import {
   TheThing,
   TheThingRelation,

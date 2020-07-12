@@ -5,6 +5,7 @@ import { generateID } from '@ygg/shared/infra/core';
 
 export class Service implements Entity, ImageThumbnailItem {
   id: string;
+  ownerId: string;
   name: string;
   image: string;
   timeLength: number;

@@ -140,6 +140,13 @@
               "scope:schedule",
               "scope:shared"
             ]
+          },
+          {
+            "sourceTag": "type:functions",
+            "onlyDependOnLibsWithTags": [
+              "type:functions",
+              "scope:shared"
+            ]
           }
         ],
         "enforceBuildableLibDependency": true

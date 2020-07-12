@@ -34,24 +34,25 @@ describe('Create play', () => {
   // const equipPO = new EquipmentViewPageObjectCypress();
 
   before(() => {
-    login().then(user => {});
+    login().then(user => {
+      cy.visit('/');
+    });
   });
 
   beforeEach(() => {
-    cy.visit('/');
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
     myPlayListPO.clickCreate();
     playPO.expectVisible();
   });
 
   after(() => {
-    // Goto my-things page and delete all test things
-    const myThingsPO = new MyThingsPageObjectCypress();
-    siteNavigator.goto(['the-things', 'my'], myThingsPO);
-    cy.wait(3000);
-    myThingsPO.deleteAll();
+    // // Goto my-things page and delete all test things
+    // const myThingsPO = new MyThingsPageObjectCypress();
+    // siteNavigator.goto(['the-things', 'my'], myThingsPO);
+    // cy.wait(3000);
+    // myThingsPO.deleteAll();
     theMockDatabase.clear();
-    theMockDatabase.restoreRTDB();
+    // theMockDatabase.restoreRTDB();
   });
 
   it('Show required cells step-by-step', () => {
@@ -92,7 +93,7 @@ describe('Create play', () => {
   it('Show add-cell button only if name set and all required cells filled', () => {
     cy.get(playPO.getSelector('buttonAddCell')).should('not.be.visible');
     const requiredCellDefs = ImitationPlay.getRequiredCellDefs();
-    playPO.setName('青菜蝦米碗糕體驗');
+    playPO.setName(MinimumPlay.name);
     cy.wrap(requiredCellDefs).each(
       (cellDef: TheThingCellDefine, index: number) => {
         playPO.setCell(MinimumPlay.getCell(cellDef.name));
@@ -101,11 +102,13 @@ describe('Create play', () => {
     cy.get(playPO.getSelector('buttonAddCell')).should('be.visible');
   });
 
-  it('Create a minimum play with all required cells', () => {
-    playPO.expectFreshNew();
+  it('Leave creation and back again should keep inputed data', () => {
+    playPO.expectValue(MinimumPlay);
+  });
+
+  it('Save a minimum play with all required cells', () => {
     playPO.setValue(MinimumPlay);
     playPO.save(MinimumPlay);
-
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
     myPlayListPO.theThingDataTablePO.gotoTheThingView(MinimumPlay);
     playPO.expectVisible();
@@ -124,7 +127,7 @@ describe('Create play', () => {
 
   it('Can delete non-required cells', () => {
     const play = MinimumPlay.clone();
-    play.name = '測試遊程(刪除資料欄位)';
+    play.name = `測試遊程(刪除資料欄位)_${Date.now()}`;
     const requiredCellNames = ImitationPlay.getRequiredCellNames();
     const additionalCells = ImitationPlay.pickNonRequiredCells(
       values(PlayFull.cells)

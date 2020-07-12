@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 import { clamp, random } from 'lodash';
-import { SerializableJSON } from '@ygg/shared/infra/data-access';
+import { SerializableJSON } from '@ygg/shared/infra/core';
 
 /**
  * Represent an absolute time in a day

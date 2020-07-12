@@ -74,7 +74,10 @@
       "@ygg/schedule/ui": ["libs/schedule/ui/src/index.ts"],
       "@ygg/schedule/test": ["libs/schedule/test/src/index.ts"],
       "@ygg/firebase/*": [".firebase/*"],
-      "@ygg/env/*": [".env/*"]
+      "@ygg/env/*": [".env/*"],
+      "@ygg/playwhat/functions": ["libs/playwhat/functions/src/index.ts"],
+      "@ygg/the-thing/functions": ["libs/the-thing/functions/src/index.ts"],
+      "@ygg/shared/functions": ["libs/shared/functions/src/index.ts"]
     },
     "rootDir": "."
   },

@@ -1,6 +1,5 @@
-import { Query } from '@ygg/shared/infra/data-access';
+import { Query } from './query';
 import { Observable } from 'rxjs';
-
 
 export abstract class DataAccessor {
   abstract async save(collection: string, id: string, data: any);

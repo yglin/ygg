@@ -8,7 +8,10 @@ import {
 } from '@ygg/shared/user/ui';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import { TheThingFactoryService } from '@ygg/the-thing/ui';
+import {
+  TheThingFactoryService,
+  RelationFactoryService
+} from '@ygg/the-thing/ui';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import { TheThing } from '@ygg/the-thing/core';
 
@@ -18,18 +21,21 @@ import { TheThing } from '@ygg/the-thing/core';
 export class EventFactoryService extends EventFactory {
   constructor(
     theThingAccessor: TheThingAccessService,
+    theThingFactory: TheThingFactoryService,
     userAccessor: UserService,
     invitationFactory: InvitationFactoryService,
     authenticator: AuthenticateUiService,
     emcee: EmceeService,
-    private theThingFactory: TheThingFactoryService
+    relationFactory: RelationFactoryService
   ) {
     super(
       theThingAccessor,
+      theThingFactory,
       userAccessor,
       invitationFactory,
       authenticator,
-      emcee
+      emcee,
+      relationFactory
     );
   }
 

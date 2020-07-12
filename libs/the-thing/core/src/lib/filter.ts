@@ -1,6 +1,6 @@
 import { extend, isEmpty, assign } from 'lodash';
 import { TheThing } from './the-thing';
-import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/core';
 import { Tags } from '@ygg/tags/core';
 import { __assign } from 'tslib';
 import { DateRange, TimeRange } from '@ygg/shared/omni-types/core';

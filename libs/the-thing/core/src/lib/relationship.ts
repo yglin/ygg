@@ -1,19 +1,28 @@
-import { extend } from 'lodash';
+import { extend, defaults } from 'lodash';
 import { TheThingImitation } from './imitation';
 import { TheThingCellDefine } from './cell-define';
 import { TheThingRelation } from './relation';
 import { TheThingCell } from './cell';
+import { TheThing } from './the-thing';
 
 export class Relationship {
   name: string;
-  imitation: TheThingImitation;
+  subjectCollection: string;
+  objectCollection: string;
+  imitation?: TheThingImitation;
   cellDefines?: { [key: string]: TheThingCellDefine };
 
   constructor(options: {
     name: string;
-    imitation: TheThingImitation;
+    subjectCollection?: string;
+    objectCollection?: string;
+    imitation?: TheThingImitation;
     cellDefines?: { [key: string]: TheThingCellDefine };
   }) {
+    options = defaults(options, {
+      subjectCollection: TheThing.collection,
+      objectCollection: TheThing.collection
+    });
     extend(this, options);
   }
 
@@ -34,7 +43,9 @@ export class Relationship {
     }
     return new TheThingRelation({
       name: this.name,
+      subjectCollection: this.subjectCollection,
       subjectId,
+      objectCollection: this.objectCollection,
       objectId,
       cells
     });

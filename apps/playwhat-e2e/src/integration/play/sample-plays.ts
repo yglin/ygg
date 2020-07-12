@@ -13,7 +13,7 @@ import { random } from 'lodash';
 import { Album, Location, BusinessHours } from '@ygg/shared/omni-types/core';
 
 export const MinimumPlay = ImitationPlay.createTheThing().fromJSON({
-  name: '溜鳥鳥體驗(最少需求資料欄位)',
+  name: `溜鳥鳥體驗(最少需求資料欄位)_${Date.now()}`,
   cells: [
     {
       name: '照片',
@@ -50,7 +50,7 @@ export const MinimumPlay = ImitationPlay.createTheThing().fromJSON({
 });
 
 export const PlayFull = MinimumPlay.clone();
-PlayFull.name = '測試體驗溜鳥鳥(所有資料欄位)';
+PlayFull.name = `測試體驗溜鳥鳥(所有資料欄位)_${Date.now()}`;
 PlayFull.addCells(
   [
     {
@@ -68,7 +68,7 @@ PlayFull.addCells(
 
 export const SamplePlays = [
   {
-    name: '巷弄騎乘派對',
+    name: `巷弄騎乘派對_${Date.now()}`,
     tags: ['體驗', 'play', '深度遊趣', '省府日常散策', '協力車'],
     cells: [
       {
@@ -110,7 +110,7 @@ export const SamplePlays = [
     ]
   },
   {
-    name: '省府苔球風景體驗',
+    name: `省府苔球風景體驗_${Date.now()}`,
     tags: ['體驗', 'play', '深度遊趣', '省府日常散策', '苔球'],
     cells: [
       {
@@ -152,7 +152,7 @@ export const SamplePlays = [
     ]
   },
   {
-    name: '職人手沖咖啡評鑑體驗',
+    name: `職人手沖咖啡評鑑體驗_${Date.now()}`,
     tags: ['體驗', 'play', '深度遊趣', '省府日常散策', '咖啡'],
     cells: [
       {
@@ -194,7 +194,7 @@ export const SamplePlays = [
     ]
   },
   {
-    name: '省府植物拓印體驗',
+    name: `省府植物拓印體驗_${Date.now()}`,
     tags: ['體驗', 'play', '深度遊趣', '省府日常散策', '拓印'],
     cells: [
       {
@@ -236,7 +236,7 @@ export const SamplePlays = [
     ]
   },
   {
-    name: '省府草地野餐(建議秋冬時節)',
+    name: `省府草地野餐(建議秋冬時節)_${Date.now()}`,
     // tags: ['體驗', 'play', '深度遊趣', '省府日常散策', '野餐'],
     cells: [
       {
@@ -281,7 +281,7 @@ export const SamplePlays = [
 
 export const SampleEquipments = [
   {
-    name: '四人協力車',
+    name: `四人協力車_${Date.now()}`,
     tags: ['addition', '設備'],
     cells: [
       {
@@ -302,7 +302,7 @@ export const SampleEquipments = [
     ]
   },
   {
-    name: '二人協力車',
+    name: `二人協力車_${Date.now()}`,
     tags: ['addition', '設備'],
     cells: [
       {

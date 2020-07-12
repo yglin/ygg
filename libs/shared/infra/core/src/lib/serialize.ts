@@ -1,3 +1,9 @@
+export interface SerializableJSON {
+  fromJSON: (data: any) => this;
+  toJSON: () => any;
+}
+
+
 export function toJSONDeep(obj: any = {}): any {
   const data = {};
   for (const key in obj) {

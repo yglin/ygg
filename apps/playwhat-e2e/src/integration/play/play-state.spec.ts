@@ -17,7 +17,10 @@ import {
   ImageThumbnailListPageObjectCypress
 } from '@ygg/shared/ui/test';
 import { PurchaseAction } from '@ygg/shopping/core';
-import { values } from 'lodash';
+import { values, omit } from 'lodash';
+import promisify from 'cypress-promise';
+import { User } from '@ygg/shared/user/core';
+import { logout } from '@ygg/shared/user/test';
 
 describe('Manipulate play states', () => {
   const siteNavigator = new SiteNavigator();
@@ -28,32 +31,41 @@ describe('Manipulate play states', () => {
   const playPO = new TheThingPageObjectCypress('', ImitationPlay);
   const playAdminPO = new PlayAdminPageObjectCypress();
   const SampleThings = SamplePlays.concat(SampleEquipments);
+  const homePlayList = new ImageThumbnailListPageObjectCypress();
+  let user: User;
 
   // const playForRequestAssess = MinimumPlay.clone();
   // playForRequestAssess.name = '測試新體驗送審核操作流程';
   // ImitationPlay.setState(playForRequestAssess, ImitationPlay.states.editing);
   // SampleThings.push(playForRequestAssess);
 
-  // const playInAssess = MinimumPlay.clone();
-  // playInAssess.name = '測試體驗狀態審核中=>上架';
-  // ImitationPlay.setState(playInAssess, ImitationPlay.states.assess);
-  // SampleThings.push(playInAssess);
+  // const MinimumPlay = MinimumPlay.clone();
+  // MinimumPlay.name = '測試體驗狀態審核中=>上架';
+  // ImitationPlay.setState(MinimumPlay, ImitationPlay.states.assess);
+  // SampleThings.push(MinimumPlay);
 
   const playsByState: { [state: string]: TheThing } = {};
   for (const stateName in ImitationPlay.states) {
     if (ImitationPlay.states.hasOwnProperty(stateName)) {
       const state = ImitationPlay.states[stateName];
       const play = MinimumPlay.clone();
-      play.name = `測試體驗狀態：${state.label}`;
+      play.name = `測試體驗狀態：${state.label}_${Date.now()}`;
       ImitationPlay.setState(play, state);
       playsByState[state.name] = play;
     }
   }
   SampleThings.push(...values(playsByState));
 
+  function gotoMyPlay(play: TheThing) {
+    siteNavigator.goto(['plays', 'my'], myPlayListPO);
+    myPlayListPO.theThingDataTablePO.gotoTheThingView(play);
+    playPO.expectVisible();
+  }
+
   before(() => {
-    login().then(user => {
-      theMockDatabase.setAdmins([user.id]);
+    login().then(_user => {
+      user = _user;
+      theMockDatabase.setAdmins([]);
       cy.wrap(SampleThings).each((thing: any) => {
         thing.ownerId = user.id;
         theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
@@ -64,11 +76,11 @@ describe('Manipulate play states', () => {
 
   beforeEach(() => {
     //Reset plays by states
-    getCurrentUser().then(user => {
-      cy.wrap(values(playsByState)).each((thing: any) => {
-        theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
-      });
-    });
+    // getCurrentUser().then(user => {
+    //   cy.wrap(values(playsByState)).each((thing: any) => {
+    //     theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
+    //   });
+    // });
   });
 
   after(() => {
@@ -82,132 +94,139 @@ describe('Manipulate play states', () => {
   });
 
   it('State of just created play should be "new"', () => {
-    const play = MinimumPlay.clone();
-    play.name = '測試新體驗的狀態=新建立';
     siteNavigator.goto(['plays', 'my'], myPlayListPO);
     myPlayListPO.clickCreate();
     playPO.expectVisible();
     playPO.expectState(ImitationPlay.states.new);
   });
 
+  it('State of "new" plays accessibility', () => {
+    playPO.expectModifiable();
+    // All actions are not avalibale
+    for (const action of values(ImitationPlay.actions)) {
+      playPO.expectNoActionButton(action);
+    }
+  });
+
   it('State of saved play should be "editing"', () => {
-    const play = MinimumPlay.clone();
-    play.name = '測試已儲存體驗的狀態=修改中';
-    siteNavigator.goto(['plays', 'my'], myPlayListPO);
-    myPlayListPO.clickCreate();
-    playPO.expectVisible();
-    playPO.setValue(play);
-    playPO.save(play);
+    playPO.setValue(MinimumPlay);
+    playPO.save(MinimumPlay);
     playPO.expectState(ImitationPlay.states.editing);
   });
 
-  it('Only plays of state "new", "edting" are modifiable', () => {
-    cy.wrap(values(ImitationPlay.states)).each((state: TheThingState) => {
-      const play = playsByState[state.name];
-      cy.visit(`/the-things/${ImitationPlay.id}/${play.id}`);
-      playPO.expectVisible();
-      if (
-        state.name === ImitationPlay.states.new.name ||
-        state.name === ImitationPlay.states.editing.name
-      ) {
-        playPO.expectModifiable();
+  it('State of "editing" play accessibility of owner', () => {
+    playPO.expectModifiable();
+    for (const action of values(ImitationPlay.actions)) {
+      if (action.id === 'request-assess') {
+        playPO.expectActionButton(action);
       } else {
-        playPO.expectReadonly();
+        playPO.expectNoActionButton(action);
       }
-    });
-  });
-
-  it('Only owner and play of state "editing" can request for state "assess"', () => {
-    const play = MinimumPlay.clone();
-    play.name = '測試新體驗送審核按鈕會不會顯示';
-    theMockDatabase.insert(`${TheThing.collection}/${play.id}`, play);
-    cy.visit(`/the-things/${ImitationPlay.id}/${play.id}`);
-    playPO.expectVisible();
-    playPO.expectNoActionButton(ImitationPlay.actions['request-assess']);
-    getCurrentUser().then(user => {
-      play.ownerId = user.id;
-      theMockDatabase.insert(`${TheThing.collection}/${play.id}`, play);
-      playPO.expectNoActionButton(ImitationPlay.actions['request-assess']);
-      ImitationPlay.setState(play, ImitationPlay.states.editing);
-      theMockDatabase.insert(`${TheThing.collection}/${play.id}`, play);
-      playPO.expectActionButton(ImitationPlay.actions['request-assess']);
-    });
+    }
   });
 
   it('Send request for state "assess" of play', () => {
-    const playForRequestAssess =
-      playsByState[ImitationPlay.states.editing.name];
-    siteNavigator.goto(['plays', 'my'], myPlayListPO);
-    myPlayListPO.theThingDataTablePO.gotoTheThingView(playForRequestAssess);
-    playPO.expectVisible();
-    // cy.pause();
     playPO.runAction(ImitationPlay.actions['request-assess']);
     const emceePO = new EmceePageObjectCypress();
     emceePO.confirm(
-      `送出 ${playForRequestAssess.name} 給管理者審核？送出後資料便無法修改，審核成功即可上架販售`
+      `送出 ${MinimumPlay.name} 給管理者審核？送出後資料便無法修改，審核成功即可上架販售`
     );
-    emceePO.alert(`${playForRequestAssess.name} 已送出，請等待管理者審核`);
+    emceePO.alert(`${MinimumPlay.name} 已送出，請等待管理者審核`);
     playPO.expectState(ImitationPlay.states.assess);
   });
 
-  it('Show plays of state "assess" in admin page', () => {
-    const playInAssess = playsByState[ImitationPlay.states.assess.name];
-    siteNavigator.goto(['admin', 'play'], playAdminPO);
-    playAdminPO.switchToTab(ImitationPlay.states.assess.name);
-    playAdminPO.theThingDataTables[
-      ImitationPlay.states.assess.name
-    ].expectTheThing(playInAssess);
+  it('State of "assess" play accessibility of owner', () => {
+    playPO.expectReadonly();
+    for (const action of values(ImitationPlay.actions)) {
+      playPO.expectNoActionButton(action);
+    }
   });
 
-  it('Only admins can approve play from "assess" to state "for-sale"', () => {
-    const playInAssess = playsByState[ImitationPlay.states.assess.name];
-    theMockDatabase.setAdmins([]);
-    siteNavigator.goto(['plays', 'my'], myPlayListPO);
-    myPlayListPO.theThingDataTablePO.gotoTheThingView(playInAssess);
-    playPO.expectVisible();
-    playPO.expectNoActionButton(ImitationPlay.actions['approve-for-sale']);
-    getCurrentUser().then(user => {
-      theMockDatabase.setAdmins([user.id]);
-      playPO.expectActionButton(ImitationPlay.actions['approve-for-sale']);
+  it('Show plays of state "assess" in admin page', () => {
+    theMockDatabase.setAdmins([user.id]).then(() => {
+      siteNavigator.goto(['admin', 'play'], playAdminPO);
+      playAdminPO.switchToTab(ImitationPlay.states.assess.name);
+      playAdminPO.theThingDataTables[
+        ImitationPlay.states.assess.name
+      ].expectTheThing(MinimumPlay);
+      playAdminPO.theThingDataTables[
+        ImitationPlay.states.assess.name
+      ].gotoTheThingView(MinimumPlay);
     });
   });
 
+  it('State of "assess" play accessibility of admin', () => {
+    playPO.expectReadonly();
+    for (const action of values(ImitationPlay.actions)) {
+      if (action.id === 'approve-for-sale' || action.id === 'back-to-editing') {
+        playPO.expectActionButton(action);
+      } else {
+        playPO.expectNoActionButton(action);
+      }
+    }
+  });
+
+  it('Withdraw play from "assess" to state "editing"', async () => {
+    playPO.runAction(ImitationPlay.actions['back-to-editing']);
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.confirm(`將體驗 ${MinimumPlay.name} 退回資料修改？`);
+    emceePO.alert(`體驗 ${MinimumPlay.name} 已退回資料修改狀態`);
+    playPO.expectState(ImitationPlay.states.editing);
+    // Restore state to assess
+    theMockDatabase.setState(
+      MinimumPlay,
+      ImitationPlay,
+      ImitationPlay.states.assess
+    );
+    playPO.expectState(ImitationPlay.states.assess);
+  });
+
   it('Approve play from "assess" to state "for-sale"', () => {
-    const playInAssess = playsByState[ImitationPlay.states.assess.name];
-    siteNavigator.goto(['admin', 'play'], playAdminPO);
-    playAdminPO.switchToTab(ImitationPlay.states.assess.name);
-    playAdminPO.theThingDataTables[
-      ImitationPlay.states.assess.name
-    ].gotoTheThingView(playInAssess);
-    playPO.expectVisible();
     playPO.runAction(ImitationPlay.actions['approve-for-sale']);
     const emceePO = new EmceePageObjectCypress();
-    emceePO.confirm(`體驗 ${playInAssess.name} 已通過審核，確定上架？`);
-    emceePO.alert(`體驗 ${playInAssess.name} 已上架`);
+    emceePO.confirm(`體驗 ${MinimumPlay.name} 已通過審核，確定上架？`);
+    emceePO.alert(`體驗 ${MinimumPlay.name} 已上架`);
     playPO.expectState(ImitationPlay.states.forSale);
+  });
+
+  it('Show plays of state "for-sale" in admin page', () => {
     siteNavigator.goto(['admin', 'play'], playAdminPO);
     playAdminPO.switchToTab(ImitationPlay.states.forSale.name);
     playAdminPO.theThingDataTables[
       ImitationPlay.states.forSale.name
-    ].expectTheThing(playInAssess);
+    ].expectTheThing(MinimumPlay);
   });
 
-  it('Only plays of state "for-sale" show add-to-cart button', () => {
-    cy.wrap(values(ImitationPlay.states)).each((state: TheThingState) => {
-      const play = playsByState[state.name];
-      cy.visit(`/the-things/${ImitationPlay.id}/${play.id}`);
-      playPO.expectVisible();
-      if (state.name === ImitationPlay.states.forSale.name) {
-        playPO.expectActionButton(ImitationPlay.actions[PurchaseAction.id]);
-      } else {
-        playPO.expectNoActionButton(ImitationPlay.actions[PurchaseAction.id]);
-      }
-    });
+  it('Show plays of state "for-sale" in home page', () => {
+    siteNavigator.goto(['home']);
+    const homePlayList = new ImageThumbnailListPageObjectCypress();
+    homePlayList.expectSomeItem();
+    homePlayList.expectItem(MinimumPlay);
+  });
+
+  // it('State of "for-sale" play accessibility of admin', () => {
+  //   gotoMyPlay(MinimumPlay);
+  //   playPO.expectReadonly();
+  //   for (const action of values(ImitationPlay.actions)) {
+  //     if (action.id === 'back-to-editing') {
+  //       playPO.expectActionButton(action);
+  //     } else {
+  //       playPO.expectNoActionButton(action);
+  //     }
+  //   }
+  // });
+
+  it('Withdraw play from "for-sale" to state "editing"', () => {
+    gotoMyPlay(MinimumPlay);
+    playPO.runAction(ImitationPlay.actions['back-to-editing']);
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.confirm(`將體驗 ${MinimumPlay.name} 退回資料修改？會一併下架體驗`);
+    emceePO.alert(`體驗 ${MinimumPlay.name} 已退回資料修改狀態`);
+    playPO.expectState(ImitationPlay.states.editing);
   });
 
   it('Only plays of state "for-sale" listed in home page', () => {
     siteNavigator.goto(['home']);
-    const homePlayList = new ImageThumbnailListPageObjectCypress();
     homePlayList.expectSomeItem();
     cy.wrap(values(ImitationPlay.states)).each((state: TheThingState) => {
       if (state.name === ImitationPlay.states.forSale.name) {
@@ -218,45 +237,100 @@ describe('Manipulate play states', () => {
     });
   });
 
-  it('Only admins can withdraw play "assess" or "for-sale" to state "editing"', () => {
-    theMockDatabase.setAdmins([]);
-    const playInAssess = playsByState[ImitationPlay.states.assess.name];
-    cy.visit(`/the-things/${ImitationPlay.id}/${playInAssess.id}`);
-    playPO.expectVisible();
-    playPO.expectNoActionButton(ImitationPlay.actions['back-to-editing']);
-    getCurrentUser().then(user => {
-      theMockDatabase.setAdmins([user.id]);
-      playPO.expectActionButton(ImitationPlay.actions['back-to-editing']);
+  it('Guest user accessibility', () => {
+    const playForSale = playsByState[ImitationPlay.states.forSale.name];
+    logout().then(async () => {
+      siteNavigator.goto([]);
+      homePlayList.clickItemLink(playForSale);
+      for (const state of values(ImitationPlay.states)) {
+        await promisify(
+          cy.wrap(
+            new Cypress.Promise((resolve, reject) => {
+              theMockDatabase
+                .setState(playForSale, ImitationPlay, state)
+                .then(() => {
+                  playPO.expectState(state);
+                  playPO.expectReadonly();
+                  for (const action of values(
+                    omit(ImitationPlay.actions, PurchaseAction.id)
+                  )) {
+                    playPO.expectNoActionButton(action);
+                  }
+                  if (state.name === ImitationPlay.states.forSale.name) {
+                    playPO.expectActionButton(
+                      ImitationPlay.actions[PurchaseAction.id]
+                    );
+                  } else {
+                    playPO.expectNoActionButton(
+                      ImitationPlay.actions[PurchaseAction.id]
+                    );
+                  }
+                  resolve();
+                });
+            }),
+            {
+              timeout: 20000
+            }
+          )
+        );
+      }
     });
   });
 
-  it('Withdraw play from "assess" to state "editing"', () => {
-    const playInAssess = playsByState[ImitationPlay.states.assess.name];
-    siteNavigator.goto(['admin', 'play'], playAdminPO);
-    playAdminPO.switchToTab(ImitationPlay.states.assess.name);
-    playAdminPO.theThingDataTables[
-      ImitationPlay.states.assess.name
-    ].gotoTheThingView(playInAssess);
-    playPO.expectVisible();
-    playPO.runAction(ImitationPlay.actions['back-to-editing']);
-    const emceePO = new EmceePageObjectCypress();
-    emceePO.confirm(`將體驗 ${playInAssess.name} 退回資料修改？`);
-    emceePO.alert(`體驗 ${playInAssess.name} 已退回資料修改狀態`);
-    playPO.expectState(ImitationPlay.states.editing);
-  });
+  // it('Only plays of state "for-sale" show add-to-cart button', () => {
+  //   cy.wrap(values(ImitationPlay.states)).each((state: TheThingState) => {
+  //     const play = playsByState[state.name];
+  //     cy.visit(`/the-things/${ImitationPlay.id}/${play.id}`);
+  //     playPO.expectVisible();
+  //     if (state.name === ImitationPlay.states.forSale.name) {
+  //       playPO.expectActionButton(ImitationPlay.actions[PurchaseAction.id]);
+  //     } else {
+  //       playPO.expectNoActionButton(ImitationPlay.actions[PurchaseAction.id]);
+  //     }
+  //   });
+  // });
 
-  it('Withdraw play from "for-sale" to state "editing"', () => {
-    const playInForSale = playsByState[ImitationPlay.states.forSale.name];
-    siteNavigator.goto(['admin', 'play'], playAdminPO);
-    playAdminPO.switchToTab(ImitationPlay.states.forSale.name);
-    playAdminPO.theThingDataTables[
-      ImitationPlay.states.forSale.name
-    ].gotoTheThingView(playInForSale);
-    playPO.expectVisible();
-    playPO.runAction(ImitationPlay.actions['back-to-editing']);
-    const emceePO = new EmceePageObjectCypress();
-    emceePO.confirm(`將體驗 ${playInForSale.name} 退回資料修改？會一併下架體驗`);
-    emceePO.alert(`體驗 ${playInForSale.name} 已退回資料修改狀態`);
-    playPO.expectState(ImitationPlay.states.editing);
-  });
+  // it('Only admins can withdraw play "assess" or "for-sale" to state "editing"', () => {
+  //   theMockDatabase.setAdmins([]);
+  //   const MinimumPlay = playsByState[ImitationPlay.states.assess.name];
+  //   cy.visit(`/the-things/${ImitationPlay.id}/${MinimumPlay.id}`);
+  //   playPO.expectVisible();
+  //   playPO.expectNoActionButton(ImitationPlay.actions['back-to-editing']);
+  //   getCurrentUser().then(user => {
+  //     theMockDatabase.setAdmins([user.id]);
+  //     playPO.expectActionButton(ImitationPlay.actions['back-to-editing']);
+  //   });
+  // });
+
+  // it('Withdraw play from "assess" to state "editing"', () => {
+  //   const MinimumPlay = playsByState[ImitationPlay.states.assess.name];
+  //   siteNavigator.goto(['admin', 'play'], playAdminPO);
+  //   playAdminPO.switchToTab(ImitationPlay.states.assess.name);
+  //   playAdminPO.theThingDataTables[
+  //     ImitationPlay.states.assess.name
+  //   ].gotoTheThingView(MinimumPlay);
+  //   playPO.expectVisible();
+  //   playPO.runAction(ImitationPlay.actions['back-to-editing']);
+  //   const emceePO = new EmceePageObjectCypress();
+  //   emceePO.confirm(`將體驗 ${MinimumPlay.name} 退回資料修改？`);
+  //   emceePO.alert(`體驗 ${MinimumPlay.name} 已退回資料修改狀態`);
+  //   playPO.expectState(ImitationPlay.states.editing);
+  // });
+
+  // it('Withdraw play from "for-sale" to state "editing"', () => {
+  //   const playInForSale = playsByState[ImitationPlay.states.forSale.name];
+  //   siteNavigator.goto(['admin', 'play'], playAdminPO);
+  //   playAdminPO.switchToTab(ImitationPlay.states.forSale.name);
+  //   playAdminPO.theThingDataTables[
+  //     ImitationPlay.states.forSale.name
+  //   ].gotoTheThingView(playInForSale);
+  //   playPO.expectVisible();
+  //   playPO.runAction(ImitationPlay.actions['back-to-editing']);
+  //   const emceePO = new EmceePageObjectCypress();
+  //   emceePO.confirm(
+  //     `將體驗 ${playInForSale.name} 退回資料修改？會一併下架體驗`
+  //   );
+  //   emceePO.alert(`體驗 ${playInForSale.name} 已退回資料修改狀態`);
+  //   playPO.expectState(ImitationPlay.states.editing);
+  // });
 });

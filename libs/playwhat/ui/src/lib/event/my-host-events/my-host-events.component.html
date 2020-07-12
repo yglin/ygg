@@ -1,0 +1,8 @@
+<div class="my-host-events">
+  <div *ngIf="myHostEvents$ && ImitationEvent">
+    <the-thing-data-table
+      [theThings$]="myHostEvents$"
+      [imitation]="ImitationEvent"
+    ></the-thing-data-table>
+  </div>
+</div>

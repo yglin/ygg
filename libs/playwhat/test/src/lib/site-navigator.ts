@@ -1,5 +1,6 @@
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
 import { timeout } from 'rxjs/operators';
+import { ImitationEvent } from '@ygg/playwhat/core';
 
 const expectPageTrivial = () => cy.get('body').should('be.visible');
 
@@ -33,6 +34,8 @@ export class SiteNavigator {
       this.gotoTourPlans(path);
     } else if (route === 'shopping') {
       this.gotoShopping(path);
+    } else if (route === ImitationEvent.routePath) {
+      this.gotoEvents(path);
     }
     return targetPage.expectVisible();
   }
@@ -96,6 +99,16 @@ export class SiteNavigator {
     const route = path.shift();
     if (route === 'cart') {
       cy.get('.pw-header .shopping-cart-button button').click();
+    }
+  }
+
+  private gotoEvents(path: string[]) {
+    const route = path.shift();
+    if (route === 'host') {
+      cy.get('.account-widget .menu-trigger', { timeout: 10000 }).click({
+        force: true
+      });
+      cy.get('.user-menu-item button#my-host-events').click({ force: true });
     }
   }
 

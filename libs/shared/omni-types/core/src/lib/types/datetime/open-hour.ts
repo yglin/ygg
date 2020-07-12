@@ -1,5 +1,5 @@
 import { random } from 'lodash';
-import { SerializableJSON } from '@ygg/shared/infra/data-access';
+import { SerializableJSON } from '@ygg/shared/infra/core';
 import { WeekDay, WeekDayNames } from './week-day';
 import { DayTimeRange } from './day-time-range';
 

@@ -1,7 +1,7 @@
 import { AccountWidgetPageObjectCypress } from './account-widget.po';
 
-export function logout() {
+export function logout(): Cypress.Chainable<any> {
   const accountWidgetPO = new AccountWidgetPageObjectCypress();
   accountWidgetPO.logout();
-  accountWidgetPO.expectLoggedOut();
+  return accountWidgetPO.expectLoggedOut();
 }

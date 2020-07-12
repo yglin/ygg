@@ -18,14 +18,15 @@ import {
 import { Tags } from '@ygg/tags/core';
 import { TheThingCell } from './cell';
 import { OmniTypeID, Image, TimeRange } from '@ygg/shared/omni-types/core';
-import { generateID, toJSONDeep, Entity } from '@ygg/shared/infra/data-access';
+import { generateID, toJSONDeep, Entity } from '@ygg/shared/infra/core';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 import { TheThingRelation } from './relation';
 import { TheThingState } from './state';
 import { DeserializerJSON, SerializerJSON } from '@ygg/shared/infra/core';
+import { config } from './config';
 
 export class TheThing implements Entity, ImageThumbnailItem {
-  static collection = 'the-things';
+  static collection = config.collection;
 
   id: string;
 
@@ -306,6 +307,17 @@ export class TheThing implements Entity, ImageThumbnailItem {
     return (
       relationName in this.relations && !isEmpty(this.relations[relationName])
     );
+  }
+
+  hasRelationTo(relationName: string, objectId: string): boolean {
+    if (this.hasRelation(relationName)) {
+      for (const relation of this.relations[relationName]) {
+        if (relation.objectId === objectId) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   addRelation(...args: any[]) {

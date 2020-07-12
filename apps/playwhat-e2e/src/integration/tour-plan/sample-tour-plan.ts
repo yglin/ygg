@@ -42,7 +42,7 @@ import * as moment from 'moment';
 
 const dateRange = DateRange.forge();
 export const MinimalTourPlan = ImitationTourPlan.createTheThing().fromJSON({
-  name: `測試遊程(最少需求資料)`,
+  name: `測試遊程(最少需求資料)_${Date.now()}`,
   view: 'tour-plan',
   cells: [
     {
@@ -67,7 +67,7 @@ export const MinimalTourPlanWithoutName = MinimalTourPlan.clone();
 delete MinimalTourPlanWithoutName.name;
 
 export const TourPlanFull = MinimalTourPlan.clone();
-TourPlanFull.name = '測試遊程(完整資料欄位)';
+TourPlanFull.name = `測試遊程(完整資料欄位)_${Date.now()}`;
 TourPlanFull.setState(
   ImitationTourPlan.stateName,
   ImitationTourPlan.states.new
@@ -136,7 +136,7 @@ for (const play of PlaysWithoutEquipment) {
   );
   TourPlanWithPlaysNoEquipment.addRelation(purchase.toRelation());
 }
-TourPlanWithPlaysNoEquipment.name = '測試遊程(預訂體驗, 無設備加購)';
+TourPlanWithPlaysNoEquipment.name = `測試遊程(預訂體驗, 無設備加購)_${Date.now()}`;
 
 export const TourPlanWithPlaysAndEquipments = MinimalTourPlan.clone();
 TourPlanWithPlaysAndEquipments.setState(
@@ -167,21 +167,21 @@ for (const play of PlaysWithEquipment) {
     }
   }
 }
-TourPlanWithPlaysAndEquipments.name = '測試遊程(預訂體驗, 有加購項目)';
+TourPlanWithPlaysAndEquipments.name = `測試遊程(預訂體驗, 有加購項目)_${Date.now()}`;
 
 export const TourPlanInApplication = TourPlanWithPlaysAndEquipments.clone();
-TourPlanInApplication.name = '測試遊程(預訂體驗, 有加購項目，已提交申請)';
+TourPlanInApplication.name = `測試遊程(預訂體驗, 有加購項目，已提交申請)_${Date.now()}`;
 TourPlanInApplication.setState(
   ImitationOrder.stateName,
   ImitationTourPlan.states.applied
 );
 
 export const TourPlanPaid = TourPlanInApplication.clone();
-TourPlanPaid.name = '測試遊程(預訂體驗, 有加購項目，已付款完成)';
+TourPlanPaid.name = `測試遊程(預訂體驗, 有加購項目，已付款完成)_${Date.now()}`;
 TourPlanPaid.setState(ImitationOrder.stateName, ImitationTourPlan.states.paid);
 
 export const TourPlanCompleted = TourPlanPaid.clone();
-TourPlanCompleted.name = '測試遊程(預訂體驗, 有加購項目，已全部完成)';
+TourPlanCompleted.name = `測試遊程(預訂體驗, 有加購項目，已全部完成)_${Date.now()}`;
 TourPlanCompleted.setState(
   ImitationOrder.stateName,
   ImitationTourPlan.states.completed
@@ -199,7 +199,7 @@ export function stubTourPlansByStateAndMonth(): {
       const state = ImitationTourPlan.states[name];
 
       const tourPlanThisMonth = TourPlanWithPlaysAndEquipments.clone();
-      tourPlanThisMonth.name = `測試遊程， ${state.label}(這個月)`;
+      tourPlanThisMonth.name = `測試遊程， ${state.label}(這個月)_${Date.now()}`;
       tourPlanThisMonth.setState(
         ImitationOrder.stateName,
         state,
@@ -207,7 +207,7 @@ export function stubTourPlansByStateAndMonth(): {
       );
 
       const tourPlanLastMonth = TourPlanWithPlaysAndEquipments.clone();
-      tourPlanLastMonth.name = `測試遊程， ${state.label}(上個月)`;
+      tourPlanLastMonth.name = `測試遊程， ${state.label}(上個月)_${Date.now()}`;
       tourPlanLastMonth.setState(
         ImitationOrder.stateName,
         state,
@@ -217,7 +217,7 @@ export function stubTourPlansByStateAndMonth(): {
       );
 
       const tourPlanTheOtherMonth = TourPlanWithPlaysAndEquipments.clone();
-      tourPlanTheOtherMonth.name = `測試遊程， ${state.label}(上上個月)`;
+      tourPlanTheOtherMonth.name = `測試遊程， ${state.label}(上上個月)_${Date.now()}`;
       tourPlanTheOtherMonth.setState(
         ImitationOrder.stateName,
         state,

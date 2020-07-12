@@ -1,5 +1,5 @@
 import { isArray, isEmpty, random } from 'lodash';
-import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/core';
 import { OpenHour } from './open-hour';
 import { WeekDay } from './week-day';
 

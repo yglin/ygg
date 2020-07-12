@@ -5,6 +5,12 @@ import {
   Entity,
   isEntity
 } from '@ygg/shared/infra/data-access';
+import {
+  TheThing,
+  TheThingImitation,
+  TheThingState
+} from '@ygg/the-thing/core';
+import { stat } from 'fs';
 
 export interface Document {
   path: string;
@@ -29,6 +35,17 @@ export class MockDatabase {
     const path = 'admin/users/roles/admins';
     this.backupRTDB(path);
     return this.insertRTDB(path, ids);
+  }
+
+  setState(
+    thing: TheThing,
+    imitation: TheThingImitation,
+    state: TheThingState
+  ): Cypress.Chainable<any> {
+    const path = `${thing.collection}/${thing.id}`;
+    const data = { states: {} };
+    data.states[imitation.stateName] = state.value;
+    return this.update(path, data);
   }
 
   insert(path: string, data: any): Cypress.Chainable<any> {

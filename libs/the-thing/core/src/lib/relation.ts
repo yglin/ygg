@@ -1,10 +1,19 @@
-import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
-import { TheThing } from './the-thing';
 import { TheThingCell } from './cell';
-import { extend, isEmpty, mapValues, get, isArray, keyBy } from 'lodash';
-import { Entity } from '@ygg/shared/infra/core';
+import {
+  extend,
+  isEmpty,
+  mapValues,
+  get,
+  isArray,
+  keyBy,
+  defaults
+} from 'lodash';
+import { Entity, SerializableJSON, toJSONDeep } from '@ygg/shared/infra/core';
+import { config } from './config';
 
-export interface RelationRecord extends Entity {
+export class RelationRecord implements Entity, SerializableJSON {
+  static collection = 'relations';
+
   id: string;
   subjectCollection: string;
   subjectId: string;
@@ -12,6 +21,48 @@ export interface RelationRecord extends Entity {
   objectId: string;
   objectRole: string;
   createAt: Date;
+
+  static constructId(
+    subjectId: string,
+    objectRole: string,
+    objectId: string
+  ): string {
+    return `${subjectId}_${objectRole}_${objectId}`;
+  }
+
+  constructor(options?: {
+    subjectCollection: string;
+    subjectId: string;
+    objectCollection: string;
+    objectId: string;
+    objectRole: string;
+  }) {
+    extend(this, options);
+    this.id = RelationRecord.constructId(
+      this.subjectId,
+      this.objectRole,
+      this.objectId
+    );
+    this.createAt = new Date();
+  }
+
+  fromJSON(data: any): this {
+    extend(this, data);
+    if (data) {
+      if (data.createAt) {
+        this.createAt = new Date(data.createAt);
+      }
+    }
+    return this;
+  };
+
+  toJSON(): any {
+    const data: any = toJSONDeep(this);
+    if (this.createAt) {
+      data.createAt = this.createAt.toISOString();
+    }
+    return data;
+  };
 }
 
 export interface ITheThingRelation {
@@ -22,20 +73,36 @@ export interface ITheThingRelation {
 }
 
 export class TheThingRelation implements SerializableJSON {
-  id: string;
+  get id(): string {
+    return `${this.subjectId}_${this.name}_${this.objectId}`;
+  }
   name: string;
+  subjectCollection: string;
   subjectId: string;
+  objectCollection: string;
   objectId: string;
   cells: { [name: string]: TheThingCell } = {};
 
   static isTheThingRelation(value: any): value is TheThingRelation {
-    return value && value.id && value.name && value.objectId;
+    return value && value.name && value.objectCollection && value.objectId;
   }
 
-  constructor(options?: ITheThingRelation) {
-    if (options) {
-      this.fromJSON(options);
-    }
+  constructor(options?: {
+    name: string;
+    subjectCollection?: string;
+    objectCollection?: string;
+    subjectId: string;
+    objectId: string;
+    cells?: TheThingCell[] | { [name: string]: TheThingCell };
+  }) {
+    options = defaults(options, {
+      subjectCollection: config.collection,
+      objectCollection: config.collection
+    });
+    options.cells = isArray(options.cells)
+      ? keyBy(options.cells, 'name')
+      : options.cells;
+    extend(this, options);
   }
 
   addCell(cell: TheThingCell) {
@@ -47,9 +114,8 @@ export class TheThingRelation implements SerializableJSON {
     return get(this.cells, `${cellName}.value`, defaultValue);
   }
 
-  fromJSON(data: ITheThingRelation): this {
+  fromJSON(data: any): this {
     extend(this, data);
-    this.id = `${this.name}_${this.subjectId}_${this.objectId}`;
     if (!isEmpty(data.cells)) {
       this.cells = mapValues(
         isArray(data.cells) ? keyBy(data.cells, 'name') : data.cells,

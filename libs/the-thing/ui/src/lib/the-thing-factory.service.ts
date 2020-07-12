@@ -9,7 +9,8 @@ import {
   TheThingRelation,
   TheThingAction,
   TheThingFactory,
-  Permission
+  Permission,
+  RelationRecord
 } from '@ygg/the-thing/core';
 import {
   AuthenticateService,
@@ -88,10 +89,6 @@ export class TheThingFactoryService extends TheThingFactory
     };
   } = {};
   creationChainStack: Subject<TheThing>[] = [];
-  runAction$: Subject<{
-    theThing: TheThing;
-    action: TheThingAction;
-  }> = new Subject();
   isActionGranted$Cache: { [id: string]: Observable<boolean> } = {};
   subscriptions: Subscription[] = [];
 
@@ -356,6 +353,25 @@ export class TheThingFactoryService extends TheThingFactory
     }
   }
 
+  async saveRelations(theThing: TheThing) {
+    for (const relationName in theThing.relations) {
+      if (theThing.relations.hasOwnProperty(relationName)) {
+        const relations = theThing.relations[relationName];
+        for (const relation of relations) {
+          await this.relaitonFactory.save(
+            new RelationRecord({
+              subjectCollection: theThing.collection,
+              subjectId: theThing.id,
+              objectCollection: relation.objectCollection,
+              objectId: relation.objectId,
+              objectRole: relation.name
+            })
+          );
+        }
+      }
+    }
+  }
+
   async save(
     theThing: TheThing,
     options: {
@@ -392,6 +408,7 @@ export class TheThingFactoryService extends TheThingFactory
         theThing = imitation.preSave(theThing);
       }
       await this.theThingAccessService.upsert(theThing);
+      await this.saveRelations(theThing);
       // console.log('林');
       // Connect to remote source
       this.connectRemoteSource(theThing.id, theThing.collection);
@@ -647,10 +664,4 @@ export class TheThingFactoryService extends TheThingFactory
     return this.isActionGranted$Cache[cacheId];
   }
 
-  runAction(action: TheThingAction, theThing: TheThing) {
-    this.runAction$.next({
-      theThing,
-      action
-    });
-  }
 }

@@ -1,5 +1,5 @@
 import { extend, sample } from 'lodash';
-import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/core';
 
 export class Address implements SerializableJSON {
   private country?: string;

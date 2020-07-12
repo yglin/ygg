@@ -1,4 +1,4 @@
-import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/core';
 import { extend } from 'lodash';
 
 interface IRelationDefine {

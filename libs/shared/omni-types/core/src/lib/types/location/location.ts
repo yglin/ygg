@@ -1,4 +1,4 @@
-import { SerializableJSON } from '@ygg/shared/infra/data-access';
+import { SerializableJSON } from '@ygg/shared/infra/core';
 import { Address } from './address';
 import { GeoPoint } from './geo-point';
 

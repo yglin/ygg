@@ -2,6 +2,7 @@ import { Subject, Observable } from 'rxjs';
 import { TheThing } from './the-thing';
 import { TheThingImitation } from './imitation';
 import { TheThingState } from './state';
+import { TheThingAction } from './action';
 
 // type InputAction = 'meta' | 'add-cell' | 'create' | 'save' | 'load';
 
@@ -11,7 +12,13 @@ import { TheThingState } from './state';
 // }
 
 export abstract class TheThingFactory {
+  imitation: TheThingImitation;
   onSave$: Subject<TheThing>;
+  runAction$: Subject<{
+    theThing: TheThing;
+    action: TheThingAction;
+  }> = new Subject();
+
   abstract async create(options: {
     imitationId?: string;
     imitation: TheThingImitation;
@@ -23,9 +30,16 @@ export abstract class TheThingFactory {
     imitation: TheThingImitation,
     state: TheThingState,
     options?: {
-      force?: boolean
+      force?: boolean;
     }
   );
+
+  runAction(action: TheThingAction, theThing: TheThing) {
+    this.runAction$.next({
+      theThing,
+      action
+    });
+  }
 }
 
 // export class TheThingFactory {

@@ -2,7 +2,7 @@ import { DataAccessor } from './data-accessor';
 import { Entity, SerializerJSON, DeserializerJSON } from './entity';
 import { map, take, tap } from 'rxjs/operators';
 import { Observable, of, combineLatest } from 'rxjs';
-import { Query } from '@ygg/shared/infra/data-access';
+import { Query } from './query';
 import { isEmpty } from 'lodash';
 
 export class EntityAccessor<T extends Entity> {
@@ -32,7 +32,7 @@ export class EntityAccessor<T extends Entity> {
     // console.log(`load$ ${this.collection}/${id}`);
     return this.dataAccessor.load$(this.collection, id).pipe(
       // tap(entityData => console.log(entityData)),
-      map(entityData => this.deserializer(entityData)),
+      map(entityData => this.deserializer(entityData))
       // tap(entity => console.log(entity))
     );
   }

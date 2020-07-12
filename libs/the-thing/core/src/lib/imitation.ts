@@ -17,7 +17,7 @@ import {
   generateID,
   SerializableJSON,
   toJSONDeep
-} from '@ygg/shared/infra/data-access';
+} from '@ygg/shared/infra/core';
 import { TheThing } from './the-thing';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 import { TheThingCell } from './cell';
@@ -112,6 +112,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     options: {
       id?: string;
       name?: string;
+      icon?: string;
       collection?: string;
       cellsDef?: TheThingCellDefine[];
       displays?: ImitationDisplayConfig;

@@ -1,5 +1,5 @@
 import { TimeRange } from './time-range';
-import { SerializableJSON } from '@ygg/shared/infra/data-access';
+import { SerializableJSON } from '@ygg/shared/infra/core';
 
 export class Duration implements SerializableJSON {
   timeRange: TimeRange;

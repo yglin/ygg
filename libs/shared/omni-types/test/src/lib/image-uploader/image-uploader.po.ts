@@ -20,7 +20,8 @@ export class ImageUploaderPageObjectCypress extends ImageUploaderPageObject {
     cy.wrap(images).each((image: Image) => {
       cy.get(this.getSelector('inputImageUrl'))
         .clear({ force: true })
-        .type(image.src);
+        .invoke('val', image.src).trigger('input');
+        // .type(image.src);
       cy.get(this.getSelector('buttonAddImageUrl'), { timeout: 10000 }).click();
     });
   }

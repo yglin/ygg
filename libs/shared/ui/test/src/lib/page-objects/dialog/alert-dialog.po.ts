@@ -1,15 +1,14 @@
 import { AlertDialogPageObject } from '@ygg/shared/ui/widgets';
+import { defaults } from 'lodash';
 
 export class AlertDialogPageObjectCypress extends AlertDialogPageObject {
   expectClosed() {
     cy.get(this.getSelector(), { timeout: 10000 }).should('not.be.visible');
   }
 
-  expectMessage(message: string) {
-    cy.get(this.getSelector('content'), { timeout: 10000 }).should(
-      'have.text',
-      message
-    );
+  expectMessage(message: string, options?: any) {
+    options = defaults(options, { timeout: 10000 });
+    cy.get(this.getSelector('content'), options).should('have.text', message);
   }
 
   // confirm(): void {

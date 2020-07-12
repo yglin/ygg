@@ -319,39 +319,44 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
   }
 
   async schedule(tourPlan: TheThing) {
-    const inSchedule = await this.scheduleAdapter.deduceScheduleFromTourPlan(
-      tourPlan
-    );
-    const outSchedule = await this.scheduleFactory.edit(inSchedule);
-    const events: TheThing[] = await this.scheduleAdapter.deriveEventsFromSchedule(
-      outSchedule
-    );
+    try {
+      const inSchedule = await this.scheduleAdapter.deduceScheduleFromTourPlan(
+        tourPlan
+      );
+      const outSchedule = await this.scheduleFactory.edit(inSchedule);
+      const events: TheThing[] = await this.scheduleAdapter.deriveEventsFromSchedule(
+        outSchedule
+      );
 
-    const relations: TheThingRelation[] = [];
-    for (const event of events) {
-      // Save event
-      await this.theThingFactory.save(event, {
+      const relations: TheThingRelation[] = [];
+      for (const event of events) {
+        // Save event
+        await this.theThingFactory.save(event, {
+          requireOwner: true,
+          imitation: ImitationEvent,
+          force: true
+        });
+        // Attach event to tour-plan
+        const relation = RelationshipScheduleEvent.createRelation(
+          tourPlan.id,
+          event.id
+        );
+        relations.push(relation);
+      }
+      tourPlan.setRelation(RelationshipScheduleEvent.name, relations);
+
+      // Save tour-plan
+      await this.theThingFactory.save(tourPlan, {
         requireOwner: true,
-        imitation: ImitationEvent,
+        imitation: ImitationTourPlan,
         force: true
       });
-      // Attach event to tour-plan
-      const relation = RelationshipScheduleEvent.createRelation(
-        tourPlan.id,
-        event.id
-      );
-      relations.push(relation);
+      this.theThingFactory.emitChange(tourPlan);
+      this.router.navigate(['/', ImitationTourPlan.routePath, tourPlan.id]);
+    } catch (error) {
+      this.emcee.error(`排定行程表失敗，錯誤原因：${error.message}`);
+      return Promise.reject();
     }
-    tourPlan.setRelation(RelationshipScheduleEvent.name, relations);
-
-    // Save tour-plan
-    this.theThingFactory.save(tourPlan, {
-      requireOwner: true,
-      imitation: ImitationTourPlan,
-      force: true
-    });
-    this.theThingFactory.emitChange(tourPlan);
-    this.router.navigate(['/', ImitationTourPlan.routePath, tourPlan.id]);
   }
 
   async sendApprovalRequests(tourPlan: TheThing) {
@@ -360,23 +365,33 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     );
     if (confirm) {
       try {
-        ImitationTourPlan.setState(
-          tourPlan,
-          ImitationTourPlan.states.waitApproval
-        );
-        await this.theThingFactory.save(tourPlan, { force: true });
         const relations: TheThingRelation[] = tourPlan.getRelations(
           RelationshipScheduleEvent.name
         );
         for (const relation of relations) {
-          const event: TheThing = await this.theThingFactory.load(
-            relation.objectId
-          );
-          await this.eventFactory.sendApprovalRequest(event);
+          try {
+            const event: TheThing = await this.theThingFactory.load(
+              relation.objectId,
+              ImitationEvent.collection
+            );
+            console.log(`Send confirmation for event ${event.name}`);
+            await this.eventFactory.sendApprovalRequest(event);
+            console.log(`Confirmation for event ${event.name} sent`);
+          } catch (error) {
+            throw new Error(
+              `送出行程確認失敗，id: ${relation.objectId},${error.message}`
+            );
+          }
         }
+        this.theThingFactory.setState(
+          tourPlan,
+          ImitationTourPlan,
+          ImitationTourPlan.states.waitApproval,
+          { force: true }
+        );
         this.emcee.info(`<h3>已送出行程確認，等待各活動負責人確認中</h3>`);
       } catch (error) {
-        this.emcee.error(`送出失敗，錯誤原因：${error.message}`);
+        this.emcee.error(`送出行程確認失敗，錯誤原因：${error.message}`);
       }
     }
   }

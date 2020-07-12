@@ -1,4 +1,4 @@
-import { SerializableJSON } from '@ygg/shared/infra/data-access';
+import { SerializableJSON } from '@ygg/shared/infra/core';
 import { isArray, isEmpty, range, random, find, remove, every } from 'lodash';
 import { Tag } from './tag';
 

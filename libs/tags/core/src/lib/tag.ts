@@ -1,10 +1,10 @@
 import { sample } from 'lodash';
-import { v4 as uuid} from 'uuid';
-import { DataItem } from '@ygg/shared/infra/data-access';
+import { v4 as uuid } from 'uuid';
+import { Entity } from '@ygg/shared/infra/core';
 
-export class Tag implements DataItem {
+export class Tag implements Entity {
   static collectionName = 'tags';
-  
+
   readonly id: string;
   readonly name: string;
 

@@ -34,12 +34,12 @@ export class EmceePageObjectCypress extends PageObject {
     // }
   }
 
-  alert(message: string) {
+  alert(message: string, options?: any) {
     const dialogPO = new YggDialogPageObjectCypress();
     const alertDialogPO = new AlertDialogPageObjectCypress(
       dialogPO.getSelector()
     );
-    alertDialogPO.expectMessage(message);
+    alertDialogPO.expectMessage(message, options);
     // cy.pause();
     dialogPO.confirm();
     // alertDialogPO.expectClosed();

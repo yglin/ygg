@@ -1,4 +1,4 @@
-import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
+import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/core';
 import { TheThingCell } from './cell';
 import { extend, get } from 'lodash';
 import { OmniTypes, OmniTypeID } from '@ygg/shared/omni-types/core';

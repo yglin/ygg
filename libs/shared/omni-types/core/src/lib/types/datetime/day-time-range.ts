@@ -1,10 +1,9 @@
-import { random } from 'lodash';
+import { SerializableJSON } from '@ygg/shared/infra/core';
 import * as Moment from 'moment';
 import { extendMoment } from 'moment-range';
-const moment = extendMoment(Moment);
-import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/data-access';
 import { DayTime } from './day-time';
 import { TimeRange } from './time-range';
+const moment = extendMoment(Moment);
 
 export class DayTimeRange implements SerializableJSON {
   private _start: DayTime;

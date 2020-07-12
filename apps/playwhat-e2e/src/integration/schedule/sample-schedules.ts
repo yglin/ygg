@@ -9,7 +9,9 @@ import {
   ImitationPlay,
   ImitationTourPlan,
   RelationshipScheduleEvent,
-  RelationshipEquipment
+  RelationshipEquipment,
+  ImitationEvent,
+  RelationshipPlay
 } from '@ygg/playwhat/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import {
@@ -21,7 +23,11 @@ import {
   PlaysWithEquipment,
   PlaysWithoutEquipment
 } from '../play/sample-plays';
-import { TheThing, TheThingRelation } from '@ygg/the-thing/core';
+import {
+  TheThing,
+  TheThingRelation,
+  RelationRecord
+} from '@ygg/the-thing/core';
 
 // let dateRange: DateRange = TourPlanWithPlaysAndEquipments.getCellValue(
 //   CellDefinesTourPlan.dateRange.name
@@ -53,6 +59,7 @@ ImitationTourPlan.setState(
 );
 
 export const ScheduledEvents: TheThing[] = [];
+export const RelationPlayOfEvents: RelationRecord[] = [];
 
 const dateRange = TourPlanUnscheduled.getCellValue(
   CellDefinesTourPlan.dateRange.name
@@ -75,6 +82,15 @@ for (const relation of TourPlanUnscheduled.getRelations(
     );
     ScheduleTrivial.addEvent(event);
     ScheduledEvents.push(ScheduleAdapter.deriveEventFromServiceEvent(event));
+    RelationPlayOfEvents.push(
+      new RelationRecord({
+        subjectCollection: ImitationEvent.collection,
+        subjectId: event.id,
+        objectCollection: ImitationPlay.collection,
+        objectId: play.id,
+        objectRole: RelationshipPlay.name
+      })
+    );
   }
 }
 
@@ -89,7 +105,7 @@ TourPlanScheduled.setRelation(
 );
 
 export const TourPlanScheduledOneEvent = TourPlanScheduled.clone();
-TourPlanScheduledOneEvent.name = '測試遊程(已規劃行程，一個事件)';
+TourPlanScheduledOneEvent.name = '測試遊程(已規劃行程，一個活動事件)';
 ImitationTourPlan.setState(
   TourPlanScheduledOneEvent,
   ImitationTourPlan.states.applied
@@ -100,3 +116,16 @@ TourPlanScheduledOneEvent.setRelation(RelationshipScheduleEvent.name, [
     ScheduledEvents[0].id
   )
 ]);
+
+export const TourPlanScheduled3Events = TourPlanScheduled.clone();
+TourPlanScheduled3Events.name = '測試遊程(已規劃行程，三個活動事件)';
+ImitationTourPlan.setState(
+  TourPlanScheduled3Events,
+  ImitationTourPlan.states.applied
+);
+TourPlanScheduled3Events.setRelation(
+  RelationshipScheduleEvent.name,
+  ScheduledEvents.slice(0, 3).map(ev =>
+    RelationshipScheduleEvent.createRelation(TourPlanScheduled3Events.id, ev.id)
+  )
+);
