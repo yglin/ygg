@@ -11,12 +11,13 @@ import {
   Resolve
 } from '@angular/router';
 import { ItemAccessService } from './item-access.service';
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, RelationAccessor } from '@ygg/the-thing/core';
 import {
   TheThingFactoryService,
   RelationFactoryService
 } from '@ygg/the-thing/ui';
 import { UserService, AuthenticateUiService } from '@ygg/shared/user/ui';
+import { TheThingAccessService } from '@ygg/the-thing/data-access';
 
 @Injectable({
   providedIn: 'root'

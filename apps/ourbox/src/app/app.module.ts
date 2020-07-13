@@ -23,6 +23,8 @@ import { BoxFactoryService } from './box-factory.service';
 import { noop } from 'lodash';
 import { MyBoxesComponent } from './pages/box/my-boxes/my-boxes.component';
 import { ItemTransferComponent } from './pages/item/item-transfer/item-transfer.component';
+import { ItemTransferCompleteComponent } from './components/item-transfer-complete/item-transfer-complete.component';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import { ItemTransferComponent } from './pages/item/item-transfer/item-transfer.
     ItemViewComponent,
     ItemThumbnailComponent,
     MyBoxesComponent,
-    ItemTransferComponent
+    ItemTransferComponent,
+    ItemTransferCompleteComponent
   ],
   imports: [
     BrowserModule,
@@ -46,6 +49,7 @@ import { ItemTransferComponent } from './pages/item/item-transfer/item-transfer.
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
     SharedUserUiModule,
+    SharedOmniTypesUiModule,
     TheThingUiModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(routes)

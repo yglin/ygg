@@ -3,7 +3,9 @@ import {
   TheThingFactory,
   RelationFactory,
   Relationship,
-  RelationRecord
+  RelationRecord,
+  TheThingAccessor,
+  RelationAccessor
 } from '@ygg/the-thing/core';
 import { Router, Emcee } from '@ygg/shared/infra/core';
 import { Subject, BehaviorSubject, Observable, of } from 'rxjs';
@@ -12,12 +14,14 @@ import {
   ItemFilter,
   RelationshipBoxItem,
   RelationshipItemHolder,
-  RelationshipItemRequestBorrow
+  RelationshipItemRequestBorrow,
+  ImitationItemCells
 } from '../models';
 import { take, filter, switchMap, tap, catchError, map } from 'rxjs/operators';
 import { ItemAccessor } from './item-accessor';
 import { User, UserAccessor, Authenticator } from '@ygg/shared/user/core';
 import { isEmpty, first } from 'lodash';
+import { Location } from '@ygg/shared/omni-types/core';
 
 export class ItemFactory {
   // creatingPool: {
@@ -217,6 +221,37 @@ export class ItemFactory {
         `取消索取 ${!!item ? item.name : itemId} 失敗，錯誤原因：${
           error.message
         }`
+      );
+    }
+  }
+
+  async transfer(item: TheThing, receiver: User, newLocation: Location) {
+    try {
+      item.setCellValue(ImitationItemCells.location.name, newLocation);
+      ImitationItem.setState(item, ImitationItem.states.available);
+      await this.theThingFactory.save(item, {
+        imitation: ImitationItem,
+        force: true
+      });
+      await this.relationFactory.delete(
+        item.id,
+        RelationshipItemRequestBorrow.role,
+        receiver.id
+      );
+      await this.relationFactory.replaceObject(
+        new RelationRecord({
+          subjectCollection: item.collection,
+          subjectId: item.id,
+          objectCollection: User.collection,
+          objectId: receiver.id,
+          objectRole: RelationshipItemHolder.role
+        })
+      );
+    } catch (error) {
+      return Promise.reject(
+        new Error(
+          `Failed to transfer ${item.name} to ${receiver.name}\n ${error.message} `
+        )
       );
     }
   }

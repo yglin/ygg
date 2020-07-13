@@ -1,34 +1,36 @@
-import {
-  TheThing,
-  TheThingFactory,
-  RelationFactory,
-  RelationRecord
-} from '@ygg/the-thing/core';
-import {
-  User,
-  Authenticator,
-  UserAccessor,
-  InvitationFactory,
-  Invitation
-} from '@ygg/shared/user/core';
 import { Emcee, Router } from '@ygg/shared/infra/core';
+import { Location } from '@ygg/shared/omni-types/core';
+import {
+  Authenticator,
+  InvitationFactory,
+  User,
+  UserAccessor
+} from '@ygg/shared/user/core';
+import {
+  RelationFactory,
+  RelationRecord,
+  TheThing,
+  TheThingFactory
+} from '@ygg/the-thing/core';
 import { first, isEmpty } from 'lodash';
-import { ItemFactory } from './item-factory';
-import { take, filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 import {
   ImitationItem,
   ImitationItemTransfer,
-  RelationshipItemTransferItem,
   RelationshipItemTransferGiver,
-  RelationshipItemTransferReceiver,
-  ImitationItemTransferCellDefines,
-  ImitationItemTransferStates
+  RelationshipItemTransferItem,
+  RelationshipItemTransferReceiver
 } from '../models';
-import { Subscription } from 'rxjs';
+import { ItemFactory } from './item-factory';
 
 export const ItemTransferInvitationType = 'ourbox-item-transfer';
 
-export class ItemTransferFactory {
+export interface ItemTransferCompleteInfo {
+  newLocation: Location;
+}
+
+export abstract class ItemTransferFactory {
   subscription: Subscription = new Subscription();
 
   constructor(
@@ -37,6 +39,7 @@ export class ItemTransferFactory {
     protected authenticator: Authenticator,
     // protected itemAccessor: ItemAccessor,
     protected itemFactory: ItemFactory,
+    // protected theThingAccessor: TheThingAccessor,
     protected theThingFactory: TheThingFactory,
     protected relationFactory: RelationFactory,
     protected userAccessor: UserAccessor,
@@ -45,11 +48,12 @@ export class ItemTransferFactory {
     this.subscription.add(
       this.theThingFactory.runAction$.subscribe(actionInfo => {
         switch (actionInfo.action.id) {
-          case 'item-transfer-confirm-reception':
-            this.confirmReception(actionInfo.theThing);
+          case 'item-transfer-consent-reception':
+            this.consentReception(actionInfo.theThing);
             break;
 
           case 'item-transfer-confirm-completed':
+            this.completeReception(actionInfo.theThing);
             break;
 
           default:
@@ -58,6 +62,10 @@ export class ItemTransferFactory {
       })
     );
   }
+
+  abstract async inquireCompleteInfo(
+    item: TheThing
+  ): Promise<ItemTransferCompleteInfo>;
 
   async create(item: TheThing, giver: User, receiver: User): Promise<TheThing> {
     try {
@@ -235,7 +243,7 @@ export class ItemTransferFactory {
     }
   }
 
-  async confirmReception(itemTransfer: TheThing) {
+  async consentReception(itemTransfer: TheThing) {
     let item: TheThing;
     let giver: User;
     let receiver: User;
@@ -250,7 +258,7 @@ export class ItemTransferFactory {
         await this.theThingFactory.setState(
           itemTransfer,
           ImitationItemTransfer,
-          ImitationItemTransfer.states.confirmed,
+          ImitationItemTransfer.states.consented,
           { force: true }
         );
         await this.invitationFactory.create({
@@ -269,6 +277,45 @@ export class ItemTransferFactory {
       }
     } catch (error) {
       this.emcee.error(`確認交付失敗，錯誤原因：${error.message}`);
+      return Promise.reject();
+    }
+  }
+
+  async completeReception(itemTransfer: TheThing) {
+    let item: TheThing;
+    let giver: User;
+    let receiver: User;
+    try {
+      item = await this.getTransferItem(itemTransfer.id);
+      giver = await this.getGiver(itemTransfer.id);
+      receiver = await this.getReceiver(itemTransfer.id);
+      const completeInfo = await this.inquireCompleteInfo(item);
+      if (completeInfo && completeInfo.newLocation) {
+        await this.itemFactory.transfer(
+          item,
+          receiver,
+          completeInfo.newLocation
+        );
+        await this.theThingFactory.setState(
+          itemTransfer,
+          ImitationItemTransfer,
+          ImitationItemTransfer.states.completed,
+          { force: true }
+        );
+        await this.invitationFactory.create({
+          type: ItemTransferInvitationType,
+          inviterId: receiver.id,
+          email: giver.email,
+          mailSubject: `${receiver.name} 已收到 ${item.name}`,
+          mailContent: `${receiver.name} 已收到 ${item.name}，請點選以下網址檢視交付記錄`,
+          confirmMessage: `<h3>您將前往交付記錄頁面</h3>`,
+          landingUrl: `/${ImitationItemTransfer.routePath}/${itemTransfer.id}`,
+          data: {}
+        });
+        this.emcee.info(`已通知 ${giver.name}, ${item.name} 的交付已完成`);
+      }
+    } catch (error) {
+      this.emcee.error(`確認完成失敗，錯誤原因：${error.message}`);
       return Promise.reject();
     }
   }

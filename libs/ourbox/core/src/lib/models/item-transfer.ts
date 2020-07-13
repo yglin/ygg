@@ -41,8 +41,8 @@ export const ImitationItemTransferStates: { [name: string]: TheThingState } = {
     label: '新建立',
     value: 10
   },
-  confirmed: {
-    name: 'confirmed',
+  consented: {
+    name: 'consented',
     label: '雙方已同意進行交付',
     value: 30
   },
@@ -54,8 +54,8 @@ export const ImitationItemTransferStates: { [name: string]: TheThingState } = {
 };
 
 export const ImitationItemTransferActions: { [id: string]: TheThingAction } = {
-  'item-transfer-confirm-reception': {
-    id: 'item-transfer-confirm-reception',
+  'item-transfer-consent-reception': {
+    id: 'item-transfer-consent-reception',
     icon: 'event_available',
     tooltip: '確定會依約收取寶物',
     permissions: [
@@ -68,7 +68,7 @@ export const ImitationItemTransferActions: { [id: string]: TheThingAction } = {
     icon: 'done_all',
     tooltip: '確認已收到寶物，交付完成',
     permissions: [
-      `state:${ImitationItemTransferStates.confirmed.name}`,
+      `state:${ImitationItemTransferStates.consented.name}`,
       `role:${RelationshipItemTransferReceiver.role}`
     ]
   }

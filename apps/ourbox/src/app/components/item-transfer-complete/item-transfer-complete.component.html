@@ -1,0 +1,10 @@
+<div class="item-transfer-complete">
+  <div *ngIf="item">
+    <h2>確認已收到{{ item.name }}，請更新寶物所在的位置</h2>
+    <br /><br />
+    <ygg-omni-type-control
+      [type]="OmniTypes.location.id"
+      [formControl]="formControl"
+    ></ygg-omni-type-control>
+  </div>
+</div>

@@ -25,6 +25,14 @@ export abstract class TheThingFactory {
   }): Promise<TheThing>;
   abstract load$(id: string, collection: string): Observable<TheThing>;
   abstract async load(id: string, collection: string): Promise<TheThing>;
+  abstract async save(
+    theThing: TheThing,
+    options?: {
+      requireOwner?: boolean;
+      imitation?: TheThingImitation;
+      force?: boolean;
+    }
+  ): Promise<TheThing>;
   abstract async setState(
     thing: TheThing,
     imitation: TheThingImitation,

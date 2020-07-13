@@ -1,8 +1,9 @@
 import { Query } from '@ygg/shared/infra/core';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, take } from 'rxjs/operators';
 import { RelationRecord } from './relation';
 import { RelationAccessor } from './relation-accessor';
+import { isEmpty } from 'lodash';
 
 export abstract class RelationFactory {
   constructor(protected relationAccessor: RelationAccessor) {}
@@ -76,5 +77,25 @@ export abstract class RelationFactory {
       console.error(error);
       return false;
     }
+  }
+
+  async deleteBySubjectAndRole(subjectId: string, objectRole: string) {
+    const relations = await this.findBySubjectAndRole$(subjectId, objectRole)
+      .pipe(take(1))
+      .toPromise();
+    if (!isEmpty(relations)) {
+      for (const relation of relations) {
+        await this.delete(
+          relation.subjectId,
+          relation.objectRole,
+          relation.objectId
+        );
+      }
+    }
+  }
+
+  async replaceObject(relation: RelationRecord) {
+    await this.deleteBySubjectAndRole(relation.subjectId, relation.objectRole);
+    return this.save(relation);
   }
 }

@@ -5,8 +5,12 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot
 } from '@angular/router';
-import { ItemTransferFactory, ImitationItemTransfer } from '@ygg/ourbox/core';
-import { EmceeService } from '@ygg/shared/ui/widgets';
+import {
+  ItemTransferFactory,
+  ImitationItemTransfer,
+  ItemTransferCompleteInfo
+} from '@ygg/ourbox/core';
+import { EmceeService, YggDialogService } from '@ygg/shared/ui/widgets';
 import {
   AuthenticateUiService,
   UserService,
@@ -19,6 +23,7 @@ import {
 import { ItemFactoryService } from './item-factory.service';
 import { Observable } from 'rxjs';
 import { TheThing } from '@ygg/the-thing/core';
+import { ItemTransferCompleteComponent } from './components/item-transfer-complete/item-transfer-complete.component';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +38,8 @@ export class ItemTransferFactoryService extends ItemTransferFactory
     theThingFactory: TheThingFactoryService,
     relationFactory: RelationFactoryService,
     userAccessor: UserService,
-    invitationFactory: InvitationFactoryService
+    invitationFactory: InvitationFactoryService,
+    protected dialog: YggDialogService
   ) {
     super(
       emcee,
@@ -66,5 +72,22 @@ export class ItemTransferFactoryService extends ItemTransferFactory
       this.router.navigate(['/']);
       return;
     }
+  }
+
+  async inquireCompleteInfo(item: TheThing): Promise<ItemTransferCompleteInfo> {
+    return new Promise((resolve, reject) => {
+      const dialogRef = this.dialog.open(ItemTransferCompleteComponent, {
+        title: `確認已收到 ${item.name}`,
+        data: {
+          item
+        }
+      });
+      dialogRef.afterClosed().subscribe(
+        (result: ItemTransferCompleteInfo) => {
+          resolve(result);
+        },
+        error => reject(error)
+      );
+    });
   }
 }
