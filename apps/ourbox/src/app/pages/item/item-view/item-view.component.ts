@@ -5,8 +5,8 @@ import {
   AuthenticateUiService
 } from '@ygg/shared/user/ui';
 import { Observable, isObservable, Subscription, of, merge } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { ImitationItem } from '@ygg/ourbox/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ImitationItem, ImitationItemTransfer } from '@ygg/ourbox/core';
 import { ItemFactoryService } from '../../../item-factory.service';
 import { tap, switchMap, map } from 'rxjs/operators';
 import { User } from '@ygg/shared/user/core';
@@ -31,7 +31,8 @@ export class ItemViewComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private authUiService: AuthenticateUiService,
     private itemFactory: ItemFactoryService,
-    private itemTransferFactory: ItemTransferFactoryService
+    private itemTransferFactory: ItemTransferFactoryService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -103,5 +104,16 @@ export class ItemViewComponent implements OnInit, OnDestroy {
 
   giveToNext() {
     this.itemTransferFactory.giveAway(this.item.id);
+  }
+
+  async gotoTransfer() {
+    const itemTransfer: TheThing = await this.itemTransferFactory.getLatestItemTransfer(
+      this.item
+    );
+    this.router.navigate([
+      '/',
+      ImitationItemTransfer.routePath,
+      itemTransfer.id
+    ]);
   }
 }

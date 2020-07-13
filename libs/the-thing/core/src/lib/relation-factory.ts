@@ -1,6 +1,6 @@
 import { Query } from '@ygg/shared/infra/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { RelationRecord } from './relation';
 import { RelationAccessor } from './relation-accessor';
 
@@ -60,9 +60,7 @@ export abstract class RelationFactory {
     objectRole: string
   ): Observable<boolean> {
     const id = RelationRecord.constructId(subjectId, objectRole, objectId);
-    return this.relationAccessor
-      .load$(id)
-      .pipe(map(relationRecord => !!relationRecord));
+    return this.relationAccessor.has$(id);
   }
 
   async hasRelation(

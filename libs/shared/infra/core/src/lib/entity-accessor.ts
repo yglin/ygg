@@ -28,6 +28,10 @@ export class EntityAccessor<T extends Entity> {
     );
   }
 
+  has$(id: string): Observable<boolean> {
+    return this.dataAccessor.has$(this.collection, id);
+  }
+
   load$(id: string): Observable<T> {
     // console.log(`load$ ${this.collection}/${id}`);
     return this.dataAccessor.load$(this.collection, id).pipe(

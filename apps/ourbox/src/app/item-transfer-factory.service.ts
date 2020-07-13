@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import {
   Router,
   Resolve,
@@ -24,7 +24,7 @@ import { TheThing } from '@ygg/the-thing/core';
   providedIn: 'root'
 })
 export class ItemTransferFactoryService extends ItemTransferFactory
-  implements Resolve<Observable<TheThing>> {
+  implements Resolve<Observable<TheThing>>, OnDestroy {
   constructor(
     emcee: EmceeService,
     router: Router,
@@ -45,6 +45,10 @@ export class ItemTransferFactoryService extends ItemTransferFactory
       userAccessor,
       invitationFactory
     );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   resolve(

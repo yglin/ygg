@@ -7,7 +7,7 @@ import {
 import { AngularFireDatabase } from '@angular/fire/database';
 import { LogService } from '@ygg/shared/infra/log';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 import { Query } from './query';
 
 type FireQueryRef =
@@ -65,22 +65,20 @@ export class FireStoreAccessService extends DataAccessor {
     }
   }
 
+  has$(collection: string, id: string): Observable<boolean> {
+    return this.getCollection(collection)
+      .doc(id)
+      .snapshotChanges()
+      .pipe(map(action => action.payload.exists));
+  }
+
   load$(collection: string, id: string): Observable<any> {
     return this.getCollection(collection)
       .doc(id)
       .snapshotChanges()
       .pipe(
-        map(action => {
-          const snapshot = action.payload;
-          if (snapshot.exists) {
-            return snapshot.data();
-          } else {
-            this.logService.warning(
-              `Not found document in collection ${collection} with id: ${id}`
-            );
-            return null;
-          }
-        })
+        filter(action => action.payload.exists),
+        map(action => action.payload.data())
       );
   }
 

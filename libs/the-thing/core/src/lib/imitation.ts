@@ -11,7 +11,8 @@ import {
   uniq,
   find,
   values,
-  noop
+  noop,
+  defaults
 } from 'lodash';
 import {
   generateID,
@@ -121,6 +122,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       states?: { [name: string]: TheThingState };
       creators?: TheThingCreator[];
       cellsOrder?: string[];
+      canModify?: (theThing: TheThing) => boolean;
       actions?: { [id: string]: TheThingAction };
       [key: string]: any;
     } = {}
@@ -129,6 +131,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     this.createAt = new Date().valueOf();
     this.view = 'basic';
     this.fromJSON(options);
+    defaults(this, options);
   }
 
   setRequiredCells(cellDefs: TheThingCellDefine[]) {

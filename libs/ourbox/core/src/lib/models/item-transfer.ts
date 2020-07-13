@@ -43,7 +43,7 @@ export const ImitationItemTransferStates: { [name: string]: TheThingState } = {
   },
   confirmed: {
     name: 'confirmed',
-    label: '雙方已同意',
+    label: '雙方已同意進行交付',
     value: 30
   },
   completed: {
@@ -54,12 +54,21 @@ export const ImitationItemTransferStates: { [name: string]: TheThingState } = {
 };
 
 export const ImitationItemTransferActions: { [id: string]: TheThingAction } = {
-  'confirm-receive': {
-    id: 'confirm-receive',
-    icon: 'fact_check',
-    tooltip: '確定要收取寶物',
+  'item-transfer-confirm-reception': {
+    id: 'item-transfer-confirm-reception',
+    icon: 'event_available',
+    tooltip: '確定會依約收取寶物',
     permissions: [
       `state:${ImitationItemTransferStates.new.name}`,
+      `role:${RelationshipItemTransferReceiver.role}`
+    ]
+  },
+  'item-transfer-confirm-completed': {
+    id: 'item-transfer-confirm-completed',
+    icon: 'done_all',
+    tooltip: '確認已收到寶物，交付完成',
+    permissions: [
+      `state:${ImitationItemTransferStates.confirmed.name}`,
       `role:${RelationshipItemTransferReceiver.role}`
     ]
   }
@@ -86,5 +95,11 @@ export const ImitationItemTransfer = new TheThingImitation({
     ImitationItemTransferCellDefines.datetime.name,
     ImitationItemTransferCellDefines.location.name
   ],
+  canModify: (theThing: TheThing): boolean => {
+    return ImitationItemTransfer.isState(
+      theThing,
+      ImitationItemTransfer.states.new
+    );
+  },
   actions: ImitationItemTransferActions
 });

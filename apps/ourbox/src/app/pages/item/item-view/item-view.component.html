@@ -17,13 +17,28 @@
         <h2>
           排隊中：
         </h2>
-        <div *ngIf="standbyList.length > 0 && amHolder">
+        <div
+          *ngIf="
+            standbyList.length > 0 &&
+            amHolder &&
+            ImitationItem.isState(item, ImitationItem.states.available)
+          "
+        >
           <button
             mat-fab
             matTooltip="讓渡給下一位等候者"
             (click)="giveToNext()"
           >
             <mat-icon>next_plan</mat-icon>
+          </button>
+        </div>
+        <div *ngIf="ImitationItem.isState(item, ImitationItem.states.transfer)">
+          <button
+            mat-fab
+            matTooltip="正在讓渡，檢視交付任務"
+            (click)="gotoTransfer()"
+          >
+            <mat-icon>connect_without_contact</mat-icon>
           </button>
         </div>
         <div *ngFor="let userId of standbyList" class="stand-by">

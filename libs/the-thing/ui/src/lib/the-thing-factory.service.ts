@@ -589,6 +589,9 @@ export class TheThingFactoryService extends TheThingFactory
             if (typeof permission === 'string') {
               if (permission.startsWith('role')) {
                 const role = permission.split(':')[1];
+                // console.log(
+                //   `Has relation? ${theThing.id}, ${user.id}, ${role}`
+                // );
                 return this.relaitonFactory.hasRelation$(
                   theThing.id,
                   user.id,
@@ -663,5 +666,4 @@ export class TheThingFactoryService extends TheThingFactory
     }
     return this.isActionGranted$Cache[cacheId];
   }
-
 }

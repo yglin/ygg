@@ -24,10 +24,13 @@ import {
   ImitationItemTransferCellDefines,
   ImitationItemTransferStates
 } from '../models';
+import { Subscription } from 'rxjs';
 
 export const ItemTransferInvitationType = 'ourbox-item-transfer';
 
 export class ItemTransferFactory {
+  subscription: Subscription = new Subscription();
+
   constructor(
     protected emcee: Emcee,
     protected router: Router,
@@ -38,14 +41,30 @@ export class ItemTransferFactory {
     protected relationFactory: RelationFactory,
     protected userAccessor: UserAccessor,
     protected invitationFactory: InvitationFactory
-  ) {}
+  ) {
+    this.subscription.add(
+      this.theThingFactory.runAction$.subscribe(actionInfo => {
+        switch (actionInfo.action.id) {
+          case 'item-transfer-confirm-reception':
+            this.confirmReception(actionInfo.theThing);
+            break;
+
+          case 'item-transfer-confirm-completed':
+            break;
+
+          default:
+            break;
+        }
+      })
+    );
+  }
 
   async create(item: TheThing, giver: User, receiver: User): Promise<TheThing> {
     try {
       const newItemTrnasfer = await this.theThingFactory.create({
         imitation: ImitationItemTransfer
       });
-      newItemTrnasfer.name = `${giver.name} 讓渡 ${item.name} 給 ${receiver.name} 的交付記錄`;
+      newItemTrnasfer.name = `${giver.name} 交付 ${item.name} 給 ${receiver.name} 的交付記錄`;
       await this.relationFactory.create({
         subjectCollection: ImitationItemTransfer.collection,
         subjectId: newItemTrnasfer.id,
@@ -88,6 +107,25 @@ export class ItemTransferFactory {
     }
   }
 
+  async getLatestItemTransfer(item: TheThing): Promise<TheThing> {
+    try {
+      const relations: RelationRecord[] = await this.relationFactory
+        .findByObjectAndRole$(item.id, RelationshipItemTransferItem.role)
+        .pipe(take(1))
+        .toPromise();
+      const relationLatest: RelationRecord = RelationRecord.findLatest(
+        relations
+      );
+      return this.theThingFactory.load(
+        relationLatest.subjectId,
+        relationLatest.subjectCollection
+      );
+    } catch (error) {
+      this.emcee.error(`找不到${item.name}的交付記錄`);
+      return Promise.reject();
+    }
+  }
+
   async giveAway(itemId: string) {
     let item: TheThing;
     try {
@@ -113,7 +151,7 @@ export class ItemTransferFactory {
       this.router.navigate(['/', ImitationItem.routePath, item.id]);
     } catch (error) {
       this.emcee.error(
-        `建立 ${!!item ? item.name : itemId} 的讓渡任務失敗，錯誤原因：${
+        `建立 ${!!item ? item.name : itemId} 的交付任務失敗，錯誤原因：${
           error.message
         }`
       );
@@ -167,18 +205,18 @@ export class ItemTransferFactory {
       item = await this.getTransferItem(itemTransfer.id);
       giver = await this.getGiver(itemTransfer.id);
       receiver = await this.getReceiver(itemTransfer.id);
-      this.invitationFactory.create({
+      await this.invitationFactory.create({
         type: ItemTransferInvitationType,
         inviterId: giver.id,
         email: receiver.email,
         mailSubject: `${giver.name} 想要將 ${item.name} 交給你`,
-        mailContent: `${giver.name} 想要將 ${item.name} 交給你，請點選以下網址檢視讓渡約定的相關訊息`,
-        confirmMessage: `<h3>您將前往讓渡通知的頁面</h3><br><h3>請確認相關約定事項</h3>`,
+        mailContent: `${giver.name} 想要將 ${item.name} 交給你，請點選以下網址檢視交付約定的相關訊息`,
+        confirmMessage: `<h3>您將前往交付通知的頁面</h3><br><h3>請確認相關約定事項</h3>`,
         landingUrl: `/${ImitationItemTransfer.routePath}/${itemTransfer.id}`,
         data: {}
       });
       await this.emcee.info(
-        `已送出 ${item.name} 的讓渡要求，請等待 ${receiver.name} 的回應`
+        `已送出 ${item.name} 的交付要求，請等待 ${receiver.name} 的回應`
       );
     } catch (error) {
       this.emcee.error(
@@ -192,8 +230,46 @@ export class ItemTransferFactory {
               receiver.name +
               ' '
             : ''
-        }讓渡通知失敗，錯誤原因：${error.message}`
+        }交付通知失敗，錯誤原因：${error.message}`
       );
+    }
+  }
+
+  async confirmReception(itemTransfer: TheThing) {
+    let item: TheThing;
+    let giver: User;
+    let receiver: User;
+    try {
+      item = await this.getTransferItem(itemTransfer.id);
+      giver = await this.getGiver(itemTransfer.id);
+      receiver = await this.getReceiver(itemTransfer.id);
+      const confirm = await this.emcee.confirm(
+        `確定要依照約定前往收取寶物 ${item.name} 嗎？`
+      );
+      if (confirm) {
+        await this.theThingFactory.setState(
+          itemTransfer,
+          ImitationItemTransfer,
+          ImitationItemTransfer.states.confirmed,
+          { force: true }
+        );
+        await this.invitationFactory.create({
+          type: ItemTransferInvitationType,
+          inviterId: receiver.id,
+          email: giver.email,
+          mailSubject: `${receiver.name} 已確認要收取 ${item.name}`,
+          mailContent: `${receiver.name} 已確認要收取 ${item.name}，請點選以下網址檢視交付約定的相關訊息`,
+          confirmMessage: `<h3>您將前往交付通知的頁面</h3><br><h3>請確認相關約定事項</h3>`,
+          landingUrl: `/${ImitationItemTransfer.routePath}/${itemTransfer.id}`,
+          data: {}
+        });
+        this.emcee.info(
+          `已通知 ${giver.name} ，請依照約定時間地點前往進行交付`
+        );
+      }
+    } catch (error) {
+      this.emcee.error(`確認交付失敗，錯誤原因：${error.message}`);
+      return Promise.reject();
     }
   }
 }

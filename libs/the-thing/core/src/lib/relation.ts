@@ -6,10 +6,12 @@ import {
   get,
   isArray,
   keyBy,
-  defaults
+  defaults,
+  reduce
 } from 'lodash';
 import { Entity, SerializableJSON, toJSONDeep } from '@ygg/shared/infra/core';
 import { config } from './config';
+import { Relationship } from './relationship';
 
 export class RelationRecord implements Entity, SerializableJSON {
   static collection = 'relations';
@@ -21,6 +23,20 @@ export class RelationRecord implements Entity, SerializableJSON {
   objectId: string;
   objectRole: string;
   createAt: Date;
+
+  static findLatest(relations: RelationRecord[]): RelationRecord {
+    return reduce(
+      relations,
+      (result: RelationRecord, r: RelationRecord) => {
+        if (!result || result.createAt < r.createAt) {
+          return r;
+        } else {
+          return result;
+        }
+      },
+      null
+    );
+  }
 
   static constructId(
     subjectId: string,
@@ -54,7 +70,7 @@ export class RelationRecord implements Entity, SerializableJSON {
       }
     }
     return this;
-  };
+  }
 
   toJSON(): any {
     const data: any = toJSONDeep(this);
@@ -62,7 +78,7 @@ export class RelationRecord implements Entity, SerializableJSON {
       data.createAt = this.createAt.toISOString();
     }
     return data;
-  };
+  }
 }
 
 export interface ITheThingRelation {
