@@ -2,7 +2,8 @@ import { OmniTypes } from '@ygg/shared/omni-types/core';
 import {
   TheThingCellDefine,
   TheThingImitation,
-  TheThingState
+  TheThingState,
+  TheThing
 } from '@ygg/the-thing/core';
 import { values } from 'lodash';
 
@@ -48,7 +49,20 @@ export const ImitationItem = new TheThingImitation({
   name: '我們的寶物',
   routePath: 'ouritems',
   cellsDef: values(ImitationItemCells),
-  states: ImitationItemStates
+  stateName: 'ourbox-item-state',
+  states: ImitationItemStates,
+  canModify: (theThing: TheThing): boolean => {
+    return (
+      ImitationItem.isState(theThing, ImitationItem.states.new) ||
+      ImitationItem.isState(theThing, ImitationItem.states.editing)
+    );
+  },
+  creators: [
+    (theThing: TheThing): TheThing => {
+      ImitationItem.setState(theThing, ImitationItem.states.new);
+      return theThing;
+    }
+  ]
 });
 
 export const RelationshipItemHolder = {

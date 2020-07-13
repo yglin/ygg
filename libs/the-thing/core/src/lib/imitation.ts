@@ -132,6 +132,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     this.view = 'basic';
     this.fromJSON(options);
     defaults(this, options);
+    this.stateName = this.stateName || `${this.id}_state`;
   }
 
   setRequiredCells(cellDefs: TheThingCellDefine[]) {
