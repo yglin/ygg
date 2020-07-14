@@ -9,7 +9,11 @@ export class OmniTypeViewControlPageObjectCypress extends OmniTypeViewControlPag
     cy.get(this.getSelector('buttonEdit')).click();
   }
 
-  setValue(type: OmniTypeID, value: any) {
+  setValue(
+    type: OmniTypeID,
+    value: any,
+    options: { validate?: boolean } = { validate: true }
+  ) {
     this.openControl();
     const dialogPO = new YggDialogPageObjectCypress();
     dialogPO.expectVisible();
@@ -19,7 +23,9 @@ export class OmniTypeViewControlPageObjectCypress extends OmniTypeViewControlPag
     controlPO.setValue(type, value);
     dialogPO.confirm();
     // dialogPO.expectClosed();
-    this.expectValue(type, value);
+    if (options.validate) {
+      this.expectValue(type, value);
+    }
   }
 
   expectValue(type: OmniTypeID, value: any) {

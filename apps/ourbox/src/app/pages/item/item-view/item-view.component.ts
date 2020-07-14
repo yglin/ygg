@@ -26,6 +26,7 @@ export class ItemViewComponent implements OnInit, OnDestroy {
   ImitationItem = ImitationItem;
   amHolder = false;
   hasRequested = false;
+  showRelatedUsers = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,7 +43,14 @@ export class ItemViewComponent implements OnInit, OnDestroy {
       // console.dir(this.item$);
     }
     if (isObservable(this.item$)) {
-      const itemUpdate$ = this.item$.pipe(tap(item => (this.item = item)));
+      const itemUpdate$ = this.item$.pipe(
+        tap(item => {
+          this.item = item;
+          this.showRelatedUsers =
+            ImitationItem.isState(item, ImitationItem.states.available) ||
+            ImitationItem.isState(item, ImitationItem.states.transfer);
+        })
+      );
 
       this.holderId$ = itemUpdate$.pipe(
         switchMap(item => {

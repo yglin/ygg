@@ -105,7 +105,8 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
     const omniTypeViewControlPO = new OmniTypeViewControlPageObjectCypress(
       this.getSelector('name')
     );
-    omniTypeViewControlPO.setValue('text', name);
+    omniTypeViewControlPO.setValue('text', name, { validate: false });
+    this.expectName(name);
   }
 
   clickSave(): void {

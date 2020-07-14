@@ -101,5 +101,12 @@ export const ImitationItemTransfer = new TheThingImitation({
       ImitationItemTransfer.states.new
     );
   },
+  preSave: (theThing: TheThing): TheThing => {
+    ImitationItemTransfer.setState(
+      theThing,
+      ImitationItemTransfer.states.editing
+    );
+    return theThing;
+  },
   actions: ImitationItemTransferActions
 });

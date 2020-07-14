@@ -1,69 +1,78 @@
 <div class="item-view" *ngIf="item">
-  <ygg-page-title icon="category">{{ item.name }}</ygg-page-title>
+  <!-- <ygg-page-title icon="category">{{ item.name }}</ygg-page-title>
   <br />
-  <div *ngIf="ImitationItem.isValid(item)">
-    <div>
-      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-        <h2>
-          目前的保管者：
-        </h2>
-        <ygg-user-thumbnail
-          [id$]="holderId$"
-          [showName]="false"
-        ></ygg-user-thumbnail>
-      </div>
-      <br />
-      <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="5px">
-        <h2>
-          排隊中：
-        </h2>
-        <div
-          *ngIf="
-            standbyList.length > 0 &&
-            amHolder &&
-            ImitationItem.isState(item, ImitationItem.states.available)
-          "
-        >
-          <button
-            mat-fab
-            matTooltip="讓渡給下一位等候者"
-            (click)="giveToNext()"
-          >
-            <mat-icon>next_plan</mat-icon>
-          </button>
-        </div>
-        <div *ngIf="ImitationItem.isState(item, ImitationItem.states.transfer)">
-          <button
-            mat-fab
-            matTooltip="正在讓渡，檢視交付任務"
-            (click)="gotoTransfer()"
-          >
-            <mat-icon>connect_without_contact</mat-icon>
-          </button>
-        </div>
-        <div *ngFor="let userId of standbyList" class="stand-by">
-          <ygg-user-thumbnail
-            [id]="userId"
-            [showName]="false"
-          ></ygg-user-thumbnail>
-          <div class="cancel-request" *ngIf="isMe(userId)">
-            <button
-              mat-mini-fab
-              matTooltip="取消等候"
-              (click)="cancelRequest()"
-            >
-              <mat-icon>cancel</mat-icon>
-            </button>
+  <br /><br /> -->
+  <the-thing [theThing$]="item$" [imitation]="ImitationItem">
+    <div the-thing-projection-middle>
+      <div *ngIf="showRelatedUsers">
+        <div>
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+            <h2>
+              目前的保管者：
+            </h2>
+            <ygg-user-thumbnail
+              [id$]="holderId$"
+              [showName]="false"
+            ></ygg-user-thumbnail>
           </div>
-        </div>
-        <div *ngIf="!(amHolder || hasRequested)">
-          <button mat-fab matTooltip="我要借這個" (click)="askForIt()">
-            <mat-icon>loyalty</mat-icon>
-          </button>
+          <br />
+          <div
+            fxLayout="row wrap"
+            fxLayoutAlign="start center"
+            fxLayoutGap="5px"
+          >
+            <h2>
+              排隊中：
+            </h2>
+            <div
+              *ngIf="
+                standbyList.length > 0 &&
+                amHolder &&
+                ImitationItem.isState(item, ImitationItem.states.available)
+              "
+            >
+              <button
+                mat-fab
+                matTooltip="讓渡給下一位等候者"
+                (click)="giveToNext()"
+              >
+                <mat-icon>next_plan</mat-icon>
+              </button>
+            </div>
+            <div
+              *ngIf="ImitationItem.isState(item, ImitationItem.states.transfer)"
+            >
+              <button
+                mat-fab
+                matTooltip="正在讓渡，檢視交付任務"
+                (click)="gotoTransfer()"
+              >
+                <mat-icon>connect_without_contact</mat-icon>
+              </button>
+            </div>
+            <div *ngFor="let userId of standbyList" class="stand-by">
+              <ygg-user-thumbnail
+                [id]="userId"
+                [showName]="false"
+              ></ygg-user-thumbnail>
+              <div class="cancel-request" *ngIf="isMe(userId)">
+                <button
+                  mat-mini-fab
+                  matTooltip="取消等候"
+                  (click)="cancelRequest()"
+                >
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div *ngIf="!(amHolder || hasRequested)">
+              <button mat-fab matTooltip="我要借這個" (click)="askForIt()">
+                <mat-icon>loyalty</mat-icon>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <br /><br />
-  <the-thing [theThing$]="item$" [imitation]="ImitationItem"></the-thing>
+  </the-thing>
 </div>

@@ -46,6 +46,7 @@ export const ImitationItemStates: { [name: string]: TheThingState } = {
 export const ImitationItem = new TheThingImitation({
   collection: 'ourbox-items',
   id: 'ourbox-item',
+  icon: 'category',
   name: '我們的寶物',
   routePath: 'ouritems',
   cellsDef: values(ImitationItemCells),
@@ -56,6 +57,10 @@ export const ImitationItem = new TheThingImitation({
       ImitationItem.isState(theThing, ImitationItem.states.new) ||
       ImitationItem.isState(theThing, ImitationItem.states.editing)
     );
+  },
+  preSave: (theThing: TheThing): TheThing => {
+    ImitationItem.setState(theThing, ImitationItem.states.editing);
+    return theThing;
   },
   creators: [
     (theThing: TheThing): TheThing => {

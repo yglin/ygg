@@ -123,6 +123,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       creators?: TheThingCreator[];
       cellsOrder?: string[];
       canModify?: (theThing: TheThing) => boolean;
+      preSave?: (theThing: TheThing) => TheThing;
       actions?: { [id: string]: TheThingAction };
       [key: string]: any;
     } = {}
