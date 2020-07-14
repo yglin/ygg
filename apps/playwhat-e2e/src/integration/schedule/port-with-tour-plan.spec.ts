@@ -43,12 +43,9 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
         thing.ownerId = user.id;
         theMockDatabase.insert(`${thing.collection}/${thing.id}`, thing);
       });
+      cy.visit('/');
+      waitForLogin();
     });
-  });
-
-  beforeEach(() => {
-    cy.visit('/');
-    waitForLogin();
   });
 
   after(() => {
@@ -62,24 +59,18 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
 
   it('Apply date-range from tour-plan', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(
-      TourPlanUnscheduled
-    );
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
     tourPlanPO.expectVisible();
     tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
     schedulePO.expectVisible();
     schedulePO.expectDateRange(
-      TourPlanUnscheduled.getCellValue(
-        CellDefinesTourPlan.dateRange.name
-      )
+      TourPlanUnscheduled.getCellValue(CellDefinesTourPlan.dateRange.name)
     );
   });
 
   it('Apply day-time-range from tour-plan', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(
-      TourPlanUnscheduled
-    );
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
     tourPlanPO.expectVisible();
     tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
     schedulePO.expectVisible();

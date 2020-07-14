@@ -51,7 +51,7 @@ import {
 // }
 
 export const TourPlanUnscheduled = TourPlanWithPlaysNoEquipment.clone();
-TourPlanUnscheduled.name = '測試遊程(尚未規劃行程)';
+TourPlanUnscheduled.name = `測試遊程(尚未規劃行程)_${Date.now()}`;
 TourPlanUnscheduled.addCell(CellDefinesTourPlan.dayTimeRange.forgeCell());
 ImitationTourPlan.setState(
   TourPlanUnscheduled,
@@ -95,7 +95,7 @@ for (const relation of TourPlanUnscheduled.getRelations(
 }
 
 export const TourPlanScheduled = TourPlanUnscheduled.clone();
-TourPlanScheduled.name = '測試遊程(已規劃行程)';
+TourPlanScheduled.name = `測試遊程(已規劃行程)_${Date.now()}`;
 ImitationTourPlan.setState(TourPlanScheduled, ImitationTourPlan.states.applied);
 TourPlanScheduled.setRelation(
   RelationshipScheduleEvent.name,
@@ -105,7 +105,7 @@ TourPlanScheduled.setRelation(
 );
 
 export const TourPlanScheduledOneEvent = TourPlanScheduled.clone();
-TourPlanScheduledOneEvent.name = '測試遊程(已規劃行程，一個活動事件)';
+TourPlanScheduledOneEvent.name = `測試遊程(已規劃行程，一個活動事件)_${Date.now()}`;
 ImitationTourPlan.setState(
   TourPlanScheduledOneEvent,
   ImitationTourPlan.states.applied
@@ -118,7 +118,7 @@ TourPlanScheduledOneEvent.setRelation(RelationshipScheduleEvent.name, [
 ]);
 
 export const TourPlanScheduled3Events = TourPlanScheduled.clone();
-TourPlanScheduled3Events.name = '測試遊程(已規劃行程，三個活動事件)';
+TourPlanScheduled3Events.name = `測試遊程(已規劃行程，三個活動事件)_${Date.now()}`;
 ImitationTourPlan.setState(
   TourPlanScheduled3Events,
   ImitationTourPlan.states.applied
