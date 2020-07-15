@@ -112,6 +112,13 @@ export class DayTime implements SerializableJSON {
     return moment(0).set({ hour: this.hour, minute: this.minute });
   }
 
+  toDate(date: Date): Date {
+    const result: Date = new Date(date);
+    result.setHours(this.hour);
+    result.setMinutes(this.minute);
+    return result;
+  }
+
   fromJSON(data: string): this {
     const mt = moment(data, 'HH:mm');
     const hour = mt.hour();

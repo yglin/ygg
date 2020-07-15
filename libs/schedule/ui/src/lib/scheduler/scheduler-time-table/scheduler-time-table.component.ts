@@ -10,12 +10,21 @@ import { ActivatedRoute } from '@angular/router';
 // import { EventService } from '../../../event/event.service';
 import { Schedule, ServiceEvent } from '@ygg/schedule/core';
 import { EmceeService } from '@ygg/shared/ui/widgets';
-import { debounce, get, isEmpty, keyBy, remove } from 'lodash';
+import {
+  debounce,
+  get,
+  isEmpty,
+  keyBy,
+  remove,
+  difference,
+  extend
+} from 'lodash';
 import * as moment from 'moment';
 import { DragulaService } from 'ng2-dragula';
 import { config } from '../../config';
 import { Subscription, Subject } from 'rxjs';
-import { DayTime, DayTimeRange } from '@ygg/shared/omni-types/core';
+import { DayTime, DayTimeRange, TimeRange } from '@ygg/shared/omni-types/core';
+import * as chroma from 'chroma-js';
 
 // import { MatSnackBar, MatDialog, MatDialogRef } from '@angular/material';
 // import { EventEditComponent } from '../../../event/event-edit/event-edit.component';
@@ -33,7 +42,8 @@ interface ScheduleForm {
 interface TimeSlot {
   start: moment.Moment;
   events: string[];
-  style: any;
+  style?: any;
+  backgroundColor?: string;
 }
 
 interface TimeTableDay {
@@ -89,51 +99,54 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.subscriptions.push(
-      this.onChangeEvent$.subscribe(() => {
-        // Set event time-range
-        try {
-          for (const day of this.timeTable.days) {
-            for (const timeSlot of day.timeSlots) {
-              if (!isEmpty(timeSlot.events)) {
-                for (const eventId of timeSlot.events) {
-                  const event = this.events[eventId];
-                  event.timeRange.moveTo(timeSlot.start.toDate());
-                }
-              }
-            }
-          }
-        } catch (error) {
-          this.emcee.error(`移動事件時段失敗，錯誤原因：${error}`);
-        }
-      })
-    );
+    // this.subscriptions.push(
+    //   this.onChangeEvent$.subscribe(() => {
+    //     // Set event time-range
+    //     try {
+    //       for (const day of this.timeTable.days) {
+    //         for (const timeSlot of day.timeSlots) {
+    //           if (!isEmpty(timeSlot.events)) {
+    //             for (const eventId of timeSlot.events) {
+    //               const event = this.events[eventId];
+    //               event.timeRange.moveTo(timeSlot.start.toDate());
+    //               console.log(
+    //                 `${event.name} move to ${timeSlot.start.toDate()}`
+    //               );
+    //             }
+    //           }
+    //         }
+    //       }
+    //     } catch (error) {
+    //       this.emcee.error(`移動事件時段失敗，錯誤原因：${error}`);
+    //     }
+    //   })
+    // );
 
     // this.clearAvailableSessionsOnTimeTable();
     // this.dragulaService.destroy('time-slot');
     // this.dragulaService.setOptions('time-slot', {});
     // this.dragulaService.drag().subscribe(this.onDrag.bind(this));
-    this.subscriptions.push(
-      this.dragulaService.dropModel().subscribe(({ item }) => {
-        this.onChangeEvent$.next(item);
-        // try {
-        //   const [, element, target] = args;
-        //   const event = this.events[element.getAttribute('eventId')];
-        //   const originalTimeSlot: TimeSlot = this.findInTimeSlot(event);
-        //   const newStart = moment(target.getAttribute('start'));
-        //   if (newStart.isValid()) {
-        //     event.timeRange.moveTo(newStart.toDate());
-        //   }
-        //   remove(originalTimeSlot.events);
-        //   const targetTimeSlot = this.findInTimeSlot(event);
-        //   if (!targetTimeSlot.events.includes(event.id)) {
-        //     targetTimeSlot.events.push(event.id);
-        //   }
-        // } catch (error) {
-        //   this.emcee.error(`移動事件時段失敗，錯誤原因：${error}`);
-        // }
-      })
-    );
+    // this.subscriptions.push(
+    //   this.dragulaService.dropModel().subscribe(({ item }) => {
+    //     this.onChangeEvent$.next(item);
+    //     // try {
+    //     //   const [, element, target] = args;
+    //     //   const event = this.events[element.getAttribute('eventId')];
+    //     //   const originalTimeSlot: TimeSlot = this.findInTimeSlot(event);
+    //     //   const newStart = moment(target.getAttribute('start'));
+    //     //   if (newStart.isValid()) {
+    //     //     event.timeRange.moveTo(newStart.toDate());
+    //     //   }
+    //     //   remove(originalTimeSlot.events);
+    //     //   const targetTimeSlot = this.findInTimeSlot(event);
+    //     //   if (!targetTimeSlot.events.includes(event.id)) {
+    //     //     targetTimeSlot.events.push(event.id);
+    //     //   }
+    //     // } catch (error) {
+    //     //   this.emcee.error(`移動事件時段失敗，錯誤原因：${error}`);
+    //     // }
+    //   })
+    // );
 
     this.renderTimeTable();
   }
@@ -154,9 +167,9 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
     //   2) *
     //   halfHourCount}px`;
 
-    console.log(this.timeTable.dayTimeRange);
+    // console.log(this.timeTable.dayTimeRange);
 
-    let day = {
+    let day: TimeTableDay = {
       date: moment(this.timeTable.startDay).startOf('day'),
       timeSlots: []
     };
@@ -177,7 +190,10 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
       if (this.timeTable.dayTimeRange.include(dayTime)) {
         day.timeSlots.push({
           start: moment(timeIterator),
-          events: []
+          events: [],
+          backgroundColor: chroma('white')
+            .alpha(0.25)
+            .css()
           // style: {
           //   width: (100 / halfHourCount).toFixed(3) + '%'
           // }
@@ -198,6 +214,20 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
           }
         }
       }
+    }
+  }
+
+  onChangeTimeSlotEvents(timeSlot: TimeSlot, eventIds: string[]) {
+    try {
+      const newEventIds = difference(eventIds, timeSlot.events);
+      for (const newEventId of newEventIds) {
+        const event = this.events[newEventId];
+        event.timeRange.moveTo(timeSlot.start.toDate());
+        console.log(`${event.name} move to ${timeSlot.start.toDate()}`);
+      }
+      timeSlot.events = eventIds;
+    } catch (error) {
+      this.emcee.error(`移動事件時段失敗，錯誤原因：${error}`);
     }
   }
 
@@ -316,10 +346,10 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
   //   this.deleteEvent.emit(event);
   // }
 
-  // onClickEvent(event: Event) {
-  //   this.renderAvailableSessionsOnTimeTable(event);
-  //   this.clickEvent.emit(event);
-  // }
+  onClickEvent(eventId: string) {
+    const event = this.events[eventId];
+    this.renderAvailableSessionsOnTimeTable(event);
+  }
 
   // getAvailableSessions(event: Event): Observable<Session[]> {
   //   // let getPlay: Observable<Play>;
@@ -358,49 +388,36 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
   //   });
   // }
 
-  // renderAvailableSessionsOnTimeTable(event: Event) {
-  //   // let getPlay: Observable<Play>;
-  //   // if (typeof play === 'string') {
-  //   //   getPlay = this.playService.get(play);
-  //   // } else if (play && play.id) {
-  //   //   getPlay = of(play);
-  //   // } else {
-  //   //   return;
-  //   // }
-  //   // getPlay.subscribe(_play => {
-  //   this.loadingStack += 1;
-  //   this.getAvailableSessions(event)
-  //     .pipe(finalize(() => (this.loadingStack -= 1)))
-  //     .subscribe(sessions => {
-  //       this.clearAvailableSessionsOnTimeTable();
-  //       sessions.forEach(session => {
-  //         // console.dir(session);
-  //         for (
-  //           let dayIndex = 0;
-  //           dayIndex < this.timeTable.days.length;
-  //           dayIndex++
-  //         ) {
-  //           const day = this.timeTable.days[dayIndex];
-  //           for (
-  //             let timeSlotIndex = 0;
-  //             timeSlotIndex < day.timeSlots.length;
-  //             timeSlotIndex++
-  //           ) {
-  //             const timeSlot = day.timeSlots[timeSlotIndex];
-  //             if (
-  //               timeSlot.start.isSameOrAfter(session.start) &&
-  //               timeSlot.start.isBefore(session.end)
-  //             ) {
-  //               timeSlot.style['background-color'] = chroma(event.color)
-  //                 .desaturate()
-  //                 .brighten();
-  //             }
-  //           }
-  //         }
-  //       });
-  //     });
-  //   // });
-  // }
+  renderAvailableSessionsOnTimeTable(event: ServiceEvent) {
+    // console.log(event.service.businessHours);
+    for (const day of this.timeTable.days) {
+      for (const timeSlot of day.timeSlots) {
+        const theHalfHour = new TimeRange(
+          timeSlot.start.toDate(),
+          moment(timeSlot.start)
+            .add(30, 'minute')
+            .toDate()
+        );
+        if (!timeSlot.style) {
+          timeSlot.style = {};
+        }
+        // console.log(`time slot ${timeSlot.start.format('DD HH:mm')}`);
+        if (
+          event.service.businessHours &&
+          event.service.businessHours.include(theHalfHour)
+        ) {
+          // console.log(`include half hour ${theHalfHour.format()}`);
+          timeSlot.backgroundColor = chroma(event.service.color)
+            .alpha(0.25)
+            .css();
+        } else {
+          timeSlot.backgroundColor = chroma('white')
+            .alpha(0.25)
+            .css();
+        }
+      }
+    }
+  }
 
   // showWarning(message: string) {
   //   const snackBarRef = this.snackBar.open(message, 'X', {

@@ -7,10 +7,11 @@ import {
   ImitationPlay,
   ImitationEquipmentCellDefines,
   ImitationEquipment,
-  RelationshipEquipment
+  RelationshipEquipment,
+  ImitationPlayCellDefines
 } from '@ygg/playwhat/core';
 import { random } from 'lodash';
-import { Album, Location, BusinessHours } from '@ygg/shared/omni-types/core';
+import { Album, Location, BusinessHours, OmniTypes } from '@ygg/shared/omni-types/core';
 
 export const MinimumPlay = ImitationPlay.createTheThing().fromJSON({
   name: `溜鳥鳥體驗(最少需求資料欄位)_${Date.now()}`,
@@ -106,6 +107,11 @@ export const SamplePlays = [
         name: '人數上限',
         type: 'number',
         value: 40
+      },
+      {
+        name: ImitationPlayCellDefines.businessHours.name,
+        type: OmniTypes['business-hours'].id,
+        value: BusinessHours.forge().toJSON()
       }
     ]
   },
@@ -148,6 +154,11 @@ export const SamplePlays = [
         name: '人數上限',
         type: 'number',
         value: 40
+      },
+      {
+        name: ImitationPlayCellDefines.businessHours.name,
+        type: OmniTypes['business-hours'].id,
+        value: BusinessHours.forge().toJSON()
       }
     ]
   },
@@ -190,6 +201,11 @@ export const SamplePlays = [
         name: '人數上限',
         type: 'number',
         value: 10
+      },
+      {
+        name: ImitationPlayCellDefines.businessHours.name,
+        type: OmniTypes['business-hours'].id,
+        value: BusinessHours.forge().toJSON()
       }
     ]
   },
@@ -232,6 +248,11 @@ export const SamplePlays = [
         name: '人數上限',
         type: 'number',
         value: 15
+      },
+      {
+        name: ImitationPlayCellDefines.businessHours.name,
+        type: OmniTypes['business-hours'].id,
+        value: BusinessHours.forge().toJSON()
       }
     ]
   },
@@ -274,6 +295,11 @@ export const SamplePlays = [
         name: '人數上限',
         type: 'number',
         value: 40
+      },
+      {
+        name: ImitationPlayCellDefines.businessHours.name,
+        type: OmniTypes['business-hours'].id,
+        value: BusinessHours.forge().toJSON()
       }
     ]
   }

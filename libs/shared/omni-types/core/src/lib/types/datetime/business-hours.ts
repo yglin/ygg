@@ -2,6 +2,7 @@ import { isArray, isEmpty, random } from 'lodash';
 import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/core';
 import { OpenHour } from './open-hour';
 import { WeekDay } from './week-day';
+import { TimeRange } from './time-range';
 
 export class BusinessHours implements SerializableJSON {
   private openHours: OpenHour[] = [];
@@ -108,6 +109,15 @@ export class BusinessHours implements SerializableJSON {
       }
     }
     return result;
+  }
+
+  include(timeRange: TimeRange): boolean {
+    for (const openHour of this.openHours) {
+      if (openHour.include(timeRange)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   fromJSON(data: any): this {

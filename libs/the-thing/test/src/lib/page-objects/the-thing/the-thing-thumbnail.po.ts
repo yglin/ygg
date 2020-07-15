@@ -4,6 +4,7 @@ import { ImageThumbnailItemPageObjectCypress } from '@ygg/shared/ui/test';
 import { get } from 'lodash';
 import { TheThingCellListPageObjectCypress } from '../cell';
 import { OmniTypeViewControlPageObjectCypress } from '@ygg/shared/omni-types/test';
+import { TimeRange } from '@ygg/shared/omni-types/core';
 
 export class TheThingThumbnailPageObjectCypress extends TheThingThumbnailPageObject {
   expectValue(theThing: TheThing): void {
@@ -21,11 +22,15 @@ export class TheThingThumbnailPageObjectCypress extends TheThingThumbnailPageObj
       cy.wrap(display.cells).each((cellName: string) => {
         const cell: TheThingCell = theThing.getCell(cellName);
         cy.get(this.getSelectorForCell(cellName)).contains(cellName);
-        const cellValuePO = new OmniTypeViewControlPageObjectCypress(
-          this.getSelectorForCell(cellName)
-        );
-        cellValuePO.expectValue(cell.type, cell.value);
+        this.expectCell(cell);
       });
     }
+  }
+
+  expectCell(cell: TheThingCell) {
+    const cellValuePO = new OmniTypeViewControlPageObjectCypress(
+      this.getSelectorForCell(cell.name)
+    );
+    cellValuePO.expectValue(cell.type, cell.value);
   }
 }

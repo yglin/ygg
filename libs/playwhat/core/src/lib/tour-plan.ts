@@ -77,6 +77,8 @@ export const CellDefinesTourPlan = mapValues(
   (data: any) => new TheThingCellDefine(data)
 );
 
+export const ImitationTourPlanCellDefines = CellDefinesTourPlan;
+
 const cellsOrder = [
   CellDefinesTourPlan.dateRange.name,
   CellDefinesTourPlan.numParticipants.name,

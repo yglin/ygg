@@ -18,7 +18,12 @@ import {
 import { Tags } from '@ygg/tags/core';
 import { TheThingCell } from './cell';
 import { OmniTypeID, Image, TimeRange } from '@ygg/shared/omni-types/core';
-import { generateID, toJSONDeep, Entity } from '@ygg/shared/infra/core';
+import {
+  generateID,
+  toJSONDeep,
+  Entity,
+  hashStringToColor
+} from '@ygg/shared/infra/core';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 import { TheThingRelation } from './relation';
 import { TheThingState } from './state';
@@ -67,6 +72,13 @@ export class TheThing implements Entity, ImageThumbnailItem {
    * For ImageThumbnailItem interface
    */
   image: string;
+
+  /**
+   * For visual identification
+   */
+  get color(): string {
+    return hashStringToColor(this.name);
+  }
 
   /**
    * Link for detail page or external reference

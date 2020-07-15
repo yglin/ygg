@@ -6,28 +6,64 @@
   margin-bottom: 20px;
 }
 
-.time-table {
+/* .time-table {
   max-width: 90vw;
-}
+} */
 
-th.date-name {
+/* th.date-name {
   width: 100px;
   padding: 5px;
-}
+} */
 
 .time-table td,
 .time-table th {
   height: 50px;
 }
 
+/* .date-axis {
+  padding-top: 90px;
+}
+
+.date-axis table {
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.date-axis table tr {
+  height: 25px;
+} */
+
 .time-slots {
+  max-width: 90vw;
   overflow-x: auto;
+  padding-top: 50px;
 }
 
 .time-slots table {
-  table-layout: fixed;
+  /* table-layout: fixed; */
   border-collapse: collapse;
   margin-left: 30px;
+}
+
+.time-slots table td {
+  z-index: 100;
+}
+
+.time-slots table td:first-child {
+  position: sticky;
+  position: -webkit-sticky;
+  /* width: 150px; */
+  left: 0;
+  border: none;
+  background-color: rgba(255, 239, 218, 0.75);
+  white-space: nowrap;
+  padding: 2px 5px;
+  z-index: 101;
+  /* top: auto;
+  border-top-width: 1px; */
+  /*only relevant for first row*/
+  /* margin-top: -1px; */
+  /*compensate for top border*/
 }
 
 .time-slots table th.day-time-name {

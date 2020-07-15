@@ -146,6 +146,12 @@ export class DayTimeRange implements SerializableJSON {
     }
   }
 
+  toTimeRange(date: Date): TimeRange {
+    const start = this.start.toDate(date);
+    const end = this.end.toDate(date);
+    return new TimeRange(start, end);
+  }
+
   alignHalfHour(): DayTimeRange {
     const start = new DayTime(
       this.start.hour,

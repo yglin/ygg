@@ -45,12 +45,12 @@ export class DateRange extends TimeRange {
       .toDate();
   }
 
-  forEachDay(handler: (date: Date, index: number) => void) {
+  forEachDay(handler: (date: Date, index?: number, range?: DateRange) => void) {
     const dayIterator = moment(this.start).startOf('day');
     const endDate = moment(this.end).endOf('day');
     let index = 0;
     for (; dayIterator.isSameOrBefore(endDate); dayIterator.add(1, 'day')) {
-      handler(dayIterator.toDate(), index);
+      handler(dayIterator.toDate(), index, this);
       index += 1;
     }
   }

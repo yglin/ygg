@@ -16,39 +16,18 @@
       <div *ngIf="events[eventId] as event" [attr.event-name]="event.name">
         <ygg-service-event-span
           [event]="event"
-          (click)="onClickEvent($event)"
+          (click)="onClickEvent(eventId)"
         ></ygg-service-event-span>
       </div>
     </div>
   </div>
   <br />
-  <div
-    *ngIf="timeTable"
-    fxLayout="row"
-    fxLayoutAlign="start start"
-    fxLayoutGap="0px"
-    class="time-table"
-  >
-    <div fxFlex="100px" style="padding-top: 40px;">
-      <table class="date-axis">
-        <!-- <thead>
-                <tr>
-                  <th></th>
-                </tr>
-              </thead> -->
-        <tbody>
-          <tr *ngFor="let day of timeTable.days; let idx = index">
-            <th class="date-name" [attr.dayIndex]="idx">
-              <span>{{ day.date | date: 'M/d EEE' }}</span>
-            </th>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div *ngIf="timeTable" class="time-table">
     <div fxFlex class="time-slots">
       <table [ngStyle]="timeTable.style">
         <thead>
           <tr>
+            <th></th>
             <th
               *ngFor="
                 let timeSlot of timeTable.days[0].timeSlots;
@@ -66,6 +45,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let day of timeTable.days; let dayIndex = index">
+            <td class="date-name" [attr.day-index]='dayIndex'>{{ day.date | date: 'M/d EEE' }}</td>
             <td
               *ngFor="let timeSlot of day.timeSlots; let timeIndex = index"
               class="time-slot"
@@ -73,10 +53,12 @@
               [attr.time]="timeSlot.start.valueOf()"
               [ngStyle]="timeSlot.style"
               [dragula]="'event-slot'"
-              [(dragulaModel)]="timeSlot.events"
+              [dragulaModel]="timeSlot.events"
+              (dragulaModelChange)="onChangeTimeSlotEvents(timeSlot, $event)"
               [style.width]="tableCellWidth + 'px'"
               [style.max-width]="tableCellWidth + 'px'"
               [style.min-width]="tableCellWidth + 'px'"
+              [style.backgroundColor]="timeSlot.backgroundColor"
             >
               <div *ngFor="let eventId of timeSlot.events">
                 <div

@@ -2,6 +2,8 @@ import { random } from 'lodash';
 import { SerializableJSON } from '@ygg/shared/infra/core';
 import { WeekDay, WeekDayNames } from './week-day';
 import { DayTimeRange } from './day-time-range';
+import { TimeRange } from './time-range';
+import * as moment from 'moment';
 
 export class OpenHour implements SerializableJSON {
   weekDay: WeekDay;
@@ -46,6 +48,13 @@ export class OpenHour implements SerializableJSON {
     } else {
       return this.dayTimeRange.isAfter(that.dayTimeRange);
     }
+  }
+
+  include(timeRange: TimeRange): boolean {
+    if (this.weekDay !== moment(timeRange.start).day()) {
+      return false;
+    }
+    return this.dayTimeRange.include(timeRange);
   }
 
   merge(openHour: OpenHour): OpenHour {

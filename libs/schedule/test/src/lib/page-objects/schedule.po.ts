@@ -1,8 +1,14 @@
 import { SchedulePageObject } from '@ygg/schedule/ui';
 import { Schedule, ServiceEvent } from '@ygg/schedule/core';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
-import { DateRange, DayTimeRange } from '@ygg/shared/omni-types/core';
+import {
+  DateRange,
+  DayTimeRange,
+  BusinessHours,
+  TimeRange
+} from '@ygg/shared/omni-types/core';
 import * as moment from 'moment';
+import * as chroma from 'chroma-js';
 
 export class SchedulePageObjectCypress extends SchedulePageObject {
   expectVisible() {
@@ -14,7 +20,7 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
     this.expectDayTimeRange(schedule.dayTimeRange);
     cy.wrap(schedule.events).each((event: ServiceEvent) => {
       if (schedule.isEventInSchedule(event)) {
-        this.expectEventInTimeSlot(event, event.timeRange.start);
+        this.expectEventInTimeSlot(event.name, event.timeRange.start);
       } else {
         this.expectEventInPool(event);
       }
@@ -25,18 +31,18 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
     cy.get(this.getSelectorForPoolEvent(event)).should('be.visible');
   }
 
-  expectEventInTimeSlot(event: ServiceEvent, time: Date) {
+  expectEventInTimeSlot(eventName: string, time: Date) {
     const timeAlignedHalfHour = new Date(time);
     time.setMinutes(time.getMinutes() >= 30 ? 30 : 0);
     cy.get(this.getSelectorForTimeSlot(time))
-      .find(`[event-name="${event.name}"]`)
+      .find(`[event-name="${eventName}"]`)
       .should('be.visible');
   }
 
   expectDateRange(dateRange: DateRange) {
     dateRange.forEachDay((date, index) => {
       cy.get(
-        `${this.getSelector()} .time-table .date-axis .date-name[dayIndex="${index}"]`
+        `${this.getSelector()} .time-table td.date-name[day-index="${index}"]`
       ).should('include.text', moment(date).format('M/D ddd'));
     });
   }
@@ -68,5 +74,45 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
     cy.get(this.getSelector('buttonSubmit')).click();
     const emceePO = new EmceePageObjectCypress();
     emceePO.confirm('行程安排完成，送出此行程表？');
+  }
+
+  clickOnEvent(name: string) {
+    cy.get(this.getSelectorForEvent(name)).click();
+  }
+
+  moveEvent(name: string, time: Date) {
+    // @ts-ignore
+    cy.get(this.getSelectorForEvent(name)).dragTo(
+      this.getSelectorForTimeSlot(time)
+    );
+  }
+
+  expectBusinessHours(businessHours: BusinessHours, color: string) {
+    // console.log(businessHours);
+    this.dateRange.forEachDay((date, index) => {
+      const timeRange = this.dayTimeRange.toTimeRange(date);
+      // console.log(timeRange);
+      timeRange.forEachHalfHour((halfHour: TimeRange) => {
+        if (businessHours.include(halfHour)) {
+          cy.get(this.getSelectorForTimeSlot(halfHour.start)).should(
+            'have.css',
+            'background-color',
+            chroma(color)
+              .alpha(0.25)
+              .css()
+              .replace(/,/g, ', ')
+          );
+        } else {
+          cy.get(this.getSelectorForTimeSlot(halfHour.start)).should(
+            'have.css',
+            'background-color',
+            chroma('white')
+              .alpha(0.25)
+              .css()
+              .replace(/,/g, ', ')
+          );
+        }
+      });
+    });
   }
 }

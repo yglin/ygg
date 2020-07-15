@@ -1,4 +1,8 @@
-import { ImitationTourPlan, ImitationEvent } from '@ygg/playwhat/core';
+import {
+  ImitationTourPlan,
+  ImitationEvent,
+  ImitationEventCellDefines
+} from '@ygg/playwhat/core';
 import { TourPlanPageObject } from '@ygg/playwhat/ui';
 import {
   ContactViewPageObjectCypress,
@@ -21,6 +25,7 @@ import {
   TheThingPageObjectCypress,
   TheThingThumbnailPageObjectCypress
 } from '@ygg/the-thing/test';
+import { TimeRange } from '@ygg/shared/omni-types/core';
 
 export class TourPlanPageObjectCypress extends TourPlanPageObject {
   constructor(parentSelector?: string) {
@@ -391,11 +396,22 @@ export class TourPlanPageObjectCypress extends TourPlanPageObject {
   expectEvents(events: TheThing[]) {
     for (const event of events) {
       const theThingThumbnailPO = new TheThingThumbnailPageObjectCypress(
-        this.getSelectorForEvent(event),
+        this.getSelectorForEvent(event.name),
         ImitationEvent
       );
       theThingThumbnailPO.expectValue(event);
     }
+  }
+
+  expectEventTimeRange(name: string, timeRange: TimeRange) {
+    const theThingThumbnailPO = new TheThingThumbnailPageObjectCypress(
+      this.getSelectorForEvent(name),
+      ImitationEvent
+    );
+    const cellTimeRange = ImitationEventCellDefines.timeRange.createCell(
+      timeRange
+    );
+    theThingThumbnailPO.expectCell(cellTimeRange);
   }
 
   runSchedule() {

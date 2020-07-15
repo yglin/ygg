@@ -1,4 +1,4 @@
-import { Entity } from '@ygg/shared/infra/core';
+import { Entity, hashStringToColor } from '@ygg/shared/infra/core';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 import { Location, BusinessHours } from '@ygg/shared/omni-types/core';
 import { generateID } from '@ygg/shared/infra/core';
@@ -13,6 +13,10 @@ export class Service implements Entity, ImageThumbnailItem {
   maxParticipants: number;
   location?: Location;
   businessHours?: BusinessHours;
+
+  get color(): string {
+    return hashStringToColor(this.name);
+  }
 
   constructor() {
     this.id = generateID();

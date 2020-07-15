@@ -138,4 +138,22 @@ export class TimeRange implements SerializableJSON {
     this._start = new Date(start);
     this._end = new Date(this._start.getTime() + diff);
   }
+
+  forEachHalfHour(
+    handler: (halfHour: TimeRange, index?: number, range?: TimeRange) => void
+  ) {
+    const timeIterator: moment.Moment = moment(this.start).minute(
+      this.start.getMinutes() >= 30 ? 30 : 0
+    );
+    for (let _index = 0; timeIterator.isBefore(this.end); _index++) {
+      handler(
+        new TimeRange(
+          timeIterator.toDate(),
+          timeIterator.add(30, 'minute').toDate()
+        ),
+        _index,
+        this
+      );
+    }
+  }
 }

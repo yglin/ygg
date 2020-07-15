@@ -1,5 +1,5 @@
 import { Service } from './service';
-import { Entity, generateID } from '@ygg/shared/infra/core';
+import { Entity, generateID, hashStringToColor } from '@ygg/shared/infra/core';
 import { TimeRange } from '@ygg/shared/omni-types/core';
 import * as moment from 'moment';
 
@@ -10,6 +10,10 @@ export class ServiceEvent implements Entity {
   service: Service;
   timeRange: TimeRange;
   numParticipants: number;
+
+  get color(): string {
+    return this.service.color;
+  }
 
   moveTo = this.setTimeRange;
 

@@ -1,21 +1,17 @@
-import { TourPlanPageObjectCypress, SiteNavigator } from '@ygg/playwhat/test';
 import {
+  CellDefinesTourPlan,
   ImitationTourPlan,
   ScheduleAdapter,
-  CellDefinesTourPlan
+  ImitationTourPlanCellDefines
 } from '@ygg/playwhat/core';
-import { Schedule } from '@ygg/schedule/core';
-import { TourPlanUnscheduled, ScheduleTrivial } from './sample-schedules';
-import { login, theMockDatabase } from '@ygg/shared/test/cypress';
-import { SamplePlays, SampleEquipments } from '../play/sample-plays';
-import { waitForLogin } from '@ygg/shared/user/test';
-import {
-  MyThingsPageObjectCypress,
-  MyThingsDataTablePageObjectCypress
-} from '@ygg/the-thing/test';
+import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
 import { SchedulePageObjectCypress } from '@ygg/schedule/test';
+import { login, theMockDatabase } from '@ygg/shared/test/cypress';
+import { waitForLogin } from '@ygg/shared/user/test';
 import { TheThing } from '@ygg/the-thing/core';
-import { CellNames } from '@ygg/shopping/core';
+import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
+import { SampleEquipments, SamplePlays } from '../play/sample-plays';
+import { ScheduleTrivial, TourPlanUnscheduled } from './sample-schedules';
 
 describe('Create/Attach schedule data from/to tour-plan', () => {
   const siteNavigator = new SiteNavigator();
@@ -27,15 +23,21 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
     '',
     ImitationTourPlan
   );
-  const schedulePO = new SchedulePageObjectCypress();
+  // Only tour-plans of state applied can make schedule
+  ImitationTourPlan.setState(
+    TourPlanUnscheduled,
+    ImitationTourPlan.states.applied
+  );
+  const schedulePO = new SchedulePageObjectCypress('', {
+    dateRange: TourPlanUnscheduled.getCellValue(
+      ImitationTourPlanCellDefines.dateRange.name
+    ),
+    dayTimeRange: TourPlanUnscheduled.getCellValue(
+      ImitationTourPlanCellDefines.dayTimeRange.name
+    )
+  });
 
   before(() => {
-    // Only tour-plans of state applied can make schedule
-    ImitationTourPlan.setState(
-      TourPlanUnscheduled,
-      ImitationTourPlan.states.applied
-    );
-
     login().then(user => {
       // Only Admin user can make schedule
       theMockDatabase.setAdmins([user.id]);
