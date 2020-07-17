@@ -45,32 +45,51 @@
         </thead>
         <tbody>
           <tr *ngFor="let day of timeTable.days; let dayIndex = index">
-            <td class="date-name" [attr.day-index]='dayIndex'>{{ day.date | date: 'M/d EEE' }}</td>
+            <td class="date-name" [attr.day-index]="dayIndex">
+              {{ day.date | date: 'M/d EEE' }}
+            </td>
             <td
               *ngFor="let timeSlot of day.timeSlots; let timeIndex = index"
-              class="time-slot"
               [attr.start]="timeSlot.start.format()"
               [attr.time]="timeSlot.start.valueOf()"
               [ngStyle]="timeSlot.style"
-              [dragula]="'event-slot'"
-              [dragulaModel]="timeSlot.events"
-              (dragulaModelChange)="onChangeTimeSlotEvents(timeSlot, $event)"
               [style.width]="tableCellWidth + 'px'"
               [style.max-width]="tableCellWidth + 'px'"
               [style.min-width]="tableCellWidth + 'px'"
               [style.backgroundColor]="timeSlot.backgroundColor"
+              class="time-slot"
             >
-              <div *ngFor="let eventId of timeSlot.events">
-                <div
-                  *ngIf="events[eventId] as event"
-                  [attr.event-name]="event.name"
+              <div class="availability">
+                <h4
+                  [hidden]="
+                    !timeSlot.availability || timeSlot.availability <= 0
+                  "
                 >
-                  <ygg-service-event-span
-                    [event]="event"
-                    (click)="onClickEvent(eventId)"
+                  {{ timeSlot.availability }}
+                </h4>
+              </div>
+              <div
+                fxLayout="column"
+                fxLayoutAlign="end start"
+                fxLayoutGap="2px"
+                class="events drop"
+                [dragulaModel]="timeSlot.events"
+                [dragula]="'event-slot'"
+                (dragulaModelChange)="onChangeTimeSlotEvents(timeSlot, $event)"
+              >
+                <ng-container *ngFor="let eventId of timeSlot.events">
+                  <div
+                    *ngIf="events[eventId] as event"
+                    [attr.event-name]="event.name"
+                    class="event-span"
+                    (mousedown)="onMousedownEvent(eventId)"
                     [attr.eventId]="eventId"
-                  ></ygg-service-event-span>
-                </div>
+                  >
+                    <ygg-service-event-span
+                      [event]="event"
+                    ></ygg-service-event-span>
+                  </div>
+                </ng-container>
               </div>
             </td>
           </tr>

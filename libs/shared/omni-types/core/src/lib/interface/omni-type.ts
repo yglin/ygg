@@ -14,6 +14,8 @@ import * as moment from 'moment';
 
 export type OmniTypeComparator = (a: any, b: any, isAsc: boolean) => number;
 
+export type OmniTypeMatcher = (testValue: any, controlValue: any) => boolean;
+
 export type OmniTypeID =
   | 'boolean'
   | 'text'
@@ -37,6 +39,7 @@ interface OmniType {
   default?: any;
   forge?: (options?: any) => any;
   comparator?: OmniTypeComparator;
+  matchers?: { [matcherId: string]: OmniTypeMatcher };
 }
 
 export const OmniTypes: { [id: string]: OmniType } = {
@@ -179,6 +182,15 @@ export const OmniTypes: { [id: string]: OmniType } = {
       return TimeRange.forge();
     },
     comparator: TimeRange.compare,
+    matchers: {
+      in: (testValue: TimeRange, controlValue: TimeRange) => {
+        return (
+          TimeRange.isTimeRange(testValue) &&
+          TimeRange.isTimeRange(controlValue) &&
+          controlValue.include(testValue)
+        );
+      }
+    },
     default: null
   },
   'day-time-range': {

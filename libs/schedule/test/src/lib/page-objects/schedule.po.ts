@@ -1,5 +1,9 @@
 import { SchedulePageObject } from '@ygg/schedule/ui';
-import { Schedule, ServiceEvent } from '@ygg/schedule/core';
+import {
+  Schedule,
+  ServiceEvent,
+  ServiceAvailablility
+} from '@ygg/schedule/core';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 import {
   DateRange,
@@ -12,7 +16,7 @@ import * as chroma from 'chroma-js';
 
 export class SchedulePageObjectCypress extends SchedulePageObject {
   expectVisible() {
-    cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
+    cy.get(this.getSelector(), { timeout: 20000 }).should('be.visible');
   }
 
   expectSchedule(schedule: Schedule) {
@@ -77,17 +81,26 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
   }
 
   clickOnEvent(name: string) {
-    cy.get(this.getSelectorForEvent(name)).click();
+    cy.get(this.getSelectorForEvent(name)).click({ force: true });
   }
 
   moveEvent(name: string, time: Date) {
-    // @ts-ignore
-    cy.get(this.getSelectorForEvent(name)).dragTo(
-      this.getSelectorForTimeSlot(time)
-    );
+    cy.get(this.getSelectorForEvent(name))
+      .first()
+      .trigger('mousedown', 5, 5, { which: 1, force: true })
+      .trigger('mousemove', { clientX: 5, clientY: 5, force: true });
+      // .trigger('mouseup', { force: true });
+    cy.get(this.getSelectorForTimeSlotDroppable(time))
+      .first()
+      .trigger('mousemove', { clientX: 5, clientY: 5, force: true })
+      .trigger('mouseup', { force: true });
   }
 
-  expectBusinessHours(businessHours: BusinessHours, color: string) {
+  expectBusinessHours(
+    businessHours: BusinessHours,
+    color: string,
+    capacity: number
+  ) {
     // console.log(businessHours);
     this.dateRange.forEachDay((date, index) => {
       const timeRange = this.dayTimeRange.toTimeRange(date);
@@ -102,6 +115,10 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
               .css()
               .replace(/,/g, ', ')
           );
+          cy.get(this.getSelectorForTimeSlot(halfHour.start)).should(
+            'include.text',
+            capacity.toString()
+          );
         } else {
           cy.get(this.getSelectorForTimeSlot(halfHour.start)).should(
             'have.css',
@@ -111,6 +128,22 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
               .css()
               .replace(/,/g, ', ')
           );
+        }
+      });
+    });
+  }
+
+  expectAvailability(serviceAvailablility: ServiceAvailablility) {
+    this.dateRange.forEachDay(date => {
+      const timeRange: TimeRange = this.dayTimeRange.toTimeRange(date);
+      timeRange.forEachHalfHour(halfHour => {
+        const availability: number = serviceAvailablility.getSingleAvailability(
+          halfHour
+        );
+        if (availability > 0) {
+          cy.get(
+            this.getSelectorForTimeSlotAvailability(halfHour.start)
+          ).should('include.text', availability.toString());
         }
       });
     });

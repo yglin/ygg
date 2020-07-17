@@ -1,5 +1,15 @@
-import { Schedule, Service, ServiceEvent } from '@ygg/schedule/core';
-import { DateRange } from '@ygg/shared/omni-types/core';
+import {
+  Schedule,
+  Service,
+  ServiceEvent,
+  ServiceAvailablility
+} from '@ygg/schedule/core';
+import {
+  DateRange,
+  TimeRange,
+  OmniTypes,
+  BusinessHours
+} from '@ygg/shared/omni-types/core';
 import {
   CellNames as CellNamesShopping,
   RelationPurchase
@@ -7,7 +17,10 @@ import {
 import {
   TheThing,
   TheThingAccessor,
-  TheThingRelation
+  TheThingRelation,
+  RelationFactory,
+  RelationRecord,
+  TheThingFilter
 } from '@ygg/the-thing/core';
 import {
   ImitationEvent,
@@ -16,6 +29,9 @@ import {
 } from '../imitations';
 import { ImitationPlay, ImitationPlayCellDefines } from '../play';
 import { CellDefinesTourPlan, ImitationTourPlan } from '../tour-plan';
+import { map, take, switchMap, filter, catchError } from 'rxjs/operators';
+import { isEmpty } from 'lodash';
+import { of, Observable, throwError } from 'rxjs';
 
 export class ScheduleAdapter {
   static deriveEventFromServiceEvent(serviceEvent: ServiceEvent): TheThing {
@@ -62,7 +78,10 @@ export class ScheduleAdapter {
     return service;
   }
 
-  constructor(protected theThingAccessor: TheThingAccessor) {}
+  constructor(
+    protected theThingAccessor: TheThingAccessor,
+    protected relationFactory: RelationFactory
+  ) {}
 
   async deduceScheduleFromTourPlan(tourPlan: TheThing): Promise<Schedule> {
     if (!ImitationTourPlan.isValid(tourPlan)) {
@@ -76,9 +95,25 @@ export class ScheduleAdapter {
     });
     const purchaseRelations = tourPlan.getRelations(RelationPurchase.name);
     for (const purchase of purchaseRelations) {
-      const event: ServiceEvent = await this.deduceEventFromPurchase(purchase);
-      if (event) {
-        schedule.addEvent(event);
+      const play = await this.theThingAccessor.get(purchase.objectId);
+      if (ImitationPlay.isValid(play)) {
+        const service = ScheduleAdapter.deduceServiceFromPlay(play);
+        const event = new ServiceEvent(service, {
+          numParticipants: purchase.getCellValue(CellNamesShopping.quantity)
+        });
+        if (event) {
+          schedule.addEvent(event);
+        }
+        if (!(play.id in schedule.serviceAvailabilities$)) {
+          schedule.serviceAvailabilities$[
+            play.id
+          ] = this.deduceServiceAvailability$(
+            play.id,
+            schedule.timeRange,
+            play.getCellValue(ImitationPlayCellDefines.maxParticipants.name),
+            play.getCellValue(ImitationPlayCellDefines.businessHours.name)
+          );
+        }
       }
     }
     return schedule;
@@ -105,6 +140,63 @@ export class ScheduleAdapter {
       events.push(event);
     }
     return events;
+  }
+
+  deduceServiceAvailability$(
+    serviceId: string,
+    timeRange: TimeRange,
+    capacity: number,
+    businessHours?: BusinessHours
+  ): Observable<ServiceAvailablility> {
+    return this.relationFactory
+      .findByObjectAndRole$(serviceId, RelationshipPlay.name)
+      .pipe(
+        switchMap((relations: RelationRecord[]) => {
+          if (isEmpty(relations)) {
+            return of([]);
+          } else {
+            const eventFilter: TheThingFilter = ImitationEvent.filter;
+            eventFilter.addState(
+              ImitationEvent.stateName,
+              ImitationEvent.states['host-approved'].value
+            );
+            eventFilter.ids = relations.map(r => r.subjectId);
+            eventFilter.addCellFilter(
+              ImitationEventCellDefines.timeRange.name,
+              OmniTypes['time-range'].matchers.in,
+              timeRange
+            );
+            return this.theThingAccessor.listByFilter$(
+              eventFilter,
+              ImitationEvent.collection
+            );
+          }
+        }),
+        map((events: TheThing[]) => {
+          const serviceAvailablility = new ServiceAvailablility(serviceId, {
+            timeRange,
+            capacity
+          });
+          if (businessHours) {
+            serviceAvailablility.mergeBusinessHours(businessHours);
+          }
+          for (const event of events) {
+            serviceAvailablility.addOccupancy(
+              event.getCellValue(ImitationEventCellDefines.timeRange.name),
+              event.getCellValue(ImitationEventCellDefines.numParticipants.name)
+            );
+          }
+          return serviceAvailablility;
+        }),
+        catchError(error => {
+          console.error(error);
+          return throwError(
+            new Error(
+              `Failed to deduce service availability from service ${serviceId}\n ${error.message}`
+            )
+          );
+        })
+      );
   }
 
   // async attachScheduleWithTourPlan(tourPlan: TheThing, schedule: Schedule) {

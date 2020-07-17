@@ -3,7 +3,17 @@ import { TheThing } from './the-thing';
 import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/core';
 import { Tags } from '@ygg/tags/core';
 import { __assign } from 'tslib';
-import { DateRange, TimeRange } from '@ygg/shared/omni-types/core';
+import {
+  DateRange,
+  TimeRange,
+  OmniTypeMatcher
+} from '@ygg/shared/omni-types/core';
+
+export interface CellFilter {
+  cellName: string;
+  matcher: OmniTypeMatcher;
+  value: any;
+}
 
 export class TheThingFilter implements SerializableJSON {
   name: string;
@@ -14,6 +24,7 @@ export class TheThingFilter implements SerializableJSON {
   flags: { [name: string]: boolean } = {};
   states: { [name: string]: number } = {};
   stateTimeRange: TimeRange;
+  cellFilters: CellFilter[] = [];
 
   constructor(...args: any[]) {
     if (!isEmpty(args)) {
@@ -80,6 +91,12 @@ export class TheThingFilter implements SerializableJSON {
         }
       }
     }
+    for (const cellFilter of this.cellFilters) {
+      const cellValue = theThing.getCellValue(cellFilter.cellName);
+      if (!cellFilter.matcher(cellValue, cellFilter.value)) {
+        return false;
+      }
+    }
     for (const name in this.flags) {
       if (this.flags.hasOwnProperty(name)) {
         const value = this.flags[name];
@@ -122,6 +139,14 @@ export class TheThingFilter implements SerializableJSON {
 
   setStateTimeRange(timeRange: TimeRange) {
     this.stateTimeRange = timeRange;
+  }
+
+  addCellFilter(cellName: string, matcher: OmniTypeMatcher, value: any) {
+    this.cellFilters.push({
+      cellName,
+      matcher,
+      value
+    });
   }
 
   clone(): TheThingFilter {

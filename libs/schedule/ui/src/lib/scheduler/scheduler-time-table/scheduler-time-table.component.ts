@@ -8,7 +8,11 @@ import { ActivatedRoute } from '@angular/router';
 // import { PlayService } from '../../../play/play.service';
 // import { CalendarService } from '../../../calendar/calendar.service';
 // import { EventService } from '../../../event/event.service';
-import { Schedule, ServiceEvent } from '@ygg/schedule/core';
+import {
+  Schedule,
+  ServiceEvent,
+  ServiceAvailablility
+} from '@ygg/schedule/core';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import {
   debounce,
@@ -44,6 +48,7 @@ interface TimeSlot {
   events: string[];
   style?: any;
   backgroundColor?: string;
+  availability?: number;
 }
 
 interface TimeTableDay {
@@ -75,17 +80,24 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
   // loadingStack = 0;
   subscriptions: Subscription[] = [];
   tableCellWidth = config.scheduler.display.halfHourLength;
+  serviceAvailabilities: { [serviceId: string]: ServiceAvailablility } = {};
 
   constructor(
     private emcee: EmceeService,
-    private route: ActivatedRoute,
-    // @Inject(APP_CONFIG) private appConfig: any,
-    // // private authService: AuthenticationService,
-    // // private dialog: MatDialog,
-    private dragulaService: DragulaService // private playService: PlayService, // private eventService: EventService, // private calendarService: CalendarService // private snackBar: MatSnackBar
-  ) {
+    private route: ActivatedRoute // @Inject(APP_CONFIG) private appConfig: any, // // private authService: AuthenticationService, // // private dialog: MatDialog, // private dragulaService: DragulaService // private playService: PlayService, // private eventService: EventService, // private calendarService: CalendarService // private snackBar: MatSnackBar
+  ) // private availabilityFactory: AvailabilityFactoryService
+  {
     this.schedule = get(this.route.snapshot.data, 'schedule', null);
     this.events = keyBy(this.schedule.events, 'id');
+    for (const event of this.schedule.events) {
+      if (event.service.id in this.schedule.serviceAvailabilities$) {
+        this.subscriptions.push(
+          this.schedule.serviceAvailabilities$[event.service.id].subscribe(
+            sa => (this.serviceAvailabilities[sa.serviceId] = sa)
+          )
+        );
+      }
+    }
   }
 
   ngOnDestroy(): void {
@@ -98,55 +110,6 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
     if (!this.schedule) {
       return;
     }
-
-    // this.subscriptions.push(
-    //   this.onChangeEvent$.subscribe(() => {
-    //     // Set event time-range
-    //     try {
-    //       for (const day of this.timeTable.days) {
-    //         for (const timeSlot of day.timeSlots) {
-    //           if (!isEmpty(timeSlot.events)) {
-    //             for (const eventId of timeSlot.events) {
-    //               const event = this.events[eventId];
-    //               event.timeRange.moveTo(timeSlot.start.toDate());
-    //               console.log(
-    //                 `${event.name} move to ${timeSlot.start.toDate()}`
-    //               );
-    //             }
-    //           }
-    //         }
-    //       }
-    //     } catch (error) {
-    //       this.emcee.error(`移動事件時段失敗，錯誤原因：${error}`);
-    //     }
-    //   })
-    // );
-
-    // this.clearAvailableSessionsOnTimeTable();
-    // this.dragulaService.destroy('time-slot');
-    // this.dragulaService.setOptions('time-slot', {});
-    // this.dragulaService.drag().subscribe(this.onDrag.bind(this));
-    // this.subscriptions.push(
-    //   this.dragulaService.dropModel().subscribe(({ item }) => {
-    //     this.onChangeEvent$.next(item);
-    //     // try {
-    //     //   const [, element, target] = args;
-    //     //   const event = this.events[element.getAttribute('eventId')];
-    //     //   const originalTimeSlot: TimeSlot = this.findInTimeSlot(event);
-    //     //   const newStart = moment(target.getAttribute('start'));
-    //     //   if (newStart.isValid()) {
-    //     //     event.timeRange.moveTo(newStart.toDate());
-    //     //   }
-    //     //   remove(originalTimeSlot.events);
-    //     //   const targetTimeSlot = this.findInTimeSlot(event);
-    //     //   if (!targetTimeSlot.events.includes(event.id)) {
-    //     //     targetTimeSlot.events.push(event.id);
-    //     //   }
-    //     // } catch (error) {
-    //     //   this.emcee.error(`移動事件時段失敗，錯誤原因：${error}`);
-    //     // }
-    //   })
-    // );
 
     this.renderTimeTable();
   }
@@ -346,7 +309,7 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
   //   this.deleteEvent.emit(event);
   // }
 
-  onClickEvent(eventId: string) {
+  onMousedownEvent(eventId: string) {
     const event = this.events[eventId];
     this.renderAvailableSessionsOnTimeTable(event);
   }
@@ -388,7 +351,12 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
   //   });
   // }
 
-  renderAvailableSessionsOnTimeTable(event: ServiceEvent) {
+  async renderAvailableSessionsOnTimeTable(event: ServiceEvent) {
+    const sa: ServiceAvailablility =
+      event.service.id in this.serviceAvailabilities
+        ? this.serviceAvailabilities[event.service.id]
+        : null;
+
     // console.log(event.service.businessHours);
     for (const day of this.timeTable.days) {
       for (const timeSlot of day.timeSlots) {
@@ -402,10 +370,13 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
           timeSlot.style = {};
         }
         // console.log(`time slot ${timeSlot.start.format('DD HH:mm')}`);
-        if (
-          event.service.businessHours &&
-          event.service.businessHours.include(theHalfHour)
-        ) {
+        if (sa) {
+          timeSlot.availability = sa.getSingleAvailability(theHalfHour);
+        } else {
+          timeSlot.availability = 0;
+        }
+
+        if (timeSlot.availability > 0) {
           // console.log(`include half hour ${theHalfHour.format()}`);
           timeSlot.backgroundColor = chroma(event.service.color)
             .alpha(0.25)

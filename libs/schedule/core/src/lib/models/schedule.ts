@@ -9,12 +9,17 @@ import {
 import { ServiceEvent } from './event';
 import { extend } from 'lodash';
 import * as moment from 'moment';
+import { ServiceAvailablility } from './availability';
+import { Observable } from 'rxjs';
 
 export class Schedule implements Entity {
   id: string;
   events: ServiceEvent[] = [];
   timeRange: TimeRange;
   dayTimeRange: DayTimeRange;
+  serviceAvailabilities$: {
+    [serviceId: string]: Observable<ServiceAvailablility>;
+  } = {};
   options: {
     allowDuplicateService: boolean;
     allowOverlappingEvents: boolean;

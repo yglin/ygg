@@ -37,6 +37,14 @@ export abstract class SchedulePageObject extends PageObject {
     return `${this.getSelector('timeSlots')} [time="${time.valueOf()}"]`;
   }
 
+  getSelectorForTimeSlotDroppable(time: Date): string {
+    return `${this.getSelectorForTimeSlot(time)} .drop`;
+  }
+
+  getSelectorForTimeSlotAvailability(time: Date): string {
+    return `${this.getSelectorForTimeSlot(time)} .availability h4`;
+  }
+
   abstract expectVisible(): any;
   abstract expectSchedule(schedule: Schedule): any;
   abstract submit();

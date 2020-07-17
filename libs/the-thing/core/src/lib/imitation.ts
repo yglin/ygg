@@ -131,6 +131,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     this.id = generateID();
     this.createAt = new Date().valueOf();
     this.view = 'basic';
+    this.filter = new TheThingFilter();
     this.fromJSON(options);
     defaults(this, options);
     this.stateName = this.stateName || `${this.id}_state`;
