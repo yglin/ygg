@@ -61,7 +61,7 @@ export class ServiceAvailablility {
         : 0;
     const endIndex =
       timeRange.end < this.timeRange.end
-        ? this.getIndex(timeRange.end) + 1
+        ? this.getIndex(timeRange.end)
         : this.availability.length;
     for (let index = startIndex; index < endIndex; index++) {
       this.availability[index] = Math.max(

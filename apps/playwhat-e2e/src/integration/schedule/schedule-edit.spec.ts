@@ -44,7 +44,7 @@ function stubBusisnessHourForPlay(
   return theMockDatabase.insert(`${ImitationPlay.collection}/${play.id}`, play);
 }
 
-function generateApprovedEventsForPlay(
+function forgeApprovedEventsForPlay(
   play: TheThing,
   timeRange: TimeRange
 ): TheThing[] {
@@ -164,28 +164,58 @@ describe('Schedule edit', () => {
   );
 
   const testPlay3 = testPlays[2];
-  const approvedEvents: TheThing[] = generateApprovedEventsForPlay(
-    testPlay3,
-    dateRange.toTimeRange()
+  const testBusinessHours03 = testBusinessHours01;
+  const approvedEvents: TheThing[] = [];
+  const maxParticipants = testPlay3.getCellValue(
+    ImitationPlayCellDefines.maxParticipants.name
   );
-  // console.log(approvedEvents);
-  const availability: ServiceAvailablility = new ServiceAvailablility(
-    testPlay3.id,
-    {
-      timeRange: dateRange.toTimeRange(),
-      capacity: testPlay3.getCellValue(
-        ImitationPlayCellDefines.maxParticipants.name
-      )
-    }
+  const timeLength = testPlay3.getCellValue(
+    ImitationPlayCellDefines.timeLength.name
   );
-  availability.mergeBusinessHours(testBusinessHours01);
-  for (const event of approvedEvents) {
-    availability.addOccupancy(
-      event.getCellValue(ImitationEventCellDefines.timeRange.name),
-      event.getCellValue(ImitationEventCellDefines.numParticipants.name)
-    );
-  }
-  // console.log(availability.print());
+  const approvedEvent01 = ImitationEvent.createTheThing();
+  approvedEvent01.setCellValue(
+    ImitationEventCellDefines.numParticipants.name,
+    random(1, maxParticipants)
+  );
+  // 2nd day 10:00 -
+  const tempMoment = moment(dateRange.start)
+    .add(1, 'day')
+    .hour(10)
+    .minute(0);
+  approvedEvent01.setCellValue(
+    ImitationEventCellDefines.timeRange.name,
+    new TimeRange(
+      tempMoment.toDate(),
+      tempMoment.add(timeLength, 'minute').toDate()
+    )
+  );
+  ImitationEvent.setState(
+    approvedEvent01,
+    ImitationEvent.states['host-approved']
+  );
+  approvedEvents.push(approvedEvent01);
+  const approvedEvent02 = ImitationEvent.createTheThing();
+  approvedEvent02.setCellValue(
+    ImitationEventCellDefines.numParticipants.name,
+    random(1, maxParticipants)
+  );
+  // 3rd day 12:30 -
+  tempMoment
+    .add(1, 'day')
+    .hour(12)
+    .minute(30);
+  approvedEvent02.setCellValue(
+    ImitationEventCellDefines.timeRange.name,
+    new TimeRange(
+      tempMoment.toDate(),
+      tempMoment.add(timeLength, 'minute').toDate()
+    )
+  );
+  ImitationEvent.setState(
+    approvedEvent02,
+    ImitationEvent.states['host-approved']
+  );
+  approvedEvents.push(approvedEvent02);
 
   before(() => {
     // Only tour-plans of state applied can make schedule
@@ -198,7 +228,7 @@ describe('Schedule edit', () => {
       });
       stubBusisnessHourForPlay(testPlay1, testBusinessHours01);
       stubBusisnessHourForPlay(testPlay2, testBusinessHours02);
-      stubBusisnessHourForPlay(testPlay3, testBusinessHours01);
+      stubBusisnessHourForPlay(testPlay3, testBusinessHours03);
       cy.wrap(approvedEvents).each((event: TheThing) => {
         stubEvent(event, testPlay3);
       });
@@ -240,9 +270,28 @@ describe('Schedule edit', () => {
   });
 
   it('Show available quantities on time-slot', () => {
+    const max = testPlay3.getCellValue(
+      ImitationPlayCellDefines.maxParticipants.name
+    );
+    const timeRange01: TimeRange = approvedEvent01.getCellValue(
+      ImitationEventCellDefines.timeRange.name
+    );
+    const availability01: number =
+      max -
+      approvedEvent01.getCellValue(
+        ImitationEventCellDefines.numParticipants.name
+      );
+    const timeRange02: TimeRange = approvedEvent02.getCellValue(
+      ImitationEventCellDefines.timeRange.name
+    );
+    const availability02: number =
+      max -
+      approvedEvent02.getCellValue(
+        ImitationEventCellDefines.numParticipants.name
+      );
     schedulePO.clickOnEvent(testPlay3.name);
-    // cy.pause();
-    schedulePO.expectAvailability(availability);
+    schedulePO.expectAvailability(timeRange01, availability01);
+    schedulePO.expectAvailability(timeRange02, availability02);
   });
 
   it('Drag a single event to target time-slot', () => {

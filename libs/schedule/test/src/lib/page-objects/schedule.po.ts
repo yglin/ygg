@@ -134,21 +134,32 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
     });
   }
 
-  expectAvailability(serviceAvailablility: ServiceAvailablility) {
-    this.dateRange.forEachDay(date => {
-      const timeRange: TimeRange = this.dayTimeRange.toTimeRange(date);
-      timeRange.forEachHalfHour(halfHour => {
-        const availability: number = serviceAvailablility.getSingleAvailability(
-          halfHour
+  expectAvailability(timeRange: TimeRange, availability: number) {
+    timeRange.forEachHalfHour(halfHour => {
+      if (availability > 0) {
+        cy.get(this.getSelectorForTimeSlotAvailability(halfHour.start)).should(
+          'include.text',
+          availability.toString()
         );
-        if (availability > 0) {
-          cy.get(
-            this.getSelectorForTimeSlotAvailability(halfHour.start)
-          ).should('include.text', availability.toString());
-        }
-      });
+      }
     });
   }
+
+  // expectAvailability(serviceAvailablility: ServiceAvailablility) {
+  //   this.dateRange.forEachDay(date => {
+  //     const timeRange: TimeRange = this.dayTimeRange.toTimeRange(date);
+  //     timeRange.forEachHalfHour(halfHour => {
+  //       const availability: number = serviceAvailablility.getSingleAvailability(
+  //         halfHour
+  //       );
+  //       if (availability > 0) {
+  //         cy.get(
+  //           this.getSelectorForTimeSlotAvailability(halfHour.start)
+  //         ).should('include.text', availability.toString());
+  //       }
+  //     });
+  //   });
+  // }
 
   expectErrorOffBusinessHours(eventName: string) {
     cy.get(this.getSelectorForEventErrorButton(eventName)).click();
