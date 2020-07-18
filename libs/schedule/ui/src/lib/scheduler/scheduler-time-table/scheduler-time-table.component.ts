@@ -29,6 +29,7 @@ import { config } from '../../config';
 import { Subscription, Subject } from 'rxjs';
 import { DayTime, DayTimeRange, TimeRange } from '@ygg/shared/omni-types/core';
 import * as chroma from 'chroma-js';
+import { ScheduleFactoryService } from '../../schedule-factory.service';
 
 // import { MatSnackBar, MatDialog, MatDialogRef } from '@angular/material';
 // import { EventEditComponent } from '../../../event/event-edit/event-edit.component';
@@ -81,12 +82,13 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   tableCellWidth = config.scheduler.display.halfHourLength;
   serviceAvailabilities: { [serviceId: string]: ServiceAvailablility } = {};
+  errorMessages: { [eventId: string]: string[] } = {};
 
   constructor(
     private emcee: EmceeService,
-    private route: ActivatedRoute // @Inject(APP_CONFIG) private appConfig: any, // // private authService: AuthenticationService, // // private dialog: MatDialog, // private dragulaService: DragulaService // private playService: PlayService, // private eventService: EventService, // private calendarService: CalendarService // private snackBar: MatSnackBar
-  ) // private availabilityFactory: AvailabilityFactoryService
-  {
+    private route: ActivatedRoute,
+    private scheduleFactory: ScheduleFactoryService
+  ) {
     this.schedule = get(this.route.snapshot.data, 'schedule', null);
     this.events = keyBy(this.schedule.events, 'id');
     for (const event of this.schedule.events) {
@@ -110,6 +112,8 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
     if (!this.schedule) {
       return;
     }
+
+    this.assessSchedule();
 
     this.renderTimeTable();
   }
@@ -180,13 +184,24 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  onChangeTimeSlotEvents(timeSlot: TimeSlot, eventIds: string[]) {
+  async assessSchedule() {
+    for (const event of this.schedule.events) {
+      this.errorMessages[event.id] = (
+        await this.scheduleFactory.assessEvent(event)
+      ).map(error => error.message);
+    }
+  }
+
+  async onChangeTimeSlotEvents(timeSlot: TimeSlot, eventIds: string[]) {
     try {
-      const newEventIds = difference(eventIds, timeSlot.events);
-      for (const newEventId of newEventIds) {
-        const event = this.events[newEventId];
+      const droppedEventIds = difference(eventIds, timeSlot.events);
+      for (const droppedEventId of droppedEventIds) {
+        const event = this.events[droppedEventId];
         event.timeRange.moveTo(timeSlot.start.toDate());
-        console.log(`${event.name} move to ${timeSlot.start.toDate()}`);
+        // console.log(`${event.name} move to ${timeSlot.start.toDate()}`);
+        this.errorMessages[droppedEventId] = (
+          await this.scheduleFactory.assessEvent(event)
+        ).map(error => error.message);
       }
       timeSlot.events = eventIds;
     } catch (error) {

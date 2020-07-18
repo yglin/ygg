@@ -31,6 +31,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatMomentDateModule } from "@angular/material-moment-adapter";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
 
 @NgModule({
   exports: [
@@ -64,6 +65,7 @@ import { MatMomentDateModule } from "@angular/material-moment-adapter";
     MatGridListModule,
     MatMomentDateModule,
     MatDatepickerModule,
+    MatSnackBarModule,
     DragDropModule
   ]
 })

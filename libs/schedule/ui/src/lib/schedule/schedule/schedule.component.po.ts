@@ -8,7 +8,8 @@ export abstract class SchedulePageObject extends PageObject {
     main: '.schedule-page',
     buttonSubmit: 'button.submit',
     eventPool: '.event-pool',
-    timeSlots: '.time-slots'
+    timeSlots: '.time-slots',
+    underSlots: '.under-table'
   };
 
   dateRange: DateRange;
@@ -33,16 +34,24 @@ export abstract class SchedulePageObject extends PageObject {
     return `${this.getSelector('eventPool')} [event-name="${event.name}"]`;
   }
 
+  getSelectorForEventErrorButton(eventName: string): string {
+    return `${this.getSelectorForEvent(eventName)} button.show-errors`;
+  }
+
+  getSelectorForUnderTimeSlot(time: Date): string {
+    return `${this.getSelector('underSlots')} [time="${time.valueOf()}"]`;
+  }
+
   getSelectorForTimeSlot(time: Date): string {
     return `${this.getSelector('timeSlots')} [time="${time.valueOf()}"]`;
   }
 
   getSelectorForTimeSlotDroppable(time: Date): string {
-    return `${this.getSelectorForTimeSlot(time)} .drop`;
+    return `${this.getSelectorForTimeSlot(time)}.drop`;
   }
 
   getSelectorForTimeSlotAvailability(time: Date): string {
-    return `${this.getSelectorForTimeSlot(time)} .availability h4`;
+    return `${this.getSelectorForUnderTimeSlot(time)} .availability h4`;
   }
 
   abstract expectVisible(): any;

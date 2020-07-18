@@ -5,6 +5,8 @@ import { WeekDay } from './week-day';
 import { TimeRange } from './time-range';
 
 export class BusinessHours implements SerializableJSON {
+  static label = "服務時段";
+
   private openHours: OpenHour[] = [];
 
   static isBusinessHours(value: any): value is BusinessHours {

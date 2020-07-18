@@ -11,6 +11,7 @@ import {
   BusinessHours,
   TimeRange
 } from '@ygg/shared/omni-types/core';
+import { MaterialSnackBarPageObjectCypress } from '@ygg/shared/test/cypress';
 import * as moment from 'moment';
 import * as chroma from 'chroma-js';
 
@@ -89,7 +90,7 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
       .first()
       .trigger('mousedown', 5, 5, { which: 1, force: true })
       .trigger('mousemove', { clientX: 5, clientY: 5, force: true });
-      // .trigger('mouseup', { force: true });
+    // .trigger('mouseup', { force: true });
     cy.get(this.getSelectorForTimeSlotDroppable(time))
       .first()
       .trigger('mousemove', { clientX: 5, clientY: 5, force: true })
@@ -107,7 +108,7 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
       // console.log(timeRange);
       timeRange.forEachHalfHour((halfHour: TimeRange) => {
         if (businessHours.include(halfHour)) {
-          cy.get(this.getSelectorForTimeSlot(halfHour.start)).should(
+          cy.get(this.getSelectorForUnderTimeSlot(halfHour.start)).should(
             'have.css',
             'background-color',
             chroma(color)
@@ -115,12 +116,12 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
               .css()
               .replace(/,/g, ', ')
           );
-          cy.get(this.getSelectorForTimeSlot(halfHour.start)).should(
+          cy.get(this.getSelectorForUnderTimeSlot(halfHour.start)).should(
             'include.text',
             capacity.toString()
           );
         } else {
-          cy.get(this.getSelectorForTimeSlot(halfHour.start)).should(
+          cy.get(this.getSelectorForUnderTimeSlot(halfHour.start)).should(
             'have.css',
             'background-color',
             chroma('white')
@@ -147,5 +148,11 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
         }
       });
     });
+  }
+
+  expectErrorOffBusinessHours(eventName: string) {
+    cy.get(this.getSelectorForEventErrorButton(eventName)).click();
+    const matSnackBarPO = new MaterialSnackBarPageObjectCypress();
+    matSnackBarPO.expectMessage('不在服務時段範圍內');
   }
 }

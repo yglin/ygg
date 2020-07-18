@@ -211,6 +211,7 @@ describe('Schedule edit', () => {
       schedulePO.expectVisible();
       // Wait for loading service availabilities
       cy.wait(3000);
+      // cy.pause();
     });
   });
 
@@ -245,65 +246,20 @@ describe('Schedule edit', () => {
   });
 
   it('Drag a single event to target time-slot', () => {
-    const targetStart: Date = moment(dateRange.start)
+    const targetSlot: Date = moment(dateRange.start)
       .add(1, 'day')
       .add(13, 'hour')
       .toDate();
-    const targetTimeRange: TimeRange = new TimeRange(
-      targetStart,
-      moment(targetStart)
-        .add(
-          testPlay1.getCellValue(ImitationPlayCellDefines.timeLength.name),
-          'minute'
-        )
-        .toDate()
-    );
-    schedulePO.moveEvent(testPlay1.name, targetStart);
-    schedulePO.expectEventInTimeSlot(testPlay1.name, targetStart);
-    schedulePO.submit();
-    tourPlanPO.expectVisible();
-    tourPlanPO.expectEventTimeRange(testPlay1.name, targetTimeRange);
-    // // XXX yglin 2020/07/15: use narrower date range to prevent the weird scrolling during drag-n-drop,
-    // // Don't know why but it fucked up the coordinate of target droppable
-    // const newDateRange = new DateRange(
-    //   nextMonday.toDate(),
-    //   nextMonday.add(2, 'day').toDate()
-    // );
-    // TourPlanUnscheduled.setCellValue(
-    //   ImitationTourPlanCellDefines.dateRange.name,
-    //   newDateRange
-    // );
-    // theMockDatabase
-    //   .insert(
-    //     `${TourPlanUnscheduled.collection}/${TourPlanUnscheduled.id}`,
-    //     TourPlanUnscheduled
-    //   )
-    //   .then(() => {
-    //     const play = testPlays[0];
-    //     // move event to second day 13:00
-    //     const targetStart: Date = moment(newDateRange.start)
-    //       .add(1, 'day')
-    //       .add(13, 'hour')
-    //       .toDate();
-    //     const targetTimeRange: TimeRange = new TimeRange(
-    //       targetStart,
-    //       moment(targetStart)
-    //         .add(
-    //           play.getCellValue(ImitationPlayCellDefines.timeLength.name),
-    //           'minute'
-    //         )
-    //         .toDate()
-    //     );
-    //     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    //     myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
-    //     tourPlanPO.expectVisible();
-    //     tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
-    //     schedulePO.expectVisible();
-    //     schedulePO.moveEvent(play.name, targetStart);
-    //     schedulePO.expectEventInTimeSlot(play.name, targetStart);
-    //     schedulePO.submit();
-    //     tourPlanPO.expectVisible();
-    //     tourPlanPO.expectEventTimeRange(play.name, targetTimeRange);
-    //   });
+    schedulePO.moveEvent(testPlay1.name, targetSlot);
+    schedulePO.expectEventInTimeSlot(testPlay1.name, targetSlot);
+  });
+
+  it('Show off-business-hours error of event', () => {
+    const targetSlot: Date = moment(dateRange.start)
+      .add(1, 'day')
+      .add(9, 'hour')
+      .toDate();
+    schedulePO.moveEvent(testPlay1.name, targetSlot);
+    schedulePO.expectErrorOffBusinessHours(testPlay1.name);
   });
 });

@@ -1,0 +1,13 @@
+<div class="ygg-error-messages">
+  <ng-content></ng-content>
+  <div class="info-button" [hidden]="hidden">
+    <button
+      class='show-errors'
+      mat-mini-fab
+      color="warn"
+      (click)="onClickBadge()"
+    >
+      {{ numErrors }}
+    </button>
+  </div>
+</div>

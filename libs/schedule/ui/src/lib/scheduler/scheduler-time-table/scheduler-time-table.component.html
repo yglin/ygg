@@ -23,8 +23,55 @@
   </div>
   <br />
   <div *ngIf="timeTable" class="time-table">
-    <div fxFlex class="time-slots">
+    <div class="under-table">
       <table [ngStyle]="timeTable.style">
+        <thead>
+          <tr>
+            <th></th>
+            <th
+              *ngFor="
+                let timeSlot of timeTable.days[0].timeSlots;
+                let idx = index
+              "
+              class="day-time-name"
+              [style.width]="tableCellWidth + 'px'"
+              [style.max-width]="tableCellWidth + 'px'"
+              [style.min-width]="tableCellWidth + 'px'"
+            >
+              <span>{{ timeSlot.start | date: 'HH:mm' }}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let day of timeTable.days; let dayIndex = index">
+            <td class="date-name">
+              {{ day.date | date: 'M/d EEE' }}
+            </td>
+            <td
+              *ngFor="let timeSlot of day.timeSlots; let timeIndex = index"
+              [attr.time]="timeSlot.start.valueOf()"
+              [style.width]="tableCellWidth + 'px'"
+              [style.max-width]="tableCellWidth + 'px'"
+              [style.min-width]="tableCellWidth + 'px'"
+              [style.backgroundColor]="timeSlot.backgroundColor"
+              class='under-slot'
+            >
+              <div class="availability">
+                <h4
+                  [hidden]="
+                    !timeSlot.availability || timeSlot.availability <= 0
+                  "
+                >
+                  {{ timeSlot.availability }}
+                </h4>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="time-slots">
+      <table>
         <thead>
           <tr>
             <th></th>
@@ -56,41 +103,25 @@
               [style.width]="tableCellWidth + 'px'"
               [style.max-width]="tableCellWidth + 'px'"
               [style.min-width]="tableCellWidth + 'px'"
-              [style.backgroundColor]="timeSlot.backgroundColor"
-              class="time-slot"
+              [dragula]="'event-slot'"
+              [dragulaModel]="timeSlot.events"
+              (dragulaModelChange)="onChangeTimeSlotEvents(timeSlot, $event)"
+              class="drop"
             >
-              <div class="availability">
-                <h4
-                  [hidden]="
-                    !timeSlot.availability || timeSlot.availability <= 0
-                  "
+              <ng-container *ngFor="let eventId of timeSlot.events">
+                <div
+                  *ngIf="events[eventId] as event"
+                  [attr.event-name]="event.name"
+                  class="event-span"
+                  (mousedown)="onMousedownEvent(eventId)"
+                  [attr.eventId]="eventId"
+                  [ygg-error-messages]="errorMessages[eventId]"
                 >
-                  {{ timeSlot.availability }}
-                </h4>
-              </div>
-              <div
-                fxLayout="column"
-                fxLayoutAlign="end start"
-                fxLayoutGap="2px"
-                class="events drop"
-                [dragulaModel]="timeSlot.events"
-                [dragula]="'event-slot'"
-                (dragulaModelChange)="onChangeTimeSlotEvents(timeSlot, $event)"
-              >
-                <ng-container *ngFor="let eventId of timeSlot.events">
-                  <div
-                    *ngIf="events[eventId] as event"
-                    [attr.event-name]="event.name"
-                    class="event-span"
-                    (mousedown)="onMousedownEvent(eventId)"
-                    [attr.eventId]="eventId"
-                  >
-                    <ygg-service-event-span
-                      [event]="event"
-                    ></ygg-service-event-span>
-                  </div>
-                </ng-container>
-              </div>
+                  <ygg-service-event-span
+                    [event]="event"
+                  ></ygg-service-event-span>
+                </div>
+              </ng-container>
             </td>
           </tr>
         </tbody>

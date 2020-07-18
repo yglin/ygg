@@ -6,46 +6,37 @@
   margin-bottom: 20px;
 }
 
-/* .time-table {
-  max-width: 90vw;
-} */
-
-/* th.date-name {
-  width: 100px;
-  padding: 5px;
-} */
-
 .time-table td,
 .time-table th {
   height: 50px;
 }
 
-/* .date-axis {
-  padding-top: 90px;
-}
-
-.date-axis table {
-  table-layout: fixed;
-  border-collapse: collapse;
-}
-
-.date-axis table tr {
-  height: 25px;
-} */
-
-.time-slots {
+.time-table {
+  position: relative;
   max-width: 90vw;
   overflow-x: auto;
-  padding-top: 50px;
 }
 
-.time-slots table {
-  /* table-layout: fixed; */
-  border-collapse: collapse;
+.time-table > div {
+  width: 100%;
+  height: 100%;
+  /* margin-top: 50px; */
   margin-left: 30px;
 }
 
-.time-slots table td:first-child {
+.time-table table {
+  /* table-layout: fixed; */
+  border-collapse: collapse;
+}
+
+.time-slots {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.time-table table td:first-child {
   position: sticky;
   position: -webkit-sticky;
   /* width: 150px; */
@@ -62,42 +53,50 @@
   /*compensate for top border*/
 }
 
-.time-slots table th.day-time-name {
+.time-table th.day-time-name {
   overflow: visible;
 }
-.time-slots table th.day-time-name span {
+
+.time-table th.day-time-name {
+  border: none;
+}
+
+.time-table th.day-time-name span {
   margin-left: -50px;
 }
 
-.time-slots table th,
-.time-slots table td {
-  padding: 2px;
+.under-table table th,
+.under-table table td {
   z-index: 100;
-  overflow: visible;
   /* vertical-align: top; */
 }
 
-.time-slots table td {
-  border: 1px solid rgb(78, 78, 78);
+th.day-time-name {
+  vertical-align: bottom;
+}
+
+td.under-slot {
   vertical-align: top;
 }
 
-.time-slot {
-  position: relative;
+.time-table table td {
+  border: 1px solid rgb(78, 78, 78);
 }
 
-.time-slot .availability h4 {
+.time-slots th.day-time-name,
+.time-slots td:first-child {
+  opacity: 0;
+}
+
+.time-slots table td.drop {
+  overflow: visible;
+  vertical-align: bottom;
+}
+
+.availability h4 {
   margin: 0;
 }
 
-.time-slot .events {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.time-slot .event-span {
+.drop .event-span {
   cursor: pointer;
 }

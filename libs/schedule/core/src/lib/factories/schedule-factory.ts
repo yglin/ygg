@@ -1,7 +1,8 @@
-import { Schedule } from '../models';
+import { Schedule, ServiceEvent, Service } from '../models';
 import { Subject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import { Router, Emcee } from '@ygg/shared/infra/core';
+import { BusinessHours } from '@ygg/shared/omni-types/core';
 
 export abstract class ScheduleFactory {
   onSave$: Subject<Schedule> = new Subject();
@@ -26,5 +27,18 @@ export abstract class ScheduleFactory {
     if (confirm) {
       this.onSave$.next(schedule);
     }
+  }
+
+  async assessEvent(event: ServiceEvent): Promise<Error[]> {
+    const errors: Error[] = [];
+    const service: Service = event.service;
+    // Check business hours
+    if (
+      BusinessHours.isBusinessHours(service.businessHours) &&
+      !service.businessHours.include(event.timeRange)
+    ) {
+      errors.push(new Error(`不在${BusinessHours.label}範圍內`));
+    }
+    return errors;
   }
 }

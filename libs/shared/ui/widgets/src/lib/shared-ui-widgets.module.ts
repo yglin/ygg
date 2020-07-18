@@ -31,6 +31,7 @@ import { ControlViewSwitchComponent } from './control-view-switch/control-view-s
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.component';
 import { DatetimeComponent } from './datetime/datetime.component';
+import { ErrorMessagesComponent } from './error-messages/error-messages.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { DatetimeComponent } from './datetime/datetime.component';
     ControlViewSwitchComponent,
     ConfirmDialogComponent,
     AlertDialogComponent,
-    DatetimeComponent
+    DatetimeComponent,
+    ErrorMessagesComponent
     // ImageThumbnailSelectorComponent
   ],
   imports: [
@@ -87,7 +89,8 @@ import { DatetimeComponent } from './datetime/datetime.component';
     ImageThumbnailListComponent,
     NgForColorBackgroundDirective,
     ControlViewSwitchComponent,
-    DatetimeComponent
+    DatetimeComponent,
+    ErrorMessagesComponent
     // ImageThumbnailSelectorComponent
   ],
   entryComponents: [
