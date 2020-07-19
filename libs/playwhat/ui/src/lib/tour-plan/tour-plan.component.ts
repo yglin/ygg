@@ -38,6 +38,7 @@ export class TourPlanComponent implements OnInit, OnDestroy {
   totalCharge: number = 0;
   eventIds: string[] = [];
   ImitationEvent = ImitationEvent;
+  showThread = false;
   // actionSchedule = extend(ImitationTourPlan.actions['schedule'], {
   //   granted: false
   // });
@@ -68,6 +69,16 @@ export class TourPlanComponent implements OnInit, OnDestroy {
             this.eventIds = this.tourPlan
               .getRelations(RelationshipScheduleEvent.name)
               .map(r => r.objectId);
+            this.showThread = !(
+              ImitationTourPlan.isState(
+                this.tourPlan,
+                ImitationTourPlan.states.new
+              ) ||
+              ImitationTourPlan.isState(
+                this.tourPlan,
+                ImitationTourPlan.states.editing
+              )
+            );
           }),
           switchMap(tourPlan => this.authorizeService.canModify$(tourPlan)),
           tap(

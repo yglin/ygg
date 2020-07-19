@@ -52,6 +52,11 @@
           </div>
         </div>
       </div>
+      <div the-thing-projection-footer>
+        <div *ngIf="showThread">
+          <ygg-thread [subjectId]="tourPlan.id"></ygg-thread>
+        </div>
+      </div>
     </the-thing>
   </div>
 </div>

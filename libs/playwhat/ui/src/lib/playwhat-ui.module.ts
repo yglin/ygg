@@ -35,6 +35,7 @@ import { TourPlanComponent } from './tour-plan/tour-plan.component';
 import { PlayFactoryService } from './play-factory.service';
 import { EventComponent } from './event/event/event.component';
 import { MyHostEventsComponent } from './event/my-host-events/my-host-events.component';
+import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
 
 @NgModule({
   imports: [
@@ -46,6 +47,7 @@ import { MyHostEventsComponent } from './event/my-host-events/my-host-events.com
     SharedUiWidgetsModule,
     SharedOmniTypesUiModule,
     SharedUserUiModule,
+    SharedThreadUiModule,
     TheThingUiModule,
     ShoppingUiModule,
     RouterModule.forChild(routes)
@@ -75,7 +77,7 @@ import { MyHostEventsComponent } from './event/my-host-events/my-host-events.com
       useFactory: configTheThingImitation,
       deps: [
         TheThingImitationAccessService,
-        TheThingViewsService,
+        TheThingViewsService
         // TheThingEditorService
       ],
       multi: true
@@ -99,7 +101,7 @@ import { MyHostEventsComponent } from './event/my-host-events/my-host-events.com
       multi: true
     }
   ],
-  exports: [TourViewComponent, /* TourPlanViewComponent */]
+  exports: [TourViewComponent /* TourPlanViewComponent */]
 })
 export class PlaywhatUiModule {}
 
@@ -113,7 +115,7 @@ export function initFactoryServices(
 
 export function configTheThingImitation(
   imitationAccessService: TheThingImitationAccessService,
-  theThingViewsService: TheThingViewsService,
+  theThingViewsService: TheThingViewsService
   // theThingEditorService: TheThingEditorService
 ) {
   return () => {

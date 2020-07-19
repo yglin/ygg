@@ -2377,6 +2377,59 @@
           }
         }
       }
+    },
+    "shared-thread-core": {
+      "root": "libs/shared/thread/core",
+      "sourceRoot": "libs/shared/thread/core/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/thread/core/tsconfig.lib.json",
+              "libs/shared/thread/core/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/thread/core/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/thread/core/jest.config.js",
+            "tsConfig": "libs/shared/thread/core/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "shared-thread-ui": {
+      "root": "libs/shared/thread/ui",
+      "sourceRoot": "libs/shared/thread/ui/src",
+      "projectType": "library",
+      "prefix": "ygg",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/thread/ui/tsconfig.lib.json",
+              "libs/shared/thread/ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/thread/ui/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/thread/ui/jest.config.js",
+            "tsConfig": "libs/shared/thread/ui/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

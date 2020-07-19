@@ -1,0 +1,16 @@
+.comment-list {
+  width: 75vw;
+  max-width: 960px;
+}
+
+.comment-list .mat-form-field {
+  width: 100%;
+}
+
+.comment-list .comments-staggered {
+  padding: 10px 30px;
+}
+
+.comment-list .mat-divider {
+  margin: 30px 10px;
+}

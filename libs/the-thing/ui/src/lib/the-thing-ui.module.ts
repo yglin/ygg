@@ -44,6 +44,7 @@ import { CellCreatorComponent } from './cell/cell-creator/cell-creator.component
 import { TheThingStateComponent } from './the-thing/the-thing-state/the-thing-state.component';
 import { TheThingCellComponent } from './cell/the-thing-cell/the-thing-cell.component';
 import { TheThingComponent } from './the-thing/the-thing/the-thing.component';
+import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
 
 interface TheThingUiModuleConfig {
   imitations: TheThingImitation[];
@@ -59,6 +60,7 @@ interface TheThingUiModuleConfig {
     SharedUserUiModule,
     TagsUiModule,
     SharedOmniTypesUiModule,
+    SharedThreadUiModule,
     RouterModule.forChild(routes)
   ],
   declarations: [

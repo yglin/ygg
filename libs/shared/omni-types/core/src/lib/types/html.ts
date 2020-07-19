@@ -7,10 +7,8 @@ export class Html implements SerializableJSON {
     return new Html().fromJSON('<div><h3>The is a piece of HTML</h3></div>');
   }
 
-  constructor(...args: any[]) {
-    if (args.length === 1 && typeof (args[0] === 'string')) {
-      this.fromJSON(args[0]);
-    }
+  constructor(content?: string) {
+    this.content = content;
   }
 
   fromJSON(data: any): this {

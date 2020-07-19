@@ -77,7 +77,9 @@
       "@ygg/env/*": [".env/*"],
       "@ygg/playwhat/functions": ["libs/playwhat/functions/src/index.ts"],
       "@ygg/the-thing/functions": ["libs/the-thing/functions/src/index.ts"],
-      "@ygg/shared/functions": ["libs/shared/functions/src/index.ts"]
+      "@ygg/shared/functions": ["libs/shared/functions/src/index.ts"],
+      "@ygg/shared/thread/core": ["libs/shared/thread/core/src/index.ts"],
+      "@ygg/shared/thread/ui": ["libs/shared/thread/ui/src/index.ts"]
     },
     "rootDir": "."
   },
