@@ -1,12 +1,47 @@
 <div class="item-transfer" *ngIf="itemTransfer$">
-  <the-thing
-    [theThing$]="itemTransfer$"
-    [imitation]="ImitationItemTransfer"
-  >
-  <div the-thing-projection-footer>
-    <div *ngIf="itemTransfer && showThread">
-      <ygg-thread [subjectId]="itemTransfer.id"></ygg-thread>
+  <the-thing [theThing$]="itemTransfer$" [imitation]="ImitationItemTransfer">
+    <div the-thing-projection-middle>
+      <div
+        *ngIf="giverId && receiverId && itemId"
+        class="animate-runner"
+        fxLayout="row"
+        fxLayoutAlign="space-around center"
+        fxLayoutGap="20px"
+        (mouseenter)="stopRunner = true"
+        (mouseleave)="stopRunner = false"
+      >
+        <ygg-user-thumbnail
+          [id]="giverId"
+          [showName]="false"
+        ></ygg-user-thumbnail>
+        <div [hidden]="runningStep === 0">
+          <mat-icon>double_arrow</mat-icon>
+        </div>
+        <div [hidden]="runningStep !== 0">
+          <the-thing-thumbnail [id]="itemId" size="small"></the-thing-thumbnail>
+        </div>
+        <div [hidden]="runningStep === 1">
+          <mat-icon>double_arrow</mat-icon>
+        </div>
+        <div [hidden]="runningStep !== 1">
+          <the-thing-thumbnail [id]="itemId" size="small"></the-thing-thumbnail>
+        </div>
+        <div [hidden]="runningStep === 2">
+          <mat-icon>double_arrow</mat-icon>
+        </div>
+        <div [hidden]="runningStep !== 2">
+          <the-thing-thumbnail [id]="itemId" size="small"></the-thing-thumbnail>
+        </div>
+        <ygg-user-thumbnail
+          [id]="receiverId"
+          [showName]="false"
+        ></ygg-user-thumbnail>
+      </div>
     </div>
-  </div>
-</the-thing>
+    <div the-thing-projection-footer>
+      <div *ngIf="itemTransfer && showThread">
+        <ygg-thread [subjectId]="itemTransfer.id"></ygg-thread>
+      </div>
+    </div>
+  </the-thing>
 </div>

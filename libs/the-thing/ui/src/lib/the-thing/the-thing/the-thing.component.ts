@@ -37,6 +37,7 @@ export class TheThingComponent implements OnInit, OnDestroy {
   @Input() id: string;
   @Input() imitation: TheThingImitation;
   @Input() theThing$: Observable<TheThing>;
+  @Input() showOwner = false;
   subscriptions: Subscription[] = [];
   // theThing$: Observable<TheThing>;
   focusSubscription: Subscription;

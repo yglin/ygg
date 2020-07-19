@@ -32,7 +32,7 @@
           [imitation]="imitation"
         ></the-thing-state>
       </div>
-      <div class="owner">
+      <div class="owner" *ngIf="showOwner">
         <ygg-user-thumbnail [id]="theThing.ownerId"></ygg-user-thumbnail>
       </div>
     </div>

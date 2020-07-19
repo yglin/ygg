@@ -10,6 +10,7 @@ import { take } from 'rxjs/operators';
 import { get } from 'lodash';
 import { Subscription } from 'rxjs';
 import { TheThingFactoryService } from '../../the-thing-factory.service';
+import { ImageThumbnailItemSize } from '@ygg/shared/ui/widgets';
 
 @Component({
   selector: 'the-thing-thumbnail',
@@ -20,6 +21,7 @@ export class TheThingThumbnailComponent implements OnInit, OnDestroy {
   @Input() imitation: TheThingImitation;
   @Input() theThing: TheThing;
   @Input() id: string;
+  @Input() size: ImageThumbnailItemSize;
   display: DisplayThumbnail;
   subscriptions: Subscription[] = [];
 
