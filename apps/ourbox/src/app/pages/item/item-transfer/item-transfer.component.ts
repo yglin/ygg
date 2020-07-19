@@ -16,12 +16,15 @@ export class ItemTransferComponent implements OnInit, OnDestroy {
   itemTransfer: TheThing;
   subscriptions: Subscription[] = [];
   ImitationItemTransfer = ImitationItemTransfer;
+  showThread = true;
 
   constructor(private route: ActivatedRoute) {
     this.itemTransfer$ = get(this.route.snapshot.data, 'itemTransfer$', null);
     if (isObservable(this.itemTransfer$)) {
       const itemTransferUpdate$ = this.itemTransfer$.pipe(
-        tap(itemTransfer => (this.itemTransfer = itemTransfer))
+        tap(itemTransfer => {
+          this.itemTransfer = itemTransfer;
+        })
       );
       this.subscriptions.push(itemTransferUpdate$.subscribe());
     }

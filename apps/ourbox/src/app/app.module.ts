@@ -25,6 +25,7 @@ import { MyBoxesComponent } from './pages/box/my-boxes/my-boxes.component';
 import { ItemTransferComponent } from './pages/item/item-transfer/item-transfer.component';
 import { ItemTransferCompleteComponent } from './components/item-transfer-complete/item-transfer-complete.component';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
+import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
     SharedUiWidgetsModule,
     SharedUserUiModule,
     SharedOmniTypesUiModule,
+    SharedThreadUiModule,
     TheThingUiModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(routes)

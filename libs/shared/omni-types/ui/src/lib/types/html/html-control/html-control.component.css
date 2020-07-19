@@ -1,0 +1,13 @@
+
+::ng-deep .ck-editor h1,
+::ng-deep .ck-editor h2,
+::ng-deep .ck-editor h3,
+::ng-deep .ck-editor h4,
+::ng-deep .ck-editor h5,
+::ng-deep .ck-editor h6,
+::ng-deep .ck-editor span,
+::ng-deep .ck-editor p,
+::ng-deep .ck-editor pre {
+  color: darkblue;
+  text-shadow: none;
+}

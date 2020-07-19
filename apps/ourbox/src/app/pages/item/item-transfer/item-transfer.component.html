@@ -2,5 +2,11 @@
   <the-thing
     [theThing$]="itemTransfer$"
     [imitation]="ImitationItemTransfer"
-  ></the-thing>
+  >
+  <div the-thing-projection-footer>
+    <div *ngIf="itemTransfer && showThread">
+      <ygg-thread [subjectId]="itemTransfer.id"></ygg-thread>
+    </div>
+  </div>
+</the-thing>
 </div>
