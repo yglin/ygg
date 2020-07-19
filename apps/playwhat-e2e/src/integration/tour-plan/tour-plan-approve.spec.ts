@@ -1,39 +1,31 @@
+import {
+  ImitationEvent,
+  ImitationTourPlan,
+  RelationshipHost,
+  RelationshipOrganizer,
+  RelationshipScheduleEvent
+} from '@ygg/playwhat/core';
 import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
-import { SamplePlays, SampleEquipments } from '../play/sample-plays';
+import { SchedulePageObjectCypress } from '@ygg/schedule/test';
+import { login, theMockDatabase } from '@ygg/shared/test/cypress';
+import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
+import { User } from '@ygg/shared/user/core';
+import { waitForLogin } from '@ygg/shared/user/test';
+import { RelationPurchase } from '@ygg/shopping/core';
+import { RelationRecord, TheThing } from '@ygg/the-thing/core';
 import {
   MyThingsDataTablePageObjectCypress,
-  TheThingPageObjectCypress,
-  TheThingDataTablePageObjectCypress
+  TheThingDataTablePageObjectCypress,
+  TheThingPageObjectCypress
 } from '@ygg/the-thing/test';
-import {
-  ImitationTourPlan,
-  ImitationEvent,
-  RelationshipScheduleEvent,
-  RelationshipPlay,
-  RelationshipHost,
-  RelationshipOrganizer
-} from '@ygg/playwhat/core';
-import {
-  TourPlanScheduled,
-  ScheduledEvents,
-  TourPlanScheduledOneEvent,
-  TourPlanScheduled3Events,
-  RelationPlayOfEvents
-} from '../schedule/sample-schedules';
-import {
-  login,
-  theMockDatabase,
-  getCurrentUser,
-  testEmail
-} from '@ygg/shared/test/cypress';
-import { waitForLogin } from '@ygg/shared/user/test';
-import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
-import { MyThingsDataTablePageObject } from '@ygg/the-thing/ui';
-import { TheThing, RelationRecord, Relationship } from '@ygg/the-thing/core';
 import { find } from 'lodash';
-import { User } from '@ygg/shared/user/core';
-import { RelationPurchase } from '@ygg/shopping/core';
-import { SchedulePageObjectCypress } from '@ygg/schedule/test';
+import { SampleEquipments, SamplePlays } from '../play/sample-plays';
+import {
+  RelationPlayOfEvents,
+  ScheduledEvents,
+  TourPlanScheduled3Events,
+  TourPlanScheduledOneEvent
+} from '../schedule/sample-schedules';
 
 describe('Approve scheduled events of tour-plan', () => {
   const siteNavigator = new SiteNavigator();
@@ -48,7 +40,6 @@ describe('Approve scheduled events of tour-plan', () => {
     '',
     ImitationTourPlan
   );
-  const schedulePO = new SchedulePageObjectCypress();
   const myHostEventsDataTablePO = new TheThingDataTablePageObjectCypress(
     '',
     ImitationEvent
@@ -107,7 +98,13 @@ describe('Approve scheduled events of tour-plan', () => {
 
       cy.visit('/');
       waitForLogin().then(() => {
-        theMockDatabase.update(`users/${user.id}`, { email: testEmail });
+        // @ts-ignore
+        cy.createInbox().then(inbox => {
+          cy.wrap(inbox).as('mailslurpInbox');
+          theMockDatabase.update(`users/${user.id}`, {
+            email: inbox.emailAddress
+          });
+        });
       });
 
       // // Create a trivial schedule and save tour-plan
@@ -146,19 +143,37 @@ describe('Approve scheduled events of tour-plan', () => {
     );
     tourPlanPO.expectVisible();
     tourPlanPO.sendApprovalRequests();
+    cy.wait(10000);
     // @ts-ignore
-    cy.waitEmail({
-      subject: `您有一項${testEvent.name}的行程活動邀請`
-    }).then(email => {
-      // console.log(response.body);
-      cy.visit(email.html.links[0].href);
-      waitForLogin();
-      emceePO.confirm(
-        `確認以負責人身份參加行程${testEvent.name}？請於行程活動頁面按下確認參加按鈕`
-      );
-      eventPO.expectVisible();
-      eventPO.expectState(ImitationEvent.states['wait-approval']);
+    cy.get('@mailslurpInbox').then(inbox => {
+      // @ts-ignore
+      cy.waitForLatestEmail(inbox.id).then(email => {
+        expect(email.subject).to.have.string(
+          `您有一項${testEvent.name}的行程活動邀請`
+        );
+        // Extract link
+        const link = /href="(http.*)"/.exec(email.body)[1];
+        cy.visit(link);
+        waitForLogin();
+        emceePO.confirm(
+          `確認以負責人身份參加行程${testEvent.name}？請於行程活動頁面按下確認參加按鈕`
+        );
+        eventPO.expectVisible();
+        eventPO.expectState(ImitationEvent.states['wait-approval']);
+      });
     });
+    // cy.waitEmail({
+    //   subject: `您有一項${testEvent.name}的行程活動邀請`
+    // }).then(email => {
+    //   // console.log(response.body);
+    //   cy.visit(email.html.links[0].href);
+    //   waitForLogin();
+    //   emceePO.confirm(
+    //     `確認以負責人身份參加行程${testEvent.name}？請於行程活動頁面按下確認參加按鈕`
+    //   );
+    //   eventPO.expectVisible();
+    //   eventPO.expectState(ImitationEvent.states['wait-approval']);
+    // });
   });
 
   it('Tour-plan approved when all its event approved', () => {

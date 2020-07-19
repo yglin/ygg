@@ -18,9 +18,5 @@
     "**/tags/*",
     "**/resource/*"
   ],
-  "watchForFileChanges": false,
-  "env": {
-    "MAILOSAUR_API_KEY": "4rOAfbBNjERr9bb",
-    "MAILOSAUR_SERVER_ID": "wp2qzvrh"
-  }
+  "watchForFileChanges": false
 }
