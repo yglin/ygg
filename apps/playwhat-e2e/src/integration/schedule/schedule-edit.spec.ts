@@ -32,7 +32,10 @@ import {
   WeekDay
 } from '@ygg/shared/omni-types/core';
 import * as moment from 'moment';
-import { RelationPurchase } from '@ygg/shopping/core';
+import {
+  RelationPurchase,
+  CellNames as CellNamesShopping
+} from '@ygg/shopping/core';
 import { ServiceAvailablility, ServiceEvent } from '@ygg/schedule/core';
 import { random } from 'lodash';
 
@@ -102,9 +105,15 @@ describe('Schedule edit', () => {
     '',
     ImitationTourPlan
   );
+
   const testPlays = SamplePlays.filter(play =>
     TourPlanUnscheduled.hasRelationTo(RelationPurchase.name, play.id)
   );
+  const testPlay1 = testPlays[0];
+  const testPlay2 = testPlays[1];
+  const testPlay3 = testPlays[2];
+  const numParticipants = testPlay3.getCellValue(ImitationPlayCellDefines.maxParticipants.name) + 1;
+
   ImitationTourPlan.setState(
     TourPlanUnscheduled,
     ImitationTourPlan.states.applied
@@ -126,12 +135,16 @@ describe('Schedule edit', () => {
     ImitationTourPlanCellDefines.dayTimeRange.name,
     dayTimeRange
   );
+  for (const relation of TourPlanUnscheduled.getRelations(
+    RelationPurchase.name
+  )) {
+    relation.setCellValue(CellNamesShopping.quantity, numParticipants);
+  }
   const schedulePO = new SchedulePageObjectCypress('', {
     dateRange,
     dayTimeRange
   });
 
-  const testPlay1 = testPlays[0];
   const testBusinessHours01 = new BusinessHours();
   let dayTimeRangeTemp = new DayTimeRange(
     new DayTime(10, 0),
@@ -153,7 +166,6 @@ describe('Schedule edit', () => {
     new OpenHour(WeekDay.Friday, dayTimeRangeTemp)
   );
 
-  const testPlay2 = testPlays[1];
   const testBusinessHours02 = new BusinessHours();
   dayTimeRangeTemp = new DayTimeRange(new DayTime(12, 0), new DayTime(17, 30));
   testBusinessHours02.addOpenHour(
@@ -163,7 +175,6 @@ describe('Schedule edit', () => {
     new OpenHour(WeekDay.Sunday, dayTimeRangeTemp)
   );
 
-  const testPlay3 = testPlays[2];
   const testBusinessHours03 = testBusinessHours01;
   const approvedEvents: TheThing[] = [];
   const maxParticipants = testPlay3.getCellValue(
@@ -292,6 +303,23 @@ describe('Schedule edit', () => {
     schedulePO.clickOnEvent(testPlay3.name);
     schedulePO.expectAvailability(timeRange01, availability01);
     schedulePO.expectAvailability(timeRange02, availability02);
+  });
+
+  it('Show over-availability error of event', () => {
+    const timeRange01: TimeRange = approvedEvent01.getCellValue(
+      ImitationEventCellDefines.timeRange.name
+    );
+    const availability01: number =
+      testPlay3.getCellValue(ImitationPlayCellDefines.maxParticipants.name) -
+      approvedEvent01.getCellValue(
+        ImitationEventCellDefines.numParticipants.name
+      );
+    schedulePO.moveEvent(testPlay3.name, timeRange01.start);
+    schedulePO.expectErrorOverAvailability(
+      testPlay3.name,
+      numParticipants,
+      availability01
+    );
   });
 
   it('Drag a single event to target time-slot', () => {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { ScheduleFactory, Schedule } from '@ygg/schedule/core';
 import {
   Router,
@@ -12,9 +12,13 @@ import { EmceeService } from '@ygg/shared/ui/widgets';
   providedIn: 'root'
 })
 export class ScheduleFactoryService extends ScheduleFactory
-  implements Resolve<Schedule> {
+  implements Resolve<Schedule>, OnDestroy {
   constructor(router: Router, emcee: EmceeService) {
     super(router, emcee);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   async resolve(

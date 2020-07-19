@@ -130,6 +130,10 @@ export class TheThingRelation implements SerializableJSON {
     return get(this.cells, `${cellName}.value`, defaultValue);
   }
 
+  setCellValue(cellName: string, value: any): any {
+    this.cells[cellName].value = value;
+  }
+
   fromJSON(data: any): this {
     extend(this, data);
     if (!isEmpty(data.cells)) {

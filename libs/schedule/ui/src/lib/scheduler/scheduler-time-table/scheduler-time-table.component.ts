@@ -81,7 +81,6 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
   // loadingStack = 0;
   subscriptions: Subscription[] = [];
   tableCellWidth = config.scheduler.display.halfHourLength;
-  serviceAvailabilities: { [serviceId: string]: ServiceAvailablility } = {};
   errorMessages: { [eventId: string]: string[] } = {};
 
   constructor(
@@ -91,15 +90,6 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
   ) {
     this.schedule = get(this.route.snapshot.data, 'schedule', null);
     this.events = keyBy(this.schedule.events, 'id');
-    for (const event of this.schedule.events) {
-      if (event.service.id in this.schedule.serviceAvailabilities$) {
-        this.subscriptions.push(
-          this.schedule.serviceAvailabilities$[event.service.id].subscribe(
-            sa => (this.serviceAvailabilities[sa.serviceId] = sa)
-          )
-        );
-      }
-    }
   }
 
   ngOnDestroy(): void {
@@ -367,10 +357,9 @@ export class SchedulerTimeTableComponent implements OnInit, OnDestroy {
   // }
 
   async renderAvailableSessionsOnTimeTable(event: ServiceEvent) {
-    const sa: ServiceAvailablility =
-      event.service.id in this.serviceAvailabilities
-        ? this.serviceAvailabilities[event.service.id]
-        : null;
+    const sa: ServiceAvailablility = this.scheduleFactory.getServiceAvailability(
+      event.service.id
+    );
 
     // console.log(event.service.businessHours);
     for (const day of this.timeTable.days) {

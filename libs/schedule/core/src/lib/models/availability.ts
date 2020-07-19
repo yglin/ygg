@@ -118,6 +118,23 @@ export class ServiceAvailablility {
     }
   }
 
+  getMinAvailability(timeRange: TimeRange): number {
+    if (!this.timeRange.include(timeRange)) {
+      return 0;
+    }
+    const timeIterator = moment(timeRange.start);
+    let index = this.getIndex(timeIterator.toDate());
+    let minValue = this.availability[index];
+    while (timeIterator.isBefore(timeRange.end)) {
+      if (this.availability[index] < minValue) {
+        minValue = this.availability[index];
+      }
+      index += 1;
+      timeIterator.add(this.intervalLength, 'minute');
+    }
+    return minValue;
+  }
+
   print(): string {
     let result = '';
     const timeIterator = moment(this.timeRange.start);

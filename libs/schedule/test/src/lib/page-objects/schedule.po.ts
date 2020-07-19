@@ -56,7 +56,7 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
     const dayTimeRangeAligned = dayTimeRange.alignHalfHour();
     const timeLength = dayTimeRangeAligned.getLength();
     const countTimeSlots = Math.ceil(timeLength / 30);
-    cy.get(`${this.getSelector()} .day-time-name`).should(
+    cy.get(`${this.getSelector()} .under-table .day-time-name`).should(
       'have.length',
       countTimeSlots
     );
@@ -69,7 +69,7 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
         .padStart(2, '0');
       const minute = (dayTimeIterator % 60).toString().padStart(2, '0');
       cy.get(
-        `${this.getSelector()} .time-slots .day-time-name[index="${index}"]`
+        `${this.getSelector()} .under-table .day-time-name[index="${index}"]`
       ).should('include.text', `${hour}:${minute}`);
       dayTimeIterator += 30;
     }
@@ -143,6 +143,18 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
         );
       }
     });
+  }
+
+  expectErrorOverAvailability(
+    eventName: string,
+    quantity: number,
+    availability: number
+  ) {
+    cy.get(this.getSelectorForEventErrorButton(eventName)).click();
+    const matSnackBarPO = new MaterialSnackBarPageObjectCypress();
+    matSnackBarPO.expectMessage(
+      `參加人數${quantity}已超過該時段的最低容量${availability}`
+    );
   }
 
   // expectAvailability(serviceAvailablility: ServiceAvailablility) {
