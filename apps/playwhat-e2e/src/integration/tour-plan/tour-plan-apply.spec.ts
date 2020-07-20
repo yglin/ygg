@@ -47,7 +47,7 @@ const SampleTourPlans = [TourPlanInApplication, TourPlanPaid].concat(
 // });
 
 const tourPlan = TourPlanWithPlaysAndEquipments.clone();
-tourPlan.name = `測試遊程(送出申請流程)`;
+tourPlan.name = `測試遊程(送出申請流程)_${Date.now()}`;
 ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.editing);
 const SampleThings = SamplePlays.concat(SampleEquipments).concat([tourPlan]);
 // .concat(SampleTourPlans)
