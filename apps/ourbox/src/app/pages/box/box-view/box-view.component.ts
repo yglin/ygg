@@ -1,15 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of, Subscription } from 'rxjs';
-import { TheThing } from '@ygg/the-thing/core';
-import { range, get, isEmpty } from 'lodash';
-import { BoxAccessService } from '../../../box-access.service';
-import { ItemAccessService } from '../../../item-access.service';
-import { ItemFactoryService } from '../../../item-factory.service';
-import { BoxFactoryService } from '../../../box-factory.service';
 import { ImitationItem } from '@ygg/ourbox/core';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { InvitationFactoryService } from '@ygg/shared/user/ui';
+import { TheThing } from '@ygg/the-thing/core';
+import { get, isEmpty, range } from 'lodash';
+import { Observable, Subscription, merge } from 'rxjs';
+import { BoxFactoryService } from '../../../box-factory.service';
+import { tap } from 'rxjs/operators';
 
 function forgeItems(): TheThing[] {
   return range(10).map(() => {
@@ -27,8 +25,10 @@ function forgeItems(): TheThing[] {
 export class BoxViewComponent implements OnInit, OnDestroy {
   box: TheThing;
   items: TheThing[] = [];
+  itemsInEditing: TheThing[] = [];
   subscriptions: Subscription[] = [];
   ImitationItem = ImitationItem;
+  isBoxEmpty = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,10 +39,22 @@ export class BoxViewComponent implements OnInit, OnDestroy {
   ) {
     this.box = get(this.route.snapshot.data, 'box', null);
     // console.log(this.box);
+    const items$: Observable<any> = this.boxFactory
+      .listItemsAvailableInBox$(this.box.id)
+      .pipe(tap(items => (this.items = isEmpty(items) ? [] : items)));
+    const itemsInEditing$: Observable<any> = this.boxFactory
+      .listMyItemsEditingInBox$(this.box.id)
+      .pipe(tap(items => (this.itemsInEditing = isEmpty(items) ? [] : items)));
+
     this.subscriptions.push(
-      this.boxFactory
-        .listItemsInBox$(this.box.id)
-        .subscribe(items => (this.items = items))
+      merge(items$, itemsInEditing$)
+        .pipe(
+          tap(() => {
+            this.isBoxEmpty =
+              isEmpty(this.items) && isEmpty(this.itemsInEditing);
+          })
+        )
+        .subscribe()
     );
   }
 

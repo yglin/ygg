@@ -63,10 +63,18 @@ export interface ImitationDisplayConfig {
   thumbnail?: DisplayThumbnail;
 }
 
+export type ImitationStateChangesId = 'initial' | 'onSave';
+export type ImitationStateChanges = {
+  [key in ImitationStateChangesId]?: {
+    previous?: TheThingState;
+    next: TheThingState;
+  };
+};
+
 type TheThingCreator = (thing: TheThing) => TheThing;
 
 export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
-  collection: string = 'the-things';
+  collection = 'the-things';
   id: string;
   name: string;
   icon: string;
@@ -93,6 +101,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   admin: {
     states?: string[];
   } = {};
+  stateChanges: ImitationStateChanges = {};
 
   /** Create time */
   createAt: number;
@@ -125,6 +134,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       canModify?: (theThing: TheThing) => boolean;
       preSave?: (theThing: TheThing) => TheThing;
       actions?: { [id: string]: TheThingAction };
+      stateChanges?: ImitationStateChanges;
       [key: string]: any;
     } = {}
   ) {
@@ -185,6 +195,9 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
           theThing.addCell(newCell);
         }
       }
+    }
+    if ('initial' in this.stateChanges) {
+      this.setState(theThing, this.stateChanges['initial'].next);
     }
     if (!!this.routePath) {
       theThing.link = `/${this.routePath}/${theThing.id}`;
@@ -345,6 +358,15 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       this.stateName in theThing.states &&
       theThing.states[this.stateName] === state.value
     );
+  }
+
+  isInStates(theThing: TheThing, states: TheThingState[]): boolean {
+    for (const state of states) {
+      if (this.isState(theThing, state)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   fromJSON(data: any = {}): this {

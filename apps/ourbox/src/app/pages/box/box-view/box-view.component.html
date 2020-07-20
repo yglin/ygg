@@ -1,7 +1,7 @@
 <div class="box-view" *ngIf="box">
   <ygg-page-title icon="inbox">{{ box.name }}</ygg-page-title>
   <div>
-    <div *ngIf="!items || items.length <= 0">
+    <div *ngIf="isBoxEmpty">
       <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
         <h2>寶箱中還沒有任何寶物，新增寶物？</h2>
         <div>
@@ -24,13 +24,38 @@
           </button>
         </div>
       </div>
-      <br>
-      <div fxLayout="row wrap" fxLayoutAlign="space-around start" fxLayoutGap="30px">
+      <br />
+      <div
+        fxLayout="row wrap"
+        fxLayoutAlign="space-around start"
+        fxLayoutGap="30px"
+      >
         <div *ngFor="let item of items">
-          <the-thing-thumbnail [theThing]="item" [imitation]="ImitationItem"></the-thing-thumbnail>
+          <the-thing-thumbnail
+            [theThing]="item"
+            [imitation]="ImitationItem"
+          ></the-thing-thumbnail>
         </div>
       </div>
-      <!-- <ygg-image-thumbnail-list [items]="items"></ygg-image-thumbnail-list> -->
+      <br />
+      <div *ngIf="itemsInEditing?.length > 0">
+        <ygg-title-divider [level]="5">
+          編輯中的寶物
+        </ygg-title-divider>
+        <br />
+        <div
+          fxLayout="row wrap"
+          fxLayoutAlign="space-around start"
+          fxLayoutGap="30px"
+        >
+          <div *ngFor="let item of itemsInEditing">
+            <the-thing-thumbnail
+              [theThing]="item"
+              [imitation]="ImitationItem"
+            ></the-thing-thumbnail>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

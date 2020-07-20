@@ -6,9 +6,10 @@ import {
 } from '@angular/fire/firestore';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { LogService } from '@ygg/shared/infra/log';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { Observable, race, NEVER } from 'rxjs';
+import { map, filter, timeout, take } from 'rxjs/operators';
 import { Query } from './query';
+import { config } from './config';
 
 type FireQueryRef =
   | firebase.firestore.CollectionReference
@@ -80,6 +81,28 @@ export class FireStoreAccessService extends DataAccessor {
         filter(action => action.payload.exists),
         map(action => action.payload.data())
       );
+  }
+
+  load(collection: string, id: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.getCollection(collection)
+        .doc(id)
+        .snapshotChanges()
+        .pipe(
+          take(1)
+          // map(action => action.payload.exists)
+        )
+        .subscribe(
+          action => {
+            if (action && action.payload && action.payload.exists) {
+              resolve(action.payload.data());
+            } else {
+              resolve(null);
+            }
+          },
+          error => reject(error)
+        );
+    });
   }
 
   async delete(collection: string, id: string) {

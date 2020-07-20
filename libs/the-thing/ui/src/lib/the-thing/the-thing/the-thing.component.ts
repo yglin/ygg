@@ -266,7 +266,7 @@ export class TheThingComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    this.theThingFactory.save(this.theThing);
+    this.theThingFactory.save(this.theThing, { imitation: this.imitation });
   }
 
   addCell() {

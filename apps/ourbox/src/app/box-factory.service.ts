@@ -5,7 +5,7 @@ import {
   Router,
   RouterStateSnapshot
 } from '@angular/router';
-import { BoxFactory, ItemFilter, ImitationBox } from '@ygg/ourbox/core';
+import { BoxFactory, ImitationBox } from '@ygg/ourbox/core';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import {
   AuthenticateUiService,
@@ -13,12 +13,10 @@ import {
   UserService
 } from '@ygg/shared/user/ui';
 import { TheThing } from '@ygg/the-thing/core';
+import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import { RelationFactoryService } from '@ygg/the-thing/ui';
-import { Observable } from 'rxjs';
-import { BoxAccessService } from './box-access.service';
 import { ItemAccessService } from './item-access.service';
 import { ItemFactoryService } from './item-factory.service';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
 
 @Injectable({
   providedIn: 'root'

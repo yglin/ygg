@@ -33,6 +33,7 @@ export class ItemTransferComponent implements OnInit, OnDestroy {
       const itemTransferUpdate$ = this.itemTransfer$.pipe(
         tap(itemTransfer => {
           this.itemTransfer = itemTransfer;
+          this.showThread = !ImitationItemTransfer.isInStates(itemTransfer, [ImitationItemTransfer.states.new, ImitationItemTransfer.states.editing]);
         })
       );
       const giverId$: Observable<any> = itemTransferUpdate$.pipe(

@@ -8,7 +8,7 @@ import {
   RelationAccessor
 } from '@ygg/the-thing/core';
 import { Router, Emcee } from '@ygg/shared/infra/core';
-import { Subject, BehaviorSubject, Observable, of } from 'rxjs';
+import { Subject, BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import {
   ImitationItem,
   ItemFilter,
@@ -31,6 +31,8 @@ export class ItemFactory {
   //   };
   // } = {};
 
+  subscription: Subscription = new Subscription();
+
   constructor(
     protected emcee: Emcee,
     protected router: Router,
@@ -39,7 +41,20 @@ export class ItemFactory {
     protected theThingFactory: TheThingFactory,
     protected relationFactory: RelationFactory,
     protected userAccessor: UserAccessor
-  ) {}
+  ) {
+    this.subscription.add(
+      this.theThingFactory.runAction$.subscribe(actionInfo => {
+        switch (actionInfo.action.id) {
+          case ImitationItem.actions['publish-available'].id:
+            this.publishAvailable(actionInfo.theThing);
+            break;
+
+          default:
+            break;
+        }
+      })
+    );
+  }
 
   async create(): Promise<TheThing> {
     try {
@@ -54,6 +69,17 @@ export class ItemFactory {
         )
         .toPromise()
         .then(async (resultItem: TheThing) => {
+          const confirm = await this.emcee.confirm(
+            `<h3>順便開放寶物 ${resultItem.name} 讓人索取嗎？<h3><h3>開放後資料無法修改喔</h3>`
+          );
+          if (confirm) {
+            await this.theThingFactory.setState(
+              resultItem,
+              ImitationItem,
+              ImitationItem.states.available,
+              { force: true }
+            );
+          }
           await this.relationFactory.create({
             subjectCollection: resultItem.collection,
             subjectId: resultItem.id,
@@ -71,6 +97,25 @@ export class ItemFactory {
 
   async load(id: string): Promise<Observable<TheThing>> {
     return this.theThingFactory.load$(id, ImitationItem.collection);
+  }
+
+  async publishAvailable(item: TheThing) {
+    try {
+      const confirm = await this.emcee.confirm(
+        `<h3>開放寶物 ${item.name} 讓人索取嗎？<h3><h3>開放後資料便無法修改喔</h3>`
+      );
+      if (confirm) {
+        await this.theThingFactory.setState(
+          item,
+          ImitationItem,
+          ImitationItem.states.available,
+          { force: true }
+        );
+        await this.emcee.info(`<h3>寶物 ${item.name} 已開放讓人索取</h3>`);
+      }
+    } catch (error) {
+      this.emcee.error(`開放寶物索取失敗，錯誤原因：${error.message}`);
+    }
   }
 
   getItemHolder$(itemId: string): Observable<User> {

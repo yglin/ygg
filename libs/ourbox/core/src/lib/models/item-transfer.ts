@@ -41,6 +41,16 @@ export const ImitationItemTransferStates: { [name: string]: TheThingState } = {
     label: '新建立',
     value: 10
   },
+  editing: {
+    name: 'editing',
+    label: '修改中',
+    value: 15
+  },
+  waitReceiver: {
+    name: 'waitReceiver',
+    label: '等候收取方同意',
+    value: 20
+  },
   consented: {
     name: 'consented',
     label: '雙方已同意進行交付',
@@ -54,16 +64,25 @@ export const ImitationItemTransferStates: { [name: string]: TheThingState } = {
 };
 
 export const ImitationItemTransferActions: { [id: string]: TheThingAction } = {
-  'item-transfer-consent-reception': {
+  'send-request': {
+    id: 'item-transfer-send-request',
+    icon: 'send',
+    tooltip: '送出約定通知給收取方',
+    permissions: [
+      `state:${ImitationItemTransferStates.editing.name}`,
+      `role:${RelationshipItemTransferGiver.role}`
+    ]
+  },
+  'consent-reception': {
     id: 'item-transfer-consent-reception',
     icon: 'event_available',
     tooltip: '確定會依約收取寶物',
     permissions: [
-      `state:${ImitationItemTransferStates.new.name}`,
+      `state:${ImitationItemTransferStates.waitReceiver.name}`,
       `role:${RelationshipItemTransferReceiver.role}`
     ]
   },
-  'item-transfer-confirm-completed': {
+  'confirm-completed': {
     id: 'item-transfer-confirm-completed',
     icon: 'done_all',
     tooltip: '確認已收到寶物，交付完成',
@@ -77,6 +96,7 @@ export const ImitationItemTransferActions: { [id: string]: TheThingAction } = {
 export const ImitationItemTransfer = new TheThingImitation({
   id: 'ourbox-item-transfer',
   name: 'item-transfer',
+  icon: '6_ft_apart',
   collection: 'ourbox-item-transfers',
   routePath: 'ourbox-item-transfer',
   cellsDef: values(ImitationItemTransferCellDefines),
@@ -96,17 +116,25 @@ export const ImitationItemTransfer = new TheThingImitation({
     ImitationItemTransferCellDefines.location.name
   ],
   canModify: (theThing: TheThing): boolean => {
-    return ImitationItemTransfer.isState(
-      theThing,
-      ImitationItemTransfer.states.new
+    return (
+      ImitationItemTransfer.isState(
+        theThing,
+        ImitationItemTransfer.states.new
+      ) ||
+      ImitationItemTransfer.isState(
+        theThing,
+        ImitationItemTransfer.states.editing
+      )
     );
   },
-  preSave: (theThing: TheThing): TheThing => {
-    ImitationItemTransfer.setState(
-      theThing,
-      ImitationItemTransfer.states.editing
-    );
-    return theThing;
+  stateChanges: {
+    initial: {
+      next: ImitationItemTransferStates.new
+    },
+    onSave: {
+      previous: ImitationItemTransferStates.new,
+      next: ImitationItemTransferStates.editing
+    }
   },
   actions: ImitationItemTransferActions
 });

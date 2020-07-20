@@ -173,17 +173,14 @@ ImitationPlay.canModify = (theThing: TheThing): boolean => {
   );
 };
 
-ImitationPlay.creators.push(
-  (theThing: TheThing): TheThing => {
-    ImitationPlay.setState(theThing, ImitationPlay.states.new);
-    return theThing;
+ImitationPlay.stateChanges = {
+  'initial': {
+    next: ImitationPlay.states.new
+  },
+  'onSave': {
+    previous: ImitationPlay.states.new,
+    next: ImitationPlay.states.editing
   }
-);
+}
 
-ImitationPlay.preSave = (theThing: TheThing): TheThing => {
-  if (ImitationPlay.isState(theThing, ImitationPlay.states.new)) {
-    ImitationPlay.setState(theThing, ImitationPlay.states.editing);
-  }
-  return theThing;
-};
 // ImitationPlay.addRelationDefine(RelationAddition);

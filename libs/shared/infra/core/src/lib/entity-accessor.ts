@@ -1,7 +1,7 @@
 import { DataAccessor } from './data-accessor';
 import { Entity, SerializerJSON, DeserializerJSON } from './entity';
-import { map, take, tap } from 'rxjs/operators';
-import { Observable, of, combineLatest } from 'rxjs';
+import { map, take, tap, timeout } from 'rxjs/operators';
+import { Observable, of, combineLatest, race, NEVER } from 'rxjs';
 import { Query } from './query';
 import { isEmpty } from 'lodash';
 
@@ -52,9 +52,8 @@ export class EntityAccessor<T extends Entity> {
   }
 
   async load(id: string): Promise<T> {
-    return this.load$(id)
-      .pipe(take(1))
-      .toPromise();
+    const entityData = await this.dataAccessor.load(this.collection, id);
+    return entityData ? this.deserializer(entityData) : null;
   }
 
   listByIds$(ids: string[]): Observable<T[]> {

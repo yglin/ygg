@@ -403,17 +403,20 @@ export class TheThingFactoryService extends TheThingFactory
       if (!confirm) {
         return;
       }
-      // console.log('幹');
       if (imitation && typeof imitation.preSave === 'function') {
         theThing = imitation.preSave(theThing);
       }
+      if (
+        'onSave' in imitation.stateChanges &&
+        imitation.isState(theThing, imitation.stateChanges['onSave'].previous)
+      ) {
+        imitation.setState(theThing, imitation.stateChanges['onSave'].next);
+      }
       await this.theThingAccessService.upsert(theThing);
       await this.saveRelations(theThing);
-      // console.log('林');
       // Connect to remote source
       this.connectRemoteSource(theThing.id, theThing.collection);
 
-      // console.log('老');
       // Clear create cache
       for (const imitationId in this.createCache) {
         if (this.createCache.hasOwnProperty(imitationId)) {
@@ -430,7 +433,6 @@ export class TheThingFactoryService extends TheThingFactory
       }
       // console.log(`TheThing ${theThing.id} saved`);
       const result = await this.load(theThing.id, theThing.collection);
-      // console.log('師');
       // this.theThingSources$[result.id].local$.next(result);
       if (!!result) {
         if (!options.force) {
@@ -588,7 +590,7 @@ export class TheThingFactoryService extends TheThingFactory
             // permission indicate a specific state
             if (typeof permission === 'string') {
               if (permission.startsWith('role')) {
-                const role = permission.split(':')[1];
+                const role = permission.split(':')[1].trim();
                 // console.log(
                 //   `Has relation? ${theThing.id}, ${user.id}, ${role}`
                 // );
@@ -598,8 +600,10 @@ export class TheThingFactoryService extends TheThingFactory
                   role
                 );
               } else if (permission.startsWith('state')) {
-                const states = permission.split(':')[1];
-                const permittedStates: string[] = states.split(',');
+                const states = permission.split(':')[1].trim();
+                const permittedStates: string[] = states
+                  .split(',')
+                  .map(s => s.trim());
                 // console.log(permittedStates);
                 let matchAny = false;
                 for (const stateName of permittedStates) {

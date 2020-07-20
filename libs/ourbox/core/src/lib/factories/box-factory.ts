@@ -209,9 +209,47 @@ export class BoxFactory {
       .pipe(map(relationRecords => relationRecords.map(rr => rr.objectId)));
   }
 
-  listItemsInBox$(boxId: string): Observable<TheThing[]> {
+  listItemsAvailableInBox$(boxId: string): Observable<TheThing[]> {
     return this.listItemIdsInBox$(boxId).pipe(
-      switchMap(itemIds => this.itemAccessor.listByIds$(itemIds))
+      switchMap(itemIds => {
+        if (isEmpty(itemIds)) {
+          return of([]);
+        } else {
+          const itemsFilter = ImitationItem.filter.clone();
+          itemsFilter.addState(
+            ImitationItem.stateName,
+            ImitationItem.states.available.value
+          );
+          itemsFilter.ids = itemIds;
+          return this.theThingAccessor.listByFilter$(
+            itemsFilter,
+            ImitationItem.collection
+          );
+        }
+      })
+    );
+  }
+
+  listMyItemsEditingInBox$(boxId: string): Observable<TheThing[]> {
+    const me$ = this.authenticator.currentUser$;
+    return combineLatest([this.listItemIdsInBox$(boxId), me$]).pipe(
+      switchMap(([itemIds, me]) => {
+        if (!(me && me.id) || isEmpty(itemIds)) {
+          return [];
+        } else {
+          const itemsFilter = ImitationItem.filter.clone();
+          itemsFilter.addState(
+            ImitationItem.stateName,
+            ImitationItem.states.editing.value
+          );
+          itemsFilter.ids = itemIds;
+          itemsFilter.ownerId = me.id;
+          return this.theThingAccessor.listByFilter$(
+            itemsFilter,
+            ImitationItem.collection
+          );
+        }
+      })
     );
   }
 
@@ -270,34 +308,10 @@ export class BoxFactory {
   }
 
   findItems$(itemFilter: ItemFilter): Observable<TheThing[]> {
-    // const itemIdsFromMyBoxes$: Observable<string[]> = this.listMyBoxes$().pipe(
-    //   switchMap((boxes: TheThing[]) => {
-    //     if (isEmpty(boxes)) {
-    //       return of([]);
-    //     } else {
-    //       const observableItemIds: Observable<string[]>[] = [];
-    //       for (const box of boxes) {
-    //         observableItemIds.push(this.listItemIdsInBox$(box.id));
-    //       }
-    //       return combineLatest(observableItemIds);
-    //     }
-    //   }),
-    //   map(itemIds => uniq(itemIds))
-    // );
-    // const itemIdsFromPublicBoxes$: Observable<string[]> = this.listPublicBoxes$().pipe(
-    //   switchMap((boxes: TheThing[]) => {
-    //     if (isEmpty(boxes)) {
-    //       return of([]);
-    //     } else {
-    //       const observableItemIds: Observable<string[]>[] = [];
-    //       for (const box of boxes) {
-    //         observableItemIds.push(this.listItemIdsInBox$(box.id));
-    //       }
-    //       return combineLatest(observableItemIds);
-    //     }
-    //   })
-    // );
-
+    itemFilter.addState(
+      ImitationItem.stateName,
+      ImitationItem.states.available.value
+    );
     return combineLatest([
       this.listMyBoxes$().pipe(startWith([])),
       this.listPublicBoxes$()

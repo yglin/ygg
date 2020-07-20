@@ -58,16 +58,26 @@ export const ImitationItem = new TheThingImitation({
       ImitationItem.isState(theThing, ImitationItem.states.editing)
     );
   },
-  preSave: (theThing: TheThing): TheThing => {
-    ImitationItem.setState(theThing, ImitationItem.states.editing);
-    return theThing;
-  },
-  creators: [
-    (theThing: TheThing): TheThing => {
-      ImitationItem.setState(theThing, ImitationItem.states.new);
-      return theThing;
+  stateChanges: {
+    'initial': {
+      next: ImitationItemStates.new,
+    },
+    'onSave': {
+      previous: ImitationItemStates.new,
+      next: ImitationItemStates.editing
     }
-  ]
+  },
+  actions: {
+    'publish-available': {
+      id: 'ourbox-item-publish-available',
+      icon: 'card_giftcard',
+      tooltip: '開放寶物讓人索取',
+      permissions: [
+        `state: ${ImitationItemStates.editing.name}`,
+        'requireOwner'
+      ]
+    }
+  }
 });
 
 export const RelationshipItemHolder = {

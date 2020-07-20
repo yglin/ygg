@@ -229,6 +229,16 @@ ImitationTourPlan.actions = {
   }
 };
 
+ImitationTourPlan.stateChanges = {
+  'initial': {
+    next: ImitationTourPlan.states.new
+  },
+  'onSave': {
+    previous: ImitationTourPlan.states.new,
+    next: ImitationTourPlan.states.editing
+  }
+}
+
 ImitationTourPlan.pipes[`cell.${CellNames.dateRange}`] = (
   theThing: TheThing
 ) => {
@@ -242,20 +252,6 @@ ImitationTourPlan.pipes[`cell.${CellNames.dateRange}`] = (
 export function defaultTourPlanName(dateRange: DateRange): string {
   return `深度遊趣${dateRange.days() + 1}日遊`;
 }
-
-ImitationTourPlan.creators.push(
-  (theThing: TheThing): TheThing => {
-    ImitationTourPlan.setState(theThing, ImitationTourPlan.states.new);
-    return theThing;
-  }
-);
-
-ImitationTourPlan.preSave = (theThing: TheThing): TheThing => {
-  if (ImitationTourPlan.isState(theThing, ImitationTourPlan.states.new)) {
-    ImitationTourPlan.setState(theThing, ImitationTourPlan.states.editing);
-  }
-  return theThing;
-};
 
 ImitationTourPlan.canModify = (theThing: TheThing): boolean => {
   return (

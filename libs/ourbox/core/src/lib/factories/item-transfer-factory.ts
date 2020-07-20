@@ -20,7 +20,9 @@ import {
   ImitationItemTransfer,
   RelationshipItemTransferGiver,
   RelationshipItemTransferItem,
-  RelationshipItemTransferReceiver
+  RelationshipItemTransferReceiver,
+  ImitationItemTransferActions,
+  ImitationItemTransferStates
 } from '../models';
 import { ItemFactory } from './item-factory';
 
@@ -48,11 +50,15 @@ export abstract class ItemTransferFactory {
     this.subscription.add(
       this.theThingFactory.runAction$.subscribe(actionInfo => {
         switch (actionInfo.action.id) {
-          case 'item-transfer-consent-reception':
+          case ImitationItemTransfer.actions['send-request'].id:
+            this.sendRequest(actionInfo.theThing);
+            break;
+
+          case ImitationItemTransfer.actions['consent-reception'].id:
             this.consentReception(actionInfo.theThing);
             break;
 
-          case 'item-transfer-confirm-completed':
+          case ImitationItemTransfer.actions['confirm-completed'].id:
             this.completeReception(actionInfo.theThing);
             break;
 
@@ -99,18 +105,15 @@ export abstract class ItemTransferFactory {
         ImitationItemTransfer.routePath,
         newItemTrnasfer.id
       ]);
-      return this.theThingFactory.onSave$
+      const itemTransfer = await this.theThingFactory.onSave$
         .pipe(
           filter(thing => thing.id === newItemTrnasfer.id),
           take(1)
         )
-        .toPromise()
-        .then(async (resultItemTransfer: TheThing) => {
-          await this.sendNotification(resultItemTransfer);
-          return resultItemTransfer;
-        });
+        .toPromise();
+      await this.sendRequest(itemTransfer);
     } catch (error) {
-      this.emcee.error(`新增寶物失敗，錯誤原因：${error.message}`);
+      this.emcee.error(`新增交付約定記錄失敗，錯誤原因：${error.message}`);
       return;
     }
   }
@@ -205,7 +208,7 @@ export abstract class ItemTransferFactory {
     return this.userAccessor.get(relations[0].objectId);
   }
 
-  async sendNotification(itemTransfer: TheThing) {
+  async sendRequest(itemTransfer: TheThing) {
     let item: TheThing;
     let giver: User;
     let receiver: User;
@@ -213,6 +216,12 @@ export abstract class ItemTransferFactory {
       item = await this.getTransferItem(itemTransfer.id);
       giver = await this.getGiver(itemTransfer.id);
       receiver = await this.getReceiver(itemTransfer.id);
+      const confirm = await this.emcee.confirm(
+        `<h3>確認約定時間和地點無誤，送出交付請求給${receiver.name}？</h3>`
+      );
+      if (!confirm) {
+        return;
+      }
       await this.invitationFactory.create({
         type: ItemTransferInvitationType,
         inviterId: giver.id,
@@ -223,8 +232,14 @@ export abstract class ItemTransferFactory {
         landingUrl: `/${ImitationItemTransfer.routePath}/${itemTransfer.id}`,
         data: {}
       });
+      await this.theThingFactory.setState(
+        itemTransfer,
+        ImitationItemTransfer,
+        ImitationItemTransferStates.waitReceiver,
+        { force: true }
+      );
       await this.emcee.info(
-        `已送出 ${item.name} 的交付要求，請等待 ${receiver.name} 的回應`
+        `<h3>已送出 ${item.name} 的交付要求，請等待 ${receiver.name} 的回應</h3>`
       );
     } catch (error) {
       this.emcee.error(
@@ -238,7 +253,7 @@ export abstract class ItemTransferFactory {
               receiver.name +
               ' '
             : ''
-        }交付通知失敗，錯誤原因：${error.message}`
+        }交付約定失敗，錯誤原因：${error.message}`
       );
     }
   }
@@ -252,7 +267,7 @@ export abstract class ItemTransferFactory {
       giver = await this.getGiver(itemTransfer.id);
       receiver = await this.getReceiver(itemTransfer.id);
       const confirm = await this.emcee.confirm(
-        `確定要依照約定前往收取寶物 ${item.name} 嗎？`
+        `<h3>確定要依照約定前往收取寶物 ${item.name} 嗎？</h3>`
       );
       if (confirm) {
         await this.theThingFactory.setState(
@@ -272,7 +287,7 @@ export abstract class ItemTransferFactory {
           data: {}
         });
         this.emcee.info(
-          `已通知 ${giver.name} ，請依照約定時間地點前往進行交付`
+          `<h3>已通知 ${giver.name} ，請依照約定時間地點前往進行交付</h3>`
         );
       }
     } catch (error) {
@@ -312,7 +327,7 @@ export abstract class ItemTransferFactory {
           landingUrl: `/${ImitationItemTransfer.routePath}/${itemTransfer.id}`,
           data: {}
         });
-        this.emcee.info(`已通知 ${giver.name}, ${item.name} 的交付已完成`);
+        this.emcee.info(`<h3>已通知 ${giver.name}, ${item.name} 的交付已完成</h3>`);
       }
     } catch (error) {
       this.emcee.error(`確認完成失敗，錯誤原因：${error.message}`);
