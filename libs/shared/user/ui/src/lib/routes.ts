@@ -1,16 +1,21 @@
 import { Routes } from '@angular/router';
-import { InvitationFactoryService } from './invitation-factory.service';
-import { InvitationComponent } from './invitation/invitation/invitation.component';
+import { NotificationFactoryService } from './notification-factory.service';
+import { NotificationComponent } from './notification/notification/notification.component';
+import { MyNotificationListComponent } from './notification/my-notification-list/my-notification-list.component';
 
 export const routes: Routes = [
   {
-    path: 'invite',
+    path: 'notifications',
     children: [
       {
+        path: 'my',
+        component: MyNotificationListComponent
+      },
+      {
         path: ':id',
-        component: InvitationComponent,
+        component: NotificationComponent,
         resolve: {
-          invitation: InvitationFactoryService
+          notification: NotificationFactoryService
         }
       }
     ]

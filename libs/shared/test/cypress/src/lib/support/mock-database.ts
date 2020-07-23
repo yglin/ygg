@@ -118,15 +118,15 @@ export class MockDatabase {
   }
 
   delete(path: string) {
+    cy.log(`Delete data at ${path} in firebase firestore DB`);
     // @ts-ignore
     cy.callFirestore('delete', path);
-    cy.log(`Delete data at ${path} in firebase firestore DB`);
   }
 
   deleteRTDB(path: string) {
+    cy.log(`Delete data at ${path} in firebase realtime DB`);
     // @ts-ignore
     cy.callRtdb('delete', path);
-    cy.log(`Delete data at ${path} in firebase realtime DB`);
   }
 
   backupRTDB(path: string): Cypress.Chainable<any> {
@@ -175,7 +175,7 @@ export class MockDatabase {
 
   clear() {
     this.restoreDocuments();
-    this.restoreRTDB();
+    // this.restoreRTDB();
     // cy.wrap<Document[]>(values(this.documents)).each((document: any) => {
     //   this.delete(document.path);
     // });

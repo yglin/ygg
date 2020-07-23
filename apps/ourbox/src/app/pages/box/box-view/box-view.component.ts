@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ImitationItem } from '@ygg/ourbox/core';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
-import { InvitationFactoryService } from '@ygg/shared/user/ui';
+import { NotificationFactoryService } from '@ygg/shared/user/ui';
 import { TheThing } from '@ygg/the-thing/core';
 import { get, isEmpty, range } from 'lodash';
 import { Observable, Subscription, merge } from 'rxjs';
@@ -34,7 +34,7 @@ export class BoxViewComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private boxFactory: BoxFactoryService,
-    private invitationFactory: InvitationFactoryService,
+    private notificationFactory: NotificationFactoryService,
     private dialog: YggDialogService
   ) {
     this.box = get(this.route.snapshot.data, 'box', null);
@@ -71,7 +71,7 @@ export class BoxViewComponent implements OnInit, OnDestroy {
   }
 
   async inviteMember() {
-    const emails = await this.invitationFactory.inquireEmails();
+    const emails = await this.notificationFactory.inquireEmails();
     // console.log(emails);
     if (!isEmpty(emails)) {
       this.boxFactory.inviteBoxMembers(this.box, emails);

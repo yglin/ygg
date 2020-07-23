@@ -7,21 +7,24 @@ import {
 import {
   User,
   UserAccessor,
-  InvitationFactory,
+  NotificationFactory,
   Authenticator
 } from '@ygg/shared/user/core';
 import {
   RelationshipPlay,
   ImitationEvent,
   RelationshipHost,
-  RelationshipOrganizer
+  RelationshipOrganizer,
+  ImitationEventCellDefines
 } from '../imitations';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import { Observable, Subscription } from 'rxjs';
 import { switchMap, shareReplay, take } from 'rxjs/operators';
 import { ImitationPlay } from '../play';
+import { Router } from '@ygg/shared/infra/core';
+import { TimeRange } from '@ygg/shared/omni-types/core';
 
-export const InvitationHostEvent = {
+export const NotificationHostEvent = {
   type: 'host-event'
 };
 
@@ -33,10 +36,11 @@ export class EventFactory {
     protected theThingAccessor: TheThingAccessor,
     protected theThingFactory: TheThingFactory,
     protected userAccessor: UserAccessor,
-    protected invitationFactory: InvitationFactory,
+    protected notificationFactory: NotificationFactory,
     protected authenticator: Authenticator,
     protected emcee: EmceeService,
-    protected relationFactory: RelationFactory
+    protected relationFactory: RelationFactory,
+    protected router: Router
   ) {
     this.subscriptions.push(
       this.theThingFactory.runAction$.subscribe(actionInfo => {
@@ -86,8 +90,8 @@ export class EventFactory {
     const host = await this.userAccessor.get(play.ownerId);
     const mailSubject = `${location.hostname}：您有一項${event.name}的行程活動邀請`;
     const mailContent = `<pre>您有一項行程活動邀請，以行程<b>${event.name}</b>的負責人身分參加</pre>`;
-    await this.invitationFactory.create({
-      type: InvitationHostEvent.type,
+    await this.notificationFactory.create({
+      type: NotificationHostEvent.type,
       inviterId: this.authenticator.currentUser.id,
       email: host.email,
       mailSubject,
@@ -152,6 +156,10 @@ export class EventFactory {
         await this.emcee.info(
           `<h3>已確認參加，之後若要取消請聯絡主辦者${organizer.name}</h3>`
         );
+        const calendarDate = (event.getCellValue(ImitationEventCellDefines.timeRange.name) as TimeRange).start
+        this.router.navigate(['/', 'calendar', 'my'], { queryParams: {
+          date: calendarDate
+        } });
       }
     } catch (error) {
       this.emcee.error(`確認參加行程失敗，錯誤原因：${error.message}`);

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DataAccessor } from '@ygg/shared/infra/core';
+import { DataAccessor, Query } from '@ygg/shared/infra/core';
 import {
   AngularFirestore,
   AngularFirestoreCollection
@@ -8,8 +8,6 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { LogService } from '@ygg/shared/infra/log';
 import { Observable, race, NEVER } from 'rxjs';
 import { map, filter, timeout, take } from 'rxjs/operators';
-import { Query } from './query';
-import { config } from './config';
 
 type FireQueryRef =
   | firebase.firestore.CollectionReference
@@ -31,7 +29,7 @@ export class FireStoreAccessService extends DataAccessor {
 
   transformQueries(ref: FireQueryRef, queries: Query[] = []): FireQueryRef {
     queries.forEach(query => {
-      if (query.fieldPath && query.comparator && query.value) {
+      if (query && query.isValid()) {
         ref = ref.where(
           query.fieldPath,
           <firebase.firestore.WhereFilterOp>query.comparator,
@@ -39,6 +37,7 @@ export class FireStoreAccessService extends DataAccessor {
         );
       }
     });
+    // console.log(ref);
     return ref;
   }
 
@@ -60,6 +59,23 @@ export class FireStoreAccessService extends DataAccessor {
     } catch (error) {
       const wrapError = new Error(
         `Failed to save ${collection}/${id};\n${error.message}`
+      );
+      this.logService.error(wrapError.message);
+      throw wrapError;
+    }
+  }
+
+  async update(collection: string, id: string, data: any) {
+    try {
+      data.refPath = `${collection}/${id}`;
+      data.modifyAt = Date().valueOf();
+      await this.getCollection(collection)
+        .doc(id)
+        .update(data);
+      return data;
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to update ${collection}/${id};\n${error.message}`
       );
       this.logService.error(wrapError.message);
       throw wrapError;

@@ -7,6 +7,7 @@ export abstract class AccountWidgetPageObject extends PageObject {
     loggedInWidget: '.logged-in',
     loggedOutWidget: '.logged-out',
     buttonLogin: 'button.login',
+    buttonNotification: '.notification button'
   };
   userMenuPO: UserMenuPageObject;
 

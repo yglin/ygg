@@ -1,15 +1,16 @@
-import { isEmpty, every, castArray } from 'lodash';
 import { Injectable } from '@angular/core';
+import { Query } from '@ygg/shared/infra/core';
+// import { IDataAccessor } from '@ygg/shared/infra/core';
+import { DataAccessService } from '@ygg/shared/infra/data-access';
+import { Tags } from '@ygg/tags/core';
 import {
   TheThing,
-  TheThingFilter,
-  TheThingAccessor
+  TheThingAccessor,
+  TheThingFilter
 } from '@ygg/the-thing/core';
-// import { IDataAccessor } from '@ygg/shared/infra/core';
-import { DataAccessService, Query } from '@ygg/shared/infra/data-access';
+import { castArray, every, isEmpty } from 'lodash';
 import { Observable, throwError } from 'rxjs';
-import { map, shareReplay, tap, take } from 'rxjs/operators';
-import { Tags } from '@ygg/tags/core';
+import { map, take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -65,7 +66,10 @@ export class TheThingAccessService implements TheThingAccessor {
       .pipe(map(items => items.map(item => new TheThing().fromJSON(item))));
   }
 
-  listByIds$(ids: string[], collection: string = TheThing.collection): Observable<TheThing[]> {
+  listByIds$(
+    ids: string[],
+    collection: string = TheThing.collection
+  ): Observable<TheThing[]> {
     return this.dataAccessService
       .listByIds$(collection, ids)
       .pipe(map(items => items.map(item => new TheThing().fromJSON(item))));

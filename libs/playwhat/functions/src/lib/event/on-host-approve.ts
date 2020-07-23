@@ -5,7 +5,7 @@ import { take } from 'rxjs/operators';
 import { relationFactory } from '@ygg/the-thing/functions';
 import { tourPlanFactory } from '../factories';
 
-// const InvitationCollection = 'invitations';
+// const NotificationCollection = 'notifications';
 export const onEventApprovalOfHost = functions.firestore
   .document(`${ImitationEvent.collection}/{id}`)
   .onUpdate(async (change, context) => {

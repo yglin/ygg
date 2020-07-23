@@ -2,7 +2,7 @@ import { Emcee, Router } from '@ygg/shared/infra/core';
 import { Location } from '@ygg/shared/omni-types/core';
 import {
   Authenticator,
-  InvitationFactory,
+  NotificationFactory,
   User,
   UserAccessor
 } from '@ygg/shared/user/core';
@@ -26,7 +26,7 @@ import {
 } from '../models';
 import { ItemFactory } from './item-factory';
 
-export const ItemTransferInvitationType = 'ourbox-item-transfer';
+export const ItemTransferNotificationType = 'ourbox-item-transfer';
 
 export interface ItemTransferCompleteInfo {
   newLocation: Location;
@@ -45,7 +45,7 @@ export abstract class ItemTransferFactory {
     protected theThingFactory: TheThingFactory,
     protected relationFactory: RelationFactory,
     protected userAccessor: UserAccessor,
-    protected invitationFactory: InvitationFactory
+    protected notificationFactory: NotificationFactory
   ) {
     this.subscription.add(
       this.theThingFactory.runAction$.subscribe(actionInfo => {
@@ -222,8 +222,8 @@ export abstract class ItemTransferFactory {
       if (!confirm) {
         return;
       }
-      await this.invitationFactory.create({
-        type: ItemTransferInvitationType,
+      await this.notificationFactory.create({
+        type: ItemTransferNotificationType,
         inviterId: giver.id,
         email: receiver.email,
         mailSubject: `${giver.name} 想要將 ${item.name} 交給你`,
@@ -276,8 +276,8 @@ export abstract class ItemTransferFactory {
           ImitationItemTransfer.states.consented,
           { force: true }
         );
-        await this.invitationFactory.create({
-          type: ItemTransferInvitationType,
+        await this.notificationFactory.create({
+          type: ItemTransferNotificationType,
           inviterId: receiver.id,
           email: giver.email,
           mailSubject: `${receiver.name} 已確認要收取 ${item.name}`,
@@ -317,8 +317,8 @@ export abstract class ItemTransferFactory {
           ImitationItemTransfer.states.completed,
           { force: true }
         );
-        await this.invitationFactory.create({
-          type: ItemTransferInvitationType,
+        await this.notificationFactory.create({
+          type: ItemTransferNotificationType,
           inviterId: receiver.id,
           email: giver.email,
           mailSubject: `${receiver.name} 已收到 ${item.name}`,

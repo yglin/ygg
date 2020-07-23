@@ -1,23 +1,17 @@
-import { flatten, isArray, toArray, uniqBy, isEmpty } from 'lodash';
 import { Injectable } from '@angular/core';
+import { AngularFireDatabase } from '@angular/fire/database';
 import {
   AngularFirestore,
   AngularFirestoreCollection
 } from '@angular/fire/firestore';
-import { AngularFireDatabase } from '@angular/fire/database';
-import { combineLatest, Observable, of, race, never, NEVER } from 'rxjs';
-import { map, catchError, filter, take, timeout } from 'rxjs/operators';
+// import { DataAccessModule } from './data-access.module';
+import { Query } from '@ygg/shared/infra/core';
 import { LogService } from '@ygg/shared/infra/log';
+import { flatten, isArray, isEmpty, uniqBy } from 'lodash';
+import { combineLatest, NEVER, Observable, of, race } from 'rxjs';
+import { catchError, map, timeout } from 'rxjs/operators';
 import { DataItem } from './data-item';
 import { DataAccessError, DataAccessErrorCode } from './error';
-// import { DataAccessModule } from './data-access.module';
-import { Query } from './query';
-import {
-  DataAccessor,
-  // SerializerJSON,
-  Entity
-  // DeserializerJSON
-} from '@ygg/shared/infra/core';
 
 type FireQueryRef =
   | firebase.firestore.CollectionReference

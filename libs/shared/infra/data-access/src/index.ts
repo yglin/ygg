@@ -1,4 +1,3 @@
-export * from './lib/query';
 export * from './lib/error';
 export * from './lib/entity';
 export * from './lib/data-item';

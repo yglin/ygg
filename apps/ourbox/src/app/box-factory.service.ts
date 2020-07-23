@@ -9,7 +9,7 @@ import { BoxFactory, ImitationBox } from '@ygg/ourbox/core';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import {
   AuthenticateUiService,
-  InvitationFactoryService,
+  NotificationFactoryService,
   UserService
 } from '@ygg/shared/user/ui';
 import { TheThing } from '@ygg/the-thing/core';
@@ -25,7 +25,7 @@ export class BoxFactoryService extends BoxFactory implements Resolve<TheThing> {
   constructor(
     authenticator: AuthenticateUiService,
     emcee: EmceeService,
-    invitationFactory: InvitationFactoryService,
+    notificationFactory: NotificationFactoryService,
     userAccessor: UserService,
     // BoxAccessor: BoxAccessService,
     relationFactory: RelationFactoryService,
@@ -37,7 +37,7 @@ export class BoxFactoryService extends BoxFactory implements Resolve<TheThing> {
     super(
       authenticator,
       emcee,
-      invitationFactory,
+      notificationFactory,
       userAccessor,
       // BoxAccessor,
       relationFactory,

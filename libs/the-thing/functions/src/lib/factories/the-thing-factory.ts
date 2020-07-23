@@ -32,6 +32,10 @@ export class TheThingFactoryFunctions extends TheThingFactory {
     throw new Error('Method not implemented.');
   }
 
+  save(theThing: TheThing, options?: { requireOwner?: boolean; imitation?: TheThingImitation; force?: boolean; }): Promise<TheThing> {
+    throw new Error("Method not implemented.");
+  }
+
   async setState(
     thing: TheThing,
     imitation: TheThingImitation,

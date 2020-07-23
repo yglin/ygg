@@ -22,4 +22,19 @@ export class AccountWidgetPageObjectCypress extends AccountWidgetPageObject {
       .get(this.getSelector('loggedOutWidget'), { timeout: 10000 })
       .should('be.visible');
   }
+
+  expectNotification(countUnread: number) {
+    cy.get(this.getSelector('buttonNotification')).should(
+      'include.text',
+      countUnread.toString()
+    );
+  }
+
+  expectNotificationHidden() {
+    cy.get(this.getSelector('buttonNotification')).should('not.be.visible');
+  }
+
+  clickNotification() {
+    cy.get(this.getSelector('buttonNotification')).click();
+  }
 }

@@ -1,5 +1,5 @@
 // import * as functions from 'firebase-functions';
-export { onInvitationCreate } from '@ygg/shared/user/functions';
+export { onNotificationCreate } from '@ygg/shared/user/functions';
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript

@@ -215,7 +215,7 @@
       "tags": []
     },
     "shared-user-functions": {
-      "tags": []
+      "tags": ["scope:shared", "type:functions"]
     },
     "functions": {
       "tags": ["scope:firebase", "type:node"]

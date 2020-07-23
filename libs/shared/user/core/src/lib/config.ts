@@ -2,8 +2,8 @@ export const config = {
   user: {
     collection: 'users'
   },
-  invitation: {
-    collection: 'invitations',
+  notification: {
+    collection: 'notifications',
     expireDays: 7
   }
 };

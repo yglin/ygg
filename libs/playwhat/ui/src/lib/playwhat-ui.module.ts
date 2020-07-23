@@ -36,6 +36,17 @@ import { PlayFactoryService } from './play-factory.service';
 import { EventComponent } from './event/event/event.component';
 import { MyHostEventsComponent } from './event/my-host-events/my-host-events.component';
 import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
+import { MyCalendarComponent } from './calendar/my-calendar/my-calendar.component';
+import { FullCalendarModule } from "ng-fullcalendar";
+// import { FullCalendarModule } from '@fullcalendar/angular'; // the main connector. must go first
+// import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
+// import momentPlugin from '@fullcalendar/moment';
+
+// FullCalendarModule.registerPlugins([
+//   // register FullCalendar plugins
+//   dayGridPlugin,
+//   momentPlugin
+// ]);
 
 @NgModule({
   imports: [
@@ -50,6 +61,7 @@ import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
     SharedThreadUiModule,
     TheThingUiModule,
     ShoppingUiModule,
+    FullCalendarModule,
     RouterModule.forChild(routes)
   ],
   declarations: [
@@ -63,7 +75,8 @@ import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
     EquipmentViewComponent,
     TourPlanComponent,
     EventComponent,
-    MyHostEventsComponent
+    MyHostEventsComponent,
+    MyCalendarComponent
   ],
   entryComponents: [
     TourViewComponent,

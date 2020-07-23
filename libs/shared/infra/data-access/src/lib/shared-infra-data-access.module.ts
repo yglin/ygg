@@ -7,13 +7,14 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 // import { environment } from '../environments/environment';
 //@ts-ignore
 import { default as FIREBASE_CONFIG } from '@ygg/firebase/project-config.json';
+//@ts-ignore
+import { default as FirebaseJSON } from "firebase.json";
 
 let useLocalEmulators = false;
 let firestoreEmulatorHost: string;
 let experimentalForceLongPolling = false;
 
 try {
-  const FirebaseJSON = require('firebase.json');
   firestoreEmulatorHost = `localhost:${FirebaseJSON.emulators.firestore.port}`;
   useLocalEmulators = window.location.hostname.startsWith('localhost');
   experimentalForceLongPolling = 'Cypress' in window;

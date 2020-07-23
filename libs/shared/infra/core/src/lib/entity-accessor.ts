@@ -28,6 +28,10 @@ export class EntityAccessor<T extends Entity> {
     );
   }
 
+  async update(id: string, data: any) {
+    return this.dataAccessor.update(this.collection, id, data);
+  }
+
   has$(id: string): Observable<boolean> {
     return this.dataAccessor.has$(this.collection, id);
   }

@@ -23,7 +23,8 @@ import { UserViewComponent } from './components/user-view/user-view.component';
 import { UserSelectorComponent } from './components/user-selector/user-selector.component';
 import { MailListControlComponent } from './components/mail-list/mail-list-control/mail-list-control.component';
 import { routes } from './routes';
-import { InvitationComponent } from './invitation/invitation/invitation.component';
+import { NotificationComponent } from './notification/notification/notification.component';
+import { MyNotificationListComponent } from './notification/my-notification-list/my-notification-list.component';
 
 // import { SharedUiWidgetsModule } from '@ygg/shared/ui-widgets';
 // import { ContactFormComponent } from './contact/contact-form/contact-form.component';
@@ -67,7 +68,8 @@ import { InvitationComponent } from './invitation/invitation/invitation.componen
     UserViewComponent,
     UserSelectorComponent,
     MailListControlComponent,
-    InvitationComponent
+    NotificationComponent,
+    MyNotificationListComponent
   ],
   entryComponents: [LoginDialogComponent],
   exports: [

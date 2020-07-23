@@ -1,6 +1,7 @@
 import { DataAccessor, Query } from '@ygg/shared/infra/core';
 import * as admin from 'firebase-admin';
 import { Observable, ReplaySubject } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 
 type FireQueryRef =
   | FirebaseFirestore.CollectionReference
@@ -38,6 +39,13 @@ export class DataAccessorFunctions extends DataAccessor {
       .set(data);
   }
 
+  async update(collection: string, id: string, data: any) {
+    return this.firestore
+      .collection(collection)
+      .doc(id)
+      .update(data);
+  }
+
   load$(collection: string, id: string): Observable<any> {
     const path = `${collection}/${id}`;
     if (!(path in this.ObservablesCache)) {
@@ -45,7 +53,11 @@ export class DataAccessorFunctions extends DataAccessor {
       this.ObservablesCache[path] = new ReplaySubject(1);
       docRef.onSnapshot(
         snapshot => {
-          this.ObservablesCache[path].next(snapshot.data());
+          if (snapshot.exists) {
+            this.ObservablesCache[path].next(snapshot.data());
+          } else {
+            this.ObservablesCache[path].next(null);
+          }
         },
         error => {
           this.ObservablesCache[path].error(error);
@@ -53,6 +65,16 @@ export class DataAccessorFunctions extends DataAccessor {
       );
     }
     return this.ObservablesCache[path];
+  }
+
+  has$(collection: string, id: string): Observable<boolean> {
+    return this.load$(collection, id).pipe(map(data => !!data));
+  }
+
+  async load(collection: string, id: string): Promise<any> {
+    return this.load$(collection, id)
+      .pipe(take(1))
+      .toPromise();
   }
 
   async delete(collection: string, id: string) {

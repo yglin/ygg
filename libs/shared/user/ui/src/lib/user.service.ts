@@ -1,10 +1,11 @@
 import { size } from 'lodash';
 import { Injectable } from '@angular/core';
-import { DataAccessService, Query } from '@ygg/shared/infra/data-access';
 import {
+  DataAccessService,
   DataAccessError,
   DataAccessErrorCode
 } from '@ygg/shared/infra/data-access';
+import { Query } from "@ygg/shared/infra/core";
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, take } from 'rxjs/operators';
 

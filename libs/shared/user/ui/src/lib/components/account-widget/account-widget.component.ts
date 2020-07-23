@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { User } from "@ygg/shared/user/core";
+import { User } from '@ygg/shared/user/core';
 import { AuthenticateService } from '../../authenticate.service';
 import { MatDialog } from '@angular/material/dialog';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
@@ -10,6 +10,9 @@ import {
   Breakpoints
 } from '@angular/cdk/layout';
 import { Subscription } from 'rxjs';
+import { NotificationFactoryService } from '../../notification-factory.service';
+import { size } from 'lodash';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ygg-account-widget',
@@ -19,12 +22,15 @@ import { Subscription } from 'rxjs';
 export class AccountWidgetComponent implements OnInit, OnDestroy {
   user: User;
   isViewPortXSmall = false;
+  numNotifications = 0;
   subscriptions: Subscription[] = [];
 
   constructor(
     private authenticateService: AuthenticateService,
     private authenticateUiService: AuthenticateUiService,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private notificationFactory: NotificationFactoryService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -45,6 +51,13 @@ export class AccountWidgetComponent implements OnInit, OnDestroy {
         user => (this.user = user)
       )
     );
+    this.subscriptions.push(
+      this.notificationFactory
+        .getUnreadNotifications$()
+        .subscribe(
+          notifications => (this.numNotifications = size(notifications))
+        )
+    );
   }
 
   ngOnDestroy() {
@@ -59,5 +72,9 @@ export class AccountWidgetComponent implements OnInit, OnDestroy {
 
   logout() {
     this.authenticateService.logout();
+  }
+
+  gotoMyNotifications() {
+    this.router.navigate(['/', 'notifications', 'my']);
   }
 }

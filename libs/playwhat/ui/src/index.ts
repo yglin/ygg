@@ -5,3 +5,4 @@ export * from './lib/tour-plan/tour-plan.component.po';
 export * from './lib/schedule-adapter.service';
 // export * from './lib/application.service';
 // export * from './lib/tour-plan.service';
+export * from './lib/calendar';

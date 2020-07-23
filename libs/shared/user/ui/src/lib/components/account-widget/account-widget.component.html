@@ -12,6 +12,9 @@
           [showName]="!isViewPortXSmall"
         ></ygg-user-thumbnail>
       </ygg-user-menu>
+      <div class="notification" [hidden]='!numNotifications'>
+        <button mat-mini-fab color='warn' (click)="gotoMyNotifications()">{{ numNotifications }}</button>
+      </div>
       <!--
         <ygg-user-thumbnail [user]='currentUser' [matMenuTriggerFor]="userMenu"></ygg-user-thumbnail>
         <mat-menu #userMenu='matMenu'>

@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 
 export abstract class DataAccessor {
   abstract async save(collection: string, id: string, data: any);
+  abstract async update(collection: string, id: string, data: any);
   abstract has$(collection: string, id: string): Observable<boolean>;
   abstract load$(collection: string, id: string): Observable<any>;
   abstract async load(collection: string, id: string): Promise<any>;

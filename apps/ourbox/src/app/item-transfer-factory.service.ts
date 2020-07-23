@@ -14,7 +14,7 @@ import { EmceeService, YggDialogService } from '@ygg/shared/ui/widgets';
 import {
   AuthenticateUiService,
   UserService,
-  InvitationFactoryService
+  NotificationFactoryService
 } from '@ygg/shared/user/ui';
 import {
   RelationFactoryService,
@@ -38,7 +38,7 @@ export class ItemTransferFactoryService extends ItemTransferFactory
     theThingFactory: TheThingFactoryService,
     relationFactory: RelationFactoryService,
     userAccessor: UserService,
-    invitationFactory: InvitationFactoryService,
+    notificationFactory: NotificationFactoryService,
     protected dialog: YggDialogService
   ) {
     super(
@@ -49,7 +49,7 @@ export class ItemTransferFactoryService extends ItemTransferFactory
       theThingFactory,
       relationFactory,
       userAccessor,
-      invitationFactory
+      notificationFactory
     );
   }
 

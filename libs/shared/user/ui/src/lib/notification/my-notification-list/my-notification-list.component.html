@@ -1,0 +1,56 @@
+<div class="my-notification-list">
+  <div *ngIf="unreadNotifications.length > 0" class="unread-list">
+    <ygg-title-divider [level]="5">未讀通知</ygg-title-divider>
+    <mat-list role="list">
+      <mat-list-item
+        *ngFor="let notification of unreadNotifications; let idx = index"
+        [attr.notification-id]="notification.id"
+        role="listitem"
+        yggNgForColorBackground
+        [index]="idx"
+        (click)="onClickNotification(notification)"
+      >
+        <ng-container
+          *ngTemplateOutlet="notificationItem; context: notification"
+        ></ng-container>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <br />
+  <div *ngIf="readNotifications.length > 0" class="read-list">
+    <ygg-title-divider [level]="5">已讀通知</ygg-title-divider>
+    <mat-list>
+      <mat-list-item
+        *ngFor="let notification of readNotifications; let idx = index"
+        [attr.notification-id]="notification.id"
+        yggNgForColorBackground
+        [index]="idx"
+        (click)="onClickNotification(notification)"
+      >
+        <ng-container
+          *ngTemplateOutlet="notificationItem; context: notification"
+        ></ng-container>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>
+
+<ng-template
+  #notificationItem
+  let-subject="mailSubject"
+  let-inviterId="inviterId"
+>
+  <div
+    class="notification-item"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+    fxLayoutGap="10px"
+  >
+    <div>
+      <h2 class="subject">{{ subject }}</h2>
+    </div>
+    <div>
+      <ygg-user-thumbnail [id]="inviterId"></ygg-user-thumbnail>
+    </div>
+  </div>
+</ng-template>

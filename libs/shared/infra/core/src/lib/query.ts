@@ -12,4 +12,8 @@ export class Query {
   toString(): string {
     return `${this.fieldPath}${this.comparator}${this.value}`;
   }
+
+  isValid(): boolean {
+    return this.fieldPath && this.comparator && this.value !== undefined;
+  }
 }

@@ -3,10 +3,14 @@ import { EventFactory, ImitationEvent } from '@ygg/playwhat/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import {
   UserService,
-  InvitationFactoryService,
+  NotificationFactoryService,
   AuthenticateUiService
 } from '@ygg/shared/user/ui';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router
+} from '@angular/router';
 import { Observable } from 'rxjs';
 import {
   TheThingFactoryService,
@@ -23,19 +27,21 @@ export class EventFactoryService extends EventFactory {
     theThingAccessor: TheThingAccessService,
     theThingFactory: TheThingFactoryService,
     userAccessor: UserService,
-    invitationFactory: InvitationFactoryService,
+    notificationFactory: NotificationFactoryService,
     authenticator: AuthenticateUiService,
     emcee: EmceeService,
-    relationFactory: RelationFactoryService
+    relationFactory: RelationFactoryService,
+    router: Router
   ) {
     super(
       theThingAccessor,
       theThingFactory,
       userAccessor,
-      invitationFactory,
+      notificationFactory,
       authenticator,
       emcee,
-      relationFactory
+      relationFactory,
+      router
     );
   }
 

@@ -1,0 +1,9 @@
+.user-account {
+  position: relative;
+}
+
+.notification {
+  position: absolute;
+  bottom: -10px;
+  left: 30px;
+}

@@ -6,6 +6,7 @@ import { TourPlanComponent } from './tour-plan/tour-plan.component';
 import { EventComponent } from './event/event/event.component';
 import { EventFactoryService } from './event-factory.service';
 import { MyHostEventsComponent } from './event/my-host-events/my-host-events.component';
+import { MyCalendarComponent } from './calendar/my-calendar/my-calendar.component';
 
 export const routes: Route[] = [
   // { path: 'plays', children: [{ path: 'my', component: MyPlayListComponent }] },
@@ -49,6 +50,15 @@ export const routes: Route[] = [
         resolve: {
           event$: EventFactoryService
         }
+      }
+    ]
+  },
+  {
+    path: 'calendar',
+    children: [
+      {
+        path: 'my',
+        component: MyCalendarComponent
       }
     ]
   }

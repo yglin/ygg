@@ -1,8 +1,8 @@
 import * as functions from 'firebase-functions';
 import {
-  InvitationCollection,
+  NotificationCollection,
   deserializer,
-  Invitation
+  Notification
 } from '@ygg/shared/user/core';
 const mailgun = require('mailgun-js')({
   apiKey: 'key-ec2a8df6896b9c64bcd02fa7c64ba663',
@@ -10,23 +10,23 @@ const mailgun = require('mailgun-js')({
 });
 const MailComposer = require('nodemailer/lib/mail-composer');
 
-// const InvitationCollection = 'invitations';
-export const onInvitationCreate = functions.firestore
-  .document(`${InvitationCollection}/{id}`)
+// const NotificationCollection = 'notifications';
+export const onNotificationCreate = functions.firestore
+  .document(`${NotificationCollection}/{id}`)
   .onCreate((snap, context) => {
-    const invitation: Invitation = deserializer(snap.data());
+    const notification: Notification = deserializer(snap.data());
     // const mailData = {
     //   from: 'yglin@mail.ygg.tw',
-    //   to: invitation.email,
-    //   subject: invitation.mailSubject,
-    //   text: invitation.mailContent
+    //   to: notification.email,
+    //   subject: notification.mailSubject,
+    //   text: notification.mailContent
     // };
 
     const mailOptions = {
       from: 'yglin@mail.ygg.tw',
-      to: invitation.email,
-      subject: invitation.mailSubject,
-      html: invitation.mailContent
+      to: notification.email,
+      subject: notification.mailSubject,
+      html: notification.mailContent
     };
 
     const mail = new MailComposer(mailOptions);
@@ -39,7 +39,7 @@ export const onInvitationCreate = functions.firestore
         }
 
         const dataToSend = {
-          to: invitation.email,
+          to: notification.email,
           message: message.toString('ascii')
         };
 

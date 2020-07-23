@@ -33,7 +33,6 @@ import { RelationDefine } from './relation-def';
 import { TheThingCellDefine } from './cell-define';
 import { OmniTypeComparator, OmniTypes } from '@ygg/shared/omni-types/core';
 import { TheThingState } from './state';
-import { stat } from 'fs';
 import { Relationship } from './relationship';
 import { TheThingAction } from './action';
 

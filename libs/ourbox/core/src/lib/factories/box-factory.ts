@@ -2,8 +2,8 @@ import { Emcee, Router } from '@ygg/shared/infra/core';
 import {
   Authenticator,
   config as UserConfig,
-  Invitation,
-  InvitationFactory,
+  Notification,
+  NotificationFactory,
   User
 } from '@ygg/shared/user/core';
 import {
@@ -29,14 +29,14 @@ import { BoxCollection } from './box-accessor';
 import { ItemAccessor } from './item-accessor';
 import { ItemFactory } from './item-factory';
 
-export const InvitationJoinBox = {
+export const NotificationJoinBox = {
   type: 'join-box'
 };
 
 export class BoxFactory {
   // private authenticator: Authenticator;
   // private emcee: Emcee;
-  // private invitationFactory: InvitationFactory;
+  // private notificationFactory: NotificationFactory;
   // private userAccessor: UserAccessor;
   // private theThingAccessor: TheThingAccessor;
   // private relationFactory: RelationFactory;
@@ -46,7 +46,7 @@ export class BoxFactory {
   constructor(
     protected authenticator: Authenticator,
     protected emcee: Emcee,
-    protected invitationFactory: InvitationFactory,
+    protected notificationFactory: NotificationFactory,
     protected userAccessor: UserAccessor,
     // protected boxAccessor: BoxAccessor,
     protected relationFactory: RelationFactory,
@@ -56,11 +56,11 @@ export class BoxFactory {
     protected theThingAccessor: TheThingAccessor
   ) {
     this.subscriptions.push(
-      this.invitationFactory.confirm$.subscribe(invitation => {
-        if (invitation.type === InvitationJoinBox.type) {
-          console.log('Confirm invitation');
-          console.log(invitation);
-          this.confirm(invitation);
+      this.notificationFactory.confirm$.subscribe(notification => {
+        if (notification.type === NotificationJoinBox.type) {
+          console.log('Confirm notification');
+          console.log(notification);
+          this.confirm(notification);
         }
       })
     );
@@ -119,8 +119,8 @@ export class BoxFactory {
       const mailSubject = `${location.hostname}：邀請您加入寶箱${box.name}`;
       const mailContent = `<pre><b>${this.authenticator.currentUser.name}</b>邀請您加入他的寶箱<b>${box.name}</b>，共享寶箱內的所有寶物</pre>`;
       for (const mail of emails) {
-        const invitation = await this.invitationFactory.create({
-          type: InvitationJoinBox.type,
+        const notification = await this.notificationFactory.create({
+          type: NotificationJoinBox.type,
           inviterId: this.authenticator.currentUser.id,
           email: mail,
           mailSubject,
@@ -180,14 +180,14 @@ export class BoxFactory {
     }
   }
 
-  async confirm(invitation: Invitation) {
-    const inviteeId = get(invitation, 'inviteeId', null);
+  async confirm(notification: Notification) {
+    const inviteeId = get(notification, 'inviteeId', null);
     const invitee: User = await this.userAccessor.get(inviteeId);
     if (!invitee) {
       this.emcee.error(`找不到受邀加入的使用者，id = ${inviteeId}`);
       return;
     }
-    const boxId = get(invitation, 'data.boxId', null);
+    const boxId = get(notification, 'data.boxId', null);
     const box: TheThing = await this.theThingAccessor.get(
       boxId,
       ImitationBox.collection
@@ -342,7 +342,7 @@ export class BoxFactory {
     );
   }
 
-  // async createInvitation(box: TheThing, mail: string): Promise<string> {
+  // async createNotification(box: TheThing, mail: string): Promise<string> {
   //   const activateTicket: ActivateTicket = await this.createActivateTicket(
   //     box,
   //     mail
