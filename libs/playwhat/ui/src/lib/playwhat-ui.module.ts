@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -49,6 +49,8 @@ import { MyEventsComponent } from './event/my-events/my-events.component';
 //   dayGridPlugin,
 //   momentPlugin
 // ]);
+import localeZhHant from '@angular/common/locales/zh-Hant';
+registerLocaleData(localeZhHant);
 
 @NgModule({
   imports: [

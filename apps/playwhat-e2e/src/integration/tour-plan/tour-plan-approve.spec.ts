@@ -239,6 +239,7 @@ describe('Approve scheduled events of tour-plan', () => {
         myCalendarPO.expectEvent(event);            
       })
       .then(() => {
+        // cy.pause();
         siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
         myTourPlansPO.theThingDataTablePO.gotoTheThingView(
           TourPlanScheduled3Events

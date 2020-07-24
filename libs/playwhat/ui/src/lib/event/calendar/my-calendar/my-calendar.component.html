@@ -1,6 +1,90 @@
 <div class="my-calendar">
-  <mwl-calendar-week-view
-    [viewDate]="viewDate"
-    [events]="events"
-  ></mwl-calendar-week-view>
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+    <div>
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <div>
+          <button
+            mat-mini-fab
+            mwlCalendarPreviousView
+            [view]="view"
+            [(viewDate)]="viewDate"
+          >
+            <mat-icon>arrow_back_ios</mat-icon>
+          </button>
+        </div>
+        <div>
+          <button
+            mat-mini-fab
+            mwlCalendarToday
+            [view]="view"
+            [(viewDate)]="viewDate"
+          >
+            <mat-icon>today</mat-icon>
+          </button>
+        </div>
+        <div>
+          <button
+            mat-mini-fab
+            mwlCalendarNextView
+            [view]="view"
+            [(viewDate)]="viewDate"
+          >
+            <mat-icon>arrow_forward_ios</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="title-container">
+        <mat-form-field class="hidden-input">
+          <input
+            matInput
+            [matDatepicker]="picker"
+            [formControl]="formControlViewDate"
+          />
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <div (click)="picker.open()" class="title-view-date">
+          <h3>
+            <mat-icon>date_range</mat-icon
+            >{{ viewDate | calendarDate: view + 'ViewTitle':locale }}
+          </h3>
+        </div>
+      </div>
+    </div>
+    <div>
+      <mat-button-toggle-group [(ngModel)]="view" color="primary">
+        <mat-button-toggle [value]="calendarViews.Month">月</mat-button-toggle>
+        <mat-button-toggle [value]="calendarViews.Week">週</mat-button-toggle>
+        <mat-button-toggle [value]="calendarViews.Day">日</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
+  <div>
+    <div [ngSwitch]="view">
+      <div *ngSwitchCase="calendarViews.Day">
+        <mwl-calendar-day-view
+          [viewDate]="viewDate"
+          [events]="events"
+          [locale]="locale"
+        >
+        </mwl-calendar-day-view>
+      </div>
+      <div *ngSwitchCase="calendarViews.Week">
+        <mwl-calendar-week-view
+          [viewDate]="viewDate"
+          [events]="events"
+          [locale]="locale"
+        ></mwl-calendar-week-view>
+      </div>
+      <div *ngSwitchDefault>
+        <mwl-calendar-month-view
+          [viewDate]="viewDate"
+          [events]="events"
+          [locale]="locale"
+        >
+        </mwl-calendar-month-view>
+      </div>
+    </div>
+  </div>
 </div>

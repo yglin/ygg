@@ -1,12 +1,14 @@
 import { Component, OnInit, ViewChild, Inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CalendarEvent } from 'angular-calendar';
+import { CalendarEvent, CalendarView } from 'angular-calendar';
 import { EventFactoryService } from '../../../event-factory.service';
 import { tap } from 'rxjs/operators';
 import { TheThing } from '@ygg/the-thing/core';
-import { Subscription } from 'rxjs';
+import { Subscription, merge } from 'rxjs';
 import { ImitationEvent, ImitationEventCellDefines } from '@ygg/playwhat/core';
 import { TimeRange } from '@ygg/shared/omni-types/core';
+import { FormControl } from '@angular/forms';
+import moment from 'moment';
 // import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 // import * as moment from 'moment';
 // import { Event } from "@fullcalendar/core";
@@ -50,10 +52,13 @@ function TheThing2CalendarEvent(event: TheThing): CalendarEvent {
 })
 export class MyCalendarComponent implements OnInit, OnDestroy {
   // @ViewChild('calendar') fullCalendar: FullCalendarComponent;
-  calendarOptions: any;
+  calendarViews = CalendarView;
+  view: CalendarView = CalendarView.Week;
   viewDate: Date;
   events: CalendarEvent[] = [];
   subscription: Subscription = new Subscription();
+  locale = 'zh-hant';
+  formControlViewDate: FormControl;
   // // fcEvents: EventObject[] = [];
   // // businessHours: FcBusinessHours;
   // title = '行事曆';
@@ -63,14 +68,28 @@ export class MyCalendarComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private eventFactory: EventFactoryService
   ) {
-    try {
-      this.viewDate = new Date(
-        parseInt(this.route.snapshot.queryParamMap.get('date'), 10)
-      );
-    } catch (error) {
-      console.warn(error.message);
+    const viewDate = parseInt(
+      this.route.snapshot.queryParamMap.get('date'),
+      10
+    );
+    if (viewDate) {
+      this.viewDate = new Date(viewDate);
+    } else {
       this.viewDate = new Date();
     }
+    this.formControlViewDate = new FormControl(this.viewDate);
+    const viewDate$ = this.formControlViewDate.valueChanges.pipe(
+      tap(value => {
+        if (moment.isMoment(value)) {
+          this.viewDate = value.toDate();
+        } else if (value instanceof Date) {
+          this.viewDate = value;
+        } else if (typeof value === 'string' && moment(value).isValid()) {
+          this.viewDate = moment(value).toDate();
+        }
+      })
+    );
+
     const events$ = this.eventFactory
       .listMyHostEvents$()
       .pipe(
@@ -80,7 +99,7 @@ export class MyCalendarComponent implements OnInit, OnDestroy {
         )
       );
 
-    this.subscription.add(events$.subscribe());
+    this.subscription.add(merge(events$, viewDate$).subscribe());
     // this.calendarOptions = this.initFullCalendarOptions();
   }
 
@@ -90,6 +109,10 @@ export class MyCalendarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // this.reload();
+  }
+
+  onChangeViewDate(event) {
+    console.log(event);
   }
 
   // // reload() {

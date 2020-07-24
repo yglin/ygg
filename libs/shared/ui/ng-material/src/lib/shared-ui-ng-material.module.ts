@@ -29,9 +29,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatDatepickerModule } from "@angular/material/datepicker";
-import { MatMomentDateModule } from "@angular/material-moment-adapter";
-import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   exports: [
@@ -66,7 +67,8 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
     MatMomentDateModule,
     MatDatepickerModule,
     MatSnackBarModule,
-    DragDropModule
+    DragDropModule,
+    MatButtonToggleModule
   ]
 })
 export class SharedUiNgMaterialModule {}

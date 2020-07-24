@@ -1,0 +1,16 @@
+.title-container {
+  position: relative;
+}
+
+.title-container .hidden-input {
+  opacity: 0;
+}
+
+.title-container .title-view-date {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  white-space: nowrap;
+
+}
