@@ -36,8 +36,10 @@ import { PlayFactoryService } from './play-factory.service';
 import { EventComponent } from './event/event/event.component';
 import { MyHostEventsComponent } from './event/my-host-events/my-host-events.component';
 import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
-import { MyCalendarComponent } from './calendar/my-calendar/my-calendar.component';
-import { FullCalendarModule } from "ng-fullcalendar";
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { MyCalendarComponent } from './event/calendar/my-calendar/my-calendar.component';
+import { MyEventsComponent } from './event/my-events/my-events.component';
 // import { FullCalendarModule } from '@fullcalendar/angular'; // the main connector. must go first
 // import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
 // import momentPlugin from '@fullcalendar/moment';
@@ -61,7 +63,10 @@ import { FullCalendarModule } from "ng-fullcalendar";
     SharedThreadUiModule,
     TheThingUiModule,
     ShoppingUiModule,
-    FullCalendarModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
     RouterModule.forChild(routes)
   ],
   declarations: [
@@ -76,7 +81,8 @@ import { FullCalendarModule } from "ng-fullcalendar";
     TourPlanComponent,
     EventComponent,
     MyHostEventsComponent,
-    MyCalendarComponent
+    MyCalendarComponent,
+    MyEventsComponent
   ],
   entryComponents: [
     TourViewComponent,
@@ -176,9 +182,9 @@ export function configUserMenu(userMenuService: UserMenuService) {
       icon: ImitationTourPlan.icon
     });
     userMenuService.addItem({
-      id: 'my-host-events',
-      label: '我的體驗活動',
-      link: `${ImitationEvent.routePath}/host`,
+      id: 'my-events',
+      label: '我的行程',
+      link: `${ImitationEvent.routePath}/my`,
       icon: ImitationEvent.icon
     });
   };

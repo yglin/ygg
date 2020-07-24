@@ -15,7 +15,7 @@ export class MyHostEventsComponent implements OnInit {
 
   constructor(private eventFactory: EventFactoryService) {}
 
-  async ngOnInit() {
-    this.myHostEvents$ = await this.eventFactory.listMyHostEvents$();
+  ngOnInit() {
+    this.myHostEvents$ = this.eventFactory.listMyHostEvents$();
   }
 }

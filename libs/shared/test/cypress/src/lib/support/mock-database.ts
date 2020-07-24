@@ -71,8 +71,13 @@ export class MockDatabase {
   update(path: string, data: any): Cypress.Chainable<any> {
     // Backup first
     cy.callFirestore('get', path).then(backupData => {
-      if (!(path in this.documentsBackup)) {
-        this.documentsBackup[path] = !!backupData ? backupData : null;
+      if (!(path in this.documentsBackup) && backupData) {
+        try {
+          backupData = JSON.parse(JSON.stringify(backupData));
+          this.documentsBackup[path] = backupData;
+        } catch (error) {
+          console.error(error);          
+        }
       }
     });
     return cy.callFirestore('update', path, data).then(() => {
@@ -86,11 +91,15 @@ export class MockDatabase {
       if (entry && entry.length >= 2) {
         const path = entry[0];
         const backupData = entry[1];
-        if (!!backupData) {
-          restoreOp = cy.callFirestore('set', path, backupData);
-        } else {
+        // if (!!backupData) {
+        //   cy.log(`Restore data at path ${path}`);
+        //   console.log(backupData);
+        //   restoreOp = cy.callFirestore('set', path, backupData);
+        // } else {
+          // XXX yglin 2020/07/23 FUCK IT, KILL THEM ALL...
+          cy.log(`Delete data at path ${path}`);
           restoreOp = cy.callFirestore('delete', path);
-        }
+        // }
         restoreOp.then(() => {
           delete this.documentsBackup[path];
         });

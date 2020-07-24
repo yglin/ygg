@@ -325,7 +325,8 @@
             "styles": [
               "apps/playwhat/src/custom-theme.scss",
               "apps/playwhat/src/styles.css",
-              "libs/shared/ui/widgets/src/shared-ui-widgets.module.css"
+              "libs/shared/ui/widgets/src/shared-ui-widgets.module.css",
+              "node_modules/angular-calendar/css/angular-calendar.css"
             ],
             "scripts": [],
             "es5BrowserSupport": true

@@ -104,11 +104,11 @@ export class SiteNavigator {
 
   private gotoEvents(path: string[]) {
     const route = path.shift();
-    if (route === 'host') {
+    if (route === 'my') {
       cy.get('.account-widget .menu-trigger', { timeout: 10000 }).click({
         force: true
       });
-      cy.get('.user-menu-item button#my-host-events').click({ force: true });
+      cy.get('.user-menu-item button#my-events').click({ force: true });
     }
   }
 

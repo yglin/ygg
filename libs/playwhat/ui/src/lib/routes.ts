@@ -5,8 +5,7 @@ import { TourPlanFactoryService } from './tour-plan-factory.service';
 import { TourPlanComponent } from './tour-plan/tour-plan.component';
 import { EventComponent } from './event/event/event.component';
 import { EventFactoryService } from './event-factory.service';
-import { MyHostEventsComponent } from './event/my-host-events/my-host-events.component';
-import { MyCalendarComponent } from './calendar/my-calendar/my-calendar.component';
+import { MyEventsComponent } from './event/my-events/my-events.component';
 
 export const routes: Route[] = [
   // { path: 'plays', children: [{ path: 'my', component: MyPlayListComponent }] },
@@ -41,8 +40,8 @@ export const routes: Route[] = [
     path: ImitationEvent.routePath,
     children: [
       {
-        path: 'host',
-        component: MyHostEventsComponent
+        path: 'my',
+        component: MyEventsComponent
       },
       {
         path: ':id',
@@ -50,15 +49,6 @@ export const routes: Route[] = [
         resolve: {
           event$: EventFactoryService
         }
-      }
-    ]
-  },
-  {
-    path: 'calendar',
-    children: [
-      {
-        path: 'my',
-        component: MyCalendarComponent
       }
     ]
   }

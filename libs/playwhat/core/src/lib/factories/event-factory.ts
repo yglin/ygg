@@ -18,7 +18,7 @@ import {
   ImitationEventCellDefines
 } from '../imitations';
 import { EmceeService } from '@ygg/shared/ui/widgets';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { switchMap, shareReplay, take } from 'rxjs/operators';
 import { ImitationPlay } from '../play';
 import { Router } from '@ygg/shared/infra/core';
@@ -109,25 +109,32 @@ export class EventFactory {
     // console.log('Hi~ PAPA');
   }
 
-  async listMyHostEvents$(): Promise<Observable<TheThing[]>> {
-    const user = await this.authenticator.requestLogin();
-    const cacheId = `my-host-events-${user.id}`;
-    if (!(cacheId in this.ObservableCaches)) {
-      this.ObservableCaches[
-        cacheId
-      ] = this.relationFactory
-        .findByObjectAndRole$(user.id, RelationshipHost.name)
-        .pipe(
-          switchMap(relations => {
-            return this.theThingAccessor.listByIds$(
-              relations.map(r => r.subjectId),
-              ImitationEvent.collection
-            );
-          }),
-          shareReplay(1)
-        );
-    }
-    return this.ObservableCaches[cacheId];
+  listMyHostEvents$(): Observable<TheThing[]> {
+    return this.authenticator.currentUser$.pipe(
+      switchMap(user => {
+        if (!user) {
+          return of([]);
+        } else {
+          const cacheId = `my-host-events-${user.id}`;
+          if (!(cacheId in this.ObservableCaches)) {
+            this.ObservableCaches[
+              cacheId
+            ] = this.relationFactory
+              .findByObjectAndRole$(user.id, RelationshipHost.name)
+              .pipe(
+                switchMap(relations => {
+                  return this.theThingAccessor.listByIds$(
+                    relations.map(r => r.subjectId),
+                    ImitationEvent.collection
+                  );
+                }),
+                shareReplay(1)
+              );
+          }
+          return this.ObservableCaches[cacheId];
+        }
+      })
+    );
   }
 
   async approveAsHost(event: TheThing) {
@@ -156,10 +163,15 @@ export class EventFactory {
         await this.emcee.info(
           `<h3>已確認參加，之後若要取消請聯絡主辦者${organizer.name}</h3>`
         );
-        const calendarDate = (event.getCellValue(ImitationEventCellDefines.timeRange.name) as TimeRange).start
-        this.router.navigate(['/', 'calendar', 'my'], { queryParams: {
-          date: calendarDate
-        } });
+        const calendarDate = (event.getCellValue(
+          ImitationEventCellDefines.timeRange.name
+        ) as TimeRange).start;
+        this.router.navigate(['/', ImitationEvent.routePath, 'my'], {
+          queryParams: {
+            view: 'calendar',
+            date: calendarDate.valueOf()
+          }
+        });
       }
     } catch (error) {
       this.emcee.error(`確認參加行程失敗，錯誤原因：${error.message}`);
