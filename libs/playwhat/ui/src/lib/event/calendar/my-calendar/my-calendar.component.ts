@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Inject, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CalendarEvent, CalendarView } from 'angular-calendar';
 import { EventFactoryService } from '../../../event-factory.service';
 import { tap } from 'rxjs/operators';
@@ -8,7 +8,7 @@ import { Subscription, merge } from 'rxjs';
 import { ImitationEvent, ImitationEventCellDefines } from '@ygg/playwhat/core';
 import { TimeRange } from '@ygg/shared/omni-types/core';
 import { FormControl } from '@angular/forms';
-import moment from 'moment';
+import * as moment from 'moment';
 // import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 // import * as moment from 'moment';
 // import { Event } from "@fullcalendar/core";
@@ -37,6 +37,7 @@ function TheThing2CalendarEvent(event: TheThing): CalendarEvent {
     ImitationEventCellDefines.timeRange.name
   );
   const calendarEvent: CalendarEvent = {
+    id: event.id,
     start: timeRange.start,
     end: timeRange.end,
     title: event.name,
@@ -66,6 +67,7 @@ export class MyCalendarComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private eventFactory: EventFactoryService
   ) {
     const viewDate = parseInt(
@@ -111,8 +113,8 @@ export class MyCalendarComponent implements OnInit, OnDestroy {
     // this.reload();
   }
 
-  onChangeViewDate(event) {
-    console.log(event);
+  onClickEvent({ event }: { event: CalendarEvent }) {
+    this.router.navigate(['/', ImitationEvent.routePath, event.id]);
   }
 
   // // reload() {

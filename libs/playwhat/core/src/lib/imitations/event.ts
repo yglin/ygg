@@ -104,5 +104,11 @@ ImitationEvent.actions = {
     icon: 'check_circle',
     tooltip: '確認以活動負責人身份參加',
     permissions: ['state:wait-approval', `role:${RelationshipHost.name}`]
+  },
+  'add-google-calendar': {
+    id: 'add-google-calendar',
+    icon: 'insert_invitation',
+    tooltip: '將此活動行程加到Google日曆',
+    permissions: ['state:host-approved', 'requireOwner']
   }
 };

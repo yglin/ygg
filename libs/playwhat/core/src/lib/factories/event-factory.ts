@@ -48,7 +48,9 @@ export class EventFactory {
           case ImitationEvent.actions['host-approve'].id:
             this.approveAsHost(actionInfo.theThing);
             break;
-
+          case ImitationEvent.actions['add-google-calendar'].id:
+            this.addToGoogleCalendar(actionInfo.theThing);
+            break;
           default:
             break;
         }
@@ -175,6 +177,24 @@ export class EventFactory {
       }
     } catch (error) {
       this.emcee.error(`確認參加行程失敗，錯誤原因：${error.message}`);
+      return Promise.reject(error);
+    }
+  }
+
+  async addToGoogleCalendar(event: TheThing) {
+    try {
+      const confirm = await this.emcee.confirm(
+        `將行程${event.name}加到我的Google日曆？`
+      );
+      if (!confirm) {
+        return;
+      }
+      
+      this.emcee.info(`行程${event.name}已加到你的Google日曆中`);
+    } catch (error) {
+      this.emcee.error(
+        `行程${event.name}加到Google日曆失敗，錯誤原因：${error.message}`
+      );
       return Promise.reject(error);
     }
   }

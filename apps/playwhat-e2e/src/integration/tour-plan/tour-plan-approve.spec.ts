@@ -155,32 +155,32 @@ describe('Approve scheduled events of tour-plan', () => {
     });
   });
 
-  it('Approve event as host and redirect to calendar', () => {
-    const testEventTimeRange: TimeRange = testEvent.getCellValue(
-      ImitationEventCellDefines.timeRange.name
-    );
+  // it('Approve event as host and redirect to calendar', () => {
+  //   const testEventTimeRange: TimeRange = testEvent.getCellValue(
+  //     ImitationEventCellDefines.timeRange.name
+  //   );
 
-    // // ==== XXX Remove this block if following previous test =====
-    // ImitationEvent.setState(testEvent, ImitationEvent.states['wait-approval']);
-    // theMockDatabase.insert(
-    //   `${testEvent.collection}/${testEvent.id}`,
-    //   testEvent
-    // );
-    // siteNavigator.goto(
-    //   [ImitationEvent.routePath, 'host'],
-    //   myHostEventsDataTablePO
-    // );
-    // myHostEventsDataTablePO.gotoTheThingView(testEvent);
-    // eventPO.expectVisible();
-    // // ==== XXX Remove this block if following previous test =====
+  //   // // ==== XXX Remove this block if following previous test =====
+  //   // ImitationEvent.setState(testEvent, ImitationEvent.states['wait-approval']);
+  //   // theMockDatabase.insert(
+  //   //   `${testEvent.collection}/${testEvent.id}`,
+  //   //   testEvent
+  //   // );
+  //   // siteNavigator.goto(
+  //   //   [ImitationEvent.routePath, 'host'],
+  //   //   myHostEventsDataTablePO
+  //   // );
+  //   // myHostEventsDataTablePO.gotoTheThingView(testEvent);
+  //   // eventPO.expectVisible();
+  //   // // ==== XXX Remove this block if following previous test =====
 
-    eventPO.runAction(ImitationEvent.actions['host-approve']);
-    emceePO.confirm(`確定會以負責人身份出席參加行程${testEvent.name}？`);
-    emceePO.alert(`已確認參加，之後若要取消請聯絡主辦者${me.name}`);
-    myCalendarPO.expectVisible();
-    // myCalendarPO.expectMonth(testEventTimeRange.start);
-    myCalendarPO.expectEvent(testEvent);
-  });
+  //   eventPO.runAction(ImitationEvent.actions['host-approve']);
+  //   emceePO.confirm(`確定會以負責人身份出席參加行程${testEvent.name}？`);
+  //   emceePO.alert(`已確認參加，之後若要取消請聯絡主辦者${me.name}`);
+  //   myCalendarPO.expectVisible();
+  //   // myCalendarPO.expectMonth(testEventTimeRange.start);
+  //   myCalendarPO.expectEvent(testEvent);
+  // });
 
   it('Tour-plan approved when all its event approved', () => {
     const testEvents = ScheduledEvents.filter(ev =>
