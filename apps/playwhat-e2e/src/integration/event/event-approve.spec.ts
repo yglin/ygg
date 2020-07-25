@@ -63,7 +63,7 @@ describe('Approve scheduled events by host', () => {
       ev.id
     )
   );
-  ImitationEvent.setState(testEvent, ImitationEvent.states['host-approved']);
+  ImitationEvent.setState(testEvent, ImitationEvent.states['wait-approval']);
   let me: User;
 
   before(() => {
@@ -123,30 +123,30 @@ describe('Approve scheduled events by host', () => {
     theMockDatabase.clear();
   });
 
-  // it('Approve event as host and redirect to calendar', () => {
-  //   const testEventTimeRange: TimeRange = testEvent.getCellValue(
-  //     ImitationEventCellDefines.timeRange.name
-  //   );
-  //   eventPO.runAction(ImitationEvent.actions['host-approve']);
-  //   emceePO.confirm(`確定會以負責人身份出席參加行程${testEvent.name}？`);
-  //   emceePO.alert(`已確認參加，之後若要取消請聯絡主辦者${me.name}`);
-  //   myCalendarPO.expectVisible();
-  //   // myCalendarPO.expectMonth(testEventTimeRange.start);
-  //   myCalendarPO.expectEvent(testEvent);
-  // });
-
-  // it('Click on event in calendar redirect to view page', () => {
-  //   myCalendarPO.clickEvent(testEvent);
-  //   eventPO.expectVisible();
-  //   eventPO.expectValue(testEvent);
-  //   eventPO.expectState(ImitationEvent.states['host-approved']);    
-  // });
-  
-  it('Add event to google calendar', () => {
-    cy.pause();
-    eventPO.runAction(ImitationEvent.actions['add-google-calendar']);
-    emceePO.confirm(`將行程${testEvent.name}加到我的Google日曆？`);
-    emceePO.alert(`行程${testEvent.name}已加到你的Google日曆中`);
+  it('Approve event as host and redirect to calendar', () => {
+    const testEventTimeRange: TimeRange = testEvent.getCellValue(
+      ImitationEventCellDefines.timeRange.name
+    );
+    eventPO.runAction(ImitationEvent.actions['host-approve']);
+    emceePO.confirm(`確定會以負責人身份出席參加行程${testEvent.name}？`);
+    emceePO.alert(`已確認參加，之後若要取消請聯絡主辦者${me.name}`);
+    myCalendarPO.expectVisible();
+    // myCalendarPO.expectMonth(testEventTimeRange.start);
+    myCalendarPO.expectEvent(testEvent);
   });
+
+  it('Click on event in calendar redirect to view page', () => {
+    myCalendarPO.clickEvent(testEvent);
+    eventPO.expectVisible();
+    eventPO.expectValue(testEvent);
+    eventPO.expectState(ImitationEvent.states['host-approved']);    
+  });
+  
+  // it('Show button event to google calendar', () => {
+  //   cy.pause();
+  //   eventPO.runAction(ImitationEvent.actions['add-google-calendar']);
+  //   emceePO.confirm(`將行程${testEvent.name}加到我的Google日曆？`);
+  //   emceePO.alert(`行程${testEvent.name}已加到你的Google日曆中`);
+  // });
   
 });

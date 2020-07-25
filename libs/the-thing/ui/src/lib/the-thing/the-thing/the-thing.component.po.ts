@@ -57,7 +57,7 @@ export abstract class TheThingPageObject extends PageObject {
   }
 
   getSelectorForActionButton(action: TheThingAction): string {
-    return `${this.getSelector()} button.action.${action.id}`;
+    return `${this.getSelector()} [action-id="${action.id}"] .action-button`;
   }
 
   getSelectorForModifyButtons(): string {

@@ -83,6 +83,10 @@ ImitationEvent.states = {
   }
 };
 
+ImitationEvent.canModify = (theThing: TheThing): boolean => {
+  return false;
+};
+
 export const RelationshipPlay: Relationship = new Relationship({
   name: '體驗項目',
   imitation: ImitationPlay
@@ -107,7 +111,7 @@ ImitationEvent.actions = {
   },
   'add-google-calendar': {
     id: 'add-google-calendar',
-    icon: 'insert_invitation',
+    icon: '/assets/google/calendar/google-calendar.png',
     tooltip: '將此活動行程加到Google日曆',
     permissions: ['state:host-approved', 'requireOwner']
   }

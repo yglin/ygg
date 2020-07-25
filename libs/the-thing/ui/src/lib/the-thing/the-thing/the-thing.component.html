@@ -45,7 +45,12 @@
     >
       <ng-container *ngFor="let actionButton of actionButtons">
         <div *ngIf="actionButton.granted">
-          <button
+          <the-thing-action-button
+            [attr.action-id]="actionButton.id"
+            [action]="actionButton"
+            (click)="runAction(actionButton)"
+          ></the-thing-action-button>
+          <!-- <button
             type="button"
             mat-fab
             class="action"
@@ -54,7 +59,7 @@
             (click)="runAction(actionButton)"
           >
             <mat-icon>{{ actionButton.icon }}</mat-icon>
-          </button>
+          </button> -->
         </div>
       </ng-container>
       <div *ngIf="!readonly">
@@ -172,7 +177,7 @@
       </div>
     </div>
   </div>
-  <br><br>
+  <br /><br />
   <div class="projection-footer">
     <ng-content select="[the-thing-projection-footer]"></ng-content>
   </div>

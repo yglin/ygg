@@ -419,7 +419,9 @@ export class TourPlanPageObjectCypress extends TourPlanPageObject {
   }
 
   sendApprovalRequests() {
-    cy.get(this.getSelector('buttonSendApprovalRequests')).click();
+    this.theThingPO.runAction(
+      ImitationTourPlan.actions['send-approval-requests']
+    );
     const emceePO = new EmceePageObjectCypress();
     emceePO.confirm(
       `將送出行程中各活動時段資訊給各活動負責人，並等待負責人確認。等待期間無法修改行程表，請確認行程中各活動時段已安排妥善，確定送出？`

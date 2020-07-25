@@ -1,0 +1,19 @@
+<div class="the-thing-action-button" *ngIf="action">
+  <div [matTooltip]="action.tooltip" class='action-button'>
+    <ng-container [ngSwitch]="iconType">
+      <div *ngSwitchCase="'icon'">
+        <button type="button" mat-fab>
+          <mat-icon>{{ action.icon }}</mat-icon>
+        </button>
+      </div>
+      <div *ngSwitchCase="'url'" class='img-icon'>
+        <img [src]="action.icon">
+      </div>
+      <div *ngSwitchDefault>
+        <button type="button" mat-fab>
+          <mat-icon>play</mat-icon>
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</div>

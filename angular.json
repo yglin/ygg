@@ -23,7 +23,10 @@
               "libs/shopping/payment/tsconfig.lib.json",
               "libs/shopping/payment/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/payment/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/payment/**"
+            ]
           }
         },
         "test": {
@@ -58,7 +61,10 @@
               "libs/shopping/order/tsconfig.lib.json",
               "libs/shopping/order/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/order/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/order/**"
+            ]
           }
         },
         "test": {
@@ -86,7 +92,10 @@
               "libs/shopping/cart/tsconfig.lib.json",
               "libs/shopping/cart/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/cart/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/cart/**"
+            ]
           }
         },
         "test": {
@@ -114,7 +123,10 @@
               "libs/shared/infra/error/tsconfig.lib.json",
               "libs/shared/infra/error/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/infra/error/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/infra/error/**"
+            ]
           }
         },
         "test": {
@@ -141,7 +153,10 @@
               "libs/shared/ui/widgets/tsconfig.lib.json",
               "libs/shared/ui/widgets/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/ui/widgets/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/widgets/**"
+            ]
           }
         },
         "test": {
@@ -169,7 +184,10 @@
               "libs/shared/ui/themes/tsconfig.lib.json",
               "libs/shared/ui/themes/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/ui/themes/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/themes/**"
+            ]
           }
         },
         "test": {
@@ -262,7 +280,10 @@
               "apps/sandbox/tsconfig.app.json",
               "apps/sandbox/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/sandbox/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/sandbox/**"
+            ]
           }
         },
         "test": {
@@ -298,7 +319,10 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/sandbox-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**", "!apps/sandbox-e2e/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/sandbox-e2e/**"
+            ]
           }
         }
       }
@@ -320,7 +344,12 @@
             "tsConfig": "apps/playwhat/tsconfig.app.json",
             "assets": [
               "apps/playwhat/src/favicon.ico",
-              "apps/playwhat/src/assets"
+              "apps/playwhat/src/assets",
+              {
+                "glob": "**/*",
+                "input": "libs/shared/google/apis/src/assets/",
+                "output": "./assets/"
+              }
             ],
             "styles": [
               "apps/playwhat/src/custom-theme.scss",
@@ -382,7 +411,10 @@
               "apps/playwhat/tsconfig.app.json",
               "apps/playwhat/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/playwhat/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/playwhat/**"
+            ]
           }
         },
         "test": {
@@ -418,7 +450,10 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/playwhat-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**", "!apps/playwhat-e2e/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/playwhat-e2e/**"
+            ]
           }
         }
       }
@@ -436,7 +471,10 @@
               "libs/playwhat/scheduler/tsconfig.lib.json",
               "libs/playwhat/scheduler/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/scheduler/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/scheduler/**"
+            ]
           }
         },
         "test": {
@@ -464,7 +502,10 @@
               "libs/playwhat/resource/tsconfig.lib.json",
               "libs/playwhat/resource/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/resource/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/resource/**"
+            ]
           }
         },
         "test": {
@@ -523,7 +564,10 @@
               "libs/shared/types/tsconfig.lib.json",
               "libs/shared/types/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/types/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/types/**"
+            ]
           }
         },
         "test": {
@@ -551,7 +595,10 @@
               "libs/playwhat/admin/tsconfig.lib.json",
               "libs/playwhat/admin/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/admin/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/admin/**"
+            ]
           }
         },
         "test": {
@@ -579,7 +626,10 @@
               "libs/shared/ui/navigation/tsconfig.lib.json",
               "libs/shared/ui/navigation/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/ui/navigation/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/navigation/**"
+            ]
           }
         },
         "test": {
@@ -607,7 +657,10 @@
               "libs/playwhat/play/tsconfig.lib.json",
               "libs/playwhat/play/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/play/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/play/**"
+            ]
           }
         },
         "test": {
@@ -730,7 +783,10 @@
               "apps/shared-types-demo/tsconfig.app.json",
               "apps/shared-types-demo/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/shared-types-demo/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/shared-types-demo/**"
+            ]
           }
         },
         "test": {
@@ -766,7 +822,10 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/shared-types-demo-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**", "!apps/shared-types-demo-e2e/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/shared-types-demo-e2e/**"
+            ]
           }
         }
       }
@@ -784,7 +843,10 @@
               "libs/shared/infra/log/tsconfig.lib.json",
               "libs/shared/infra/log/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/infra/log/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/infra/log/**"
+            ]
           }
         },
         "test": {
@@ -812,7 +874,10 @@
               "libs/shared/ui/ng-material/tsconfig.lib.json",
               "libs/shared/ui/ng-material/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/ui/ng-material/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/ng-material/**"
+            ]
           }
         },
         "test": {
@@ -840,7 +905,10 @@
               "libs/tags/core/tsconfig.lib.json",
               "libs/tags/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/tags/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/tags/core/**"
+            ]
           }
         },
         "test": {
@@ -868,7 +936,10 @@
               "libs/tags/ui/tsconfig.lib.json",
               "libs/tags/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/tags/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/tags/ui/**"
+            ]
           }
         },
         "test": {
@@ -896,7 +967,10 @@
               "libs/tags/admin/tsconfig.lib.json",
               "libs/tags/admin/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/tags/admin/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/tags/admin/**"
+            ]
           }
         },
         "test": {
@@ -955,7 +1029,10 @@
               "libs/tags/data-access/tsconfig.lib.json",
               "libs/tags/data-access/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/tags/data-access/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/tags/data-access/**"
+            ]
           }
         },
         "test": {
@@ -1041,7 +1118,10 @@
               "libs/schedule/core/tsconfig.lib.json",
               "libs/schedule/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/schedule/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/schedule/core/**"
+            ]
           }
         },
         "test": {
@@ -1069,7 +1149,10 @@
               "libs/schedule/data-access/tsconfig.lib.json",
               "libs/schedule/data-access/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/schedule/data-access/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/schedule/data-access/**"
+            ]
           }
         },
         "test": {
@@ -1097,7 +1180,10 @@
               "libs/schedule/ui/tsconfig.lib.json",
               "libs/schedule/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/schedule/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/schedule/ui/**"
+            ]
           }
         },
         "test": {
@@ -1125,7 +1211,10 @@
               "libs/schedule/admin/tsconfig.lib.json",
               "libs/schedule/admin/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/schedule/admin/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/schedule/admin/**"
+            ]
           }
         },
         "test": {
@@ -1153,7 +1242,10 @@
               "libs/schedule/frontend/tsconfig.lib.json",
               "libs/schedule/frontend/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/schedule/frontend/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/schedule/frontend/**"
+            ]
           }
         },
         "test": {
@@ -1181,7 +1273,10 @@
               "libs/schedule/factory/tsconfig.lib.json",
               "libs/schedule/factory/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/schedule/factory/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/schedule/factory/**"
+            ]
           }
         },
         "test": {
@@ -1209,7 +1304,10 @@
               "libs/shopping/core/tsconfig.lib.json",
               "libs/shopping/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/core/**"
+            ]
           }
         },
         "test": {
@@ -1237,7 +1335,10 @@
               "libs/shopping/ui/tsconfig.lib.json",
               "libs/shopping/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/ui/**"
+            ]
           }
         },
         "test": {
@@ -1265,7 +1366,10 @@
               "libs/shopping/data-access/tsconfig.lib.json",
               "libs/shopping/data-access/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/data-access/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/data-access/**"
+            ]
           }
         },
         "test": {
@@ -1293,7 +1397,10 @@
               "libs/shopping/factory/tsconfig.lib.json",
               "libs/shopping/factory/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/factory/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/factory/**"
+            ]
           }
         },
         "test": {
@@ -1321,7 +1428,10 @@
               "libs/resource/core/tsconfig.lib.json",
               "libs/resource/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/resource/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/resource/core/**"
+            ]
           }
         },
         "test": {
@@ -1349,7 +1459,10 @@
               "libs/resource/data-access/tsconfig.lib.json",
               "libs/resource/data-access/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/resource/data-access/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/resource/data-access/**"
+            ]
           }
         },
         "test": {
@@ -1377,7 +1490,10 @@
               "libs/resource/ui/tsconfig.lib.json",
               "libs/resource/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/resource/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/resource/ui/**"
+            ]
           }
         },
         "test": {
@@ -1405,7 +1521,10 @@
               "libs/shared/ui/dynamic-form/tsconfig.lib.json",
               "libs/shared/ui/dynamic-form/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/ui/dynamic-form/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/dynamic-form/**"
+            ]
           }
         },
         "test": {
@@ -1433,7 +1552,10 @@
               "libs/resource/factory/tsconfig.lib.json",
               "libs/resource/factory/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/resource/factory/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/resource/factory/**"
+            ]
           }
         },
         "test": {
@@ -1526,7 +1648,10 @@
               "apps/the-thing/tsconfig.app.json",
               "apps/the-thing/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/the-thing/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/the-thing/**"
+            ]
           }
         },
         "test": {
@@ -1562,7 +1687,10 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/the-thing-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**", "!apps/the-thing-e2e/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/the-thing-e2e/**"
+            ]
           }
         }
       }
@@ -1580,7 +1708,10 @@
               "libs/shared/test/cypress/tsconfig.lib.json",
               "libs/shared/test/cypress/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/test/cypress/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/test/cypress/**"
+            ]
           }
         },
         "test": {
@@ -1606,7 +1737,10 @@
               "libs/the-thing/core/tsconfig.lib.json",
               "libs/the-thing/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/the-thing/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/the-thing/core/**"
+            ]
           }
         },
         "test": {
@@ -1632,7 +1766,10 @@
               "libs/the-thing/admin/tsconfig.lib.json",
               "libs/the-thing/admin/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/the-thing/admin/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/the-thing/admin/**"
+            ]
           }
         },
         "test": {
@@ -1660,7 +1797,10 @@
               "libs/the-thing/data-access/tsconfig.lib.json",
               "libs/the-thing/data-access/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/the-thing/data-access/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/the-thing/data-access/**"
+            ]
           }
         },
         "test": {
@@ -1688,7 +1828,10 @@
               "libs/the-thing/ui/tsconfig.lib.json",
               "libs/the-thing/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/the-thing/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/the-thing/ui/**"
+            ]
           }
         },
         "test": {
@@ -1716,7 +1859,10 @@
               "libs/the-thing/test/tsconfig.lib.json",
               "libs/the-thing/test/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/the-thing/test/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/the-thing/test/**"
+            ]
           }
         },
         "test": {
@@ -1742,7 +1888,10 @@
               "libs/shared/omni-types/ui/tsconfig.lib.json",
               "libs/shared/omni-types/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/omni-types/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/omni-types/ui/**"
+            ]
           }
         },
         "test": {
@@ -1770,7 +1919,10 @@
               "libs/shared/omni-types/core/tsconfig.lib.json",
               "libs/shared/omni-types/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/omni-types/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/omni-types/core/**"
+            ]
           }
         },
         "test": {
@@ -1796,7 +1948,10 @@
               "libs/shared/omni-types/test/tsconfig.lib.json",
               "libs/shared/omni-types/test/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/omni-types/test/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/omni-types/test/**"
+            ]
           }
         },
         "test": {
@@ -1822,7 +1977,10 @@
               "libs/playwhat/ui/tsconfig.lib.json",
               "libs/playwhat/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/ui/**"
+            ]
           }
         },
         "test": {
@@ -1850,7 +2008,10 @@
               "libs/shared/ui/test/tsconfig.lib.json",
               "libs/shared/ui/test/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/ui/test/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/ui/test/**"
+            ]
           }
         },
         "test": {
@@ -1876,7 +2037,10 @@
               "libs/playwhat/core/tsconfig.lib.json",
               "libs/playwhat/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/core/**"
+            ]
           }
         },
         "test": {
@@ -1902,7 +2066,10 @@
               "libs/shopping/test/tsconfig.lib.json",
               "libs/shopping/test/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shopping/test/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shopping/test/**"
+            ]
           }
         },
         "test": {
@@ -1930,7 +2097,10 @@
               "libs/playwhat/test/tsconfig.lib.json",
               "libs/playwhat/test/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/test/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/test/**"
+            ]
           }
         },
         "test": {
@@ -1956,7 +2126,10 @@
               "libs/shared/user/ui/tsconfig.lib.json",
               "libs/shared/user/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/user/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/user/ui/**"
+            ]
           }
         },
         "test": {
@@ -1984,7 +2157,10 @@
               "libs/shared/user/core/tsconfig.lib.json",
               "libs/shared/user/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/user/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/user/core/**"
+            ]
           }
         },
         "test": {
@@ -2010,7 +2186,10 @@
               "libs/shared/user/test/tsconfig.lib.json",
               "libs/shared/user/test/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/user/test/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/user/test/**"
+            ]
           }
         },
         "test": {
@@ -2036,7 +2215,10 @@
               "libs/shared/infra/core/tsconfig.lib.json",
               "libs/shared/infra/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/infra/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/infra/core/**"
+            ]
           }
         },
         "test": {
@@ -2065,7 +2247,10 @@
             "polyfills": "apps/ourbox/src/polyfills.ts",
             "tsConfig": "apps/ourbox/tsconfig.app.json",
             "aot": true,
-            "assets": ["apps/ourbox/src/favicon.ico", "apps/ourbox/src/assets"],
+            "assets": [
+              "apps/ourbox/src/favicon.ico",
+              "apps/ourbox/src/assets"
+            ],
             "styles": [
               "apps/ourbox/src/custom-theme.scss",
               "apps/ourbox/src/styles.css"
@@ -2127,7 +2312,10 @@
               "apps/ourbox/tsconfig.app.json",
               "apps/ourbox/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/ourbox/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/ourbox/**"
+            ]
           }
         },
         "test": {
@@ -2162,8 +2350,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/ourbox-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/ourbox-e2e/**"]
+            "tsConfig": [
+              "apps/ourbox-e2e/tsconfig.e2e.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/ourbox-e2e/**"
+            ]
           }
         }
       }
@@ -2181,7 +2374,10 @@
               "libs/ourbox/core/tsconfig.lib.json",
               "libs/ourbox/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/ourbox/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ourbox/core/**"
+            ]
           }
         },
         "test": {
@@ -2207,7 +2403,10 @@
               "libs/shared/user/functions/tsconfig.lib.json",
               "libs/shared/user/functions/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/user/functions/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/user/functions/**"
+            ]
           }
         },
         "test": {
@@ -2233,7 +2432,9 @@
             "outputPath": "dist/apps/functions",
             "main": "apps/functions/src/main.ts",
             "tsConfig": "apps/functions/tsconfig.app.json",
-            "assets": ["apps/functions/src/assets"]
+            "assets": [
+              "apps/functions/src/assets"
+            ]
           },
           "configurations": {
             "production": {
@@ -2262,7 +2463,10 @@
               "apps/functions/tsconfig.app.json",
               "apps/functions/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/functions/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/functions/**"
+            ]
           }
         },
         "test": {
@@ -2288,7 +2492,10 @@
               "libs/schedule/test/tsconfig.lib.json",
               "libs/schedule/test/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/schedule/test/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/schedule/test/**"
+            ]
           }
         },
         "test": {
@@ -2314,7 +2521,10 @@
               "libs/playwhat/functions/tsconfig.lib.json",
               "libs/playwhat/functions/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/playwhat/functions/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/playwhat/functions/**"
+            ]
           }
         },
         "test": {
@@ -2340,7 +2550,10 @@
               "libs/the-thing/functions/tsconfig.lib.json",
               "libs/the-thing/functions/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/the-thing/functions/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/the-thing/functions/**"
+            ]
           }
         },
         "test": {
@@ -2366,7 +2579,10 @@
               "libs/shared/functions/tsconfig.lib.json",
               "libs/shared/functions/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/functions/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/functions/**"
+            ]
           }
         },
         "test": {
@@ -2392,7 +2608,10 @@
               "libs/shared/thread/core/tsconfig.lib.json",
               "libs/shared/thread/core/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/thread/core/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/thread/core/**"
+            ]
           }
         },
         "test": {
@@ -2419,7 +2638,10 @@
               "libs/shared/thread/ui/tsconfig.lib.json",
               "libs/shared/thread/ui/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/thread/ui/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/thread/ui/**"
+            ]
           }
         },
         "test": {
@@ -2445,7 +2667,10 @@
               "libs/shared/google/apis/tsconfig.lib.json",
               "libs/shared/google/apis/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/shared/google/apis/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/google/apis/**"
+            ]
           }
         },
         "test": {

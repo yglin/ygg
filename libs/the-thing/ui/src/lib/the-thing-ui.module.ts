@@ -45,6 +45,7 @@ import { TheThingStateComponent } from './the-thing/the-thing-state/the-thing-st
 import { TheThingCellComponent } from './cell/the-thing-cell/the-thing-cell.component';
 import { TheThingComponent } from './the-thing/the-thing/the-thing.component';
 import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
+import { TheThingActionButtonComponent } from './the-thing/the-thing-action-button/the-thing-action-button.component';
 
 interface TheThingUiModuleConfig {
   imitations: TheThingImitation[];
@@ -90,7 +91,8 @@ interface TheThingUiModuleConfig {
     CellCreatorComponent,
     TheThingStateComponent,
     TheThingCellComponent,
-    TheThingComponent
+    TheThingComponent,
+    TheThingActionButtonComponent
   ],
   exports: [
     CellListComponent,
