@@ -143,10 +143,10 @@ describe('Approve scheduled events by host', () => {
   // });
   
   it('Add event to google calendar', () => {
+    cy.pause();
     eventPO.runAction(ImitationEvent.actions['add-google-calendar']);
     emceePO.confirm(`將行程${testEvent.name}加到我的Google日曆？`);
     emceePO.alert(`行程${testEvent.name}已加到你的Google日曆中`);
-    cy.url({timeout: 10000}).should('match', /calendar.google.com/);
   });
   
 });

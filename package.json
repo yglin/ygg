@@ -64,6 +64,7 @@
     "@nrwl/angular": "9.2.2",
     "@schematics/angular": "~9.1.0",
     "@types/chroma-js": "^2.0.0",
+    "@types/gapi": "0.0.39",
     "@types/uuid": "^3.4.5",
     "amazing-time-picker": "^1.8.0",
     "angular-calendar": "^0.28.16",

@@ -2431,6 +2431,34 @@
           }
         }
       }
+    },
+    "shared-google-apis": {
+      "projectType": "library",
+      "root": "libs/shared/google/apis",
+      "sourceRoot": "libs/shared/google/apis/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/google/apis/tsconfig.lib.json",
+              "libs/shared/google/apis/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/google/apis/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/google/apis/jest.config.js",
+            "tsConfig": "libs/shared/google/apis/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/shared/google/apis/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

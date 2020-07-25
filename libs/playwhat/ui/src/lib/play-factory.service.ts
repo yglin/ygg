@@ -42,10 +42,6 @@ export class PlayFactoryService implements OnDestroy, Resolve<TheThing> {
       const action = get(ImitationPlay.actions, actionData.action.id, null);
       if (!!action) {
         this.runAction(action, actionData.theThing);
-      } else {
-        console.error(
-          `Not supported action: ${action.id} on play ${actionData.theThing.id}`
-        );
       }
     });
   }

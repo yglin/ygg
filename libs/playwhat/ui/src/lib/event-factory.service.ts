@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { EventFactory, ImitationEvent } from '@ygg/playwhat/core';
+import {
+  EventFactory,
+  ImitationEvent,
+  ImitationEventCellDefines
+} from '@ygg/playwhat/core';
 import { TheThingAccessService } from '@ygg/the-thing/data-access';
 import {
   UserService,
@@ -18,6 +22,8 @@ import {
 } from '@ygg/the-thing/ui';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import { TheThing } from '@ygg/the-thing/core';
+import { GoogleCalendarService } from '@ygg/shared/google/apis';
+import { TimeRange } from '@ygg/shared/omni-types/core';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +37,8 @@ export class EventFactoryService extends EventFactory {
     authenticator: AuthenticateUiService,
     emcee: EmceeService,
     relationFactory: RelationFactoryService,
-    router: Router
+    router: Router,
+    private googleCalendar: GoogleCalendarService
   ) {
     super(
       theThingAccessor,
@@ -68,5 +75,44 @@ export class EventFactoryService extends EventFactory {
         reject(error);
       }
     });
+  }
+
+  toGoogleCalendarEvent(event: TheThing): any {
+    const timeRange: TimeRange = event.getCellValue(
+      ImitationEventCellDefines.timeRange.name
+    );
+    return {
+      id: event.id.toLowerCase(),
+      start: {
+        dateTime: timeRange.start.toISOString()
+      },
+      end: {
+        dateTime: timeRange.end.toISOString()
+      },
+      summary: event.name,
+      description: event.name
+    };
+  }
+
+  async addToGoogleCalendar(event: TheThing) {
+    try {
+      const confirm = await this.emcee.confirm(
+        `<h3>將行程 ${event.name} 加到我的Google日曆？</h3>`
+      );
+      if (!confirm) {
+        return;
+      }
+      const gcEvent = await this.googleCalendar.insertEvent(
+        this.toGoogleCalendarEvent(event)
+      );
+      await this.emcee.info(
+        `<h3>行程${event.name}已加到你的Google日曆中</h3><a href="${gcEvent.htmlLink}" target="_blank">點此檢視</a>`
+      );
+    } catch (error) {
+      this.emcee.error(
+        `<h3>行程${event.name}加到Google日曆失敗，錯誤原因：${error.message}</h3>`
+      );
+      return Promise.reject(error);
+    }
   }
 }

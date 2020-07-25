@@ -237,6 +237,9 @@
     },
     "shared-thread-ui": {
       "tags": ["scope:shared", "type:ui"]
+    },
+    "shared-google-apis": {
+      "tags": ["scope:shared", "type:ext-api"]
     }
   },
   "tasksRunnerOptions": {
