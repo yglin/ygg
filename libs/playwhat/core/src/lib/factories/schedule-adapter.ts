@@ -34,26 +34,26 @@ import { isEmpty } from 'lodash';
 import { of, Observable, throwError } from 'rxjs';
 
 export class ScheduleAdapter {
-  static deriveEventFromServiceEvent(serviceEvent: ServiceEvent): TheThing {
-    const event = ImitationEvent.createTheThing();
-    event.id = serviceEvent.id;
-    event.name = serviceEvent.service.name;
-    event.image = serviceEvent.service.image;
-    event.setCellValue(
-      ImitationEventCellDefines.timeRange.name,
-      serviceEvent.timeRange
-    );
-    event.setCellValue(
-      ImitationEventCellDefines.numParticipants.name,
-      serviceEvent.numParticipants
-    );
-    event.addRelation(
-      RelationshipPlay.createRelation(event.id, serviceEvent.service.id)
-    );
-    // console.log('deriveEventFromServiceEvent');
-    // console.log(event);
-    return event;
-  }
+  // static deriveEventFromServiceEvent(serviceEvent: ServiceEvent): TheThing {
+  //   const event = ImitationEvent.createTheThing();
+  //   event.id = serviceEvent.id;
+  //   event.name = serviceEvent.service.name;
+  //   event.image = serviceEvent.service.image;
+  //   event.setCellValue(
+  //     ImitationEventCellDefines.timeRange.name,
+  //     serviceEvent.timeRange
+  //   );
+  //   event.setCellValue(
+  //     ImitationEventCellDefines.numParticipants.name,
+  //     serviceEvent.numParticipants
+  //   );
+  //   event.addRelation(
+  //     RelationshipPlay.createRelation(event.id, serviceEvent.service.id)
+  //   );
+  //   // console.log('deriveEventFromServiceEvent');
+  //   // console.log(event);
+  //   return event;
+  // }
 
   static deduceServiceFromPlay(play: TheThing): Service {
     const service = new Service();
@@ -136,7 +136,21 @@ export class ScheduleAdapter {
   async deriveEventsFromSchedule(schedule: Schedule): Promise<TheThing[]> {
     const events: TheThing[] = [];
     for (const serviceEvent of schedule.events) {
-      const event = ScheduleAdapter.deriveEventFromServiceEvent(serviceEvent);
+      const play: TheThing = await this.theThingAccessor.get(
+        serviceEvent.service.id
+      );
+      const event: TheThing = ImitationEvent.createTheThing(play);
+      // console.dir(event);
+      event.name = play.name;
+      event.setCellValue(
+        ImitationEventCellDefines.timeRange.name,
+        serviceEvent.timeRange
+      );
+      event.setCellValue(
+        ImitationEventCellDefines.numParticipants.name,
+        serviceEvent.numParticipants
+      );
+      event.addRelation(RelationshipPlay.createRelation(event.id, play.id));
       events.push(event);
     }
     return events;

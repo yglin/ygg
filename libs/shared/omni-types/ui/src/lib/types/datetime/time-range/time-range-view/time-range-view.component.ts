@@ -19,8 +19,8 @@ export class TimeRangeViewComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     const newTimeRange = changes.timeRange.currentValue;
-    console.log(newTimeRange);
-    console.log(TimeRange.isTimeRange(newTimeRange));
+    // console.log(newTimeRange);
+    // console.log(TimeRange.isTimeRange(newTimeRange));
     if (TimeRange.isTimeRange(newTimeRange)) {
       this.startDate = moment(newTimeRange.start).format(
         DATE_FORMATS.display.date

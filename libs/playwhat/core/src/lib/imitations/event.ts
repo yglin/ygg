@@ -5,23 +5,42 @@ import {
   TheThingCell,
   TheThing
 } from '@ygg/the-thing/core';
-import { ImitationPlay } from '../play';
+import { ImitationPlay, ImitationPlayCellDefines } from '../play';
 import { OmniTypes } from '@ygg/shared/omni-types/core';
-import { values, keyBy } from 'lodash';
+import { values, keyBy, extend, pick, mapValues } from 'lodash';
 import { User } from '@ygg/shared/user/core';
 
-export const ImitationEventCellDefines = {
-  timeRange: new TheThingCellDefine({
-    name: '時段',
-    type: OmniTypes['time-range'].id,
-    userInput: 'required'
-  }),
-  numParticipants: new TheThingCellDefine({
-    name: '參加人數',
-    type: OmniTypes.number.id,
-    userInput: 'required'
-  })
-};
+export const ImitationEventCellDefines = extend(
+  mapValues(
+    pick(ImitationPlayCellDefines, [
+      'location',
+      // 'album',
+      // 'timeLength',
+      // 'introduction'
+    ]),
+    (cellDefine: TheThingCellDefine, key: string) => {
+      const cloned = cellDefine.clone();
+      if (key === 'location') {
+        cloned.userInput = 'required';
+      } else {
+        cloned.userInput = 'optional';
+      }
+      return cloned;
+    }
+  ),
+  {
+    timeRange: new TheThingCellDefine({
+      name: '時段',
+      type: OmniTypes['time-range'].id,
+      userInput: 'required'
+    }),
+    numParticipants: new TheThingCellDefine({
+      name: '參加人數',
+      type: OmniTypes.number.id,
+      userInput: 'required'
+    })
+  }
+);
 
 export const ImitationEvent: TheThingImitation = new TheThingImitation({
   id: 'event',
@@ -30,6 +49,11 @@ export const ImitationEvent: TheThingImitation = new TheThingImitation({
   collection: 'events',
   routePath: 'event',
   cellsDef: values(ImitationEventCellDefines),
+  cellsOrder: [
+    ImitationEventCellDefines.timeRange.name,
+    ImitationEventCellDefines.numParticipants.name,
+    // ImitationEventCellDefines.location.name
+  ],
   displays: {
     thumbnail: {
       cells: [

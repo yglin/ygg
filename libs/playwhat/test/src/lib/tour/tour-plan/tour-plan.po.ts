@@ -428,4 +428,12 @@ export class TourPlanPageObjectCypress extends TourPlanPageObject {
     );
     emceePO.alert(`已送出行程確認，等待各活動負責人確認中`, { timeout: 20000 });
   }
+
+  gotoEventView(event: TheThing) {
+    const eventThumbnailPO = new TheThingThumbnailPageObjectCypress(
+      this.getSelectorForEvent(event.name),
+      ImitationEvent
+    );
+    eventThumbnailPO.gotoView();
+  }
 }

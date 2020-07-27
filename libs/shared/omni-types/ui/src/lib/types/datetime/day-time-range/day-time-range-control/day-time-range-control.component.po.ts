@@ -12,7 +12,7 @@ export class DayTimeRangeControlPageObject extends PageObject {
   endDayTimeControl: DayTimeControlPageObject;
 
   setValue(dayTimeRange: DayTimeRange) {
-    console.log(dayTimeRange);
+    // console.log(dayTimeRange);
     this.startDayTimeControl.setValue(dayTimeRange.start);
     this.endDayTimeControl.setValue(dayTimeRange.end);
   }

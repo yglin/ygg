@@ -1,4 +1,5 @@
 <div class="the-thing" *ngIf="theThing && imitation">
+  <!-- <pre>{{ theThing | json }}</pre> -->
   <div
     fxLayout="row wrap"
     fxLayoutAlign="space-between center"
@@ -88,7 +89,7 @@
         >
           <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
             <ygg-title-divider [level]="4">{{ cellName }}</ygg-title-divider>
-            <div *ngIf="!isCellRequired(cellName)">
+            <div *ngIf="!isCellRequired(cellName) && !readonly">
               <button
                 type="button"
                 class="delete edit"

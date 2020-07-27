@@ -9,7 +9,7 @@ export function toJSONDeep(obj: any = {}): any {
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
       const property = obj[key];
-      if (!property || typeof property === 'function') {
+      if (property === undefined || property === null || typeof property === 'function') {
         continue;
       } else if (typeof property.toJSON === 'function') {
         data[key] = property.toJSON();

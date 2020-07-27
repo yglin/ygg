@@ -1,16 +1,10 @@
-import { values, entries, get } from 'lodash';
-import {
-  SerializableJSON,
-  isSerializableJSON,
-  Entity,
-  isEntity
-} from '@ygg/shared/infra/data-access';
+import { Entity, toJSONDeep, isEntity } from '@ygg/shared/infra/core';
 import {
   TheThing,
   TheThingImitation,
   TheThingState
 } from '@ygg/the-thing/core';
-import { stat } from 'fs';
+import { entries } from 'lodash';
 
 export interface Document {
   path: string;
@@ -55,17 +49,18 @@ export class MockDatabase {
         this.documentsBackup[path] = !!backupData ? backupData : null;
       }
     });
+    cy.log(`Insert test data at ${path} in firebase firestore DB`);
+    const alias = `${data.id}_${Date.now()}`;
     // @ts-ignore
-    cy.callFirestore('set', path, data).then(() => {
-      cy.log(`Insert test data at ${path} in firebase firestore DB`);
+    cy.callFirestore('set', path, toJSONDeep(data)).then(() => {
       if (isEntity(data)) {
         this.entities[path] = data;
-        data = data.toJSON();
+        // data = data.toJSON();
       }
-      this.pushDocument(path, data);
-      cy.wrap(data).as(data.id);
+      // this.pushDocument(path, data);
+      cy.wrap(data).as(alias);
     });
-    return cy.get(`@${data.id}`);
+    return cy.get(`@${alias}`, { timeout: 5000 });
   }
 
   update(path: string, data: any): Cypress.Chainable<any> {
@@ -76,7 +71,7 @@ export class MockDatabase {
           backupData = JSON.parse(JSON.stringify(backupData));
           this.documentsBackup[path] = backupData;
         } catch (error) {
-          console.error(error);          
+          console.error(error);
         }
       }
     });
@@ -96,9 +91,9 @@ export class MockDatabase {
         //   console.log(backupData);
         //   restoreOp = cy.callFirestore('set', path, backupData);
         // } else {
-          // XXX yglin 2020/07/23 FUCK IT, KILL THEM ALL...
-          cy.log(`Delete data at path ${path}`);
-          restoreOp = cy.callFirestore('delete', path);
+        // XXX yglin 2020/07/23 FUCK IT, KILL THEM ALL...
+        cy.log(`Delete data at path ${path}`);
+        restoreOp = cy.callFirestore('delete', path);
         // }
         restoreOp.then(() => {
           delete this.documentsBackup[path];

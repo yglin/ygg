@@ -54,7 +54,7 @@ export const ImitationPlayCellDefines: { [key: string]: TheThingCellDefine } = {
   location: new TheThingCellDefine({
     name: '地點',
     type: 'location',
-    userInput: 'optional'
+    userInput: 'required'
   }),
   businessHours: new TheThingCellDefine({
     name: '服務時段',

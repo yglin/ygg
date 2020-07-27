@@ -572,6 +572,16 @@ export class TheThing implements Entity, ImageThumbnailItem {
 
   toJSON(): any {
     const data = toJSONDeep(this);
+    // Clear out null cells
+    for (const cellName in data.cells) {
+      if (Object.prototype.hasOwnProperty.call(data.cells, cellName)) {
+        const cell = data.cells[cellName];
+        if (cell.value === null || cell.value === undefined) {
+          delete data.cell[cellName];
+        }
+      }
+    }
+    // Clear out relations with no object
     for (const name in data.relations) {
       if (data.relations.hasOwnProperty(name)) {
         const relations = data.relations[name];

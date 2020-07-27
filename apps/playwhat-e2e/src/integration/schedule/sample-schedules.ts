@@ -11,7 +11,8 @@ import {
   RelationshipScheduleEvent,
   RelationshipEquipment,
   ImitationEvent,
-  RelationshipPlay
+  RelationshipPlay,
+  ImitationEventCellDefines
 } from '@ygg/playwhat/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import {
@@ -81,7 +82,22 @@ for (const relation of TourPlanUnscheduled.getRelations(
       }
     );
     ScheduleTrivial.addEvent(event);
-    ScheduledEvents.push(ScheduleAdapter.deriveEventFromServiceEvent(event));
+
+    const eventThing = ImitationEvent.createTheThing(play);
+    eventThing.name = play.name;
+    eventThing.setCellValue(
+      ImitationEventCellDefines.timeRange.name,
+      event.timeRange
+    );
+    eventThing.setCellValue(
+      ImitationEventCellDefines.numParticipants.name,
+      event.numParticipants
+    );
+    eventThing.addRelation(
+      RelationshipPlay.createRelation(eventThing.id, play.id)
+    );
+    ScheduledEvents.push(eventThing);
+
     RelationPlayOfEvents.push(
       new RelationRecord({
         subjectCollection: ImitationEvent.collection,

@@ -88,6 +88,10 @@ function stubEvent(event: TheThing, play: TheThing) {
     objectId: play.id,
     objectRole: RelationshipPlay.name
   });
+  // if (event.getCellValue(ImitationEventCellDefines.location.name) === null) {
+  //   console.log('幹??');
+  //   console.log(event);
+  // }
   theMockDatabase.insert(`${ImitationEvent.collection}/${event.id}`, event);
   theMockDatabase.insert(
     `${RelationRecord.collection}/${relation.id}`,
@@ -112,7 +116,8 @@ describe('Schedule edit', () => {
   const testPlay1 = testPlays[0];
   const testPlay2 = testPlays[1];
   const testPlay3 = testPlays[2];
-  const numParticipants = testPlay3.getCellValue(ImitationPlayCellDefines.maxParticipants.name) + 1;
+  const numParticipants =
+    testPlay3.getCellValue(ImitationPlayCellDefines.maxParticipants.name) + 1;
 
   ImitationTourPlan.setState(
     TourPlanUnscheduled,
@@ -183,7 +188,7 @@ describe('Schedule edit', () => {
   const timeLength = testPlay3.getCellValue(
     ImitationPlayCellDefines.timeLength.name
   );
-  const approvedEvent01 = ImitationEvent.createTheThing();
+  const approvedEvent01 = ImitationEvent.createTheThing(testPlay3);
   approvedEvent01.setCellValue(
     ImitationEventCellDefines.numParticipants.name,
     random(1, maxParticipants)
@@ -205,7 +210,7 @@ describe('Schedule edit', () => {
     ImitationEvent.states['host-approved']
   );
   approvedEvents.push(approvedEvent01);
-  const approvedEvent02 = ImitationEvent.createTheThing();
+  const approvedEvent02 = ImitationEvent.createTheThing(testPlay3);
   approvedEvent02.setCellValue(
     ImitationEventCellDefines.numParticipants.name,
     random(1, maxParticipants)
@@ -262,7 +267,7 @@ describe('Schedule edit', () => {
     // siteNavigator.goto(['the-things', 'my'], myThingsPO);
     // cy.wait(3000);
     // myThingsPO.deleteAll();
-    theMockDatabase.clear();
+    // theMockDatabase.clear();
   });
 
   it('Click on event shows its business-hours', () => {

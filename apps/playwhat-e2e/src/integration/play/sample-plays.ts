@@ -11,7 +11,12 @@ import {
   ImitationPlayCellDefines
 } from '@ygg/playwhat/core';
 import { random } from 'lodash';
-import { Album, Location, BusinessHours, OmniTypes } from '@ygg/shared/omni-types/core';
+import {
+  Album,
+  Location,
+  BusinessHours,
+  OmniTypes
+} from '@ygg/shared/omni-types/core';
 
 export const MinimumPlay = ImitationPlay.createTheThing().fromJSON({
   name: `溜鳥鳥體驗(最少需求資料欄位)_${Date.now()}`,
@@ -46,7 +51,12 @@ export const MinimumPlay = ImitationPlay.createTheThing().fromJSON({
       name: '人數上限',
       type: 'number',
       value: random(10, 50)
-    }
+    },
+    {
+      name: ImitationPlayCellDefines.location.name,
+      type: 'location',
+      value: Location.forge().toJSON()
+    },
   ]
 });
 
@@ -54,11 +64,6 @@ export const PlayFull = MinimumPlay.clone();
 PlayFull.name = `測試體驗溜鳥鳥(所有資料欄位)_${Date.now()}`;
 PlayFull.addCells(
   [
-    {
-      name: '地點',
-      type: 'location',
-      value: Location.forge().toJSON()
-    },
     {
       name: '服務時段',
       type: 'business-hours',
@@ -109,6 +114,11 @@ export const SamplePlays = [
         value: 40
       },
       {
+        name: ImitationPlayCellDefines.location.name,
+        type: 'location',
+        value: Location.forge().toJSON()
+      },
+      {
         name: ImitationPlayCellDefines.businessHours.name,
         type: OmniTypes['business-hours'].id,
         value: BusinessHours.forge().toJSON()
@@ -156,6 +166,10 @@ export const SamplePlays = [
         value: 40
       },
       {
+        name: ImitationPlayCellDefines.location.name,
+        type: 'location',
+        value: Location.forge().toJSON()
+      },      {
         name: ImitationPlayCellDefines.businessHours.name,
         type: OmniTypes['business-hours'].id,
         value: BusinessHours.forge().toJSON()
@@ -203,6 +217,10 @@ export const SamplePlays = [
         value: 10
       },
       {
+        name: ImitationPlayCellDefines.location.name,
+        type: 'location',
+        value: Location.forge().toJSON()
+      },      {
         name: ImitationPlayCellDefines.businessHours.name,
         type: OmniTypes['business-hours'].id,
         value: BusinessHours.forge().toJSON()
@@ -250,6 +268,10 @@ export const SamplePlays = [
         value: 15
       },
       {
+        name: ImitationPlayCellDefines.location.name,
+        type: 'location',
+        value: Location.forge().toJSON()
+      },      {
         name: ImitationPlayCellDefines.businessHours.name,
         type: OmniTypes['business-hours'].id,
         value: BusinessHours.forge().toJSON()
@@ -297,6 +319,10 @@ export const SamplePlays = [
         value: 40
       },
       {
+        name: ImitationPlayCellDefines.location.name,
+        type: 'location',
+        value: Location.forge().toJSON()
+      },      {
         name: ImitationPlayCellDefines.businessHours.name,
         type: OmniTypes['business-hours'].id,
         value: BusinessHours.forge().toJSON()

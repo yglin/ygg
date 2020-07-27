@@ -33,4 +33,11 @@ export class TheThingThumbnailPageObjectCypress extends TheThingThumbnailPageObj
     );
     cellValuePO.expectValue(cell.type, cell.value);
   }
+
+  gotoView() {
+    const imageThumbnailItemPO = new ImageThumbnailItemPageObjectCypress(
+      this.getSelector()
+    );
+    imageThumbnailItemPO.clickLink();
+  }
 }

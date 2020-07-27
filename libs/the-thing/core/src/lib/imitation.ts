@@ -177,7 +177,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     return theThing;
   }
 
-  createTheThing(): TheThing {
+  createTheThing(source?: TheThing): TheThing {
     let theThing = new TheThing();
     if (this.collection) {
       theThing.collection = this.collection;
@@ -186,12 +186,20 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       theThing.tags = new Tags(this.filter.tags);
     }
     theThing.view = this.view;
+    if (source && source.image) {
+      theThing.image = source.image;
+    }
     for (const cellName in this.cellsDef) {
       if (this.cellsDef.hasOwnProperty(cellName)) {
         const cellDef = this.cellsDef[cellName];
         if (cellDef.userInput === 'required') {
           const newCell = cellDef.createCell();
           theThing.addCell(newCell);
+        }
+        if (source && source.hasCell(cellName)) {
+          // console.log(`Copy cell ${cellName}`);
+          // console.log(source.getCellValue(cellName));
+          theThing.addCell(cellDef.createCell(source.getCellValue(cellName)));
         }
       }
     }

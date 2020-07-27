@@ -2,7 +2,9 @@ import {
   CellDefinesTourPlan,
   ImitationTourPlan,
   ScheduleAdapter,
-  ImitationTourPlanCellDefines
+  ImitationTourPlanCellDefines,
+  ImitationEvent,
+  ImitationEventCellDefines
 } from '@ygg/playwhat/core';
 import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
 import { SchedulePageObjectCypress } from '@ygg/schedule/test';
@@ -11,7 +13,12 @@ import { waitForLogin } from '@ygg/shared/user/test';
 import { TheThing } from '@ygg/the-thing/core';
 import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
 import { SampleEquipments, SamplePlays } from '../play/sample-plays';
-import { ScheduleTrivial, TourPlanUnscheduled } from './sample-schedules';
+import {
+  ScheduleTrivial,
+  TourPlanUnscheduled,
+  ScheduledEvents
+} from './sample-schedules';
+import { find } from 'lodash';
 
 describe('Create/Attach schedule data from/to tour-plan', () => {
   const siteNavigator = new SiteNavigator();
@@ -36,6 +43,20 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
       ImitationTourPlanCellDefines.dayTimeRange.name
     )
   });
+
+  // const scheduleEvents: TheThing[] = ScheduleTrivial.events.map(se => {
+  //   const play: TheThing = find(SamplePlays, p => p.id === se.service.id);
+  //   const event = ImitationEvent.createTheThing(play);
+  //   event.setCellValue(
+  //     ImitationEventCellDefines.timeRange.name,
+  //     se.timeRange
+  //   );
+  //   event.setCellValue(
+  //     ImitationEventCellDefines.numParticipants.name,
+  //     se.numParticipants
+  //   );
+  //   return event;
+  // });
 
   before(() => {
     login().then(user => {
@@ -83,9 +104,6 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
   });
 
   it('Create a trivial schedule from tour-plan', () => {
-    const scheduleEvents: TheThing[] = ScheduleTrivial.events.map(se =>
-      ScheduleAdapter.deriveEventFromServiceEvent(se)
-    );
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
     tourPlanPO.expectVisible();
@@ -94,13 +112,10 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
     schedulePO.expectSchedule(ScheduleTrivial);
     schedulePO.submit();
     tourPlanPO.expectVisible();
-    tourPlanPO.expectEvents(scheduleEvents);
+    tourPlanPO.expectEvents(ScheduledEvents);
   });
 
   it('Save schedule for tour-plan', () => {
-    const scheduleEvents: TheThing[] = ScheduleTrivial.events.map(se =>
-      ScheduleAdapter.deriveEventFromServiceEvent(se)
-    );
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
     tourPlanPO.expectVisible();
@@ -116,6 +131,6 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
     tourPlanPO.expectVisible();
-    tourPlanPO.expectEvents(scheduleEvents);
+    tourPlanPO.expectEvents(ScheduledEvents);
   });
 });
