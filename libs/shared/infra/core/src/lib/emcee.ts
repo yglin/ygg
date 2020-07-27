@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 export enum AlertType {
   Error = 'error',
   Info = 'info',
@@ -7,8 +9,8 @@ export enum AlertType {
 export abstract class Emcee {
   abstract async alert(message: string, type: AlertType);
   abstract async confirm(message: string): Promise<boolean>;
-  abstract showProgress(message: string, percentage: number): void;
-  abstract hideProgress(delay: number): void;
+  abstract showProgress(options?:{message: string, percentage$: Observable<number>}): void;
+  abstract hideProgress(): void;
 
   async info(message: string) {
     return this.alert(message, AlertType.Info);

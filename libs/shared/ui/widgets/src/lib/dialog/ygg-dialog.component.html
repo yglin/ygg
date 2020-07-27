@@ -1,5 +1,5 @@
 <div class="ygg-dialog" [ngClass]="{ active: isActive }">
-  <div class="title" mat-dialog-title>
+  <div class="title" mat-dialog-title [hidden]='!title'>
     {{ title }}
   </div>
   <div class="content">

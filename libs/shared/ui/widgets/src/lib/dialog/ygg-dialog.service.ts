@@ -6,7 +6,7 @@ import { YggDialogComponent } from './ygg-dialog.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
 import { Subscription } from 'rxjs';
-import { find } from 'lodash';
+import { find, isArray } from 'lodash';
 import { AlertType, Dialog } from '@ygg/shared/infra/core';
 
 export interface IYggDialogOpenConfig {
@@ -40,7 +40,7 @@ export class YggDialogService extends Dialog {
       data: config.data
     };
     config.data = wrappingData;
-    config.panelClass = ['ygg-dialog'];
+    config.panelClass = isArray(config.panelClass) ? ['ygg-dialog', ...config.panelClass] : ['ygg-dialog'];
     const newDialogRef = this.dialog.open(YggDialogComponent, config);
     // Activate new dialog
     newDialogRef.componentInstance.isActive = true;

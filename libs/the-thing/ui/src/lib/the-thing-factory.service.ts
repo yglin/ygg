@@ -413,7 +413,7 @@ export class TheThingFactoryService extends TheThingFactory
         imitation.setState(theThing, imitation.stateChanges['onSave'].next);
       }
       await this.theThingAccessService.upsert(theThing);
-      await this.saveRelations(theThing);
+      // await this.saveRelations(theThing);
       // Connect to remote source
       this.connectRemoteSource(theThing.id, theThing.collection);
 

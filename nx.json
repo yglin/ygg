@@ -218,7 +218,7 @@
       "tags": ["scope:shared", "type:functions"]
     },
     "functions": {
-      "tags": ["scope:firebase", "type:node"]
+      "tags": ["scope:firebase", "type:functions"]
     },
     "schedule-test": {
       "tags": ["scope:schedule", "type:test"]

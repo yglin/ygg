@@ -24,8 +24,21 @@
   position: relative;
 }
 
-::ng-deep .close-button {
+::ng-deep .ygg-dialog .close-button {
   position: absolute;
   top: -10px;
   right: -10px;
+}
+
+::ng-deep .ygg-dialog.transparent .mat-dialog-title {
+  display: none;
+}
+
+::ng-deep .ygg-dialog.transparent .mat-dialog-container {
+  background: rgba(255, 255, 255, 0);
+  box-shadow: none;
+}
+
+::ng-deep .ygg-dialog.transparent .close-button {
+  display: none;
 }

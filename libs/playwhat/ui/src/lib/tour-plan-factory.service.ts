@@ -324,6 +324,9 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
         tourPlan
       );
       const outSchedule = await this.scheduleFactory.edit(inSchedule);
+      this.emcee.showProgress({
+        message: '儲存行程中'
+      });
       const events: TheThing[] = await this.scheduleAdapter.deriveEventsFromSchedule(
         outSchedule
       );
@@ -352,6 +355,7 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
         force: true
       });
       this.theThingFactory.emitChange(tourPlan);
+      this.emcee.hideProgress();
       this.router.navigate(['/', ImitationTourPlan.routePath, tourPlan.id]);
     } catch (error) {
       this.emcee.error(`排定行程表失敗，錯誤原因：${error.message}`);

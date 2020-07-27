@@ -412,7 +412,7 @@ export default function attachCustomCommands(
             dataToWrite.createdAt = firebase.firestore.FieldValue.serverTimestamp();
           }
         }
-        cy.log(JSON.stringify(dataToWrite));
+        // cy.log(JSON.stringify(dataToWrite));
         taskSettings.data = dataToWrite;
       }
       // Use third argument as options for get action

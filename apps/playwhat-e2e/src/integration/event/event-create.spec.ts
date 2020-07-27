@@ -69,7 +69,7 @@ describe('Create events', () => {
     schedulePO.expectVisible();
     schedulePO.expectSchedule(ScheduleTrivial);
     schedulePO.submit();
-    cy.wait(10000);
+    // cy.wait(10000);
     tourPlanPO.expectVisible();
     tourPlanPO.expectEvents(ScheduledEvents);
     cy.wrap(ScheduledEvents).each((event: TheThing) => {

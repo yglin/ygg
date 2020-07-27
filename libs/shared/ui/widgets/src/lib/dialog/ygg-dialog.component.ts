@@ -46,7 +46,7 @@ export class YggDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<YggDialogComponent>,
     private componentFactoryResolver: ComponentFactoryResolver
   ) {
-    this.title = 'Play What';
+    // this.title = 'Play What';
   }
 
   ngOnInit() {

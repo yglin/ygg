@@ -32,6 +32,7 @@ import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.c
 import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.component';
 import { DatetimeComponent } from './datetime/datetime.component';
 import { ErrorMessagesComponent } from './error-messages/error-messages.component';
+import { ProgressDialogComponent } from './dialog/progress-dialog/progress-dialog.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { ErrorMessagesComponent } from './error-messages/error-messages.componen
     ConfirmDialogComponent,
     AlertDialogComponent,
     DatetimeComponent,
-    ErrorMessagesComponent
+    ErrorMessagesComponent,
+    ProgressDialogComponent
     // ImageThumbnailSelectorComponent
   ],
   imports: [

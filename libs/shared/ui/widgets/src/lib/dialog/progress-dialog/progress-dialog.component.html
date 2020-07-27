@@ -1,0 +1,11 @@
+<div
+  class="progress-dialog"
+  fxLayout="column"
+  fxLayoutAlign="center center"
+  fxLayoutGap="50px"
+>
+  <mat-spinner mode="indeterminate"></mat-spinner>
+  <h2 class="message" *ngIf="message">
+    {{ message }} ... <span [hidden]="!percentage">{{ percentage }}&#37;</span>
+  </h2>
+</div>
