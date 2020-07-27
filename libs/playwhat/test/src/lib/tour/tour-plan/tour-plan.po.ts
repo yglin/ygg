@@ -393,6 +393,10 @@ export class TourPlanPageObjectCypress extends TourPlanPageObject {
     );
   }
 
+  expectNoSchedule() {
+    cy.get(this.getSelector('schedule')).should('not.be.visible');
+  }
+
   expectEvents(events: TheThing[]) {
     for (const event of events) {
       const theThingThumbnailPO = new TheThingThumbnailPageObjectCypress(

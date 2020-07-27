@@ -38,7 +38,7 @@
           </div>
         </div>
         <br />
-        <div class="schedule">
+        <div class="schedule" *ngIf="eventIds && eventIds.length > 0">
           <h2>行程表</h2>
           <div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="50px">
             <ng-container *ngFor="let eventId of eventIds">

@@ -24,6 +24,7 @@ import { TheThingFactoryService } from '@ygg/the-thing/ui';
 import { Observable, Subscription } from 'rxjs';
 import { EventFactoryService } from './event-factory.service';
 import { ScheduleAdapterService } from './schedule-adapter.service';
+import { Schedule } from '@ygg/schedule/core';
 
 export interface IModifyRequest {
   command: 'update' | 'add' | 'delete';
@@ -324,38 +325,41 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
         tourPlan
       );
       const outSchedule = await this.scheduleFactory.edit(inSchedule);
-      this.emcee.showProgress({
-        message: '儲存行程中'
-      });
-      const events: TheThing[] = await this.scheduleAdapter.deriveEventsFromSchedule(
-        outSchedule
-      );
+      // console.log(outSchedule);
+      if (Schedule.isSchedule(outSchedule)) {
+        this.emcee.showProgress({
+          message: '儲存行程中'
+        });
+        const events: TheThing[] = await this.scheduleAdapter.deriveEventsFromSchedule(
+          outSchedule
+        );
 
-      const relations: TheThingRelation[] = [];
-      for (const event of events) {
-        // Save event
-        await this.theThingFactory.save(event, {
+        const relations: TheThingRelation[] = [];
+        for (const event of events) {
+          // Save event
+          await this.theThingFactory.save(event, {
+            requireOwner: true,
+            imitation: ImitationEvent,
+            force: true
+          });
+          // Attach event to tour-plan
+          const relation = RelationshipScheduleEvent.createRelation(
+            tourPlan.id,
+            event.id
+          );
+          relations.push(relation);
+        }
+        tourPlan.setRelation(RelationshipScheduleEvent.name, relations);
+
+        // Save tour-plan
+        await this.theThingFactory.save(tourPlan, {
           requireOwner: true,
-          imitation: ImitationEvent,
+          imitation: ImitationTourPlan,
           force: true
         });
-        // Attach event to tour-plan
-        const relation = RelationshipScheduleEvent.createRelation(
-          tourPlan.id,
-          event.id
-        );
-        relations.push(relation);
+        this.theThingFactory.emitChange(tourPlan);
+        this.emcee.hideProgress();
       }
-      tourPlan.setRelation(RelationshipScheduleEvent.name, relations);
-
-      // Save tour-plan
-      await this.theThingFactory.save(tourPlan, {
-        requireOwner: true,
-        imitation: ImitationTourPlan,
-        force: true
-      });
-      this.theThingFactory.emitChange(tourPlan);
-      this.emcee.hideProgress();
       this.router.navigate(['/', ImitationTourPlan.routePath, tourPlan.id]);
     } catch (error) {
       this.emcee.error(`排定行程表失敗，錯誤原因：${error.message}`);

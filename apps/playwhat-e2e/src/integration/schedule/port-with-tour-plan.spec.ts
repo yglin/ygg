@@ -92,21 +92,19 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
   });
 
   it('Apply day-time-range from tour-plan', () => {
-    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
-    tourPlanPO.expectVisible();
-    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
-    schedulePO.expectVisible();
     const dayTimeRange = TourPlanUnscheduled.getCellValue(
       CellDefinesTourPlan.dayTimeRange.name
     );
     schedulePO.expectDayTimeRange(dayTimeRange);
   });
 
-  it('Create a trivial schedule from tour-plan', () => {
-    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
+  it('Cancel and back to tour-plans', () => {
+    schedulePO.cancel();
     tourPlanPO.expectVisible();
+    tourPlanPO.expectNoSchedule();
+  });
+
+  it('Create a trivial schedule from tour-plan', () => {
     tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
     schedulePO.expectVisible();
     schedulePO.expectSchedule(ScheduleTrivial);
@@ -115,19 +113,7 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
     tourPlanPO.expectEvents(ScheduledEvents);
   });
 
-  it('Save schedule for tour-plan', () => {
-    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
-    tourPlanPO.expectVisible();
-    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
-    schedulePO.expectVisible();
-    schedulePO.expectSchedule(ScheduleTrivial);
-    schedulePO.submit();
-    tourPlanPO.expectVisible();
-
-    // Reload
-    cy.visit('/');
-    waitForLogin();
+  it('Schedule saved for tour-plan', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
     tourPlanPO.expectVisible();

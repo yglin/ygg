@@ -81,6 +81,12 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
     emceePO.confirm('行程安排完成，送出此行程表？');
   }
 
+  cancel() {
+    cy.get(this.getSelector('buttonCancel')).click();
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.confirm('取消行程安排？');
+  }
+
   clickOnEvent(name: string) {
     cy.get(this.getSelectorForEvent(name)).click({ force: true });
   }

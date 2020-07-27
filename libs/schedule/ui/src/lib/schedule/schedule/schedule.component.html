@@ -1,8 +1,20 @@
 <div class="schedule-page">
-  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
-    <button class="submit" mat-fab (click)="submit()" matTooltip="完成並送出">
-      <mat-icon>forward</mat-icon>
-    </button>
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+    <div>
+      <button
+        mat-fab
+        class="cancel"
+        matTooltip="取消行程編排"
+        (click)="cancel()"
+      >
+        <mat-icon>keyboard_arrow_left</mat-icon>
+      </button>
+    </div>
+    <div>
+      <button class="submit" mat-fab (click)="submit()" matTooltip="完成並送出">
+        <mat-icon>assignment_turned_in</mat-icon>
+      </button>
+    </div>
   </div>
   <ygg-scheduler-time-table [schedule]="schedule"></ygg-scheduler-time-table>
 </div>

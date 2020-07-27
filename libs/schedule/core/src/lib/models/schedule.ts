@@ -28,6 +28,10 @@ export class Schedule implements Entity {
     allowOverlappingEvents: false
   };
 
+  static isSchedule(value: any): value is Schedule {
+    return !!(value && value.timeRange && value.dayTimeRange);
+  }
+
   constructor(
     timeRange: TimeRange,
     options: {

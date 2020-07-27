@@ -24,4 +24,8 @@ export class ScheduleComponent implements OnInit {
   submit() {
     this.scheduleFactory.submit(this.schedule);
   }
+
+  cancel() {
+    this.scheduleFactory.cancel(this.schedule);
+  }
 }

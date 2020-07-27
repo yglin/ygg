@@ -7,6 +7,7 @@ export abstract class SchedulePageObject extends PageObject {
   selectors = {
     main: '.schedule-page',
     buttonSubmit: 'button.submit',
+    buttonCancel: 'button.cancel',
     eventPool: '.event-pool',
     timeSlots: '.time-slots',
     underSlots: '.under-table'

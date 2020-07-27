@@ -14,6 +14,7 @@ export abstract class TourPlanPageObject extends PageObject {
   selectors = {
     main: '.tour-plan',
     purchases: '.purchases',
+    schedule: '.schedule',
     buttonSubmitApplication: 'button.submit-application',
     buttonAdminComplete: 'button.admin-complete',
     buttonAdminPaid: 'button.admin-paid',
