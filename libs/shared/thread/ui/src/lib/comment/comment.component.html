@@ -1,0 +1,20 @@
+<div
+  *ngIf="comment"
+  class="comment"
+  fxLayout="column"
+  [fxLayoutAlign]="'start ' + rowAlign"
+  fxLayoutGap="10px"
+>
+  <div class="author" [attr.user-id]="comment.ownerId">
+    <ygg-user-thumbnail [id]="comment.ownerId"></ygg-user-thumbnail>
+  </div>
+  <div>
+    <h5>{{ comment.createAt | date: 'short' }}</h5>
+  </div>
+  <div style="max-width: 100%;" class="content">
+    <ygg-omni-type-view
+      type="html"
+      [value]="comment.content"
+    ></ygg-omni-type-view>
+  </div>
+</div>

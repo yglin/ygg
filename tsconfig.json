@@ -80,7 +80,8 @@
       "@ygg/shared/functions": ["libs/shared/functions/src/index.ts"],
       "@ygg/shared/thread/core": ["libs/shared/thread/core/src/index.ts"],
       "@ygg/shared/thread/ui": ["libs/shared/thread/ui/src/index.ts"],
-      "@ygg/shared/google/apis": ["libs/shared/google/apis/src/index.ts"]
+      "@ygg/shared/google/apis": ["libs/shared/google/apis/src/index.ts"],
+      "@ygg/shared/thread/test": ["libs/shared/thread/test/src/index.ts"]
     },
     "rootDir": "."
   },

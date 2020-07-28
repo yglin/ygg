@@ -4,7 +4,7 @@ import {
   TourPlanAdminPageObjectCypress,
   TourPlanPageObjectCypress
 } from '@ygg/playwhat/test';
-import { Month } from '@ygg/shared/omni-types/core';
+import { Month, Html } from '@ygg/shared/omni-types/core';
 import {
   getCurrentUser,
   login,
@@ -28,6 +28,8 @@ import {
 } from './sample-tour-plan';
 import promisify from 'cypress-promise';
 import { waitForLogin } from '@ygg/shared/user/test';
+import { Comment } from "@ygg/shared/thread/core";
+import { CommentListPageObjectCypress } from '@ygg/shared/thread/test';
 
 const tourPlansByStateAndMonth: {
   [state: string]: TheThing[];
@@ -49,6 +51,7 @@ const myTourPlansPO = new MyThingsDataTablePageObjectCypress(
   '',
   ImitationTourPlan
 );
+const commentsPO = new CommentListPageObjectCypress();
 // let incomeRecord: IncomeRecord;
 
 describe('Tour-plan senario for state completed', () => {
@@ -102,7 +105,7 @@ describe('Tour-plan senario for state completed', () => {
     );
     const emceePO = new EmceePageObjectCypress();
     emceePO.confirm(
-      `確定此遊程 ${tourPlan.name} 的所有活動流程已結束，標記為已完成？`
+      `確定此遊程 ${tourPlan.name} 的所有活動行程已結束，標記為已完成？`
     );
     emceePO.alert(`遊程 ${tourPlan.name} 標記為已完成。`);
     tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.completed);
@@ -119,6 +122,19 @@ describe('Tour-plan senario for state completed', () => {
       ImitationTourPlan.states.completed.name
     ].gotoTheThingView(tourPlan);
     tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.completed);
+  });
+
+  it('Log action confirm-completed to a new comment', () => {
+    getCurrentUser().then(user => {
+      const commentLog = new Comment({
+        subjectId: tourPlan.id,
+        ownerId: user.id,
+        content: new Html(
+          `📌 ${user.name} 更改狀態 ${ImitationTourPlan.states.paid.label} ➡ ${ImitationTourPlan.states.completed.label}`
+        )
+      });
+      commentsPO.expectLatestComment(commentLog);
+    });
   });
 
   it('Can mark completed only if admin and in state paid', async () => {

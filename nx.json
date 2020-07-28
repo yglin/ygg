@@ -240,6 +240,9 @@
     },
     "shared-google-apis": {
       "tags": ["scope:shared", "type:ext-api"]
+    },
+    "shared-thread-test": {
+      "tags": ["scope:shared", "type:test"]
     }
   },
   "tasksRunnerOptions": {

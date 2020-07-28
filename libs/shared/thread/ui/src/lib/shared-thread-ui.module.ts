@@ -6,9 +6,11 @@ import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { SharedUserUiModule } from '@ygg/shared/user/ui';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { CommentListComponent } from './comment-list/comment-list.component';
+import { CommentComponent } from './comment/comment.component';
 
 @NgModule({
-  declarations: [ThreadComponent],
+  declarations: [ThreadComponent, CommentListComponent, CommentComponent],
   imports: [
     CommonModule,
     FormsModule,

@@ -10,10 +10,15 @@ import {
   SiteNavigator,
   TourPlanPageObjectCypress,
   MyCalendarPageObjectCypress,
-  MyEventsPageObjectCypress
+  MyEventsPageObjectCypress,
+  TourPlanAdminPageObjectCypress
 } from '@ygg/playwhat/test';
 import { SchedulePageObjectCypress } from '@ygg/schedule/test';
-import { login, theMockDatabase } from '@ygg/shared/test/cypress';
+import {
+  login,
+  theMockDatabase,
+  getCurrentUser
+} from '@ygg/shared/test/cypress';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
 import { waitForLogin } from '@ygg/shared/user/test';
@@ -32,7 +37,9 @@ import {
   TourPlanScheduled3Events,
   TourPlanScheduledOneEvent
 } from '../schedule/sample-schedules';
-import { TimeRange } from '@ygg/shared/omni-types/core';
+import { Comment } from '@ygg/shared/thread/core';
+import { TimeRange, Html } from '@ygg/shared/omni-types/core';
+import { CommentListPageObjectCypress } from '@ygg/shared/thread/test';
 
 describe('Approve scheduled events of tour-plan', () => {
   const siteNavigator = new SiteNavigator();
@@ -43,6 +50,7 @@ describe('Approve scheduled events of tour-plan', () => {
     .concat(ScheduledEvents)
     .concat([TourPlanScheduledOneEvent, TourPlanScheduled3Events]);
   const tourPlanPO = new TourPlanPageObjectCypress();
+  const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();
   const myTourPlansPO = new MyThingsDataTablePageObjectCypress(
     '',
     ImitationTourPlan
@@ -54,6 +62,7 @@ describe('Approve scheduled events of tour-plan', () => {
   const eventPO = new TheThingPageObjectCypress('', ImitationEvent);
   const myCalendarPO = new MyCalendarPageObjectCypress();
   const emceePO = new EmceePageObjectCypress();
+  const commentsPO = new CommentListPageObjectCypress();
   const plays: TheThing[] = TourPlanScheduled3Events.getRelations(
     RelationPurchase.name
   )
@@ -66,6 +75,7 @@ describe('Approve scheduled events of tour-plan', () => {
     )
   );
   let me: User;
+  let inbox: any;
 
   before(() => {
     // Only tour-plans of state applied can make schedule
@@ -111,15 +121,16 @@ describe('Approve scheduled events of tour-plan', () => {
       });
 
       cy.visit('/');
-      waitForLogin().then(() => {
-        // @ts-ignore
-        cy.createInbox().then(inbox => {
-          cy.wrap(inbox).as('mailslurpInbox');
-          theMockDatabase.update(`${User.collection}/${user.id}`, {
-            email: inbox.emailAddress
-          });
-        });
-      });
+      waitForLogin();
+      // waitForLogin().then(() => {
+      //   // @ts-ignore
+      //   cy.createInbox().then(_inbox => {
+      //     inbox = _inbox;
+      //     theMockDatabase.update(`${User.collection}/${user.id}`, {
+      //       email: _inbox.emailAddress
+      //     });
+      //   });
+      // });
     });
   });
 
@@ -127,60 +138,84 @@ describe('Approve scheduled events of tour-plan', () => {
     theMockDatabase.clear();
   });
 
-  it('Send approval request of each scheduled event to owner of the play', () => {
+  it('Send approval request for tour-plan', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(
       TourPlanScheduledOneEvent
     );
     tourPlanPO.expectVisible();
-    tourPlanPO.sendApprovalRequests();
-    cy.wait(10000);
-    // @ts-ignore
-    cy.get('@mailslurpInbox').then(inbox => {
-      // @ts-ignore
-      cy.waitForLatestEmail(inbox.id).then(email => {
-        expect(email.subject).to.have.string(
-          `您有一項${testEvent.name}的行程活動邀請`
-        );
-        // Extract link
-        const link = /href="(http.*)"/.exec(email.body)[1];
-        cy.visit(link);
-        waitForLogin();
-        emceePO.confirm(
-          `確認以負責人身份參加行程${testEvent.name}？請於行程活動頁面按下確認參加按鈕`
-        );
-        eventPO.expectVisible();
-        eventPO.expectState(ImitationEvent.states['wait-approval']);
+    tourPlanPO.theThingPO.runAction(
+      ImitationTourPlan.actions['send-approval-requests']
+    );
+    emceePO.confirm(
+      `將送出行程中各活動時段資訊給各活動負責人，並等待負責人確認。等待期間無法修改行程表，請確認行程中各活動時段已安排妥善，確定送出？`
+    );
+    emceePO.alert(`已送出行程確認，等待各活動負責人確認中`, { timeout: 20000 });
+  });
+
+  it('Log action send-approval-requests to a new comment', () => {
+    getCurrentUser().then(user => {
+      const commentLog = new Comment({
+        subjectId: TourPlanScheduledOneEvent.id,
+        ownerId: user.id,
+        content: new Html(
+          `📌 ${user.name} 更改狀態 ${ImitationTourPlan.states.applied.label} ➡ ${ImitationTourPlan.states.waitApproval.label}`
+        )
       });
+      commentsPO.expectLatestComment(commentLog);
     });
   });
 
-  // it('Approve event as host and redirect to calendar', () => {
-  //   const testEventTimeRange: TimeRange = testEvent.getCellValue(
-  //     ImitationEventCellDefines.timeRange.name
-  //   );
-
-  //   // // ==== XXX Remove this block if following previous test =====
-  //   // ImitationEvent.setState(testEvent, ImitationEvent.states['wait-approval']);
-  //   // theMockDatabase.insert(
-  //   //   `${testEvent.collection}/${testEvent.id}`,
-  //   //   testEvent
-  //   // );
-  //   // siteNavigator.goto(
-  //   //   [ImitationEvent.routePath, 'host'],
-  //   //   myHostEventsDataTablePO
-  //   // );
-  //   // myHostEventsDataTablePO.gotoTheThingView(testEvent);
-  //   // eventPO.expectVisible();
-  //   // // ==== XXX Remove this block if following previous test =====
-
-  //   eventPO.runAction(ImitationEvent.actions['host-approve']);
-  //   emceePO.confirm(`確定會以負責人身份出席參加行程${testEvent.name}？`);
-  //   emceePO.alert(`已確認參加，之後若要取消請聯絡主辦者${me.name}`);
-  //   myCalendarPO.expectVisible();
-  //   // myCalendarPO.expectMonth(testEventTimeRange.start);
-  //   myCalendarPO.expectEvent(testEvent);
+  // it('Send approval request of each scheduled event to owner of the play', () => {
+  //   // cy.wait(10000);
+  //   // @ts-ignore
+  //   cy.waitForLatestEmail(inbox.id).then(email => {
+  //     expect(email.subject).to.have.string(
+  //       `您有一項${testEvent.name}的行程活動邀請`
+  //     );
+  //     // Extract link
+  //     const link = /href="(http.*)"/.exec(email.body)[1];
+  //     cy.visit(link);
+  //     waitForLogin();
+  //     emceePO.confirm(
+  //       `確認以負責人身份參加行程${testEvent.name}？請於行程活動頁面按下確認參加按鈕`
+  //     );
+  //     eventPO.expectVisible();
+  //     eventPO.expectState(ImitationEvent.states['wait-approval']);
+  //   });
   // });
+
+  it('Admin user can directly approve tour-plan', () => {
+    siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
+    tourPlanAdminPO.switchToTab(ImitationTourPlan.states.waitApproval.name);
+    tourPlanAdminPO.theThingDataTables[
+      ImitationTourPlan.states.waitApproval.name
+    ].gotoTheThingView(TourPlanScheduledOneEvent);
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.runAction(
+      ImitationTourPlan.actions['approve-available']
+    );
+    emceePO.confirm(
+      `請確定遊程 ${TourPlanScheduledOneEvent.name} 中各行程的負責人已確認該負責行程可成行，將標記遊程 ${TourPlanScheduledOneEvent.name} 為可成行並等待付款？`
+    );
+    emceePO.alert(
+      `遊程 ${TourPlanScheduledOneEvent.name} 已標記為可成行。請通知客戶付款。`
+    );
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.approved);
+  });
+
+  it('Log action approve-available to a new comment', () => {
+    getCurrentUser().then(user => {
+      const commentLog = new Comment({
+        subjectId: TourPlanScheduledOneEvent.id,
+        ownerId: user.id,
+        content: new Html(
+          `📌 ${user.name} 更改狀態 ${ImitationTourPlan.states.waitApproval.label} ➡ ${ImitationTourPlan.states.approved.label}`
+        )
+      });
+      commentsPO.expectLatestComment(commentLog);
+    });
+  });
 
   it('Tour-plan approved when all its event approved', () => {
     const testEvents = ScheduledEvents.filter(ev =>
@@ -236,7 +271,6 @@ describe('Approve scheduled events of tour-plan', () => {
         emceePO.confirm(`確定會以負責人身份出席參加行程${event.name}？`);
         emceePO.alert(`已確認參加，之後若要取消請聯絡主辦者${me.name}`);
         myCalendarPO.expectVisible();
-        myCalendarPO.expectEvent(event);            
       })
       .then(() => {
         // cy.pause();

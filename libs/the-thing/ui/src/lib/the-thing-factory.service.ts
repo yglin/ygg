@@ -1,61 +1,58 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
-  TheThing,
-  TheThingImitation,
-  TheThingCell,
-  TheThingState,
-  stateConfirmMessage,
-  Relationship,
-  TheThingRelation,
-  TheThingAction,
-  TheThingFactory,
-  Permission,
-  RelationRecord
-} from '@ygg/the-thing/core';
+  ActivatedRouteSnapshot,
+  Resolve,
+  Router,
+  RouterStateSnapshot
+} from '@angular/router';
+import { AlertType } from '@ygg/shared/infra/core';
+import { Html } from '@ygg/shared/omni-types/core';
+import { CommentFactoryService } from '@ygg/shared/thread/ui';
+import { EmceeService } from '@ygg/shared/ui/widgets';
 import {
   AuthenticateService,
   AuthenticateUiService,
   AuthorizeService
 } from '@ygg/shared/user/ui';
 import {
-  take,
-  first,
-  timeout,
-  shareReplay,
-  map,
-  filter,
-  catchError,
-  switchMap,
-  tap
-} from 'rxjs/operators';
+  Permission,
+  RelationRecord,
+  Relationship,
+  stateConfirmMessage,
+  TheThing,
+  TheThingAction,
+  TheThingCell,
+  TheThingFactory,
+  TheThingImitation,
+  TheThingRelation,
+  TheThingState
+} from '@ygg/the-thing/core';
 import {
-  TheThingImitationAccessService,
-  TheThingAccessService
+  TheThingAccessService,
+  TheThingImitationAccessService
 } from '@ygg/the-thing/data-access';
-import { TheThingImitationViewInterface } from './the-thing/the-thing-imitation-view/imitation-view-interface.component';
-import { YggDialogService, EmceeService } from '@ygg/shared/ui/widgets';
-import { AlertType } from '@ygg/shared/infra/core';
+import { every, extend, get, isEmpty } from 'lodash';
 import {
-  Observable,
   BehaviorSubject,
-  Subject,
   combineLatest,
+  NEVER,
+  Observable,
   of,
-  Subscription,
-  throwError,
-  ReplaySubject,
-  isObservable,
-  never,
   race,
-  NEVER
+  ReplaySubject,
+  Subject,
+  Subscription,
+  throwError
 } from 'rxjs';
 import {
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  Resolve,
-  Router
-} from '@angular/router';
-import { extend, values, isEmpty, get, keys, every } from 'lodash';
+  catchError,
+  first,
+  map,
+  shareReplay,
+  switchMap,
+  take,
+  timeout
+} from 'rxjs/operators';
 import { RelationFactoryService } from './relation-factory.service';
 
 export interface ITheThingCreateOptions {
@@ -100,7 +97,8 @@ export class TheThingFactoryService extends TheThingFactory
     private imitationAccessServcie: TheThingImitationAccessService,
     private emceeService: EmceeService,
     private router: Router,
-    private relaitonFactory: RelationFactoryService
+    private relaitonFactory: RelationFactoryService,
+    private commentFactory: CommentFactoryService
   ) {
     super();
   }
@@ -331,25 +329,23 @@ export class TheThingFactoryService extends TheThingFactory
   async setState(
     theThing: TheThing,
     imitation: TheThingImitation,
-    state: TheThingState,
-    options: {
-      force?: boolean;
-    } = {}
+    state: TheThingState
   ) {
     try {
-      let confirm: boolean;
-      if (options.force) {
-        confirm = true;
-      } else {
-        const confirmMessage = stateConfirmMessage(theThing, state);
-        confirm = await this.emceeService.confirm(confirmMessage);
-      }
-      if (confirm) {
-        imitation.setState(theThing, state);
-        await this.theThingAccessService.upsert(theThing);
-      }
+      const oldState = imitation.getState(theThing);
+      imitation.setState(theThing, state);
+      await this.theThingAccessService.upsert(theThing);
+      const user = await this.authUiService.requestLogin();
+
+      // log state change as comment
+      await this.commentFactory.addComment(
+        theThing.id,
+        new Html(
+          `📌 ${user.name} 更改狀態 <b>${oldState.label} ➡ ${state.label}</b>`
+        )
+      );
     } catch (error) {
-      this.emceeService.error(`狀態設定失敗，錯誤原因：${error.message}`);
+      return Promise.reject(error);
     }
   }
 

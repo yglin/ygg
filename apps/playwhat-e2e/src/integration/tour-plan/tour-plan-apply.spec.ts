@@ -4,31 +4,26 @@ import {
   TourPlanAdminPageObjectCypress,
   TourPlanPageObjectCypress
 } from '@ygg/playwhat/test';
-import { Month } from '@ygg/shared/omni-types/core';
+import { Html } from '@ygg/shared/omni-types/core';
 import {
   getCurrentUser,
   login,
   theMockDatabase
 } from '@ygg/shared/test/cypress';
+import { Comment } from '@ygg/shared/thread/core';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
-import { ImitationOrder } from '@ygg/shopping/core';
-import { TheThing, TheThingState } from '@ygg/the-thing/core';
-import {
-  MyThingsDataTablePageObjectCypress,
-  MyThingsPageObjectCypress
-} from '@ygg/the-thing/test';
-import { flatten, keys, mapValues, values } from 'lodash';
+import { TheThing } from '@ygg/the-thing/core';
+import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
+import promisify from 'cypress-promise';
+import { flatten, values } from 'lodash';
 import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import {
-  MinimalTourPlan,
   stubTourPlansByStateAndMonth,
   TourPlanInApplication,
   TourPlanPaid,
-  TourPlanWithPlaysAndEquipments,
-  TourPlanWithPlaysNoEquipment
+  TourPlanWithPlaysAndEquipments
 } from './sample-tour-plan';
-import promisify from 'cypress-promise';
-import { symlink } from 'fs';
+import { CommentListPageObjectCypress } from '@ygg/shared/thread/test';
 
 const tourPlansByStateAndMonth: {
   [state: string]: TheThing[];
@@ -59,6 +54,7 @@ const myTourPlansPO = new MyThingsDataTablePageObjectCypress(
   '',
   ImitationTourPlan
 );
+const commentsPO = new CommentListPageObjectCypress();
 // let incomeRecord: IncomeRecord;
 
 describe('Tour-plan scenario of applying to admin assessment', () => {
@@ -73,18 +69,18 @@ describe('Tour-plan scenario of applying to admin assessment', () => {
     });
   });
 
-  beforeEach(() => {
-    // // Reset tour-plan states
-    // getCurrentUser().then(user => {
-    //   theMockDatabase.setAdmins([user.id]);
-    //   cy.wrap(values(tourPlansByState)).each((tourPlan: any) => {
-    //     theMockDatabase.insert(`${TheThing.collection}/${tourPlan.id}`, tourPlan);
-    //   });
-    //   cy.visit('/');
-    // });
-    // // Back to home
-    // siteNavigator.goto();
-  });
+  // beforeEach(() => {
+  //   // // Reset tour-plan states
+  //   // getCurrentUser().then(user => {
+  //   //   theMockDatabase.setAdmins([user.id]);
+  //   //   cy.wrap(values(tourPlansByState)).each((tourPlan: any) => {
+  //   //     theMockDatabase.insert(`${TheThing.collection}/${tourPlan.id}`, tourPlan);
+  //   //   });
+  //   //   cy.visit('/');
+  //   // });
+  //   // // Back to home
+  //   // siteNavigator.goto();
+  // });
 
   after(() => {
     theMockDatabase.clear();
@@ -104,9 +100,23 @@ describe('Tour-plan scenario of applying to admin assessment', () => {
     );
     emceePO.alert(`遊程 ${tourPlan.name} 已送出申請，等待管理者審核。`);
     tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.applied);
-    // Expect the submitted tour-plan show up in administrator's list
+  });
+
+  it('Log action apply to a new comment', () => {
+    getCurrentUser().then(user => {
+      const commentLog = new Comment({
+        subjectId: tourPlan.id,
+        ownerId: user.id,
+        content: new Html(
+          `📌 ${user.name} 更改狀態 ${ImitationTourPlan.states.editing.label} ➡ ${ImitationTourPlan.states.applied.label}`
+        )
+      });
+      commentsPO.expectLatestComment(commentLog);
+    });
+  });
+
+  it('Show applied tour-plan in admin page', () => {
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
-    // tourPlanDataTablePO.expectTheThing(MinimalTourPlan);
     tourPlanAdminPO.theThingDataTables[
       ImitationTourPlan.states.applied.name
     ].expectTheThing(tourPlan);
@@ -127,7 +137,30 @@ describe('Tour-plan scenario of applying to admin assessment', () => {
     tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.editing);
   });
 
+  it('Log action cancel-apply to a new comment', () => {
+    getCurrentUser().then(user => {
+      const commentLog = new Comment({
+        subjectId: tourPlan.id,
+        ownerId: user.id,
+        content: new Html(
+          `📌 ${user.name} 更改狀態 ${ImitationTourPlan.states.applied.label} ➡ ${ImitationTourPlan.states.editing.label}`
+        )
+      });
+      commentsPO.expectLatestComment(commentLog);
+    });
+  });
+
+  it('Cancelled tour-plan should not in admin page', () => {
+    siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);
+    tourPlanAdminPO.theThingDataTables[
+      ImitationTourPlan.states.applied.name
+    ].expectNotTheThing(tourPlan);
+  });
+
   it('Can send application only if owner and in state editing', async () => {
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(tourPlan);
+
     for (const state of values(ImitationTourPlan.states)) {
       await promisify(
         cy.wrap(

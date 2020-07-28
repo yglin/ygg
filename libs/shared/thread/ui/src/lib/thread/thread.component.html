@@ -16,29 +16,5 @@
     </button>
   </div>
   <br />
-  <div class="comment-list">
-    <div class="comments-staggered">
-      <div
-        *ngFor="let comment of comments; let isEven = even; let isLast = last"
-      >
-        <div
-          fxLayout="column"
-          [fxLayoutAlign]="isEven ? 'start end' : 'start start'"
-          fxLayoutGap="10px"
-        >
-          <ygg-user-thumbnail [id]="comment.ownerId"></ygg-user-thumbnail>
-          <div>
-            <h5>{{ comment.createAt | date: 'short' }}</h5>
-          </div>
-          <div style="max-width: 100%;">
-            <ygg-omni-type-view
-              type="html"
-              [value]="comment.content"
-            ></ygg-omni-type-view>
-          </div>
-        </div>
-        <mat-divider *ngIf="!isLast"></mat-divider>
-      </div>
-    </div>
-  </div>
+  <ygg-comment-list [comments]='comments'></ygg-comment-list>
 </div>

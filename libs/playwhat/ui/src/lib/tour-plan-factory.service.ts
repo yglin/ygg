@@ -269,9 +269,14 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
       `將此遊程 ${tourPlan.name} 送出申請？一旦送出便無法再修改資料`
     );
     if (confirm) {
-      ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.applied);
-      await this.theThingFactory.save(tourPlan, { force: true });
-      this.emcee.info(`遊程 ${tourPlan.name} 已送出申請，等待管理者審核。`);
+      await this.theThingFactory.setState(
+        tourPlan,
+        ImitationTourPlan,
+        ImitationTourPlan.states.applied
+      );
+      await this.emcee.info(
+        `遊程 ${tourPlan.name} 已送出申請，等待管理者審核。`
+      );
     }
   }
 
@@ -280,42 +285,56 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
       `取消此遊程 ${tourPlan.name} 的申請並退回修改狀態？`
     );
     if (confirm) {
-      ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.editing);
-      await this.theThingFactory.save(tourPlan, { force: true });
+      await this.theThingFactory.setState(
+        tourPlan,
+        ImitationTourPlan,
+        ImitationTourPlan.states.editing
+      );
       this.emcee.info(`遊程 ${tourPlan.name} 已取消申請並退回修改`);
     }
   }
 
   async approveAvailable(tourPlan: TheThing) {
     const confirm = await this.emcee.confirm(
-      `確定遊程 ${tourPlan.name} 有充分的資源和時間可成團，標記為可成行並等待付款？`
+      `<h3>請確定遊程 ${tourPlan.name} 中各行程的負責人已確認該負責行程可成行，</h3><h3>將標記遊程 ${tourPlan.name} 為可成行並等待付款？</h3>`
     );
     if (confirm) {
-      ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.approved);
-      await this.theThingFactory.save(tourPlan, { force: true });
-      this.emcee.info(`遊程 ${tourPlan.name} 已標記為可成行。`);
+      await this.theThingFactory.setState(
+        tourPlan,
+        ImitationTourPlan,
+        ImitationTourPlan.states.approved
+      );
+      await this.emcee.info(
+        `<h3>遊程 ${tourPlan.name} 已標記為可成行。</h3><h3>請通知客戶付款。</h3>`
+      );
     }
   }
 
   async confirmPaid(tourPlan: TheThing) {
     const confirm = await this.emcee.confirm(
-      `確定此遊程 ${tourPlan.name} 的所有款項已付清，標記為已付款？`
+      `<h3>確定此遊程 ${tourPlan.name} 的所有款項已付清，標記為已付款？</h3>`
     );
     if (confirm) {
-      ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.paid);
-      await this.theThingFactory.save(tourPlan, { force: true });
-      this.emcee.info(`遊程 ${tourPlan.name} 標記為已付款。`);
+      await this.theThingFactory.setState(
+        tourPlan,
+        ImitationTourPlan,
+        ImitationTourPlan.states.paid
+      );
+      await this.emcee.info(`<h3>遊程 ${tourPlan.name} 標記為已付款。</h3>`);
     }
   }
 
   async confirmCompleted(tourPlan: TheThing) {
     const confirm = await this.emcee.confirm(
-      `確定此遊程 ${tourPlan.name} 的所有活動流程已結束，標記為已完成？`
+      `<h3>確定此遊程 ${tourPlan.name} 的所有活動行程已結束，標記為已完成？</h3>`
     );
     if (confirm) {
-      ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.completed);
-      await this.theThingFactory.save(tourPlan, { force: true });
-      this.emcee.info(`遊程 ${tourPlan.name} 標記為已完成。`);
+      await this.theThingFactory.setState(
+        tourPlan,
+        ImitationTourPlan,
+        ImitationTourPlan.states.completed
+      );
+      await this.emcee.info(`<h3>遊程 ${tourPlan.name} 標記為已完成。</h3>`);
     }
   }
 
@@ -391,11 +410,10 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
             );
           }
         }
-        this.theThingFactory.setState(
+        await this.theThingFactory.setState(
           tourPlan,
           ImitationTourPlan,
-          ImitationTourPlan.states.waitApproval,
-          { force: true }
+          ImitationTourPlan.states.waitApproval
         );
         this.emcee.info(`<h3>已送出行程確認，等待各活動負責人確認中</h3>`);
       } catch (error) {

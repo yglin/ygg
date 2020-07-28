@@ -145,6 +145,7 @@
             "sourceTag": "type:functions",
             "onlyDependOnLibsWithTags": [
               "type:functions",
+              "type:core",
               "scope:shared"
             ]
           }

@@ -16,6 +16,7 @@ export class HtmlControlPageObjectCypress extends HtmlControlPageObject {
     // So this implementation below pass the test but is eventualy wrong
     cy.get(this.getSelector())
       .find('[contenteditable=true]')
+      .clear()
       .type(html.content);
   }
 }

@@ -1,0 +1,20 @@
+<div class="comment-list">
+  <div class="comments-staggered">
+    <div
+      *ngFor="
+        let comment of comments;
+        let isEven = even;
+        let isFirst = first;
+        let isLast = last
+      "
+    >
+      <div [ngClass]="{ latest: isFirst }">
+        <ygg-comment
+          [comment]="comment"
+          [horizontalAlign]="isEven ? 'left' : 'right'"
+        ></ygg-comment>
+      </div>
+      <mat-divider *ngIf="!isLast"></mat-divider>
+    </div>
+  </div>
+</div>

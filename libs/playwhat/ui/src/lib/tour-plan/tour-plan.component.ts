@@ -69,15 +69,9 @@ export class TourPlanComponent implements OnInit, OnDestroy {
             this.eventIds = this.tourPlan
               .getRelations(RelationshipScheduleEvent.name)
               .map(r => r.objectId);
-            this.showThread = !(
-              ImitationTourPlan.isState(
-                this.tourPlan,
-                ImitationTourPlan.states.new
-              ) ||
-              ImitationTourPlan.isState(
-                this.tourPlan,
-                ImitationTourPlan.states.editing
-              )
+            this.showThread = !ImitationTourPlan.isState(
+              this.tourPlan,
+              ImitationTourPlan.states.new
             );
           }),
           switchMap(tourPlan => this.authorizeService.canModify$(tourPlan)),

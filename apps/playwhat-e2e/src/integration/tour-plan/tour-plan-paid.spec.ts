@@ -4,29 +4,22 @@ import {
   TourPlanAdminPageObjectCypress,
   TourPlanPageObjectCypress
 } from '@ygg/playwhat/test';
-import { Month } from '@ygg/shared/omni-types/core';
-import {
-  getCurrentUser,
-  login,
-  theMockDatabase
-} from '@ygg/shared/test/cypress';
+import { login, theMockDatabase, getCurrentUser } from '@ygg/shared/test/cypress';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
-import { ImitationOrder } from '@ygg/shopping/core';
-import { TheThing, TheThingState } from '@ygg/the-thing/core';
-import {
-  MyThingsDataTablePageObjectCypress,
-  MyThingsPageObjectCypress
-} from '@ygg/the-thing/test';
-import { flatten, keys, mapValues, values } from 'lodash';
+import { TheThing } from '@ygg/the-thing/core';
+import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
+import promisify from 'cypress-promise';
+import { flatten, values } from 'lodash';
 import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import {
-  MinimalTourPlan,
   stubTourPlansByStateAndMonth,
   TourPlanInApplication,
   TourPlanPaid,
   TourPlanWithPlaysAndEquipments
 } from './sample-tour-plan';
-import promisify from 'cypress-promise';
+import { Comment } from "@ygg/shared/thread/core";
+import { CommentListPageObjectCypress } from '@ygg/shared/thread/test';
+import { Html } from '@ygg/shared/omni-types/core';
 
 const tourPlansByStateAndMonth: {
   [state: string]: TheThing[];
@@ -57,6 +50,7 @@ const myTourPlansPO = new MyThingsDataTablePageObjectCypress(
   '',
   ImitationTourPlan
 );
+const commentsPO = new CommentListPageObjectCypress();
 // let incomeRecord: IncomeRecord;
 
 describe('Tour-plan scenario of pushing into state paid', () => {
@@ -125,6 +119,19 @@ describe('Tour-plan scenario of pushing into state paid', () => {
     ].gotoTheThingView(tourPlan);
     tourPlanPO.expectVisible();
     tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.paid);
+  });
+
+  it('Log action confirm-paid to a new comment', () => {
+    getCurrentUser().then(user => {
+      const commentLog = new Comment({
+        subjectId: tourPlan.id,
+        ownerId: user.id,
+        content: new Html(
+          `📌 ${user.name} 更改狀態 ${ImitationTourPlan.states.approved.label} ➡ ${ImitationTourPlan.states.paid.label}`
+        )
+      });
+      commentsPO.expectLatestComment(commentLog);
+    });
   });
 
   it('Can mark paid only if admin and in state approved', async () => {

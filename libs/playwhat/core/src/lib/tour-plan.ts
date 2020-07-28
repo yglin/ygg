@@ -158,7 +158,7 @@ ImitationTourPlan.dataTableConfig = {
   )
 };
 
-ImitationTourPlan.admin.states = ['applied', 'approved', 'paid', 'completed'];
+ImitationTourPlan.admin.states = ['applied', 'waitApproval', 'approved', 'paid', 'completed'];
 
 // export function getTotalCharge(tourPlan: TheThing): number {
 //   let totalCharge = 0;
