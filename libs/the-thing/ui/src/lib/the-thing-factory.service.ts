@@ -334,7 +334,7 @@ export class TheThingFactoryService extends TheThingFactory
     try {
       const oldState = imitation.getState(theThing);
       imitation.setState(theThing, state);
-      await this.theThingAccessService.upsert(theThing);
+      await this.theThingAccessService.update(theThing, `states.${imitation.stateName}`, state.value);
       const user = await this.authUiService.requestLogin();
 
       // log state change as comment

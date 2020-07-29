@@ -205,6 +205,12 @@ export class DataAccessService {
   //   return typeof deserializer === 'function' ? deserializer(entity) : entity;
   // }
 
+  async update(collection: string, id: string, fieldPath: string, data: any) {
+    const updatePackage = {};
+    updatePackage[fieldPath] = data;
+    return this.firestore.doc(`${collection}/${id}`).update(updatePackage);
+  }
+
   async delete(collection: string, itemId: string) {
     return this.getCollection(collection)
       .doc(itemId)

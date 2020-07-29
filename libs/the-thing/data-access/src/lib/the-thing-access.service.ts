@@ -114,6 +114,10 @@ export class TheThingAccessService implements TheThingAccessor {
     return this.get(theThing.id, theThing.collection);
   }
 
+  async update(theThing: TheThing, fieldPath: string, data: any) {
+    return this.dataAccessService.update(theThing.collection, theThing.id, fieldPath, data);
+  }
+
   async delete(
     theThings: TheThing | TheThing[]
   ): Promise<TheThing | TheThing[]> {

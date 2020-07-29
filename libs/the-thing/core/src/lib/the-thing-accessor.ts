@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 export abstract class TheThingAccessor {
   abstract async get(id: string, collection?: string): Promise<TheThing>;
   abstract async save(theThing: TheThing, collection?: string);
+  abstract async update(theThing: TheThing, fieldPath: string, data:any);
   abstract listByIds$(
     ids: string[],
     collection?: string
