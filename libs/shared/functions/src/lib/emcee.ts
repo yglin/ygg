@@ -1,4 +1,5 @@
 import { Emcee, AlertType } from '@ygg/shared/infra/core';
+import { Observable } from 'rxjs';
 
 export class EmceeFunctions extends Emcee {
   async alert(message: string, type: AlertType) {
@@ -10,11 +11,16 @@ export class EmceeFunctions extends Emcee {
     return true;
   }
 
-  showProgress(message: string, percentage: number): void {
-    console.log(`${message} ...${percentage}%`);
+  showProgress(options?: {
+    message: string;
+    percentage$: Observable<number>;
+  }): void {
+    // Basically do nothing in firebase functions
+    console.log(`Progress ${options && options.message} ...`);
   }
 
-  hideProgress(delay: number): void {
-    // Do nothing...
+  hideProgress(): void {
+    // Basically do nothing in firebase functions
+    console.log(`Progress done`);
   }
 }

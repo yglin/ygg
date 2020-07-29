@@ -1,9 +1,5 @@
 import * as functions from 'firebase-functions';
-import {
-  NotificationCollection,
-  deserializer,
-  Notification
-} from '@ygg/shared/user/core';
+import { Notification } from '@ygg/shared/user/core';
 const mailgun = require('mailgun-js')({
   apiKey: 'key-ec2a8df6896b9c64bcd02fa7c64ba663',
   domain: 'mail.ygg.tw'
@@ -12,9 +8,9 @@ const MailComposer = require('nodemailer/lib/mail-composer');
 
 // const NotificationCollection = 'notifications';
 export const onNotificationCreate = functions.firestore
-  .document(`${NotificationCollection}/{id}`)
+  .document(`${Notification.collection}/{id}`)
   .onCreate((snap, context) => {
-    const notification: Notification = deserializer(snap.data());
+    const notification: Notification = Notification.deserializer(snap.data());
     // const mailData = {
     //   from: 'yglin@mail.ygg.tw',
     //   to: notification.email,

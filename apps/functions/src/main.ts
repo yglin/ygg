@@ -1,4 +1,2 @@
-import { onEventApprovalOfHost } from '@ygg/playwhat/functions';
-import { onNotificationCreate } from '@ygg/shared/user/functions';
-
-export { onNotificationCreate, onEventApprovalOfHost };
+export * from '@ygg/playwhat/functions';
+export * from '@ygg/shared/user/functions';

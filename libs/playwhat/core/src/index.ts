@@ -5,3 +5,4 @@ export * from './lib/play';
 export * from './lib/equipment';
 export * from './lib/factories';
 export * from './lib/imitations';
+export * from './lib/the-thing-imitations';

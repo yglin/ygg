@@ -421,6 +421,10 @@ export class TheThing implements Entity, ImageThumbnailItem {
     );
   }
 
+  getAllRelations(): TheThingRelation[] {
+    return flatten(values(this.relations));
+  }
+
   /**
    * Get the object ids of specified relation name
    *
@@ -449,6 +453,17 @@ export class TheThing implements Entity, ImageThumbnailItem {
       }
     }
     return null;
+  }
+
+  forEachRelation(handler: (relation: TheThingRelation) => void) {
+    for (const relationName in this.relations) {
+      if (Object.prototype.hasOwnProperty.call(this.relations, relationName)) {
+        const relations = this.relations[relationName];
+        for (const relation of relations) {
+          handler(relation);
+        }
+      }
+    }
   }
 
   clone(): TheThing {

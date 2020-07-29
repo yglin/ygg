@@ -7,7 +7,8 @@ import {
   isArray,
   keyBy,
   defaults,
-  reduce
+  reduce,
+  isEqual
 } from 'lodash';
 import { Entity, SerializableJSON, toJSONDeep } from '@ygg/shared/infra/core';
 import { config } from './config';
@@ -23,6 +24,7 @@ export class RelationRecord implements Entity, SerializableJSON {
   objectId: string;
   objectRole: string;
   createAt: Date;
+  data?: any;
 
   static findLatest(relations: RelationRecord[]): RelationRecord {
     return reduce(
@@ -52,6 +54,7 @@ export class RelationRecord implements Entity, SerializableJSON {
     objectCollection: string;
     objectId: string;
     objectRole: string;
+    data?: any;
   }) {
     extend(this, options);
     this.id = RelationRecord.constructId(
@@ -60,6 +63,10 @@ export class RelationRecord implements Entity, SerializableJSON {
       this.objectId
     );
     this.createAt = new Date();
+  }
+
+  isEqual(that: RelationRecord): boolean {
+    return isEqual(this.toJSON(), that.toJSON());
   }
 
   fromJSON(data: any): this {
@@ -132,6 +139,17 @@ export class TheThingRelation implements SerializableJSON {
 
   setCellValue(cellName: string, value: any): any {
     this.cells[cellName].value = value;
+  }
+
+  toRelationRecord(): RelationRecord {
+    return new RelationRecord({
+      subjectCollection: this.subjectCollection,
+      subjectId: this.subjectId,
+      objectCollection: this.objectCollection,
+      objectId: this.objectId,
+      objectRole: this.name,
+      data: toJSONDeep({ cells: this.cells })
+    });
   }
 
   fromJSON(data: any): this {
