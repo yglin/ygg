@@ -253,6 +253,20 @@ export class BoxFactory {
     );
   }
 
+  listMembers$(boxId: string): Observable<User[]> {
+    return this.relationFactory
+      .findBySubjectAndRole$(boxId, RelationshipBoxMember.role)
+      .pipe(
+        switchMap(relations => {
+          if (isEmpty(relations)) {
+            return of([]);
+          } else {
+            return this.userAccessor.listByIds$(relations.map(r => r.objectId));
+          }
+        })
+      );
+  }
+
   async isMember(boxId: string, userId?: string): Promise<boolean> {
     if (!userId) {
       userId =

@@ -8,6 +8,7 @@ import { get, isEmpty, range } from 'lodash';
 import { Observable, Subscription, merge } from 'rxjs';
 import { BoxFactoryService } from '../../../box-factory.service';
 import { tap } from 'rxjs/operators';
+import { User } from '@ygg/shared/user/core';
 
 function forgeItems(): TheThing[] {
   return range(10).map(() => {
@@ -29,6 +30,7 @@ export class BoxViewComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   ImitationItem = ImitationItem;
   isBoxEmpty = true;
+  members: User[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -38,24 +40,31 @@ export class BoxViewComponent implements OnInit, OnDestroy {
     private dialog: YggDialogService
   ) {
     this.box = get(this.route.snapshot.data, 'box', null);
-    // console.log(this.box);
-    const items$: Observable<any> = this.boxFactory
-      .listItemsAvailableInBox$(this.box.id)
-      .pipe(tap(items => (this.items = isEmpty(items) ? [] : items)));
-    const itemsInEditing$: Observable<any> = this.boxFactory
-      .listMyItemsEditingInBox$(this.box.id)
-      .pipe(tap(items => (this.itemsInEditing = isEmpty(items) ? [] : items)));
-
-    this.subscriptions.push(
-      merge(items$, itemsInEditing$)
+    if (this.box) {
+      // console.log(this.box);
+      const items$: Observable<any> = this.boxFactory
+        .listItemsAvailableInBox$(this.box.id)
+        .pipe(tap(items => (this.items = isEmpty(items) ? [] : items)));
+      const itemsInEditing$: Observable<any> = this.boxFactory
+        .listMyItemsEditingInBox$(this.box.id)
         .pipe(
-          tap(() => {
-            this.isBoxEmpty =
-              isEmpty(this.items) && isEmpty(this.itemsInEditing);
-          })
-        )
-        .subscribe()
-    );
+          tap(items => (this.itemsInEditing = isEmpty(items) ? [] : items))
+        );
+      const members$: Observable<User[]> = this.boxFactory
+        .listMembers$(this.box.id)
+        .pipe(tap(members => (this.members = members)));
+
+      this.subscriptions.push(
+        merge(items$, itemsInEditing$, members$)
+          .pipe(
+            tap(() => {
+              this.isBoxEmpty =
+                isEmpty(this.items) && isEmpty(this.itemsInEditing);
+            })
+          )
+          .subscribe()
+      );
+    }
   }
 
   ngOnInit(): void {}
