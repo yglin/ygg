@@ -25,7 +25,7 @@ import {
 import { TheThing } from '@ygg/the-thing/core';
 import {
   MyThingsDataTablePageObjectCypress,
-  MyThingsPageObjectCypress,
+  // MyThingsPageObjectCypress,
   TheThingPageObjectCypress
 } from '@ygg/the-thing/test';
 import { chunk, isEmpty, keyBy, random, sampleSize, sum } from 'lodash';

@@ -1,31 +1,30 @@
-import { isEmpty, noop, find, remove } from 'lodash';
 import {
   Component,
-  OnInit,
-  OnDestroy,
-  Input,
-  Output,
   EventEmitter,
-  forwardRef
+  forwardRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
 } from '@angular/core';
 import {
-  FormControl,
   ControlValueAccessor,
+  FormControl,
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
+import { YggDialogContentComponent } from '@ygg/shared/ui/widgets';
 import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { isEmpty, noop } from 'lodash';
 // import { MatDialogRef } from '@angular/material/dialog';
 import {
-  of,
-  combineLatest,
-  Subscription,
   BehaviorSubject,
+  combineLatest,
   Observable,
-  Subject
+  of,
+  Subject,
+  Subscription
 } from 'rxjs';
-import { debounceTime, switchMap, startWith } from 'rxjs/operators';
-import { YggDialogContentComponent } from '@ygg/shared/ui/widgets';
+import { TheThingAccessService } from '../../the-thing-access.service';
 import { IInputTheThingFinder } from './the-thing-finder.component.po';
 
 @Component({

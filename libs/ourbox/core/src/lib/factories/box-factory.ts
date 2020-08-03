@@ -188,7 +188,7 @@ export class BoxFactory {
       return;
     }
     const boxId = get(notification, 'data.boxId', null);
-    const box: TheThing = await this.theThingAccessor.get(
+    const box: TheThing = await this.theThingAccessor.load(
       boxId,
       ImitationBox.collection
     );

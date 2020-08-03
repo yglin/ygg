@@ -4,7 +4,11 @@ import {
   TourPlanAdminPageObjectCypress,
   TourPlanPageObjectCypress
 } from '@ygg/playwhat/test';
-import { login, theMockDatabase, getCurrentUser } from '@ygg/shared/test/cypress';
+import {
+  login,
+  theMockDatabase,
+  getCurrentUser
+} from '@ygg/shared/test/cypress';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 import { TheThing } from '@ygg/the-thing/core';
 import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
@@ -17,7 +21,7 @@ import {
   TourPlanPaid,
   TourPlanWithPlaysAndEquipments
 } from './sample-tour-plan';
-import { Comment } from "@ygg/shared/thread/core";
+import { Comment } from '@ygg/shared/thread/core';
 import { CommentListPageObjectCypress } from '@ygg/shared/thread/test';
 import { Html } from '@ygg/shared/omni-types/core';
 
@@ -38,7 +42,7 @@ const SampleTourPlans = [TourPlanInApplication, TourPlanPaid].concat(
 // });
 
 const tourPlan = TourPlanWithPlaysAndEquipments.clone();
-tourPlan.name = `測試遊程(付款流程)`;
+tourPlan.name = `測試遊程(付款流程)_${Date.now()}`;
 ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.approved);
 const SampleThings = SamplePlays.concat(SampleEquipments).concat([tourPlan]);
 // .concat(SampleTourPlans)

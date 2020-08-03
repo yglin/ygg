@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ImitationPlay } from '@ygg/playwhat/core';
 import { Observable } from 'rxjs';
 import { TheThing, TheThingImitation } from '@ygg/the-thing/core';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { TheThingAccessService } from '@ygg/the-thing/ui';
 
 @Component({
   selector: 'ygg-play-admin',

@@ -5,7 +5,7 @@ import {
   TheThingCell,
   TheThing
 } from '@ygg/the-thing/core';
-import { ImitationPlay, ImitationPlayCellDefines } from '../play';
+import { ImitationPlay, ImitationPlayCellDefines } from './play';
 import { OmniTypes } from '@ygg/shared/omni-types/core';
 import { values, keyBy, extend, pick, mapValues } from 'lodash';
 import { User } from '@ygg/shared/user/core';
@@ -13,7 +13,7 @@ import { User } from '@ygg/shared/user/core';
 export const ImitationEventCellDefines = extend(
   mapValues(
     pick(ImitationPlayCellDefines, [
-      'location',
+      'location'
       // 'album',
       // 'timeLength',
       // 'introduction'
@@ -51,7 +51,7 @@ export const ImitationEvent: TheThingImitation = new TheThingImitation({
   cellsDef: values(ImitationEventCellDefines),
   cellsOrder: [
     ImitationEventCellDefines.timeRange.name,
-    ImitationEventCellDefines.numParticipants.name,
+    ImitationEventCellDefines.numParticipants.name
     // ImitationEventCellDefines.location.name
   ],
   displays: {

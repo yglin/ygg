@@ -20,7 +20,7 @@ import {
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import { Observable, Subscription, of } from 'rxjs';
 import { switchMap, shareReplay, take } from 'rxjs/operators';
-import { ImitationPlay } from '../play';
+import { ImitationPlay } from '../imitations';
 import { Router } from '@ygg/shared/infra/core';
 import { TimeRange } from '@ygg/shared/omni-types/core';
 
@@ -59,12 +59,12 @@ export class EventFactory {
   }
 
   async addToGoogleCalendar(theThing: TheThing) {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   async getPlay(event: TheThing) {
     try {
-      return this.theThingAccessor.get(
+      return this.theThingAccessor.load(
         event.getRelations(RelationshipPlay.name)[0].objectId,
         ImitationPlay.collection
       );
@@ -92,7 +92,7 @@ export class EventFactory {
     // console.log('Hi~ MAMA');
 
     // const serviceId = event.getRelationObjectIds(RelationshipPlay.name)[0];
-    // const service: TheThing = await this.theThingAccessor.get(serviceId);
+    // const service: TheThing = await this.theThingAccessor.load(serviceId);
     const host = await this.userAccessor.get(play.ownerId);
     const mailSubject = `${location.hostname}：您有一項${event.name}的行程活動邀請`;
     const mailContent = `<pre>您有一項行程活動邀請，以行程<b>${event.name}</b>的負責人身分參加</pre>`;
@@ -184,5 +184,4 @@ export class EventFactory {
       return Promise.reject(error);
     }
   }
-
 }

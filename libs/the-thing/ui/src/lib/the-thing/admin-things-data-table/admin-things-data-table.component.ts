@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { TheThingImitation, TheThing } from '@ygg/the-thing/core';
 import { Observable, Subscription } from 'rxjs';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { TheThingAccessService } from '../../the-thing-access.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -46,7 +46,9 @@ export class AdminThingsDataTableComponent implements OnInit {
   async deleteSelected() {
     if (
       confirm(
-        `確定要永久刪除以下物件？\n${this.selection.map(s => s.name).join('\n')}`
+        `確定要永久刪除以下物件？\n${this.selection
+          .map(s => s.name)
+          .join('\n')}`
       )
     ) {
       try {
@@ -56,4 +58,5 @@ export class AdminThingsDataTableComponent implements OnInit {
         alert(`刪除失敗，錯誤原因： ${error.message}`);
       }
     }
-  }}
+  }
+}

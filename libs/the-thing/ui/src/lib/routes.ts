@@ -1,20 +1,12 @@
 import { Route } from '@angular/router';
-import {
-  TheThingFinderComponent,
-  TheThingEditorComponent,
-  MyThingsComponent,
-  TheThingViewComponent,
-  TheThingResolver,
-  TheThingEditorPageObject
-} from './the-thing';
-import { LoggedInGuard, AdminGuard } from '@ygg/shared/user/ui';
-import { ImitationTemplateResolver } from './imitation-template-resolver.service';
-import { ImitationManagerComponent } from './imitation';
-import { MyThingsDataTableComponent } from './the-thing/my-things-data-table/my-things-data-table.component';
-import { AdminThingsDataTableComponent } from './the-thing/admin-things-data-table/admin-things-data-table.component';
-import { ImitationResolver } from './imitation/imitation-resolver.service';
-import { TheThingEditPageComponent } from './the-thing/the-thing-edit-page/the-thing-edit-page.component';
-import { TheThingCellsEditorComponent } from './cell/cells-editor/cells-editor.component';
+// import { LoggedInGuard, AdminGuard } from '@ygg/shared/user/ui';
+// import { ImitationTemplateResolver } from './imitation-template-resolver.service';
+// import { ImitationManagerComponent } from './imitation';
+// import { MyThingsDataTableComponent } from './the-thing/my-things-data-table/my-things-data-table.component';
+// import { AdminThingsDataTableComponent } from './the-thing/admin-things-data-table/admin-things-data-table.component';
+// import { ImitationResolver } from './imitation/imitation-resolver.service';
+// import { TheThingEditPageComponent } from './the-thing/the-thing-edit-page/the-thing-edit-page.component';
+// import { TheThingCellsEditorComponent } from './cell/cells-editor/cells-editor.component';
 import { TheThingComponent } from './the-thing/the-thing/the-thing.component';
 import { TheThingFactoryService } from './the-thing-factory.service';
 
@@ -23,21 +15,8 @@ export const routes: Route[] = [
     path: 'the-things',
     children: [
       {
-        path: 'my',
-        component: MyThingsComponent,
-        canActivate: [LoggedInGuard]
-      },
-      {
         path: ':imitation',
         children: [
-          {
-            path: 'my',
-            component: MyThingsDataTableComponent,
-            resolve: {
-              imitation: ImitationResolver
-            },
-            canActivate: [LoggedInGuard]
-          },
           {
             path: ':id',
             component: TheThingComponent,
@@ -46,7 +25,7 @@ export const routes: Route[] = [
             }
           }
         ]
-      },
+      }
       // {
       //   path: 'my',
       //   children: [
@@ -65,19 +44,19 @@ export const routes: Route[] = [
       //   ],
       //   canActivateChild: [LoggedInGuard]
       // },
-      {
-        path: 'admin',
-        children: [
-          {
-            path: ':imitation',
-            component: AdminThingsDataTableComponent,
-            resolve: {
-              imitation: ImitationResolver
-            }
-          }
-        ],
-        canActivateChild: [AdminGuard]
-      }
+      // {
+      //   path: 'admin',
+      //   children: [
+      //     {
+      //       path: ':imitation',
+      //       component: AdminThingsDataTableComponent,
+      //       resolve: {
+      //         imitation: ImitationResolver
+      //       }
+      //     }
+      //   ],
+      //   canActivateChild: [AdminGuard]
+      // }
     ]
   }
   // {

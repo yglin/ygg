@@ -9,16 +9,11 @@ import { AlertType } from '@ygg/shared/infra/core';
 import { Html } from '@ygg/shared/omni-types/core';
 import { CommentFactoryService } from '@ygg/shared/thread/ui';
 import { EmceeService } from '@ygg/shared/ui/widgets';
-import {
-  AuthenticateService,
-  AuthenticateUiService,
-  AuthorizeService
-} from '@ygg/shared/user/ui';
+import { AuthenticateUiService, AuthorizeService } from '@ygg/shared/user/ui';
 import {
   Permission,
   RelationRecord,
   Relationship,
-  stateConfirmMessage,
   TheThing,
   TheThingAction,
   TheThingCell,
@@ -27,10 +22,7 @@ import {
   TheThingRelation,
   TheThingState
 } from '@ygg/the-thing/core';
-import {
-  TheThingAccessService,
-  TheThingImitationAccessService
-} from '@ygg/the-thing/data-access';
+import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { every, extend, get, isEmpty } from 'lodash';
 import {
   BehaviorSubject,
@@ -54,6 +46,7 @@ import {
   timeout
 } from 'rxjs/operators';
 import { RelationFactoryService } from './relation-factory.service';
+import { TheThingAccessService } from './the-thing-access.service';
 
 export interface ITheThingCreateOptions {
   imitation?: string;
@@ -90,7 +83,6 @@ export class TheThingFactoryService extends TheThingFactory
   subscriptions: Subscription[] = [];
 
   constructor(
-    private authService: AuthenticateService,
     private authUiService: AuthenticateUiService,
     private authorizeService: AuthorizeService,
     private theThingAccessService: TheThingAccessService,
@@ -271,7 +263,7 @@ export class TheThingFactoryService extends TheThingFactory
       };
     }
     if (!this.theThingSources$[id].remote$) {
-      this.theThingSources$[id].remote$ = this.theThingAccessService.get$(
+      this.theThingSources$[id].remote$ = this.theThingAccessService.load$(
         id,
         collection
       );
@@ -334,7 +326,11 @@ export class TheThingFactoryService extends TheThingFactory
     try {
       const oldState = imitation.getState(theThing);
       imitation.setState(theThing, state);
-      await this.theThingAccessService.update(theThing, `states.${imitation.stateName}`, state.value);
+      await this.theThingAccessService.update(
+        theThing,
+        `states.${imitation.stateName}`,
+        state.value
+      );
       const user = await this.authUiService.requestLogin();
 
       // log state change as comment

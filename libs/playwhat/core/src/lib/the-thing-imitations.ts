@@ -1,11 +1,13 @@
-import { ImitationPlay } from './play';
-import { ImitationEquipment } from './equipment';
-import { ImitationEvent } from './imitations';
-import { ImitationTourPlan } from './tour-plan';
+import {
+  ImitationEvent,
+  ImitationPlay,
+  ImitationEquipment,
+  ImitationTourPlan
+} from './imitations';
 
 export const TheThingImitations = [
   ImitationPlay,
   ImitationEquipment,
   ImitationEvent,
   ImitationTourPlan
-]
+];

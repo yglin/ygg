@@ -1,18 +1,18 @@
-import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import {
   Component,
+  EventEmitter,
+  forwardRef,
   Input,
   OnInit,
-  forwardRef,
-  Output,
-  EventEmitter
+  Output
 } from '@angular/core';
-import { Observable, Subject, Subscription, merge, BehaviorSubject } from 'rxjs';
-import { TheThing, TheThingRelation } from '@ygg/the-thing/core';
-import { isArray, noop, isEmpty, find } from 'lodash';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { tap, switchMap } from 'rxjs/operators';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
+import { TheThing, TheThingRelation } from '@ygg/the-thing/core';
+import { find, isArray, isEmpty, noop } from 'lodash';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { TheThingAccessService } from '../../the-thing-access.service';
 import { TheThingFinderComponent } from '../../the-thing/the-thing-finder/the-thing-finder.component';
 
 @Component({
@@ -50,7 +50,7 @@ export class RelationsEditorComponent implements OnInit, ControlValueAccessor {
         this.theThingAccessService.listByIds$(
           relations.map(relation => relation.objectId)
         )
-      ),
+      )
       // tap(objects => console.dir(objects))
     );
   }

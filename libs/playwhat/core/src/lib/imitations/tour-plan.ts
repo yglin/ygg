@@ -1,13 +1,13 @@
-import {
-  TheThingImitation,
-  TheThing,
-  Relationship,
-  TheThingCellDefine
-} from '@ygg/the-thing/core';
 import { DateRange } from '@ygg/shared/omni-types/core';
 import { ImitationOrder } from '@ygg/shopping/core';
-import { keyBy, values, mapValues } from 'lodash';
-import { ImitationEvent } from './imitations';
+import {
+  Relationship,
+  TheThing,
+  TheThingCellDefine,
+  TheThingImitation
+} from '@ygg/the-thing/core';
+import { keyBy, mapValues, values } from 'lodash';
+import { ImitationEvent } from './event';
 
 export const CellNames = {
   dateRange: '預計出遊日期',
@@ -158,7 +158,13 @@ ImitationTourPlan.dataTableConfig = {
   )
 };
 
-ImitationTourPlan.admin.states = ['applied', 'waitApproval', 'approved', 'paid', 'completed'];
+ImitationTourPlan.admin.states = [
+  'applied',
+  'waitApproval',
+  'approved',
+  'paid',
+  'completed'
+];
 
 // export function getTotalCharge(tourPlan: TheThing): number {
 //   let totalCharge = 0;
@@ -230,14 +236,14 @@ ImitationTourPlan.actions = {
 };
 
 ImitationTourPlan.stateChanges = {
-  'initial': {
+  initial: {
     next: ImitationTourPlan.states.new
   },
-  'onSave': {
+  onSave: {
     previous: ImitationTourPlan.states.new,
     next: ImitationTourPlan.states.editing
   }
-}
+};
 
 ImitationTourPlan.pipes[`cell.${CellNames.dateRange}`] = (
   theThing: TheThing

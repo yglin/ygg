@@ -6,8 +6,9 @@ import {
 } from '@angular/fire/firestore';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { LogService } from '@ygg/shared/infra/log';
-import { Observable, race, NEVER } from 'rxjs';
-import { map, filter, timeout, take } from 'rxjs/operators';
+import { Observable, race, NEVER, of, combineLatest } from 'rxjs';
+import { map, filter, timeout, take, shareReplay } from 'rxjs/operators';
+import { isEmpty } from 'lodash';
 
 type FireQueryRef =
   | firebase.firestore.CollectionReference
@@ -95,7 +96,8 @@ export class FireStoreAccessService extends DataAccessor {
       .snapshotChanges()
       .pipe(
         filter(action => action.payload.exists),
-        map(action => action.payload.data())
+        map(action => action.payload.data()),
+        shareReplay(1)
       );
   }
 
@@ -119,6 +121,21 @@ export class FireStoreAccessService extends DataAccessor {
           error => reject(error)
         );
     });
+  }
+
+  list$(collection: string): Observable<any[]> {
+    return this.getCollection(collection).valueChanges();
+  }
+
+  listByIds$(collection: string, ids: string[]): Observable<any[]> {
+    if (isEmpty(ids)) {
+      return of([]);
+    } else {
+      const arrayGet$: Observable<any>[] = ids.map(id =>
+        this.load$(collection, id)
+      );
+      return combineLatest(arrayGet$);
+    }
   }
 
   async delete(collection: string, id: string) {

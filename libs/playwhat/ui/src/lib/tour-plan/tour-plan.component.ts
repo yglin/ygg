@@ -1,28 +1,19 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  TheThing,
-  TheThingRelation,
-  TheThingAction
-} from '@ygg/the-thing/core';
-import {
-  ImitationTourPlan,
   ImitationEvent,
+  ImitationTourPlan,
   RelationshipScheduleEvent
 } from '@ygg/playwhat/core';
-import { TourPlanFactoryService } from '../tour-plan-factory.service';
-import { Subscription, of, merge, Observable } from 'rxjs';
-import { ShoppingCartService } from '@ygg/shopping/ui';
-import {
-  RelationPurchase,
-  Purchase,
-  evalTotalChargeFromRelations
-} from '@ygg/shopping/core';
-import { switchMap, tap, filter } from 'rxjs/operators';
 import { AuthorizeService } from '@ygg/shared/user/ui';
-import { isEmpty, find, extend } from 'lodash';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { EmceeService } from '@ygg/shared/ui/widgets';
+import {
+  evalTotalChargeFromRelations,
+  RelationPurchase
+} from '@ygg/shopping/core';
+import { TheThing, TheThingRelation } from '@ygg/the-thing/core';
 import { TheThingFactoryService } from '@ygg/the-thing/ui';
+import { Subscription } from 'rxjs';
+import { filter, switchMap, tap } from 'rxjs/operators';
+import { TourPlanFactoryService } from '../tour-plan-factory.service';
 
 @Component({
   selector: 'ygg-tour-plan',

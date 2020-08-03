@@ -1,13 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
-import {
-  TheThingImitation,
-  TheThing,
-  TheThingFilter
-} from '@ygg/the-thing/core';
-import { Observable, Subscription } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticateService } from '@ygg/shared/user/ui';
+import { TheThing, TheThingImitation } from '@ygg/the-thing/core';
+import { Observable, Subscription } from 'rxjs';
+import { TheThingAccessService } from '../../the-thing-access.service';
 
 @Component({
   selector: 'my-things-data-table',

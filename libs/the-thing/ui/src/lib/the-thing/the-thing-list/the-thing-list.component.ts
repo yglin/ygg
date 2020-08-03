@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { TheThing } from '@ygg/the-thing/core';
 import { Subscription } from 'rxjs';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { TheThingAccessService } from '../../the-thing-access.service';
 
 @Component({
   selector: 'the-thing-list',

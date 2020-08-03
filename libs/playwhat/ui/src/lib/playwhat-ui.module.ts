@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import {
   ImitationPlay,
-  ImitationTour,
   ImitationTourPlan,
   ImitationEquipment,
   RelationshipEquipment,
@@ -17,19 +16,19 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { SharedUserUiModule, UserMenuService } from '@ygg/shared/user/ui';
 import { ShoppingUiModule } from '@ygg/shopping/ui';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
-import { TheThingUiModule, TheThingViewsService } from '@ygg/the-thing/ui';
+import { TheThingUiModule } from '@ygg/the-thing/ui';
 // import { TheThingEditorService } from 'libs/the-thing/ui/src/lib/the-thing-editor.service';
 import { routes } from './routes';
-import { MyPlayListComponent } from './ui/my-play-list/my-play-list.component';
-import { MyTourPlanListComponent } from './ui/my-tour-plan-list/my-tour-plan-list.component';
-import { PlayCardComponent } from './ui/play-card/play-card.component';
-import { PlayViewComponent } from './ui/play-view/play-view.component';
+import { MyPlayListComponent } from './play/my-play-list/my-play-list.component';
+import { MyTourPlanListComponent } from './tour-plan/my-tour-plan-list/my-tour-plan-list.component';
+// import { PlayCardComponent } from './ui/play-card/play-card.component';
+// import { PlayViewComponent } from './ui/play-view/play-view.component';
 // import { TourPlanBuilderComponent } from './ui/tour-plan-builder/tour-plan-builder.component';
 // import { TourPlanViewComponent } from './ui/tour-plan-view/tour-plan-view.component';
-import { TourViewComponent } from './ui/tour-view/tour-view.component';
+// import { TourViewComponent } from './ui/tour-view/tour-view.component';
 import { TourPlanFactoryService } from './tour-plan-factory.service';
 import { noop } from 'lodash';
-import { EquipmentViewComponent } from './ui/equipment/equipment-view/equipment-view.component';
+// import { EquipmentViewComponent } from './ui/equipment/equipment-view/equipment-view.component';
 import { PurchaseService } from '@ygg/shopping/factory';
 import { TourPlanComponent } from './tour-plan/tour-plan.component';
 import { PlayFactoryService } from './play-factory.service';
@@ -67,19 +66,19 @@ registerLocaleData(localeZhHant);
     ShoppingUiModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
-      useFactory: adapterFactory,
+      useFactory: adapterFactory
     }),
     RouterModule.forChild(routes)
   ],
   declarations: [
-    TourViewComponent,
-    PlayCardComponent,
+    // TourViewComponent,
+    // PlayCardComponent,
     // TourPlanViewComponent,
     // TourPlanBuilderComponent,
-    PlayViewComponent,
+    // PlayViewComponent,
     MyPlayListComponent,
     MyTourPlanListComponent,
-    EquipmentViewComponent,
+    // EquipmentViewComponent,
     TourPlanComponent,
     EventComponent,
     MyHostEventsComponent,
@@ -87,9 +86,9 @@ registerLocaleData(localeZhHant);
     MyEventsComponent
   ],
   entryComponents: [
-    TourViewComponent,
+    // TourViewComponent,
     // TourPlanViewComponent,
-    PlayViewComponent
+    // PlayViewComponent
     // TourPlanBuilderComponent
   ],
   providers: [
@@ -97,8 +96,8 @@ registerLocaleData(localeZhHant);
       provide: APP_INITIALIZER,
       useFactory: configTheThingImitation,
       deps: [
-        TheThingImitationAccessService,
-        TheThingViewsService
+        TheThingImitationAccessService
+        // TheThingViewsService
         // TheThingEditorService
       ],
       multi: true
@@ -122,7 +121,7 @@ registerLocaleData(localeZhHant);
       multi: true
     }
   ],
-  exports: [TourViewComponent /* TourPlanViewComponent */]
+  // exports: [TourViewComponent /* TourPlanViewComponent */]
 })
 export class PlaywhatUiModule {}
 
@@ -135,27 +134,26 @@ export function initFactoryServices(
 }
 
 export function configTheThingImitation(
-  imitationAccessService: TheThingImitationAccessService,
-  theThingViewsService: TheThingViewsService
+  imitationAccessService: TheThingImitationAccessService
+  // theThingViewsService: TheThingViewsService
   // theThingEditorService: TheThingEditorService
 ) {
   return () => {
     imitationAccessService.addLocal([
       ImitationPlay,
-      ImitationTour,
       ImitationTourPlan,
       ImitationEquipment
     ]);
-    theThingViewsService.addView('play', {
-      id: 'play',
-      label: '體驗',
-      component: PlayViewComponent
-    });
-    theThingViewsService.addView('tour', {
-      id: 'tour',
-      label: '體驗組合',
-      component: TourViewComponent
-    });
+    // theThingViewsService.addView('play', {
+    //   id: 'play',
+    //   label: '體驗',
+    //   component: PlayViewComponent
+    // });
+    // theThingViewsService.addView('tour', {
+    //   id: 'tour',
+    //   label: '體驗組合',
+    //   component: TourViewComponent
+    // });
     // theThingViewsService.addView('tour-plan', {
     //   id: 'tour-plan',
     //   label: '遊程規劃',
@@ -174,13 +172,13 @@ export function configUserMenu(userMenuService: UserMenuService) {
     userMenuService.addItem({
       id: 'play',
       label: '我的體驗',
-      link: `the-things/${ImitationPlay.id}/my`,
+      link: `${ImitationPlay.routePath}/my`,
       icon: ImitationPlay.icon
     });
     userMenuService.addItem({
       id: 'tour-plan',
       label: '我的遊程',
-      link: `the-things/${ImitationTourPlan.id}/my`,
+      link: `${ImitationTourPlan.routePath}/my`,
       icon: ImitationTourPlan.icon
     });
     userMenuService.addItem({

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TheThing, TheThingFilter } from '@ygg/the-thing/core';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { TheThingAccessService } from '@ygg/the-thing/ui';
 import { Observable, of } from 'rxjs';
 import {
   IncomeRecord,

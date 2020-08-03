@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Purchase, CellNames, RelationAddition } from '@ygg/shopping/core';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { TheThingAccessService } from '@ygg/the-thing/ui';
 import { TheThing } from '@ygg/the-thing/core';
 import { castArray, isEmpty, flatten, pick, values } from 'lodash';
 
@@ -52,7 +52,7 @@ export class PurchaseService {
       const additionalPurchases: Purchase[] = [];
       if (product.hasRelation(relationName)) {
         for (const relation of product.getRelations(relationName)) {
-          const additionProduct: TheThing = await this.theThingAccessService.get(
+          const additionProduct: TheThing = await this.theThingAccessService.load(
             relation.objectId
           );
           const followedPurchases = await this.purchase(

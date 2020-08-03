@@ -1,18 +1,14 @@
 import {
-  TheThingImitation,
-  TheThing,
-  RelationDefine,
-  TheThingCellDefine,
-  TheThingCell,
-  Relationship
-} from '@ygg/the-thing/core';
-import {
-  RelationAddition,
   CellNames as CellNamesShopping,
   PurchaseAction
 } from '@ygg/shopping/core';
-import { __values } from 'tslib';
-import { values, extend } from 'lodash';
+import {
+  Relationship,
+  TheThing,
+  TheThingCellDefine,
+  TheThingImitation
+} from '@ygg/the-thing/core';
+import { extend, values } from 'lodash';
 import { ImitationEquipment } from './equipment';
 
 export const ImitationPlayCellDefines: { [key: string]: TheThingCellDefine } = {
@@ -71,6 +67,7 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
     icon: 'local_play',
     image: '/assets/images/play/play.svg',
     view: 'play',
+    routePath: 'play',
     tags: ['play', '體驗'],
     cellsOrder: [
       ImitationPlayCellDefines.album.name,
@@ -174,13 +171,13 @@ ImitationPlay.canModify = (theThing: TheThing): boolean => {
 };
 
 ImitationPlay.stateChanges = {
-  'initial': {
+  initial: {
     next: ImitationPlay.states.new
   },
-  'onSave': {
+  onSave: {
     previous: ImitationPlay.states.new,
     next: ImitationPlay.states.editing
   }
-}
+};
 
 // ImitationPlay.addRelationDefine(RelationAddition);

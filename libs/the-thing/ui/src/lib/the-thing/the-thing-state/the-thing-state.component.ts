@@ -1,22 +1,19 @@
 import {
   Component,
-  OnInit,
   Input,
   OnChanges,
-  SimpleChanges,
-  OnDestroy
+  OnDestroy,
+  OnInit,
+  SimpleChanges
 } from '@angular/core';
 import {
   TheThing,
   TheThingImitation,
   TheThingState
 } from '@ygg/the-thing/core';
-import { AuthorizeService, AuthenticateService } from '@ygg/shared/user/ui';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { filter, tap, find, startWith } from 'rxjs/operators';
-import { combineLatest, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 import { TheThingFactoryService } from '../../the-thing-factory.service';
-import { isEmpty } from 'lodash';
 
 @Component({
   selector: 'the-thing-state',

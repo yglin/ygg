@@ -12,7 +12,7 @@
       >
         <div>
           <ygg-image-thumbnail
-            [item$]="theThingAccessService.get$(purchase.productId)"
+            [item$]="theThingAccessService.load$(purchase.productId)"
           ></ygg-image-thumbnail>
         </div>
         <div>

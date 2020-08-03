@@ -1,16 +1,13 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ImageThumbnailItemSize } from '@ygg/shared/ui/widgets';
 import {
+  DisplayThumbnail,
   TheThing,
-  TheThingImitation,
-  DisplayThumbnail
+  TheThingImitation
 } from '@ygg/the-thing/core';
-import { Album } from '@ygg/shared/omni-types/core';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { take } from 'rxjs/operators';
 import { get } from 'lodash';
 import { Subscription } from 'rxjs';
 import { TheThingFactoryService } from '../../the-thing-factory.service';
-import { ImageThumbnailItemSize } from '@ygg/shared/ui/widgets';
 
 @Component({
   selector: 'the-thing-thumbnail',

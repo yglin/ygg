@@ -1,29 +1,25 @@
-import { isEmpty } from 'lodash';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import {
+  ImageThumbnailListComponent,
+  YggDialogService
+} from '@ygg/shared/ui/widgets';
+import { AuthenticateService } from '@ygg/shared/user/ui';
 import {
   TheThing,
   TheThingFilter,
   TheThingImitation
 } from '@ygg/the-thing/core';
+import { TheThingAccessService } from '../../the-thing-access.service';
+import { isEmpty } from 'lodash';
 import {
-  Subscription,
-  of,
   BehaviorSubject,
   combineLatest,
   Observable,
-  throwError
+  of,
+  Subscription
 } from 'rxjs';
-import { switchMap, map, take } from 'rxjs/operators';
-import {
-  TheThingAccessService,
-  TheThingImitationAccessService
-} from '@ygg/the-thing/data-access';
-import { AuthenticateService } from "@ygg/shared/user/ui";
-import { Router } from '@angular/router';
-import {
-  YggDialogService,
-  ImageThumbnailListComponent
-} from '@ygg/shared/ui/widgets';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'the-thing-my-things',
@@ -45,10 +41,12 @@ export class MyThingsComponent implements OnInit, OnDestroy {
     private theThingAccessService: TheThingAccessService,
     private authenticateService: AuthenticateService,
     private router: Router,
-    private dialog: YggDialogService,
-    private imitationAccessService: TheThingImitationAccessService
+    private dialog: YggDialogService // private imitationAccessService: TheThingImitationAccessService
   ) {
-    this.myThings$ = combineLatest([this.authenticateService.currentUser$, this.filter$]).pipe(
+    this.myThings$ = combineLatest([
+      this.authenticateService.currentUser$,
+      this.filter$
+    ]).pipe(
       switchMap(([user, filter]) => {
         if (user) {
           if (!filter) {
@@ -61,13 +59,13 @@ export class MyThingsComponent implements OnInit, OnDestroy {
           return of([]);
         }
       })
-    )
-    this.subscriptions.push(
-      this.imitationAccessService.list$().subscribe(imitations => {
-        this.imitations = imitations;
-        this.hasImitations = !isEmpty(this.imitations);
-      })
     );
+    // this.subscriptions.push(
+    //   this.imitationAccessService.list$().subscribe(imitations => {
+    //     this.imitations = imitations;
+    //     this.hasImitations = !isEmpty(this.imitations);
+    //   })
+    // );
   }
 
   ngOnInit() {}

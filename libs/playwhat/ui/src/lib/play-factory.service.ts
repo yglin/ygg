@@ -1,26 +1,27 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import {
+  ActivatedRouteSnapshot,
+  Resolve,
+  Router,
+  RouterStateSnapshot
+} from '@angular/router';
+import { ImitationPlay } from '@ygg/playwhat/core';
+import { AlertType } from '@ygg/shared/infra/core';
+import { EmceeService } from '@ygg/shared/ui/widgets';
 import {
   TheThing,
+  TheThingAction,
   TheThingCell,
-  TheThingImitation,
-  TheThingRelation,
-  TheThingAction
+  TheThingImitation
 } from '@ygg/the-thing/core';
-import { TheThingFactoryService } from '@ygg/the-thing/ui';
-import { ImitationPlay } from '@ygg/playwhat/core';
 import {
-  Resolve,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  Router
-} from '@angular/router';
-import { tap, take } from 'rxjs/operators';
+  TheThingAccessService,
+  TheThingFactoryService
+} from '@ygg/the-thing/ui';
 import { extend, get } from 'lodash';
-import { EmceeService } from '@ygg/shared/ui/widgets';
-import { AlertType } from '@ygg/shared/infra/core';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { take, tap } from 'rxjs/operators';
 import { EquipmentFactoryService } from './equipment-factory.service';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
 
 @Injectable({
   providedIn: 'root'

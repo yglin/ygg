@@ -1,15 +1,10 @@
-import { get, castArray, isEmpty, values, uniqBy } from 'lodash';
 import { Injectable } from '@angular/core';
-import {
-  TheThingImitation,
-  ImitationsDataPath,
-  TheThing
-} from '@ygg/the-thing/core';
-import { Observable, throwError, of, combineLatest } from 'rxjs';
 import { DataAccessService } from '@ygg/shared/infra/data-access';
-import { map, startWith, catchError, filter, timeout } from 'rxjs/operators';
-import { TheThingAccessService } from './the-thing-access.service';
 import { LogService } from '@ygg/shared/infra/log';
+import { ImitationsDataPath, TheThingImitation } from '@ygg/the-thing/core';
+import { castArray, uniqBy, values } from 'lodash';
+import { combineLatest, Observable, of, throwError } from 'rxjs';
+import { catchError, map, startWith } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +12,7 @@ import { LogService } from '@ygg/shared/infra/log';
 export class TheThingImitationAccessService {
   constructor(
     private logService: LogService,
-    private dataAccessService: DataAccessService,
-    private theThingAccessService: TheThingAccessService
+    private dataAccessService: DataAccessService
   ) {}
 
   localList: { [id: string]: TheThingImitation } = {};
@@ -97,7 +91,7 @@ export class TheThingImitationAccessService {
   // getTemplate$(id: string): Observable<TheThing> {
   //   return this.get$(id).pipe(
   //     switchMap((imitation: TheThingImitation) =>
-  //       this.theThingAccessService.get$(imitation.templateId)
+  //       this.theThingAccessService.load$(imitation.templateId)
   //     )
   //   );
   // }

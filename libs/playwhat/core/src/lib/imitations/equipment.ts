@@ -1,9 +1,7 @@
 import { CellNames as CellNamesShopping } from '@ygg/shopping/core';
 import { TheThingCellDefine, TheThingImitation } from '@ygg/the-thing/core';
 import { OmniTypes } from '@ygg/shared/omni-types/core';
-import { __values } from 'tslib';
 import { values } from 'lodash';
-import { ImitationPlayCellDefines } from './play';
 
 export const ImitationEquipmentCellDefines = {
   price: new TheThingCellDefine({

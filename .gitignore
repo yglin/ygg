@@ -41,6 +41,7 @@ testem.log
 /recycle-bin
 *.log
 apps/*-e2e/data
+**/.deprecated
 
 # System Files
 .DS_Store

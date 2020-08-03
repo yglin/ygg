@@ -1,37 +1,39 @@
 import {
   Schedule,
   Service,
-  ServiceEvent,
-  ServiceAvailablility
+  ServiceAvailablility,
+  ServiceEvent
 } from '@ygg/schedule/core';
 import {
+  BusinessHours,
   DateRange,
-  TimeRange,
   OmniTypes,
-  BusinessHours
+  TimeRange
 } from '@ygg/shared/omni-types/core';
 import {
   CellNames as CellNamesShopping,
   RelationPurchase
 } from '@ygg/shopping/core';
 import {
-  TheThing,
-  TheThingAccessor,
-  TheThingRelation,
   RelationFactory,
   RelationRecord,
-  TheThingFilter
+  TheThing,
+  TheThingAccessor,
+  TheThingFilter,
+  TheThingRelation
 } from '@ygg/the-thing/core';
+import { isEmpty } from 'lodash';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import {
+  CellDefinesTourPlan,
   ImitationEvent,
   ImitationEventCellDefines,
+  ImitationPlay,
+  ImitationPlayCellDefines,
+  ImitationTourPlan,
   RelationshipPlay
 } from '../imitations';
-import { ImitationPlay, ImitationPlayCellDefines } from '../play';
-import { CellDefinesTourPlan, ImitationTourPlan } from '../tour-plan';
-import { map, take, switchMap, filter, catchError } from 'rxjs/operators';
-import { isEmpty } from 'lodash';
-import { of, Observable, throwError } from 'rxjs';
 
 export class ScheduleAdapter {
   // static deriveEventFromServiceEvent(serviceEvent: ServiceEvent): TheThing {
@@ -95,7 +97,7 @@ export class ScheduleAdapter {
     });
     const purchaseRelations = tourPlan.getRelations(RelationPurchase.name);
     for (const purchase of purchaseRelations) {
-      const play = await this.theThingAccessor.get(purchase.objectId);
+      const play = await this.theThingAccessor.load(purchase.objectId);
       if (ImitationPlay.isValid(play)) {
         const service = ScheduleAdapter.deduceServiceFromPlay(play);
         const event = new ServiceEvent(service, {
@@ -122,7 +124,7 @@ export class ScheduleAdapter {
   async deduceEventFromPurchase(
     purchase: TheThingRelation
   ): Promise<ServiceEvent> {
-    const play = await this.theThingAccessor.get(purchase.objectId);
+    const play = await this.theThingAccessor.load(purchase.objectId);
     if (!ImitationPlay.isValid(play)) {
       return null;
     }
@@ -136,7 +138,7 @@ export class ScheduleAdapter {
   async deriveEventsFromSchedule(schedule: Schedule): Promise<TheThing[]> {
     const events: TheThing[] = [];
     for (const serviceEvent of schedule.events) {
-      const play: TheThing = await this.theThingAccessor.get(
+      const play: TheThing = await this.theThingAccessor.load(
         serviceEvent.service.id
       );
       const event: TheThing = ImitationEvent.createTheThing(play);

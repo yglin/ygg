@@ -1,18 +1,16 @@
-import { isEmpty, sumBy, sum } from 'lodash';
 import {
   Component,
-  OnInit,
   Input,
   OnChanges,
-  SimpleChanges,
-  OnDestroy
+  OnDestroy,
+  OnInit,
+  SimpleChanges
 } from '@angular/core';
-import { Purchase, CellNames } from '@ygg/shopping/core';
+import { CellNames, Purchase } from '@ygg/shopping/core';
+import { TheThingAccessService } from '@ygg/the-thing/ui';
+import { sumBy } from 'lodash';
 // import { ShoppingCartService } from '@ygg/shopping/factory';
-import { Subscription, Observable, of, BehaviorSubject } from 'rxjs';
-import { tap, switchMap } from 'rxjs/operators';
-import { TheThingRelation } from '@ygg/the-thing/core';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'ygg-purchase-list',

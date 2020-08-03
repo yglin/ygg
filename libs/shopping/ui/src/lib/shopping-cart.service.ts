@@ -1,26 +1,28 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { TheThing } from '@ygg/the-thing/core';
+import { Router } from '@angular/router';
+import { EmceeService, YggDialogService } from '@ygg/shared/ui/widgets';
 import {
-  Purchase,
   evalTotalChargeFromPurchases,
+  Purchase,
   PurchaseAction
 } from '@ygg/shopping/core';
-import { EmceeService, YggDialogService } from '@ygg/shared/ui/widgets';
-import { PurchaseProductComponent } from './purchase/purchase-product/purchase-product.component';
-import { PurchaseProductComponentInput } from './purchase';
-import { isEmpty, values, keyBy } from 'lodash';
 import { PurchaseService } from '@ygg/shopping/factory';
+import { TheThing } from '@ygg/the-thing/core';
+import {
+  TheThingAccessService,
+  TheThingFactoryService
+} from '@ygg/the-thing/ui';
+import { isEmpty, keyBy, values } from 'lodash';
 import {
   BehaviorSubject,
-  Subject,
-  Observable,
   merge,
+  Observable,
+  Subject,
   Subscription
 } from 'rxjs';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { TheThingFactoryService } from '@ygg/the-thing/ui';
+import { switchMap, tap } from 'rxjs/operators';
+import { PurchaseProductComponentInput } from './purchase';
+import { PurchaseProductComponent } from './purchase/purchase-product/purchase-product.component';
 
 export interface CartSubmitPack {
   order?: TheThing;
@@ -105,7 +107,7 @@ export class ShoppingCartService implements OnDestroy {
 
   async removePurchase(purchase: Purchase) {
     try {
-      const product = await this.theThingAccessor.get(purchase.productId);
+      const product = await this.theThingAccessor.load(purchase.productId);
       const confirm = await this.emcee.confirm(
         `確定要移除購買項目：${product.name}？`
       );

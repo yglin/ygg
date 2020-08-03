@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TheThing } from '@ygg/the-thing/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { HomepageManageService } from '@ygg/playwhat/admin';
-import { Subscription, Observable } from 'rxjs';
-import { Router, NavigationEnd } from '@angular/router';
+import { ImitationPlay } from '@ygg/playwhat/core';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
-import { ImitationTourPlan, ImitationPlay } from '@ygg/playwhat/core';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { TheThing } from '@ygg/the-thing/core';
+import { TheThingAccessService } from '@ygg/the-thing/ui';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'pw-home',

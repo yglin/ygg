@@ -16,7 +16,10 @@ export class HtmlControlPageObjectCypress extends HtmlControlPageObject {
     // So this implementation below pass the test but is eventualy wrong
     cy.get(this.getSelector())
       .find('[contenteditable=true]')
+      .should('be.visible')
+      .click()
       .clear()
+      .should('have.value', '')
       .type(html.content);
   }
 }

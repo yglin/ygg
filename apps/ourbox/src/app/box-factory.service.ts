@@ -13,8 +13,10 @@ import {
   UserService
 } from '@ygg/shared/user/ui';
 import { TheThing } from '@ygg/the-thing/core';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { RelationFactoryService } from '@ygg/the-thing/ui';
+import {
+  RelationFactoryService,
+  TheThingAccessService
+} from '@ygg/the-thing/ui';
 import { ItemAccessService } from './item-access.service';
 import { ItemFactoryService } from './item-factory.service';
 
@@ -55,7 +57,7 @@ export class BoxFactoryService extends BoxFactory implements Resolve<TheThing> {
     const id = route.paramMap.get('id');
     try {
       await this.authenticator.requestLogin();
-      const box = await this.theThingAccessor.get(id, ImitationBox.collection);
+      const box = await this.theThingAccessor.load(id, ImitationBox.collection);
       if (!box) {
         throw new Error(`找不到寶箱，id: ${id}`);
       }

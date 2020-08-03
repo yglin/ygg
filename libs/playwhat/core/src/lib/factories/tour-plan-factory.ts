@@ -1,15 +1,18 @@
+import { Emcee } from '@ygg/shared/infra/core';
 import {
+  RelationFactory,
+  RelationRecord,
   TheThing,
   TheThingAccessor,
-  TheThingFactory,
-  RelationFactory,
-  RelationRecord
+  TheThingFactory
 } from '@ygg/the-thing/core';
 import { every } from 'lodash';
-import { ImitationEvent } from '../imitations';
-import { ImitationTourPlan, RelationshipScheduleEvent } from '../tour-plan';
-import { Emcee } from '@ygg/shared/infra/core';
 import { switchMap, take } from 'rxjs/operators';
+import {
+  ImitationEvent,
+  ImitationTourPlan,
+  RelationshipScheduleEvent
+} from '../imitations';
 
 export class TourPlanFactory {
   constructor(
@@ -36,7 +39,7 @@ export class TourPlanFactory {
 
   async checkApproval(tourPlanId: string) {
     try {
-      const tourPlan = await this.theThingAccessor.get(
+      const tourPlan = await this.theThingAccessor.load(
         tourPlanId,
         ImitationTourPlan.collection
       );

@@ -1,18 +1,13 @@
 import {
+  ImitationEquipment,
   ImitationPlay,
-  RelationshipEquipment,
-  ImitationEquipment
+  RelationshipEquipment
 } from '@ygg/playwhat/core';
 import { SiteNavigator } from '@ygg/playwhat/test';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
-import {
-  TheThingCell,
-  TheThingCellDefine,
-  Relationship
-} from '@ygg/the-thing/core';
+import { TheThingCell, TheThingCellDefine } from '@ygg/the-thing/core';
 import {
   MyThingsDataTablePageObjectCypress,
-  MyThingsPageObjectCypress,
   TheThingPageObjectCypress
 } from '@ygg/the-thing/test';
 import { values } from 'lodash';

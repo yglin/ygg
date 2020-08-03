@@ -1,29 +1,28 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import {
   Component,
-  OnInit,
-  Input,
-  ViewChild,
-  OnDestroy,
-  Output,
   EventEmitter,
+  Input,
   OnChanges,
-  SimpleChanges
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
 } from '@angular/core';
-import {
-  TheThingImitation,
-  TheThing,
-  DataTableConfig,
-  TheThingFilter
-} from '@ygg/the-thing/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
-import { keys, isArray, find } from 'lodash';
-import { TheThingDataSource } from './the-thing-datasource';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
-import { SelectionModel } from '@angular/cdk/collections';
 import { OmniTypeComparator } from '@ygg/shared/omni-types/core';
+import {
+  DataTableConfig,
+  TheThing,
+  TheThingImitation
+} from '@ygg/the-thing/core';
+import { find, isArray, keys } from 'lodash';
+import { Observable, Subscription } from 'rxjs';
+import { TheThingAccessService } from '../../the-thing-access.service';
+import { TheThingDataSource } from './the-thing-datasource';
 
 @Component({
   selector: 'the-thing-data-table',

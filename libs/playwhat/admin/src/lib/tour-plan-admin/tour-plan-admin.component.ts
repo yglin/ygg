@@ -7,7 +7,7 @@ import { IncomeRecord } from '@ygg/shopping/core';
 import { AccountingService } from '@ygg/shopping/factory';
 import { Month } from '@ygg/shared/omni-types/core';
 import { switchMap, startWith } from 'rxjs/operators';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { TheThingAccessService } from '@ygg/the-thing/ui';
 import { range } from 'lodash';
 import { FormControl } from '@angular/forms';
 

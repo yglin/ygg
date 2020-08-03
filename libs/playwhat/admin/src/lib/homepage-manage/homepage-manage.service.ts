@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { TheThing } from '@ygg/the-thing/core';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { TheThingAccessService } from '@ygg/the-thing/ui';
 import { PlaywhatAdminService } from '../playwhat-admin.service';
 import { switchMap } from 'rxjs/operators';
 

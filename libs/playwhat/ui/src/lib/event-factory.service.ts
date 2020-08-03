@@ -4,7 +4,7 @@ import {
   ImitationEvent,
   ImitationEventCellDefines
 } from '@ygg/playwhat/core';
-import { TheThingAccessService } from '@ygg/the-thing/data-access';
+import { TheThingAccessService } from '@ygg/the-thing/ui';
 import {
   UserService,
   NotificationFactoryService,
