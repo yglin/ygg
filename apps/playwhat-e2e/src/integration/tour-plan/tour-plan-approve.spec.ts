@@ -3,22 +3,22 @@ import {
   ImitationTourPlan,
   RelationshipHost,
   RelationshipOrganizer,
-  RelationshipScheduleEvent,
-  ImitationEventCellDefines
+  RelationshipScheduleEvent
 } from '@ygg/playwhat/core';
 import {
-  SiteNavigator,
-  TourPlanPageObjectCypress,
   MyCalendarPageObjectCypress,
-  MyEventsPageObjectCypress,
-  TourPlanAdminPageObjectCypress
+  SiteNavigator,
+  TourPlanAdminPageObjectCypress,
+  TourPlanPageObjectCypress
 } from '@ygg/playwhat/test';
-import { SchedulePageObjectCypress } from '@ygg/schedule/test';
+import { Html } from '@ygg/shared/omni-types/core';
 import {
+  getCurrentUser,
   login,
-  theMockDatabase,
-  getCurrentUser
+  theMockDatabase
 } from '@ygg/shared/test/cypress';
+import { Comment } from '@ygg/shared/thread/core';
+import { CommentListPageObjectCypress } from '@ygg/shared/thread/test';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
 import { waitForLogin } from '@ygg/shared/user/test';
@@ -29,7 +29,7 @@ import {
   TheThingDataTablePageObjectCypress,
   TheThingPageObjectCypress
 } from '@ygg/the-thing/test';
-import { find } from 'lodash';
+import { find, isEmpty } from 'lodash';
 import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import {
   RelationPlayOfEvents,
@@ -37,9 +37,8 @@ import {
   TourPlanScheduled3Events,
   TourPlanScheduledOneEvent
 } from '../schedule/sample-schedules';
-import { Comment } from '@ygg/shared/thread/core';
-import { TimeRange, Html } from '@ygg/shared/omni-types/core';
-import { CommentListPageObjectCypress } from '@ygg/shared/thread/test';
+import * as env from '@ygg/env/environments.json';
+const mailSlurpInbox = env.mailslurp.inboxes[0];
 
 describe('Approve scheduled events of tour-plan', () => {
   const siteNavigator = new SiteNavigator();
@@ -75,7 +74,6 @@ describe('Approve scheduled events of tour-plan', () => {
     )
   );
   let me: User;
-  let inbox: any;
 
   before(() => {
     // Only tour-plans of state applied can make schedule
@@ -122,15 +120,11 @@ describe('Approve scheduled events of tour-plan', () => {
 
       cy.visit('/');
       waitForLogin();
-      // waitForLogin().then(() => {
-      //   // @ts-ignore
-      //   cy.createInbox().then(_inbox => {
-      //     inbox = _inbox;
-      //     theMockDatabase.update(`${User.collection}/${user.id}`, {
-      //       email: _inbox.emailAddress
-      //     });
-      //   });
-      // });
+      waitForLogin().then(() => {
+        theMockDatabase.update(`${User.collection}/${user.id}`, {
+          email: mailSlurpInbox.email
+        });
+      });
     });
   });
 
@@ -166,24 +160,30 @@ describe('Approve scheduled events of tour-plan', () => {
     });
   });
 
-  // it('Send approval request of each scheduled event to owner of the play', () => {
-  //   // cy.wait(10000);
-  //   // @ts-ignore
-  //   cy.waitForLatestEmail(inbox.id).then(email => {
-  //     expect(email.subject).to.have.string(
-  //       `您有一項${testEvent.name}的行程活動邀請`
-  //     );
-  //     // Extract link
-  //     const link = /href="(http.*)"/.exec(email.body)[1];
-  //     cy.visit(link);
-  //     waitForLogin();
-  //     emceePO.confirm(
-  //       `確認以負責人身份參加行程${testEvent.name}？請於行程活動頁面按下確認參加按鈕`
-  //     );
-  //     eventPO.expectVisible();
-  //     eventPO.expectState(ImitationEvent.states['wait-approval']);
-  //   });
-  // });
+  it('Send approval request of each scheduled event to owner of the play', () => {
+    // cy.wait(10000);
+    // @ts-ignore
+    // cy.waitForLatestEmail(mailSlurpInbox.id).then(email => {
+    cy.waitForMatchingEmail(mailSlurpInbox.id, testEvent.name).then(email => {
+      expect(email.subject).to.have.string(
+        `您有一項${testEvent.name}的行程活動邀請`
+      );
+      // console.log(email);
+      // Extract link
+      const links = /href="(http.*)"/.exec(email.body);
+      if (isEmpty(links) || links.length < 2) {
+        throw new Error(`Not found links in email body:\n${email.body}`);
+      }
+      const link = links[1];
+      cy.visit(link);
+      waitForLogin();
+      emceePO.confirm(
+        `確認以負責人身份參加行程${testEvent.name}？請於行程活動頁面按下確認參加按鈕`
+      );
+      eventPO.expectVisible();
+      eventPO.expectState(ImitationEvent.states['wait-approval']);
+    });
+  });
 
   it('Admin user can directly approve tour-plan', () => {
     siteNavigator.goto(['admin', 'tour-plans'], tourPlanAdminPO);

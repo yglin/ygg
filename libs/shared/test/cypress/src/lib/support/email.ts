@@ -1,5 +1,6 @@
-import { defaults } from 'lodash';
 import { MailSlurp } from 'mailslurp-client';
+import { MatchOption } from 'mailslurp-client/dist/generated';
+import { isEmpty } from 'lodash';
 
 const mailslurp = new MailSlurp({
   apiKey: Cypress.env('MAILSLURP_API_KEY')
@@ -14,6 +15,49 @@ Cypress.Commands.add('createInbox', () => {
 Cypress.Commands.add('waitForLatestEmail', inboxId => {
   return mailslurp.waitForLatestEmail(inboxId) as any;
 });
+
+Cypress.Commands.add(
+  'waitForMatchingEmail',
+  (inboxId: string, subjectKeyword: string) => {
+    return cy.wrap(
+      new Cypress.Promise((resolve, reject) => {
+        mailslurp
+          .waitForMatchingEmails(
+            {
+              matches: [
+                {
+                  field: MatchOption.FieldEnum.SUBJECT,
+                  should: MatchOption.ShouldEnum.CONTAIN,
+                  value: subjectKeyword
+                }
+              ]
+            },
+            1,
+            inboxId,
+            30000
+          )
+          .then(
+            matched => {
+              if (isEmpty(matched)) {
+                reject(
+                  new Error(
+                    `Not found any email with subject contains ${subjectKeyword}`
+                  )
+                );
+              } else {
+                mailslurp.getEmail(matched[0].id).then(
+                  email => resolve(email),
+                  error => reject(error)
+                );
+              }
+            },
+            error => reject(error)
+          );
+      }),
+      { timeout: 30000 }
+    );
+  }
+);
 
 // export const testEmail = `yggy.${Cypress.env(
 //   'MAILOSAUR_SERVER_ID'
