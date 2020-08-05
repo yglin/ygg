@@ -77,7 +77,14 @@ export class Purchase implements SerializableJSON {
     return newPurchase;
   }
 
-  constructor(options: any = {}) {
+  constructor(
+    options: {
+      consumerId?: string;
+      productId?: string;
+      price?: number;
+      quantity?: number;
+    } = {}
+  ) {
     this.id = generateID();
     // this.productType = ProductType.Unknown;
     this.consumerId = '';

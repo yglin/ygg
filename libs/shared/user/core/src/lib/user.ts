@@ -1,5 +1,5 @@
 // import {DataItem, toJSONDeep} from '@ygg/shared/infra/data-access';
-import {extend, sample} from 'lodash';
+import { extend, sample, random } from 'lodash';
 import * as firebase from 'firebase/app';
 import { Entity, toJSONDeep } from '@ygg/shared/infra/core';
 
@@ -13,7 +13,7 @@ export enum UserState {
 
 export class User implements Entity {
   static collection = 'users';
-  
+
   id: string;
   isAnonymous: boolean;
   createAt: Date;
@@ -29,23 +29,45 @@ export class User implements Entity {
     return !!(value && value.id);
   }
 
-// tslint:disable-next-line: member-ordering
+  // tslint:disable-next-line: member-ordering
   static forgedCount = 0;
   static forge(): User {
     const forged = new User();
     forged.id = `anony-mummy-honey-spaghetti-your-moms-fatty-${User.forgedCount++}`;
     forged.isAnonymous = true;
-    forged.name = sample(['馬＊久', '蔣＊虢', '李＊灰', '菜＊文', '陳＊匾']);
-    forged.email = 'taiwanNO1@ygmail.com';
-    forged.phone = '0999089457';
-    forged.avatarUrl = new URL(sample([
-      'https://upload.wikimedia.org/wikipedia/commons/7/73/Facebook_Haha_React.png',
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Chicken_icon_05.svg/816px-Chicken_icon_05.svg.png',
-      'https://upload.wikimedia.org/wikipedia/en/thumb/3/34/AlthepalHappyface.svg/256px-AlthepalHappyface.svg.png',
-      'https://upload.wikimedia.org/wikipedia/commons/4/48/Govi.png',
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Phantom_Open_Emoji_1f619.svg/64px-Phantom_Open_Emoji_1f619.svg.png',
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Breathe-face-devil-grin.svg/128px-Breathe-face-devil-grin.svg.png'
-    ]));
+    forged.name = sample([
+      '馬＊久',
+      '蔣＊國',
+      '李＊灰',
+      '菜＊文',
+      '陳＊匾',
+      '韓＊🐟',
+      '宋＊🐠',
+      '連👍',
+      '柯阿背',
+      '王🐳平',
+      '扶🐉王',
+      '白🐬'
+    ]);
+    forged.email = `taiwanNo${random(1, 50)}@ygmail.com`;
+    forged.account = forged.email;
+    forged.phone = `09780894${random(10, 99)}`;
+    forged.avatarUrl = new URL(
+      sample([
+        'https://i.imgur.com/trZxMHq.jpeg',
+        'https://i.imgur.com/YExYEAx.jpg',
+        'https://i.imgur.com/sFq0wAC.jpeg',
+        'https://i.imgur.com/zfOPmnI.jpeg',
+        'https://i.imgur.com/67tSocD.jpeg',
+        'https://i.imgur.com/zAZLWd3.jpg',
+        'https://i.imgur.com/EFGZiUi.jpeg',
+        'https://i.imgur.com/bg0MZPZ.jpg',
+        'https://i.imgur.com/Khh79KZ.jpeg',
+        'https://i.imgur.com/CKmgMDL.jpg',
+        'https://i.imgur.com/S8a6rFQ.jpeg'
+      ])
+    );
+    forged.state = UserState.Activated;
     return forged;
   }
 
@@ -56,7 +78,7 @@ export class User implements Entity {
     try {
       user.avatarUrl = new URL(firebaseUser.photoURL);
     } catch (error) {
-      console.warn(error);      
+      console.warn(error);
     }
     user.email = firebaseUser.email;
     user.phone = firebaseUser.phoneNumber;
@@ -79,7 +101,7 @@ export class User implements Entity {
       try {
         this.avatarUrl = new URL(data.avatarUrl);
       } catch (error) {
-        console.error(error);        
+        console.error(error);
       }
     }
     return this;
@@ -122,8 +144,10 @@ export class User implements Entity {
     }
 
     let profile = userProfile;
-    if (userProfile.additionalUserInfo &&
-        userProfile.additionalUserInfo.profile) {
+    if (
+      userProfile.additionalUserInfo &&
+      userProfile.additionalUserInfo.profile
+    ) {
       profile = userProfile.additionalUserInfo.profile;
     }
     this.providers[provider] = profile;

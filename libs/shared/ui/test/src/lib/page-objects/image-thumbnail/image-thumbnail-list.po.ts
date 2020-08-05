@@ -4,6 +4,7 @@ import {
   ImageThumbnailItemPageObject
 } from '@ygg/shared/ui/widgets';
 import { ImageThumbnailItemPageObjectCypress } from './image-thumbnail-item.po';
+import { defaults } from 'lodash';
 
 export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageObject {
   getItemPageObject(
@@ -45,12 +46,17 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
       .should('be.visible');
   }
 
-  expectItems(items: ImageThumbnailItem[]) {
+  expectItems(items: ImageThumbnailItem[], options?: { exact: boolean }) {
+    options = defaults(options, {
+      exact: true
+    });
     cy.wrap(items).each((item: any) => this.expectItem(item));
-    cy.get(this.getSelector())
-      .find('.item')
-      .its('length')
-      .should('eq', items.length);
+    if (options.exact) {
+      cy.get(this.getSelector())
+        .find('.item')
+        .its('length')
+        .should('eq', items.length);
+    }
   }
 
   expectNoItem(item: ImageThumbnailItem) {

@@ -12,7 +12,8 @@ import {
   find,
   values,
   noop,
-  defaults
+  defaults,
+  random
 } from 'lodash';
 import {
   generateID,
@@ -161,12 +162,13 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     return name in this.cellsDef ? this.cellsDef[name] : null;
   }
 
-  forgeTheThing(): any {
+  forgeTheThing(): TheThing {
     const theThing = this.createTheThing();
+    theThing.name = `${this.name}_${Date.now()}`;
     for (const name in this.cellsDef) {
       if (this.cellsDef.hasOwnProperty(name)) {
         const cellDef = this.cellsDef[name];
-        if (cellDef.userInput === 'required') {
+        if (cellDef.userInput === 'required' || random(1, true) > 0.5) {
           const cell = theThing.getCell(name);
           if (!cell || !cell.value) {
             theThing.upsertCell(cellDef.forgeCell());

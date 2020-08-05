@@ -11,12 +11,7 @@
   "numTestsKeptInMemory": 0,
   "testFiles": "**/*.spec.ts",
   "ignoreTestFiles": [
-    "**/admin/*",
-    "**/tour/*",
-    "**/playground/**/*",
-    "**/scheduler/schedule/*",
-    "**/tags/*",
-    "**/resource/*"
+    "**/.deprecated/*"
   ],
   "watchForFileChanges": false
 }
