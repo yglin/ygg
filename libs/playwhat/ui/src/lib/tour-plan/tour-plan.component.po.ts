@@ -13,7 +13,6 @@ import { TheThingStatePageObject, TheThingPageObject } from '@ygg/the-thing/ui';
 export abstract class TourPlanPageObject extends PageObject {
   selectors = {
     main: '.tour-plan',
-    purchases: '.purchases',
     schedule: '.schedule',
     buttonSubmitApplication: 'button.submit-application',
     buttonAdminComplete: 'button.admin-complete',
@@ -28,7 +27,9 @@ export abstract class TourPlanPageObject extends PageObject {
     totalCharge: '.total-charge',
     theThing: '.the-thing',
     buttonSchedule: 'button.action-schedule',
-    buttonSendApprovalRequests: 'button.send-approval-requests'
+    buttonSendApprovalRequests: 'button.send-approval-requests',
+    purchases: '.purchases',
+    buttonClearPurchases: 'button.clear-purchases',
   };
   theThingPO: TheThingPageObject;
   statePO: TheThingStatePageObject;

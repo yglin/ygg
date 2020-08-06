@@ -68,6 +68,15 @@ describe('Import/export purchases between cart and tour-plan', () => {
 
   let currentUser: User;
 
+  const purchasesTourPlanWithPlaysNoEquipment: Purchase[] = TourPlanWithPlaysNoEquipment.getRelations(
+    RelationPurchase.name
+  ).map(r => Purchase.fromRelation(r));
+  const totalChargeTourPlanWithPlaysNoEquipment = sum(
+    purchasesTourPlanWithPlaysNoEquipment.map(p => p.charge)
+  );
+  const resultTourPlan = TourPlanFull.clone();
+  resultTourPlan.name = `測試遊程(從購物車中匯入購買資料)_${Date.now()}`;
+
   function purchasePlays(plays: TheThing[]): Cypress.Chainable<Purchase[]> {
     const purchases: { [playId: string]: Purchase } = keyBy(
       plays.map(play => {
@@ -131,15 +140,16 @@ describe('Import/export purchases between cart and tour-plan', () => {
         theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
       });
       cy.visit('/');
+      waitForLogin();
     });
   });
 
-  beforeEach(() => {
-    cy.visit('/');
-    waitForLogin();
-    // tourPlanBuilderPO.reset();
-    // siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
-  });
+  // beforeEach(() => {
+  //   cy.visit('/');
+  //   waitForLogin();
+  //   // tourPlanBuilderPO.reset();
+  //   // siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
+  // });
 
   after(() => {
     // // Goto my-things page and delete all test things
@@ -160,26 +170,25 @@ describe('Import/export purchases between cart and tour-plan', () => {
       tourPlanPO.expectVisible();
       tourPlanPO.expectPurchases(purchases);
       tourPlanPO.expectTotalCharge(totalCharge);
+      siteNavigator.goto(['shopping', 'cart'], cartPO);
+      cartPO.removeAll();
     });
   });
 
   it('Import purchases from tour-plan to cart page', () => {
-    const purchases: Purchase[] = TourPlanWithPlaysNoEquipment.getRelations(
-      RelationPurchase.name
-    ).map(r => Purchase.fromRelation(r));
-    const totalCharge = sum(purchases.map(p => p.charge));
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(
       TourPlanWithPlaysNoEquipment
     );
     tourPlanPO.expectVisible();
-    tourPlanPO.expectPurchases(purchases);
+    tourPlanPO.expectPurchases(purchasesTourPlanWithPlaysNoEquipment);
     tourPlanPO.theThingPO.runAction(
       ImitationTourPlan.actions['alter-shopping-cart']
     );
     cartPO.expectVisible();
-    cartPO.expectPurchases(purchases);
-    cartPO.expectTotalCharge(totalCharge);
+    cartPO.expectPurchases(purchasesTourPlanWithPlaysNoEquipment);
+    cartPO.expectTotalCharge(totalChargeTourPlanWithPlaysNoEquipment);
+    cartPO.removeAll();
   });
 
   it('On import, confirm clear purchases already in cart', () => {
@@ -187,10 +196,6 @@ describe('Import/export purchases between cart and tour-plan', () => {
     // Purchase some plays in advance, make cart not empty
     purchasePlays(samplePlays);
 
-    const purchases: Purchase[] = TourPlanWithPlaysNoEquipment.getRelations(
-      RelationPurchase.name
-    ).map(r => Purchase.fromRelation(r));
-    const totalCharge = sum(purchases.map(p => p.charge));
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(
       TourPlanWithPlaysNoEquipment
@@ -205,13 +210,14 @@ describe('Import/export purchases between cart and tour-plan', () => {
     // confirmPO.expectMessage('原本在購物車中的購買項目將會被清除，是否繼續？');
     // confirmPO.confirm();
     cartPO.expectVisible();
-    cartPO.expectPurchases(purchases);
-    cartPO.expectTotalCharge(totalCharge);
+    cartPO.expectPurchases(purchasesTourPlanWithPlaysNoEquipment);
+    cartPO.expectTotalCharge(totalChargeTourPlanWithPlaysNoEquipment);
+    cartPO.removeAll();
   });
 
   it('Save tour plan with purchased plays', () => {
-    const resultTourPlan = TourPlanFull.clone();
-    resultTourPlan.name = `測試遊程(從購物車中匯入購買資料)_${Date.now()}`;
+    cy.visit('/');
+    waitForLogin();
     const plays = PlaysWithoutEquipment;
     purchasePlays(plays).then(purchases => {
       resultTourPlan.setRelation(
@@ -232,24 +238,34 @@ describe('Import/export purchases between cart and tour-plan', () => {
       tourPlanPO.theThingPO.expectValue(resultTourPlan);
       tourPlanPO.expectPurchases(purchases);
       tourPlanPO.expectTotalCharge(totalCharge);
+      siteNavigator.goto(['shopping', 'cart'], cartPO);
+      cartPO.removeAll();
     });
   });
 
-  it('Edit exist tour-plan with purchasing plays and equipments', () => {
-    const resultTourPlan = MinimalTourPlan.clone();
-    resultTourPlan.name = `測試遊程修改(加購體驗，含設備)_${Date.now()}`;
+  it('Edit exist tour-plan altering purchases', () => {
+    // const resultTourPlan = MinimalTourPlan.clone();
+    // resultTourPlan.name = `測試遊程修改(加購體驗，含設備)_${Date.now()}`;
     const plays: TheThing[] = PlaysWithEquipment;
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(resultTourPlan);
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.runAction(
+      ImitationTourPlan.actions['alter-shopping-cart']
+    );
+    cartPO.expectVisible();
+    cartPO.removeAll();
     purchasePlays(plays).then(purchases => {
       const totalCharge = sum(purchases.map(p => p.charge));
       siteNavigator.goto(['shopping', 'cart'], cartPO);
       cartPO.submit();
       tourPlanPO.expectVisible();
-      tourPlanPO.theThingPO.setValue(resultTourPlan);
+      tourPlanPO.expectPurchases(purchases);
       tourPlanPO.theThingPO.save(resultTourPlan);
       siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
       myTourPlansPO.theThingDataTablePO.gotoTheThingView(resultTourPlan);
       tourPlanPO.expectVisible();
-      tourPlanPO.expectValue(resultTourPlan);
+      // tourPlanPO.expectValue(resultTourPlan);
       tourPlanPO.expectPurchases(purchases);
       tourPlanPO.expectTotalCharge(totalCharge);
     });
@@ -285,5 +301,10 @@ describe('Import/export purchases between cart and tour-plan', () => {
     tourPlanPO.expectVisible();
     tourPlanPO.expectPurchases(remainPurchases);
     tourPlanPO.expectTotalCharge(totalCharge);
+  });
+
+  it('Hide purchases block if no purchase', () => {
+    tourPlanPO.removeAllPurchases();
+    tourPlanPO.expectNonePurchase();
   });
 });

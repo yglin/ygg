@@ -100,6 +100,11 @@ export class TourPlanComponent implements OnInit, OnDestroy {
     }
   }
 
+  clearPurchases() {
+    this.tourPlan.removeRelation(RelationPurchase.name);
+    this.purchaseRelations.length = 0;
+  }
+
   // runAction(action: TheThingAction) {
   //   this.theThingFactory.runAction(action, this.tourPlan);
   // }

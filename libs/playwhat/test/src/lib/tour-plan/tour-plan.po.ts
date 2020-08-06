@@ -440,4 +440,12 @@ export class TourPlanPageObjectCypress extends TourPlanPageObject {
     );
     eventThumbnailPO.gotoView();
   }
+
+  removeAllPurchases() {
+    cy.get(this.getSelector('buttonClearPurchases')).click();
+  }
+
+  expectNonePurchase() {
+    cy.get(this.getSelector('purchases')).should('be.not.visible');
+  }
 }

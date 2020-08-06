@@ -2,20 +2,23 @@
   <div class="the-thing">
     <the-thing [id]="tourPlan.id" [imitation]="imitation">
       <div the-thing-projection-middle>
-        <div class="purchases">
-          <!-- <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px"> -->
-          <h2>預訂項目</h2>
-          <!-- <div *ngIf="!readonly">
+        <div
+          class="purchases"
+          *ngIf="purchaseRelations && purchaseRelations.length > 0"
+        >
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+            <h2>預訂項目</h2>
+            <div *ngIf="!readonly">
               <button
-                class="import-to-cart edit"
+                class="clear-purchases"
                 mat-mini-fab
-                matTooltip="修改購物車"
-                (click)="importToCart()"
+                matTooltip="刪除所有購買項目"
+                (click)="clearPurchases()"
               >
-                <mat-icon>add_shopping_cart </mat-icon>
+                <mat-icon>delete_sweep</mat-icon>
               </button>
-            </div> -->
-          <!-- </div> -->
+            </div>
+          </div>
           <div
             fxLayout="row wrap"
             fxLayoutAlign="start start"
