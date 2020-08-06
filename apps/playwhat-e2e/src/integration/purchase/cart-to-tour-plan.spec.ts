@@ -28,7 +28,7 @@ import {
   // MyThingsPageObjectCypress,
   TheThingPageObjectCypress
 } from '@ygg/the-thing/test';
-import { chunk, isEmpty, keyBy, random, sampleSize, sum } from 'lodash';
+import { chunk, isEmpty, keyBy, random, sampleSize, sum, result } from 'lodash';
 import { HeaderPageObjectCypress } from '../../support/header.po';
 import {
   PlaysWithEquipment,
@@ -258,6 +258,7 @@ describe('Import/export purchases between cart and tour-plan', () => {
     purchasePlays(plays).then(purchases => {
       const totalCharge = sum(purchases.map(p => p.charge));
       siteNavigator.goto(['shopping', 'cart'], cartPO);
+      cartPO.expectSubmitTarget(resultTourPlan.name);
       cartPO.submit();
       tourPlanPO.expectVisible();
       tourPlanPO.expectPurchases(purchases);

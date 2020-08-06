@@ -88,9 +88,9 @@ export class ShoppingCartService implements OnDestroy {
       title: `訂購${product.name}`,
       data: dialogData
     });
-    purchaseDialog.afterClosed().subscribe(purchases => {
-      if (!isEmpty(purchases)) {
-        for (const purchase of purchases) {
+    purchaseDialog.afterClosed().subscribe(_purchases => {
+      if (!isEmpty(_purchases)) {
+        for (const purchase of _purchases) {
           this.purchases[purchase.productId] = purchase;
         }
         this.purchases$.next(values(this.purchases));

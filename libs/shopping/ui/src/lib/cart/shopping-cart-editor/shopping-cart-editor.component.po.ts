@@ -35,7 +35,8 @@ export abstract class ShoppingCartEditorPageObject extends PageObject {
     totalCharge: '.total-charge',
     buttonClear: 'button.clear-all',
     buttonSubmit: 'button.submit',
-    buttonAddPurchase: 'button.add-purchase'
+    buttonAddPurchase: 'button.add-purchase',
+    submitTarget: '.submit-target'
   };
 
   getSelectorForPurchase(purchase?: Purchase): string {

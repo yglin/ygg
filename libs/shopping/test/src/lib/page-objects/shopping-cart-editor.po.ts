@@ -132,4 +132,8 @@ export class ShoppingCartEditorPageObjectCypress extends ShoppingCartEditorPageO
     // confirmDialogPO.confirm();
     cy.get(this.getSelectorForPurchase()).should('not.be.visible');
   }
+
+  expectSubmitTarget(name: string) {
+    cy.get(this.getSelector('submitTarget')).should('include.text', name);
+  }
 }

@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { AuthenticateService } from '@ygg/shared/user/ui';
 import { Purchase } from '@ygg/shopping/core';
 // import { PurchaseControlComponent } from '../../purchase';
-import { TheThingFilter } from '@ygg/the-thing/core';
+import { TheThingFilter, TheThing } from '@ygg/the-thing/core';
 import { IConsumer } from 'libs/shopping/core/src/lib/models/consumer';
 import { isEmpty, noop } from 'lodash';
 import { merge, Subscription } from 'rxjs';
@@ -37,11 +37,13 @@ export class ShoppingCartEditorComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   clearButtonDisabled = false; // Always enable
   canSubmit = false;
+  submitTarget: TheThing = null;
 
   constructor(
     private authService: AuthenticateService,
     private shoppingCart: ShoppingCartService,
   ) {
+    this.submitTarget = this.shoppingCart.order || null;
     this.totalCharge = 0;
     this.displayedColumns = ['product', 'quantity', 'charge', 'management'];
     this.purchasesDataSource = new MatTableDataSource<Purchase>([]);

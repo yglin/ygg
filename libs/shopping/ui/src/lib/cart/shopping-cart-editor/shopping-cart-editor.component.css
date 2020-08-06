@@ -30,3 +30,10 @@
   width: 75px;
   font-size: 20px;
 }
+
+.submit-target h2 {
+  max-width: 250px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+}
