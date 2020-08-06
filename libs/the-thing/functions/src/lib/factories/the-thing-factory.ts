@@ -43,6 +43,6 @@ export class TheThingFactoryFunctions extends TheThingFactory {
     options?: { force?: boolean }
   ) {
     imitation.setState(thing, state);
-    return this.theThingAccessor.save(thing, thing.collection);
+    return this.theThingAccessor.upsert(thing);
   }
 }

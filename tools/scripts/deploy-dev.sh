@@ -10,7 +10,7 @@ cd ..
 ng build --prod
 
 #deploy
-firebase deploy --only hosting
+firebase deploy
 
 
 # Restore settings to develop project

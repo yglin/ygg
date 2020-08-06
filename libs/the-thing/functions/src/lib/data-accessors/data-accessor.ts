@@ -1,7 +1,8 @@
 import { DataAccessor, Query } from '@ygg/shared/infra/core';
 import * as admin from 'firebase-admin';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject, of, combineLatest } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import { isEmpty } from 'lodash';
 
 type FireQueryRef =
   | FirebaseFirestore.CollectionReference
@@ -112,5 +113,31 @@ export class DataAccessorFunctions extends DataAccessor {
       );
     }
     return this.ObservablesCache[cachedId];
+  }
+
+  list$(collection: string): Observable<any[]> {
+    const cachedId = collection;
+    if (!(cachedId in this.ObservablesCache)) {
+      this.ObservablesCache[cachedId] = new ReplaySubject(1);
+      this.firestore.collection(collection).onSnapshot(
+        snapshot => {
+          this.ObservablesCache[cachedId].next(
+            snapshot.docs.map(docSnapshot => docSnapshot.data())
+          );
+        },
+        error => {
+          this.ObservablesCache[cachedId].error(error);
+        }
+      );
+    }
+    return this.ObservablesCache[cachedId];
+  }
+
+  listByIds$(collection: string, ids: string[]): Observable<any[]> {
+    if (isEmpty(ids)) {
+      return of([]);
+    } else {
+      return combineLatest(ids.map(id => this.load$(collection, id)));
+    }
   }
 }

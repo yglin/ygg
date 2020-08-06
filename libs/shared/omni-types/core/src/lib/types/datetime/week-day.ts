@@ -7,7 +7,17 @@ export const WeekDayNames = [
   '星期五',
   '星期六'
 ];
-export { WeekDay } from '@angular/common';
+
+export enum WeekDay {
+  Sunday = 0,
+  Monday = 1,
+  Tuesday = 2,
+  Wednesday = 3,
+  Thursday = 4,
+  Friday = 5,
+  Saturday = 6
+}
+
 export function getWeekDayName(weekDay: number): string {
   return WeekDayNames[(weekDay % WeekDayNames.length)];
 }

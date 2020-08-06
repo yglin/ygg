@@ -145,17 +145,20 @@
     "tslint": "6.0.0",
     "typescript": "~3.8.3"
   },
-  "firebase-functions-dependencies": [
-    "firebase-functions",
-    "firebase-admin",
-    "rxjs",
-    "moment",
-    "short-uuid",
-    "mailgun-js",
-    "nodemailer"
-  ],
-  "main": "./dist/functions/main.js",
-  "engines": {
-    "node": "10"
+  "firebase": {
+    "dependencies": [
+      "firebase-functions",
+      "firebase-admin",
+      "rxjs",
+      "moment",
+      "moment-range",
+      "short-uuid",
+      "mailgun-js",
+      "nodemailer"
+    ],
+    "main": "main.js",
+    "engines": {
+      "node": "10"
+    }
   }
 }

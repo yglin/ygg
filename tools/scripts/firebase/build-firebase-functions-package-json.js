@@ -1,12 +1,12 @@
 const packageJson = require('../../../package.json'); // Take root package.json
 const fs = require('fs');
-const deps = packageJson['firebase-functions-dependencies'];
+const deps = packageJson.firebase.dependencies;
 
 
 // Template of package.json for Firebase Functions
 const firebaseFunctionsPackageJson = {
-  engines: { node: '8' },
-  main: 'main.js',
+  engines: packageJson.firebase.engines,
+  main: packageJson.firebase.main,
 
   // filter only dependencies we need for Firebase Functions
   dependencies: deps.reduce((acc, cur) => {

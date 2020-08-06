@@ -1,43 +1,35 @@
 import {
-  CellDefinesTourPlan,
-  ImitationTourPlan,
-  ScheduleAdapter,
-  ImitationTourPlanCellDefines,
-  RelationshipPlay,
-  ImitationPlayCellDefines,
-  RelationNamePlay,
   ImitationEvent,
+  ImitationEventCellDefines,
   ImitationPlay,
-  ImitationEventCellDefines
+  ImitationPlayCellDefines,
+  ImitationTourPlan,
+  ImitationTourPlanCellDefines,
+  RelationshipPlay
 } from '@ygg/playwhat/core';
 import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
 import { SchedulePageObjectCypress } from '@ygg/schedule/test';
+import {
+  BusinessHours,
+  DateRange,
+  DayTime,
+  DayTimeRange,
+  OpenHour,
+  TimeRange,
+  WeekDay
+} from '@ygg/shared/omni-types/core';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import { waitForLogin } from '@ygg/shared/user/test';
 import {
-  TheThing,
-  TheThingRelation,
-  RelationRecord
-} from '@ygg/the-thing/core';
-import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
-import { SampleEquipments, SamplePlays } from '../play/sample-plays';
-import { ScheduleTrivial, TourPlanUnscheduled } from './sample-schedules';
-import {
-  DateRange,
-  DayTimeRange,
-  DayTime,
-  TimeRange,
-  BusinessHours,
-  OpenHour,
-  WeekDay
-} from '@ygg/shared/omni-types/core';
-import * as moment from 'moment';
-import {
-  RelationPurchase,
-  CellNames as CellNamesShopping
+  CellNames as CellNamesShopping,
+  RelationPurchase
 } from '@ygg/shopping/core';
-import { ServiceAvailablility, ServiceEvent } from '@ygg/schedule/core';
+import { RelationRecord, TheThing } from '@ygg/the-thing/core';
+import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
 import { random } from 'lodash';
+import * as moment from 'moment';
+import { SampleEquipments, SamplePlays } from '../play/sample-plays';
+import { TourPlanUnscheduled } from './sample-schedules';
 
 function stubBusisnessHourForPlay(
   play: TheThing,
