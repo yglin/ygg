@@ -53,8 +53,12 @@ export abstract class ShoppingCartEditorPageObject extends PageObject {
     return `${this.getSelector('purchaseList')} [product-id="${productId}"]`;
   }
 
+  getSelectorForProductQuantity(productId: string): string {
+    return `${this.getSelectorForProduct(productId)} .quantity`;
+  }
+
   getSelectorForProductQuantityInput(productId: string): string {
-    return `${this.getSelectorForProduct(productId)} .quantity input`;
+    return `${this.getSelectorForProductQuantity(productId)} input`;
   }
 
   abstract setQuantity(productId: string, quantity: number): void;

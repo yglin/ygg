@@ -1,4 +1,8 @@
-import { ImitationPlay, RelationshipEquipment } from '@ygg/playwhat/core';
+import {
+  ImitationPlay,
+  RelationshipEquipment,
+  ImitationPlayCellDefines
+} from '@ygg/playwhat/core';
 import { SiteNavigator } from '@ygg/playwhat/test';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import {
@@ -18,7 +22,16 @@ import {
 } from '@ygg/shopping/test';
 import { TheThing } from '@ygg/the-thing/core';
 import { TheThingPageObjectCypress } from '@ygg/the-thing/test';
-import { cloneDeep, keyBy, last, random, remove, sum, values } from 'lodash';
+import {
+  cloneDeep,
+  keyBy,
+  last,
+  random,
+  remove,
+  sum,
+  values,
+  find
+} from 'lodash';
 import { HeaderPageObjectCypress } from '../../support/header.po';
 import {
   PlaysWithEquipment,
@@ -42,6 +55,7 @@ describe('Purchase plays and add to cart', () => {
   // const tourPlanViewPO = new TourPlanViewPageObjectCypress();
   const playPO = new TheThingPageObjectCypress('', ImitationPlay);
   let currentUser: User;
+  let purchasesGlobal: Purchase[];
 
   function purchasePlays(plays: TheThing[]): Purchase[] {
     const purchases: { [playId: string]: Purchase } = keyBy(
@@ -84,8 +98,8 @@ describe('Purchase plays and add to cart', () => {
   });
 
   beforeEach(() => {
-    cy.visit('/');
-    waitForLogin();
+    // cy.visit('/');
+    // waitForLogin();
     // tourPlanBuilderPO.reset();
     // siteNavigator.goto(['tour-plans', 'builder'], tourPlanBuilderPO);
   });
@@ -108,32 +122,86 @@ describe('Purchase plays and add to cart', () => {
     siteNavigator.goto(['shopping', 'cart'], cartPO);
     //Hide badge of shopping cart button after visit shopping cart page
     headerPO.shoppingCartButtonPO.expectBadge('hide');
+    cartPO.removeAll();
   });
 
   it('Show purchased plays in cart page', () => {
-    const purchases = purchasePlays(PlaysWithoutEquipment);
-    const totalCharge = sum(values(purchases).map(p => p.charge));
+    purchasesGlobal = purchasePlays(PlaysWithoutEquipment);
+    const totalCharge = sum(values(purchasesGlobal).map(p => p.charge));
     siteNavigator.goto(['shopping', 'cart'], cartPO);
-    cartPO.expectPurchases(values(purchases));
+    cartPO.expectPurchases(values(purchasesGlobal));
     cartPO.expectTotalCharge(totalCharge);
+  });
+
+  it('Change quantity of purchases in cart page', () => {
+    cy.wrap(purchasesGlobal).then((purchases: any) => {
+      // Change quantity;
+      for (const purchase of purchases) {
+        purchase.quantity = random(20, 50);
+      }
+      const totalCharge = sum(values(purchases).map(p => p.charge));
+      siteNavigator.goto(['shopping', 'cart'], cartPO);
+      cy.wrap(purchases).each((p: any) => {
+        cartPO.setQuantity(p.productId, p.quantity);
+      });
+      cartPO.expectPurchases(values(purchases));
+      cartPO.expectTotalCharge(totalCharge);
+    });
+  });
+
+  it('Show over-maximum error when quantity exceeds maximum', () => {
+    cy.wrap(purchasesGlobal).then((purchases: any) => {
+      const play = PlaysWithoutEquipment[0];
+      const purchase: Purchase = find(
+        purchases as Purchase[],
+        pc => pc.productId === play.id
+      );
+      const oldQuantity = purchase.quantity;
+      const maximum: number = play.getCellValue(
+        ImitationPlayCellDefines.maxParticipants.name
+      );
+      const newQuantity = maximum + 1;
+      cartPO.setQuantity(play.id, newQuantity);
+      cartPO.expectOverMaximumError(play.id, newQuantity, maximum);
+      cartPO.setQuantity(play.id, oldQuantity);
+    });
+  });
+
+  it('Show under-minimum error when quantity less than minimum', () => {
+    cy.wrap(purchasesGlobal).then((purchases: any) => {
+      const play = PlaysWithoutEquipment[0];
+      const purchase: Purchase = find(
+        purchases as Purchase[],
+        pc => pc.productId === play.id
+      );
+      const oldQuantity = purchase.quantity;
+      const minimum: number = play.getCellValue(
+        ImitationPlayCellDefines.minParticipants.name
+      );
+      const newQuantity = minimum - 1;
+      cartPO.setQuantity(play.id, newQuantity);
+      cartPO.expectUnderMinimumError(play.id, newQuantity, minimum);
+      cartPO.setQuantity(play.id, oldQuantity);
+    });
   });
 
   it('Remove purchases in cart page', () => {
-    const purchases = purchasePlays(PlaysWithoutEquipment);
-    const playToBeRemoved = last(PlaysWithoutEquipment);
-    const [purchaseToBeRemoved, ...rest] = remove(
-      purchases,
-      p => p.productId === playToBeRemoved.id
-    );
-    const totalCharge = sum(values(purchases).map(p => p.charge));
-    siteNavigator.goto(['shopping', 'cart'], cartPO);
-    cartPO.removePurchase(purchaseToBeRemoved);
-    cartPO.expectTotalCharge(totalCharge);
+    cy.wrap(purchasesGlobal).then((purchases: any) => {
+      const playToBeRemoved = last(PlaysWithoutEquipment);
+      const [purchaseToBeRemoved, ...rest] = remove(
+        purchases,
+        p => p.productId === playToBeRemoved.id
+      );
+      const totalCharge = sum(values(purchases).map(p => p.charge));
+      siteNavigator.goto(['shopping', 'cart'], cartPO);
+      cartPO.removePurchase(purchaseToBeRemoved);
+      cartPO.expectTotalCharge(totalCharge);
+    });
   });
 
   it('Remove all in cart page', () => {
-    const purchases = purchasePlays(PlaysWithoutEquipment);
-    siteNavigator.goto(['shopping', 'cart'], cartPO);
+    // const purchases = purchasePlays(PlaysWithoutEquipment);
+    // siteNavigator.goto(['shopping', 'cart'], cartPO);
     cartPO.removeAll();
     cartPO.expectTotalCharge(0);
     // Hide cart button when no purchase in cart
@@ -177,21 +245,6 @@ describe('Purchase plays and add to cart', () => {
     purchasePO.setValue(purchases);
     dialogPO.confirm();
     siteNavigator.goto(['shopping', 'cart'], cartPO);
-    cartPO.expectPurchases(values(purchases));
-    cartPO.expectTotalCharge(totalCharge);
-  });
-
-  it('Change quantity of purchases in cart page', () => {
-    const purchases = cloneDeep(purchasePlays(PlaysWithoutEquipment));
-    // Change quantity;
-    for (const purchase of purchases) {
-      purchase.quantity = random(20, 50);
-    }
-    const totalCharge = sum(values(purchases).map(p => p.charge));
-    siteNavigator.goto(['shopping', 'cart'], cartPO);
-    cy.wrap(purchases).each((p: any) => {
-      cartPO.setQuantity(p.productId, p.quantity);
-    });
     cartPO.expectPurchases(values(purchases));
     cartPO.expectTotalCharge(totalCharge);
   });

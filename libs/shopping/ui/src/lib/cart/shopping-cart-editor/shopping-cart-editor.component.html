@@ -50,15 +50,17 @@
           *matCellDef="let purchase; let idx = index"
           class="quantity"
         >
-          <mat-form-field>
-            <input
-              type="number"
-              matInput
-              placeholder="數量/人數"
-              [ngModel]="purchase.quantity"
-              (ngModelChange)="onChangeQuantity(purchase, $event)"
-            />
-          </mat-form-field>
+          <div [ygg-error-messages]="errorMessages[purchase.id]?.quantity">
+            <mat-form-field>
+              <input
+                type="number"
+                matInput
+                placeholder="數量/人數"
+                [ngModel]="purchase.quantity"
+                (ngModelChange)="onChangeQuantity(purchase, $event)"
+              />
+            </mat-form-field>
+          </div>
         </td>
         <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>

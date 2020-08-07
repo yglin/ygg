@@ -1,7 +1,15 @@
 import { theMockDatabase } from '@ygg/shared/test/cypress';
-import { EmceePageObjectCypress, YggDialogPageObjectCypress } from '@ygg/shared/ui/test';
+import {
+  EmceePageObjectCypress,
+  YggDialogPageObjectCypress,
+  ErrorMessagesPageObjectCypress
+} from '@ygg/shared/ui/test';
 import { Purchase } from '@ygg/shopping/core';
-import { IPurchasePack, PurchaseRowPageObject, ShoppingCartEditorPageObject } from '@ygg/shopping/ui';
+import {
+  IPurchasePack,
+  PurchaseRowPageObject,
+  ShoppingCartEditorPageObject
+} from '@ygg/shopping/ui';
 import { TheThing } from '@ygg/the-thing/core';
 import { TheThingFinderPageObjectCypress } from '@ygg/the-thing/test';
 import { sum } from 'lodash';
@@ -40,6 +48,7 @@ export class ShoppingCartEditorPageObjectCypress extends ShoppingCartEditorPageO
   submit(): void {
     cy.get(this.getSelector('buttonSubmit')).click();
   }
+
   expectVisible(): Cypress.Chainable<any> {
     return cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
   }
@@ -135,5 +144,23 @@ export class ShoppingCartEditorPageObjectCypress extends ShoppingCartEditorPageO
 
   expectSubmitTarget(name: string) {
     cy.get(this.getSelector('submitTarget')).should('include.text', name);
+  }
+
+  expectOverMaximumError(productId: string, quantity: number, maximum: number) {
+    const errorMessagesPO = new ErrorMessagesPageObjectCypress(
+      this.getSelectorForProductQuantity(productId)
+    );
+    errorMessagesPO.expectMessage(`訂購數量${quantity}已超過上限${maximum}`);
+  }
+
+  expectUnderMinimumError(
+    productId: string,
+    quantity: number,
+    minimum: number
+  ) {
+    const errorMessagesPO = new ErrorMessagesPageObjectCypress(
+      this.getSelectorForProductQuantity(productId)
+    );
+    errorMessagesPO.expectMessage(`訂購數量${quantity}不足下限${minimum}`);
   }
 }

@@ -45,7 +45,9 @@ export class PurchaseService {
     const mainPurchase: Purchase = new Purchase({
       productId: product.id,
       quantity: options.quantity,
-      price: product.getCellValue(CellNames.price)
+      price: product.getCellValue(CellNames.price),
+      maximum: product.getCellValue(CellNames.maximum),
+      minimum: product.getCellValue(CellNames.minimum)
     });
     purchases.push(mainPurchase);
     for (const relationName of this.additionalPurchaseRelations) {

@@ -43,6 +43,8 @@ export class Purchase implements SerializableJSON {
   duration: Duration;
   price: number;
   state: PurchaseState;
+  maximum: number;
+  minimum: number;
   childPurchaseIds: string[];
 
   get charge(): number {
@@ -83,6 +85,8 @@ export class Purchase implements SerializableJSON {
       productId?: string;
       price?: number;
       quantity?: number;
+      maximum?: number;
+      minimum?: number;
     } = {}
   ) {
     this.id = generateID();

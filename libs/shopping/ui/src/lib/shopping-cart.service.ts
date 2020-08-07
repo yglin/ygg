@@ -29,6 +29,10 @@ export interface CartSubmitPack {
   purchases: Purchase[];
 }
 
+export interface ErrorMessagesMap {
+  quantity?: string[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -160,5 +164,30 @@ export class ShoppingCartService implements OnDestroy {
 
   clear() {
     this.purchases = {};
+  }
+
+  assessPurchase(purchase: Purchase): ErrorMessagesMap {
+    // console.log(`Assess purchase`);
+    // console.log(purchase.maximum);
+    // console.log(typeof purchase.maximum);
+    // console.log(purchase.quantity);
+    // console.log(typeof purchase.quantity);
+    const errorMessagesMap = {
+      quantity: []
+    };
+    if (purchase.maximum && purchase.quantity > purchase.maximum) {
+      // console.log('幹！？');
+      errorMessagesMap.quantity.push(
+        `訂購數量${purchase.quantity}已超過上限${purchase.maximum}`
+      );
+    }
+    if (purchase.minimum && purchase.quantity < purchase.minimum) {
+      // console.log('幹！？');
+      errorMessagesMap.quantity.push(
+        `訂購數量${purchase.quantity}不足下限${purchase.minimum}`
+      );
+    }
+    // console.log(errorMessagesMap);
+    return errorMessagesMap;
   }
 }

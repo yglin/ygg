@@ -33,12 +33,12 @@ export const ImitationPlayCellDefines: { [key: string]: TheThingCellDefine } = {
     userInput: 'required'
   }),
   minParticipants: new TheThingCellDefine({
-    name: '人數下限',
+    name: CellNamesShopping.minimum,
     type: 'number',
     userInput: 'required'
   }),
   maxParticipants: new TheThingCellDefine({
-    name: '人數上限',
+    name: CellNamesShopping.maximum,
     type: 'number',
     userInput: 'required'
   }),

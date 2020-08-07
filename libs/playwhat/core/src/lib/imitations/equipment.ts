@@ -9,8 +9,13 @@ export const ImitationEquipmentCellDefines = {
     type: OmniTypes.number.id,
     userInput: 'required'
   }),
-  stock: new TheThingCellDefine({
-    name: CellNamesShopping.stock,
+  maximum: new TheThingCellDefine({
+    name: CellNamesShopping.maximum,
+    type: OmniTypes.number.id,
+    userInput: 'required'
+  }),
+  minimum: new TheThingCellDefine({
+    name: CellNamesShopping.minimum,
     type: OmniTypes.number.id,
     userInput: 'required'
   }),
@@ -34,7 +39,7 @@ export const ImitationEquipment: TheThingImitation = new TheThingImitation({
     thumbnail: {
       cells: [
         ImitationEquipmentCellDefines.price.name,
-        ImitationEquipmentCellDefines.stock.name
+        ImitationEquipmentCellDefines.maximum.name
       ]
     }
   }

@@ -7,3 +7,4 @@ export * from './lib/chips-control';
 export * from './lib/image-thumbnail';
 export * from './lib/control-view-switch/control-view-switch.component.po';
 export * from './lib/emcee.service';
+export * from './lib/error-messages/error-messages.component.po';

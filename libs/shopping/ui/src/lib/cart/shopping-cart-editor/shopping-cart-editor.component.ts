@@ -9,7 +9,10 @@ import { isEmpty, noop } from 'lodash';
 import { merge, Subscription } from 'rxjs';
 // import { ShoppingCartService } from '@ygg/shopping/factory';
 import { tap } from 'rxjs/operators';
-import { ShoppingCartService } from '../../shopping-cart.service';
+import {
+  ShoppingCartService,
+  ErrorMessagesMap
+} from '../../shopping-cart.service';
 
 @Component({
   selector: 'ygg-shopping-cart-editor',
@@ -38,10 +41,11 @@ export class ShoppingCartEditorComponent implements OnInit, OnDestroy {
   clearButtonDisabled = false; // Always enable
   canSubmit = false;
   submitTarget: TheThing = null;
+  errorMessages: { [purchaseId: string]: ErrorMessagesMap } = {};
 
   constructor(
     private authService: AuthenticateService,
-    private shoppingCart: ShoppingCartService,
+    private shoppingCart: ShoppingCartService
   ) {
     this.submitTarget = this.shoppingCart.order || null;
     this.totalCharge = 0;
@@ -52,6 +56,8 @@ export class ShoppingCartEditorComponent implements OnInit, OnDestroy {
         this.purchasesDataSource.data = purchases;
         // this.clearButtonDisabled = purchases.length < 3;
         this.canSubmit = !isEmpty(purchases);
+        this.errorMessages = {};
+        this.assessPurchases(purchases);
       })
     );
     const totalCharge$ = this.shoppingCart.totalCharge$.pipe(
@@ -154,10 +160,19 @@ export class ShoppingCartEditorComponent implements OnInit, OnDestroy {
 
   onChangeQuantity(purchase: Purchase, value: number) {
     this.shoppingCart.changeQuantity(purchase, value);
+    this.assessPurchases([purchase]);
     // purchase.quantity = value;
     // // console.log(`Fuck, typeof quantity input ${typeof value}`);
     // this.emitChange(this.purchases);
     // this.evalTotalCharge();
+  }
+
+  assessPurchases(purchases: Purchase[]) {
+    for (const purchase of purchases) {
+      this.errorMessages[purchase.id] = this.shoppingCart.assessPurchase(
+        purchase
+      );
+    }
   }
 
   submit() {

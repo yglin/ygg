@@ -43,12 +43,12 @@ export const MinimumPlay = ImitationPlay.createTheThing().fromJSON({
       value: random(30, 120)
     },
     {
-      name: '人數下限',
+      name: ImitationPlayCellDefines.minParticipants.name,
       type: 'number',
       value: random(1, 10)
     },
     {
-      name: '人數上限',
+      name: ImitationPlayCellDefines.maxParticipants.name,
       type: 'number',
       value: random(10, 50)
     },
@@ -104,12 +104,12 @@ export const SamplePlays = [
         value: 120
       },
       {
-        name: '人數下限',
+        name: ImitationPlayCellDefines.minParticipants.name,
         type: 'number',
         value: 4
       },
       {
-        name: '人數上限',
+        name: ImitationPlayCellDefines.maxParticipants.name,
         type: 'number',
         value: 40
       },
@@ -156,12 +156,12 @@ export const SamplePlays = [
         value: 90
       },
       {
-        name: '人數下限',
+        name: ImitationPlayCellDefines.minParticipants.name,
         type: 'number',
         value: 2
       },
       {
-        name: '人數上限',
+        name: ImitationPlayCellDefines.maxParticipants.name,
         type: 'number',
         value: 40
       },
@@ -207,12 +207,12 @@ export const SamplePlays = [
         value: 120
       },
       {
-        name: '人數下限',
+        name: ImitationPlayCellDefines.minParticipants.name,
         type: 'number',
         value: 6
       },
       {
-        name: '人數上限',
+        name: ImitationPlayCellDefines.maxParticipants.name,
         type: 'number',
         value: 10
       },
@@ -258,12 +258,12 @@ export const SamplePlays = [
         value: 90
       },
       {
-        name: '人數下限',
+        name: ImitationPlayCellDefines.minParticipants.name,
         type: 'number',
         value: 2
       },
       {
-        name: '人數上限',
+        name: ImitationPlayCellDefines.maxParticipants.name,
         type: 'number',
         value: 15
       },
@@ -309,12 +309,12 @@ export const SamplePlays = [
         value: 120
       },
       {
-        name: '人數下限',
+        name: ImitationPlayCellDefines.minParticipants.name,
         type: 'number',
         value: 10
       },
       {
-        name: '人數上限',
+        name: ImitationPlayCellDefines.maxParticipants.name,
         type: 'number',
         value: 40
       },
@@ -342,9 +342,14 @@ export const SampleEquipments = [
         value: 100
       },
       {
-        name: ShoppingCellNames.stock,
+        name: ImitationEquipmentCellDefines.maximum.name,
         type: 'number',
         value: 6
+      },
+      {
+        name: ImitationEquipmentCellDefines.minimum.name,
+        type: 'number',
+        value: 1
       },
       {
         name: '照片',
@@ -363,9 +368,14 @@ export const SampleEquipments = [
         value: 60
       },
       {
-        name: ShoppingCellNames.stock,
+        name: ImitationEquipmentCellDefines.maximum.name,
         type: 'number',
         value: 5
+      },
+      {
+        name: ImitationEquipmentCellDefines.minimum.name,
+        type: 'number',
+        value: 1
       },
       {
         name: '照片',
