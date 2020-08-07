@@ -16,6 +16,16 @@
           <mat-icon>home</mat-icon>
         </button>
       </div>
+      <div>
+        <button
+          class="tour-plan-create"
+          mat-mini-fab
+          matTooltip="新增一個遊程計畫"
+          [routerLink]="['/', ImitationTourPlan.routePath, 'create']"
+        >
+          <mat-icon>{{ ImitationTourPlan.icon }}</mat-icon>
+        </button>
+      </div>
       <div class="shopping-cart">
         <ygg-shopping-cart-button></ygg-shopping-cart-button>
       </div>

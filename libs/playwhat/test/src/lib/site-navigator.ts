@@ -50,13 +50,13 @@ export class SiteNavigator {
 
   private gotoTourPlans(path: string[] = []) {
     const route = path.shift();
-    if (route === 'builder') {
-      cy.get('.pw-header #to-home').click({ force: true });
+    if (route === 'create') {
+      cy.get('.pw-header .tour-plan-create').click({ force: true });
     } else if (route === 'my') {
       cy.get('.account-widget .menu-trigger').click({ force: true });
       cy.get('.user-menu-item button#tour-plan').click({ force: true });
-    } else if (route === 'create') {
-      cy.get('.goto-create-tour-plan').click({ force: true });
+    } else {
+      throw new Error(`Unsupported route for tour-plans: ${route}`);
     }
   }
 

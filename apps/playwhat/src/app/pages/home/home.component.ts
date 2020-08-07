@@ -31,13 +31,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
     this.plays$ = theThingAccessService.listByFilter$(filter);
 
-    this.links.push({
-      id: 'create-tour-plan',
-      name: '新增一個遊程計畫',
-      image: '/assets/images/tour-plan/tour-plan.png',
-      path: ['/', 'tour-plans', 'create'],
-      class: 'goto-create-tour-plan'
-    });
+    // this.links.push({
+    //   id: 'create-tour-plan',
+    //   name: '新增一個遊程計畫',
+    //   image: '/assets/images/tour-plan/tour-plan.png',
+    //   path: ['/', 'tour-plans', 'create'],
+    //   class: 'goto-create-tour-plan'
+    // });
 
     this.subscriptions.push(
       this.homepageManageService

@@ -1,5 +1,8 @@
 <div class="homepage" *ngIf="reloader">
-  <div fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="space-around start" fxLayoutGap="50px">
+  <div>
+    <ygg-image-thumbnail-list [items$]="plays$" size="big"></ygg-image-thumbnail-list>
+  </div>
+<!-- <div fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="space-around start" fxLayoutGap="50px">
     <div>
       <ygg-image-thumbnail-list [items$]="plays$" size="big"></ygg-image-thumbnail-list>
     </div>
@@ -14,7 +17,7 @@
         </a>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- <div class="exhibits">
     <div *ngFor="let thing of exhibitThings">
       <the-thing-view [theThing]="thing" readonly></the-thing-view>

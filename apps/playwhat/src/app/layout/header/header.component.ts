@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ImitationTourPlan } from '@ygg/playwhat/core';
 
 @Component({
   selector: 'pw-header',
@@ -6,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-
+  ImitationTourPlan = ImitationTourPlan;
+  
   constructor() { }
 
   ngOnInit() {
