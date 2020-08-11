@@ -63,6 +63,18 @@ export class Address implements SerializableJSON {
         district: '彰化市',
         road: '南瑤路',
         number: '372號',
+      }, {
+        country: '台灣',
+        county: '彰化縣',
+        district: '彰化市',
+        road: '三民路',
+        number: '1號',
+      }, {
+        country: '台灣',
+        county: '台北市',
+        district: '中正區',
+        road: '北平西路',
+        number: '3號',
       }]);
     const newOne = new Address().fromJSON(address);
     return newOne;

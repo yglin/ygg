@@ -24,7 +24,7 @@ export class DateRange extends TimeRange {
 
   static forge(): DateRange {
     const start = moment().add(random(6), 'month');
-    const end = moment(start).add(random(7), 'day');
+    const end = moment(start).add(random(1, 7), 'day');
     return new DateRange(start.toDate(), end.toDate());
   }
 

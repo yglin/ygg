@@ -46,7 +46,7 @@ export const OmniTypes: { [id: string]: OmniType } = {
   boolean: {
     id: 'boolean',
     label: '二元勾選',
-    forge: () => false,
+    forge: () => (Math.random() > 0.5 ? true : false),
     comparator: (a: boolean, b: boolean, isAsc: boolean) => {
       return a === b ? -1 : 1;
     },
@@ -65,7 +65,20 @@ export const OmniTypes: { [id: string]: OmniType } = {
         'KAKAPO & KIWI',
         'I O B BK',
         '北斗神拳',
-        '有那魔炎粽嗎幹'
+        '有那魔炎粽嗎幹',
+        '一兼二顧，摸蜊仔兼洗褲',
+        '一樣米飼百樣人',
+        '一樣生，百樣死',
+        '七月半鴨仔',
+        '二月初二打雷，稻尾較重秤錘',
+        '人衰，種瓠仔生菜瓜',
+        '乞食趕廟公',
+        '大人爬起，囡仔佔椅',
+        '不識字個兼無衛生',
+        '公親變事主',
+        '生雞卵無，放雞屎有',
+        '囝仔人，尻川三斗火',
+        '黑矸仔底豆油'
       ]);
     },
     comparator: (a: string, b: string, isAsc: boolean) => {
@@ -134,7 +147,18 @@ export const OmniTypes: { [id: string]: OmniType } = {
   email: {
     id: 'email',
     label: 'E-mail',
-    forge: () => 'yggisfkinggy@ygmail.com',
+    forge: () =>
+      sample([
+        'yggisfkinggy@ygmail.com',
+        '厚德路78號@ygmail.com',
+        '有這個信箱哇頭吼哩@ygmail.com',
+        '54088@ygmail.com',
+        '59478@ygmail.com',
+        'BIGGG5566@ygmail.com',
+        'localmama@ygmail.com',
+        'loserrrr@ygmail.com',
+        'spam@ygmail.com'
+      ]),
     default: ''
   },
   address: {

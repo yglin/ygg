@@ -4,13 +4,16 @@ import { WeekDay, WeekDayNames } from './week-day';
 import { DayTimeRange } from './day-time-range';
 import { TimeRange } from './time-range';
 import * as moment from 'moment';
+import { DayTime } from './day-time';
 
 export class OpenHour implements SerializableJSON {
   weekDay: WeekDay;
   dayTimeRange: DayTimeRange;
 
   static forge(): OpenHour {
-    const forged = new OpenHour(random(0, 6), DayTimeRange.forge());
+    const start = new DayTime(random(6, 12), 30 * random(0, 1));
+    const end = new DayTime(random(13, 21), 30 * random(0, 1));
+    const forged = new OpenHour(random(0, 6), new DayTimeRange(start, end));
     // console.log('Forge OpenHour');
     // console.dir(forged);
     return forged;
