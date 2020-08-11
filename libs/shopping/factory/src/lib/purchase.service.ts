@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Purchase, CellNames, RelationAddition } from '@ygg/shopping/core';
+import {
+  Purchase,
+  RelationAddition,
+  ShoppingCellDefines
+} from '@ygg/shopping/core';
 import { TheThingAccessService } from '@ygg/the-thing/ui';
 import { TheThing } from '@ygg/the-thing/core';
 import { castArray, isEmpty, flatten, pick, values } from 'lodash';
@@ -45,9 +49,9 @@ export class PurchaseService {
     const mainPurchase: Purchase = new Purchase({
       productId: product.id,
       quantity: options.quantity,
-      price: product.getCellValue(CellNames.price),
-      maximum: product.getCellValue(CellNames.maximum),
-      minimum: product.getCellValue(CellNames.minimum)
+      price: product.getCellValue(ShoppingCellDefines.price.id),
+      maximum: product.getCellValue(ShoppingCellDefines.maximum.id),
+      minimum: product.getCellValue(ShoppingCellDefines.minimum.id)
     });
     purchases.push(mainPurchase);
     for (const relationName of this.additionalPurchaseRelations) {

@@ -41,7 +41,7 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     // Only show first required cell, hide rest cells and other optional inputs
     for (let index = 1; index < orderedRequiredCells.length; index++) {
       const cell = orderedRequiredCells[index];
-      cy.get(this.getSelectorForCell(cell.name)).should('not.be.visible');
+      cy.get(this.getSelectorForCell(cell.id)).should('not.be.visible');
     }
     cy.get(this.getSelector('optionals')).should('not.be.visible');
   }
@@ -55,12 +55,12 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
   }
 
   expectCell(cell: TheThingCell) {
-    cy.get(`${this.getSelectorForCell(cell.name)} h4`).contains(cell.name);
+    cy.get(`${this.getSelectorForCell(cell.id)} h4`).contains(cell.label);
     // const cellViewPagePO = new TheThingCellViewPageObjectCypress(
     //   this.getSelectorForCell(cell.name)
     // );
     const cellViewPagePO = new OmniTypeViewControlPageObjectCypress(
-      this.getSelectorForCell(cell.name)
+      this.getSelectorForCell(cell.id)
     );
     cellViewPagePO.expectValue(cell.type, cell.value);
   }
@@ -72,12 +72,12 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
 
   expectValue(tourPlan: TheThing) {
     this.expectName(tourPlan.name);
-    const requiredCells = ImitationTourPlan.getRequiredCellNames();
+    const requiredCells = ImitationTourPlan.getRequiredCellIds();
     for (const requiredCell of requiredCells) {
       const cell = tourPlan.cells[requiredCell];
       this.expectCell(cell);
     }
-    const optionalCells = ImitationTourPlan.getOptionalCellNames();
+    const optionalCells = ImitationTourPlan.getOptionalCellIds();
     for (const optionalCell of optionalCells) {
       if (tourPlan.hasCell(optionalCell)) {
         const cell = tourPlan.cells[optionalCell];
@@ -93,7 +93,7 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     //     return Purchase.purchase(
     //       tourPlan,
     //       product,
-    //       r.getCellValue(CellNames.quantity)
+    //       r.getCellValue(CellIds.quantity)
     //     );
     //   });
     //   this.purchaseListPO.expectPurchases(purchases);
@@ -163,7 +163,7 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
 
   setCell(cell: TheThingCell): void {
     const omniTypeViewControlPO = new OmniTypeViewControlPageObjectCypress(
-      this.getSelectorForCell(cell.name)
+      this.getSelectorForCell(cell.id)
     );
     omniTypeViewControlPO.setValue(cell.type, cell.value);
   }
@@ -217,26 +217,26 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     }
 
     const orderedRequiredCells = tourPlan.getCellsByNames(
-      ImitationTourPlan.getRequiredCellNames()
+      ImitationTourPlan.getRequiredCellIds()
     );
 
     cy.wrap(orderedRequiredCells).each((cell: any, index: number) => {
       if (options.freshNew) {
         // Show required error
         this.expectError(
-          this.getSelectorForCell(cell.name),
-          `請填入${cell.name}`
+          this.getSelectorForCell(cell.id),
+          `請填入${cell.label}`
         );
       }
       const omniTypeViewControlPO = new OmniTypeViewControlPageObjectCypress(
-        this.getSelectorForCell(cell.name)
+        this.getSelectorForCell(cell.id)
       );
       omniTypeViewControlPO.setValue(cell.type, cell.value);
 
       if (options.freshNew && index + 1 < orderedRequiredCells.length) {
         // Reveal next required cell
         const nextCell = orderedRequiredCells[index + 1];
-        cy.get(this.getSelectorForCell(nextCell.name)).should('be.visible');
+        cy.get(this.getSelectorForCell(nextcell.id)).should('be.visible');
       }
     });
 
@@ -307,7 +307,7 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
     const cellCreatorPO = new CellCreatorPageObjectCypress(
       dialogPO.getSelector()
     );
-    cellCreatorPO.selectPreset(cell.name);
+    cellCreatorPO.selectPreset(cell.id);
     cellCreatorPO.setCellValue(cell);
     dialogPO.confirm();
     dialogPO.expectClosed();
@@ -318,11 +318,11 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
   }
 
   deleteCell(cell: TheThingCell) {
-    cy.get(`${this.getSelectorForCell(cell.name)} button.delete`).click();
+    cy.get(`${this.getSelectorForCell(cell.id)} button.delete`).click();
   }
 
   expectNoCell(cell: TheThingCell) {
-    cy.get(this.getSelectorForCell(cell.name)).should('not.exist');
+    cy.get(this.getSelectorForCell(cell.id)).should('not.exist');
   }
 
   expectNoCells(cells: TheThingCell[]) {

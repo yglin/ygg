@@ -81,30 +81,30 @@
     <ng-content select="[the-thing-projection-middle]"></ng-content>
   </div>
   <div [formGroup]="formGroupCells" class="cells">
-    <div *ngFor="let cellName of orderedCellNames">
-      <div *ngIf="formGroupCells.get(cellName) as cellControl">
+    <div *ngFor="let cellId of orderedCellIds">
+      <div *ngIf="formGroupCells.get(cellId) as cellControl">
         <div
-          [attr.cell-name]="cellName"
-          [hidden]="!isCellControlShown(cellName)"
+          [attr.cell-id]="cellId"
+          [hidden]="!isCellControlShown(cellId)"
         >
           <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-            <ygg-title-divider [level]="4">{{ cellName }}</ygg-title-divider>
-            <div *ngIf="!isCellRequired(cellName) && !readonly">
+            <ygg-title-divider [level]="4">{{ getCellLabel(cellId) }}</ygg-title-divider>
+            <div *ngIf="!isCellRequired(cellId) && !readonly">
               <button
                 type="button"
                 class="delete edit"
                 mat-mini-fab
-                [matTooltip]="'移除資料欄位 ' + cellName"
-                (click)="deleteCell(cellName)"
+                [matTooltip]="'移除資料欄位 ' + cellId"
+                (click)="deleteCell(cellId)"
               >
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
           </div>
           <the-thing-cell
-            [formControlName]="cellName"
+            [formControlName]="cellId"
             [readonly]="readonly"
-            [required]="isCellRequired(cellName)"
+            [required]="isCellRequired(cellId)"
           ></the-thing-cell>
         </div>
       </div>

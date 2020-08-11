@@ -5,7 +5,7 @@ export abstract class TheThingCellsEditorPageObject extends PageObject {
   selectors = {
     main: '.the-thing-cells-editor',
     deleteAll: 'button.delete-all',
-    inputCellName: 'input.name',
+    inputCellId: 'input.name',
     selectCellType: 'select.cell-type',
     buttonAddCell: 'button.add-cell',
     buttonSubmit: 'button.submit'
@@ -13,9 +13,9 @@ export abstract class TheThingCellsEditorPageObject extends PageObject {
 
   getSelectorForCellControl(cell?: TheThingCell): string {
     if (cell) {
-      return `${this.getSelector()} [cell-name="${cell.name}"]`;
+      return `${this.getSelector()} [cell-id="${cell.id}"]`;
     } else {
-      return `${this.getSelector()} [cell-name]`;
+      return `${this.getSelector()} [cell-id]`;
     }
   }
 

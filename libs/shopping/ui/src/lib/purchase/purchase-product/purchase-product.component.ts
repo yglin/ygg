@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { YggDialogContentComponent } from '@ygg/shared/ui/widgets';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { Purchase, CellNames } from '@ygg/shopping/core';
+import { Purchase } from '@ygg/shopping/core';
 import { PurchaseProductComponentInput } from './purchase-product.component.po';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { isEmpty } from 'lodash';
@@ -13,7 +13,6 @@ import { isEmpty } from 'lodash';
 })
 export class PurchaseProductComponent
   implements OnInit, OnDestroy, YggDialogContentComponent {
-  CellNames = CellNames;
   purchases: Purchase[] = [];
   dialogData: PurchaseProductComponentInput;
   dialogOutput$: BehaviorSubject<Purchase[]> = new BehaviorSubject([]);

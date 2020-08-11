@@ -8,8 +8,8 @@
       <mat-form-field>
         <input
           matInput
-          [placeholder]="cell.name"
-          [formControlName]="cell.name"
+          [placeholder]="cell.label"
+          [formControlName]="cell.id"
         />
       </mat-form-field>
     </div>
@@ -17,8 +17,8 @@
       <mat-form-field>
         <textarea
           matInput
-          [placeholder]="cell.name"
-          [formControlName]="cell.name"
+          [placeholder]="cell.label"
+          [formControlName]="cell.id"
           cdkTextareaAutosize
           #autosize="cdkTextareaAutosize"
           cdkAutosizeMinRows="3"
@@ -27,38 +27,38 @@
       </mat-form-field>
     </div>
     <div *ngSwitchCase="'number'">
-      <ygg-number-control [formControlName]="cell.name"></ygg-number-control>
+      <ygg-number-control [formControlName]="cell.id"></ygg-number-control>
     </div>
     <div *ngSwitchCase="'album'">
-      <ygg-album-control [formControlName]="cell.name"></ygg-album-control>
+      <ygg-album-control [formControlName]="cell.id"></ygg-album-control>
     </div>
     <div *ngSwitchCase="'html'">
-      <ygg-html-control [formControlName]="cell.name"></ygg-html-control>
+      <ygg-html-control [formControlName]="cell.id"></ygg-html-control>
     </div>
     <div *ngSwitchCase="'address'">
-      <ygg-address-control [formControlName]="cell.name"></ygg-address-control>
+      <ygg-address-control [formControlName]="cell.id"></ygg-address-control>
     </div>
     <div *ngSwitchCase="'date-range'">
       <ygg-date-range-control
-        [formControlName]="cell.name"
+        [formControlName]="cell.id"
       ></ygg-date-range-control>
     </div>
     <div *ngSwitchCase="'day-time-range'">
       <ygg-day-time-range-control
-        [formControlName]="cell.name"
+        [formControlName]="cell.id"
       ></ygg-day-time-range-control>
     </div>
     <div *ngSwitchCase="'business-hours'">
       <ygg-business-hours-control
-        [formControlName]="cell.name"
+        [formControlName]="cell.id"
       ></ygg-business-hours-control>
     </div>
     <div *ngSwitchCase="'contact'">
-      <ygg-contact-control [formControlName]="cell.name"></ygg-contact-control>
+      <ygg-contact-control [formControlName]="cell.id"></ygg-contact-control>
     </div>
     <div *ngSwitchCase="'location'">
       <ygg-location-control
-        [formControlName]="cell.name"
+        [formControlName]="cell.id"
       ></ygg-location-control>
     </div>
     <div *ngSwitchDefault>

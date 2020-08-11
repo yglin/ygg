@@ -1,34 +1,19 @@
 import {
-  TourPlanWithPlaysAndEquipments,
-  TourPlanWithPlaysNoEquipment
-} from '../tour-plan/sample-tour-plan';
-import { Schedule, ServiceEvent } from '@ygg/schedule/core';
-import {
   CellDefinesTourPlan,
-  ScheduleAdapter,
+  ImitationEvent,
+  ImitationEventCellDefines,
   ImitationPlay,
   ImitationTourPlan,
-  RelationshipScheduleEvent,
-  RelationshipEquipment,
-  ImitationEvent,
   RelationshipPlay,
-  ImitationEventCellDefines
+  RelationshipScheduleEvent,
+  ScheduleAdapter
 } from '@ygg/playwhat/core';
-import { DateRange } from '@ygg/shared/omni-types/core';
-import {
-  RelationPurchase,
-  CellNames as CellNamesShopping
-} from '@ygg/shopping/core';
+import { Schedule, ServiceEvent } from '@ygg/schedule/core';
+import { RelationPurchase, ShoppingCellDefines } from '@ygg/shopping/core';
+import { RelationRecord, TheThing } from '@ygg/the-thing/core';
 import { find } from 'lodash';
-import {
-  PlaysWithEquipment,
-  PlaysWithoutEquipment
-} from '../play/sample-plays';
-import {
-  TheThing,
-  TheThingRelation,
-  RelationRecord
-} from '@ygg/the-thing/core';
+import { PlaysWithoutEquipment } from '../play/sample-plays';
+import { TourPlanWithPlaysNoEquipment } from '../tour-plan/sample-tour-plan';
 
 // let dateRange: DateRange = TourPlanWithPlaysAndEquipments.getCellValue(
 //   CellDefinesTourPlan.dateRange.name
@@ -44,16 +29,17 @@ import {
 //     const event = new ServiceEvent(
 //       ScheduleAdapter.deduceServiceFromPlay(play),
 //       {
-//         numParticipants: relation.getCellValue(CellNamesShopping.quantity)
+//         numParticipants: relation.getCellValue(CellIdsShopping.quantity)
 //       }
 //     );
 //     ScheduleFromTourPlanWithPlaysAndEquipments.addEvent(event);
 //   }
 // }
 
+console.log(TourPlanWithPlaysNoEquipment);
 export const TourPlanUnscheduled = TourPlanWithPlaysNoEquipment.clone();
 TourPlanUnscheduled.name = `測試遊程(尚未規劃行程)_${Date.now()}`;
-TourPlanUnscheduled.addCell(CellDefinesTourPlan.dayTimeRange.forgeCell());
+TourPlanUnscheduled.upsertCell(CellDefinesTourPlan.dayTimeRange.forgeCell());
 ImitationTourPlan.setState(
   TourPlanUnscheduled,
   ImitationTourPlan.states.applied
@@ -63,22 +49,23 @@ export const ScheduledEvents: TheThing[] = [];
 export const RelationPlayOfEvents: RelationRecord[] = [];
 
 const dateRange = TourPlanUnscheduled.getCellValue(
-  CellDefinesTourPlan.dateRange.name
+  CellDefinesTourPlan.dateRange.id
 );
 export const ScheduleTrivial: Schedule = new Schedule(dateRange.toTimeRange(), {
   dayTimeRange: TourPlanUnscheduled.getCellValue(
-    CellDefinesTourPlan.dayTimeRange.name
+    CellDefinesTourPlan.dayTimeRange.id
   )
 });
 for (const relation of TourPlanUnscheduled.getRelations(
   RelationPurchase.name
 )) {
+  console.log(relation);
   const play = find(PlaysWithoutEquipment, p => p.id === relation.objectId);
   if (ImitationPlay.isValid(play)) {
     const event = new ServiceEvent(
       ScheduleAdapter.deduceServiceFromPlay(play),
       {
-        numParticipants: relation.getCellValue(CellNamesShopping.quantity)
+        numParticipants: relation.getCellValue(ShoppingCellDefines.quantity.id)
       }
     );
     ScheduleTrivial.addEvent(event);
@@ -86,16 +73,17 @@ for (const relation of TourPlanUnscheduled.getRelations(
     const eventThing = ImitationEvent.createTheThing(play);
     eventThing.name = play.name;
     eventThing.setCellValue(
-      ImitationEventCellDefines.timeRange.name,
+      ImitationEventCellDefines.timeRange.id,
       event.timeRange
     );
     eventThing.setCellValue(
-      ImitationEventCellDefines.numParticipants.name,
+      ImitationEventCellDefines.numParticipants.id,
       event.numParticipants
     );
     eventThing.addRelation(
       RelationshipPlay.createRelation(eventThing.id, play.id)
     );
+    console.log(eventThing);
     ScheduledEvents.push(eventThing);
 
     RelationPlayOfEvents.push(

@@ -9,7 +9,7 @@ export function validateCellRequired(
     ? null
     : {
         validateCellRequired: {
-          message: `Require non-null value of cell ${!!cell ? cell.name : ''}`
+          message: `Require non-null value of cell ${!!cell ? cell.id : ''}`
         }
       };
 }

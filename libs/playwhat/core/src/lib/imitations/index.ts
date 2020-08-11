@@ -3,3 +3,4 @@ export * from './event';
 export * from './equipment';
 export * from './play';
 export * from './tour-plan';
+export * from './cell-defines';

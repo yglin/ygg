@@ -9,14 +9,15 @@ import { ImitationPlay, ImitationPlayCellDefines } from './play';
 import { OmniTypes } from '@ygg/shared/omni-types/core';
 import { values, keyBy, extend, pick, mapValues } from 'lodash';
 import { User } from '@ygg/shared/user/core';
+import { CellDefines } from './cell-defines';
 
 export const ImitationEventCellDefines = extend(
   mapValues(
     pick(ImitationPlayCellDefines, [
-      'location'
-      // 'album',
-      // 'timeLength',
-      // 'introduction'
+      'location',
+      'album',
+      'timeLength',
+      'introduction'
     ]),
     (cellDefine: TheThingCellDefine, key: string) => {
       const cloned = cellDefine.clone();
@@ -29,14 +30,10 @@ export const ImitationEventCellDefines = extend(
     }
   ),
   {
-    timeRange: new TheThingCellDefine({
-      name: '時段',
-      type: OmniTypes['time-range'].id,
+    timeRange: CellDefines.timeRange.extend({
       userInput: 'required'
     }),
-    numParticipants: new TheThingCellDefine({
-      name: '參加人數',
-      type: OmniTypes.number.id,
+    numParticipants: CellDefines.numParticipants.extend({
       userInput: 'required'
     })
   }
@@ -50,15 +47,15 @@ export const ImitationEvent: TheThingImitation = new TheThingImitation({
   routePath: 'event',
   cellsDef: values(ImitationEventCellDefines),
   cellsOrder: [
-    ImitationEventCellDefines.timeRange.name,
-    ImitationEventCellDefines.numParticipants.name
+    ImitationEventCellDefines.timeRange.id,
+    ImitationEventCellDefines.numParticipants.id
     // ImitationEventCellDefines.location.name
   ],
   displays: {
     thumbnail: {
       cells: [
-        ImitationEventCellDefines.timeRange.name,
-        ImitationEventCellDefines.numParticipants.name
+        ImitationEventCellDefines.timeRange.id,
+        ImitationEventCellDefines.numParticipants.id
       ]
     }
   }
@@ -68,13 +65,13 @@ ImitationEvent.dataTableConfig = {
   columns: keyBy(
     [
       {
-        name: ImitationEventCellDefines.timeRange.name,
-        label: ImitationEventCellDefines.timeRange.name,
+        name: ImitationEventCellDefines.timeRange.id,
+        label: ImitationEventCellDefines.timeRange.id,
         valueSource: 'cell'
       },
       {
-        name: ImitationEventCellDefines.numParticipants.name,
-        label: ImitationEventCellDefines.numParticipants.name,
+        name: ImitationEventCellDefines.numParticipants.id,
+        label: ImitationEventCellDefines.numParticipants.id,
         valueSource: 'cell'
       },
       {

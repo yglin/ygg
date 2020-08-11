@@ -1,30 +1,33 @@
-import { CellNames as CellNamesShopping } from '@ygg/shopping/core';
+import { ShoppingCellDefines, ShoppingCellIds } from '@ygg/shopping/core';
 import { TheThingCellDefine, TheThingImitation } from '@ygg/the-thing/core';
 import { OmniTypes } from '@ygg/shared/omni-types/core';
-import { values } from 'lodash';
+import { values, keyBy } from 'lodash';
+import { CellDefines } from './cell-defines';
 
-export const ImitationEquipmentCellDefines = {
-  price: new TheThingCellDefine({
-    name: CellNamesShopping.price,
-    type: OmniTypes.number.id,
-    userInput: 'required'
-  }),
-  maximum: new TheThingCellDefine({
-    name: CellNamesShopping.maximum,
-    type: OmniTypes.number.id,
-    userInput: 'required'
-  }),
-  minimum: new TheThingCellDefine({
-    name: CellNamesShopping.minimum,
-    type: OmniTypes.number.id,
-    userInput: 'required'
-  }),
-  album: new TheThingCellDefine({
-    name: '照片',
-    type: OmniTypes.album.id,
-    userInput: 'optional'
-  })
-};
+type CellIds = ShoppingCellIds | 'album';
+
+export const ImitationEquipmentCellDefines: {
+  [key in CellIds]?: TheThingCellDefine;
+} = keyBy(
+  [
+    ShoppingCellDefines.price.extend({
+      label: '租用單價',
+      userInput: 'required'
+    }),
+    ShoppingCellDefines.maximum.extend({
+      label: '租用數量上限',
+      userInput: 'required'
+    }),
+    ShoppingCellDefines.minimum.extend({
+      label: '租用數量下限',
+      userInput: 'required'
+    }),
+    CellDefines.album.extend({
+      userInput: 'optional'
+    })
+  ],
+  'id'
+);
 
 export const ImitationEquipment: TheThingImitation = new TheThingImitation({
   id: 'equipment',
@@ -38,8 +41,8 @@ export const ImitationEquipment: TheThingImitation = new TheThingImitation({
   displays: {
     thumbnail: {
       cells: [
-        ImitationEquipmentCellDefines.price.name,
-        ImitationEquipmentCellDefines.maximum.name
+        ImitationEquipmentCellDefines.price.id,
+        ImitationEquipmentCellDefines.maximum.id
       ]
     }
   }

@@ -12,9 +12,9 @@ import {
 import { User } from '@ygg/shared/user/core';
 import { waitForLogin } from '@ygg/shared/user/test';
 import {
-  CellNames as ShoppingCellNames,
   Purchase,
-  PurchaseAction
+  PurchaseAction,
+  ShoppingCellDefines
 } from '@ygg/shopping/core';
 import {
   PurchaseProductPageObjectCypress,
@@ -62,7 +62,7 @@ describe('Purchase plays and add to cart', () => {
       plays.map(play => {
         const purchase = new Purchase({
           productId: play.id,
-          price: play.getCellValue(ShoppingCellNames.price),
+          price: play.getCellValue(ShoppingCellDefines.price.id),
           quantity: 10
         });
         return purchase;
@@ -158,7 +158,7 @@ describe('Purchase plays and add to cart', () => {
       );
       const oldQuantity = purchase.quantity;
       const maximum: number = play.getCellValue(
-        ImitationPlayCellDefines.maxParticipants.name
+        ImitationPlayCellDefines.maximum.id
       );
       const newQuantity = maximum + 1;
       cartPO.setQuantity(play.id, newQuantity);
@@ -176,7 +176,7 @@ describe('Purchase plays and add to cart', () => {
       );
       const oldQuantity = purchase.quantity;
       const minimum: number = play.getCellValue(
-        ImitationPlayCellDefines.minParticipants.name
+        ImitationPlayCellDefines.minimum.id
       );
       const newQuantity = minimum - 1;
       cartPO.setQuantity(play.id, newQuantity);
@@ -214,7 +214,7 @@ describe('Purchase plays and add to cart', () => {
     purchases.push(
       new Purchase({
         productId: play.id,
-        price: play.getCellValue(ShoppingCellNames.price),
+        price: play.getCellValue(ShoppingCellDefines.price.id),
         quantity: random(1, 30)
       })
     );
@@ -225,7 +225,7 @@ describe('Purchase plays and add to cart', () => {
       purchases.push(
         new Purchase({
           productId: equipment.id,
-          price: equipment.getCellValue(ShoppingCellNames.price),
+          price: equipment.getCellValue(ShoppingCellDefines.price.id),
           quantity: random(1, 30)
         })
       );

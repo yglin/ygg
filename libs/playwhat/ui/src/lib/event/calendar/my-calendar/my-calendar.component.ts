@@ -34,7 +34,7 @@ colorsByState[ImitationEvent.states['host-approved'].name] = {
 
 function TheThing2CalendarEvent(event: TheThing): CalendarEvent {
   const timeRange: TimeRange = event.getCellValue(
-    ImitationEventCellDefines.timeRange.name
+    ImitationEventCellDefines.timeRange.id
   );
   const calendarEvent: CalendarEvent = {
     id: event.id,

@@ -206,9 +206,9 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
   //   //   !this.tourPlan.name &&
   //   //   request.command === 'update' &&
   //   //   request.target === 'cell' &&
-  //   //   request.field === CellNames.dateRange
+  //   //   request.field === CellIds.dateRange
   //   // ) {
-  //   //   const dateRange = this.tourPlan.getCellValue(CellNames.dateRange);
+  //   //   const dateRange = this.tourPlan.getCellValue(CellIds.dateRange);
   //   //   if (!!dateRange && !this.tourPlan.name) {
   //   //     this.tourPlan.name = defaultTourPlanName(dateRange);
   //   //   }

@@ -1,10 +1,10 @@
 import {
-  CellNames,
   defaultTourPlanName,
-  ImitationTourPlan
+  ImitationTourPlan,
+  ImitationTourPlanCellDefines
 } from '@ygg/playwhat/core';
 import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
-import { Contact } from '@ygg/shared/omni-types/core';
+import { Contact, OmniTypes } from '@ygg/shared/omni-types/core';
 import {
   ContactControlPageObjectCypress,
   OmniTypeViewControlPageObjectCypress
@@ -21,10 +21,7 @@ import {
   waitForLogin
 } from '@ygg/shared/user/test';
 import { TheThingCell } from '@ygg/the-thing/core';
-import {
-  MyThingsDataTablePageObjectCypress,
-  MyThingsPageObjectCypress
-} from '@ygg/the-thing/test';
+import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
 import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import { MinimalTourPlan, TourPlanFull } from './sample-tour-plan';
 
@@ -86,18 +83,24 @@ describe('Tour-plan create', () => {
 
   it('A tour-plan without user input name should have default name', () => {
     siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
-    const dateRangeCell = MinimalTourPlan.getCell(CellNames.dateRange);
+    const dateRangeCell = MinimalTourPlan.getCell(
+      ImitationTourPlanCellDefines.dateRange.id
+    );
     tourPlanPO.theThingPO.setCell(dateRangeCell);
     tourPlanPO.theThingPO.expectName(defaultTourPlanName(dateRangeCell.value));
   });
 
   it('Logged-in user can automatically fill contact info', () => {
-    tourPlanPO.theThingPO.setCell(MinimalTourPlan.getCell(CellNames.dateRange));
     tourPlanPO.theThingPO.setCell(
-      MinimalTourPlan.getCell(CellNames.numParticipants)
+      MinimalTourPlan.getCell(ImitationTourPlanCellDefines.dateRange.id)
+    );
+    tourPlanPO.theThingPO.setCell(
+      MinimalTourPlan.getCell(ImitationTourPlanCellDefines.numParticipants.id)
     );
     const omniTypeViewControl = new OmniTypeViewControlPageObjectCypress(
-      tourPlanPO.theThingPO.getSelectorForCell(CellNames.contact)
+      tourPlanPO.theThingPO.getSelectorForCell(
+        ImitationTourPlanCellDefines.contact.id
+      )
     );
     omniTypeViewControl.openControl();
     const dialogPO = new YggDialogPageObjectCypress();
@@ -114,21 +117,28 @@ describe('Tour-plan create', () => {
   });
 
   it('Can not add duplicate named cell', () => {
-    tourPlanPO.theThingPO.setCell(MinimalTourPlan.getCell(CellNames.dateRange));
     tourPlanPO.theThingPO.setCell(
-      MinimalTourPlan.getCell(CellNames.numParticipants)
+      MinimalTourPlan.getCell(ImitationTourPlanCellDefines.dateRange.id)
     );
-    tourPlanPO.theThingPO.setCell(MinimalTourPlan.getCell(CellNames.contact));
+    tourPlanPO.theThingPO.setCell(
+      MinimalTourPlan.getCell(ImitationTourPlanCellDefines.numParticipants.id)
+    );
+    tourPlanPO.theThingPO.setCell(
+      MinimalTourPlan.getCell(ImitationTourPlanCellDefines.contact.id)
+    );
     const cell = new TheThingCell({
-      name: '兩顆子彈',
+      id: '兩顆子彈',
+      label: '兩顆子彈',
       type: 'text',
       value: '肚皮'
     });
     tourPlanPO.theThingPO.addCell(cell);
     tourPlanPO.theThingPO.addCell(cell);
     const emceePO = new EmceePageObjectCypress();
-    emceePO.alert(`資料欄位 ${cell.name} 已存在`);
-    cy.get(tourPlanPO.getSelectorForCell(cell.name)).should('have.length', 1);
+    emceePO.alert(
+      `資料欄位 ${cell.label}(${OmniTypes[cell.type].label}) 已存在`
+    );
+    cy.get(tourPlanPO.getSelectorForCell(cell.id)).should('have.length', 1);
   });
 
   it('Build a tour-plan plus includes all optional data fields', () => {
@@ -142,7 +152,7 @@ describe('Tour-plan create', () => {
   it('Can delete cells', () => {
     siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
     const optionalCells = TourPlanFull.getCellsByNames(
-      ImitationTourPlan.getOptionalCellNames()
+      ImitationTourPlan.getOptionalCellIds()
     );
     tourPlanPO.theThingPO.setValue(MinimalTourPlan);
     cy.wrap(optionalCells).each((cell: TheThingCell) => {
@@ -180,7 +190,7 @@ describe('Tour-plan create', () => {
   it('Show saved tour-plan in /tour-plans/my', () => {
     siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
     const tourPlan = MinimalTourPlan.clone();
-    tourPlan.name = '測試遊程（儲存後顯示在我的遊程清單中）';
+    tourPlan.name = `測試遊程（儲存後顯示在我的遊程清單中）_${Date.now()}`;
     tourPlanPO.theThingPO.setValue(tourPlan);
     tourPlanPO.theThingPO.save(tourPlan);
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
@@ -194,7 +204,7 @@ describe('Tour-plan create', () => {
     // // So we wait several seconds here for tour-plan-builder to be stable
     // cy.wait(3000);
     const tourPlan = MinimalTourPlan.clone();
-    tourPlan.name = '測試遊程（需要登入才能儲存）';
+    tourPlan.name = `測試遊程（需要登入才能儲存）_${Date.now()}`;
     siteNavigator.goto(['tour-plans', 'create'], tourPlanPO);
     tourPlanPO.theThingPO.setValue(tourPlan);
     tourPlanPO.theThingPO.clickSave();

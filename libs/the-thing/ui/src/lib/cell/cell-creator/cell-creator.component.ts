@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { TheThingCell } from '@ygg/the-thing/core';
+import { TheThingCell, TheThingCellDefine } from '@ygg/the-thing/core';
 import { isEmpty, find, get } from 'lodash';
 import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { OmniTypes } from '@ygg/shared/omni-types/core';
@@ -14,7 +14,8 @@ import { filter, map, tap } from 'rxjs/operators';
 })
 export class CellCreatorComponent
   implements OnInit, OnDestroy, YggDialogContentComponent {
-  @Input() presetCells: TheThingCell[] = [];
+  @Input() presets: TheThingCellDefine[] = [];
+  selectedPreset: TheThingCellDefine;
   formControlPreset: FormControl = new FormControl();
   formGroupCreate: FormGroup;
   cellTypes = OmniTypes;
@@ -24,33 +25,51 @@ export class CellCreatorComponent
 
   constructor(private formBuilder: FormBuilder) {
     this.formGroupCreate = this.formBuilder.group({
-      name: null,
+      label: null,
       type: null,
       value: null
     });
     this.dialogOutput$ = this.formGroupCreate.valueChanges.pipe(
-      filter(cellData => cellData.name && cellData.type),
+      filter(cellData => cellData.label && cellData.type),
       // tap(cellData => {
       //   console.log('before new TheThingCell()');
       //   console.dir(cellData);
       // }),
-      map(cellData => new TheThingCell(cellData)),
+      map(cellData => {
+        if (this.selectedPreset) {
+          return this.selectedPreset.createCell(cellData.value);
+        } else {
+          cellData.id = cellData.label;
+          return new TheThingCell(cellData);
+        }
+      })
       // tap(cell => {
-      //   console.log(`Output new cell: ${cell.name}`);
+      //   console.log(`Output new cell: ${cell.label}`);
       //   console.dir(cell.toJSON());
       // })
     );
     const selectPreset$ = this.formControlPreset.valueChanges.pipe(
-      map(selectName => find(this.presetCells, c => c.name === selectName)),
-      filter(presetCell => !!presetCell),
-      tap(presetCell => this.formGroupCreate.patchValue(presetCell))
+      map(selected =>
+        find(this.presets, cellDefine => cellDefine.id === selected)
+      ),
+      filter(preset => !!preset),
+      tap((preset: TheThingCellDefine) => {
+        this.selectedPreset = preset;
+        this.formGroupCreate
+          .get('label')
+          .setValue(preset.label, { emitEvent: false });
+        this.formGroupCreate
+          .get('type')
+          .setValue(preset.type, { emitEvent: false });
+        this.formGroupCreate.get('value').setValue(null, { emitEvent: false });
+      })
     );
     this.subscriptions.push(selectPreset$.subscribe());
   }
 
   ngOnInit(): void {
     if (this.dialogData) {
-      this.presetCells = get(this.dialogData, 'presetCells', []);
+      this.presets = get(this.dialogData, 'presets', []);
     }
   }
 
@@ -63,6 +82,6 @@ export class CellCreatorComponent
   }
 
   hasPresets(): boolean {
-    return !isEmpty(this.presetCells);
+    return !isEmpty(this.presets);
   }
 }

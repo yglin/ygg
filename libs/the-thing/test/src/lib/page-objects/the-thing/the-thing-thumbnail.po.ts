@@ -19,9 +19,9 @@ export class TheThingThumbnailPageObjectCypress extends TheThingThumbnailPageObj
       null
     );
     if (display) {
-      cy.wrap(display.cells).each((cellName: string) => {
-        const cell: TheThingCell = theThing.getCell(cellName);
-        cy.get(this.getSelectorForCell(cellName)).contains(cellName);
+      cy.wrap(display.cells).each((cellId: string) => {
+        const cell: TheThingCell = theThing.getCell(cellId);
+        cy.get(this.getSelectorForCell(cellId)).contains(cellId);
         this.expectCell(cell);
       });
     }
@@ -29,7 +29,7 @@ export class TheThingThumbnailPageObjectCypress extends TheThingThumbnailPageObj
 
   expectCell(cell: TheThingCell) {
     const cellValuePO = new OmniTypeViewControlPageObjectCypress(
-      this.getSelectorForCell(cell.name)
+      this.getSelectorForCell(cell.id)
     );
     cellValuePO.expectValue(cell.type, cell.value);
   }

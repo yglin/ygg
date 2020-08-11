@@ -13,8 +13,8 @@ export abstract class TheThingThumbnailPageObject extends PageObject {
     this.imitation = imitation;
   }
 
-  getSelectorForCell(cellName: string): string {
-    return `${this.getSelector()} [cell-name="${cellName}"]`;
+  getSelectorForCell(cellId: string): string {
+    return `${this.getSelector()} [cell-id="${cellId}"]`;
   }
 
   abstract expectValue(theThing: TheThing): void;

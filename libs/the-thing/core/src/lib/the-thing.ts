@@ -185,8 +185,8 @@ export class TheThing implements Entity, ImageThumbnailItem {
             '討厭'
           ],
           random(3, 6)
-        ).map(name => TheThingCell.forge({ name })),
-        cell => cell.name
+        ).map(label => TheThingCell.forge({ label })),
+        "id"
       );
     }
 
@@ -213,16 +213,16 @@ export class TheThing implements Entity, ImageThumbnailItem {
   }
 
   hasCell(cell: TheThingCell | string, type?: OmniTypeID): boolean {
-    let cellName: string;
+    let cellId: string;
     if (typeof cell === 'string') {
-      cellName = cell;
+      cellId = cell;
     } else {
-      cellName = cell.name;
+      cellId = cell.id;
     }
-    if (!(cellName in this.cells)) {
+    if (!(cellId in this.cells)) {
       return false;
     }
-    if (type && this.cells[cellName].type !== type) {
+    if (type && this.cells[cellId].type !== type) {
       return false;
     }
     return true;
@@ -233,15 +233,12 @@ export class TheThing implements Entity, ImageThumbnailItem {
   }
 
   upsertCell(cell: TheThingCell) {
-    this.cells[cell.name] = cell;
+    this.cells[cell.id] = cell;
   }
 
-  // To be deprecated
-  addCell = this.upsertCell;
-
-  addCells(cells: TheThingCell[]) {
+  upsertCells(cells: TheThingCell[]) {
     for (const cell of cells) {
-      this.addCell(cell);
+      this.upsertCell(cell);
     }
   }
 
@@ -266,10 +263,10 @@ export class TheThing implements Entity, ImageThumbnailItem {
     }
   }
 
-  deleteCell(cellName: TheThingCell | string) {
-    cellName = typeof cellName === 'string' ? cellName : cellName.name;
-    if (this.hasCell(cellName)) {
-      delete this.cells[cellName];
+  deleteCell(cellId: TheThingCell | string) {
+    cellId = typeof cellId === 'string' ? cellId : cellId.id;
+    if (this.hasCell(cellId)) {
+      delete this.cells[cellId];
     }
   }
 
@@ -283,36 +280,36 @@ export class TheThing implements Entity, ImageThumbnailItem {
     this.cells = {};
   }
 
-  getCell(cellName: string): TheThingCell {
+  getCell(cellId: string): TheThingCell {
     try {
-      return this.cells[cellName];
+      return this.cells[cellId];
     } catch (error) {
-      console.warn(`Failed to get cell from ${cellName}: ${error.message}`);
+      console.warn(`Failed to get cell from ${cellId}: ${error.message}`);
       return null;
     }
   }
 
-  setCellValue(cellName: string, value: any) {
-    if (this.hasCell(cellName)) {
-      this.cells[cellName].value = value;
+  setCellValue(cellId: string, value: any) {
+    if (this.hasCell(cellId)) {
+      this.cells[cellId].value = value;
     } else {
-      console.warn(`Failed to setCellValue ${cellName}, cell not exists`);
+      console.warn(`Failed to setCellValue ${cellId}, cell not exists`);
     }
   }
 
-  getCellValue(cellName: string): any {
+  getCellValue(cellId: string): any {
     try {
-      return this.cells[cellName].value;
+      return this.cells[cellId].value;
     } catch (error) {
       console.warn(
-        `Failed to get cell value from ${cellName}: ${error.message}`
+        `Failed to get cell value from ${cellId}: ${error.message}`
       );
       return null;
     }
   }
 
-  getCellValuesByNames(cellNames: string[]): { [cellName: string]: any } {
-    return mapValues(pick(this.cells, cellNames), cell => cell.value);
+  getCellValuesByNames(cellIds: string[]): { [cellId: string]: any } {
+    return mapValues(pick(this.cells, cellIds), cell => cell.value);
   }
 
   hasRelation(relationName: string) {
@@ -519,7 +516,7 @@ export class TheThing implements Entity, ImageThumbnailItem {
       if (victim.cells.hasOwnProperty(key)) {
         const victimCell = victim.cells[key];
         if (!this.hasCell(victimCell)) {
-          this.addCell(victimCell.clone());
+          this.upsertCell(victimCell.clone());
         }
       }
     }
@@ -556,7 +553,7 @@ export class TheThing implements Entity, ImageThumbnailItem {
       }
       if (!isEmpty(data.cells)) {
         if (isArray(data.cells)) {
-          data.cells = keyBy(data.cells, 'name');
+          data.cells = keyBy(data.cells, 'id');
         }
         this.cells = mapValues(data.cells, cellData =>
           new TheThingCell().fromJSON(cellData)
@@ -588,11 +585,11 @@ export class TheThing implements Entity, ImageThumbnailItem {
   toJSON(): any {
     const data = toJSONDeep(this);
     // Clear out null cells
-    for (const cellName in data.cells) {
-      if (Object.prototype.hasOwnProperty.call(data.cells, cellName)) {
-        const cell = data.cells[cellName];
+    for (const cellId in data.cells) {
+      if (Object.prototype.hasOwnProperty.call(data.cells, cellId)) {
+        const cell = data.cells[cellId];
         if (cell.value === null || cell.value === undefined) {
-          delete data.cell[cellName];
+          delete data.cell[cellId];
         }
       }
     }

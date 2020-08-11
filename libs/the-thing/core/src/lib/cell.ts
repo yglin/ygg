@@ -12,9 +12,11 @@ import {
   TimeRange
 } from '@ygg/shared/omni-types/core';
 import { OmniTypes } from '@ygg/shared/omni-types/core';
+import { generateID, toJSONDeep } from '@ygg/shared/infra/core';
 
 export class TheThingCell {
-  name: string;
+  id: string;
+  label: string;
   type: OmniTypeID;
   value: any;
 
@@ -22,12 +24,19 @@ export class TheThingCell {
     return !!value && !!value.name && !!value.type;
   }
 
-  static forge(options: any = {}): TheThingCell {
+  static forge(
+    options: {
+      id?: string;
+      label?: string;
+      type?: OmniTypeID;
+      value?: any;
+    } = {}
+  ): TheThingCell {
     const cell = new TheThingCell();
-    if (options.name) {
-      cell.name = options.name;
+    if (options.label) {
+      cell.label = options.label;
     } else {
-      cell.name = sample([
+      cell.label = sample([
         '身高',
         '體重',
         '性別',
@@ -55,7 +64,15 @@ export class TheThingCell {
     return cell;
   }
 
-  constructor(options?: any) {
+  constructor(
+    options: {
+      id?: string;
+      label?: string;
+      type?: OmniTypeID;
+      value?: any;
+    } = {}
+  ) {
+    this.id = generateID();
     if (options) {
       extend(this, options);
       // this.fromJSON(options);
@@ -109,13 +126,6 @@ export class TheThingCell {
   }
 
   toJSON(): any {
-    return {
-      name: this.name,
-      type: this.type,
-      value:
-        this.value && typeof this.value.toJSON === 'function'
-          ? this.value.toJSON()
-          : this.value
-    };
+    return toJSONDeep(this);
   }
 }

@@ -19,9 +19,9 @@ import { TourPlanViewPageObjectCypress } from './tour-plan-view.po';
 import {
   Purchase,
   RelationAddition,
-  CellNames.stock,
+  CellIds.stock,
   RelationPurchase.name,
-  CellNames.quantity
+  CellIds.quantity
 } from '@ygg/shopping/core';
 import { isEmpty, find, values } from 'lodash';
 
@@ -164,7 +164,7 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
       // const theThingCellsEditorPO = new TheThingCellsEditorPageObjectCypress();
       // theThingCellsEditorPO.expectVisible();
       const optionalCells = tourPlan.getCellsByNames(
-        ImitationTourPlan.getOptionalCellNames()
+        ImitationTourPlan.getOptionalCellIds()
       );
       cy.wrap(optionalCells).each((cell: any) => {
         this.tourPlanPreviewPO.addOptionalCell(cell);
@@ -206,7 +206,7 @@ export class TourPlanBuilderPageObjectCypress extends TourPlanBuilderPageObject
     // }
     // // Set optional data fields
     // const optionalCells = tourPlan.getCellsByNames(
-    //   ImitationTourPlan.getOptionalCellNames()
+    //   ImitationTourPlan.getOptionalCellIds()
     // );
     // if (!isEmpty(optionalCells)) {
     //   this.theThingCellsEditorPO.setValue(optionalCells);

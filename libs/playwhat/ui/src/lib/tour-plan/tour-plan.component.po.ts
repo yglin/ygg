@@ -38,8 +38,8 @@ export abstract class TourPlanPageObject extends PageObject {
   // contactViewPO: ContactViewPageObject;
   // purchaseListPO: PurchaseListPageObject;
 
-  getSelectorForCell(cellName: string): string {
-    return `${this.getSelector()} [cell-name="${cellName}"]`;
+  getSelectorForCell(cellId: string): string {
+    return `${this.getSelector()} [cell-id="${cellId}"]`;
   }
 
   getSelectorForButtonState(state: TheThingState): string {

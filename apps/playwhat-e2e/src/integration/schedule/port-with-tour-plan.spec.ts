@@ -37,10 +37,10 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
   );
   const schedulePO = new SchedulePageObjectCypress('', {
     dateRange: TourPlanUnscheduled.getCellValue(
-      ImitationTourPlanCellDefines.dateRange.name
+      ImitationTourPlanCellDefines.dateRange.id
     ),
     dayTimeRange: TourPlanUnscheduled.getCellValue(
-      ImitationTourPlanCellDefines.dayTimeRange.name
+      ImitationTourPlanCellDefines.dayTimeRange.id
     )
   });
 
@@ -48,11 +48,11 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
   //   const play: TheThing = find(SamplePlays, p => p.id === se.service.id);
   //   const event = ImitationEvent.createTheThing(play);
   //   event.setCellValue(
-  //     ImitationEventCellDefines.timeRange.name,
+  //     ImitationEventCellDefines.timeRange.id,
   //     se.timeRange
   //   );
   //   event.setCellValue(
-  //     ImitationEventCellDefines.numParticipants.name,
+  //     ImitationEventCellDefines.numParticipants.id,
   //     se.numParticipants
   //   );
   //   return event;
@@ -87,13 +87,13 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
     tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
     schedulePO.expectVisible();
     schedulePO.expectDateRange(
-      TourPlanUnscheduled.getCellValue(CellDefinesTourPlan.dateRange.name)
+      TourPlanUnscheduled.getCellValue(CellDefinesTourPlan.dateRange.id)
     );
   });
 
   it('Apply day-time-range from tour-plan', () => {
     const dayTimeRange = TourPlanUnscheduled.getCellValue(
-      CellDefinesTourPlan.dayTimeRange.name
+      CellDefinesTourPlan.dayTimeRange.id
     );
     schedulePO.expectDayTimeRange(dayTimeRange);
   });

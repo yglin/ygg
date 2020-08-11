@@ -91,9 +91,9 @@ export const RelationshipItemRequestBorrow = {
 // export class Item extends TheThing {
 //   static forge() {
 //     const item = TheThing.forge();
-//     item.addCell(
+//     item.upsertCell(
 //       new TheThingCell({
-//         name: CellNames.location,
+//         name: CellIds.location,
 //         type: OmniTypes.location.id,
 //         value: Location.forge()
 //       })

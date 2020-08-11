@@ -1,10 +1,10 @@
 import {
   ImitationEvent,
-  ImitationEventCellDefines,
   ImitationTourPlan,
   RelationshipHost,
   RelationshipOrganizer,
-  RelationshipScheduleEvent
+  RelationshipScheduleEvent,
+  CellDefines as PlaywhatCellDefines
 } from '@ygg/playwhat/core';
 import {
   MyCalendarPageObjectCypress,
@@ -15,7 +15,6 @@ import { TimeRange } from '@ygg/shared/omni-types/core';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
-import { waitForLogin } from '@ygg/shared/user/test';
 import { RelationPurchase } from '@ygg/shopping/core';
 import { RelationRecord, TheThing } from '@ygg/the-thing/core';
 import {
@@ -125,7 +124,7 @@ describe('Approve scheduled events by host', () => {
 
   it('Approve event as host and redirect to calendar', () => {
     const testEventTimeRange: TimeRange = testEvent.getCellValue(
-      ImitationEventCellDefines.timeRange.name
+      PlaywhatCellDefines.timeRange.id
     );
     eventPO.runAction(ImitationEvent.actions['host-approve']);
     emceePO.confirm(`確定會以負責人身份出席參加行程${testEvent.name}？`);
@@ -143,7 +142,7 @@ describe('Approve scheduled events by host', () => {
   });
   
   // it('Show button event to google calendar', () => {
-  //   cy.pause();
+  //   // cy.pause();
   //   eventPO.runAction(ImitationEvent.actions['add-google-calendar']);
   //   emceePO.confirm(`將行程${testEvent.name}加到我的Google日曆？`);
   //   emceePO.alert(`行程${testEvent.name}已加到你的Google日曆中`);

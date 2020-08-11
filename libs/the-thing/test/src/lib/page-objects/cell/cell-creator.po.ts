@@ -1,8 +1,9 @@
 import { CellCreatorPageObject } from '@ygg/the-thing/ui';
-import { TheThingCell } from '@ygg/the-thing/core';
+import { TheThingCell, TheThingCellDefine } from '@ygg/the-thing/core';
 import { MaterialSelectPageObjectCypress } from '@ygg/shared/test/cypress';
 import { OmniTypeControlPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { OmniTypes } from '@ygg/shared/omni-types/core';
+import { find } from 'lodash';
 
 export class CellCreatorPageObjectCypress extends CellCreatorPageObject {
   setCellValue(cell: TheThingCell) {
@@ -12,25 +13,36 @@ export class CellCreatorPageObjectCypress extends CellCreatorPageObject {
     omniTypeControlPO.setValue(cell.type, cell.value);
   }
 
-  selectPreset(cellName: string): void {
+  selectPreset(cellDefine: TheThingCellDefine): void {
     const matSelectPO = new MaterialSelectPageObjectCypress(
       this.getSelector('presetSelect')
     );
-    matSelectPO.select(cellName);
-  }
-
-  setCell(cell: TheThingCell) {
+    matSelectPO.select(cellDefine.label);
     cy.get(this.getSelector('inputName'))
-      .clear()
-      .type(cell.name);
+      .invoke('val')
+      .should('equal', cellDefine.label);
     const typeSelectPO = new MaterialSelectPageObjectCypress(
       this.getSelector('selectType')
     );
-    const typeLabel = OmniTypes[cell.type].label;
-    typeSelectPO.select(typeLabel);
-    const omniTypeControlPO = new OmniTypeControlPageObjectCypress(
-      this.getSelector('valueControl')
+    typeSelectPO.expectSelected(OmniTypes[cellDefine.type].label);
+  }
+
+  setCell(cell: TheThingCell) {
+    const cellDefine: TheThingCellDefine = find(
+      this.cellDefines,
+      cd => cd.id === cell.id
     );
-    omniTypeControlPO.setValue(cell.type, cell.value);
+    if (cellDefine) {
+      this.selectPreset(cellDefine);
+    } else {
+      cy.get(this.getSelector('inputName'))
+        .clear()
+        .type(cell.label);
+      const typeSelectPO = new MaterialSelectPageObjectCypress(
+        this.getSelector('selectType')
+      );
+      typeSelectPO.select(OmniTypes[cell.type].label);
+    }
+    this.setCellValue(cell);
   }
 }

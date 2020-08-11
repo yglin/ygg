@@ -56,11 +56,11 @@ describe('Create play', () => {
     cy.wrap(requiredCellDefs).each(
       (cellDef: TheThingCellDefine, index: number) => {
         if (index === 0) {
-          cy.get(playPO.getSelectorForCell(cellDef.name))
+          cy.get(playPO.getSelectorForCell(cellDef.id))
             .scrollIntoView()
             .should('be.visible');
         } else {
-          cy.get(playPO.getSelectorForCell(cellDef.name)).should(
+          cy.get(playPO.getSelectorForCell(cellDef.id)).should(
             'not.be.visible'
           );
         }
@@ -71,13 +71,13 @@ describe('Create play', () => {
     cy.wrap(requiredCellDefs).each(
       (cellDef: TheThingCellDefine, index: number) => {
         playPO.expectError(
-          playPO.getSelectorForCell(cellDef.name),
-          `請填入${cellDef.name}資料`
+          playPO.getSelectorForCell(cellDef.id),
+          `請填入${cellDef.label}資料`
         );
-        playPO.setCell(MinimumPlay.getCell(cellDef.name));
+        playPO.setCell(MinimumPlay.getCell(cellDef.id));
         if (index < requiredCellDefs.length - 1) {
           const nextCellDef = requiredCellDefs[index + 1];
-          cy.get(playPO.getSelectorForCell(nextCellDef.name))
+          cy.get(playPO.getSelectorForCell(nextCellDef.id))
             .scrollIntoView()
             .should('be.visible');
         }
@@ -91,7 +91,7 @@ describe('Create play', () => {
     playPO.setName(MinimumPlay.name);
     cy.wrap(requiredCellDefs).each(
       (cellDef: TheThingCellDefine, index: number) => {
-        playPO.setCell(MinimumPlay.getCell(cellDef.name));
+        playPO.setCell(MinimumPlay.getCell(cellDef.id));
       }
     );
     cy.get(playPO.getSelector('buttonAddCell')).should('be.visible');
@@ -123,7 +123,7 @@ describe('Create play', () => {
   it('Can delete non-required cells', () => {
     const play = MinimumPlay.clone();
     play.name = `測試遊程(刪除資料欄位)_${Date.now()}`;
-    const requiredCellNames = ImitationPlay.getRequiredCellNames();
+    const requiredCellIds = ImitationPlay.getRequiredCellIds();
     const additionalCells = ImitationPlay.pickNonRequiredCells(
       values(PlayFull.cells)
     );
@@ -131,8 +131,8 @@ describe('Create play', () => {
     playPO.setValue(play);
 
     // Required cell does not show delete button
-    cy.wrap(requiredCellNames).each((cellName: string) => {
-      cy.get(playPO.getSelectorForCellDeleteButton(cellName)).should(
+    cy.wrap(requiredCellIds).each((cellId: string) => {
+      cy.get(playPO.getSelectorForCellDeleteButton(cellId)).should(
         'not.be.visible'
       );
     });

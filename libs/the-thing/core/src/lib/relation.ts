@@ -1,18 +1,17 @@
-import { TheThingCell } from './cell';
+import { Entity, SerializableJSON, toJSONDeep } from '@ygg/shared/infra/core';
 import {
+  defaults,
   extend,
-  isEmpty,
-  mapValues,
   get,
   isArray,
+  isEmpty,
+  isEqual,
   keyBy,
-  defaults,
-  reduce,
-  isEqual
+  mapValues,
+  reduce
 } from 'lodash';
-import { Entity, SerializableJSON, toJSONDeep } from '@ygg/shared/infra/core';
+import { TheThingCell } from './cell';
 import { config } from './config';
-import { Relationship } from './relationship';
 
 export class RelationRecord implements Entity, SerializableJSON {
   static collection = 'relations';
@@ -123,22 +122,22 @@ export class TheThingRelation implements SerializableJSON {
       objectCollection: config.collection
     });
     options.cells = isArray(options.cells)
-      ? keyBy(options.cells, 'name')
+      ? keyBy(options.cells, 'id')
       : options.cells;
     extend(this, options);
   }
 
-  addCell(cell: TheThingCell) {
-    this.cells[cell.name] = cell;
+  upsertCell(cell: TheThingCell) {
+    this.cells[cell.id] = cell;
   }
 
-  getCellValue(cellName: string, defaultValue?: any): any {
+  getCellValue(cellId: string, defaultValue?: any): any {
     defaultValue = typeof defaultValue === 'undefined' ? null : defaultValue;
-    return get(this.cells, `${cellName}.value`, defaultValue);
+    return get(this.cells, `${cellId}.value`, defaultValue);
   }
 
-  setCellValue(cellName: string, value: any): any {
-    this.cells[cellName].value = value;
+  setCellValue(cellId: string, value: any): any {
+    this.cells[cellId].value = value;
   }
 
   toRelationRecord(): RelationRecord {
@@ -156,7 +155,7 @@ export class TheThingRelation implements SerializableJSON {
     extend(this, data);
     if (!isEmpty(data.cells)) {
       this.cells = mapValues(
-        isArray(data.cells) ? keyBy(data.cells, 'name') : data.cells,
+        isArray(data.cells) ? keyBy(data.cells, 'id') : data.cells,
         cell => new TheThingCell().fromJSON(cell)
       );
     }

@@ -145,9 +145,9 @@ export class TheThingCellsEditorPageObjectCypress extends TheThingCellsEditorPag
   }
 
   addCell(cell: TheThingCell) {
-    cy.get(this.getSelector('inputCellName'))
+    cy.get(this.getSelector('inputCellId'))
       .clear({ force: true })
-      .type(cell.name);
+      .type(cell.id);
     cy.get(this.getSelector('selectCellType')).select(cell.type);
     cy.get(this.getSelector('buttonAddCell')).click();
     cy.get(this.getSelectorForCellControl(cell)).should('be.exist');

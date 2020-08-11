@@ -1,23 +1,23 @@
 import {
-  CellDefinesTourPlan,
-  ImitationTourPlan,
-  ImitationTourPlanCellDefines,
+  CellDefines as PlaywhatCellDefines,
   ImitationEvent,
-  ImitationEventCellDefines
+  ImitationTourPlan
 } from '@ygg/playwhat/core';
 import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
 import { SchedulePageObjectCypress } from '@ygg/schedule/test';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import { waitForLogin } from '@ygg/shared/user/test';
 import { TheThing } from '@ygg/the-thing/core';
-import { MyThingsDataTablePageObjectCypress, TheThingPageObjectCypress } from '@ygg/the-thing/test';
+import {
+  MyThingsDataTablePageObjectCypress,
+  TheThingPageObjectCypress
+} from '@ygg/the-thing/test';
 import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import {
+  ScheduledEvents,
   ScheduleTrivial,
-  TourPlanUnscheduled,
-  ScheduledEvents
+  TourPlanUnscheduled
 } from '../schedule/sample-schedules';
-import { find } from 'lodash';
 
 describe('Create events', () => {
   const siteNavigator = new SiteNavigator();
@@ -37,10 +37,10 @@ describe('Create events', () => {
   );
   const schedulePO = new SchedulePageObjectCypress('', {
     dateRange: TourPlanUnscheduled.getCellValue(
-      ImitationTourPlanCellDefines.dateRange.name
+      PlaywhatCellDefines.dateRange.id
     ),
     dayTimeRange: TourPlanUnscheduled.getCellValue(
-      ImitationTourPlanCellDefines.dayTimeRange.name
+      PlaywhatCellDefines.dayTimeRange.id
     )
   });
 

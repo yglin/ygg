@@ -13,10 +13,10 @@ import {
 import { User } from '@ygg/shared/user/core';
 import { waitForLogin } from '@ygg/shared/user/test';
 import {
-  CellNames as ShoppingCellNames,
   Purchase,
   PurchaseAction,
-  RelationPurchase
+  RelationPurchase,
+  ShoppingCellDefines
 } from '@ygg/shopping/core';
 import {
   PurchaseProductPageObjectCypress,
@@ -82,7 +82,7 @@ describe('Import/export purchases between cart and tour-plan', () => {
       plays.map(play => {
         const purchase = new Purchase({
           productId: play.id,
-          price: play.getCellValue(ShoppingCellNames.price),
+          price: play.getCellValue(ShoppingCellDefines.price.id),
           quantity: random(10, 50)
         });
         return purchase;
@@ -95,7 +95,7 @@ describe('Import/export purchases between cart and tour-plan', () => {
       playPurchases.push(
         new Purchase({
           productId: play.id,
-          price: play.getCellValue(ShoppingCellNames.price),
+          price: play.getCellValue(ShoppingCellDefines.price.id),
           quantity: random(10, 50)
         })
       );
@@ -108,7 +108,7 @@ describe('Import/export purchases between cart and tour-plan', () => {
           playPurchases.push(
             new Purchase({
               productId: eRelation.objectId,
-              price: equip.getCellValue(ShoppingCellNames.price),
+              price: equip.getCellValue(ShoppingCellDefines.price.id),
               quantity: random(1, 10)
             })
           );

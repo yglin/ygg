@@ -1,13 +1,12 @@
-import {
-  AccountWidgetPageObjectCypress,
-  waitForLogin,
-  MyNotificationListPageObjectCypress,
-  NotificationItemPageObjectCypress,
-  NotificationPageObjectCypress
-} from '@ygg/shared/user/test';
-import { Notification } from '@ygg/shared/user/core';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
+import { Notification } from '@ygg/shared/user/core';
+import {
+  AccountWidgetPageObjectCypress,
+  MyNotificationListPageObjectCypress,
+  NotificationPageObjectCypress,
+  waitForLogin
+} from '@ygg/shared/user/test';
 
 describe('Read new unread notifications', () => {
   const accountWidgetPO = new AccountWidgetPageObjectCypress();
@@ -77,7 +76,7 @@ describe('Read new unread notifications', () => {
       accountWidgetPO.clickNotification();
       myNotificationsPO.clickNotification(ntf);
       const emcee = new EmceePageObjectCypress();
-      emcee.confirm(ntf.confirmMessage);  
+      emcee.confirm(ntf.confirmMessage);
     });
     accountWidgetPO.expectNotificationHidden();
   });

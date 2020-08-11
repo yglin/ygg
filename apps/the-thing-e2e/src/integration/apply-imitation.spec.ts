@@ -53,7 +53,7 @@ describe('Apply imitation to the-thing', () => {
       imitationViewDogPO.expectNoError();
       // Expect all required cells show
       const requiredCells = theThing.getCellsByNames(
-        imitation.getRequiredCellNames()
+        imitation.getRequiredCellIds()
       );
       imitationViewDogPO.expectCells(requiredCells);
     });

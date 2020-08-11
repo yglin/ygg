@@ -170,7 +170,7 @@ export class EventFactory {
           `<h3>已確認參加，之後若要取消請聯絡主辦者${organizer.name}</h3>`
         );
         const calendarDate = (event.getCellValue(
-          ImitationEventCellDefines.timeRange.name
+          ImitationEventCellDefines.timeRange.id
         ) as TimeRange).start;
         this.router.navigate(['/', ImitationEvent.routePath, 'my'], {
           queryParams: {

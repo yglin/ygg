@@ -5,7 +5,7 @@
     [editable]="!readonly"
   >
     <div errors *ngIf="!readonly">
-      <div *ngIf="required && !formControl.value">請填入{{ cell.name }}資料</div>
+      <div *ngIf="required && !formControl.value">請填入{{ cell.label }}資料</div>
     </div>
   </ygg-omni-type-view-control>
 </div>

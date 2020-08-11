@@ -14,6 +14,13 @@ export class MaterialSelectPageObjectCypress extends PageObject {
       .contains(regexp)
       .click();
   }
+
+  expectSelected(label: string) {
+    cy.get(`${this.getSelector()} .mat-select-value`).should(
+      'include.text',
+      label
+    );
+  }
 }
 
 // Ref. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Escaping

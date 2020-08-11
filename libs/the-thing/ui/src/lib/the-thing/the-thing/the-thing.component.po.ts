@@ -27,17 +27,17 @@ export abstract class TheThingPageObject extends PageObject {
   }
 
   getSelectorForCell(cell: TheThingCell | string): string {
-    let cellName: string;
+    let cellId: string;
     if (typeof cell === 'string') {
-      cellName = cell;
+      cellId = cell;
     } else {
-      cellName = cell.name;
+      cellId = cell.id;
     }
-    return `${this.getSelector()} .cells [cell-name="${cellName}"]`;
+    return `${this.getSelector()} .cells [cell-id="${cellId}"]`;
   }
 
-  getSelectorForCellDeleteButton(cellName: string): string {
-    return `${this.getSelectorForCell(cellName)} button.delete`;
+  getSelectorForCellDeleteButton(cellId: string): string {
+    return `${this.getSelectorForCell(cellId)} button.delete`;
   }
 
   getSelectorForRelation(relationName: string): string {

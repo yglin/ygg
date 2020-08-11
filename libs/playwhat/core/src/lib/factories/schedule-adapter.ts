@@ -11,8 +11,7 @@ import {
   TimeRange
 } from '@ygg/shared/omni-types/core';
 import {
-  CellNames as CellNamesShopping,
-  RelationPurchase
+  RelationPurchase, ShoppingCellDefines
 } from '@ygg/shopping/core';
 import {
   RelationFactory,
@@ -32,7 +31,8 @@ import {
   ImitationPlay,
   ImitationPlayCellDefines,
   ImitationTourPlan,
-  RelationshipPlay
+  RelationshipPlay,
+  ImitationTourPlanCellDefines
 } from '../imitations';
 
 export class ScheduleAdapter {
@@ -42,11 +42,11 @@ export class ScheduleAdapter {
   //   event.name = serviceEvent.service.name;
   //   event.image = serviceEvent.service.image;
   //   event.setCellValue(
-  //     ImitationEventCellDefines.timeRange.name,
+  //     ImitationEventCellDefines.timeRange.id,
   //     serviceEvent.timeRange
   //   );
   //   event.setCellValue(
-  //     ImitationEventCellDefines.numParticipants.name,
+  //     ImitationEventCellDefines.numParticipants.id,
   //     serviceEvent.numParticipants
   //   );
   //   event.addRelation(
@@ -63,19 +63,19 @@ export class ScheduleAdapter {
     service.image = play.image;
     service.name = play.name;
     service.timeLength = play.getCellValue(
-      ImitationPlayCellDefines.timeLength.name
+      ImitationPlayCellDefines.timeLength.id
     );
     service.minParticipants = play.getCellValue(
-      ImitationPlayCellDefines.minParticipants.name
+      ImitationPlayCellDefines.minimum.id
     );
     service.maxParticipants = play.getCellValue(
-      ImitationPlayCellDefines.maxParticipants.name
+      ImitationPlayCellDefines.maximum.id
     );
     service.location = play.getCellValue(
-      ImitationPlayCellDefines.location.name
+      ImitationPlayCellDefines.location.id
     );
     service.businessHours = play.getCellValue(
-      ImitationPlayCellDefines.businessHours.name
+      ImitationPlayCellDefines.businessHours.id
     );
     return service;
   }
@@ -90,10 +90,10 @@ export class ScheduleAdapter {
       throw new Error(`Not a valid tour plan: ${JSON.stringify(tourPlan)}`);
     }
     const dateRange: DateRange = tourPlan.getCellValue(
-      CellDefinesTourPlan.dateRange.name
+      ImitationTourPlanCellDefines.dateRange.id
     );
     const schedule = new Schedule(dateRange.toTimeRange(), {
-      dayTimeRange: tourPlan.getCellValue(CellDefinesTourPlan.dayTimeRange.name)
+      dayTimeRange: tourPlan.getCellValue(ImitationTourPlanCellDefines.dayTimeRange.id)
     });
     const purchaseRelations = tourPlan.getRelations(RelationPurchase.name);
     for (const purchase of purchaseRelations) {
@@ -101,7 +101,7 @@ export class ScheduleAdapter {
       if (ImitationPlay.isValid(play)) {
         const service = ScheduleAdapter.deduceServiceFromPlay(play);
         const event = new ServiceEvent(service, {
-          numParticipants: purchase.getCellValue(CellNamesShopping.quantity)
+          numParticipants: purchase.getCellValue(ShoppingCellDefines.quantity.id)
         });
         if (event) {
           schedule.addEvent(event);
@@ -112,8 +112,8 @@ export class ScheduleAdapter {
           ] = this.deduceServiceAvailability$(
             play.id,
             schedule.timeRange,
-            play.getCellValue(ImitationPlayCellDefines.maxParticipants.name),
-            play.getCellValue(ImitationPlayCellDefines.businessHours.name)
+            play.getCellValue(ImitationPlayCellDefines.maximum.id),
+            play.getCellValue(ImitationPlayCellDefines.businessHours.id)
           );
         }
       }
@@ -130,7 +130,7 @@ export class ScheduleAdapter {
     }
     const service = ScheduleAdapter.deduceServiceFromPlay(play);
     const event = new ServiceEvent(service, {
-      numParticipants: purchase.getCellValue(CellNamesShopping.quantity)
+      numParticipants: purchase.getCellValue(ShoppingCellDefines.quantity.id)
     });
     return event;
   }
@@ -145,11 +145,11 @@ export class ScheduleAdapter {
       // console.dir(event);
       event.name = play.name;
       event.setCellValue(
-        ImitationEventCellDefines.timeRange.name,
+        ImitationEventCellDefines.timeRange.id,
         serviceEvent.timeRange
       );
       event.setCellValue(
-        ImitationEventCellDefines.numParticipants.name,
+        ImitationEventCellDefines.numParticipants.id,
         serviceEvent.numParticipants
       );
       event.addRelation(RelationshipPlay.createRelation(event.id, play.id));
@@ -178,7 +178,7 @@ export class ScheduleAdapter {
             );
             eventFilter.ids = relations.map(r => r.subjectId);
             eventFilter.addCellFilter(
-              ImitationEventCellDefines.timeRange.name,
+              ImitationEventCellDefines.timeRange.id,
               OmniTypes['time-range'].matchers.in,
               timeRange
             );
@@ -198,8 +198,8 @@ export class ScheduleAdapter {
           }
           for (const event of events) {
             serviceAvailablility.addOccupancy(
-              event.getCellValue(ImitationEventCellDefines.timeRange.name),
-              event.getCellValue(ImitationEventCellDefines.numParticipants.name)
+              event.getCellValue(ImitationEventCellDefines.timeRange.id),
+              event.getCellValue(ImitationEventCellDefines.numParticipants.id)
             );
           }
           return serviceAvailablility;

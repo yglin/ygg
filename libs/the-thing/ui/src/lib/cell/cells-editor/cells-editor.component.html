@@ -10,12 +10,12 @@
         <mat-icon>save</mat-icon>
       </button>
     </div>
-    <div *ngFor="let cellName of cellsOrder; let idx = index">
+    <div *ngFor="let cellId of cellsOrder; let idx = index">
       <div
-        *ngIf="cells[cellName] as cell"
+        *ngIf="cells[cellId] as cell"
         yggNgForColorBackground
         [index]="idx"
-        [attr.cell-name]="cell.name"
+        [attr.cell-id]="cell.id"
       >
         <div
           fxLayout="row"
@@ -23,14 +23,14 @@
           fxLayoutGap="10px"
         >
           <div fxFlex>
-            <ygg-title-divider [level]="5">{{ cell.name }}</ygg-title-divider>
+            <ygg-title-divider [level]="5">{{ cell.label }}</ygg-title-divider>
           </div>
           <div fxFlex="50px">
             <button
               type="button"
               class="delete"
               mat-mini-fab
-              (click)="onClickDeleteCell(cell.name)"
+              (click)="onClickDeleteCell(cell.id)"
             >
               <mat-icon>delete</mat-icon>
             </button>

@@ -5,7 +5,7 @@ export * from './lib/relation';
 export * from './lib/relation-def';
 export * from './lib/filter';
 export * from './lib/imitation';
-export * from './lib/imitation-dog';
+// export * from './lib/imitation-dog';
 export * from './lib/view';
 export * from './lib/editor';
 export * from './lib/validator';

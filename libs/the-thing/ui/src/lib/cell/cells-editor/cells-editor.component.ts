@@ -154,43 +154,43 @@ export class TheThingCellsEditorComponent
   }
 
   addCell(cell: TheThingCell) {
-    this.cells[cell.name] = cell;
-    this.formGroup.addControl(cell.name, new FormControl(cell.value));
+    this.cells[cell.id] = cell;
+    this.formGroup.addControl(cell.id, new FormControl(cell.value));
     this.canDeleteAllCells = size(this.formGroup.controls) >= 1;
   }
 
-  onClickDeleteCell(cellName: string) {
-    const confirmMessage = `確定要刪除資料欄位：${cellName}？`;
+  onClickDeleteCell(cellId: string) {
+    const confirmMessage = `確定要刪除資料欄位：${cellId}？`;
     if (confirm(confirmMessage)) {
-      if (cellName in this.cells) {
-        delete this.cells[cellName];
+      if (cellId in this.cells) {
+        delete this.cells[cellId];
       }
-      if (cellName in this.formGroup.controls) {
-        this.formGroup.removeControl(cellName);
+      if (cellId in this.formGroup.controls) {
+        this.formGroup.removeControl(cellId);
       }
       this.onChange(this.cells);
       this.canDeleteAllCells = size(this.formGroup.controls) >= 1;
-      remove(this.cellsOrder, name => name === cellName);
+      remove(this.cellsOrder, name => name === cellId);
     }
   }
 
   onClickAddCell() {
-    const newCellName = this.formGroupAddCell.get('name').value;
-    if (newCellName in this.cells) {
+    const newCellId = this.formGroupAddCell.get('name').value;
+    if (newCellId in this.cells) {
       alert(
-        `資料欄位 ${newCellName} 已存在了喔？\n請檢查是否重複或是取新的名稱。`
+        `資料欄位 ${newCellId} 已存在了喔？\n請檢查是否重複或是取新的名稱。`
       );
     } else {
       const newCellType = this.formGroupAddCell.get('type').value;
       const cell = new TheThingCell().fromJSON({
-        name: newCellName,
+        name: newCellId,
         type: newCellType,
         value: null
       });
       this.addCell(cell);
       this.onChange(this.cells);
-      if (this.cellsOrder.indexOf(cell.name) < 0) {
-        this.cellsOrder.push(cell.name);
+      if (this.cellsOrder.indexOf(cell.id) < 0) {
+        this.cellsOrder.push(cell.id);
       }
     }
   }

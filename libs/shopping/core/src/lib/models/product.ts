@@ -16,7 +16,7 @@
 // }
 
 import { TheThingImitation } from '@ygg/the-thing/core';
-import { CellNames } from './cell-names';
+import { ShoppingCellDefines } from './cell-defines';
 
 export const ImitationProduct: TheThingImitation = new TheThingImitation().fromJSON(
   {
@@ -26,16 +26,12 @@ export const ImitationProduct: TheThingImitation = new TheThingImitation().fromJ
     image: '/assets/images/shopping/product.svg',
     tags: ['product', '商品'],
     cellsDef: [
-      {
-        name: CellNames.price,
-        type: 'number',
+      ShoppingCellDefines.price.extend({
         userInput: 'required'
-      },
-      {
-        name: CellNames.stock,
-        type: 'number',
+      }),
+      ShoppingCellDefines.maximum.extend({
         userInput: 'required'
-      }
+      })
     ],
     filter: {
       name: '搜尋商品',

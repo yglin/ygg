@@ -20,10 +20,7 @@ import {
 } from '@ygg/shared/omni-types/core';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import { waitForLogin } from '@ygg/shared/user/test';
-import {
-  CellNames as CellNamesShopping,
-  RelationPurchase
-} from '@ygg/shopping/core';
+import { RelationPurchase, ShoppingCellDefines } from '@ygg/shopping/core';
 import { RelationRecord, TheThing } from '@ygg/the-thing/core';
 import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
 import { random } from 'lodash';
@@ -35,7 +32,7 @@ function stubBusisnessHourForPlay(
   play: TheThing,
   businessHour: BusinessHours
 ): Cypress.Chainable<any> {
-  play.setCellValue(ImitationPlayCellDefines.businessHours.name, businessHour);
+  play.setCellValue(ImitationPlayCellDefines.businessHours.id, businessHour);
   return theMockDatabase.insert(`${ImitationPlay.collection}/${play.id}`, play);
 }
 
@@ -43,23 +40,19 @@ function forgeApprovedEventsForPlay(
   play: TheThing,
   timeRange: TimeRange
 ): TheThing[] {
-  const maxParticipants = play.getCellValue(
-    ImitationPlayCellDefines.maxParticipants.name
-  );
-  const timeLength = play.getCellValue(
-    ImitationPlayCellDefines.timeLength.name
-  );
+  const maximum = play.getCellValue(ImitationPlayCellDefines.maximum.id);
+  const timeLength = play.getCellValue(ImitationPlayCellDefines.timeLength.id);
   const events: TheThing[] = [];
   const timeIterator = moment(timeRange.start);
   timeIterator.add(30 * random(1, 4), 'minute');
   while (timeIterator.isBefore(timeRange.end)) {
     const event: TheThing = ImitationEvent.createTheThing();
     event.setCellValue(
-      ImitationEventCellDefines.numParticipants.name,
-      random(1, maxParticipants)
+      ImitationEventCellDefines.numParticipants.id,
+      random(1, maximum)
     );
     event.setCellValue(
-      ImitationEventCellDefines.timeRange.name,
+      ImitationEventCellDefines.timeRange.id,
       new TimeRange(
         timeIterator.toDate(),
         timeIterator.add(timeLength, 'minute').toDate()
@@ -80,7 +73,7 @@ function stubEvent(event: TheThing, play: TheThing) {
     objectId: play.id,
     objectRole: RelationshipPlay.name
   });
-  // if (event.getCellValue(ImitationEventCellDefines.location.name) === null) {
+  // if (event.getCellValue(ImitationEventCellDefines.location.id) === null) {
   //   console.log('幹??');
   //   console.log(event);
   // }
@@ -109,7 +102,7 @@ describe('Schedule edit', () => {
   const testPlay2 = testPlays[1];
   const testPlay3 = testPlays[2];
   const numParticipants =
-    testPlay3.getCellValue(ImitationPlayCellDefines.maxParticipants.name) + 1;
+    testPlay3.getCellValue(ImitationPlayCellDefines.maximum.id) + 1;
 
   ImitationTourPlan.setState(
     TourPlanUnscheduled,
@@ -125,17 +118,17 @@ describe('Schedule edit', () => {
   );
   const dayTimeRange = new DayTimeRange(new DayTime(9, 0), new DayTime(17, 0));
   TourPlanUnscheduled.setCellValue(
-    ImitationTourPlanCellDefines.dateRange.name,
+    ImitationTourPlanCellDefines.dateRange.id,
     dateRange
   );
   TourPlanUnscheduled.setCellValue(
-    ImitationTourPlanCellDefines.dayTimeRange.name,
+    ImitationTourPlanCellDefines.dayTimeRange.id,
     dayTimeRange
   );
   for (const relation of TourPlanUnscheduled.getRelations(
     RelationPurchase.name
   )) {
-    relation.setCellValue(CellNamesShopping.quantity, numParticipants);
+    relation.setCellValue(ShoppingCellDefines.quantity.id, numParticipants);
   }
   const schedulePO = new SchedulePageObjectCypress('', {
     dateRange,
@@ -174,16 +167,14 @@ describe('Schedule edit', () => {
 
   const testBusinessHours03 = testBusinessHours01;
   const approvedEvents: TheThing[] = [];
-  const maxParticipants = testPlay3.getCellValue(
-    ImitationPlayCellDefines.maxParticipants.name
-  );
+  const maximum = testPlay3.getCellValue(ImitationPlayCellDefines.maximum.id);
   const timeLength = testPlay3.getCellValue(
-    ImitationPlayCellDefines.timeLength.name
+    ImitationPlayCellDefines.timeLength.id
   );
   const approvedEvent01 = ImitationEvent.createTheThing(testPlay3);
   approvedEvent01.setCellValue(
-    ImitationEventCellDefines.numParticipants.name,
-    random(1, maxParticipants)
+    ImitationEventCellDefines.numParticipants.id,
+    random(1, maximum)
   );
   // 2nd day 10:00 -
   const tempMoment = moment(dateRange.start)
@@ -191,7 +182,7 @@ describe('Schedule edit', () => {
     .hour(10)
     .minute(0);
   approvedEvent01.setCellValue(
-    ImitationEventCellDefines.timeRange.name,
+    ImitationEventCellDefines.timeRange.id,
     new TimeRange(
       tempMoment.toDate(),
       tempMoment.add(timeLength, 'minute').toDate()
@@ -204,8 +195,8 @@ describe('Schedule edit', () => {
   approvedEvents.push(approvedEvent01);
   const approvedEvent02 = ImitationEvent.createTheThing(testPlay3);
   approvedEvent02.setCellValue(
-    ImitationEventCellDefines.numParticipants.name,
-    random(1, maxParticipants)
+    ImitationEventCellDefines.numParticipants.id,
+    random(1, maximum)
   );
   // 3rd day 12:30 -
   tempMoment
@@ -213,7 +204,7 @@ describe('Schedule edit', () => {
     .hour(12)
     .minute(30);
   approvedEvent02.setCellValue(
-    ImitationEventCellDefines.timeRange.name,
+    ImitationEventCellDefines.timeRange.id,
     new TimeRange(
       tempMoment.toDate(),
       tempMoment.add(timeLength, 'minute').toDate()
@@ -267,35 +258,33 @@ describe('Schedule edit', () => {
     schedulePO.expectBusinessHours(
       testBusinessHours01,
       testPlay1.color,
-      testPlay1.getCellValue(ImitationPlayCellDefines.maxParticipants.name)
+      testPlay1.getCellValue(ImitationPlayCellDefines.maximum.id)
     );
     schedulePO.clickOnEvent(testPlay2.name);
     schedulePO.expectBusinessHours(
       testBusinessHours02,
       testPlay2.color,
-      testPlay2.getCellValue(ImitationPlayCellDefines.maxParticipants.name)
+      testPlay2.getCellValue(ImitationPlayCellDefines.maximum.id)
     );
   });
 
   it('Show available quantities on time-slot', () => {
-    const max = testPlay3.getCellValue(
-      ImitationPlayCellDefines.maxParticipants.name
-    );
+    const max = testPlay3.getCellValue(ImitationPlayCellDefines.maximum.id);
     const timeRange01: TimeRange = approvedEvent01.getCellValue(
-      ImitationEventCellDefines.timeRange.name
+      ImitationEventCellDefines.timeRange.id
     );
     const availability01: number =
       max -
       approvedEvent01.getCellValue(
-        ImitationEventCellDefines.numParticipants.name
+        ImitationEventCellDefines.numParticipants.id
       );
     const timeRange02: TimeRange = approvedEvent02.getCellValue(
-      ImitationEventCellDefines.timeRange.name
+      ImitationEventCellDefines.timeRange.id
     );
     const availability02: number =
       max -
       approvedEvent02.getCellValue(
-        ImitationEventCellDefines.numParticipants.name
+        ImitationEventCellDefines.numParticipants.id
       );
     schedulePO.clickOnEvent(testPlay3.name);
     schedulePO.expectAvailability(timeRange01, availability01);
@@ -304,12 +293,12 @@ describe('Schedule edit', () => {
 
   it('Show over-availability error of event', () => {
     const timeRange01: TimeRange = approvedEvent01.getCellValue(
-      ImitationEventCellDefines.timeRange.name
+      ImitationEventCellDefines.timeRange.id
     );
     const availability01: number =
-      testPlay3.getCellValue(ImitationPlayCellDefines.maxParticipants.name) -
+      testPlay3.getCellValue(ImitationPlayCellDefines.maximum.id) -
       approvedEvent01.getCellValue(
-        ImitationEventCellDefines.numParticipants.name
+        ImitationEventCellDefines.numParticipants.id
       );
     schedulePO.moveEvent(testPlay3.name, timeRange01.start);
     schedulePO.expectErrorOverAvailability(

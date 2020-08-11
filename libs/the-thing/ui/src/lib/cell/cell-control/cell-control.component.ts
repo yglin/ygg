@@ -18,7 +18,7 @@ export class CellControlComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.cell && this.formGroup) {
-      this.formControl = this.formGroup.get(this.cell.name);
+      this.formControl = this.formGroup.get(this.cell.id);
       this.subscriptions.push(
         this.formControl.valueChanges.subscribe(
           value => (this.cell.value = value)

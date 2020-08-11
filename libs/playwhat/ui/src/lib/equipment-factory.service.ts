@@ -158,7 +158,7 @@ export class EquipmentFactoryService implements OnDestroy, Resolve<TheThing> {
     return;
   }
 
-  deleteCell(cellName: string) {
-    this.theThing.deleteCell(cellName);
+  deleteCell(cellId: string) {
+    this.theThing.deleteCell(cellId);
   }
 }

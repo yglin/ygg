@@ -170,14 +170,14 @@ export class TheThingDataSource extends DataSource<TheThing> {
       comparator = (a: TheThing, b: TheThing) =>
         (a.createAt - b.createAt) * (isAsc ? 1 : -1);
     } else if (this.sort.active in this.compareFunctions) {
-      const cellName = this.sort.active;
-      const cellComparator = this.compareFunctions[cellName];
-      // console.log(cellName);
+      const cellId = this.sort.active;
+      const cellComparator = this.compareFunctions[cellId];
+      // console.log(cellId);
       // console.dir(cellComparator);
       comparator = (a: TheThing, b: TheThing) =>
         cellComparator(
-          a.getCellValue(cellName),
-          b.getCellValue(cellName),
+          a.getCellValue(cellId),
+          b.getCellValue(cellId),
           isAsc
         );
     }

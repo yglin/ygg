@@ -163,8 +163,8 @@ export class TheThingFactoryService extends TheThingFactory
   //   this.subjectThing = theThing;
   // }
 
-  // setSubjectCells(cellNames: string[]) {
-  //   this.subjectCells = cellNames;
+  // setSubjectCells(cellIds: string[]) {
+  //   this.subjectCells = cellIds;
   // }
 
   // getSubjectCells(): TheThingCell[] {
@@ -300,7 +300,7 @@ export class TheThingFactoryService extends TheThingFactory
     if (!isEmpty(imitation.pipes)) {
       for (const source in imitation.pipes) {
         if (
-          source === `cell.${cell.name}` &&
+          source === `cell.${cell.id}` &&
           imitation.pipes.hasOwnProperty(source)
         ) {
           const pipe = imitation.pipes[source];
@@ -313,8 +313,8 @@ export class TheThingFactoryService extends TheThingFactory
     }
   }
 
-  async deleteCell(theThing: TheThing, cellName: string) {
-    theThing.deleteCell(cellName);
+  async deleteCell(theThing: TheThing, cellId: string) {
+    theThing.deleteCell(cellId);
     return;
   }
 

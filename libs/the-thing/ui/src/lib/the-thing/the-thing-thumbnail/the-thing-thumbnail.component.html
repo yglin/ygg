@@ -5,12 +5,12 @@
       <ygg-image-thumbnail [item]="theThing" [size]='size'></ygg-image-thumbnail>
     </div>
     <div *ngIf="display">
-      <div *ngFor="let cellName of display.cells">
+      <div *ngFor="let cellId of display.cells">
         <div
-          *ngIf="theThing.cells[cellName] as cell"
-          [attr.cell-name]="cellName"
+          *ngIf="theThing.cells[cellId] as cell"
+          [attr.cell-id]="cellId"
         >
-          <h4>{{ cellName }}</h4>
+          <h4>{{ cellId }}</h4>
           <the-thing-cell readonly [cell]="cell"></the-thing-cell>
         </div>
         <br />

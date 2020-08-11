@@ -50,7 +50,7 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
 
   setCell(cell: TheThingCell) {
     const omniTypeViewControlPO = new OmniTypeViewControlPageObjectCypress(
-      this.getSelectorForCell(cell.name)
+      this.getSelectorForCell(cell.id)
     );
     omniTypeViewControlPO.setValue(cell.type, cell.value);
   }
@@ -59,7 +59,7 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
     this.setName(theThing.name);
 
     const orderedRequiredCells = theThing.getCellsByNames(
-      this.imitation.getRequiredCellNames()
+      this.imitation.getRequiredCellIds()
     );
 
     cy.wrap(orderedRequiredCells).each((cell: TheThingCell, index: number) =>
@@ -77,15 +77,15 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
   }
 
   expectCell(cell: TheThingCell) {
-    cy.get(`${this.getSelectorForCell(cell.name)}`).contains(cell.name);
+    cy.get(`${this.getSelectorForCell(cell.id)}`).contains(cell.label);
     const cellViewPagePO = new OmniTypeViewControlPageObjectCypress(
-      this.getSelectorForCell(cell.name)
+      this.getSelectorForCell(cell.id)
     );
     cellViewPagePO.expectValue(cell.type, cell.value);
   }
 
   expectNoCell(cell: TheThingCell): void {
-    cy.get(`${this.getSelectorForCell(cell.name)}`).should('not.be.visible');
+    cy.get(`${this.getSelectorForCell(cell.id)}`).should('not.be.visible');
   }
 
   addCell(cell: TheThingCell) {
@@ -93,7 +93,8 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
     const dialogPO = new YggDialogPageObjectCypress();
     dialogPO.expectVisible();
     const cellCreatorPO = new CellCreatorPageObjectCypress(
-      dialogPO.getSelector()
+      dialogPO.getSelector(),
+      values(this.imitation.cellsDef)
     );
     cellCreatorPO.setCell(cell);
     cellCreatorPO.setCellValue(cell);
@@ -127,17 +128,15 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
     );
     const firstRequiredCell: TheThingCellDefine = this.imitation.getFirstRequiredCellDef();
     this.expectError(
-      this.getSelectorForCell(firstRequiredCell.name),
-      `請填入${firstRequiredCell.name}資料`
+      this.getSelectorForCell(firstRequiredCell.id),
+      `請填入${firstRequiredCell.label}資料`
     );
     // Only show first required cell, hide others
     for (const key in this.imitation.cellsDef) {
       if (this.imitation.cellsDef.hasOwnProperty(key)) {
         const cellDef = this.imitation.cellsDef[key];
-        if (cellDef.name !== firstRequiredCell.name) {
-          cy.get(this.getSelectorForCell(cellDef.name)).should(
-            'not.be.visible'
-          );
+        if (cellDef.id !== firstRequiredCell.id) {
+          cy.get(this.getSelectorForCell(cellDef.id)).should('not.be.visible');
         }
       }
     }
@@ -190,7 +189,7 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
   }
 
   deleteCell(cell: TheThingCell) {
-    cy.get(this.getSelectorForCellDeleteButton(cell.name)).click();
+    cy.get(this.getSelectorForCellDeleteButton(cell.id)).click();
   }
 
   runAction(action: TheThingAction) {

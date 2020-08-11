@@ -45,7 +45,7 @@ type ValueFunction = (thing: TheThing) => any;
 export interface DataTableColumnConfig {
   name: string;
   label: string;
-  valueSource?: ValueSource;
+  valueSource?: ValueSource | string;
   valueFunc?: ValueFunction;
 }
 
@@ -149,7 +149,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
 
   setRequiredCells(cellDefs: TheThingCellDefine[]) {
     for (const cellDef of cellDefs) {
-      this.cellsDef[cellDef.name] = cellDef;
+      this.cellsDef[cellDef.id] = cellDef;
     }
   }
 
@@ -165,11 +165,11 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   forgeTheThing(): TheThing {
     const theThing = this.createTheThing();
     theThing.name = `${this.name}_${Date.now()}`;
-    for (const name in this.cellsDef) {
-      if (this.cellsDef.hasOwnProperty(name)) {
-        const cellDef = this.cellsDef[name];
+    for (const cellId in this.cellsDef) {
+      if (this.cellsDef.hasOwnProperty(cellId)) {
+        const cellDef = this.cellsDef[cellId];
         if (cellDef.userInput === 'required' || random(1, true) > 0.5) {
-          const cell = theThing.getCell(name);
+          const cell = theThing.getCell(cellId);
           if (!cell || !cell.value) {
             theThing.upsertCell(cellDef.forgeCell());
           }
@@ -191,17 +191,17 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     if (source && source.image) {
       theThing.image = source.image;
     }
-    for (const cellName in this.cellsDef) {
-      if (this.cellsDef.hasOwnProperty(cellName)) {
-        const cellDef = this.cellsDef[cellName];
+    for (const cellId in this.cellsDef) {
+      if (this.cellsDef.hasOwnProperty(cellId)) {
+        const cellDef = this.cellsDef[cellId];
         if (cellDef.userInput === 'required') {
           const newCell = cellDef.createCell();
-          theThing.addCell(newCell);
+          theThing.upsertCell(newCell);
         }
-        if (source && source.hasCell(cellName)) {
-          // console.log(`Copy cell ${cellName}`);
-          // console.log(source.getCellValue(cellName));
-          theThing.addCell(cellDef.createCell(source.getCellValue(cellName)));
+        if (source && source.hasCell(cellId)) {
+          // console.log(`Copy cell ${cellId}`);
+          // console.log(source.getCellValue(cellId));
+          theThing.upsertCell(cellDef.createCell(source.getCellValue(cellId)));
         }
       }
     }
@@ -213,11 +213,6 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     } else {
       theThing.link = `/the-things/${this.id}/${theThing.id}`;
     }
-    // for (const name in this.relationsDef) {
-    //   if (this.relationsDef.hasOwnProperty(name)) {
-    //     theThing.addRelation(name);
-    //   }
-    // }
     if (!isEmpty(this.creators)) {
       for (const creator of this.creators) {
         theThing = creator(theThing);
@@ -238,31 +233,31 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     );
     if (!isEmpty(this.cellsOrder)) {
       requireds = requireds.sort((cellA, cellB) => {
-        const indexA = this.cellsOrder.indexOf(cellA.name);
-        const indexB = this.cellsOrder.indexOf(cellB.name);
+        const indexA = this.cellsOrder.indexOf(cellA.id);
+        const indexB = this.cellsOrder.indexOf(cellB.id);
         return indexA > indexB ? 1 : -1;
       });
     }
     return requireds;
   }
 
-  getRequiredCellNames(): string[] {
-    return this.getRequiredCellDefs().map(cellDef => cellDef.name);
+  getRequiredCellIds(): string[] {
+    return this.getRequiredCellDefs().map(cellDef => cellDef.id);
   }
 
   getOptionalCellDefs(): TheThingCellDefine[] {
     return filter(this.cellsDef, cellDef => cellDef.userInput === 'optional');
   }
 
-  getOptionalCellNames(): string[] {
-    return this.getOptionalCellDefs().map(cellDef => cellDef.name);
+  getOptionalCellIds(): string[] {
+    return this.getOptionalCellDefs().map(cellDef => cellDef.id);
   }
 
   createOptionalCells(): TheThingCell[] {
     return this.getOptionalCellDefs().map(cellDef => cellDef.createCell());
   }
 
-  getComparators(): { [cellName: string]: OmniTypeComparator } {
+  getComparators(): { [cellId: string]: OmniTypeComparator } {
     return pickBy(
       mapValues(this.cellsDef, cellDef =>
         get(OmniTypes, `${cellDef.type}.comparator`, null)
@@ -345,7 +340,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
 
   pickNonRequiredCells(cells: TheThingCell[]): TheThingCell[] {
     return cells.filter(c => {
-      const cellDef = this.getCellDef(c.name);
+      const cellDef = this.getCellDef(c.id);
       if (
         !!cellDef &&
         (cellDef.userInput === 'required' || cellDef.userInput === 'hidden')
@@ -389,7 +384,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
         cellsDef
           .filter(cd => TheThingCellDefine.isTheThingCellDefine(cd))
           .map(cd => new TheThingCellDefine(cd)),
-        'name'
+        'id'
       );
       // mapValues(cellsDef, cellDef => new TheThingCellDefine(cellDef));
     }

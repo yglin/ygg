@@ -8,7 +8,7 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { ShoppingCartEditorComponent } from './cart/shopping-cart-editor/shopping-cart-editor.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TheThingUiModule } from '@ygg/the-thing/ui';
-import { AdditionViewComponent } from './addition/addition-view/addition-view.component';
+// import { AdditionViewComponent } from './addition/addition-view/addition-view.component';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { ImitationProduct } from '@ygg/shopping/core';
 import { IncomeRecordDataTableComponent } from './accounting/income-data-table/income-data-table.component';
@@ -37,7 +37,7 @@ import { ShoppingCartButtonComponent } from './cart/shopping-cart-button/shoppin
     // ProductThumbnailComponent,
     // PurchaseThumbnailComponent,
     ShoppingCartEditorComponent,
-    AdditionViewComponent,
+    // AdditionViewComponent,
     IncomeRecordDataTableComponent,
     PurchaseProductComponent,
     ShoppingCartButtonComponent
@@ -46,7 +46,7 @@ import { ShoppingCartButtonComponent } from './cart/shopping-cart-button/shoppin
   exports: [
     PurchaseListComponent,
     ShoppingCartEditorComponent,
-    AdditionViewComponent,
+    // AdditionViewComponent,
     IncomeRecordDataTableComponent,
     ShoppingCartButtonComponent
     // PurchaseControlComponent

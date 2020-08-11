@@ -1,6 +1,6 @@
 import {
-  CellNames as CellNamesShopping,
-  PurchaseAction
+  PurchaseAction,
+  ShoppingCellDefines
 } from '@ygg/shopping/core';
 import {
   Relationship,
@@ -10,51 +10,36 @@ import {
 } from '@ygg/the-thing/core';
 import { extend, values } from 'lodash';
 import { ImitationEquipment } from './equipment';
+import { CellDefines, CellIds } from './cell-defines';
 
-export const ImitationPlayCellDefines: { [key: string]: TheThingCellDefine } = {
-  album: new TheThingCellDefine({
-    name: '照片',
-    type: 'album',
+export const ImitationPlayCellDefines: { [key in CellIds]?: TheThingCellDefine } = {
+  album: CellDefines.album.extend({
     userInput: 'required'
   }),
-  introduction: new TheThingCellDefine({
-    name: '簡介',
-    type: 'html',
+  introduction: CellDefines.introduction.extend({
     userInput: 'required'
   }),
-  price: new TheThingCellDefine({
-    name: CellNamesShopping.price,
-    type: 'number',
+  price: ShoppingCellDefines.price.extend({
     userInput: 'required'
   }),
-  timeLength: new TheThingCellDefine({
-    name: '時長',
-    type: 'number',
+  timeLength: CellDefines.timeLength.extend({
     userInput: 'required'
   }),
-  minParticipants: new TheThingCellDefine({
-    name: CellNamesShopping.minimum,
-    type: 'number',
+  minimum: ShoppingCellDefines.minimum.extend({
+    label: '報名人數下限',
     userInput: 'required'
   }),
-  maxParticipants: new TheThingCellDefine({
-    name: CellNamesShopping.maximum,
-    type: 'number',
+  maximum: ShoppingCellDefines.maximum.extend({
+    label: '報名人數上限',
     userInput: 'required'
   }),
-  subtitle: new TheThingCellDefine({
-    name: '副標題',
-    type: 'text',
+  subtitle: CellDefines.subtitle.extend({
     userInput: 'optional'
   }),
-  location: new TheThingCellDefine({
-    name: '地點',
-    type: 'location',
+  location: CellDefines.location.extend({
     userInput: 'required'
   }),
-  businessHours: new TheThingCellDefine({
-    name: '服務時段',
-    type: 'business-hours',
+  businessHours: CellDefines.businessHours.extend({
     userInput: 'optional'
   })
 };
@@ -70,15 +55,15 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
     routePath: 'play',
     tags: ['play', '體驗'],
     cellsOrder: [
-      ImitationPlayCellDefines.album.name,
-      ImitationPlayCellDefines.introduction.name,
-      ImitationPlayCellDefines.price.name,
-      ImitationPlayCellDefines.timeLength.name,
-      ImitationPlayCellDefines.minParticipants.name,
-      ImitationPlayCellDefines.maxParticipants.name,
-      ImitationPlayCellDefines.subtitle.name,
-      ImitationPlayCellDefines.location.name,
-      ImitationPlayCellDefines.businessHours.name
+      ImitationPlayCellDefines.album.id,
+      ImitationPlayCellDefines.introduction.id,
+      ImitationPlayCellDefines.price.id,
+      ImitationPlayCellDefines.timeLength.id,
+      ImitationPlayCellDefines.minimum.id,
+      ImitationPlayCellDefines.maximum.id,
+      ImitationPlayCellDefines.subtitle.id,
+      ImitationPlayCellDefines.location.id,
+      ImitationPlayCellDefines.businessHours.id
     ],
     cellsDef: values(ImitationPlayCellDefines),
     filter: {
@@ -89,18 +74,18 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
 );
 
 const dataTableColumns = {};
-dataTableColumns[ImitationPlayCellDefines.introduction.name] = {
-  name: ImitationPlayCellDefines.introduction.name,
+dataTableColumns[ImitationPlayCellDefines.introduction.id] = {
+  name: ImitationPlayCellDefines.introduction.id,
   label: '簡介',
   valueSource: 'cell'
 };
-dataTableColumns[ImitationPlayCellDefines.price.name] = {
-  name: ImitationPlayCellDefines.price.name,
+dataTableColumns[ImitationPlayCellDefines.price.id] = {
+  name: ImitationPlayCellDefines.price.id,
   label: '費用(每人)',
   valueSource: 'cell'
 };
-dataTableColumns[ImitationPlayCellDefines.timeLength.name] = {
-  name: ImitationPlayCellDefines.timeLength.name,
+dataTableColumns[ImitationPlayCellDefines.timeLength.id] = {
+  name: ImitationPlayCellDefines.timeLength.id,
   label: '體驗時長(分鐘)',
   valueSource: 'cell'
 };

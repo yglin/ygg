@@ -4,32 +4,27 @@ import {
   TourPlanAdminPageObjectCypress,
   TourPlanPageObjectCypress
 } from '@ygg/playwhat/test';
-import { Month, Html } from '@ygg/shared/omni-types/core';
+import { Html } from '@ygg/shared/omni-types/core';
 import {
   getCurrentUser,
   login,
   theMockDatabase
 } from '@ygg/shared/test/cypress';
+import { Comment } from '@ygg/shared/thread/core';
+import { CommentListPageObjectCypress } from '@ygg/shared/thread/test';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
-import { ImitationOrder } from '@ygg/shopping/core';
-import { TheThing, TheThingState } from '@ygg/the-thing/core';
-import {
-  MyThingsDataTablePageObjectCypress,
-  MyThingsPageObjectCypress
-} from '@ygg/the-thing/test';
-import { flatten, keys, mapValues, values } from 'lodash';
+import { waitForLogin } from '@ygg/shared/user/test';
+import { TheThing } from '@ygg/the-thing/core';
+import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
+import promisify from 'cypress-promise';
+import { flatten, values } from 'lodash';
 import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import {
-  MinimalTourPlan,
   stubTourPlansByStateAndMonth,
   TourPlanInApplication,
   TourPlanPaid,
   TourPlanWithPlaysAndEquipments
 } from './sample-tour-plan';
-import promisify from 'cypress-promise';
-import { waitForLogin } from '@ygg/shared/user/test';
-import { Comment } from "@ygg/shared/thread/core";
-import { CommentListPageObjectCypress } from '@ygg/shared/thread/test';
 
 const tourPlansByStateAndMonth: {
   [state: string]: TheThing[];
@@ -41,7 +36,7 @@ const SampleTourPlans = [TourPlanInApplication, TourPlanPaid].concat(
 );
 
 const tourPlan = TourPlanWithPlaysAndEquipments.clone();
-tourPlan.name = `測試遊程(全部完成流程)`;
+tourPlan.name = `測試遊程(全部完成流程)_${Date.now()}`;
 ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.paid);
 const SampleThings = SamplePlays.concat(SampleEquipments).concat([tourPlan]);
 

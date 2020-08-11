@@ -1,24 +1,14 @@
 // import { sampleSize, values, pick, sum, sumBy, random, find } from 'lodash';
-import { ImitationPlay, ImitationTourPlan } from '@ygg/playwhat/core';
+import { ImitationTourPlan } from '@ygg/playwhat/core';
 import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
-import { login, logout, theMockDatabase } from '@ygg/shared/test/cypress';
-import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
-import { ShoppingCartEditorPageObjectCypress } from '@ygg/shopping/test';
-import { TheThing, TheThingCell } from '@ygg/the-thing/core';
-import {
-  MyThingsDataTablePageObjectCypress,
-  TheThingPageObjectCypress
-} from '@ygg/the-thing/test';
-import { SampleEquipments, SamplePlays } from '../play/sample-plays';
-import {
-  MinimalTourPlan,
-  TourPlanFull,
-  TourPlanWithPlaysNoEquipment,
-  TourPlanWithPlaysAndEquipments
-} from './sample-tour-plan';
+import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import { waitForLogin } from '@ygg/shared/user/test';
-import { values } from 'lodash';
+import { TheThing, TheThingCell } from '@ygg/the-thing/core';
+import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
 import promisify from 'cypress-promise';
+import { values } from 'lodash';
+import { SampleEquipments, SamplePlays } from '../play/sample-plays';
+import { MinimalTourPlan, TourPlanFull } from './sample-tour-plan';
 
 describe('Edit exist tour-plans from my-tour-plans page', () => {
   const siteNavigator = new SiteNavigator();
@@ -98,7 +88,7 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     tourPlanPO.expectVisible();
     tourPlanPO.expectValue(tourPlan);
     const cells2BDel: TheThingCell[] = tourPlan.getCellsByNames(
-      ImitationTourPlan.getOptionalCellNames()
+      ImitationTourPlan.getOptionalCellIds()
     );
     for (const cell of cells2BDel) {
       tourPlanPO.deleteCell(cell);

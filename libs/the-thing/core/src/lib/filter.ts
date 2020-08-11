@@ -10,7 +10,7 @@ import {
 } from '@ygg/shared/omni-types/core';
 
 export interface CellFilter {
-  cellName: string;
+  cellId: string;
   matcher: OmniTypeMatcher;
   value: any;
 }
@@ -92,7 +92,7 @@ export class TheThingFilter implements SerializableJSON {
       }
     }
     for (const cellFilter of this.cellFilters) {
-      const cellValue = theThing.getCellValue(cellFilter.cellName);
+      const cellValue = theThing.getCellValue(cellFilter.cellId);
       if (!cellFilter.matcher(cellValue, cellFilter.value)) {
         return false;
       }
@@ -141,9 +141,9 @@ export class TheThingFilter implements SerializableJSON {
     this.stateTimeRange = timeRange;
   }
 
-  addCellFilter(cellName: string, matcher: OmniTypeMatcher, value: any) {
+  addCellFilter(cellId: string, matcher: OmniTypeMatcher, value: any) {
     this.cellFilters.push({
-      cellName,
+      cellId,
       matcher,
       value
     });

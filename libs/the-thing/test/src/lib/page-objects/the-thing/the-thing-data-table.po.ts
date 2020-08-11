@@ -9,7 +9,7 @@ import {
 } from '@ygg/the-thing/core';
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
 import { timeout } from 'rxjs/operators';
-import { values } from 'lodash';
+import { values, keys } from 'lodash';
 import { TheThingCellViewPageObjectCypress } from '../cell/cell-view.po';
 import { OmniTypeViewPageObjectCypress } from '@ygg/shared/omni-types/test';
 
@@ -27,20 +27,21 @@ export class TheThingDataRowPageObjectCypress extends TheThingDataRowPageObject 
   expectValue(theThing: TheThing) {
     cy.get(this.getSelectorForColumn('name')).contains(theThing.name);
     if (this.imitation) {
-      cy.wrap(values(this.imitation.dataTableConfig.columns)).each(
-        (columnConfig: any) => {
-          columnConfig = columnConfig as DataTableColumnConfig;
+      const columnConfigs = this.imitation.dataTableConfig.columns;
+      cy.wrap(keys(columnConfigs)).each(
+        (key: any) => {
+          const columnConfig = columnConfigs[key] as DataTableColumnConfig;
           switch (columnConfig.valueSource) {
             case 'function':
               const value = columnConfig.valueFunc(theThing);
-              cy.get(this.getSelectorForColumn(columnConfig.name)).contains(
+              cy.get(this.getSelectorForColumn(key)).contains(
                 value.toString()
               );
               break;
             default:
-              const cell = theThing.getCell(columnConfig.name);
+              const cell = theThing.getCell(key);
               const cellViewPO = new OmniTypeViewPageObjectCypress(
-                this.getSelectorForColumn(columnConfig.name)
+                this.getSelectorForColumn(key)
               );
               cellViewPO.expectValue(cell.type, cell.value);
               break;

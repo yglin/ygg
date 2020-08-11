@@ -1,6 +1,6 @@
 import { TheThingRelation } from '@ygg/the-thing/core';
 import { isEmpty, sum } from 'lodash';
-import { CellNames, Purchase } from '../models';
+import { Purchase, ShoppingCellDefines } from '../models';
 
 export async function evalTotalChargeFromRelations(
   purchaseRelations: TheThingRelation[]
@@ -12,8 +12,8 @@ export async function evalTotalChargeFromRelations(
     : sum(
         purchaseRelations.map(
           pr =>
-            pr.getCellValue(CellNames.price) *
-            pr.getCellValue(CellNames.quantity)
+            pr.getCellValue(ShoppingCellDefines.price.id) *
+            pr.getCellValue(ShoppingCellDefines.quantity.id)
         )
       );
   // console.log(totalCharge);

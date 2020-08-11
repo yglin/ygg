@@ -34,19 +34,10 @@ const SampleTourPlans = [TourPlanInApplication, TourPlanPaid].concat(
   flatten(values(tourPlansByStateAndMonth))
 );
 
-// const tourPlansByState = mapValues(ImitationTourPlan.states, state => {
-//   const tourPlan = TourPlanWithPlaysAndEquipments.clone();
-//   tourPlan.name = `測試遊程狀態：${state.label}`;
-//   ImitationTourPlan.setState(tourPlan, state);
-//   return tourPlan;
-// });
-
 const tourPlan = TourPlanWithPlaysAndEquipments.clone();
 tourPlan.name = `測試遊程(付款流程)_${Date.now()}`;
 ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.approved);
 const SampleThings = SamplePlays.concat(SampleEquipments).concat([tourPlan]);
-// .concat(SampleTourPlans)
-// .concat(values(tourPlansByState));
 
 const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();
 const tourPlanPO = new TourPlanPageObjectCypress();
@@ -85,13 +76,7 @@ describe('Tour-plan scenario of pushing into state paid', () => {
   // });
 
   after(() => {
-    // // Goto my-things page and delete previously created things
-    // const myThingsPO = new MyThingsPageObjectCypress();
-    // siteNavigator.goto(['the-things', 'my'], myThingsPO);
-    // cy.wait(3000);
-    // myThingsPO.deleteAll();
     theMockDatabase.clear();
-    // theMockDatabase.restoreRTDB();
   });
 
   it('Mark tour-plan as paid by set it state Paid', () => {

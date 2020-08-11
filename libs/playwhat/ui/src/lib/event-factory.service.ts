@@ -79,7 +79,7 @@ export class EventFactoryService extends EventFactory {
 
   toGoogleCalendarEvent(event: TheThing): any {
     const timeRange: TimeRange = event.getCellValue(
-      ImitationEventCellDefines.timeRange.name
+      ImitationEventCellDefines.timeRange.id
     );
     return {
       id: event.id.toLowerCase(),

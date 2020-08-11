@@ -24,9 +24,8 @@ import {
 } from '@ygg/playwhat/core';
 import {
   Purchase,
-  CellNames as CellNamesShopping,
-  CellNames,
-  RelationPurchase
+  RelationPurchase,
+  ShoppingCellDefines
 } from '@ygg/shopping/core';
 import { TimeRange, DateRange } from '@ygg/shared/omni-types/core';
 import * as moment from 'moment';
@@ -145,10 +144,10 @@ function forgeTourPlans(options?: {
         const purchase: Purchase = new Purchase({
           consumerId: tourPlan.id,
           productId: play.id,
-          price: play.getCellValue(CellNamesShopping.price),
+          price: play.getCellValue(ShoppingCellDefines.price.id),
           quantity: random(
-            play.getCellValue(ImitationPlayCellDefines.minParticipants.name),
-            play.getCellValue(ImitationPlayCellDefines.maxParticipants.name)
+            play.getCellValue(ImitationPlayCellDefines.minimum.id),
+            play.getCellValue(ImitationPlayCellDefines.maximum.id)
           )
         });
         tourPlan.addRelation(purchase.toRelation());
@@ -168,7 +167,7 @@ function forgeTourPlans(options?: {
               const purchaseEquip: Purchase = new Purchase({
                 consumerId: tourPlan.id,
                 productId: equipment.id,
-                price: equipment.getCellValue(CellNamesShopping.price),
+                price: equipment.getCellValue(ShoppingCellDefines.price.id),
                 quantity: random(1, 10)
               });
               tourPlan.addRelation(purchaseEquip.toRelation());
@@ -195,21 +194,21 @@ function forgeEvents(options: {
       const event = ImitationEvent.createTheThing(play);
       event.name = play.name;
       const dateRange: DateRange = options.tourPlan.getCellValue(
-        ImitationTourPlanCellDefines.dateRange.name
+        ImitationTourPlanCellDefines.dateRange.id
       );
       const tmpMoment = moment(dateRange.start);
       const playLength = play.getCellValue(
-        ImitationPlayCellDefines.timeLength.name
+        ImitationPlayCellDefines.timeLength.id
       );
       const timeRange: TimeRange = new TimeRange(
         tmpMoment.add(random(360), 'minute').toDate(),
         tmpMoment.add(playLength, 'minute').toDate()
       );
 
-      event.setCellValue(ImitationEventCellDefines.timeRange.name, timeRange);
+      event.setCellValue(ImitationEventCellDefines.timeRange.id, timeRange);
       event.setCellValue(
-        ImitationEventCellDefines.numParticipants.name,
-        relation.getCellValue(CellNamesShopping.quantity)
+        ImitationEventCellDefines.numParticipants.id,
+        relation.getCellValue(ShoppingCellDefines.quantity.id)
       );
       event.addRelation(RelationshipPlay.createRelation(event.id, play.id));
       events.push(event);

@@ -16,7 +16,7 @@ import {
 // import { IDataAccessor } from '@ygg/shared/infra/core';
 import { RelationAddition } from './addition';
 import { IConsumer } from './consumer';
-import { CellNames } from './cell-names';
+import { ShoppingCellDefines } from './cell-defines';
 
 export const RelationPurchase = new RelationDefine({
   name: '訂購'
@@ -63,7 +63,7 @@ export class Purchase implements SerializableJSON {
     const newPurchase = new Purchase({
       consumerId: consumer.id,
       productId: product.id,
-      price: product.getCellValue(CellNames.price),
+      price: product.getCellValue(ShoppingCellDefines.price.id),
       quantity
     });
     return newPurchase;
@@ -73,8 +73,8 @@ export class Purchase implements SerializableJSON {
     const newPurchase = new Purchase({
       consumerId: relation.subjectId,
       productId: relation.objectId,
-      price: relation.getCellValue(CellNames.price),
-      quantity: relation.getCellValue(CellNames.quantity)
+      price: relation.getCellValue(ShoppingCellDefines.price.id),
+      quantity: relation.getCellValue(ShoppingCellDefines.quantity.id)
     });
     return newPurchase;
   }
@@ -108,16 +108,8 @@ export class Purchase implements SerializableJSON {
       subjectId: this.consumerId,
       objectId: this.productId,
       cells: [
-        new TheThingCell({
-          name: CellNames.price,
-          type: 'number',
-          value: this.price
-        }),
-        new TheThingCell({
-          name: CellNames.quantity,
-          type: 'number',
-          value: this.quantity
-        })
+        ShoppingCellDefines.price.createCell(this.price),
+        ShoppingCellDefines.quantity.createCell(this.quantity)
       ]
     });
   }

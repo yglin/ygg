@@ -6,90 +6,56 @@ import {
   TheThingCellDefine,
   TheThingImitation
 } from '@ygg/the-thing/core';
-import { keyBy, mapValues, values } from 'lodash';
+import { keyBy, mapValues, values, pick, extend } from 'lodash';
 import { ImitationEvent } from './event';
+import { CellDefines } from './cell-defines';
 
-export const CellNames = {
-  dateRange: '預計出遊日期',
-  completeAt: '完成時間',
-  numParticipants: '預計參加人數',
-  contact: '聯絡資訊',
-  misc: '其他'
+export const CellDefinesTourPlan = {
+  dateRange: CellDefines.dateRange.extend({
+    userInput: 'required'
+  }),
+  numParticipants: CellDefines.numParticipants.extend({
+    userInput: 'required'
+  }),
+  contact: CellDefines.contact.extend({
+    userInput: 'required'
+  }),
+  dayTimeRange: CellDefines.dayTimeRange.extend({
+    userInput: 'optional'
+  }),
+  aboutMeals: CellDefines.aboutMeals.extend({
+    userInput: 'optional'
+  }),
+  aboutTransport: CellDefines.aboutTransport.extend({
+    userInput: 'optional'
+  }),
+  numElders: CellDefines.numElders.extend({
+    userInput: 'optional'
+  }),
+  numKids: CellDefines.numKids.extend({
+    userInput: 'optional'
+  }),
+  numPartTimes: CellDefines.numPartTimes.extend({
+    userInput: 'optional'
+  }),
+  miscNotes: CellDefines.miscNotes.extend({
+    userInput: 'optional'
+  })
 };
-
-export enum States {
-  Completed = '已完成'
-}
-
-export const CellDefinesTourPlan = mapValues(
-  {
-    dateRange: {
-      name: '預計出遊日期',
-      type: 'date-range',
-      userInput: 'required'
-    },
-    numParticipants: {
-      name: '預計參加人數',
-      type: 'number',
-      userInput: 'required'
-    },
-    contact: {
-      name: '聯絡資訊',
-      type: 'contact',
-      userInput: 'required'
-    },
-    dayTimeRange: {
-      name: '預計遊玩時間',
-      type: 'day-time-range',
-      userInput: 'optional'
-    },
-    aboutMeals: {
-      name: '用餐需求',
-      type: 'longtext',
-      userInput: 'optional'
-    },
-    aboutTransport: {
-      name: '交通需求',
-      type: 'longtext',
-      userInput: 'optional'
-    },
-    numElders: {
-      name: '長輩人數',
-      type: 'number',
-      userInput: 'optional'
-    },
-    numKids: {
-      name: '孩童人數',
-      type: 'number',
-      userInput: 'optional'
-    },
-    numPartTimes: {
-      name: '司領人數',
-      type: 'number',
-      userInput: 'optional'
-    },
-    misc: {
-      name: CellNames.misc,
-      type: 'html',
-      userInput: 'optional'
-    }
-  },
-  (data: any) => new TheThingCellDefine(data)
-);
 
 export const ImitationTourPlanCellDefines = CellDefinesTourPlan;
 
 const cellsOrder = [
-  CellDefinesTourPlan.dateRange.name,
-  CellDefinesTourPlan.numParticipants.name,
-  CellDefinesTourPlan.contact.name,
-  CellDefinesTourPlan.dayTimeRange.name,
-  CellDefinesTourPlan.aboutMeals.name,
-  CellDefinesTourPlan.aboutTransport.name,
-  CellDefinesTourPlan.numElders.name,
-  CellDefinesTourPlan.numKids.name,
-  CellDefinesTourPlan.numPartTimes.name,
-  CellDefinesTourPlan.misc.name
+  CellDefinesTourPlan.dateRange.id,
+  CellDefinesTourPlan.numParticipants.id,
+  CellDefinesTourPlan.contact.id,
+  CellDefinesTourPlan.dayTimeRange.id,
+  CellDefinesTourPlan.aboutMeals.id,
+  CellDefinesTourPlan.aboutTransport.id,
+  CellDefinesTourPlan.numElders.id,
+  CellDefinesTourPlan.numKids.id,
+  CellDefinesTourPlan.numPartTimes.id,
+  CellDefinesTourPlan.miscNotes.id
 ];
 
 export const ImitationTourPlan: TheThingImitation = ImitationOrder.extend({
@@ -130,31 +96,29 @@ ImitationTourPlan.states['approved'] = {
 ImitationTourPlan.states['paid'].permissions = ['isAdmin', 'approved'];
 
 ImitationTourPlan.dataTableConfig = {
-  columns: keyBy(
-    [
-      {
-        name: '預計出遊日期',
-        label: '預計出遊日期',
-        valueSource: 'cell'
-      },
-      {
-        name: '預計參加人數',
-        label: '預計參加人數',
-        valueSource: 'cell'
-      },
-      {
-        name: '聯絡資訊',
-        label: '聯絡資訊',
-        valueSource: 'cell'
-      },
-      {
+  columns: extend(
+    mapValues(
+      pick(CellDefinesTourPlan, [
+        CellDefinesTourPlan.dateRange.id,
+        CellDefinesTourPlan.numParticipants.id,
+        CellDefinesTourPlan.contact.id
+      ]),
+      cellDefine => {
+        return {
+          name: cellDefine.id,
+          label: cellDefine.label,
+          valueSource: 'cell'
+        };
+      }
+    ),
+    {
+      totalCharge: {
         name: '總價',
         label: '總價',
         valueSource: 'function',
         valueFunc: ImitationOrder.valueFunctions['getTotalCharge']
       }
-    ],
-    'name'
+    }
   )
 };
 
@@ -171,8 +135,8 @@ ImitationTourPlan.admin.states = [
 //   const relations = tourPlan.getRelations(RelationPurchase.name);
 //   for (const relation of relations) {
 //     const charge =
-//       relation.getCellValue(CellNames.price) *
-//       relation.getCellValue(CellNames.quantity);
+//       relation.getCellValue(CellIds.price) *
+//       relation.getCellValue(CellIds.quantity);
 //     if (charge) {
 //       totalCharge += charge;
 //     }
@@ -245,12 +209,12 @@ ImitationTourPlan.stateChanges = {
   }
 };
 
-ImitationTourPlan.pipes[`cell.${CellNames.dateRange}`] = (
+ImitationTourPlan.pipes[`cell.${CellDefinesTourPlan.dateRange.id}`] = (
   theThing: TheThing
 ) => {
   if (!theThing.name) {
     theThing.name = defaultTourPlanName(
-      theThing.getCellValue(CellNames.dateRange)
+      theThing.getCellValue(CellDefinesTourPlan.dateRange.id)
     );
   }
 };

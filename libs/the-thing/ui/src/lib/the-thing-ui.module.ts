@@ -1,51 +1,48 @@
-import { NgModule, ModuleWithProviders, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { CellListComponent } from './cell/cell-list/cell-list.component';
-import { CellFormComponent } from './cell/cell-form/cell-form.component';
-import { CellControlComponent } from './cell/cell-control/cell-control.component';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
+import { RouterModule } from '@angular/router';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
-
-import { CellViewComponent } from './cell/cell-view/cell-view.component';
-import {
-  // TheThingEditorComponent,
-  // TheThingViewComponent,
-  TheThingFinderComponent,
-  TheThingListComponent,
-  ImitationViewHostDirective,
-  TheThingDataTableComponent
-} from './the-thing';
-import { TagsUiModule } from '@ygg/tags/ui';
+import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
+import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
-import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-thing-thumbnail.component';
-import { MyThingsComponent } from './the-thing/my-things/my-things.component';
 import { SharedUserUiModule } from '@ygg/shared/user/ui';
-import { TheThingFilterComponent } from './the-thing/the-thing-filter/the-thing-filter.component';
-import { TheThingImitation, ImitationDog } from '@ygg/the-thing/core';
-import { routes } from './routes';
-import { TheThingImitationViewComponent } from './the-thing/the-thing-imitation-view/the-thing-imitation-view.component';
-import { UserMenuService } from '@ygg/shared/user/ui';
-// import { ImitationEditorComponent } from './imitation/imitation-editor/imitation-editor.component';
-// import { ImitationManagerComponent } from './imitation/imitation-manager/imitation-manager.component';
-import { TheThingCellsEditorComponent } from './cell/cells-editor/cells-editor.component';
-// import { ImitationViewDogComponent } from './imitation/imitation-view-dog/imitation-view-dog.component';
-// import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
-import { RelationsEditorComponent } from './relation/relations-editor/relations-editor.component';
-import { MyThingsDataTableComponent } from './the-thing/my-things-data-table/my-things-data-table.component';
-import { AdminThingsDataTableComponent } from './the-thing/admin-things-data-table/admin-things-data-table.component';
+import { TagsUiModule } from '@ygg/tags/ui';
+import { TheThingImitation } from '@ygg/the-thing/core';
+import { CellControlComponent } from './cell/cell-control/cell-control.component';
 // import {
 //   TheThingEditPageComponent,
 //   TheThingEditorHostDirective
 // } from './the-thing/the-thing-edit-page/the-thing-edit-page.component';
 import { CellCreatorComponent } from './cell/cell-creator/cell-creator.component';
-import { TheThingStateComponent } from './the-thing/the-thing-state/the-thing-state.component';
+import { CellFormComponent } from './cell/cell-form/cell-form.component';
+import { CellListComponent } from './cell/cell-list/cell-list.component';
+import { CellViewComponent } from './cell/cell-view/cell-view.component';
+// import { ImitationEditorComponent } from './imitation/imitation-editor/imitation-editor.component';
+// import { ImitationManagerComponent } from './imitation/imitation-manager/imitation-manager.component';
+import { TheThingCellsEditorComponent } from './cell/cells-editor/cells-editor.component';
 import { TheThingCellComponent } from './cell/the-thing-cell/the-thing-cell.component';
-import { TheThingComponent } from './the-thing/the-thing/the-thing.component';
-import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
+// import { ImitationViewDogComponent } from './imitation/imitation-view-dog/imitation-view-dog.component';
+// import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
+import { RelationsEditorComponent } from './relation/relations-editor/relations-editor.component';
+import { routes } from './routes';
+import {
+  ImitationViewHostDirective,
+  TheThingDataTableComponent,
+  // TheThingEditorComponent,
+  // TheThingViewComponent,
+  TheThingFinderComponent,
+  TheThingListComponent
+} from './the-thing';
+import { AdminThingsDataTableComponent } from './the-thing/admin-things-data-table/admin-things-data-table.component';
+import { MyThingsDataTableComponent } from './the-thing/my-things-data-table/my-things-data-table.component';
+import { MyThingsComponent } from './the-thing/my-things/my-things.component';
 import { TheThingActionButtonComponent } from './the-thing/the-thing-action-button/the-thing-action-button.component';
+import { TheThingFilterComponent } from './the-thing/the-thing-filter/the-thing-filter.component';
+import { TheThingImitationViewComponent } from './the-thing/the-thing-imitation-view/the-thing-imitation-view.component';
+import { TheThingStateComponent } from './the-thing/the-thing-state/the-thing-state.component';
+import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-thing-thumbnail.component';
+import { TheThingComponent } from './the-thing/the-thing/the-thing.component';
 
 interface TheThingUiModuleConfig {
   imitations: TheThingImitation[];
