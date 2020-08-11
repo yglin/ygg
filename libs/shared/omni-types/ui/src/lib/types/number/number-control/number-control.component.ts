@@ -31,6 +31,9 @@ export class NumberControlComponent implements OnInit, ControlValueAccessor {
   set value(_value: number) {
     if (_value !== this._value) {
       this._value = _value;
+      if (this._value >= this.max) {
+        this.max *= 2;
+      }
       if (this.emitChange) {
         this.emitChange(this._value);
       }
