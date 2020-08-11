@@ -22,6 +22,9 @@
           [dayTimeRange]="value"
         ></ygg-day-time-range-view>
       </div>
+      <div *ngSwitchCase="'time-length'">
+        <ygg-time-length-view [value]="value"></ygg-time-length-view>
+      </div>
       <div *ngSwitchCase="'number'">
         <ygg-number-view [number]="value"></ygg-number-view>
       </div>

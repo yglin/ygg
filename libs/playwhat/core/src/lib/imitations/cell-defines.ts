@@ -37,7 +37,7 @@ export const CellDefines: {
       timeLength: {
         id: 'timeLength',
         label: '時長',
-        type: 'number'
+        type: 'time-length'
       },
       businessHours: {
         id: 'businessHours',

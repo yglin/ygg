@@ -49,6 +49,8 @@ import { DatetimeControlComponent } from './types/datetime/datetime/datetime-con
 import { DatetimeViewComponent } from './types/datetime/datetime/datetime-view/datetime-view.component';
 import { DateControlComponent } from './types/datetime/date/date-control/date-control.component';
 import { DateViewComponent } from './types/datetime/date/date-view/date-view.component';
+import { TimeLengthControlComponent } from './types/datetime/time-length/time-length-control/time-length-control.component';
+import { TimeLengthViewComponent } from './types/datetime/time-length/time-length-view/time-length-view.component';
 
 @NgModule({
   imports: [
@@ -101,7 +103,9 @@ import { DateViewComponent } from './types/datetime/date/date-view/date-view.com
     DatetimeControlComponent,
     DatetimeViewComponent,
     DateControlComponent,
-    DateViewComponent
+    DateViewComponent,
+    TimeLengthControlComponent,
+    TimeLengthViewComponent
   ],
   exports: [
     HtmlControlComponent,

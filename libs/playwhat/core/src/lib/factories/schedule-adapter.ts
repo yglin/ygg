@@ -8,7 +8,8 @@ import {
   BusinessHours,
   DateRange,
   OmniTypes,
-  TimeRange
+  TimeRange,
+  TimeLength
 } from '@ygg/shared/omni-types/core';
 import {
   RelationPurchase, ShoppingCellDefines
@@ -62,9 +63,9 @@ export class ScheduleAdapter {
     service.id = play.id;
     service.image = play.image;
     service.name = play.name;
-    service.timeLength = play.getCellValue(
+    service.timeLength = (play.getCellValue(
       ImitationPlayCellDefines.timeLength.id
-    );
+    ) as TimeLength).getLength();
     service.minParticipants = play.getCellValue(
       ImitationPlayCellDefines.minimum.id
     );

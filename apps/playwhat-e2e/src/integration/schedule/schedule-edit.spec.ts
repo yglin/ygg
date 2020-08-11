@@ -16,7 +16,8 @@ import {
   DayTimeRange,
   OpenHour,
   TimeRange,
-  WeekDay
+  WeekDay,
+  TimeLength
 } from '@ygg/shared/omni-types/core';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import { waitForLogin } from '@ygg/shared/user/test';
@@ -41,7 +42,7 @@ function forgeApprovedEventsForPlay(
   timeRange: TimeRange
 ): TheThing[] {
   const maximum = play.getCellValue(ImitationPlayCellDefines.maximum.id);
-  const timeLength = play.getCellValue(ImitationPlayCellDefines.timeLength.id);
+  const timeLength = (play.getCellValue(ImitationPlayCellDefines.timeLength.id) as TimeLength).getLength();
   const events: TheThing[] = [];
   const timeIterator = moment(timeRange.start);
   timeIterator.add(30 * random(1, 4), 'minute');
@@ -168,9 +169,9 @@ describe('Schedule edit', () => {
   const testBusinessHours03 = testBusinessHours01;
   const approvedEvents: TheThing[] = [];
   const maximum = testPlay3.getCellValue(ImitationPlayCellDefines.maximum.id);
-  const timeLength = testPlay3.getCellValue(
+  const timeLength = (testPlay3.getCellValue(
     ImitationPlayCellDefines.timeLength.id
-  );
+  ) as TimeLength).getLength();
   const approvedEvent01 = ImitationEvent.createTheThing(testPlay3);
   approvedEvent01.setCellValue(
     ImitationEventCellDefines.numParticipants.id,

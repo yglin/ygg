@@ -29,6 +29,11 @@
           [formControl]="formControl"
         ></ygg-day-time-range-control>
       </div>
+      <div *ngSwitchCase="'time-length'">
+        <ygg-time-length-control
+          [formControl]="formControl"
+        ></ygg-time-length-control>
+      </div>
       <div *ngSwitchCase="'number'">
         <ygg-number-control [formControl]="formControl"></ygg-number-control>
       </div>

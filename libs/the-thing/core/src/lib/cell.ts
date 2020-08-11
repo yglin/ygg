@@ -9,7 +9,8 @@ import {
   Contact,
   BusinessHours,
   OmniTypeID,
-  TimeRange
+  TimeRange,
+  TimeLength
 } from '@ygg/shared/omni-types/core';
 import { OmniTypes } from '@ygg/shared/omni-types/core';
 import { generateID, toJSONDeep } from '@ygg/shared/infra/core';
@@ -110,6 +111,9 @@ export class TheThingCell {
           break;
         case 'day-time-range':
           this.value = new DayTimeRange().fromJSON(data.value);
+          break;
+        case 'time-length':
+          this.value = new TimeLength().fromJSON(data.value);
           break;
         case 'business-hours':
           this.value = new BusinessHours().fromJSON(data.value);

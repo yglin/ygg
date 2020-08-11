@@ -6,7 +6,8 @@ import { LongTextControlPageObjectCypress } from './longtext';
 import {
   DateRangeControlPageObjectCypress,
   DayTimeRangeControlPageObjectCypress,
-  BusinessHoursControlPageObjectCypress
+  BusinessHoursControlPageObjectCypress,
+  TimeLengthControlPageObjectCypress
 } from './datetime';
 import { NumberControlPageObjectCypress } from './number';
 import { ContactControlPageObjectCypress } from './contact';
@@ -30,6 +31,9 @@ export class OmniTypeControlPageObjectCypress extends OmniTypeControlPageObject 
         break;
       case 'time-range':
         controlPO = new TimeRangeControlPageObjectCypress(this.getSelector());
+        break;
+      case 'time-length':
+        controlPO = new TimeLengthControlPageObjectCypress(this.getSelector());
         break;
       case 'number':
         controlPO = new NumberControlPageObjectCypress(this.getSelector());

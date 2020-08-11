@@ -8,3 +8,4 @@ export * from './duration';
 export * from './month';
 export * from './business-hours';
 export * from './open-hour';
+export * from './time-length';

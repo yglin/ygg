@@ -20,9 +20,11 @@ export const ImitationPlayCellDefines: { [key in CellIds]?: TheThingCellDefine }
     userInput: 'required'
   }),
   price: ShoppingCellDefines.price.extend({
+    label: '單價（每人）',
     userInput: 'required'
   }),
   timeLength: CellDefines.timeLength.extend({
+    label: '體驗時長',
     userInput: 'required'
   }),
   minimum: ShoppingCellDefines.minimum.extend({

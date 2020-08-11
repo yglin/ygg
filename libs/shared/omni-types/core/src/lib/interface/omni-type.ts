@@ -11,6 +11,7 @@ import {
   TimeRange
 } from '../types';
 import * as moment from 'moment';
+import { TimeLength } from '../types/datetime/time-length';
 
 export type OmniTypeComparator = (a: any, b: any, isAsc: boolean) => number;
 
@@ -31,7 +32,8 @@ export type OmniTypeID =
   | 'time-range'
   | 'day-time-range'
   | 'business-hours'
-  | 'contact';
+  | 'contact'
+  | 'time-length';
 
 interface OmniType {
   id: OmniTypeID;
@@ -224,6 +226,13 @@ export const OmniTypes: { [id: string]: OmniType } = {
       return DayTimeRange.forge();
     },
     comparator: DayTimeRange.compare,
+    default: null
+  },
+  'time-length': {
+    id: 'time-length',
+    label: '時長',
+    forge: TimeLength.forge,
+    comparator: TimeLength.compare,
     default: null
   },
   'business-hours': {

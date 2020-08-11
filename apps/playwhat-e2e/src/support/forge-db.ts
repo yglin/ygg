@@ -27,7 +27,7 @@ import {
   RelationPurchase,
   ShoppingCellDefines
 } from '@ygg/shopping/core';
-import { TimeRange, DateRange } from '@ygg/shared/omni-types/core';
+import { TimeRange, DateRange, TimeLength } from '@ygg/shared/omni-types/core';
 import * as moment from 'moment';
 
 export default function forgeDB() {
@@ -197,9 +197,9 @@ function forgeEvents(options: {
         ImitationTourPlanCellDefines.dateRange.id
       );
       const tmpMoment = moment(dateRange.start);
-      const playLength = play.getCellValue(
+      const playLength = (play.getCellValue(
         ImitationPlayCellDefines.timeLength.id
-      );
+      ) as TimeLength).getLength();
       const timeRange: TimeRange = new TimeRange(
         tmpMoment.add(random(360), 'minute').toDate(),
         tmpMoment.add(playLength, 'minute').toDate()
