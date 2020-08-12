@@ -15,6 +15,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { UserError, UserErrorCode } from './error';
 import { User, Authenticator } from '@ygg/shared/user/core';
 import { UserService } from './user.service';
+import { EmceeService } from '@ygg/shared/ui/widgets';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticateService {
@@ -23,7 +24,8 @@ export class AuthenticateService {
 
   constructor(
     private userService: UserService,
-    private angularFireAuth: AngularFireAuth
+    private angularFireAuth: AngularFireAuth,
+    private emcee: EmceeService
   ) {
     this.currentUser$ = new BehaviorSubject(null);
     this.angularFireAuth.authState
@@ -32,11 +34,15 @@ export class AuthenticateService {
           if (!firebaseUser) {
             return of(null);
           } else {
-            return this.syncUser$(firebaseUser);
+            return this.syncUser(firebaseUser);
           }
+        }),
+        tap(user => (this.currentUser = user)),
+        catchError(error => {
+          this.emcee.error(`登入失敗，錯誤原因：${error.message}`);
+          return of(null);
         })
       )
-      .pipe(tap(user => (this.currentUser = user)))
       .subscribe(this.currentUser$);
   }
 
@@ -68,32 +74,32 @@ export class AuthenticateService {
 
       await this.angularFireAuth.auth.signInWithPopup(provider);
     } catch (error) {
-      alert(`無法登入，錯誤原因如下：${error.message}`);
+      this.emcee.warning(`無法登入，錯誤原因如下：${error.message}`);
     }
   }
 
-  syncUser$(firebaseUser: firebase.User): Observable<User> {
-    const userId = firebaseUser.uid;
-    return this.userService.get$(userId).pipe(
-      switchMap(user => {
-        if (user) {
-          this.syncFromFirebase(user, firebaseUser);
-          return this.userService.upsert(user);
-        }
-      }),
-      catchError(error => {
-        const userError: UserError = error;
-        if (userError.code === UserErrorCode.UserNotFound) {
-          const newUser = new User().connectProvider(
-            firebaseUser.providerId,
-            firebaseUser
-          );
-          return this.userService.upsert(newUser);
-        } else {
-          return throwError(error);
-        }
-      })
-    );
+  async syncUser(firebaseUser: firebase.User): Promise<User> {
+    try {
+      const userId = firebaseUser.uid;
+      let user = await this.userService.get(userId);
+      console.log(user);
+      if (user) {
+        this.syncFromFirebase(user, firebaseUser);
+      } else {
+        user = new User().connectProvider(
+          firebaseUser.providerId,
+          firebaseUser
+        );
+      }
+      console.log(user);
+      await this.userService.upsert(user);
+      return user;
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to sync user profile with firebase user: ${firebaseUser.uid}.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
   }
 
   syncFromFirebase(user: User, firebaseUser: firebase.User) {

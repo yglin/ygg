@@ -111,40 +111,7 @@ export class TheThing implements Entity, ImageThumbnailItem {
 
   static deserializerJSON: DeserializerJSON = (data: any): TheThing => {
     const theThing = new TheThing();
-    if (data) {
-      extend(theThing, data);
-
-      if (data.tags) {
-        theThing.tags = Tags.fromJSON(data.tags);
-      }
-      if (!isEmpty(data.cells)) {
-        if (isArray(data.cells)) {
-          data.cells = keyBy(data.cells, 'name');
-        }
-        theThing.cells = mapValues(data.cells, cellData =>
-          new TheThingCell().fromJSON(cellData)
-        );
-      }
-      if (data.relations) {
-        theThing.relations = mapValues(data.relations, relations =>
-          relations.map(relation => new TheThingRelation(relation))
-        );
-      }
-      // console.log(`TheThing.fromJSON: ${theThing.image}`);
-      if (!theThing.image) {
-        theThing.image = theThing.resolveImage();
-      }
-
-      if (data.stateTimestamps) {
-        theThing.stateTimestamps = mapValues(
-          data.stateTimestamps,
-          t => new Date(t)
-        );
-      }
-    }
-    if (!theThing.link) {
-      theThing.link = `/the-things/${theThing.id}`;
-    }
+    theThing.fromJSON(data);
     return theThing;
   };
 

@@ -403,9 +403,9 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
               relation.objectId,
               ImitationEvent.collection
             );
-            console.log(`Send confirmation for event ${event.name}`);
+            // console.log(`Send confirmation for event ${event.name}`);
             await this.eventFactory.sendApprovalRequest(event);
-            console.log(`Confirmation for event ${event.name} sent`);
+            // console.log(`Confirmation for event ${event.name} sent`);
           } catch (error) {
             throw new Error(
               `送出行程確認失敗，id: ${relation.objectId},${error.message}`

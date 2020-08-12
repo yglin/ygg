@@ -16,6 +16,7 @@ import {
   RouterStateSnapshot,
   Router
 } from '@angular/router';
+import { isEmpty } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -28,8 +29,8 @@ export class NotificationFactoryService extends NotificationFactory
     authenticator: AuthenticateUiService,
     emcee: EmceeService,
     notificationAccessor: NotificationAccessService,
-    dialog: YggDialogService,
-    router: Router
+    router: Router,
+    private dialog: YggDialogService
   ) {
     super(
       userAccessor,
@@ -37,9 +38,7 @@ export class NotificationFactoryService extends NotificationFactory
       authenticator,
       emcee,
       notificationAccessor,
-      dialog,
-      router,
-      MailListControlComponent
+      router
     );
   }
 
@@ -53,5 +52,24 @@ export class NotificationFactoryService extends NotificationFactory
     } catch (error) {
       this.router.navigate(['/']);
     }
+  }
+
+
+  async inquireEmails(): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+      const dialogRef = this.dialog.open(MailListControlComponent, {
+        title: '新增通知Email'
+      });
+      dialogRef.afterClosed().subscribe(
+        emails => {
+          if (!isEmpty(emails)) {
+            resolve(emails);
+          } else {
+            resolve([]);
+          }
+        },
+        error => reject(error)
+      );
+    });
   }
 }

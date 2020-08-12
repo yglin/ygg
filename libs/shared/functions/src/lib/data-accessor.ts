@@ -1,5 +1,6 @@
 import { DataAccessor, Query } from '@ygg/shared/infra/core';
 import * as admin from 'firebase-admin';
+import * as firebase from 'firebase';
 import { Observable, ReplaySubject, of, combineLatest } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { isEmpty } from 'lodash';

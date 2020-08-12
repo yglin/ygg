@@ -38,6 +38,7 @@ import {
   TourPlanScheduledOneEvent
 } from '../schedule/sample-schedules';
 import * as env from '@ygg/env/environments.json';
+import { TourPlanWithPlaysNoEquipment } from './sample-tour-plan';
 const mailSlurpInbox = env.mailslurp.inboxes[0];
 
 describe('Approve scheduled events of tour-plan', () => {
@@ -281,5 +282,35 @@ describe('Approve scheduled events of tour-plan', () => {
         tourPlanPO.expectVisible();
         tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.approved);
       });
+  });
+
+  it('Receive email notification of tour-plan approval', () => {
+    // @ts-ignore
+    cy.waitForMatchingEmail(
+      mailSlurpInbox.id,
+      TourPlanScheduled3Events.name
+    ).then(email => {
+      expect(email.subject).to.have.string(
+        `您的遊程：${TourPlanScheduled3Events.name} 已確認可成行`
+      );
+      // console.log(email);
+      // Extract link
+      expect(email.body).to.have.string(
+        `您的遊程：${TourPlanScheduled3Events.name} 已確認可成行，可以開始付款流程。`
+      );
+      const links = /href="(http.*)"/.exec(email.body);
+      if (isEmpty(links) || links.length < 2) {
+        throw new Error(`Not found links in email body:\n${email.body}`);
+      }
+      const link = links[1];
+      cy.visit(link);
+      waitForLogin();
+      emceePO.confirm(
+        `您的遊程：${TourPlanScheduled3Events.name} 已確認可成行，前往遊程檢視頁面。`
+      );
+      tourPlanPO.expectVisible();
+      tourPlanPO.theThingPO.expectName(TourPlanScheduled3Events.name);
+      tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.approved);
+    });
   });
 });

@@ -1,21 +1,19 @@
 import {
   DataAccessor,
-  Dialog,
   Emcee,
   generateID,
-  Router,
-  Query
+  Query,
+  Router
 } from '@ygg/shared/infra/core';
-import { isEmpty } from 'lodash';
-import * as moment from 'moment';
-import { Subject, Observable, of } from 'rxjs';
-import { Notification } from './notification';
+import { Observable, of, Subject } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { Authenticator } from '../authenticator';
 import { config } from '../config';
 import { User } from '../user';
 import { UserAccessor } from '../user-accessor';
+import { Notification } from './notification';
 import { NotificationAccessor } from './notification-accessor';
-import { map, switchMap } from 'rxjs/operators';
+import * as env from '@ygg/env/environments.json';
 
 export abstract class NotificationFactory {
   constructor(
@@ -24,9 +22,7 @@ export abstract class NotificationFactory {
     protected authenticator: Authenticator,
     protected emcee: Emcee,
     protected notificationAccessor: NotificationAccessor,
-    protected dialog: Dialog,
-    protected router: Router,
-    protected mailListControlComponent: any
+    protected router: Router
   ) {}
 
   confirm$: Subject<Notification> = new Subject();
@@ -42,11 +38,11 @@ export abstract class NotificationFactory {
     data: any;
   }): Promise<Notification> {
     const id = generateID();
-    const notificationLink = `${location.origin}/notifications/${id}`;
+    const notificationLink = `${env.siteConfig.url.protocol}://${env.siteConfig.url.domain}/notifications/${id}`;
     const mailSubject =
-      options.mailSubject || `來自 ${location.hostname} 的通知`;
+      options.mailSubject || `來自 ${env.siteConfig.title} 的通知`;
     const mailContent = `
-      <h3>來自 ${location.hostname} 的通知，此為系統自動寄發，請勿回覆</h3>
+      <h3>來自 ${env.siteConfig.title} 的通知，此為系統自動寄發，請勿回覆</h3>
       <br>
       ${options.mailContent}
       <br><br>
@@ -172,23 +168,5 @@ export abstract class NotificationFactory {
         }
       })
     );
-  }
-
-  async inquireEmails(): Promise<string[]> {
-    return new Promise((resolve, reject) => {
-      const dialogRef = this.dialog.open(this.mailListControlComponent, {
-        title: '新增通知Email'
-      });
-      dialogRef.afterClosed().subscribe(
-        emails => {
-          if (!isEmpty(emails)) {
-            resolve(emails);
-          } else {
-            resolve([]);
-          }
-        },
-        error => reject(error)
-      );
-    });
   }
 }
