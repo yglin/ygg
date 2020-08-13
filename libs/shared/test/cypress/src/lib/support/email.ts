@@ -1,7 +1,7 @@
 import { MailSlurp } from 'mailslurp-client';
 import { MatchOption } from 'mailslurp-client/dist/generated';
 import { isEmpty } from 'lodash';
-
+const timeout = 60000;
 const mailslurp = new MailSlurp({
   apiKey: Cypress.env('MAILSLURP_API_KEY')
 });
@@ -34,7 +34,7 @@ Cypress.Commands.add(
             },
             1,
             inboxId,
-            30000
+            timeout
           )
           .then(
             matched => {
@@ -54,7 +54,7 @@ Cypress.Commands.add(
             error => reject(error)
           );
       }),
-      { timeout: 30000 }
+      { timeout: timeout }
     );
   }
 );

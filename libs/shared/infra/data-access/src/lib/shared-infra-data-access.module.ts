@@ -5,8 +5,7 @@ import { AngularFirestoreModule, SETTINGS } from '@angular/fire/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 // import { environment } from '../environments/environment';
-//@ts-ignore
-import { default as FIREBASE_CONFIG } from '@ygg/firebase/project-config.json';
+import * as env from "@ygg/env/environments.json"
 //@ts-ignore
 import { default as FirebaseJSON } from "firebase.json";
 
@@ -34,7 +33,7 @@ try {
 @NgModule({
   imports: [
     CommonModule,
-    AngularFireModule.initializeApp(FIREBASE_CONFIG),
+    AngularFireModule.initializeApp(env.firebase),
     AngularFirestoreModule,
     AngularFireDatabaseModule,
     AngularFireStorageModule

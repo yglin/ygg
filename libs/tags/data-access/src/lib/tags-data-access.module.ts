@@ -4,14 +4,14 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 
-import * as firebaseConfig from '@ygg/firebase/project-config.json';
+import * as env from '@ygg/env/environments.json';
 
 @NgModule({
   imports: [
     CommonModule,
     AngularFireDatabaseModule,
     AngularFirestoreModule,
-    AngularFireModule.initializeApp(firebaseConfig)
+    AngularFireModule.initializeApp(env.firebase)
   ]
 })
 export class TagsDataAccessModule {}

@@ -164,7 +164,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
 
   forgeTheThing(): TheThing {
     const theThing = this.createTheThing();
-    theThing.name = `${this.name}_${Date.now()}`;
+    theThing.name = `${this.name}_這是一個假造資料_${Date.now()}`;
     for (const cellId in this.cellsDef) {
       if (this.cellsDef.hasOwnProperty(cellId)) {
         const cellDef = this.cellsDef[cellId];

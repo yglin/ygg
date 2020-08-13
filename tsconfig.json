@@ -73,7 +73,6 @@
       "@ygg/schedule/core": ["libs/schedule/core/src/index.ts"],
       "@ygg/schedule/ui": ["libs/schedule/ui/src/index.ts"],
       "@ygg/schedule/test": ["libs/schedule/test/src/index.ts"],
-      "@ygg/firebase/*": [".firebase/*"],
       "@ygg/env/*": [".env/*"],
       "@ygg/playwhat/functions": ["libs/playwhat/functions/src/index.ts"],
       "@ygg/the-thing/functions": ["libs/the-thing/functions/src/index.ts"],

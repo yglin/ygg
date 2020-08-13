@@ -1,20 +1,20 @@
 #! /bin/bash -x
 
-# Channel settings to product project
+# Point settings to production
 firebase use product
-cd .firebase
-ln -fs project-config.production.json project-config.json
+cd .env
+ln -fs environments.production.json environments.json
 cd ..
 
 # build
 ng build --prod
 
 #deploy
-firebase deploy --only hosting
+firebase deploy
 
 
-# Restore settings to develop project
+# Restore settings to local develop
 firebase use default
-cd .firebase
-ln -fs project-config.default.json project-config.json
+cd .env
+ln -fs environments.local.json environments.json
 cd ..
