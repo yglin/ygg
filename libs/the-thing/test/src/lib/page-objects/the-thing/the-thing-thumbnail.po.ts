@@ -21,7 +21,7 @@ export class TheThingThumbnailPageObjectCypress extends TheThingThumbnailPageObj
     if (display) {
       cy.wrap(display.cells).each((cellId: string) => {
         const cell: TheThingCell = theThing.getCell(cellId);
-        cy.get(this.getSelectorForCell(cellId)).contains(cellId);
+        cy.get(this.getSelectorForCell(cellId)).contains(cell.label);
         this.expectCell(cell);
       });
     }

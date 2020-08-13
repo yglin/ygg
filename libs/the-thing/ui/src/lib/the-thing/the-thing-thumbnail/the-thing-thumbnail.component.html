@@ -10,7 +10,7 @@
           *ngIf="theThing.cells[cellId] as cell"
           [attr.cell-id]="cellId"
         >
-          <h4>{{ cellId }}</h4>
+          <h4>{{ cell.label }}</h4>
           <the-thing-cell readonly [cell]="cell"></the-thing-cell>
         </div>
         <br />

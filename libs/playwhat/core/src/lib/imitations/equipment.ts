@@ -42,6 +42,7 @@ export const ImitationEquipment: TheThingImitation = new TheThingImitation({
     thumbnail: {
       cells: [
         ImitationEquipmentCellDefines.price.id,
+        ShoppingCellDefines.minimum.id,
         ImitationEquipmentCellDefines.maximum.id
       ]
     }
