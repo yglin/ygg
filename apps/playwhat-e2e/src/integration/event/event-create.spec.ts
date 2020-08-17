@@ -1,7 +1,8 @@
 import {
   CellDefines as PlaywhatCellDefines,
   ImitationEvent,
-  ImitationTourPlan
+  ImitationTourPlan,
+  ImitationEventCellDefines
 } from '@ygg/playwhat/core';
 import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
 import { SchedulePageObjectCypress } from '@ygg/schedule/test';
@@ -18,6 +19,7 @@ import {
   ScheduleTrivial,
   TourPlanUnscheduled
 } from '../schedule/sample-schedules';
+import { TimeRange } from '@ygg/shared/omni-types/core';
 
 describe('Create events', () => {
   const siteNavigator = new SiteNavigator();
@@ -67,9 +69,16 @@ describe('Create events', () => {
     tourPlanPO.expectVisible();
     tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
     schedulePO.expectVisible();
-    schedulePO.expectSchedule(ScheduleTrivial);
+    cy.wrap(ScheduledEvents).each((tEvent: TheThing) => {
+      schedulePO.moveEvent(
+        tEvent.name,
+        (tEvent.getCellValue(
+          ImitationEventCellDefines.timeRange.id
+        ) as TimeRange).start
+      );
+    });
     schedulePO.submit();
-    // cy.wait(10000);
+    cy.wait(30000);
     tourPlanPO.expectVisible();
     tourPlanPO.expectEvents(ScheduledEvents);
     cy.wrap(ScheduledEvents).each((event: TheThing) => {

@@ -6,6 +6,9 @@ import { RelationAccessor } from './relation-accessor';
 import { isEmpty } from 'lodash';
 
 export abstract class RelationFactory {
+
+  saveUniq = this.replaceObject;
+
   constructor(protected relationAccessor: RelationAccessor) {}
 
   async create(options: {
@@ -39,6 +42,7 @@ export abstract class RelationFactory {
     subjectId: string,
     objectRole: string
   ): Observable<RelationRecord[]> {
+    // console.log(`Find by subject id ${subjectId}, of role ${objectRole}`);
     const queries = [];
     queries.push(new Query('subjectId', '==', subjectId));
     queries.push(new Query('objectRole', '==', objectRole));

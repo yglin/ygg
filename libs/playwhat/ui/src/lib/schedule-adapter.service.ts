@@ -4,15 +4,17 @@ import {
   RelationFactoryService,
   TheThingAccessService
 } from '@ygg/the-thing/ui';
+import { EventFactoryService } from './event-factory.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScheduleAdapterService extends ScheduleAdapter {
   constructor(
+    eventFactory: EventFactoryService,
     theThingAccessor: TheThingAccessService,
     relationFactory: RelationFactoryService
   ) {
-    super(theThingAccessor, relationFactory);
+    super(eventFactory, theThingAccessor, relationFactory);
   }
 }

@@ -37,8 +37,9 @@ import {
   TourPlanScheduled3Events,
   TourPlanScheduledOneEvent
 } from '../schedule/sample-schedules';
-import * as env from '@ygg/env/environments.json';
 import { TourPlanWithPlaysNoEquipment } from './sample-tour-plan';
+import * as env from '@ygg/env/environments.json';
+
 const mailSlurpInbox = env.mailslurp.inboxes[0];
 
 describe('Approve scheduled events of tour-plan', () => {
@@ -120,7 +121,6 @@ describe('Approve scheduled events of tour-plan', () => {
       });
 
       cy.visit('/');
-      waitForLogin();
       waitForLogin().then(() => {
         theMockDatabase.update(`${User.collection}/${user.id}`, {
           email: mailSlurpInbox.email
@@ -171,7 +171,10 @@ describe('Approve scheduled events of tour-plan', () => {
       );
       // console.log(email);
       // Extract link
-      const links = /href="(http.*)"/.exec(email.body);
+      const regEx = new RegExp(
+        `href="${env.siteConfig.url.protocol}://${env.siteConfig.url.domain}/(.*)"`
+      );
+      const links = regEx.exec(email.body);
       if (isEmpty(links) || links.length < 2) {
         throw new Error(`Not found links in email body:\n${email.body}`);
       }
@@ -298,10 +301,14 @@ describe('Approve scheduled events of tour-plan', () => {
       expect(email.body).to.have.string(
         `您的遊程：${TourPlanScheduled3Events.name} 已確認可成行，可以開始付款流程。`
       );
-      const links = /href="(http.*)"/.exec(email.body);
+      const regEx = new RegExp(
+        `href="${env.siteConfig.url.protocol}://${env.siteConfig.url.domain}/(.*)"`
+      );
+      const links = regEx.exec(email.body);
       if (isEmpty(links) || links.length < 2) {
         throw new Error(`Not found links in email body:\n${email.body}`);
       }
+      console.log(links);
       const link = links[1];
       cy.visit(link);
       waitForLogin();

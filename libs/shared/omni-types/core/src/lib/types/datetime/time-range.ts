@@ -90,6 +90,13 @@ export class TimeRange implements SerializableJSON {
     return this;
   }
 
+  isEqual(that: TimeRange): boolean {
+    if (!TimeRange.isTimeRange(that)) {
+      return false;
+    }
+    return this.start === that.start && this.end === that.end;
+  }
+
   toJSON(): string[] {
     return [
       moment(this.start).format(DATE_FORMATS.serialize),
@@ -131,6 +138,14 @@ export class TimeRange implements SerializableJSON {
     const mmStart = moment(this.start);
     const mmEnd = moment(this.end);
     return mmTime.isSameOrAfter(mmStart) && mmTime.isSameOrBefore(mmEnd);
+  }
+
+  move(amount: number, unit: moment.unitOfTime.DurationConstructor) {
+    const diff = this.end.getTime() - this.start.getTime();
+    this._start = moment(this._start)
+      .add(amount, unit)
+      .toDate();
+    this._end = new Date(this._start.getTime() + diff);
   }
 
   moveTo(start: Date) {

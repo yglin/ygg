@@ -55,8 +55,14 @@ export class Schedule implements Entity {
         }
       }
     }
-    this.arrangeEventStupid(event);
+    // this.arrangeEventStupid(event);
     this.events.push(event);
+  }
+
+  stupidSchedule() {
+    for (const event of this.events) {
+      this.arrangeEventStupid(event);
+    }
   }
 
   arrangeEventStupid(event: ServiceEvent) {

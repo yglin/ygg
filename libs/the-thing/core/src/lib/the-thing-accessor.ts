@@ -91,7 +91,11 @@ export abstract class TheThingAccessor {
   }
 
   async upsert(theThing: TheThing): Promise<TheThing> {
-    await this.dataAccessor.save(theThing.collection, theThing.id, theThing.toJSON());
+    await this.dataAccessor.save(
+      theThing.collection,
+      theThing.id,
+      theThing.toJSON()
+    );
     return this.load(theThing.id, theThing.collection);
   }
 
@@ -111,9 +115,7 @@ export abstract class TheThingAccessor {
     const victims: TheThing[] = castArray(theThings);
     const promises: Promise<any>[] = [];
     for (const victim of victims) {
-      promises.push(
-        this.dataAccessor.delete(TheThing.collection, victim.id)
-      );
+      promises.push(this.dataAccessor.delete(TheThing.collection, victim.id));
     }
     await Promise.all(promises);
     return theThings;

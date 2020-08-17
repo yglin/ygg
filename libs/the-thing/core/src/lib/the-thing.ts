@@ -13,7 +13,8 @@ import {
   pick,
   values,
   castArray,
-  flatten
+  flatten,
+  find
 } from 'lodash';
 import { Tags } from '@ygg/tags/core';
 import { TheThingCell } from './cell';
@@ -25,7 +26,7 @@ import {
   hashStringToColor
 } from '@ygg/shared/infra/core';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
-import { TheThingRelation } from './relation';
+import { TheThingRelation, RelationRecord } from './relation';
 import { TheThingState } from './state';
 import { DeserializerJSON, SerializerJSON } from '@ygg/shared/infra/core';
 import { config } from './config';
@@ -153,7 +154,7 @@ export class TheThing implements Entity, ImageThumbnailItem {
           ],
           random(3, 6)
         ).map(label => TheThingCell.forge({ label })),
-        "id"
+        'id'
       );
     }
 
@@ -268,9 +269,7 @@ export class TheThing implements Entity, ImageThumbnailItem {
     try {
       return this.cells[cellId].value;
     } catch (error) {
-      console.warn(
-        `Failed to get cell value from ${cellId}: ${error.message}`
-      );
+      console.warn(`Failed to get cell value from ${cellId}: ${error.message}`);
       return null;
     }
   }
@@ -376,6 +375,14 @@ export class TheThing implements Entity, ImageThumbnailItem {
     }
   }
 
+  getRelation(name: string, objectId: string): TheThingRelation {
+    if (!this.hasRelation(name)) {
+      return null;
+    }
+    const relations = this.relations[name];
+    return find(relations, r => r.objectId === objectId);
+  }
+
   getRelations(relationNames: string | string[]): TheThingRelation[] {
     relationNames = castArray(relationNames);
     return flatten(
@@ -387,6 +394,26 @@ export class TheThing implements Entity, ImageThumbnailItem {
 
   getAllRelations(): TheThingRelation[] {
     return flatten(values(this.relations));
+  }
+
+  generateRelationRecords(): RelationRecord[] {
+    const records = [];
+    for (const relationName in this.relations) {
+      if (Object.prototype.hasOwnProperty.call(this.relations, relationName)) {
+        const relations: TheThingRelation[] = this.relations[relationName];
+        for (const relation of relations) {
+          const relationRecord = new RelationRecord({
+            subjectCollection: this.collection,
+            subjectId: this.id,
+            objectCollection: relation.objectCollection,
+            objectId: relation.objectId,
+            objectRole: relationName
+          });
+          records.push(relationRecord);
+        }
+      }
+    }
+    return records;
   }
 
   /**
@@ -552,20 +579,24 @@ export class TheThing implements Entity, ImageThumbnailItem {
   toJSON(): any {
     const data = toJSONDeep(this);
     // Clear out null cells
-    for (const cellId in data.cells) {
-      if (Object.prototype.hasOwnProperty.call(data.cells, cellId)) {
-        const cell = data.cells[cellId];
-        if (cell.value === null || cell.value === undefined) {
-          delete data.cell[cellId];
+    if (!isEmpty(data.cells)) {
+      for (const cellId in data.cells) {
+        if (data.cells.hasOwnProperty(cellId)) {
+          const cell = data.cells[cellId];
+          if (!cell || cell.value === null || cell.value === undefined) {
+            delete data.cells[cellId];
+          }
         }
       }
     }
     // Clear out relations with no object
-    for (const name in data.relations) {
-      if (data.relations.hasOwnProperty(name)) {
-        const relations = data.relations[name];
-        if (isEmpty(relations)) {
-          delete data.relations[name];
+    if (!isEmpty(data.relations)) {
+      for (const name in data.relations) {
+        if (data.relations.hasOwnProperty(name)) {
+          const relations = data.relations[name];
+          if (isEmpty(relations)) {
+            delete data.relations[name];
+          }
         }
       }
     }

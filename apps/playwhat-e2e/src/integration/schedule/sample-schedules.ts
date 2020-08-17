@@ -1,10 +1,10 @@
 import {
-  CellDefinesTourPlan,
+  ImitationTourPlanCellDefines,
   ImitationEvent,
   ImitationEventCellDefines,
   ImitationPlay,
   ImitationTourPlan,
-  RelationshipPlay,
+  RelationshipEventService,
   RelationshipScheduleEvent,
   ScheduleAdapter
 } from '@ygg/playwhat/core';
@@ -12,11 +12,12 @@ import { Schedule, ServiceEvent } from '@ygg/schedule/core';
 import { RelationPurchase, ShoppingCellDefines } from '@ygg/shopping/core';
 import { RelationRecord, TheThing } from '@ygg/the-thing/core';
 import { find } from 'lodash';
-import { PlaysWithoutEquipment } from '../play/sample-plays';
+import { PlaysWithoutEquipment, SamplePlays } from '../play/sample-plays';
 import { TourPlanWithPlaysNoEquipment } from '../tour-plan/sample-tour-plan';
+import { DayTimeRange, DayTime } from '@ygg/shared/omni-types/core';
 
 // let dateRange: DateRange = TourPlanWithPlaysAndEquipments.getCellValue(
-//   CellDefinesTourPlan.dateRange.name
+//   ImitationTourPlanCellDefines.dateRange.name
 // );
 // export const ScheduleFromTourPlanWithPlaysAndEquipments: Schedule = new Schedule(
 //   dateRange.toTimeRange()
@@ -36,12 +37,27 @@ import { TourPlanWithPlaysNoEquipment } from '../tour-plan/sample-tour-plan';
 //   }
 // }
 
-console.log(TourPlanWithPlaysNoEquipment);
+// console.log(TourPlanWithPlaysNoEquipment);
 export const TourPlanUnscheduled = TourPlanWithPlaysNoEquipment.clone();
 TourPlanUnscheduled.name = `測試遊程(尚未規劃行程)_${Date.now()}`;
-TourPlanUnscheduled.upsertCell(CellDefinesTourPlan.dayTimeRange.forgeCell());
+TourPlanUnscheduled.upsertCell(
+  ImitationTourPlanCellDefines.dayTimeRange.createCell(
+    new DayTimeRange(new DayTime(7, 30), new DayTime(18, 0))
+  )
+);
 ImitationTourPlan.setState(
   TourPlanUnscheduled,
+  ImitationTourPlan.states.applied
+);
+
+export const TourPlanUnscheduledOnePlay = TourPlanUnscheduled.clone();
+TourPlanUnscheduledOnePlay.setRelation(
+  RelationPurchase.name,
+  TourPlanUnscheduled.getRelations(RelationPurchase.name).slice(0, 1)
+);
+TourPlanUnscheduledOnePlay.name = `測試遊程(尚未規劃行程，一個體驗)_${Date.now()}`;
+ImitationTourPlan.setState(
+  TourPlanUnscheduledOnePlay,
   ImitationTourPlan.states.applied
 );
 
@@ -49,51 +65,55 @@ export const ScheduledEvents: TheThing[] = [];
 export const RelationPlayOfEvents: RelationRecord[] = [];
 
 const dateRange = TourPlanUnscheduled.getCellValue(
-  CellDefinesTourPlan.dateRange.id
+  ImitationTourPlanCellDefines.dateRange.id
 );
 export const ScheduleTrivial: Schedule = new Schedule(dateRange.toTimeRange(), {
   dayTimeRange: TourPlanUnscheduled.getCellValue(
-    CellDefinesTourPlan.dayTimeRange.id
+    ImitationTourPlanCellDefines.dayTimeRange.id
   )
 });
 for (const relation of TourPlanUnscheduled.getRelations(
   RelationPurchase.name
 )) {
-  console.log(relation);
+  // console.log(relation);
   const play = find(PlaysWithoutEquipment, p => p.id === relation.objectId);
   if (ImitationPlay.isValid(play)) {
-    const event = new ServiceEvent(
-      ScheduleAdapter.deduceServiceFromPlay(play),
-      {
-        numParticipants: relation.getCellValue(ShoppingCellDefines.quantity.id)
-      }
-    );
-    ScheduleTrivial.addEvent(event);
-
-    const eventThing = ImitationEvent.createTheThing(play);
-    eventThing.name = play.name;
-    eventThing.setCellValue(
-      ImitationEventCellDefines.timeRange.id,
-      event.timeRange
-    );
-    eventThing.setCellValue(
+    const tEvent = ImitationEvent.createTheThing(play);
+    tEvent.name = play.name;
+    tEvent.setCellValue(
       ImitationEventCellDefines.numParticipants.id,
-      event.numParticipants
+      relation.getCellValue(ShoppingCellDefines.quantity.id)
     );
-    eventThing.addRelation(
-      RelationshipPlay.createRelation(eventThing.id, play.id)
+    tEvent.addRelation(
+      RelationshipEventService.createRelation(tEvent.id, play.id)
     );
-    console.log(eventThing);
-    ScheduledEvents.push(eventThing);
+    // console.log(tEvent);
+    ScheduledEvents.push(tEvent);
 
     RelationPlayOfEvents.push(
       new RelationRecord({
         subjectCollection: ImitationEvent.collection,
-        subjectId: event.id,
+        subjectId: tEvent.id,
         objectCollection: ImitationPlay.collection,
         objectId: play.id,
-        objectRole: RelationshipPlay.name
+        objectRole: RelationshipEventService.name
       })
+    );
+
+    const sEvent = ScheduleAdapter.fromTheThingEventToServiceEvent(
+      tEvent,
+      play
+    );
+    ScheduleTrivial.addEvent(sEvent);
+  }
+}
+
+ScheduleTrivial.stupidSchedule();
+for (const sEvent of ScheduleTrivial.events) {
+  const tEvent = find(ScheduledEvents, ev => ev.id === sEvent.id);
+  if (tEvent) {
+    tEvent.upsertCell(
+      ImitationEventCellDefines.timeRange.createCell(sEvent.timeRange)
     );
   }
 }
@@ -114,10 +134,16 @@ ImitationTourPlan.setState(
   TourPlanScheduledOneEvent,
   ImitationTourPlan.states.applied
 );
+const onePlay = find(SamplePlays, p =>
+  TourPlanUnscheduledOnePlay.hasRelationTo(RelationPurchase.name, p.id)
+);
+const oneEvent = find(ScheduledEvents, ev =>
+  ev.hasRelationTo(RelationshipEventService.name, onePlay.id)
+);
 TourPlanScheduledOneEvent.setRelation(RelationshipScheduleEvent.name, [
   RelationshipScheduleEvent.createRelation(
     TourPlanScheduledOneEvent.id,
-    ScheduledEvents[0].id
+    oneEvent.id
   )
 ]);
 

@@ -141,7 +141,7 @@ describe('Approve scheduled events by host', () => {
     eventPO.expectState(ImitationEvent.states['host-approved']);    
   });
   
-  // it('Show button event to google calendar', () => {
+  // it('Show button of adding event to google calendar', () => {
   //   // cy.pause();
   //   eventPO.runAction(ImitationEvent.actions['add-google-calendar']);
   //   emceePO.confirm(`將行程${testEvent.name}加到我的Google日曆？`);

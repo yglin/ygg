@@ -97,13 +97,15 @@ export abstract class ScheduleFactory {
       errors.push(new Error(`不在${BusinessHours.label}範圍內`));
     } else {
       const sa = this.getServiceAvailability(event.service.id);
-      const minAvailability: number = sa.getMinAvailability(event.timeRange);
-      if (event.numParticipants > minAvailability) {
-        errors.push(
-          new Error(
-            `參加人數${event.numParticipants}已超過該時段的最低容量${minAvailability}`
-          )
-        );
+      if (sa) {
+        const minAvailability: number = sa.getMinAvailability(event.timeRange);
+        if (event.numParticipants > minAvailability) {
+          errors.push(
+            new Error(
+              `參加人數${event.numParticipants}已超過該時段的最低容量${minAvailability}`
+            )
+          );
+        }
       }
     }
     return errors;

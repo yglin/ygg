@@ -22,9 +22,10 @@ export function generateOnCreateFunctions(imitations: TheThingImitation[]) {
         ) => {
           try {
             const theThing: TheThing = new TheThing().fromJSON(snapshot.data());
-            for (const relation of theThing
-              .getAllRelations()
-              .map(r => r.toRelationRecord())) {
+            // console.log(`Save relations of TheThing ${theThing.id}`);
+            for (const relation of theThing.generateRelationRecords()) {
+              // console.log(`Save relation record ${relation.id}`);
+              // console.log(relation);
               await relationFactory.save(relation);
             }
             return Promise.resolve();

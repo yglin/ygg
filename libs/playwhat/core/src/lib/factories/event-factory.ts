@@ -2,7 +2,9 @@ import {
   TheThing,
   TheThingAccessor,
   RelationFactory,
-  TheThingFactory
+  TheThingFactory,
+  RelationRecord,
+  TheThingRelation
 } from '@ygg/the-thing/core';
 import {
   User,
@@ -11,7 +13,7 @@ import {
   Authenticator
 } from '@ygg/shared/user/core';
 import {
-  RelationshipPlay,
+  RelationshipEventService,
   ImitationEvent,
   RelationshipHost,
   RelationshipOrganizer,
@@ -23,6 +25,7 @@ import { switchMap, shareReplay, take } from 'rxjs/operators';
 import { ImitationPlay } from '../imitations';
 import { Router } from '@ygg/shared/infra/core';
 import { TimeRange } from '@ygg/shared/omni-types/core';
+// import * as env from "@ygg/env/environments.json";
 
 export const NotificationHostEvent = {
   type: 'host-event'
@@ -58,6 +61,56 @@ export class EventFactory {
     );
   }
 
+  async createFromService(
+    service: TheThing,
+    options: { numParticipants?: number } = {}
+  ): Promise<TheThing> {
+    try {
+      // console.log(`Create event from service: ${service.name}`);
+      const event = ImitationEvent.createTheThing(service);
+      event.name = service.name;
+      if (options.numParticipants) {
+        event.upsertCell(
+          ImitationEventCellDefines.numParticipants.createCell(
+            options.numParticipants
+          )
+        );
+      }
+      // console.log(event);
+      event.addRelation(
+        RelationshipEventService.createRelation(event.id, service.id)
+      );
+      return event;
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to create event from service ${service.name}.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
+  }
+
+  async save(event: TheThing) {
+    try {
+      const play = await this.getPlay(event);
+      const playOwner = await this.userAccessor.get(play.ownerId);
+      await this.relationFactory.saveUniq(
+        new RelationRecord({
+          subjectCollection: event.collection,
+          subjectId: event.id,
+          objectCollection: User.collection,
+          objectId: playOwner.id,
+          objectRole: RelationshipHost.name
+        })
+      );
+      return await this.theThingAccessor.upsert(event);
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to save event ${event.id}.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
+  }
+
   async addToGoogleCalendar(theThing: TheThing) {
     throw new Error('Method not implemented.');
   }
@@ -65,7 +118,7 @@ export class EventFactory {
   async getPlay(event: TheThing) {
     try {
       return this.theThingAccessor.load(
-        event.getRelations(RelationshipPlay.name)[0].objectId,
+        event.getRelations(RelationshipEventService.name)[0].objectId,
         ImitationPlay.collection
       );
     } catch (error) {
@@ -88,31 +141,38 @@ export class EventFactory {
   }
 
   async sendApprovalRequest(event: TheThing) {
-    const play = await this.getPlay(event);
-    // console.log('Hi~ MAMA');
+    try {
+      const play = await this.getPlay(event);
+      // console.log('Hi~ MAMA');
 
-    // const serviceId = event.getRelationObjectIds(RelationshipPlay.name)[0];
-    // const service: TheThing = await this.theThingAccessor.load(serviceId);
-    const host = await this.userAccessor.get(play.ownerId);
-    const mailSubject = `${location.hostname}：您有一項${event.name}的行程活動邀請`;
-    const mailContent = `<pre>您有一項行程活動邀請，以行程<b>${event.name}</b>的負責人身分參加</pre>`;
-    await this.notificationFactory.create({
-      type: NotificationHostEvent.type,
-      inviterId: this.authenticator.currentUser.id,
-      email: host.email,
-      mailSubject,
-      mailContent,
-      confirmMessage: `<h3>確認以負責人身份參加行程${event.name}？</h3><div>請於行程活動頁面按下確認參加按鈕</div>`,
-      landingUrl: `/${ImitationEvent.routePath}/${event.id}`,
-      data: {}
-    });
-    await this.theThingFactory.setState(
-      event,
-      ImitationEvent,
-      ImitationEvent.states['wait-approval'],
-      { force: true }
-    );
-    // console.log('Hi~ PAPA');
+      // const serviceId = event.getRelationObjectIds(RelationshipEventService.name)[0];
+      // const service: TheThing = await this.theThingAccessor.load(serviceId);
+      const host = await this.userAccessor.get(play.ownerId);
+      const mailSubject = `您有一項${event.name}的行程活動邀請`;
+      const mailContent = `<pre>您有一項行程活動邀請，以行程<b>${event.name}</b>的負責人身分參加</pre>`;
+      await this.notificationFactory.create({
+        type: NotificationHostEvent.type,
+        inviterId: this.authenticator.currentUser.id,
+        email: host.email,
+        mailSubject,
+        mailContent,
+        confirmMessage: `<h3>確認以負責人身份參加行程${event.name}？</h3><div>請於行程活動頁面按下確認參加按鈕</div>`,
+        landingUrl: `/${ImitationEvent.routePath}/${event.id}`,
+        data: {}
+      });
+      await this.theThingFactory.setState(
+        event,
+        ImitationEvent,
+        ImitationEvent.states['wait-approval'],
+        { force: true }
+      );
+      // console.log('Hi~ PAPA');
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to send event approval， event-id: ${event.id},\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
   }
 
   listMyHostEvents$(): Observable<TheThing[]> {

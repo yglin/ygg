@@ -12,11 +12,11 @@
       *ngFor="let eventId of eventPool"
       class="event-span"
       [attr.eventId]="eventId"
+      (mousedown)="onMousedownEvent(eventId)"
     >
       <div *ngIf="events[eventId] as event" [attr.event-name]="event.name">
         <ygg-service-event-span
           [event]="event"
-          (click)="onClickEvent(eventId)"
         ></ygg-service-event-span>
       </div>
     </div>

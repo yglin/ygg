@@ -13,7 +13,8 @@ import {
   values,
   noop,
   defaults,
-  random
+  random,
+  pick
 } from 'lodash';
 import {
   generateID,
@@ -180,45 +181,56 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   }
 
   createTheThing(source?: TheThing): TheThing {
-    let theThing = new TheThing();
-    if (this.collection) {
-      theThing.collection = this.collection;
-    }
-    if (this.filter && this.filter.tags) {
-      theThing.tags = new Tags(this.filter.tags);
-    }
-    theThing.view = this.view;
-    if (source && source.image) {
-      theThing.image = source.image;
-    }
-    for (const cellId in this.cellsDef) {
-      if (this.cellsDef.hasOwnProperty(cellId)) {
-        const cellDef = this.cellsDef[cellId];
-        if (cellDef.userInput === 'required') {
-          const newCell = cellDef.createCell();
-          theThing.upsertCell(newCell);
-        }
-        if (source && source.hasCell(cellId)) {
-          // console.log(`Copy cell ${cellId}`);
-          // console.log(source.getCellValue(cellId));
-          theThing.upsertCell(cellDef.createCell(source.getCellValue(cellId)));
+    try {
+      let theThing = new TheThing();
+      if (this.collection) {
+        theThing.collection = this.collection;
+      }
+      if (this.filter && this.filter.tags) {
+        theThing.tags = new Tags(this.filter.tags);
+      }
+      theThing.view = this.view;
+      if (source) {
+        defaults(theThing, pick(source, ['name', 'image']));
+      }
+      for (const cellId in this.cellsDef) {
+        if (this.cellsDef.hasOwnProperty(cellId)) {
+          const cellDef = this.cellsDef[cellId];
+          if (cellDef.userInput === 'required') {
+            const newCell = cellDef.createCell();
+            theThing.upsertCell(newCell);
+          }
+          if (source && source.hasCell(cellId)) {
+            // console.log(`Copy cell ${cellId}`);
+            // console.log(source.getCellValue(cellId));
+            theThing.upsertCell(
+              cellDef.createCell(source.getCellValue(cellId))
+            );
+          }
         }
       }
-    }
-    if ('initial' in this.stateChanges) {
-      this.setState(theThing, this.stateChanges['initial'].next);
-    }
-    if (!!this.routePath) {
-      theThing.link = `/${this.routePath}/${theThing.id}`;
-    } else {
-      theThing.link = `/the-things/${this.id}/${theThing.id}`;
-    }
-    if (!isEmpty(this.creators)) {
-      for (const creator of this.creators) {
-        theThing = creator(theThing);
+      if ('initial' in this.stateChanges) {
+        this.setState(theThing, this.stateChanges['initial'].next);
       }
+      if (!!this.routePath) {
+        theThing.link = `/${this.routePath}/${theThing.id}`;
+      } else {
+        theThing.link = `/the-things/${this.id}/${theThing.id}`;
+      }
+      if (!isEmpty(this.creators)) {
+        // console.log(this.creators);
+        for (const creator of this.creators) {
+          theThing = creator(theThing);
+        }
+      }
+      // console.log(`Created TheThing ${theThing.id}`);
+      return theThing;
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to create TheThing of imitation ${this.name}.\n${error.message}`
+      );
+      throw wrapError;
     }
-    return theThing;
   }
 
   getFirstRequiredCellDef(): TheThingCellDefine {

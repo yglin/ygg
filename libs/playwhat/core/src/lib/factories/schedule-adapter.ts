@@ -8,12 +8,10 @@ import {
   BusinessHours,
   DateRange,
   OmniTypes,
-  TimeRange,
-  TimeLength
+  TimeLength,
+  TimeRange
 } from '@ygg/shared/omni-types/core';
-import {
-  RelationPurchase, ShoppingCellDefines
-} from '@ygg/shopping/core';
+import { RelationPurchase, ShoppingCellDefines } from '@ygg/shopping/core';
 import {
   RelationFactory,
   RelationRecord,
@@ -22,19 +20,20 @@ import {
   TheThingFilter,
   TheThingRelation
 } from '@ygg/the-thing/core';
-import { isEmpty } from 'lodash';
+import { find, isEmpty } from 'lodash';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 import {
-  CellDefinesTourPlan,
   ImitationEvent,
   ImitationEventCellDefines,
   ImitationPlay,
   ImitationPlayCellDefines,
   ImitationTourPlan,
-  RelationshipPlay,
-  ImitationTourPlanCellDefines
+  ImitationTourPlanCellDefines,
+  RelationshipEventService,
+  RelationshipScheduleEvent
 } from '../imitations';
+import { EventFactory } from './event-factory';
 
 export class ScheduleAdapter {
   // static deriveEventFromServiceEvent(serviceEvent: ServiceEvent): TheThing {
@@ -51,12 +50,34 @@ export class ScheduleAdapter {
   //     serviceEvent.numParticipants
   //   );
   //   event.addRelation(
-  //     RelationshipPlay.createRelation(event.id, serviceEvent.service.id)
+  //     RelationshipEventService.createRelation(event.id, serviceEvent.service.id)
   //   );
   //   // console.log('deriveEventFromServiceEvent');
   //   // console.log(event);
   //   return event;
   // }
+
+  static fromTheThingEventToServiceEvent(
+    tEvent: TheThing,
+    play: TheThing
+  ): ServiceEvent {
+    const sEvent = new ServiceEvent(
+      ScheduleAdapter.deduceServiceFromPlay(play),
+      {
+        id: tEvent.id,
+        numParticipants: tEvent.getCellValue(
+          ImitationEventCellDefines.numParticipants.id
+        )
+      }
+    );
+    const timeRange: TimeRange = tEvent.getCellValue(
+      ImitationEventCellDefines.timeRange.id
+    );
+    if (timeRange) {
+      sEvent.setTimeRange(timeRange.start, timeRange.end);
+    }
+    return sEvent;
+  }
 
   static deduceServiceFromPlay(play: TheThing): Service {
     const service = new Service();
@@ -72,9 +93,7 @@ export class ScheduleAdapter {
     service.maxParticipants = play.getCellValue(
       ImitationPlayCellDefines.maximum.id
     );
-    service.location = play.getCellValue(
-      ImitationPlayCellDefines.location.id
-    );
+    service.location = play.getCellValue(ImitationPlayCellDefines.location.id);
     service.businessHours = play.getCellValue(
       ImitationPlayCellDefines.businessHours.id
     );
@@ -82,44 +101,80 @@ export class ScheduleAdapter {
   }
 
   constructor(
+    protected eventFactory: EventFactory,
     protected theThingAccessor: TheThingAccessor,
     protected relationFactory: RelationFactory
   ) {}
 
-  async deduceScheduleFromTourPlan(tourPlan: TheThing): Promise<Schedule> {
-    if (!ImitationTourPlan.isValid(tourPlan)) {
-      throw new Error(`Not a valid tour plan: ${JSON.stringify(tourPlan)}`);
-    }
-    const dateRange: DateRange = tourPlan.getCellValue(
-      ImitationTourPlanCellDefines.dateRange.id
-    );
-    const schedule = new Schedule(dateRange.toTimeRange(), {
-      dayTimeRange: tourPlan.getCellValue(ImitationTourPlanCellDefines.dayTimeRange.id)
-    });
-    const purchaseRelations = tourPlan.getRelations(RelationPurchase.name);
-    for (const purchase of purchaseRelations) {
-      const play = await this.theThingAccessor.load(purchase.objectId);
-      if (ImitationPlay.isValid(play)) {
-        const service = ScheduleAdapter.deduceServiceFromPlay(play);
-        const event = new ServiceEvent(service, {
-          numParticipants: purchase.getCellValue(ShoppingCellDefines.quantity.id)
-        });
-        if (event) {
-          schedule.addEvent(event);
-        }
-        if (!(play.id in schedule.serviceAvailabilities$)) {
+  async fromTourPlanToSchedule(tourPlan: TheThing, tServices: TheThing[], tEvents: TheThing[]): Promise<Schedule> {
+    try {
+      if (!ImitationTourPlan.isValid(tourPlan)) {
+        throw new Error(`Not a valid tour plan: ${JSON.stringify(tourPlan)}`);
+      }
+
+      // console.log(tEvents);
+      // console.log(tEvents);
+
+      const dateRange: DateRange = tourPlan.getCellValue(
+        ImitationTourPlanCellDefines.dateRange.id
+      );
+      const schedule = new Schedule(dateRange.toTimeRange(), {
+        dayTimeRange: tourPlan.getCellValue(
+          ImitationTourPlanCellDefines.dayTimeRange.id
+        )
+      });
+      for (const tEvent of tEvents) {
+        const tService: TheThing = find(tServices, p =>
+          tEvent.hasRelationTo(RelationshipEventService.name, p.id)
+        );
+        const sEvent: ServiceEvent = await ScheduleAdapter.fromTheThingEventToServiceEvent(
+          tEvent,
+          tService
+        );
+        schedule.addEvent(sEvent);
+        if (!(tService.id in schedule.serviceAvailabilities$)) {
           schedule.serviceAvailabilities$[
-            play.id
+            tService.id
           ] = this.deduceServiceAvailability$(
-            play.id,
+            tService.id,
             schedule.timeRange,
-            play.getCellValue(ImitationPlayCellDefines.maximum.id),
-            play.getCellValue(ImitationPlayCellDefines.businessHours.id)
+            tService.getCellValue(ImitationPlayCellDefines.maximum.id),
+            tService.getCellValue(ImitationPlayCellDefines.businessHours.id)
           );
         }
       }
+      // console.log(schedule.events);
+      // for (const purchase of purchaseRelations) {
+      //   const play = await this.theThingAccessor.load(purchase.objectId);
+      //   if (ImitationPlay.isValid(play)) {
+      //     const service = ScheduleAdapter.deduceServiceFromPlay(play);
+      //     const event = new ServiceEvent(service, {
+      //       numParticipants: purchase.getCellValue(
+      //         ShoppingCellDefines.quantity.id
+      //       )
+      //     });
+      //     if (event) {
+      //       schedule.addEvent(event);
+      //     }
+      //     if (!(play.id in schedule.serviceAvailabilities$)) {
+      //       schedule.serviceAvailabilities$[
+      //         play.id
+      //       ] = this.deduceServiceAvailability$(
+      //         play.id,
+      //         schedule.timeRange,
+      //         play.getCellValue(ImitationPlayCellDefines.maximum.id),
+      //         play.getCellValue(ImitationPlayCellDefines.businessHours.id)
+      //       );
+      //     }
+      //   }
+      // }
+      return schedule;
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to convert tour-plan to schedule.\n${error.message}`
+      );
+      throw wrapError;
     }
-    return schedule;
   }
 
   async deduceEventFromPurchase(
@@ -153,7 +208,9 @@ export class ScheduleAdapter {
         ImitationEventCellDefines.numParticipants.id,
         serviceEvent.numParticipants
       );
-      event.addRelation(RelationshipPlay.createRelation(event.id, play.id));
+      event.addRelation(
+        RelationshipEventService.createRelation(event.id, play.id)
+      );
       events.push(event);
     }
     return events;
@@ -166,7 +223,7 @@ export class ScheduleAdapter {
     businessHours?: BusinessHours
   ): Observable<ServiceAvailablility> {
     return this.relationFactory
-      .findByObjectAndRole$(serviceId, RelationshipPlay.name)
+      .findByObjectAndRole$(serviceId, RelationshipEventService.name)
       .pipe(
         switchMap((relations: RelationRecord[]) => {
           if (isEmpty(relations)) {

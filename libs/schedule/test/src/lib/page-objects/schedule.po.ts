@@ -23,22 +23,33 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
   expectSchedule(schedule: Schedule) {
     this.expectDateRange(DateRange.fromTimeRange(schedule.timeRange));
     this.expectDayTimeRange(schedule.dayTimeRange);
-    cy.wrap(schedule.events).each((event: ServiceEvent) => {
-      if (schedule.isEventInSchedule(event)) {
-        this.expectEventInTimeSlot(event.name, event.timeRange.start);
-      } else {
-        this.expectEventInPool(event);
-      }
-    });
+    this.expectEvents(schedule.events, schedule);
   }
 
   expectEventInPool(event: ServiceEvent) {
     cy.get(this.getSelectorForPoolEvent(event)).should('be.visible');
   }
 
+  expectEvents(events: ServiceEvent[], schedule: Schedule) {
+    cy.wrap(events).each((event: ServiceEvent) => {
+      this.expectEvent(event, schedule);
+    });
+  }
+
+  expectEvent(event: ServiceEvent, schedule: Schedule) {
+    if (schedule.isEventInSchedule(event)) {
+      this.expectEventInTimeSlot(event.name, event.timeRange.start);
+    } else {
+      this.expectEventInPool(event);
+    }
+  }
+
   expectEventInTimeSlot(eventName: string, time: Date) {
     const timeAlignedHalfHour = new Date(time);
     time.setMinutes(time.getMinutes() >= 30 ? 30 : 0);
+    cy.log(
+      `Expect event ${eventName} in time slot ${timeAlignedHalfHour.toLocaleString()}`
+    );
     cy.get(this.getSelectorForTimeSlot(time))
       .find(`[event-name="${eventName}"]`)
       .should('be.visible');
@@ -92,6 +103,7 @@ export class SchedulePageObjectCypress extends SchedulePageObject {
   }
 
   moveEvent(name: string, time: Date) {
+    cy.log(`Move event ${name} to ${time.toLocaleString()}`);
     cy.get(this.getSelectorForEvent(name))
       .first()
       .trigger('mousedown', 5, 5, { which: 1, force: true })

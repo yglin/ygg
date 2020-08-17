@@ -337,11 +337,14 @@ export class TheThingFactoryService extends TheThingFactory
       await this.commentFactory.addComment(
         theThing.id,
         new Html(
-          `📌 ${user.name} 更改狀態 <b>${oldState.label} ➡ ${state.label}</b>`
+          `📌 ${user.name} 更改狀態 <b>${!!oldState ? oldState.label : "未知狀態"} ➡ ${state.label}</b>`
         )
       );
     } catch (error) {
-      return Promise.reject(error);
+      const wrapError = new Error(
+        `Failed to change state of ${theThing.id},\n:${error.message}`
+      );
+      return Promise.reject(wrapError);
     }
   }
 

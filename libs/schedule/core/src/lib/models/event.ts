@@ -20,14 +20,26 @@ export class ServiceEvent implements Entity {
   constructor(
     service: Service,
     options: {
+      id?: string;
       numParticipants?: number;
+      timeRange?: TimeRange;
     } = {}
   ) {
-    this.id = generateID();
+    this.id = options.id || generateID();
     this.name = service.name;
     this.image = service.image;
     this.service = service;
     this.numParticipants = options.numParticipants || 0;
+    if (TimeRange.isTimeRange(options.timeRange)) {
+      this.timeRange = options.timeRange;
+    } else {
+      const timeLength = Math.max(30, this.service.timeLength);
+      const start = new Date();
+      const end = moment(start)
+        .add(timeLength, 'minute')
+        .toDate();
+      this.timeRange = new TimeRange(start, end);
+    }
   }
 
   setTimeRange(start: Date, end?: Date) {

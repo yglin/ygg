@@ -4,7 +4,8 @@ import {
   ScheduleAdapter,
   ImitationTourPlanCellDefines,
   ImitationEvent,
-  ImitationEventCellDefines
+  ImitationEventCellDefines,
+  RelationshipEventService
 } from '@ygg/playwhat/core';
 import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
 import { SchedulePageObjectCypress } from '@ygg/schedule/test';
@@ -16,9 +17,12 @@ import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import {
   ScheduleTrivial,
   TourPlanUnscheduled,
-  ScheduledEvents
+  ScheduledEvents,
+  RelationPlayOfEvents
 } from './sample-schedules';
 import { find } from 'lodash';
+import { TimeRange } from '@ygg/shared/omni-types/core';
+import { ServiceEvent } from '@ygg/schedule/core';
 
 describe('Create/Attach schedule data from/to tour-plan', () => {
   const siteNavigator = new SiteNavigator();
@@ -43,6 +47,26 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
       ImitationTourPlanCellDefines.dayTimeRange.id
     )
   });
+
+  const movedEvent01: TheThing = ScheduledEvents[0].clone();
+  const movedTimeRange01: TimeRange = (movedEvent01.getCellValue(
+    ImitationEventCellDefines.timeRange.id
+  ) as TimeRange).clone();
+  movedTimeRange01.move(150, 'minute');
+  movedEvent01.setCellValue(
+    ImitationEventCellDefines.timeRange.id,
+    movedTimeRange01
+  );
+
+  const movedEvent02: TheThing = ScheduledEvents[1].clone();
+  const movedTimeRange02: TimeRange = (movedEvent02.getCellValue(
+    ImitationEventCellDefines.timeRange.id
+  ) as TimeRange).clone();
+  movedTimeRange02.move(210, 'minute');
+  movedEvent02.setCellValue(
+    ImitationEventCellDefines.timeRange.id,
+    movedTimeRange02
+  );
 
   // const scheduleEvents: TheThing[] = ScheduleTrivial.events.map(se => {
   //   const play: TheThing = find(SamplePlays, p => p.id === se.service.id);
@@ -98,6 +122,12 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
     schedulePO.expectDayTimeRange(dayTimeRange);
   });
 
+  it('Expect events in event pool', () => {
+    cy.wrap(ScheduleTrivial.events).each((event: ServiceEvent) => {
+      schedulePO.expectEventInPool(event);
+    });
+  });
+
   it('Cancel and back to tour-plans', () => {
     schedulePO.cancel();
     tourPlanPO.expectVisible();
@@ -107,8 +137,16 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
   it('Create a trivial schedule from tour-plan', () => {
     tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
     schedulePO.expectVisible();
-    schedulePO.expectSchedule(ScheduleTrivial);
+    cy.wrap(ScheduledEvents).each((tEvent: TheThing) => {
+      schedulePO.moveEvent(
+        tEvent.name,
+        (tEvent.getCellValue(
+          ImitationEventCellDefines.timeRange.id
+        ) as TimeRange).start
+      );
+    });
     schedulePO.submit();
+    cy.wait(30000);
     tourPlanPO.expectVisible();
     tourPlanPO.expectEvents(ScheduledEvents);
   });
@@ -118,5 +156,44 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
     myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
     tourPlanPO.expectVisible();
     tourPlanPO.expectEvents(ScheduledEvents);
+  });
+
+  it('Edit exist schedule events', () => {
+    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
+    schedulePO.expectVisible();
+    schedulePO.expectEvents(
+      ScheduledEvents.map(tEvent => {
+        const tPlay = find(SamplePlays, p =>
+          tEvent.hasRelationTo(RelationshipEventService.name, p.id)
+        );
+        return ScheduleAdapter.fromTheThingEventToServiceEvent(tEvent, tPlay);
+      }),
+      ScheduleTrivial
+    );
+    const movedPlay01 = find(SamplePlays, p =>
+      movedEvent01.hasRelationTo(RelationshipEventService.name, p.id)
+    );
+    schedulePO.moveEvent(
+      ScheduleAdapter.fromTheThingEventToServiceEvent(movedEvent01, movedPlay01)
+        .name,
+      movedTimeRange01.start
+    );
+    const movedPlay02 = find(SamplePlays, p =>
+      movedEvent02.hasRelationTo(RelationshipEventService.name, p.id)
+    );
+    schedulePO.moveEvent(
+      ScheduleAdapter.fromTheThingEventToServiceEvent(movedEvent02, movedPlay02)
+        .name,
+      movedTimeRange02.start
+    );
+    schedulePO.submit();
+    cy.wait(30000);
+    tourPlanPO.expectVisible();
+    tourPlanPO.expectEvent(movedEvent01);
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
+    tourPlanPO.expectVisible();
+    tourPlanPO.expectEvent(movedEvent01);
+    tourPlanPO.expectEvent(movedEvent02);
   });
 });

@@ -82,7 +82,7 @@ export class AuthenticateService {
     try {
       const userId = firebaseUser.uid;
       let user = await this.userService.get(userId);
-      console.log(user);
+      // console.log(user);
       if (user) {
         this.syncFromFirebase(user, firebaseUser);
       } else {
@@ -91,7 +91,7 @@ export class AuthenticateService {
           firebaseUser
         );
       }
-      console.log(user);
+      // console.log(user);
       await this.userService.upsert(user);
       return user;
     } catch (error) {

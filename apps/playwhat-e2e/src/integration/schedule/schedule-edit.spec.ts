@@ -5,7 +5,7 @@ import {
   ImitationPlayCellDefines,
   ImitationTourPlan,
   ImitationTourPlanCellDefines,
-  RelationshipPlay
+  RelationshipEventService
 } from '@ygg/playwhat/core';
 import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
 import { SchedulePageObjectCypress } from '@ygg/schedule/test';
@@ -72,7 +72,7 @@ function stubEvent(event: TheThing, play: TheThing) {
     subjectId: event.id,
     objectCollection: ImitationPlay.collection,
     objectId: play.id,
-    objectRole: RelationshipPlay.name
+    objectRole: RelationshipEventService.name
   });
   // if (event.getCellValue(ImitationEventCellDefines.location.id) === null) {
   //   console.log('幹??');

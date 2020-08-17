@@ -8,25 +8,37 @@ import {
 import {
   ImitationEvent,
   ImitationTourPlan,
-  RelationshipScheduleEvent
+  RelationshipScheduleEvent,
+  RelationshipOrganizer,
+  ImitationTourPlanCellDefines,
+  ImitationPlay,
+  RelationshipEventService,
+  ImitationEventCellDefines
 } from '@ygg/playwhat/core';
-import { Schedule } from '@ygg/schedule/core';
+import { Schedule, ServiceEvent } from '@ygg/schedule/core';
 import { ScheduleFactoryService } from '@ygg/schedule/ui';
 import { EmceeService } from '@ygg/shared/ui/widgets';
-import { Purchase, RelationPurchase } from '@ygg/shopping/core';
+import { Purchase, RelationPurchase, ShoppingCellDefines } from '@ygg/shopping/core';
 import { CartSubmitPack, ShoppingCartService } from '@ygg/shopping/ui';
 import {
   TheThing,
   TheThingAction,
-  TheThingRelation
+  TheThingRelation,
+  RelationRecord
 } from '@ygg/the-thing/core';
 import {
   TheThingAccessService,
-  TheThingFactoryService
+  TheThingFactoryService,
+  RelationFactoryService
 } from '@ygg/the-thing/ui';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { EventFactoryService } from './event-factory.service';
 import { ScheduleAdapterService } from './schedule-adapter.service';
+import { User } from '@ygg/shared/user/core';
+import { UserService } from '@ygg/shared/user/ui';
+import { DateRange, TimeRange } from '@ygg/shared/omni-types/core';
+import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
+import { isEmpty, find } from 'lodash';
 
 export interface IModifyRequest {
   command: 'update' | 'add' | 'delete';
@@ -53,7 +65,8 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     private router: Router,
     private scheduleAdapter: ScheduleAdapterService,
     private scheduleFactory: ScheduleFactoryService,
-    private eventFactory: EventFactoryService
+    private eventFactory: EventFactoryService,
+    private relationFactory: RelationFactoryService
   ) {
     this.subscriptions.push(
       this.theThingFactory.runAction$.subscribe(actionSubmit => {
@@ -340,10 +353,85 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     }
   }
 
+  async listScheduledEvents(tourPlan: TheThing): Promise<TheThing[]> {
+    return this.relationFactory
+      .findBySubjectAndRole$(tourPlan.id, RelationshipScheduleEvent.name)
+      .pipe(
+        switchMap((relations: RelationRecord[]) => {
+          if (isEmpty(relations)) {
+            return of([]);
+          } else {
+            return this.theThingAccessor.listByIds$(
+              relations.map(r => r.objectId),
+              ImitationEvent.collection
+            );
+          }
+        }),
+        // tap(events => console.log(events)),
+        map((events: TheThing[]) =>
+          events.filter(ev => ImitationEvent.isValid(ev))
+        ),
+        // tap(events => console.log(events)),
+        take(1)
+      )
+      .toPromise();
+  }
+
+  async listPurchasedPlays(tourPlan: TheThing): Promise<TheThing[]> {
+    return this.relationFactory
+      .findBySubjectAndRole$(tourPlan.id, RelationPurchase.name)
+      .pipe(
+        switchMap((relations: RelationRecord[]) => {
+          // console.log(relations);
+          if (isEmpty(relations)) {
+            return of([]);
+          } else {
+            return this.theThingAccessor.listByIds$(
+              relations.map(r => r.objectId),
+              ImitationPlay.collection
+            );
+          }
+        }),
+        // tap(plays => console.log(plays)),
+        map((plays: TheThing[]) => plays.filter(p => ImitationPlay.isValid(p))),
+        // tap(plays => console.log(plays)),
+        take(1)
+      )
+      .toPromise();
+  }
+
   async schedule(tourPlan: TheThing) {
     try {
-      const inSchedule = await this.scheduleAdapter.deduceScheduleFromTourPlan(
-        tourPlan
+      const plays: TheThing[] = await this.listPurchasedPlays(tourPlan);
+      const tEvents: TheThing[] = await this.listScheduledEvents(tourPlan);
+      for (const play of plays) {
+        if (
+          !find(tEvents, ev =>
+            ev.hasRelationTo(RelationshipEventService.name, play.id)
+          )
+        ) {
+          const purchase: TheThingRelation = tourPlan.getRelation(
+            RelationPurchase.name,
+            play.id
+          );
+          if (purchase) {
+            const newEvent: TheThing = await this.eventFactory.createFromService(
+              play, {
+                numParticipants: purchase.getCellValue(ShoppingCellDefines.quantity.id)
+              }
+            );
+            // console.log(newEvent);
+            if (newEvent) {
+              tEvents.push(newEvent);
+            }
+          }
+        }
+      }
+
+      const inSchedule = await this.scheduleAdapter.fromTourPlanToSchedule(
+        tourPlan,
+        plays,
+        tEvents
       );
       const outSchedule = await this.scheduleFactory.edit(inSchedule);
       // console.log(outSchedule);
@@ -351,26 +439,46 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
         this.emcee.showProgress({
           message: '儲存行程中'
         });
-        const events: TheThing[] = await this.scheduleAdapter.deriveEventsFromSchedule(
-          outSchedule
-        );
-
         const relations: TheThingRelation[] = [];
-        for (const event of events) {
-          // Save event
-          await this.theThingFactory.save(event, {
-            requireOwner: true,
-            imitation: ImitationEvent,
-            force: true
-          });
-          // Attach event to tour-plan
-          const relation = RelationshipScheduleEvent.createRelation(
-            tourPlan.id,
-            event.id
+        for (const tEvent of tEvents) {
+          const sEvent: ServiceEvent = find(
+            outSchedule.events,
+            ev => ev.id === tEvent.id
           );
-          relations.push(relation);
+          if (!sEvent) {
+            continue;
+          }
+          const oldTimeRange: TimeRange = tEvent.getCellValue(
+            ImitationEventCellDefines.timeRange.id
+          );
+          if (!sEvent.timeRange.isEqual(oldTimeRange)) {
+            tEvent.upsertCell(
+              ImitationEventCellDefines.timeRange.createCell(sEvent.timeRange)
+            );
+
+            // Save event
+            await this.eventFactory.save(tEvent);
+            await this.relationFactory.saveUniq(
+              new RelationRecord({
+                subjectCollection: tEvent.collection,
+                subjectId: tEvent.id,
+                objectCollection: User.collection,
+                objectId: tourPlan.ownerId,
+                objectRole: RelationshipOrganizer.name
+              })
+            );
+          }
+          // Attach event to tour-plan
+          if (
+            !tourPlan.hasRelationTo(RelationshipScheduleEvent.name, tEvent.id)
+          ) {
+            const relationTourPlanEvent = RelationshipScheduleEvent.createRelation(
+              tourPlan.id,
+              tEvent.id
+            );
+            tourPlan.addRelation(relationTourPlanEvent);
+          }
         }
-        tourPlan.setRelation(RelationshipScheduleEvent.name, relations);
 
         // Save tour-plan
         await this.theThingFactory.save(tourPlan, {
@@ -398,19 +506,13 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
           RelationshipScheduleEvent.name
         );
         for (const relation of relations) {
-          try {
-            const event: TheThing = await this.theThingFactory.load(
-              relation.objectId,
-              ImitationEvent.collection
-            );
-            // console.log(`Send confirmation for event ${event.name}`);
-            await this.eventFactory.sendApprovalRequest(event);
-            // console.log(`Confirmation for event ${event.name} sent`);
-          } catch (error) {
-            throw new Error(
-              `送出行程確認失敗，id: ${relation.objectId},${error.message}`
-            );
-          }
+          const event: TheThing = await this.theThingFactory.load(
+            relation.objectId,
+            ImitationEvent.collection
+          );
+          // console.log(`Send confirmation for event ${event.name}`);
+          await this.eventFactory.sendApprovalRequest(event);
+          // console.log(`Confirmation for event ${event.name} sent`);
         }
         await this.theThingFactory.setState(
           tourPlan,

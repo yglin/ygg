@@ -48,8 +48,8 @@ export const ImitationEvent: TheThingImitation = new TheThingImitation({
   cellsDef: values(ImitationEventCellDefines),
   cellsOrder: [
     ImitationEventCellDefines.timeRange.id,
-    ImitationEventCellDefines.numParticipants.id
-    // ImitationEventCellDefines.location.name
+    ImitationEventCellDefines.location.id,
+    ImitationEventCellDefines.numParticipants.id,
   ],
   displays: {
     thumbnail: {
@@ -92,6 +92,11 @@ ImitationEvent.states = {
     label: '新建立',
     value: 10
   },
+  editing: {
+    name: 'editing',
+    label: '修改中',
+    value: 30
+  },
   'wait-approval': {
     name: 'wait-approval',
     label: '等待負責人確認中',
@@ -104,11 +109,21 @@ ImitationEvent.states = {
   }
 };
 
+ImitationEvent.stateChanges = {
+  initial: {
+    next: ImitationEvent.states.new
+  },
+  onSave: {
+    previous: ImitationEvent.states.new,
+    next: ImitationEvent.states.editing
+  }
+};
+
 ImitationEvent.canModify = (theThing: TheThing): boolean => {
   return false;
 };
 
-export const RelationshipPlay: Relationship = new Relationship({
+export const RelationshipEventService: Relationship = new Relationship({
   name: '體驗項目',
   imitation: ImitationPlay
 });
@@ -134,6 +149,6 @@ ImitationEvent.actions = {
     id: 'add-google-calendar',
     icon: '/assets/google/calendar/google-calendar.png',
     tooltip: '將此活動行程加到Google日曆',
-    permissions: ['state:host-approved', 'requireOwner']
+    permissions: ['state:host-approved', `role:${RelationshipHost.name}`]
   }
 };

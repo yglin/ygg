@@ -20,7 +20,7 @@ import {
   ScheduleAdapter,
   ImitationEventCellDefines,
   ImitationTourPlanCellDefines,
-  RelationshipPlay
+  RelationshipEventService
 } from '@ygg/playwhat/core';
 import {
   Purchase,
@@ -210,7 +210,7 @@ function forgeEvents(options: {
         ImitationEventCellDefines.numParticipants.id,
         relation.getCellValue(ShoppingCellDefines.quantity.id)
       );
-      event.addRelation(RelationshipPlay.createRelation(event.id, play.id));
+      event.addRelation(RelationshipEventService.createRelation(event.id, play.id));
       events.push(event);
     }
   }
