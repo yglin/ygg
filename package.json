@@ -95,6 +95,7 @@
     "ngx-webstorage-service": "^4.1.0",
     "nodemailer": "^6.4.8",
     "reflect-metadata": "^0.1.13",
+    "rfc4648": "^1.4.0",
     "rxjs": "~6.5.4",
     "short-uuid": "^3.1.1",
     "uuid": "^3.3.2",

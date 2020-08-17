@@ -24,6 +24,7 @@ import { EmceeService } from '@ygg/shared/ui/widgets';
 import { TheThing } from '@ygg/the-thing/core';
 import { GoogleCalendarService } from '@ygg/shared/google/apis';
 import { TimeRange } from '@ygg/shared/omni-types/core';
+import { base32hex } from 'rfc4648';
 
 @Injectable({
   providedIn: 'root'
@@ -81,8 +82,20 @@ export class EventFactoryService extends EventFactory {
     const timeRange: TimeRange = event.getCellValue(
       ImitationEventCellDefines.timeRange.id
     );
+    let fuckingBase32hexEncodingShitGoogleCalendarResourceId = '';
+    const charCodeArray = [];
+    for (let index = 0; index < event.id.length; index++) {
+      charCodeArray.push(event.id.charCodeAt(index));
+    }
+    fuckingBase32hexEncodingShitGoogleCalendarResourceId = base32hex.stringify(
+      charCodeArray
+    );
+    fuckingBase32hexEncodingShitGoogleCalendarResourceId = fuckingBase32hexEncodingShitGoogleCalendarResourceId
+      .replace(/=/g, '')
+      .toLowerCase();
+    // console.log(fuckingBase32hexEncodingShitGoogleCalendarResourceId);
     return {
-      id: event.id.toLowerCase(),
+      id: fuckingBase32hexEncodingShitGoogleCalendarResourceId,
       start: {
         dateTime: timeRange.start.toISOString()
       },
