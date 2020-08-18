@@ -115,17 +115,22 @@ export class EventFactoryService extends EventFactory {
       if (!confirm) {
         return;
       }
+      this.emcee.showProgress({
+        message: `傳送行程 ${event.name} 到Google日曆`
+      });
       const gcEvent = await this.googleCalendar.insertEvent(
         this.toGoogleCalendarEvent(event)
       );
       await this.emcee.info(
-        `<h3>行程${event.name}已加到你的Google日曆中</h3><a href="${gcEvent.htmlLink}" target="_blank">點此檢視</a>`
+        `<h3>行程 ${event.name} 已加到你的Google日曆中</h3><a href="${gcEvent.htmlLink}" target="_blank">點此檢視</a>`
       );
     } catch (error) {
       this.emcee.error(
-        `<h3>行程${event.name}加到Google日曆失敗，錯誤原因：${error.message}</h3>`
+        `<h3>行程 ${event.name} 加到Google日曆失敗，錯誤原因：${error.message}</h3>`
       );
       return Promise.reject(error);
+    } finally {
+      this.emcee.hideProgress();
     }
   }
 }
