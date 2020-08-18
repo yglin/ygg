@@ -10,6 +10,8 @@ import { Router, Emcee } from '@ygg/shared/infra/core';
 import { BusinessHours } from '@ygg/shared/omni-types/core';
 
 export abstract class ScheduleFactory {
+  static signalCancel = 'cancel';
+
   onSave$: Subject<Schedule> = new Subject();
   onCancel$: Subject<Schedule> = new Subject();
   schedulePool: { [id: string]: Schedule } = {};
@@ -55,7 +57,7 @@ export abstract class ScheduleFactory {
         this.onCancel$.pipe(
           filter(_schedule => _schedule.id === schedule.id),
           take(1),
-          map(() => 'cancel')
+          map(() => ScheduleFactory.signalCancel)
         )
       ).subscribe(
         result => resolve(result),

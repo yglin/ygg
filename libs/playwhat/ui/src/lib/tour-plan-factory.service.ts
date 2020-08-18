@@ -15,7 +15,7 @@ import {
   RelationshipEventService,
   ImitationEventCellDefines
 } from '@ygg/playwhat/core';
-import { Schedule, ServiceEvent } from '@ygg/schedule/core';
+import { Schedule, ServiceEvent, ScheduleFactory } from '@ygg/schedule/core';
 import { ScheduleFactoryService } from '@ygg/schedule/ui';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import { Purchase, RelationPurchase, ShoppingCellDefines } from '@ygg/shopping/core';
@@ -434,65 +434,77 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
         tEvents
       );
       const outSchedule = await this.scheduleFactory.edit(inSchedule);
-      // console.log(outSchedule);
-      if (Schedule.isSchedule(outSchedule)) {
-        this.emcee.showProgress({
-          message: '儲存行程中'
-        });
-        const relations: TheThingRelation[] = [];
-        for (const tEvent of tEvents) {
-          const sEvent: ServiceEvent = find(
-            outSchedule.events,
-            ev => ev.id === tEvent.id
-          );
-          if (!sEvent) {
-            continue;
-          }
-          const oldTimeRange: TimeRange = tEvent.getCellValue(
-            ImitationEventCellDefines.timeRange.id
-          );
-          if (!sEvent.timeRange.isEqual(oldTimeRange)) {
-            tEvent.upsertCell(
-              ImitationEventCellDefines.timeRange.createCell(sEvent.timeRange)
-            );
-
-            // Save event
-            await this.eventFactory.save(tEvent);
-            await this.relationFactory.saveUniq(
-              new RelationRecord({
-                subjectCollection: tEvent.collection,
-                subjectId: tEvent.id,
-                objectCollection: User.collection,
-                objectId: tourPlan.ownerId,
-                objectRole: RelationshipOrganizer.name
-              })
-            );
-          }
-          // Attach event to tour-plan
-          if (
-            !tourPlan.hasRelationTo(RelationshipScheduleEvent.name, tEvent.id)
-          ) {
-            const relationTourPlanEvent = RelationshipScheduleEvent.createRelation(
-              tourPlan.id,
-              tEvent.id
-            );
-            tourPlan.addRelation(relationTourPlanEvent);
-          }
-        }
-
-        // Save tour-plan
-        await this.theThingFactory.save(tourPlan, {
-          requireOwner: true,
-          imitation: ImitationTourPlan,
-          force: true
-        });
-        this.theThingFactory.emitChange(tourPlan);
-        this.emcee.hideProgress();
+      if (outSchedule !== ScheduleFactory.signalCancel) {
+        await this.saveScheduleForTourPlan(tourPlan, outSchedule as Schedule, tEvents);
       }
+      // console.log(outSchedule);
       this.router.navigate(['/', ImitationTourPlan.routePath, tourPlan.id]);
     } catch (error) {
       this.emcee.error(`排定行程表失敗，錯誤原因：${error.message}`);
       return Promise.reject();
+    }
+  }
+
+  async saveScheduleForTourPlan(tourPlan: TheThing, schedule: Schedule, tEvents: TheThing[]) {
+    try {
+      if (!Schedule.isSchedule(schedule)) {
+        throw new Error(`Input not a valid schedule`);
+      }
+      this.emcee.showProgress({
+        message: '儲存行程中'
+      });
+      for (const tEvent of tEvents) {
+        const sEvent: ServiceEvent = find(
+          schedule.events,
+          ev => ev.id === tEvent.id
+        );
+        if (!sEvent) {
+          continue;
+        }
+        const oldTimeRange: TimeRange = tEvent.getCellValue(
+          ImitationEventCellDefines.timeRange.id
+        );
+        if (!sEvent.timeRange.isEqual(oldTimeRange)) {
+          tEvent.upsertCell(
+            ImitationEventCellDefines.timeRange.createCell(sEvent.timeRange)
+          );
+
+          // Save event
+          await this.eventFactory.save(tEvent);
+          await this.relationFactory.saveUniq(
+            new RelationRecord({
+              subjectCollection: tEvent.collection,
+              subjectId: tEvent.id,
+              objectCollection: User.collection,
+              objectId: tourPlan.ownerId,
+              objectRole: RelationshipOrganizer.name
+            })
+          );
+        }
+        // Attach event to tour-plan
+        if (
+          !tourPlan.hasRelationTo(RelationshipScheduleEvent.name, tEvent.id)
+        ) {
+          const relationTourPlanEvent = RelationshipScheduleEvent.createRelation(
+            tourPlan.id,
+            tEvent.id
+          );
+          tourPlan.addRelation(relationTourPlanEvent);
+        }
+      }
+
+      // Save tour-plan
+      await this.theThingFactory.save(tourPlan, {
+        requireOwner: true,
+        imitation: ImitationTourPlan,
+        force: true
+      });
+      this.theThingFactory.emitChange(tourPlan);
+    } catch (error) {
+      const wrapError = new Error(`Failed to save schedule for tour-plan.\n${error.message}`);
+      return Promise.reject(wrapError);
+    } finally {
+      this.emcee.hideProgress();
     }
   }
 
