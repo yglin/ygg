@@ -13,6 +13,10 @@ import { ServiceAvailablility } from './availability';
 import { Observable } from 'rxjs';
 
 export class Schedule implements Entity {
+  static Defaults = {
+    dayTimeRange: new DayTimeRange(new DayTime(9, 0), new DayTime(17, 30))
+  };
+
   id: string;
   events: ServiceEvent[] = [];
   timeRange: TimeRange;
@@ -42,8 +46,7 @@ export class Schedule implements Entity {
   ) {
     this.id = generateID();
     this.timeRange = timeRange;
-    this.dayTimeRange = new DayTimeRange(new DayTime(6, 0), new DayTime(20, 0));
-    extend(this, options);
+    this.dayTimeRange = options.dayTimeRange || Schedule.Defaults.dayTimeRange;
     extend(this.options, options);
   }
 

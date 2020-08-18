@@ -22,12 +22,21 @@ import {
 } from './sample-schedules';
 import { find } from 'lodash';
 import { TimeRange } from '@ygg/shared/omni-types/core';
-import { ServiceEvent } from '@ygg/schedule/core';
+import { ServiceEvent, Schedule } from '@ygg/schedule/core';
 
 describe('Create/Attach schedule data from/to tour-plan', () => {
   const siteNavigator = new SiteNavigator();
+
+  const TourPlanUnscheduledWithoutDayTimeRange = TourPlanUnscheduled.clone();
+  TourPlanUnscheduledWithoutDayTimeRange.name = `測試遊程(尚未規劃行程，沒有遊玩時段)_${Date.now()}`;
+  TourPlanUnscheduledWithoutDayTimeRange.deleteCell(
+    ImitationTourPlanCellDefines.dayTimeRange.id
+  );
+  ImitationTourPlan.setState(TourPlanUnscheduledWithoutDayTimeRange, ImitationTourPlan.states.applied);
+
   const SampleThings = SamplePlays.concat(SampleEquipments).concat([
-    TourPlanUnscheduled
+    TourPlanUnscheduled,
+    TourPlanUnscheduledWithoutDayTimeRange
   ]);
   const tourPlanPO = new TourPlanPageObjectCypress();
   const myTourPlansPO = new MyThingsDataTablePageObjectCypress(
@@ -196,4 +205,14 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
     tourPlanPO.expectEvent(movedEvent01);
     tourPlanPO.expectEvent(movedEvent02);
   });
+
+  it('Apply default dayTimeRange if not found in tour-plan', () => {
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduledWithoutDayTimeRange);
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
+    schedulePO.expectVisible();
+    schedulePO.expectDayTimeRange(Schedule.Defaults.dayTimeRange);
+  });
+  
 });
