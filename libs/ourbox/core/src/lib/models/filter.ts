@@ -31,7 +31,7 @@ export class ItemFilter extends TheThingFilter {
     if (!super.test(item)) {
       return false;
     }
-    const location = item.getCellValue(ImitationItemCells.location.name);
+    const location = item.getCellValue(ImitationItemCells.location.id);
     if (
       !!this.geoBound &&
       !!location &&

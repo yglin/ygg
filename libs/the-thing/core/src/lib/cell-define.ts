@@ -33,7 +33,12 @@ export class TheThingCellDefine {
     return new TheThingCellDefine(this);
   }
 
-  extend(options: any): TheThingCellDefine {
+  extend(
+    options: {
+      label?: string;
+      userInput?: UserInputType;
+    } = {}
+  ): TheThingCellDefine {
     const extendedCellDefine = this.clone();
     extend(extendedCellDefine, options);
     return extendedCellDefine;
@@ -67,20 +72,24 @@ export class TheThingCellDefine {
   // }
 }
 
-export type CommonCellIds =
+/* export type CommonCellIds =
   | 'album'
+  | 'datetime'
   | 'location'
   | 'introduction'
   | 'contact'
-  | 'miscNotes';
-export const CommonCellDefines: {
-  [key in CommonCellIds]: TheThingCellDefine;
-} = mapValues(
+  | 'miscNotes'; */
+export const CommonCellDefines = mapValues(
   {
     album: {
       id: 'album',
       label: '照片',
       type: 'album'
+    },
+    datetime: {
+      id: 'datetime',
+      label: '時間',
+      type: 'datetime'
     },
     location: {
       id: 'location',

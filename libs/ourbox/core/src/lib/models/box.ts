@@ -1,7 +1,6 @@
 import {
   TheThingImitation,
   TheThingCellDefine,
-  Relationship,
   TheThingFilter
 } from '@ygg/the-thing/core';
 import { OmniTypes } from '@ygg/shared/omni-types/core';
@@ -36,14 +35,10 @@ export const ImitationBoxThumbnailImages = [
 
 export const ImitationBoxCells = {
   public: new TheThingCellDefine({
-    name: '公開',
+    id: 'public',
+    label: '公開',
     type: OmniTypes.boolean.id,
     userInput: 'required'
-  }),
-  friends: new TheThingCellDefine({
-    name: '箱友',
-    type: OmniTypes.text.id,
-    userInput: 'hidden'
   })
 };
 

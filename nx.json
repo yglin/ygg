@@ -205,14 +205,14 @@
       "tags": ["scope:shared", "type:core"]
     },
     "ourbox": {
-      "tags": []
+      "tags": ["scope:ourbox", "type:app"]
     },
     "ourbox-e2e": {
       "tags": [],
       "implicitDependencies": ["ourbox"]
     },
     "ourbox-core": {
-      "tags": []
+      "tags": ["scope:ourbox", "type:core"]
     },
     "shared-user-functions": {
       "tags": ["scope:shared", "type:functions"]

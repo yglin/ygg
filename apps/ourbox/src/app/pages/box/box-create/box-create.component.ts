@@ -29,9 +29,9 @@ import { ImageUploaderService } from '@ygg/shared/omni-types/ui';
 export class BoxCreateComponent implements OnInit, OnDestroy {
   firstFormGroup: FormGroup;
   // secondFormGroup: FormGroup;
-  formControlFriendEmail: FormControl = new FormControl('', [Validators.email]);
+  formControlMemberEmail: FormControl = new FormControl('', [Validators.email]);
   formControlPublic: FormControl = new FormControl(false);
-  friends: { [email: string]: { id: string } } = {};
+  members: { [email: string]: { id: string } } = {};
   foundUsers: User[] = [];
   isEmail = isEmail;
   isPublicDescription = ImitationBoxFlags.isPublic.description;
@@ -48,7 +48,7 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
     this.firstFormGroup = this.formBuilder.group({
       name: [null, Validators.required]
     });
-    const inputEmailChange$ = this.formControlFriendEmail.valueChanges.pipe(
+    const inputEmailChange$ = this.formControlMemberEmail.valueChanges.pipe(
       debounceTime(300),
       filter(value => value && value.length >= 3)
     );
@@ -64,7 +64,7 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
         .subscribe()
     );
 
-    // this.formControlFriendEmail.valueChanges
+    // this.formControlMemberEmail.valueChanges
     //   .pipe(
     //     debounceTime(5000),
     //     filter(value => value && value.length >= 3),
@@ -99,23 +99,23 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
     this.boxFactory.create({
       name: this.firstFormGroup.get('name').value,
       image: this.thumbSelected,
-      memberEmails: keys(this.friends),
+      memberEmails: keys(this.members),
       isPublic: this.formControlPublic.value
     });
   }
 
-  addFriend() {
-    const email = this.formControlFriendEmail.value;
+  addMember() {
+    const email = this.formControlMemberEmail.value;
     if (isEmail(email)) {
       const foundUser = find(this.foundUsers, user => user.email === email);
-      this.friends[email] = { id: !!foundUser ? foundUser.id : null };
-      this.formControlFriendEmail.setValue(null, { emitEvent: false });
+      this.members[email] = { id: !!foundUser ? foundUser.id : null };
+      this.formControlMemberEmail.setValue(null, { emitEvent: false });
     }
   }
 
-  deleteFriend(email: string) {
-    if (email in this.friends) {
-      delete this.friends[email];
+  deleteMember(email: string) {
+    if (email in this.members) {
+      delete this.members[email];
     }
   }
 

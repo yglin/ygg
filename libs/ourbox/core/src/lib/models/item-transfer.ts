@@ -3,10 +3,10 @@ import {
   TheThingCellDefine,
   TheThingState,
   TheThing,
-  TheThingAction
+  TheThingAction,
+  CommonCellDefines
 } from '@ygg/the-thing/core';
-import { values } from 'lodash';
-import { OmniTypes } from '@ygg/shared/omni-types/core';
+import { values, keyBy } from 'lodash';
 
 export const RelationshipItemTransferItem = {
   role: 'subject-item'
@@ -20,7 +20,17 @@ export const RelationshipItemTransferReceiver = {
   role: 'receiver'
 };
 
-export const ImitationItemTransferCellDefines: {
+export const ImitationItemTransferCellDefines = keyBy([
+  CommonCellDefines.datetime.extend({
+    label: '約定時間',
+    userInput: 'required',
+  }),
+  CommonCellDefines.location.extend({
+    label: '約定地點',
+    userInput: 'required'
+  })
+], 'id');
+/* : {
   [name: string]: TheThingCellDefine;
 } = {
   location: new TheThingCellDefine({
@@ -34,7 +44,7 @@ export const ImitationItemTransferCellDefines: {
     userInput: 'required'
   })
 };
-
+ */
 export const ImitationItemTransferStates: { [name: string]: TheThingState } = {
   new: {
     name: 'new',
@@ -112,8 +122,8 @@ export const ImitationItemTransfer = new TheThingImitation({
     }
   ],
   cellsOrder: [
-    ImitationItemTransferCellDefines.datetime.name,
-    ImitationItemTransferCellDefines.location.name
+    ImitationItemTransferCellDefines.datetime.id,
+    ImitationItemTransferCellDefines.location.id
   ],
   canModify: (theThing: TheThing): boolean => {
     return (

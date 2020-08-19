@@ -8,24 +8,28 @@ import { Image } from '@ygg/shared/omni-types/core';
 const links: { [key: string]: ImageThumbnailItem } = {
   map: {
     id: 'map-search',
+    class: 'map-search',
     name: '撿寶地圖',
     image: '/assets/images/map.png',
     path: '/map'
   },
   'create-box': {
     id: 'create-box',
+    class: 'create-box',
     name: '開新寶箱',
     image: '/assets/images/box/create.png',
     path: '/ourbox/create'
   },
   'my-boxes': {
     id: 'my-boxes',
+    class: 'my-boxes',
     name: '我的寶箱',
     image: '/assets/images/box/box.png',
     path: '/ourbox/my'
   },
   'my-board': {
     id: 'my-board',
+    class: 'my-board',
     name: '佈告欄',
     image: '/assets/images/board.png',
     path: '/board'

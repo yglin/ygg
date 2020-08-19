@@ -3,22 +3,20 @@ import {
   TheThingCellDefine,
   TheThingImitation,
   TheThingState,
-  TheThing
+  TheThing,
+  CommonCellDefines
 } from '@ygg/the-thing/core';
-import { values } from 'lodash';
+import { values, keyBy } from 'lodash';
 
-export const ImitationItemCells = {
-  album: new TheThingCellDefine({
-    name: '照片',
-    type: OmniTypes.album.id,
+export const ImitationItemCells = keyBy([
+  CommonCellDefines.album.extend({
     userInput: 'required'
   }),
-  location: new TheThingCellDefine({
-    name: '所在地',
-    type: OmniTypes.location.id,
+  CommonCellDefines.location.extend({
+    label: '物品所在地',
     userInput: 'required'
   })
-};
+], 'id');
 
 export const ImitationItemStates: { [name: string]: TheThingState } = {
   new: {

@@ -12,12 +12,12 @@
   height: 100%;
 }
 
-.friend-list {
+.member-list {
   height: 25vh;
   overflow-y: auto;
 }
 
-.friend {
+.member {
   width: 20vw;
   min-width: 250px;
   margin-bottom: 20px;

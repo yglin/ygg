@@ -112,6 +112,14 @@
             ]
           },
           {
+            "sourceTag": "scope:ourbox",
+            "onlyDependOnLibsWithTags": [
+              "scope:ourbox",
+              "scope:the-thing",
+              "scope:shared"
+            ]
+          },
+          {
             "sourceTag": "scope:the-thing",
             "onlyDependOnLibsWithTags": [
               "scope:the-thing",

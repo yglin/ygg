@@ -117,7 +117,7 @@
                       matInput
                       type="email"
                       placeholder="輸入好友Email"
-                      [formControl]="formControlFriendEmail"
+                      [formControl]="formControlMemberEmail"
                       [matAutocomplete]="users"
                     />
                   </mat-form-field>
@@ -133,17 +133,17 @@
                 <div>
                   <button
                     mat-mini-fab
-                    [disabled]="formControlFriendEmail.invalid"
-                    (click)="addFriend()"
+                    [disabled]="formControlMemberEmail.invalid"
+                    (click)="addMember()"
                   >
                     <mat-icon>add</mat-icon>
                   </button>
                 </div>
               </div>
-              <div class="friend-list">
+              <div class="member-list">
                 <div
-                  *ngFor="let friendMap of friends | keyvalue"
-                  class="friend"
+                  *ngFor="let memberMap of members | keyvalue"
+                  class="member"
                 >
                   <div
                     fxLayout="row"
@@ -151,19 +151,19 @@
                     fxLayoutGap="50px"
                   >
                     <div>
-                      <div *ngIf="friendMap.value.id">
+                      <div *ngIf="memberMap.value.id">
                         <ygg-user-thumbnail
-                          [id]="friendMap.value.id"
+                          [id]="memberMap.value.id"
                         ></ygg-user-thumbnail>
                       </div>
-                      <div *ngIf="!friendMap.value.id">
-                        <h3>{{ friendMap.key }}</h3>
+                      <div *ngIf="!memberMap.value.id">
+                        <h3>{{ memberMap.key }}</h3>
                       </div>
                     </div>
                     <div>
                       <button
                         mat-mini-fab
-                        (click)="deleteFriend(friendMap.key)"
+                        (click)="deleteMember(memberMap.key)"
                       >
                         <mat-icon>delete</mat-icon>
                       </button>

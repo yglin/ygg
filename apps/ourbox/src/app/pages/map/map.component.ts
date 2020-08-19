@@ -17,13 +17,18 @@ import { debounceTime, map, switchMap, tap } from 'rxjs/operators';
 import { BoxFactoryService } from '../../box-factory.service';
 
 class Marker {
+  geoPoint: GeoPoint;
+  name: string;
+  imgUrl: string;
+  id: string;
+
   static fromItem(item: TheThing): Marker {
     return new Marker({
       id: item.id,
       name: item.name,
       imgUrl: item.image,
       geoPoint: (item.getCellValue(
-        ImitationItemCells.location.name
+        ImitationItemCells.location.id
       ) as Location).geoPoint
     });
   }
@@ -31,11 +36,6 @@ class Marker {
   constructor(options: any = {}) {
     extend(this, options);
   }
-
-  geoPoint: GeoPoint;
-  name: string;
-  imgUrl: string;
-  id: string;
 }
 
 @Component({

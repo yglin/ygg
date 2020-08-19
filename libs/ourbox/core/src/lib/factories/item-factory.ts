@@ -272,7 +272,7 @@ export class ItemFactory {
 
   async transfer(item: TheThing, receiver: User, newLocation: Location) {
     try {
-      item.setCellValue(ImitationItemCells.location.name, newLocation);
+      item.setCellValue(ImitationItemCells.location.id, newLocation);
       ImitationItem.setState(item, ImitationItem.states.available);
       await this.theThingFactory.save(item, {
         imitation: ImitationItem,

@@ -101,7 +101,7 @@ export class BoxFactory {
       //   ImitationBoxCells.members.createCell(memberEmails.join(','))
       // );
 
-      await this.theThingAccessor.save(box);
+      await this.theThingAccessor.upsert(box);
       await this.addBoxMember(box.id, this.authenticator.currentUser.id);
       if (!isEmpty(memberEmails)) {
         await this.inviteBoxMembers(box, memberEmails);
