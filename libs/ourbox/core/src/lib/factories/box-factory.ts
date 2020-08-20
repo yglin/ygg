@@ -14,8 +14,16 @@ import {
 } from '@ygg/the-thing/core';
 import { UserAccessor } from 'libs/shared/user/core/src/lib/user-accessor';
 import { flatten, get, isEmpty, uniq, uniqBy } from 'lodash';
-import { combineLatest, Observable, of, Subscription } from 'rxjs';
-import { filter, map, switchMap, startWith } from 'rxjs/operators';
+import { combineLatest, Observable, of, Subscription, throwError } from 'rxjs';
+import {
+  filter,
+  map,
+  switchMap,
+  startWith,
+  catchError,
+  shareReplay,
+  tap
+} from 'rxjs/operators';
 import {
   ImitationBox,
   ImitationBoxFlags,
@@ -42,6 +50,7 @@ export class BoxFactory {
   // private relationFactory: RelationFactory;
 
   subscriptions: Subscription[] = [];
+  ObservableCaches: { [id: string]: Observable<any> } = {};
 
   constructor(
     protected authenticator: Authenticator,
@@ -294,31 +303,35 @@ export class BoxFactory {
   }
 
   listMyBoxes$(userId?: string): Observable<TheThing[]> {
-    let userId$: Observable<string>;
-    if (userId) {
-      userId$ = of(userId);
-    } else {
-      userId$ = this.authenticator.currentUser$.pipe(
-        filter(user => !!user),
-        map(user => user.id)
-      );
+    if (!userId) {
+      userId = get(this.authenticator.currentUser, 'id', null);
     }
-    return userId$.pipe(
-      switchMap(_userId => {
-        // console.log(_userId);
-        return this.relationFactory.findByObjectAndRole$(
-          _userId,
-          RelationshipBoxMember.role
+    if (!userId) {
+      return of([]);
+    }
+    const cacheId = `listMyBoxes$_${userId}`;
+    if (!(cacheId in this.ObservableCaches)) {
+      this.ObservableCaches[
+        cacheId
+      ] = this.relationFactory
+        .findByObjectAndRole$(userId, RelationshipBoxMember.role)
+        .pipe(
+          tap(relations => console.log(relations)),
+          switchMap((relaitonRecords: RelationRecord[]) => {
+            // console.log(relaitonRecords);
+            return this.theThingAccessor.listByIds$(
+              relaitonRecords.map(rr => rr.subjectId),
+              ImitationBox.collection
+            );
+          }),
+          catchError(error => {
+            console.warn(error.message);
+            return of([]);
+          }),
+          shareReplay(1)
         );
-      }),
-      switchMap((relaitonRecords: RelationRecord[]) => {
-        // console.log(relaitonRecords);
-        return this.theThingAccessor.listByIds$(
-          relaitonRecords.map(rr => rr.subjectId),
-          ImitationBox.collection
-        );
-      })
-    );
+    }
+    return this.ObservableCaches[cacheId];
   }
 
   findItems$(itemFilter: ItemFilter): Observable<TheThing[]> {

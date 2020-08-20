@@ -12,6 +12,7 @@ import {
   ImitationItemTransfer
 } from '@ygg/ourbox/core';
 import { BoxCreateComponent } from './box/box-create/box-create.component';
+import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
 // import { ItemFactoryService } from './item-factory.service';
 // import { MyBoxesComponent } from './pages/box/my-boxes/my-boxes.component';
 // import { ItemTransferComponent } from './pages/item/item-transfer/item-transfer.component';
@@ -32,6 +33,10 @@ export const routes: Routes = [
       {
         path: 'create-box',
         component: BoxCreateComponent
+      },
+      {
+        path: 'my-boxes',
+        component: MyBoxesComponent
       }
       // {
       //   path: 'ourbox',

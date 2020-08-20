@@ -4,6 +4,8 @@ import { BoxFactoryService } from '../../box-factory.service';
 import { Subscription } from 'rxjs';
 import { isEmpty, pick, values } from 'lodash';
 import { Image } from '@ygg/shared/omni-types/core';
+import { AuthenticateUiService } from '@ygg/shared/user/ui';
+import { switchMap } from 'rxjs/operators';
 
 const links: { [key: string]: ImageThumbnailItem } = {
   map: {
@@ -22,14 +24,14 @@ const links: { [key: string]: ImageThumbnailItem } = {
   },
   'my-boxes': {
     id: 'my-boxes',
-    class: 'my-boxes',
+    class: 'goto-my-boxes',
     name: '我的寶箱',
     image: '/assets/images/box/box.png',
-    path: '/ourbox/my'
+    path: '/ourbox/my-boxes'
   },
   'my-board': {
     id: 'my-board',
-    class: 'my-board',
+    class: 'goto-my-board',
     name: '佈告欄',
     image: '/assets/images/board.png',
     path: '/board'
@@ -47,16 +49,25 @@ export class HomeComponent implements OnInit, OnDestroy {
   links: ImageThumbnailItem[] = values(pick(links, ['map']));
   subscriptions: Subscription[] = [];
 
-  constructor(private boxFactory: BoxFactoryService) {
+  constructor(
+    private authenticator: AuthenticateUiService,
+    private boxFactory: BoxFactoryService
+  ) {
     this.subscriptions.push(
-      this.boxFactory.listMyBoxes$().subscribe(boxes => {
-        const hasMyBoxes = !isEmpty(boxes);
-        if (hasMyBoxes) {
-          this.links = values(pick(links, ['map', 'my-boxes']));
-        } else {
-          this.links = values(pick(links, ['map', 'create-box']));
-        }
-      })
+      this.authenticator.currentUser$
+        .pipe(
+          switchMap(user =>
+            this.boxFactory.listMyBoxes$(!!user ? user.id : null)
+          )
+        )
+        .subscribe(boxes => {
+          const hasMyBoxes = !isEmpty(boxes);
+          if (hasMyBoxes) {
+            this.links = values(pick(links, ['map', 'my-boxes']));
+          } else {
+            this.links = values(pick(links, ['map', 'create-box']));
+          }
+        })
     );
   }
 

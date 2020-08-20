@@ -4,9 +4,10 @@ import { MapSearchComponent } from './map/map-search/map-search.component';
 import { RouterModule } from '@angular/router';
 import { routes } from './route';
 import { BoxCreateComponent } from './box/box-create/box-create.component';
+import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
 
 @NgModule({
-  declarations: [MapSearchComponent, BoxCreateComponent],
+  declarations: [MapSearchComponent, BoxCreateComponent, MyBoxesComponent],
   imports: [CommonModule, RouterModule.forChild(routes)],
   exports: [MapSearchComponent]
 })

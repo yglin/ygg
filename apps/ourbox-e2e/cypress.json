@@ -8,5 +8,6 @@
   "video": true,
   "videosFolder": "../../dist/cypress/apps/ourbox-e2e/videos",
   "screenshotsFolder": "../../dist/cypress/apps/ourbox-e2e/screenshots",
-  "chromeWebSecurity": false
+  "chromeWebSecurity": false,
+  "watchForFileChanges": false
 }

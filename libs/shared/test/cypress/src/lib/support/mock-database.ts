@@ -46,7 +46,12 @@ export class MockDatabase {
     // Backup first
     cy.callFirestore('get', path).then(backupData => {
       if (!(path in this.documentsBackup)) {
-        this.documentsBackup[path] = !!backupData ? backupData : null;
+        try {
+          backupData = JSON.parse(JSON.stringify(backupData));
+          this.documentsBackup[path] = backupData;
+        } catch (error) {
+          console.error(error);
+        }
       }
     });
     cy.log(`Insert test data at ${path} in firebase firestore DB`);
