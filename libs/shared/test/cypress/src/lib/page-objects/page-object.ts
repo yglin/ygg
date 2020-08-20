@@ -1,3 +1,11 @@
-export interface PageObjectCypress {
-  expectVisible: () => Cypress.Chainable<any>
+import { PageObject } from '@ygg/shared/test/page-object';
+
+export class PageObjectCypress extends PageObject {
+  expectVisible(
+    options: any = {
+      timeout: 10000
+    }
+  ): Cypress.Chainable<any> {
+    return cy.get(this.getSelector(), options).should('be.visible');
+  }
 }

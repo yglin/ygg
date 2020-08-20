@@ -1,7 +1,7 @@
-import { MyBoxesPageObject } from '@ygg/ourbox/ui';
+import { PageObjectCypress } from '@ygg/shared/test/cypress';
 
-export class MyBoxesPageObjectCypress extends MyBoxesPageObject {
-  expectVisible(options: any): Cypress.Chainable<any> {
-    return cy.get(this.getSelector(), options).should('be.visible');
-  }
+export class MyBoxesPageObjectCypress extends PageObjectCypress {
+  selectors = {
+    main: '.my-boxes'
+  };
 }

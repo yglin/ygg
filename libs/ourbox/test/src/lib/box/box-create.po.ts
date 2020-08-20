@@ -1,7 +1,7 @@
-import { BoxCreatePageObject } from '@ygg/ourbox/ui';
+import { PageObjectCypress } from '@ygg/shared/test/cypress';
 
-export class BoxCreatePageObjectCypress extends BoxCreatePageObject {
-  expectVisible(options: any) {
-    cy.get(this.getSelector(), options).should('be.visible');
-  }
+export class BoxCreatePageObjectCypress extends PageObjectCypress {
+  selectors = {
+    main: '.box-create'
+  };
 }

@@ -1,7 +1,7 @@
-import { MapSearchPageObject } from '@ygg/ourbox/ui';
+import { PageObjectCypress } from '@ygg/shared/test/cypress';
 
-export class MapSearchPageObjectCypress extends MapSearchPageObject {
-  expectVisible(options: any) {
-    cy.get(this.getSelector(), options).should('be.visible');
-  }
+export class MapSearchPageObjectCypress extends PageObjectCypress {
+  selectors = {
+    main: '.map-search'
+  };
 }
