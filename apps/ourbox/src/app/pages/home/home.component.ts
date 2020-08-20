@@ -11,14 +11,14 @@ const links: { [key: string]: ImageThumbnailItem } = {
     class: 'map-search',
     name: '撿寶地圖',
     image: '/assets/images/map.png',
-    path: '/map'
+    path: '/ourbox/map'
   },
   'create-box': {
     id: 'create-box',
     class: 'create-box',
     name: '開新寶箱',
     image: '/assets/images/box/create.png',
-    path: '/ourbox/create'
+    path: '/ourbox/create-box'
   },
   'my-boxes': {
     id: 'my-boxes',

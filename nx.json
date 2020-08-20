@@ -208,7 +208,7 @@
       "tags": ["scope:ourbox", "type:app"]
     },
     "ourbox-e2e": {
-      "tags": [],
+      "tags": ["scope:ourbox", "type:e2e"],
       "implicitDependencies": ["ourbox"]
     },
     "ourbox-core": {
@@ -243,6 +243,12 @@
     },
     "shared-thread-test": {
       "tags": ["scope:shared", "type:test"]
+    },
+    "ourbox-ui": {
+      "tags": ["scope:ourbox", "type:ui"]
+    },
+    "ourbox-test": {
+      "tags": ["scope:ourbox", "type:test"]
     }
   },
   "tasksRunnerOptions": {

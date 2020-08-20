@@ -2490,6 +2490,58 @@
           }
         }
       }
+    },
+    "ourbox-ui": {
+      "root": "libs/ourbox/ui",
+      "sourceRoot": "libs/ourbox/ui/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ourbox/ui/tsconfig.lib.json",
+              "libs/ourbox/ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ourbox/ui/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ourbox/ui/jest.config.js",
+            "tsConfig": "libs/ourbox/ui/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "ourbox-test": {
+      "root": "libs/ourbox/test",
+      "sourceRoot": "libs/ourbox/test/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ourbox/test/tsconfig.lib.json",
+              "libs/ourbox/test/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/ourbox/test/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ourbox/test/jest.config.js",
+            "tsConfig": "libs/ourbox/test/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {
