@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
-import { BoxFactoryService } from '../../box-factory.service';
+import { BoxFactoryService } from '../box/box-factory.service';
 import { Subscription } from 'rxjs';
 import { isEmpty, pick, values } from 'lodash';
-import { Image } from '@ygg/shared/omni-types/core';
 import { AuthenticateUiService } from '@ygg/shared/user/ui';
 import { switchMap } from 'rxjs/operators';
 
@@ -39,7 +38,7 @@ const links: { [key: string]: ImageThumbnailItem } = {
 };
 
 @Component({
-  selector: 'ygg-home',
+  selector: 'ourbox-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })

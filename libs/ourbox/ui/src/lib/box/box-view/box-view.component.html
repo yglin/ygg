@@ -1,11 +1,16 @@
 <div class="box-view" *ngIf="box">
-  <ygg-page-title icon="inbox">{{ box.name }}</ygg-page-title>
+  <ygg-page-title icon="inbox" class="name">{{ box.name }}</ygg-page-title>
   <div>
-    <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="5px">
+    <div
+      fxLayout="row wrap"
+      fxLayoutAlign="start end"
+      fxLayoutGap="5px"
+      class="member-list"
+    >
       <div fxLayoutGap="15px">
-        <h2>寶箱成員</h2>
+        <mat-icon matTooltip="寶箱成員">people</mat-icon>
       </div>
-      <div *ngFor="let member of members">
+      <div *ngFor="let member of members" [attr.member-id]="member.id">
         <ygg-user-thumbnail
           [id]="member.id"
           [showName]="false"
@@ -13,6 +18,7 @@
       </div>
     </div>
   </div>
+  <br>
   <div>
     <div *ngIf="isBoxEmpty">
       <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">

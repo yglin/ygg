@@ -33,6 +33,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatSidenavModule } from "@angular/material/sidenav";
 
 @NgModule({
   exports: [
@@ -68,7 +69,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatDatepickerModule,
     MatSnackBarModule,
     DragDropModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatSidenavModule
   ]
 })
 export class SharedUiNgMaterialModule {}

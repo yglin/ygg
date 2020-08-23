@@ -3,7 +3,13 @@
     <ygg-title-divider [level]="5">未讀通知</ygg-title-divider>
     <mat-list role="list">
       <mat-list-item
-        *ngFor="let notification of unreadNotifications; let idx = index"
+        *ngFor="
+          let notification of unreadNotifications;
+          let idx = index;
+          let isFirst = first
+        "
+        class="notification"
+        [ngClass]="{ first: isFirst }"
         [attr.notification-id]="notification.id"
         role="listitem"
         yggNgForColorBackground
@@ -22,6 +28,7 @@
     <mat-list>
       <mat-list-item
         *ngFor="let notification of readNotifications; let idx = index"
+        class="notification"
         [attr.notification-id]="notification.id"
         yggNgForColorBackground
         [index]="idx"

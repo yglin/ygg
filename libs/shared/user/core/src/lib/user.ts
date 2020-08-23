@@ -1,7 +1,7 @@
 // import {DataItem, toJSONDeep} from '@ygg/shared/infra/data-access';
 import { extend, sample, random } from 'lodash';
 import * as firebase from 'firebase/app';
-import { Entity, toJSONDeep } from '@ygg/shared/infra/core';
+import { Entity, toJSONDeep, generateID } from '@ygg/shared/infra/core';
 
 export enum UserState {
   Unknown = 0,
@@ -33,7 +33,7 @@ export class User implements Entity {
   static forgedCount = 0;
   static forge(): User {
     const forged = new User();
-    forged.id = `anony-mummy-honey-spaghetti-your-moms-fatty-${User.forgedCount++}`;
+    // forged.id = `anony-mummy-honey-spaghetti-your-moms-fatty-${User.forgedCount++}`;
     forged.isAnonymous = true;
     forged.name = sample([
       '馬＊久',
@@ -49,7 +49,7 @@ export class User implements Entity {
       '扶🐉王',
       '白🐬'
     ]);
-    forged.email = `taiwanNo${random(1, 50)}@ygmail.com`;
+    forged.email = `${generateID()}@ygmail.com`;
     forged.account = forged.email;
     forged.phone = `09780894${random(10, 99)}`;
     forged.avatarUrl = new URL(
@@ -86,6 +86,7 @@ export class User implements Entity {
   }
 
   constructor() {
+    this.id = generateID();
     this.isAnonymous = false;
     this.createAt = new Date();
     this.state = UserState.New;

@@ -1,22 +1,55 @@
 <div class="login-dialog">
   <div fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="30px">
     <div>
-      <button mat-raised-button class='btn-facebook' (click)="login('facebook')">
+      <button
+        mat-raised-button
+        class="btn-facebook"
+        (click)="login('facebook')"
+      >
         使用 Facebook 帳號登入
       </button>
     </div>
     <div>
-      <button mat-raised-button class='btn-google' (click)="login('google')">
+      <button mat-raised-button class="btn-google" (click)="login('google')">
         使用 Google 帳號登入
       </button>
     </div>
   </div>
-  <!-- <br>
-  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="30px">
-    <div>
-      <button id='login-anonymous' mat-raised-button class='btn-anonymous' (click)="loginAnonymously()">
-        匿名登入
-      </button>
-    </div>
-  </div> -->
+  <br />
+  <div *ngIf="testEnabled" class="test-account">
+    <form [formGroup]="formGroupTestAccount">
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="30px">
+        <div>
+          <mat-form-field>
+            <input
+              matInput
+              type="email"
+              placeholder="輸入測試用Email"
+              formControlName="email"
+            />
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <input
+              matInput
+              type="password"
+              placeholder="輸入測試用密碼"
+              formControlName="password"
+            />
+          </mat-form-field>
+        </div>
+        <div>
+          <button
+            mat-raised-button
+            class="login-test"
+            [disabled]="formGroupTestAccount.invalid"
+            (click)="loginTestAccount()"
+          >
+            登入測試帳號
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>

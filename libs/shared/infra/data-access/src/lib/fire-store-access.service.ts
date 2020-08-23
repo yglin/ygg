@@ -156,4 +156,10 @@ export class FireStoreAccessService extends DataAccessor {
       .collection(collection, ref => this.transformQueries(ref, queries))
       .valueChanges();
   }
+
+  async find(collection: string, queries: Query[]): Promise<any[]> {
+    return this.find$(collection, queries)
+      .pipe(take(1))
+      .toPromise();
+  }
 }

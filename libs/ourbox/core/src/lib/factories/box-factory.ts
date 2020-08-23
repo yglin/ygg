@@ -1,4 +1,4 @@
-import { Emcee, Router } from '@ygg/shared/infra/core';
+import { Emcee, Router, getEnv } from '@ygg/shared/infra/core';
 import {
   Authenticator,
   config as UserConfig,
@@ -67,8 +67,8 @@ export class BoxFactory {
     this.subscriptions.push(
       this.notificationFactory.confirm$.subscribe(notification => {
         if (notification.type === NotificationJoinBox.type) {
-          console.log('Confirm notification');
-          console.log(notification);
+          // console.log('Confirm notification');
+          // console.log(notification);
           this.confirm(notification);
         }
       })
@@ -81,8 +81,9 @@ export class BoxFactory {
     memberEmails?: string[];
     isPublic?: boolean;
   }): Promise<TheThing> {
+    let owner: User;
     try {
-      this.authenticator.requestLogin();
+      owner = await this.authenticator.requestLogin();
     } catch (error) {
       this.emcee.warning(`必須先登入才能繼續`);
       return;
@@ -94,7 +95,7 @@ export class BoxFactory {
           '<h3>將會寄出加入邀請信給以下信箱</h3>' +
           options.memberEmails.map(email => '<h4>' + email + '</h4>').join('');
       }
-      const confirmMessage = `<h2>新增寶箱：${options.name}？<br>${mailsMessage}`;
+      const confirmMessage = `<h2>確定要建立新的寶箱 ${options.name} ？<br>${mailsMessage}`;
       const confirm = await this.emcee.confirm(confirmMessage);
       if (!confirm) {
         return;
@@ -102,7 +103,7 @@ export class BoxFactory {
       const memberEmails = options.memberEmails || [];
       const isPublic = !!options.isPublic;
       const box = ImitationBox.createTheThing();
-      box.ownerId = this.authenticator.currentUser.id;
+      box.ownerId = owner.id;
       box.name = options.name;
       box.image = options.image || ImitationBoxThumbnailImages[0];
       box.setFlag(ImitationBoxFlags.isPublic.id, isPublic);
@@ -111,44 +112,63 @@ export class BoxFactory {
       // );
 
       await this.theThingAccessor.upsert(box);
-      await this.addBoxMember(box.id, this.authenticator.currentUser.id);
+      await this.addBoxMember(box.id, owner.id);
+      mailsMessage = '';
       if (!isEmpty(memberEmails)) {
-        await this.inviteBoxMembers(box, memberEmails);
+        for (const email of memberEmails) {
+          await this.inviteBoxMember(box, email, owner);
+        }
+        mailsMessage = memberEmails
+          .map(email => '<h4>' + email + '</h4>')
+          .join('');
+        mailsMessage = `<h3>已送出寶箱成員的邀請給以下email：</h3><br>${mailsMessage}`;
       }
 
-      this.router.navigate(['/', 'ourbox', box.id]);
+      await this.emcee.info(
+        `<h3>寶箱 ${box.name} 已建立</h3><br>${mailsMessage}`
+      );
+      this.router.navigate(['/', 'ourbox', 'boxes', box.id]);
       return box;
     } catch (error) {
       this.emcee.error(`開寶箱失敗，錯誤原因：${error.message}`);
     }
   }
 
+  async inviteBoxMember(box: TheThing, email: string, inviter: User) {
+    let invitee: User;
+    try {
+      invitee = await this.userAccessor.findByEmail(email);
+    } catch (error) {
+      invitee = null;
+    }
+    const mailSubject = `${getEnv('siteConfig.title')}：邀請您加入寶箱${
+      box.name
+    }`;
+    const mailContent = `<pre><b>${inviter.name}</b>邀請您加入他的寶箱<b>${box.name}</b>，共享寶箱內的所有寶物</pre>`;
+    const notification = await this.notificationFactory.create({
+      type: NotificationJoinBox.type,
+      inviterId: inviter.id,
+      inviteeId: !!invitee ? invitee.id : '',
+      email: email,
+      mailSubject,
+      mailContent,
+      confirmMessage: `${this.authenticator.currentUser.name} 邀請您，是否要加入我們的寶箱：${box.name}？`,
+      landingUrl: `/${ImitationBox.routePath}/${box.id}`,
+      data: {
+        boxId: box.id
+      }
+    });
+  }
+
   async inviteBoxMembers(box: TheThing, emails: string[]) {
     try {
-      const mailSubject = `${location.hostname}：邀請您加入寶箱${box.name}`;
-      const mailContent = `<pre><b>${this.authenticator.currentUser.name}</b>邀請您加入他的寶箱<b>${box.name}</b>，共享寶箱內的所有寶物</pre>`;
-      for (const mail of emails) {
-        const notification = await this.notificationFactory.create({
-          type: NotificationJoinBox.type,
-          inviterId: this.authenticator.currentUser.id,
-          email: mail,
-          mailSubject,
-          mailContent,
-          confirmMessage: `${this.authenticator.currentUser.name} 邀請您，是否要加入我們的寶箱：${box.name}？`,
-          landingUrl: `/${ImitationBox.routePath}/${box.id}`,
-          data: {
-            boxId: box.id
-          }
-        });
+      const inviter = await this.authenticator.requestLogin();
+      for (const email of emails) {
+        await this.inviteBoxMember(box, email, inviter);
       }
-      const mailsMessage = emails
-        .map(email => '<h4>' + email + '</h4>')
-        .join('');
-      this.emcee.info(
-        `<h3>已送出寶箱成員的邀請給以下email：</h3><br>${mailsMessage}`
-      );
     } catch (error) {
       this.emcee.error(`邀請寶箱成員失敗，錯誤原因：${error.message}`);
+      return Promise.reject(error);
     }
   }
 
@@ -190,25 +210,25 @@ export class BoxFactory {
   }
 
   async confirm(notification: Notification) {
-    const inviteeId = get(notification, 'inviteeId', null);
-    const invitee: User = await this.userAccessor.get(inviteeId);
-    if (!invitee) {
-      this.emcee.error(`找不到受邀加入的使用者，id = ${inviteeId}`);
-      return;
-    }
-    const boxId = get(notification, 'data.boxId', null);
-    const box: TheThing = await this.theThingAccessor.load(
-      boxId,
-      ImitationBox.collection
-    );
-    if (!box) {
-      this.emcee.error(`找不到寶箱，id = ${boxId}`);
-      return;
-    }
     try {
+      const inviteeId = get(notification, 'inviteeId', null);
+      const invitee: User = await this.userAccessor.get(inviteeId);
+      if (!invitee) {
+        throw new Error(`找不到受邀加入的使用者，id = ${inviteeId}`);
+      }
+      const boxId = get(notification, 'data.boxId', null);
+      const box: TheThing = await this.theThingAccessor.load(
+        boxId,
+        ImitationBox.collection
+      );
+      if (!box) {
+        throw new Error(`找不到寶箱，id = ${boxId}`);
+      }
       await this.addBoxMember(box.id, invitee.id);
+      this.router.navigate(['/', 'ourbox', 'boxes', box.id]);
     } catch (error) {
-      this.emcee.error(`加入寶箱失敗：錯誤原因：${error.message}`);
+      this.emcee.error(`加入寶箱成員失敗：錯誤原因：${error.message}`);
+      return Promise.reject(error);
     }
   }
 

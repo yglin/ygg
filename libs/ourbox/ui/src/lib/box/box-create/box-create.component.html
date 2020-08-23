@@ -1,3 +1,239 @@
 <div class="box-create">
-  <p>box-create works!</p>
+  <div class="box-create">
+    <ygg-page-title icon="library_add">開一個新寶箱</ygg-page-title>
+    <br />
+    <div class="panel">
+      <mat-horizontal-stepper linear="true" #stepper>
+        <mat-step [stepControl]="firstFormGroup">
+          <form [formGroup]="firstFormGroup">
+            <ng-template matStepLabel>寶箱名稱</ng-template>
+            <div
+              class="tab-content"
+              fxLayout="row"
+              fxLayoutAlign="center center"
+              fxLayoutGap="30px"
+            >
+              <div class="icon" fxHide.xs="true">
+                <img src="/assets/images/box/box.png" />
+              </div>
+              <div>
+                <mat-form-field>
+                  <input
+                    class="box-name"
+                    name="ourbox-create-box-name"
+                    matInput
+                    placeholder="請輸入寶箱名稱"
+                    formControlName="name"
+                    required
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div
+              fxLayout="row"
+              fxLayoutAlign="space-between center"
+              fxLayoutGap="20px"
+            >
+              <div></div>
+              <button mat-fab matStepperNext class="next-step">
+                <mat-icon>keyboard_arrow_right</mat-icon>
+              </button>
+              <!-- <button mat-button matStepperNext>下一步</button> -->
+            </div>
+          </form>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>選擇寶箱圖示</ng-template>
+          <div
+            class="tab-content"
+            fxLayout="row"
+            fxLayoutAlign="center center"
+            fxLayoutGap="30px"
+          >
+            <div class="icon" fxHide.xs="true">
+              <img src="/assets/images/box/thumbnail.png" />
+            </div>
+            <div
+              fxLayout="row wrap"
+              fxLayoutAlign="space-around start"
+              fxLayoutGap="20px"
+            >
+              <div
+                *ngFor="let thumbImage of thumbnailImages"
+                class="thumbnail-image"
+                [ngClass]="{
+                  selected: thumbImage === thumbSelected
+                }"
+                (click)="thumbSelected = thumbImage"
+              >
+                <img [src]="thumbImage" />
+              </div>
+              <div
+                fxLayout="row"
+                fxLayoutAlign="center center"
+                fxLayoutGap="0px"
+              >
+                <button mat-fab matTooltip="上傳圖片" (click)="addImages()">
+                  <mat-icon>add_photo_alternate </mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            fxLayout="row"
+            fxLayoutAlign="space-between center"
+            fxLayoutGap="20px"
+          >
+            <button mat-fab matStepperPrevious>
+              <mat-icon>keyboard_arrow_left</mat-icon>
+            </button>
+            <button mat-fab matStepperNext class="next-step">
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </button>
+            <!-- <button mat-button matStepperNext>下一步</button> -->
+          </div>
+        </mat-step>
+        <mat-step>
+          <form>
+            <ng-template matStepLabel>邀請好友加入</ng-template>
+            <div
+              class="tab-content"
+              fxLayout="row"
+              fxLayoutAlign="center center"
+              fxLayoutGap="30px"
+            >
+              <div class="icon" fxHide.xs="true">
+                <img src="/assets/images/box/share.png" />
+              </div>
+
+              <div>
+                <div
+                  fxLayout="row"
+                  fxLayoutAlign="start center"
+                  fxLayoutGap="10px"
+                >
+                  <div>
+                    <div *ngIf="foundUsers.length === 1">
+                      <ygg-user-thumbnail
+                        [id]="foundUsers[0].id"
+                      ></ygg-user-thumbnail>
+                    </div>
+                    <mat-form-field>
+                      <input
+                        matInput
+                        type="email"
+                        class="member-email"
+                        placeholder="輸入好友Email"
+                        [formControl]="formControlMemberEmail"
+                        [matAutocomplete]="users"
+                      />
+                    </mat-form-field>
+                    <mat-autocomplete #users="matAutocomplete">
+                      <mat-option
+                        *ngFor="let user of foundUsers"
+                        [value]="user.email"
+                      >
+                        <ygg-user-thumbnail [id]="user.id"></ygg-user-thumbnail>
+                      </mat-option>
+                    </mat-autocomplete>
+                  </div>
+                  <div>
+                    <button
+                      mat-mini-fab
+                      class="add-email"
+                      [disabled]="formControlMemberEmail.invalid"
+                      (click)="addMember()"
+                    >
+                      <mat-icon>add</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div class="member-list">
+                  <div
+                    *ngFor="let memberMap of members | keyvalue"
+                    class="member"
+                    [attr.email]="memberMap.key"
+                  >
+                    <div
+                      fxLayout="row"
+                      fxLayoutAlign="space-between center"
+                      fxLayoutGap="50px"
+                    >
+                      <div>
+                        <div *ngIf="memberMap.value.id">
+                          <ygg-user-thumbnail
+                            [id]="memberMap.value.id"
+                          ></ygg-user-thumbnail>
+                        </div>
+                        <div *ngIf="!memberMap.value.id">
+                          <h3>{{ memberMap.key }}</h3>
+                        </div>
+                      </div>
+                      <div>
+                        <button
+                          mat-mini-fab
+                          (click)="deleteMember(memberMap.key)"
+                        >
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              fxLayout="row"
+              fxLayoutAlign="space-between center"
+              fxLayoutGap="20px"
+            >
+              <button mat-fab matStepperPrevious>
+                <mat-icon>keyboard_arrow_left</mat-icon>
+              </button>
+              <button mat-fab matStepperNext class="next-step">
+                <mat-icon>keyboard_arrow_right</mat-icon>
+              </button>
+
+              <!-- <button mat-button matStepperPrevious>上一步</button> -->
+              <!-- <button mat-button matStepperNext>下一步</button> -->
+            </div>
+          </form>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>公開寶箱</ng-template>
+          <div
+            class="tab-content"
+            fxLayout="row"
+            fxLayoutAlign="center center"
+            fxLayoutGap="30px"
+          >
+            <div class="icon" fxHide.xs="true">
+              <img src="/assets/images/box/publish.png" />
+            </div>
+            <div fxFlex="300px">
+              <mat-checkbox [formControl]="formControlPublic"
+                >公開這個寶箱的內容？</mat-checkbox
+              >
+              <br /><br />
+              <p style="font-size: smaller;">
+                <mat-icon>info</mat-icon>{{ isPublicDescription }}
+              </p>
+            </div>
+          </div>
+          <div
+            fxLayout="row"
+            fxLayoutAlign="space-between center"
+            fxLayoutGap="10px"
+          >
+            <button mat-fab matStepperPrevious>
+              <mat-icon>keyboard_arrow_left</mat-icon>
+            </button>
+            <button mat-fab (click)="submit()" class="submit">
+              <mat-icon>done_outline</mat-icon>
+            </button>
+          </div>
+        </mat-step>
+      </mat-horizontal-stepper>
+    </div>
+  </div>
 </div>

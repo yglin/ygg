@@ -3,7 +3,10 @@ import { AuthenticateService } from '../../authenticate.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { skip } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { User } from "@ygg/shared/user/core";
+import { User } from '@ygg/shared/user/core';
+import { get } from 'lodash';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { getEnv } from '@ygg/shared/infra/core';
 
 @Component({
   selector: 'ygg-login-dialog',
@@ -12,33 +15,42 @@ import { User } from "@ygg/shared/user/core";
 })
 export class LoginDialogComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
+  testEnabled = !!getEnv('test.account');
+  formGroupTestAccount: FormGroup;
 
   constructor(
     private authenticateService: AuthenticateService,
-    private dialogRef: MatDialogRef<LoginDialogComponent>
+    private dialogRef: MatDialogRef<LoginDialogComponent>,
+    private formBuilder: FormBuilder
   ) {
+    // console.log(this.testEnabled);
     this.subscriptions.push(
-    this.authenticateService.currentUser$.pipe(skip(1)).subscribe(user => {
-      if (User.isUser(user)) {
-        this.dialogRef.close(user);
-      }
-    }));
+      this.authenticateService.currentUser$.pipe(skip(1)).subscribe(user => {
+        if (User.isUser(user)) {
+          this.dialogRef.close(user);
+        }
+      })
+    );
+
+    this.formGroupTestAccount = this.formBuilder.group({
+      email: [null, Validators.required],
+      password: [null, Validators.required]
+    });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngOnDestroy() {
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
     }
   }
-  
+
   login(provider: string) {
     this.authenticateService.login(provider);
   }
 
-  loginAnonymously() {
-    this.authenticateService.loginAnonymously();
+  loginTestAccount() {
+    this.authenticateService.loginTestAccount(this.formGroupTestAccount.value);
   }
 }

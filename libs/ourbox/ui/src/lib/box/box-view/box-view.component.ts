@@ -6,7 +6,7 @@ import { NotificationFactoryService } from '@ygg/shared/user/ui';
 import { TheThing } from '@ygg/the-thing/core';
 import { get, isEmpty, range } from 'lodash';
 import { Observable, Subscription, merge } from 'rxjs';
-import { BoxFactoryService } from '../../../box-factory.service';
+import { BoxFactoryService } from '../box-factory.service';
 import { tap } from 'rxjs/operators';
 import { User } from '@ygg/shared/user/core';
 
@@ -19,7 +19,7 @@ function forgeItems(): TheThing[] {
 }
 
 @Component({
-  selector: 'ygg-box-view',
+  selector: 'ourbox-box-view',
   templateUrl: './box-view.component.html',
   styleUrls: ['./box-view.component.css']
 })

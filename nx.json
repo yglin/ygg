@@ -249,6 +249,9 @@
     },
     "ourbox-test": {
       "tags": ["scope:ourbox", "type:test"]
+    },
+    "shared-ui-core": {
+      "tags": ["scope:shared", "type:core"]
     }
   },
   "tasksRunnerOptions": {

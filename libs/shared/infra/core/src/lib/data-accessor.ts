@@ -11,4 +11,5 @@ export abstract class DataAccessor {
   abstract async load(collection: string, id: string): Promise<any>;
   abstract async delete(collection: string, id: string);
   abstract find$(collection: string, queries: Query[]): Observable<any[]>;
+  abstract async find(collection: string, queries: Query[]): Promise<any[]>; 
 }

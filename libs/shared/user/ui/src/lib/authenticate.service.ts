@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
-import { sample } from 'lodash';
+import { sample, get } from 'lodash';
 import {
   BehaviorSubject,
   from,
@@ -13,14 +13,16 @@ import {
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import { UserError, UserErrorCode } from './error';
-import { User, Authenticator } from '@ygg/shared/user/core';
+import { User, Authenticator, TestAccount } from '@ygg/shared/user/core';
 import { UserService } from './user.service';
 import { EmceeService } from '@ygg/shared/ui/widgets';
+import { getEnv } from '@ygg/shared/infra/core';
 
 @Injectable({ providedIn: 'root' })
-export class AuthenticateService {
+export class AuthenticateService implements OnDestroy {
   currentUser: User;
   currentUser$: BehaviorSubject<User>;
+  subscription: Subscription = new Subscription();
 
   constructor(
     private userService: UserService,
@@ -28,26 +30,57 @@ export class AuthenticateService {
     private emcee: EmceeService
   ) {
     this.currentUser$ = new BehaviorSubject(null);
-    this.angularFireAuth.authState
-      .pipe(
-        switchMap(firebaseUser => {
-          if (!firebaseUser) {
+    this.subscription.add(
+      this.currentUser$.subscribe(user => (this.currentUser = user))
+    );
+    this.subscription.add(
+      this.angularFireAuth.authState
+        .pipe(
+          switchMap(firebaseUser => {
+            if (!firebaseUser) {
+              return of(null);
+            } else {
+              return this.syncUser(firebaseUser);
+            }
+          }),
+          tap(user => this.currentUser$.next(user)),
+          catchError(error => {
+            this.emcee.error(`登入失敗，錯誤原因：${error.message}`);
             return of(null);
-          } else {
-            return this.syncUser(firebaseUser);
-          }
-        }),
-        tap(user => (this.currentUser = user)),
-        catchError(error => {
-          this.emcee.error(`登入失敗，錯誤原因：${error.message}`);
-          return of(null);
-        })
-      )
-      .subscribe(this.currentUser$);
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   async loginAnonymously() {
     this.currentUser$.next(sample(this.userService.anonymousUsers));
+  }
+
+  async loginTestAccount(account: TestAccount) {
+    try {
+      const password = getEnv('test.account.password');
+      if (!password) {
+        throw new Error(
+          `Not found password of test account, test login not supported`
+        );
+      }
+      if (account.password !== password) {
+        throw new Error(`Password not match`);
+      }
+      const user: User = await this.userService.findByEmail(account.email);
+      this.currentUser$.next(user);
+    } catch (error) {
+      const wrapError = new Error(
+        `登入測試帳號失敗，錯誤原因：\n${error.message}`
+      );
+      this.emcee.error(`<h3>${wrapError.message}</h3>`);
+      return Promise.reject(error);
+    }
   }
 
   async login(providerName: string) {

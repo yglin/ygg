@@ -56,10 +56,12 @@ export class EmceeService extends Emcee implements OnDestroy {
   }
 
   async alert(message: string, type: AlertType) {
+    message = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
     return this.dialog.alert(message, type);
   }
 
   async confirm(message: string): Promise<boolean> {
+    message = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
     return this.dialog.confirm(message);
   }
 

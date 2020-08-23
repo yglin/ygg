@@ -20,10 +20,10 @@ import {
   RelationFactoryService,
   TheThingFactoryService
 } from '@ygg/the-thing/ui';
-import { ItemFactoryService } from './item-factory.service';
+import { ItemFactoryService } from '../item/item-factory.service';
 import { Observable } from 'rxjs';
 import { TheThing } from '@ygg/the-thing/core';
-import { ItemTransferCompleteComponent } from './components/item-transfer-complete/item-transfer-complete.component';
+import { ItemTransferCompleteComponent } from './item-transfer-complete/item-transfer-complete.component';
 
 @Injectable({
   providedIn: 'root'

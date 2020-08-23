@@ -15,6 +15,10 @@ export class MyNotificationListPageObjectCypress extends MyNotificationListPageO
     cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
   }
 
+  clickFirstUnreadNotification() {
+    cy.get(this.getSelector('firstUnread')).click();
+  }
+
   expectUnreadNotifications(notifications: Notification[]) {
     cy.wrap(notifications).each((ntf: Notification) => {
       const notificationItemPO = new NotificationItemPageObjectCypress(

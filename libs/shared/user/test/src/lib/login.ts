@@ -1,7 +1,10 @@
 import { LoginDialogPageObjectCypress } from './login-dialog.po';
 import { AccountWidgetPageObjectCypress } from './account-widget.po';
+import { User, TestAccount } from '@ygg/shared/user/core';
+import { getEnv } from '@ygg/shared/infra/core';
+import { theMockDatabase } from '@ygg/shared/test/cypress';
 
-export function waitForLogin():Cypress.Chainable<any> {
+export function waitForLogin(): Cypress.Chainable<any> {
   const accountWidgetPO = new AccountWidgetPageObjectCypress();
   return accountWidgetPO.expectLoggedIn();
 }
@@ -23,4 +26,26 @@ export function login(provider: string) {
   }
   loginDialogPO.expectClosed({ timeout: 30000 });
   accountWidgetPO.expectLoggedIn();
+}
+
+export function loginTestUser(
+  user: User,
+  options: {
+    openLoginDialog: boolean;
+  } = {
+    openLoginDialog: true
+  }
+): Cypress.Chainable<any> {
+  const accountWidgetPO = new AccountWidgetPageObjectCypress();
+  const loginDialogPO = new LoginDialogPageObjectCypress();
+  if (options.openLoginDialog) {
+    accountWidgetPO.login();
+    loginDialogPO.expectVisible();
+  }
+  const account: TestAccount = {
+    email: user.email,
+    password: getEnv('test.account.password')
+  };
+  loginDialogPO.loginTest(account);
+  return accountWidgetPO.expectLoggedIn();
 }

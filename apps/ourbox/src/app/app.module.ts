@@ -11,19 +11,13 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { SharedUserUiModule } from '@ygg/shared/user/ui';
 import { TheThingUiModule } from '@ygg/the-thing/ui';
-import { noop } from 'lodash';
 import { AppComponent } from './app.component';
-import { BoxFactoryService } from './box-factory.service';
-import { HeaderComponent } from './layout/header/header.component';
-import { HomeComponent } from './pages/home/home.component';
 import { routes } from './route';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    HeaderComponent,
     // MapComponent,
     // BoxCreateComponent,
     // BoardComponent,

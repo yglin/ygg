@@ -2,6 +2,8 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Subscription, Subject, fromEvent } from 'rxjs';
 import { tap, debounceTime } from 'rxjs/operators';
 import { fadeOutAnimation } from '@ygg/shared/ui/themes';
+import { MatDrawer } from '@angular/material/sidenav';
+import { SideDrawerService } from '@ygg/shared/ui/widgets';
 
 @Component({
   selector: 'ygg-root',
@@ -16,8 +18,9 @@ export class AppComponent {
   showGoToTopButton$: Subject<boolean> = new Subject();
   showGoToTopButton = false;
   @ViewChild('page', { static: false }) pageElement: ElementRef;
+  @ViewChild('drawer', { static: false }) sideDrawer: MatDrawer;
 
-  constructor() {}
+  constructor(private sideDrawerService: SideDrawerService) {}
 
   ngOnInit() {}
 
@@ -48,6 +51,9 @@ export class AppComponent {
           })
       );
     }
+    if (this.sideDrawer) {
+      this.sideDrawerService.setSideDrawer(this.sideDrawer);
+    }
   }
 
   ngOnDestroy() {
@@ -58,7 +64,7 @@ export class AppComponent {
 
   scrollToTop() {
     if (this.pageElement) {
-      let scrollToTop = window.setInterval(() => {
+      const scrollToTop = window.setInterval(() => {
         const pos = this.pageElement.nativeElement.scrollTop;
         const step = Math.max(pos / 10, 5);
         // console.log(`FUCK~!!! ${pos}`);

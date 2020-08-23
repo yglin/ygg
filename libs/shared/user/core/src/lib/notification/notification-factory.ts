@@ -30,6 +30,7 @@ export abstract class NotificationFactory {
   async create(options: {
     type: string;
     inviterId: string;
+    inviteeId?: string;
     email: string;
     mailSubject?: string;
     mailContent: string;
@@ -54,6 +55,7 @@ export abstract class NotificationFactory {
       id,
       type: options.type,
       inviterId: options.inviterId,
+      inviteeId: options.inviteeId,
       email: options.email,
       mailSubject,
       mailContent,

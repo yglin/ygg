@@ -13,6 +13,9 @@ import {
 } from '@ygg/ourbox/core';
 import { BoxCreateComponent } from './box/box-create/box-create.component';
 import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
+import { HomeComponent } from './home/home.component';
+import { BoxFactoryService } from './box/box-factory.service';
+import { BoxViewComponent } from './box/box-view/box-view.component';
 // import { ItemFactoryService } from './item-factory.service';
 // import { MyBoxesComponent } from './pages/box/my-boxes/my-boxes.component';
 // import { ItemTransferComponent } from './pages/item/item-transfer/item-transfer.component';
@@ -22,10 +25,11 @@ export const routes: Routes = [
   {
     path: 'ourbox',
     children: [
-      // {
-      //   path: 'home',
-      //   component: HomeComponent
-      // },
+      {
+        path: '',
+        pathMatch: 'full',
+        component: HomeComponent
+      },
       {
         path: 'map',
         component: MapSearchComponent
@@ -37,27 +41,19 @@ export const routes: Routes = [
       {
         path: 'my-boxes',
         component: MyBoxesComponent
-      }
-      // {
-      //   path: 'ourbox',
-      //   children: [
-      //     {
-      //       path: 'create',
-      //       component: BoxCreateComponent
-      //     },
-      //     {
-      //       path: 'my',
-      //       component: MyBoxesComponent
-      //     },
-      //     {
-      //       path: ':id',
-      //       component: BoxViewComponent,
-      //       resolve: {
-      //         box: BoxFactoryService
-      //       }
-      //     }
-      //   ]
-      // },
+      },
+      {
+        path: 'boxes',
+        children: [
+          {
+            path: ':id',
+            component: BoxViewComponent,
+            resolve: {
+              box: BoxFactoryService
+            }
+          }
+        ]
+      },
       // {
       //   path: 'board',
       //   component: BoardComponent

@@ -1,0 +1,17 @@
+<div class="side-drawer">
+  <br />
+  <div class="page-links">
+    <div
+      *ngFor="let pageLink of pageLinks"
+      class="link"
+      [attr.link-id]="pageLink.id"
+    >
+      <a [routerLink]="pageLink.path">
+        <span>
+          <mat-icon>{{ pageLink.icon }}</mat-icon
+          >&nbsp;{{ pageLink.label }}
+        </span>
+      </a>
+    </div>
+  </div>
+</div>

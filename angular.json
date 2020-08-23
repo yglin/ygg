@@ -2542,6 +2542,32 @@
           }
         }
       }
+    },
+    "shared-ui-core": {
+      "root": "libs/shared/ui/core",
+      "sourceRoot": "libs/shared/ui/core/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/ui/core/tsconfig.lib.json",
+              "libs/shared/ui/core/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/ui/core/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/ui/core/jest.config.js",
+            "tsConfig": "libs/shared/ui/core/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

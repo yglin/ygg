@@ -17,8 +17,8 @@ import {
   RelationFactoryService,
   TheThingAccessService
 } from '@ygg/the-thing/ui';
-import { ItemAccessService } from './item-access.service';
-import { ItemFactoryService } from './item-factory.service';
+import { ItemAccessService } from '../item/item-access.service';
+import { ItemFactoryService } from '../item/item-factory.service';
 
 @Injectable({
   providedIn: 'root'
