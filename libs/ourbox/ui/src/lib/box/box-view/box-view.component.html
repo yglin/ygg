@@ -1,24 +1,32 @@
 <div class="box-view" *ngIf="box">
-  <ygg-page-title icon="inbox" class="name">{{ box.name }}</ygg-page-title>
-  <div>
-    <div
-      fxLayout="row wrap"
-      fxLayoutAlign="start end"
-      fxLayoutGap="5px"
-      class="member-list"
-    >
-      <div fxLayoutGap="15px">
-        <mat-icon matTooltip="寶箱成員">people</mat-icon>
-      </div>
-      <div *ngFor="let member of members" [attr.member-id]="member.id">
-        <ygg-user-thumbnail
-          [id]="member.id"
-          [showName]="false"
-        ></ygg-user-thumbnail>
+  <ygg-page-title [icon]="ImitationBox.icon" class="name">{{
+    box.name
+  }}</ygg-page-title>
+  <br />
+  <div fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="30px">
+    <div class="box-image">
+      <img [src]="box.image" alt="/assets/images/box/box.png" />
+    </div>
+    <div>
+      <div
+        fxLayout="row wrap"
+        fxLayoutAlign="start end"
+        fxLayoutGap="5px"
+        class="member-list"
+      >
+        <div fxLayoutGap="15px">
+          <mat-icon matTooltip="寶箱成員">people</mat-icon>
+        </div>
+        <div *ngFor="let member of members" [attr.member-id]="member.id">
+          <ygg-user-thumbnail
+            [id]="member.id"
+            [showName]="false"
+          ></ygg-user-thumbnail>
+        </div>
       </div>
     </div>
   </div>
-  <br>
+  <br />
   <div>
     <div *ngIf="isBoxEmpty">
       <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">

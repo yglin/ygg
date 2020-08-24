@@ -1,5 +1,6 @@
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
-import { User } from '@ygg/shared/user/core';
+import { ImageUploaderPageObjectCypress } from '@ygg/shared/omni-types/test';
+import { Image } from '@ygg/shared/omni-types/core';
 
 export class BoxCreatePageObjectCypress extends PageObjectCypress {
   selectors = {
@@ -9,7 +10,9 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
     buttonSubmit: 'button.submit',
     inputMemberEmail: 'input.member-email',
     memberEmailList: '.member-list',
-    buttonAddEmail: 'button.add-email'
+    buttonAddEmail: 'button.add-email',
+    thumbnailImages: '.thumbnail-images',
+    buttonAddImage: 'button.add-images'
   };
 
   getSelectorForMemberEmail(email: string): string {
@@ -28,6 +31,21 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
       .type(email);
     cy.get(this.getSelector('buttonAddEmail')).click();
     cy.get(this.getSelectorForMemberEmail(email)).should('be.visible');
+  }
+
+  selectImage(imageSrc: string) {
+    cy.get(this.getSelector('thumbnailImages'))
+      .find(`.thumbnail-image img[src="${imageSrc}"]`)
+      .click();
+  }
+
+  selectCustomImage(imageSrc: string) {
+    cy.get(this.getSelector('buttonAddImage')).click();
+    const imageUploadPO = new ImageUploaderPageObjectCypress();
+    imageUploadPO.expectOpen();
+    imageUploadPO.addImagesByUrl([new Image(imageSrc)]);
+    imageUploadPO.submit();
+    this.selectImage(imageSrc);
   }
 
   nextStep() {

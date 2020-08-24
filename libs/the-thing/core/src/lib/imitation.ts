@@ -186,6 +186,9 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       if (this.collection) {
         theThing.collection = this.collection;
       }
+      if (this.image) {
+        theThing.image = this.image;
+      }
       if (this.filter && this.filter.tags) {
         theThing.tags = new Tags(this.filter.tags);
       }

@@ -7,3 +7,4 @@ export * from './lib/album';
 export * from './lib/omni-type-view-control.po';
 export * from './lib/omni-type-control.po';
 export * from './lib/omni-type-view.po';
+export * from './lib/image-uploader';

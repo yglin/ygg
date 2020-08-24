@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ImitationItem } from '@ygg/ourbox/core';
+import { ImitationItem, ImitationBox } from '@ygg/ourbox/core';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { NotificationFactoryService } from '@ygg/shared/user/ui';
 import { TheThing } from '@ygg/the-thing/core';
@@ -28,6 +28,7 @@ export class BoxViewComponent implements OnInit, OnDestroy {
   items: TheThing[] = [];
   itemsInEditing: TheThing[] = [];
   subscriptions: Subscription[] = [];
+  ImitationBox = ImitationBox;
   ImitationItem = ImitationItem;
   isBoxEmpty = true;
   members: User[] = [];

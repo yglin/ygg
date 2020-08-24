@@ -57,6 +57,7 @@
               fxLayout="row wrap"
               fxLayoutAlign="space-around start"
               fxLayoutGap="20px"
+              class="thumbnail-images"
             >
               <div
                 *ngFor="let thumbImage of thumbnailImages"
@@ -73,7 +74,7 @@
                 fxLayoutAlign="center center"
                 fxLayoutGap="0px"
               >
-                <button mat-fab matTooltip="上傳圖片" (click)="addImages()">
+                <button mat-fab class="add-images" matTooltip="上傳圖片" (click)="addImages()">
                   <mat-icon>add_photo_alternate </mat-icon>
                 </button>
               </div>

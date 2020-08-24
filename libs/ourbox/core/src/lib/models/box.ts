@@ -48,6 +48,8 @@ export const ImitationBox = new TheThingImitation({
   name: '我們的寶箱',
   cellsDef: values(ImitationBoxCells),
   routePath: 'ourbox',
+  icon: 'inbox',
+  image: '/assets/images/box/box.png',
   filter: new TheThingFilter({
     name: 'ourbox-box',
     tags: []

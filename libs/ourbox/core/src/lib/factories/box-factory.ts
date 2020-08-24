@@ -105,7 +105,7 @@ export class BoxFactory {
       const box = ImitationBox.createTheThing();
       box.ownerId = owner.id;
       box.name = options.name;
-      box.image = options.image || ImitationBoxThumbnailImages[0];
+      box.image = !!(options.image) ? options.image : box.image;
       box.setFlag(ImitationBoxFlags.isPublic.id, isPublic);
       // box.upsertCell(
       //   ImitationBoxCells.members.createCell(memberEmails.join(','))

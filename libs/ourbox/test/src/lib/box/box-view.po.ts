@@ -6,7 +6,8 @@ import { UserThumbnailPageObjectCypress } from '@ygg/shared/user/test';
 export class BoxViewPageObjectCypress extends PageObjectCypress {
   selectors = {
     main: '.box-view',
-    name: '.name'
+    name: '.name',
+    image: '.box-image img'
   };
 
   getSelectorForMember(user: User): string {
@@ -26,5 +27,9 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
       this.getSelectorForMember(user)
     );
     userThumbnailPO.expectVisible();
+  }
+
+  expectImage(image: string) {
+    cy.get(this.getSelector('image')).should('have.attr', 'src', image);
   }
 }

@@ -2,3 +2,13 @@
   font-size: 48px;
   width: 50px;
 }
+
+.box-image {
+  width: 20vw;
+  height: 20vw;
+}
+
+.box-image img {
+  widows: 100%;
+  height: 100%;
+}

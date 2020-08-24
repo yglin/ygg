@@ -57,9 +57,16 @@ describe('Creation of box', () => {
     theMockDatabase.clear();
   });
 
+  beforeEach(function() {
+    loginTestUser(testUser);
+  });
+
+  afterEach(function() {
+    logout();
+  });
+
   it('Create a default box, private, no other members ', () => {
     const testBox = ImitationBox.forgeTheThing();
-    loginTestUser(testUser);
     gotoBoxCreatePage();
     // Step: Name input
     boxCreatePO.inputName(testBox.name);
@@ -83,6 +90,65 @@ describe('Creation of box', () => {
     boxViewPO.expectVisible();
     boxViewPO.expectValue(testBox);
     boxViewPO.expectMember(testUser);
+    boxViewPO.expectImage(ImitationBox.image);
+  });
+
+  it('Create a box with selected image', () => {
+    const testBox = ImitationBox.forgeTheThing();
+    const testImageSrc = '/assets/images/box/thumbnails/03.png';
+    gotoBoxCreatePage();
+    // Step: Name input
+    boxCreatePO.inputName(testBox.name);
+    boxCreatePO.nextStep();
+
+    // Step Select image
+    boxCreatePO.selectImage(testImageSrc);
+    boxCreatePO.nextStep();
+
+    // Step: Add members by emails
+    // Do nothing
+    boxCreatePO.nextStep();
+
+    // Step: Select public or private
+    // Do nothing
+    boxCreatePO.submit();
+
+    emceePO.confirm(`確定要建立新的寶箱 ${testBox.name} ？`);
+    emceePO.alert(`寶箱 ${testBox.name} 已建立`);
+
+    boxViewPO.expectVisible();
+    boxViewPO.expectValue(testBox);
+    boxViewPO.expectMember(testUser);
+    boxViewPO.expectImage(testImageSrc);
+  });
+
+  it('Create a box with custom image', () => {
+    const testBox = ImitationBox.forgeTheThing();
+    const testImageSrc = 'https://i.imgur.com/scBJrge.jpg';
+    gotoBoxCreatePage();
+    // Step: Name input
+    boxCreatePO.inputName(testBox.name);
+    boxCreatePO.nextStep();
+
+    // Step Select image
+    boxCreatePO.selectCustomImage(testImageSrc);
+    boxCreatePO.nextStep();
+
+    // Step: Add members by emails
+    // Do nothing
+    boxCreatePO.nextStep();
+
+    // Step: Select public or private
+    // Do nothing
+    boxCreatePO.submit();
+
+    emceePO.confirm(`確定要建立新的寶箱 ${testBox.name} ？`);
+    emceePO.alert(`寶箱 ${testBox.name} 已建立`);
+
+    boxViewPO.expectVisible();
+    boxViewPO.expectValue(testBox);
+    boxViewPO.expectMember(testUser);
+    boxViewPO.expectImage(testImageSrc);
   });
 
   it('Submit creation requires login', () => {
@@ -113,7 +179,6 @@ describe('Creation of box', () => {
     boxViewPO.expectVisible();
     boxViewPO.expectValue(testBox);
     boxViewPO.expectMember(testUser);
-    logout();
   });
 
   it('Create a box with other members invited', () => {
@@ -134,7 +199,6 @@ describe('Creation of box', () => {
       }
     });
 
-    loginTestUser(testUser);
     gotoBoxCreatePage();
 
     // Step: Name input
@@ -172,30 +236,6 @@ describe('Creation of box', () => {
     emceePO.confirm(notificationBoxMemberInvite.confirmMessage);
     boxViewPO.expectVisible();
     boxViewPO.expectMember(otherUser);
-
-    // cy.location('pathname')
-    //   .should('match', /ourbox\/boxes\/.*/)
-    //   .then(path => {
-    //     const boxId = last(path.split('/'));
-    //     if (!boxId) {
-    //       throw new Error(`Not found id of created box`);
-    //     }
-    //     // Automatic grant otherUser to member
-    //     const relationMember: RelationRecord = new RelationRecord({
-    //       subjectCollection: ImitationBox.collection,
-    //       subjectId: boxId,
-    //       objectCollection: User.collection,
-    //       objectId: otherUser.id,
-    //       objectRole: RelationshipBoxMember.role
-    //     });
-    //     theMockDatabase.insert(
-    //       `${RelationRecord.collection}/${relationMember.id}`,
-    //       relationMember
-    //     );
-    //     boxViewPO.expectVisible();
-    //     boxViewPO.expectMember(otherUser);
-    //     theMockDatabase.delete(`${ImitationBox.collection}/${boxId}`);
-    //   });
   });
 
   // it('Create a public box ', () => {});
