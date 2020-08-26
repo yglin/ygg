@@ -17,6 +17,8 @@ import { HomeComponent } from './home/home.component';
 import { BoxFactoryService } from './box/box-factory.service';
 import { BoxViewComponent } from './box/box-view/box-view.component';
 import { ItemWarehouseComponent } from './item/item-warehouse/item-warehouse.component';
+import { ItemFactoryService } from './item/item-factory.service';
+import { ItemComponent } from './item/item/item.component';
 // import { ItemFactoryService } from './item-factory.service';
 // import { MyBoxesComponent } from './pages/box/my-boxes/my-boxes.component';
 // import { ItemTransferComponent } from './pages/item/item-transfer/item-transfer.component';
@@ -58,23 +60,23 @@ export const routes: Routes = [
       {
         path: 'item-warehouse',
         component: ItemWarehouseComponent
-      }
+      },
       // {
       //   path: 'board',
       //   component: BoardComponent
       // },
-      // {
-      //   path: ImitationItem.routePath,
-      //   children: [
-      //     {
-      //       path: ':id',
-      //       component: ItemViewComponent,
-      //       resolve: {
-      //         item$: ItemFactoryService
-      //       }
-      //     }
-      //   ]
-      // },
+      {
+        path: ImitationItem.routePath,
+        children: [
+          {
+            path: ':id',
+            component: ItemComponent,
+            resolve: {
+              item$: ItemFactoryService
+            }
+          }
+        ]
+      },
       // {
       //   path: ImitationItemTransfer.routePath,
       //   children: [

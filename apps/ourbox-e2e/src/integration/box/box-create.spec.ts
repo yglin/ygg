@@ -29,6 +29,7 @@ import { User, Notification } from '@ygg/shared/user/core';
 import { RelationRecord } from '@ygg/the-thing/core';
 import { last } from 'lodash';
 import { getEnv } from '@ygg/shared/infra/core';
+import { TheThingPageObjectCypress } from '@ygg/the-thing/test';
 
 describe('Creation of box', () => {
   const siteNavigator = new SiteNavigator();
@@ -42,6 +43,7 @@ describe('Creation of box', () => {
   const sideDrawerPO = new SideDrawerPageObjectCypress();
   const emceePO = new EmceePageObjectCypress();
   const itemWarehousePO = new ItemWarehousePageObjectCypress();
+  const itemPO = new TheThingPageObjectCypress('', ImitationItem);
 
   const testUser = User.forge();
   const otherUser = User.forge();
@@ -265,35 +267,31 @@ describe('Creation of box', () => {
     emceePO.alert(`寶箱 ${testBox.name} 已建立`);
 
     boxViewPO.expectVisible();
-    cy.location('pathname').then((path: string) => {
-      const boxId = last(path.split('/'));
-      if (!boxId) {
-        throw new Error(`Can not find box id in url pathname`);
-      }
-      const relationRecord = new RelationRecord({
-        subjectCollection: ImitationBox.collection,
-        subjectId: boxId,
-        objectCollection: ImitationItem.collection,
-        objectId: testItem01.id,
-        objectRole: RelationshipBoxItem.role
-      });
-      theMockDatabase.insert(
-        `${RelationRecord.collection}/${relationRecord.id}`,
-        relationRecord
-      );
+    boxViewPO.gotoCreateItem();
 
-      // Can see the item as box member
-      siteNavigator.gotoItemWarehouse();
-      itemWarehousePO.expectItem(testItem01);
+    itemPO.expectVisible();
+    itemPO.setValue(testItem01);
+    itemPO.save(testItem01);
+    // emceePO.confirm(`確定要儲存 ${testItem01.name} ？`);
+    // emceePO.alert(`已成功儲存 ${testItem01.name}`);
+    emceePO.confirm(
+      `順便開放寶物 ${testItem01.name} 讓人索取嗎？開放後資料無法修改喔`
+    );
 
-      // Login as other user, which is not box member
-      logout();
-      loginTestUser(otherUser);
+    boxViewPO.expectVisible({ timeout: 20000 });
+    boxViewPO.expectItem(testItem01);
 
-      // Can not see the item as not member
-      // siteNavigator.gotoItemWarehouse();
-      itemWarehousePO.expectNotItem(testItem01);
-    });
+    // Can see the item as box member
+    siteNavigator.gotoItemWarehouse();
+    itemWarehousePO.expectItem(testItem01);
+
+    // Login as other user, which is not box member
+    logout();
+    loginTestUser(otherUser);
+
+    // Can not see the item as not member
+    // siteNavigator.gotoItemWarehouse();
+    itemWarehousePO.expectNotItem(testItem01);
   });
 
   it('Items of public box should be visible to anyone', () => {
@@ -319,40 +317,37 @@ describe('Creation of box', () => {
     emceePO.alert(`寶箱 ${testBox.name} 已建立`);
 
     boxViewPO.expectVisible();
-    cy.location('pathname').then((path: string) => {
-      const boxId = last(path.split('/'));
-      if (!boxId) {
-        throw new Error(`Can not find box id in url pathname`);
-      }
-      const relationRecord = new RelationRecord({
-        subjectCollection: ImitationBox.collection,
-        subjectId: boxId,
-        objectCollection: ImitationItem.collection,
-        objectId: testItem02.id,
-        objectRole: RelationshipBoxItem.role
-      });
-      theMockDatabase.insert(
-        `${RelationRecord.collection}/${relationRecord.id}`,
-        relationRecord
-      );
+    boxViewPO.gotoCreateItem();
 
-      // Can see the item as box member
-      siteNavigator.gotoItemWarehouse();
-      itemWarehousePO.expectItem(testItem02);
+    itemPO.expectVisible();
+    itemPO.setValue(testItem02);
+    itemPO.save(testItem02);
+    // emceePO.confirm(`確定要儲存 ${testItem01.name} ？`);
+    // emceePO.alert(`已成功儲存 ${testItem01.name}`);
+    emceePO.confirm(
+      `順便開放寶物 ${testItem02.name} 讓人索取嗎？開放後資料無法修改喔`
+    );
 
-      // Logout as guest
-      logout();
-      cy.wait(3000);
+    boxViewPO.expectVisible({ timeout: 20000 });
+    boxViewPO.expectItem(testItem02);
 
-      // Can see the item as guest
-      itemWarehousePO.expectItem(testItem02);
+    // Can see the item as box member
+    siteNavigator.gotoItemWarehouse();
+    itemWarehousePO.expectItem(testItem02);
 
-      // Login as other user, which is not box member
-      loginTestUser(otherUser);
-      cy.wait(3000);
+    // Logout as guest
+    logout();
+    cy.wait(3000);
 
-      // Can see the item as not box member
-      itemWarehousePO.expectItem(testItem02);
-    });
+    // Can see the item as guest
+    itemWarehousePO.expectItem(testItem02);
+
+    // Login as other user, which is not box member
+    loginTestUser(otherUser);
+    cy.wait(3000);
+
+    // Can see the item as not box member
+    itemWarehousePO.expectItem(testItem02);
+
   });
 });

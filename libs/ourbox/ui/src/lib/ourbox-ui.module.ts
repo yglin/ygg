@@ -18,6 +18,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BoxViewComponent } from './box/box-view/box-view.component';
 import { ItemWarehouseComponent } from './item/item-warehouse/item-warehouse.component';
 import { TheThingUiModule } from '@ygg/the-thing/ui';
+import { ItemComponent } from './item/item/item.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { TheThingUiModule } from '@ygg/the-thing/ui';
     MyBoxesComponent,
     HeaderComponent,
     HomeComponent,
-    ItemWarehouseComponent
+    ItemWarehouseComponent,
+    ItemComponent
   ],
   imports: [
     CommonModule,

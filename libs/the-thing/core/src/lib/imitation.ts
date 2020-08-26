@@ -170,7 +170,6 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   forgeTheThing(): TheThing {
     const theThing = this.createTheThing();
     theThing.name = `${this.name}_這是一個假造資料_${Date.now()}`;
-    theThing.image = Image.forge().src;
     for (const cellId in this.cellsDef) {
       if (this.cellsDef.hasOwnProperty(cellId)) {
         const cellDef = this.cellsDef[cellId];
@@ -181,6 +180,10 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
           }
         }
       }
+    }
+    theThing.image = theThing.resolveImage();
+    if (!theThing.image) {
+      theThing.image = Image.forge().src;
     }
     return theThing;
   }

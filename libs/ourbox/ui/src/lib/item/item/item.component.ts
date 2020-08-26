@@ -7,17 +7,17 @@ import {
 import { Observable, isObservable, Subscription, of, merge } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ImitationItem, ImitationItemTransfer } from '@ygg/ourbox/core';
-import { ItemFactoryService } from '../../../item-factory.service';
+import { ItemFactoryService } from '../item-factory.service';
 import { tap, switchMap, map } from 'rxjs/operators';
 import { User } from '@ygg/shared/user/core';
-import { ItemTransferFactoryService } from '../../../item-transfer-factory.service';
+import { ItemTransferFactoryService } from '../../item-transfer/item-transfer-factory.service';
 
 @Component({
-  selector: 'ygg-item-view',
-  templateUrl: './item-view.component.html',
-  styleUrls: ['./item-view.component.css']
+  selector: 'ourbox-item',
+  templateUrl: './item.component.html',
+  styleUrls: ['./item.component.css']
 })
-export class ItemViewComponent implements OnInit, OnDestroy {
+export class ItemComponent implements OnInit {
   @Input() item$: Observable<TheThing>;
   item: TheThing;
   holderId$: Observable<string>;
