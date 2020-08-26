@@ -9,7 +9,7 @@ export enum AlertType {
 export abstract class Emcee {
   abstract async alert(message: string, type: AlertType);
   abstract async confirm(message: string): Promise<boolean>;
-  abstract showProgress(options?:{message: string, percentage$: Observable<number>}): void;
+  abstract showProgress(options?:{message: string, percentage$?: Observable<number>}): void;
   abstract hideProgress(): void;
 
   async info(message: string) {

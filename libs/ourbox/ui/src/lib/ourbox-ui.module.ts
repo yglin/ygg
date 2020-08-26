@@ -16,6 +16,8 @@ import { BoxFactoryService } from './box/box-factory.service';
 import { noop } from 'lodash';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BoxViewComponent } from './box/box-view/box-view.component';
+import { ItemWarehouseComponent } from './item/item-warehouse/item-warehouse.component';
+import { TheThingUiModule } from '@ygg/the-thing/ui';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { BoxViewComponent } from './box/box-view/box-view.component';
     BoxViewComponent,
     MyBoxesComponent,
     HeaderComponent,
-    HomeComponent
+    HomeComponent,
+    ItemWarehouseComponent
   ],
   imports: [
     CommonModule,
@@ -34,6 +37,7 @@ import { BoxViewComponent } from './box/box-view/box-view.component';
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
     SharedUserUiModule,
+    TheThingUiModule,
     RouterModule.forChild(routes)
   ],
   exports: [MapSearchComponent, HeaderComponent, HomeComponent],

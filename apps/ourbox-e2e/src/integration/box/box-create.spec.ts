@@ -1,7 +1,8 @@
 import {
   BoxCreatePageObjectCypress,
   HeaderPageObjectCypress,
-  BoxViewPageObjectCypress
+  BoxViewPageObjectCypress,
+  ItemWarehousePageObjectCypress
 } from '@ygg/ourbox/test';
 import { theMockDatabase, getCurrentUser } from '@ygg/shared/test/cypress';
 import { login } from '@ygg/shared/test/cypress';
@@ -18,10 +19,11 @@ import {
   EmceePageObjectCypress
 } from '@ygg/shared/ui/test';
 import {
-  OurBoxSideMenu,
   ImitationBox,
   RelationshipBoxMember,
-  NotificationJoinBox
+  NotificationJoinBox,
+  ImitationItem,
+  RelationshipBoxItem
 } from '@ygg/ourbox/core';
 import { User, Notification } from '@ygg/shared/user/core';
 import { RelationRecord } from '@ygg/the-thing/core';
@@ -29,6 +31,9 @@ import { last } from 'lodash';
 import { getEnv } from '@ygg/shared/infra/core';
 
 describe('Creation of box', () => {
+  const siteNavigator = new SiteNavigator();
+
+  // page objects
   const accountWidgetPO = new AccountWidgetPageObjectCypress();
   const myNotificationsPO = new MyNotificationListPageObjectCypress();
   const boxCreatePO = new BoxCreatePageObjectCypress();
@@ -36,20 +41,26 @@ describe('Creation of box', () => {
   const headerPO = new HeaderPageObjectCypress();
   const sideDrawerPO = new SideDrawerPageObjectCypress();
   const emceePO = new EmceePageObjectCypress();
+  const itemWarehousePO = new ItemWarehousePageObjectCypress();
+
   const testUser = User.forge();
   const otherUser = User.forge();
-
-  function gotoBoxCreatePage() {
-    // Navigate to box-create page through side menu
-    headerPO.openSideDrawer();
-    sideDrawerPO.expectVisible();
-    sideDrawerPO.clickLink(OurBoxSideMenu.links.boxCreate);
-    boxCreatePO.expectVisible();
-  }
+  const testItem01 = ImitationItem.forgeTheThing();
+  testItem01.setState(ImitationItem.stateName, ImitationItem.states.available);
+  const testItem02 = ImitationItem.forgeTheThing();
+  testItem02.setState(ImitationItem.stateName, ImitationItem.states.available);
 
   before(function() {
     theMockDatabase.insert(`${User.collection}/${testUser.id}`, testUser);
     theMockDatabase.insert(`${User.collection}/${otherUser.id}`, otherUser);
+    theMockDatabase.insert(
+      `${ImitationItem.collection}/${testItem01.id}`,
+      testItem01
+    );
+    theMockDatabase.insert(
+      `${ImitationItem.collection}/${testItem02.id}`,
+      testItem02
+    );
     cy.visit('/');
   });
 
@@ -59,6 +70,7 @@ describe('Creation of box', () => {
 
   beforeEach(function() {
     loginTestUser(testUser);
+    siteNavigator.gotoBoxCreatePage();
   });
 
   afterEach(function() {
@@ -67,7 +79,6 @@ describe('Creation of box', () => {
 
   it('Create a default box, private, no other members ', () => {
     const testBox = ImitationBox.forgeTheThing();
-    gotoBoxCreatePage();
     // Step: Name input
     boxCreatePO.inputName(testBox.name);
     boxCreatePO.nextStep();
@@ -96,7 +107,6 @@ describe('Creation of box', () => {
   it('Create a box with selected image', () => {
     const testBox = ImitationBox.forgeTheThing();
     const testImageSrc = '/assets/images/box/thumbnails/03.png';
-    gotoBoxCreatePage();
     // Step: Name input
     boxCreatePO.inputName(testBox.name);
     boxCreatePO.nextStep();
@@ -125,7 +135,6 @@ describe('Creation of box', () => {
   it('Create a box with custom image', () => {
     const testBox = ImitationBox.forgeTheThing();
     const testImageSrc = 'https://i.imgur.com/scBJrge.jpg';
-    gotoBoxCreatePage();
     // Step: Name input
     boxCreatePO.inputName(testBox.name);
     boxCreatePO.nextStep();
@@ -154,7 +163,6 @@ describe('Creation of box', () => {
   it('Submit creation requires login', () => {
     const testBox = ImitationBox.forgeTheThing();
     logout();
-    gotoBoxCreatePage();
     // Step: Name input
     boxCreatePO.inputName(testBox.name);
     boxCreatePO.nextStep();
@@ -199,8 +207,6 @@ describe('Creation of box', () => {
       }
     });
 
-    gotoBoxCreatePage();
-
     // Step: Name input
     boxCreatePO.inputName(testBox.name);
     boxCreatePO.nextStep();
@@ -238,5 +244,115 @@ describe('Creation of box', () => {
     boxViewPO.expectMember(otherUser);
   });
 
-  // it('Create a public box ', () => {});
+  it('Items of private box should be visible only to members', () => {
+    const testBox = ImitationBox.forgeTheThing();
+    // Step: Name input
+    boxCreatePO.inputName(testBox.name);
+    boxCreatePO.nextStep();
+
+    // Step Select image
+    // Do nothing
+    boxCreatePO.nextStep();
+
+    // Step: Add members by emails
+    // Do nothing
+    boxCreatePO.nextStep();
+
+    // Step: Select public or private
+    boxCreatePO.submit();
+
+    emceePO.confirm(`確定要建立新的寶箱 ${testBox.name} ？`);
+    emceePO.alert(`寶箱 ${testBox.name} 已建立`);
+
+    boxViewPO.expectVisible();
+    cy.location('pathname').then((path: string) => {
+      const boxId = last(path.split('/'));
+      if (!boxId) {
+        throw new Error(`Can not find box id in url pathname`);
+      }
+      const relationRecord = new RelationRecord({
+        subjectCollection: ImitationBox.collection,
+        subjectId: boxId,
+        objectCollection: ImitationItem.collection,
+        objectId: testItem01.id,
+        objectRole: RelationshipBoxItem.role
+      });
+      theMockDatabase.insert(
+        `${RelationRecord.collection}/${relationRecord.id}`,
+        relationRecord
+      );
+
+      // Can see the item as box member
+      siteNavigator.gotoItemWarehouse();
+      itemWarehousePO.expectItem(testItem01);
+
+      // Login as other user, which is not box member
+      logout();
+      loginTestUser(otherUser);
+
+      // Can not see the item as not member
+      // siteNavigator.gotoItemWarehouse();
+      itemWarehousePO.expectNotItem(testItem01);
+    });
+  });
+
+  it('Items of public box should be visible to anyone', () => {
+    const testBox = ImitationBox.forgeTheThing();
+    // Step: Name input
+    boxCreatePO.inputName(testBox.name);
+    boxCreatePO.nextStep();
+
+    // Step Select image
+    // Do nothing
+    boxCreatePO.nextStep();
+
+    // Step: Add members by emails
+    // Do nothing
+    boxCreatePO.nextStep();
+
+    // Step: Select public or private
+    // Check box as public
+    boxCreatePO.checkPublic();
+    boxCreatePO.submit();
+
+    emceePO.confirm(`確定要建立新的寶箱 ${testBox.name} ？`);
+    emceePO.alert(`寶箱 ${testBox.name} 已建立`);
+
+    boxViewPO.expectVisible();
+    cy.location('pathname').then((path: string) => {
+      const boxId = last(path.split('/'));
+      if (!boxId) {
+        throw new Error(`Can not find box id in url pathname`);
+      }
+      const relationRecord = new RelationRecord({
+        subjectCollection: ImitationBox.collection,
+        subjectId: boxId,
+        objectCollection: ImitationItem.collection,
+        objectId: testItem02.id,
+        objectRole: RelationshipBoxItem.role
+      });
+      theMockDatabase.insert(
+        `${RelationRecord.collection}/${relationRecord.id}`,
+        relationRecord
+      );
+
+      // Can see the item as box member
+      siteNavigator.gotoItemWarehouse();
+      itemWarehousePO.expectItem(testItem02);
+
+      // Logout as guest
+      logout();
+      cy.wait(3000);
+
+      // Can see the item as guest
+      itemWarehousePO.expectItem(testItem02);
+
+      // Login as other user, which is not box member
+      loginTestUser(otherUser);
+      cy.wait(3000);
+
+      // Can see the item as not box member
+      itemWarehousePO.expectItem(testItem02);
+    });
+  });
 });

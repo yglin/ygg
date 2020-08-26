@@ -10,7 +10,8 @@ import {
   RelationFactory,
   RelationRecord,
   TheThing,
-  TheThingAccessor
+  TheThingAccessor,
+  TheThingFilter
 } from '@ygg/the-thing/core';
 import { UserAccessor } from 'libs/shared/user/core/src/lib/user-accessor';
 import { flatten, get, isEmpty, uniq, uniqBy } from 'lodash';
@@ -22,7 +23,8 @@ import {
   startWith,
   catchError,
   shareReplay,
-  tap
+  tap,
+  finalize
 } from 'rxjs/operators';
 import {
   ImitationBox,
@@ -100,12 +102,13 @@ export class BoxFactory {
       if (!confirm) {
         return;
       }
+      this.emcee.showProgress({ message: `建立新寶箱 ${options.name}` });
       const memberEmails = options.memberEmails || [];
       const isPublic = !!options.isPublic;
       const box = ImitationBox.createTheThing();
       box.ownerId = owner.id;
       box.name = options.name;
-      box.image = !!(options.image) ? options.image : box.image;
+      box.image = !!options.image ? options.image : box.image;
       box.setFlag(ImitationBoxFlags.isPublic.id, isPublic);
       // box.upsertCell(
       //   ImitationBoxCells.members.createCell(memberEmails.join(','))
@@ -131,6 +134,8 @@ export class BoxFactory {
       return box;
     } catch (error) {
       this.emcee.error(`開寶箱失敗，錯誤原因：${error.message}`);
+    } finally {
+      this.emcee.hideProgress();
     }
   }
 
@@ -235,7 +240,10 @@ export class BoxFactory {
   listItemIdsInBox$(boxId: string): Observable<string[]> {
     return this.relationFactory
       .findBySubjectAndRole$(boxId, RelationshipBoxItem.role)
-      .pipe(map(relationRecords => relationRecords.map(rr => rr.objectId)));
+      .pipe(
+        // tap(relationRecords => console.log(relationRecords)),
+        map(relationRecords => relationRecords.map(rr => rr.objectId))
+      );
   }
 
   listItemsAvailableInBox$(boxId: string): Observable<TheThing[]> {
@@ -322,43 +330,43 @@ export class BoxFactory {
     );
   }
 
-  listMyBoxes$(userId?: string): Observable<TheThing[]> {
-    if (!userId) {
-      userId = get(this.authenticator.currentUser, 'id', null);
-    }
-    if (!userId) {
-      return of([]);
-    }
-    const cacheId = `listMyBoxes$_${userId}`;
+  listMyBoxes$(): Observable<TheThing[]> {
+    const cacheId = `listMyBoxes$`;
     if (!(cacheId in this.ObservableCaches)) {
-      this.ObservableCaches[
-        cacheId
-      ] = this.relationFactory
-        .findByObjectAndRole$(userId, RelationshipBoxMember.role)
-        .pipe(
-          tap(relations => console.log(relations)),
-          switchMap((relaitonRecords: RelationRecord[]) => {
-            // console.log(relaitonRecords);
-            return this.theThingAccessor.listByIds$(
-              relaitonRecords.map(rr => rr.subjectId),
-              ImitationBox.collection
-            );
-          }),
-          catchError(error => {
-            console.warn(error.message);
+      this.ObservableCaches[cacheId] = this.authenticator.currentUser$.pipe(
+        switchMap(user => {
+          if (!user) {
             return of([]);
-          }),
-          shareReplay(1)
-        );
+          } else {
+            return this.relationFactory.findByObjectAndRole$(
+              user.id,
+              RelationshipBoxMember.role
+            );
+          }
+        }),
+        // tap(relations => console.log(relations)),
+        switchMap((relaitonRecords: RelationRecord[]) => {
+          // console.log(relaitonRecords);
+          return this.theThingAccessor.listByIds$(
+            relaitonRecords.map(rr => rr.subjectId),
+            ImitationBox.collection
+          );
+        }),
+        catchError(error => {
+          console.warn(error.message);
+          return of([]);
+        }),
+        shareReplay(1)
+      );
     }
     return this.ObservableCaches[cacheId];
   }
 
   findItems$(itemFilter: ItemFilter): Observable<TheThing[]> {
-    itemFilter.addState(
-      ImitationItem.stateName,
-      ImitationItem.states.available.value
-    );
+    // itemFilter.addState(
+    //   ImitationItem.stateName,
+    //   ImitationItem.states.available.value
+    // );
     return combineLatest([
       this.listMyBoxes$().pipe(startWith([])),
       this.listPublicBoxes$()
@@ -385,6 +393,51 @@ export class BoxFactory {
           itemFilter,
           ImitationItem.collection
         );
+      })
+    );
+  }
+
+  /**
+   * Find items available to me,
+   * i.e. (1) in public box or my member box (2) in state available
+   */
+  listMyManifestItems$(): Observable<TheThing[]> {
+    const itemFilter: TheThingFilter = ImitationItem.filter.clone();
+    itemFilter.setState(
+      ImitationItem.stateName,
+      ImitationItem.states.available
+    );
+    return combineLatest([
+      this.listMyBoxes$().pipe(startWith([])),
+      this.listPublicBoxes$()
+    ]).pipe(
+      map(([myBoxes, publicBoxes]) => {
+        console.log(myBoxes);
+        console.log(publicBoxes);
+        return uniqBy(myBoxes.concat(publicBoxes), 'id');
+      }),
+      switchMap(boxes => {
+        if (isEmpty(boxes)) {
+          return of([]);
+        } else {
+          const observableItemIds: Observable<string[]>[] = [];
+          for (const box of boxes) {
+            observableItemIds.push(this.listItemIdsInBox$(box.id));
+          }
+          return combineLatest(observableItemIds);
+        }
+      }),
+      switchMap((itemIds: string[][]) => {
+        // console.log(itemIds);
+        itemFilter.ids = uniq(flatten(itemIds));
+        if (isEmpty(itemFilter.ids)) {
+          return of([]);
+        } else {
+          return this.theThingAccessor.listByFilter$(
+            itemFilter,
+            ImitationItem.collection
+          );
+        }
       })
     );
   }

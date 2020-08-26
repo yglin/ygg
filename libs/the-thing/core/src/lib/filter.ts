@@ -8,6 +8,7 @@ import {
   TimeRange,
   OmniTypeMatcher
 } from '@ygg/shared/omni-types/core';
+import { TheThingState } from './state';
 
 export interface CellFilter {
   cellId: string;
@@ -131,6 +132,10 @@ export class TheThingFilter implements SerializableJSON {
 
   addFlags(flags: { [name: string]: boolean }) {
     assign(this.flags, flags);
+  }
+
+  setState(stateName: string, state: TheThingState) {
+    this.states[stateName] = state.value;
   }
 
   addState(stateName: string, value: number) {

@@ -2059,7 +2059,7 @@
       "schematics": {},
       "root": "apps/ourbox",
       "sourceRoot": "apps/ourbox/src",
-      "prefix": "ygg",
+      "prefix": "ourbox",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -2495,6 +2495,7 @@
       "root": "libs/ourbox/ui",
       "sourceRoot": "libs/ourbox/ui/src",
       "projectType": "library",
+      "prefix": "ourbox",
       "schematics": {},
       "architect": {
         "lint": {

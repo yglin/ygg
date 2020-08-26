@@ -1,4 +1,4 @@
-import { PageObjectCypress } from '@ygg/shared/test/cypress';
+import { PageObjectCypress, MatCheckboxPageObjectCypress } from '@ygg/shared/test/cypress';
 import { ImageUploaderPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { Image } from '@ygg/shared/omni-types/core';
 
@@ -12,7 +12,8 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
     memberEmailList: '.member-list',
     buttonAddEmail: 'button.add-email',
     thumbnailImages: '.thumbnail-images',
-    buttonAddImage: 'button.add-images'
+    buttonAddImage: 'button.add-images',
+    checkboxPublic: '.check-public'
   };
 
   getSelectorForMemberEmail(email: string): string {
@@ -50,6 +51,13 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
 
   nextStep() {
     cy.get(this.getSelector('buttonNextStep')).click();
+  }
+
+  checkPublic() {
+    const matCheckboxPO = new MatCheckboxPageObjectCypress(
+      this.getSelector('checkboxPublic')
+    );
+    matCheckboxPO.check();
   }
 
   submit() {

@@ -33,7 +33,11 @@ import {
 import { Tags } from '@ygg/tags/core';
 import { RelationDefine } from './relation-def';
 import { TheThingCellDefine } from './cell-define';
-import { OmniTypeComparator, OmniTypes } from '@ygg/shared/omni-types/core';
+import {
+  OmniTypeComparator,
+  OmniTypes,
+  Image
+} from '@ygg/shared/omni-types/core';
 import { TheThingState } from './state';
 import { Relationship } from './relationship';
 import { TheThingAction } from './action';
@@ -166,6 +170,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   forgeTheThing(): TheThing {
     const theThing = this.createTheThing();
     theThing.name = `${this.name}_這是一個假造資料_${Date.now()}`;
+    theThing.image = Image.forge().src;
     for (const cellId in this.cellsDef) {
       if (this.cellsDef.hasOwnProperty(cellId)) {
         const cellDef = this.cellsDef[cellId];

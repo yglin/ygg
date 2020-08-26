@@ -53,20 +53,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     private boxFactory: BoxFactoryService
   ) {
     this.subscriptions.push(
-      this.authenticator.currentUser$
-        .pipe(
-          switchMap(user =>
-            this.boxFactory.listMyBoxes$(!!user ? user.id : null)
-          )
-        )
-        .subscribe(boxes => {
-          const hasMyBoxes = !isEmpty(boxes);
-          if (hasMyBoxes) {
-            this.links = values(pick(links, ['map', 'my-boxes']));
-          } else {
-            this.links = values(pick(links, ['map', 'create-box']));
-          }
-        })
+      this.boxFactory.listMyBoxes$().subscribe(boxes => {
+        const hasMyBoxes = !isEmpty(boxes);
+        if (hasMyBoxes) {
+          this.links = values(pick(links, ['map', 'my-boxes']));
+        } else {
+          this.links = values(pick(links, ['map', 'create-box']));
+        }
+      })
     );
   }
 
