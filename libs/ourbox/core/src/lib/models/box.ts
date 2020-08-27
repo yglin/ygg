@@ -1,18 +1,13 @@
 import {
   TheThingImitation,
   TheThingCellDefine,
-  TheThingFilter
+  TheThingFilter,
+  Relationship
 } from '@ygg/the-thing/core';
 import { OmniTypes } from '@ygg/shared/omni-types/core';
 import { values } from 'lodash';
-
-export const RelationshipBoxMember = {
-  role: 'member'
-};
-
-export const RelationshipBoxItem = {
-  role: 'boxitem'
-};
+import { User } from '@ygg/shared/user/core';
+import { ImitationItem } from './item';
 
 export const ImitationBoxFlags = {
   isPublic: {
@@ -53,5 +48,19 @@ export const ImitationBox = new TheThingImitation({
   filter: new TheThingFilter({
     name: 'ourbox-box',
     tags: []
-  })
+  }),
+  flags: [ImitationBoxFlags.isPublic.id]
 });
+
+export const RelationshipBoxMember = new Relationship({
+  name: 'ourbox-box-member',
+  subjectImitation: ImitationBox,
+  objectCollection: User.collection
+});
+
+export const RelationshipBoxItem = new Relationship({
+  name: 'ourbox-box-item',
+  subjectImitation: ImitationBox,
+  objectImitation: ImitationItem
+});
+

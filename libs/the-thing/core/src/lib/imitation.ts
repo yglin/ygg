@@ -14,7 +14,8 @@ import {
   noop,
   defaults,
   random,
-  pick
+  pick,
+  sample
 } from 'lodash';
 import {
   generateID,
@@ -98,6 +99,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   valueFunctions: { [name: string]: ValueFunction } = {};
   stateName: string;
   states: { [name: string]: TheThingState };
+  flags: string[] = [];
   creators: TheThingCreator[] = [];
   cellsOrder: string[] = [];
   displays: ImitationDisplayConfig = {};
@@ -134,6 +136,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       filter?: TheThingFilter;
       stateName?: string;
       states?: { [name: string]: TheThingState };
+      flags?: string[];
       creators?: TheThingCreator[];
       cellsOrder?: string[];
       canModify?: (theThing: TheThing) => boolean;
@@ -170,6 +173,11 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
   forgeTheThing(): TheThing {
     const theThing = this.createTheThing();
     theThing.name = `${this.name}_這是一個假造資料_${Date.now()}`;
+    if (!isEmpty(this.flags)) {
+      for (const flag of this.flags) {
+        theThing.setFlag(flag, Math.random() > 0.5);
+      }
+    }
     for (const cellId in this.cellsDef) {
       if (this.cellsDef.hasOwnProperty(cellId)) {
         const cellDef = this.cellsDef[cellId];
@@ -184,6 +192,9 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     theThing.image = theThing.resolveImage();
     if (!theThing.image) {
       theThing.image = Image.forge().src;
+    }
+    if (!isEmpty(this.states)) {
+      theThing.setState(this.stateName, sample(this.states));
     }
     return theThing;
   }

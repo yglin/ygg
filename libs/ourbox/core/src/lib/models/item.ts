@@ -4,19 +4,24 @@ import {
   TheThingImitation,
   TheThingState,
   TheThing,
-  CommonCellDefines
+  CommonCellDefines,
+  Relationship
 } from '@ygg/the-thing/core';
 import { values, keyBy } from 'lodash';
+import { User } from '@ygg/shared/user/core';
 
-export const ImitationItemCells = keyBy([
-  CommonCellDefines.album.extend({
-    userInput: 'required'
-  }),
-  CommonCellDefines.location.extend({
-    label: '物品所在地',
-    userInput: 'required'
-  })
-], 'id');
+export const ImitationItemCells = keyBy(
+  [
+    CommonCellDefines.album.extend({
+      userInput: 'required'
+    }),
+    CommonCellDefines.location.extend({
+      label: '物品所在地',
+      userInput: 'required'
+    })
+  ],
+  'id'
+);
 
 export const ImitationItemStates: { [name: string]: TheThingState } = {
   new: {
@@ -57,10 +62,10 @@ export const ImitationItem = new TheThingImitation({
     );
   },
   stateChanges: {
-    'initial': {
-      next: ImitationItemStates.new,
+    initial: {
+      next: ImitationItemStates.new
     },
-    'onSave': {
+    onSave: {
       previous: ImitationItemStates.new,
       next: ImitationItemStates.editing
     }
@@ -78,13 +83,17 @@ export const ImitationItem = new TheThingImitation({
   }
 });
 
-export const RelationshipItemHolder = {
-  role: 'item holder'
-};
+export const RelationshipItemHolder = new Relationship({
+  name: 'ourbox-item-holder',
+  subjectImitation: ImitationItem,
+  objectCollection: User.collection
+});
 
-export const RelationshipItemRequestBorrow = {
-  role: 'request borrow item'
-};
+export const RelationshipItemRequestBorrow = new Relationship({
+  name: 'ourbox-request-borrow-item',
+  subjectImitation: ImitationItem,
+  objectCollection: User.collection
+});
 
 // export class Item extends TheThing {
 //   static forge() {
