@@ -6,10 +6,12 @@ import {
 } from '@ygg/ourbox/test';
 import { SideDrawerPageObjectCypress } from '@ygg/shared/ui/test';
 import { pages as OurboxPages } from '@ygg/ourbox/ui';
+import { AccountWidgetPageObjectCypress } from '@ygg/shared/user/test';
 
 export class SiteNavigator {
   headerPO = new HeaderPageObjectCypress();
   sideDrawerPO = new SideDrawerPageObjectCypress();
+  accountWidgetPO = new AccountWidgetPageObjectCypress();
 
   goto(paths: string[] | string) {
     paths = castArray(paths);
@@ -44,5 +46,10 @@ export class SiteNavigator {
     this.sideDrawerPO.clickLink(OurboxPages.itemWarehouse);
     const itemWarehousePO = new ItemWarehousePageObjectCypress();
     itemWarehousePO.expectVisible();
+  }
+
+  gotoMyBoxes() {
+    this.accountWidgetPO.openUserMenu();
+    this.accountWidgetPO.userMenuPO.clickMenuItem('myBoxes');
   }
 }

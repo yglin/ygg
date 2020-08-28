@@ -44,4 +44,8 @@ export class EmceePageObjectCypress extends PageObject {
     dialogPO.confirm();
     // alertDialogPO.expectClosed();
   }
+
+  cancel(message: string) {
+    this.confirm(message, { doConfirm: false });
+  }
 }

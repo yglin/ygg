@@ -18,11 +18,13 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
   }
 
   getSelectorForItem(item: TheThing): string {
-    return `${this.getSelector()} .item-list .item:contains("${item.name}")`;
+    return `${this.getSelector()} .item:contains("${item.name}")`;
   }
 
   getSelectorForItemInEditing(item: TheThing): string {
-    return `${this.getSelector()} .item-editing-list .item:contains("${item.name}")`;
+    return `${this.getSelector()} .item-editing-list .item:contains("${
+      item.name
+    }")`;
   }
 
   expectName(name: string) {
@@ -50,6 +52,14 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
       ImitationItem
     );
     theThingThumbnailPO.expectValue(item);
+  }
+
+  gotoItem(item: TheThing) {
+    const theThingThumbnailPO = new TheThingThumbnailPageObjectCypress(
+      this.getSelectorForItem(item),
+      ImitationItem
+    );
+    theThingThumbnailPO.gotoView();
   }
 
   expectItemInEditing(item: TheThing) {

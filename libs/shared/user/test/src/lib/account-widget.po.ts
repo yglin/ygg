@@ -37,4 +37,8 @@ export class AccountWidgetPageObjectCypress extends AccountWidgetPageObject {
   clickNotification() {
     cy.get(this.getSelector('buttonNotification')).click();
   }
+
+  openUserMenu() {
+    this.userMenuPO.open();
+  }
 }

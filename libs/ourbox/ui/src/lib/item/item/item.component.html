@@ -1,4 +1,4 @@
-<div class="item" *ngIf="item">
+<div class="ourbox-item" *ngIf="item">
   <!-- <ygg-page-title icon="category">{{ item.name }}</ygg-page-title>
   <br />
   <br /><br /> -->
@@ -6,7 +6,12 @@
     <div the-thing-projection-middle>
       <div *ngIf="showRelatedUsers">
         <div>
-          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+          <div
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            fxLayoutGap="5px"
+            class="holder"
+          >
             <h2>
               目前的保管者：
             </h2>

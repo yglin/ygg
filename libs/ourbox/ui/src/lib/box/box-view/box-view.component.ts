@@ -49,7 +49,8 @@ export class BoxViewComponent implements OnInit, OnDestroy {
       const itemsInEditing$: Observable<any> = this.boxFactory
         .listMyItemsEditingInBox$(this.box.id)
         .pipe(
-          tap(items => (this.itemsInEditing = isEmpty(items) ? [] : items))
+          tap(items => (this.itemsInEditing = isEmpty(items) ? [] : items)),
+          // tap(() => console.log(this.itemsInEditing))
         );
       const members$: Observable<User[]> = this.boxFactory
         .listMembers$(this.box.id)

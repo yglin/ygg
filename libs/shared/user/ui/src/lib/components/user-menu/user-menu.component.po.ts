@@ -6,5 +6,7 @@ export abstract class UserMenuPageObject extends PageObject {
     menuTrigger: '.menu-trigger'
   };
 
+  abstract open(): void;
   abstract logout(): void;
+  abstract clickMenuItem(itemId: string): void;
 }

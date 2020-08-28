@@ -5,7 +5,8 @@ export abstract class YggDialogPageObject extends PageObject {
 
   selectors = {
     main: YggDialogPageObject.selector,
-    buttonConfirm: 'button.confirm'
+    buttonConfirm: 'button.confirm',
+    buttonCancel: 'button.cancel'
   };
 
   abstract expectVisible(): void;

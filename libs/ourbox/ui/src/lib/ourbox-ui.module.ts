@@ -9,8 +9,15 @@ import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
 import { HeaderComponent } from './layout/header/header.component';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { SharedUserUiModule } from '@ygg/shared/user/ui';
-import { SideDrawerService, SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
+import {
+  SharedUserUiModule,
+  UserMenuService,
+  UserMenuItem
+} from '@ygg/shared/user/ui';
+import {
+  SideDrawerService,
+  SharedUiWidgetsModule
+} from '@ygg/shared/ui/widgets';
 import { pages } from './pages';
 import { BoxFactoryService } from './box/box-factory.service';
 import { noop } from 'lodash';
@@ -52,6 +59,12 @@ import { ItemComponent } from './item/item/item.component';
     },
     {
       provide: APP_INITIALIZER,
+      useFactory: configUserMenu,
+      deps: [UserMenuService],
+      multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
       useFactory: initFactoryServices,
       deps: [BoxFactoryService],
       multi: true
@@ -75,4 +88,10 @@ export function initSideMenu(sideDrawer: SideDrawerService) {
 export function initFactoryServices(boxFactory: BoxFactoryService) {
   // Do nothing, just to call constructors of factories
   return noop;
+}
+
+export function configUserMenu(userMenuService: UserMenuService) {
+  return () => {
+    userMenuService.addItem(UserMenuItem.fromPage(pages.myBoxes));
+  };
 }

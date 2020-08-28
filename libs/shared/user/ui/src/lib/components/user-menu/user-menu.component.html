@@ -1,4 +1,4 @@
-<div class="ygg-user-menu" class="user-menu">
+<div class="user-menu">
   <div class="menu-trigger" [matMenuTriggerFor]="userMenu">
     <ng-content></ng-content>
   </div>
@@ -8,6 +8,7 @@
         mat-menu-item
         [routerLink]="menuItem.link"
         [id]="menuItem.id"
+        [attr.menu-item-id]="menuItem.id"
         [matTooltip]="menuItem.label"
       >
         <mat-icon>{{ menuItem.icon }}</mat-icon

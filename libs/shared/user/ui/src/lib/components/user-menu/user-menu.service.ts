@@ -3,6 +3,7 @@ import { UserMenuItem } from './user-menu';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AuthenticateService } from '../../authenticate.service';
+import { Page } from '@ygg/shared/ui/core';
 
 @Injectable({
   providedIn: 'root'

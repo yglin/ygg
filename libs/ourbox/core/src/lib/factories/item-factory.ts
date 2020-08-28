@@ -61,7 +61,7 @@ export class ItemFactory {
       const newItem = await this.theThingFactory.create({
         imitation: ImitationItem
       });
-      this.router.navigate(['ourbox', ImitationItem.routePath, newItem.id]);
+      this.router.navigate([ImitationItem.routePath, newItem.id]);
       return this.theThingFactory.onSave$
         .pipe(
           filter(thing => thing.id === newItem.id),

@@ -65,30 +65,30 @@
         <div *ngFor="let item of items" class="item-list">
           <div class="item">
             <the-thing-thumbnail
-              [theThing]="item"
+              [id]="item.id"
               [imitation]="ImitationItem"
             ></the-thing-thumbnail>
           </div>
         </div>
       </div>
+    </div>
+    <br />
+    <div *ngIf="itemsInEditing?.length > 0">
+      <ygg-title-divider [level]="5">
+        編輯中的寶物
+      </ygg-title-divider>
       <br />
-      <div *ngIf="itemsInEditing?.length > 0">
-        <ygg-title-divider [level]="5">
-          編輯中的寶物
-        </ygg-title-divider>
-        <br />
-        <div
-          fxLayout="row wrap"
-          fxLayoutAlign="space-around start"
-          fxLayoutGap="30px"
-        >
-          <div *ngFor="let item of itemsInEditing" class="item-editing-list">
-            <div class="item">
-              <the-thing-thumbnail
-                [theThing]="item"
-                [imitation]="ImitationItem"
-              ></the-thing-thumbnail>
-            </div>
+      <div
+        fxLayout="row wrap"
+        fxLayoutAlign="space-around start"
+        fxLayoutGap="30px"
+      >
+        <div *ngFor="let item of itemsInEditing" class="item-editing-list">
+          <div class="item">
+            <the-thing-thumbnail
+              [id]="item.id"
+              [imitation]="ImitationItem"
+            ></the-thing-thumbnail>
           </div>
         </div>
       </div>

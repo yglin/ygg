@@ -9,7 +9,8 @@ import { MapSearchComponent } from './map/map-search/map-search.component';
 import {
   ImitationItem,
   ImitationItemTransferStates,
-  ImitationItemTransfer
+  ImitationItemTransfer,
+  ImitationBox
 } from '@ygg/ourbox/core';
 import { BoxCreateComponent } from './box/box-create/box-create.component';
 import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
@@ -46,49 +47,45 @@ export const routes: Routes = [
         component: MyBoxesComponent
       },
       {
-        path: 'boxes',
-        children: [
-          {
-            path: ':id',
-            component: BoxViewComponent,
-            resolve: {
-              box: BoxFactoryService
-            }
-          }
-        ]
-      },
-      {
         path: 'item-warehouse',
         component: ItemWarehouseComponent
-      },
-      // {
-      //   path: 'board',
-      //   component: BoardComponent
-      // },
+      }
+    ]
+  },
+  {
+    path: ImitationBox.routePath,
+    children: [
       {
-        path: ImitationItem.routePath,
-        children: [
-          {
-            path: ':id',
-            component: ItemComponent,
-            resolve: {
-              item$: ItemFactoryService
-            }
-          }
-        ]
-      },
-      // {
-      //   path: ImitationItemTransfer.routePath,
-      //   children: [
-      //     {
-      //       path: ':id',
-      //       component: ItemTransferComponent,
-      //       resolve: {
-      //         itemTransfer$: ItemTransferFactoryService
-      //       }
-      //     }
-      //   ]
-      // }
+        path: ':id',
+        component: BoxViewComponent,
+        resolve: {
+          box: BoxFactoryService
+        }
+      }
+    ]
+  },
+  {
+    path: ImitationItem.routePath,
+    children: [
+      {
+        path: ':id',
+        component: ItemComponent,
+        resolve: {
+          item$: ItemFactoryService
+        }
+      }
     ]
   }
+  // {
+  //   path: ImitationItemTransfer.routePath,
+  //   children: [
+  //     {
+  //       path: ':id',
+  //       component: ItemTransferComponent,
+  //       resolve: {
+  //         itemTransfer$: ItemTransferFactoryService
+  //       }
+  //     }
+  //   ]
+  // }
 ];

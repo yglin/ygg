@@ -130,7 +130,7 @@ export class BoxFactory {
       await this.emcee.info(
         `<h3>寶箱 ${box.name} 已建立</h3><br>${mailsMessage}`
       );
-      this.router.navigate(['/', 'ourbox', 'boxes', box.id]);
+      this.router.navigate(['/', ImitationBox.routePath, box.id]);
       return box;
     } catch (error) {
       this.emcee.error(`開寶箱失敗，錯誤原因：${error.message}`);
@@ -230,7 +230,7 @@ export class BoxFactory {
         throw new Error(`找不到寶箱，id = ${boxId}`);
       }
       await this.addBoxMember(box.id, invitee.id);
-      this.router.navigate(['/', 'ourbox', 'boxes', box.id]);
+      this.router.navigate(['/', ImitationBox.routePath, box.id]);
     } catch (error) {
       this.emcee.error(`加入寶箱成員失敗：錯誤原因：${error.message}`);
       return Promise.reject(error);
@@ -271,6 +271,8 @@ export class BoxFactory {
     const me$ = this.authenticator.currentUser$;
     return combineLatest([this.listItemIdsInBox$(boxId), me$]).pipe(
       switchMap(([itemIds, me]) => {
+        // console.log(itemIds);
+        // console.log(me);
         if (!(me && me.id) || isEmpty(itemIds)) {
           return [];
         } else {
@@ -286,7 +288,8 @@ export class BoxFactory {
             ImitationItem.collection
           );
         }
-      })
+      }),
+      // tap(items => console.log(items))
     );
   }
 
