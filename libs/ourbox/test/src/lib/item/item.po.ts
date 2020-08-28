@@ -10,7 +10,8 @@ import { UserThumbnailPageObjectCypress } from '@ygg/shared/user/test';
 export class ItemPageObjectCypress extends PageObjectCypress {
   selectors = {
     main: '.ourbox-item',
-    holder: '.holder'
+    holder: '.holder',
+    requesterList: '.requester-list'
   };
   theThingPO: TheThingPageObjectCypress;
 
@@ -47,7 +48,15 @@ export class ItemPageObjectCypress extends PageObjectCypress {
   }
 
   expectHolder(holder: User) {
-    const userThumbnailPO = new UserThumbnailPageObjectCypress(this.getSelector('holder'));
+    const userThumbnailPO = new UserThumbnailPageObjectCypress(
+      this.getSelector('holder')
+    );
     userThumbnailPO.expectUser(holder);
+  }
+
+  expectNoRequester() {
+    cy.get(this.getSelector('requesterList'))
+      .find('.requester')
+      .should('have.length', 0);
   }
 }

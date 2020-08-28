@@ -80,13 +80,12 @@ export class ItemFactory {
               { force: true }
             );
           }
-          await this.relationFactory.create({
-            subjectCollection: resultItem.collection,
-            subjectId: resultItem.id,
-            objectCollection: User.collection,
-            objectId: resultItem.ownerId,
-            objectRole: RelationshipItemHolder.role
-          });
+          await this.relationFactory.create(
+            RelationshipItemHolder.createRelationRecord(
+              resultItem.id,
+              resultItem.ownerId
+            )
+          );
           return resultItem;
         });
     } catch (error) {
@@ -122,7 +121,7 @@ export class ItemFactory {
     return this.relationFactory
       .findBySubjectAndRole$(itemId, RelationshipItemHolder.role)
       .pipe(
-        // tap(relations => console.log(relations)),
+        tap(relations => console.log(relations)),
         filter(relations => !isEmpty(relations)),
         switchMap((relations: RelationRecord[]) => {
           return this.userAccessor.get$(relations[0].objectId);

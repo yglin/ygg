@@ -21,6 +21,12 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
     return `${this.getSelector()} .item:contains("${item.name}")`;
   }
 
+  getSelectorForItemAvailable(item: TheThing): string {
+    return `${this.getSelector()} .item-available-list .item:contains("${
+      item.name
+    }")`;
+  }
+
   getSelectorForItemInEditing(item: TheThing): string {
     return `${this.getSelector()} .item-editing-list .item:contains("${
       item.name
@@ -60,6 +66,14 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
       ImitationItem
     );
     theThingThumbnailPO.gotoView();
+  }
+
+  expectItemAvailable(item: TheThing) {
+    const theThingThumbnailPO = new TheThingThumbnailPageObjectCypress(
+      this.getSelectorForItemAvailable(item),
+      ImitationItem
+    );
+    theThingThumbnailPO.expectValue(item);
   }
 
   expectItemInEditing(item: TheThing) {

@@ -55,7 +55,24 @@ describe('Create item in box', () => {
     boxViewPO.gotoItem(testItem);
     itemPO.expectVisible();
     itemPO.expectItem(testItem);
-    // itemPO.expectHolder(testUser);
-    // itemPO.expectNoRequester();
   });
+
+  it('Create an item and make it available as well', () => {
+    const testItem = ImitationItem.forgeTheThing();
+    siteNavigator.gotoMyBoxes();
+    myBoxesPO.expectVisible();
+    myBoxesPO.gotoBox(testBox);
+    boxViewPO.expectVisible();
+    boxViewPO.gotoCreateItem();
+    itemPO.expectVisible();
+    itemPO.createItem(testItem, { makeAvailable: true });
+    boxViewPO.expectVisible();
+    boxViewPO.expectItemAvailable(testItem);
+    boxViewPO.gotoItem(testItem);
+    itemPO.expectVisible();
+    itemPO.expectItem(testItem);
+    itemPO.expectHolder(testUser);
+    itemPO.expectNoRequester();    
+  });
+  
 });
