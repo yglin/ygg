@@ -98,9 +98,9 @@ export class ItemComponent implements OnInit {
     }
   }
 
-  async askForIt() {
-    this.itemFactory.requestBorrowItem(this.item.id);
-  }
+  // async askForIt() {
+  //   this.itemFactory.requestBorrowItem(this.item.id);
+  // }
 
   isMe(userId: string): boolean {
     return this.authUiService.isMe(userId);

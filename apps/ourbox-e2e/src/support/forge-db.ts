@@ -4,7 +4,7 @@ import {
   RelationshipBoxItem,
   RelationshipBoxMember,
   RelationshipItemHolder,
-  RelationshipItemRequestBorrow
+  RelationshipItemRequester
 } from '@ygg/ourbox/core';
 import { theMockDatabase } from '@ygg/shared/test/cypress';
 import { User } from '@ygg/shared/user/core';
@@ -130,7 +130,7 @@ function forgeItems(
       const requesters = sampleUsers.slice(1);
       if (!isEmpty(requesters)) {
         for (const requester of requesters) {
-          const requestRelation = RelationshipItemRequestBorrow.createRelationRecord(
+          const requestRelation = RelationshipItemRequester.createRelationRecord(
             item.id,
             requester.id
           );

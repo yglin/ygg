@@ -14,7 +14,7 @@ import {
   ItemFilter,
   RelationshipBoxItem,
   RelationshipItemHolder,
-  RelationshipItemRequestBorrow,
+  RelationshipItemRequester,
   ImitationItemCells
 } from '../models';
 import { take, filter, switchMap, tap, catchError, map } from 'rxjs/operators';
@@ -47,6 +47,14 @@ export class ItemFactory {
         switch (actionInfo.action.id) {
           case ImitationItem.actions['publish-available'].id:
             this.publishAvailable(actionInfo.theThing);
+            break;
+
+          case ImitationItem.actions['request'].id:
+            this.requestBorrowItem(actionInfo.theThing.id);
+            break;
+
+          case ImitationItem.actions['cancel-request'].id:
+            this.cancelRequest(actionInfo.theThing.id);
             break;
 
           default:
@@ -171,7 +179,7 @@ export class ItemFactory {
           return this.relationFactory.hasRelation(
             itemId,
             _userId,
-            RelationshipItemRequestBorrow.role
+            RelationshipItemRequester.role
           );
         } else {
           return of(false);
@@ -208,7 +216,7 @@ export class ItemFactory {
           subjectId: item.id,
           objectCollection: User.collection,
           objectId: user.id,
-          objectRole: RelationshipItemRequestBorrow.role
+          objectRole: RelationshipItemRequester.role
         });
         this.emcee.info(`已送出索取 ${item.name} 的請求`);
       }
@@ -223,7 +231,7 @@ export class ItemFactory {
 
   getItemRequestBorrowers$(itemId: string): Observable<User[]> {
     return this.relationFactory
-      .findBySubjectAndRole$(itemId, RelationshipItemRequestBorrow.role)
+      .findBySubjectAndRole$(itemId, RelationshipItemRequester.role)
       .pipe(
         switchMap((relations: RelationRecord[]) => {
           // Ordered by createAt
@@ -255,7 +263,7 @@ export class ItemFactory {
       if (confirm) {
         await this.relationFactory.delete(
           item.id,
-          RelationshipItemRequestBorrow.role,
+          RelationshipItemRequester.role,
           user.id
         );
         this.emcee.info(`已取消索取 ${item.name}`);
@@ -279,7 +287,7 @@ export class ItemFactory {
       });
       await this.relationFactory.delete(
         item.id,
-        RelationshipItemRequestBorrow.role,
+        RelationshipItemRequester.role,
         receiver.id
       );
       await this.relationFactory.replaceObject(

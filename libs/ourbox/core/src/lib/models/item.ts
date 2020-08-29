@@ -69,17 +69,6 @@ export const ImitationItem = new TheThingImitation({
       previous: ImitationItemStates.new,
       next: ImitationItemStates.editing
     }
-  },
-  actions: {
-    'publish-available': {
-      id: 'ourbox-item-publish-available',
-      icon: 'card_giftcard',
-      tooltip: '開放寶物讓人索取',
-      permissions: [
-        `state: ${ImitationItemStates.editing.name}`,
-        'requireOwner'
-      ]
-    }
   }
 });
 
@@ -89,11 +78,40 @@ export const RelationshipItemHolder = new Relationship({
   objectCollection: User.collection
 });
 
-export const RelationshipItemRequestBorrow = new Relationship({
+export const RelationshipItemRequester = new Relationship({
   name: 'ourbox-request-borrow-item',
   subjectImitation: ImitationItem,
   objectCollection: User.collection
 });
+
+ImitationItem.actions = {
+  'publish-available': {
+    id: 'ourbox-item-publish-available',
+    icon: 'card_giftcard',
+    tooltip: '開放寶物讓人索取',
+    permissions: [`state: ${ImitationItemStates.editing.name}`, 'requireOwner']
+  },
+  request: {
+    id: 'ourbox-item-request',
+    icon: 'loyalty',
+    tooltip: '我要借這個',
+    permissions: [
+      `state: ${ImitationItemStates.available.name}`,
+      `role:!${RelationshipItemHolder.name}`,
+      `role:!${RelationshipItemRequester.name}`
+    ]
+  },
+  'cancel-request': {
+    id: 'ourbox-cancel-request',
+    icon: 'backspace',
+    tooltip: '取消索取需求',
+    permissions: [
+      `state: ${ImitationItemStates.available.name}`,
+      `role:!${RelationshipItemHolder.name}`,
+      `role:${RelationshipItemRequester.name}`
+    ]
+  }
+};
 
 // export class Item extends TheThing {
 //   static forge() {

@@ -585,15 +585,20 @@ export class TheThingFactoryService extends TheThingFactory
             // permission indicate a specific state
             if (typeof permission === 'string') {
               if (permission.startsWith('role')) {
-                const role = permission.split(':')[1].trim();
+                let role = permission.split(':')[1].trim();
                 // console.log(
                 //   `Has relation? ${theThing.id}, ${user.id}, ${role}`
                 // );
+                let exclude = false;
+                if (role.startsWith('!')) {
+                  role = role.substring(1);
+                  exclude = true;
+                }
                 return this.relaitonFactory.hasRelation$(
                   theThing.id,
                   user.id,
                   role
-                );
+                ).pipe(map(has => exclude ? !has : has));
               } else if (permission.startsWith('state')) {
                 const states = permission.split(':')[1].trim();
                 const permittedStates: string[] = states

@@ -23,6 +23,10 @@ export class ItemPageObjectCypress extends PageObjectCypress {
     );
   }
 
+  getSelectorForRequesterAt(place: number): string {
+    return `${this.getSelector('requesterList')} .requester[place="${place}"]`;
+  }
+
   createItem(
     item: TheThing,
     options: {
@@ -57,6 +61,19 @@ export class ItemPageObjectCypress extends PageObjectCypress {
   expectNoRequester() {
     cy.get(this.getSelector('requesterList'))
       .find('.requester')
+      .should('have.length', 0);
+  }
+
+  expectRequester(requester: User, place: number) {
+    const userThumbnailPO = new UserThumbnailPageObjectCypress(
+      this.getSelectorForRequesterAt(place)
+    );
+    userThumbnailPO.expectUser(requester);
+  }
+
+  expectNotRequester(requester: User) {
+    cy.get(this.getSelector('requesterList'))
+      .find(`.requester:contains("${requester.name}")`)
       .should('have.length', 0);
   }
 }

@@ -56,12 +56,16 @@
                 <mat-icon>connect_without_contact</mat-icon>
               </button>
             </div>
-            <div *ngFor="let userId of standbyList" class="stand-by requester">
+            <div
+              *ngFor="let userId of standbyList; let idx = index"
+              class="stand-by requester"
+              [attr.place]="idx"
+            >
               <ygg-user-thumbnail
                 [id]="userId"
                 [showName]="false"
               ></ygg-user-thumbnail>
-              <div class="cancel-request" *ngIf="isMe(userId)">
+              <!-- <div class="cancel-request" *ngIf="isMe(userId)">
                 <button
                   mat-mini-fab
                   matTooltip="取消等候"
@@ -69,12 +73,7 @@
                 >
                   <mat-icon>cancel</mat-icon>
                 </button>
-              </div>
-            </div>
-            <div *ngIf="!(amHolder || hasRequested)">
-              <button mat-fab matTooltip="我要借這個" (click)="askForIt()">
-                <mat-icon>loyalty</mat-icon>
-              </button>
+              </div> -->
             </div>
           </div>
         </div>
