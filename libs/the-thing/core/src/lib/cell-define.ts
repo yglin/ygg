@@ -72,13 +72,14 @@ export class TheThingCellDefine {
   // }
 }
 
-/* export type CommonCellIds =
+export type CommonCellIds =
   | 'album'
   | 'datetime'
   | 'location'
   | 'introduction'
   | 'contact'
-  | 'miscNotes'; */
+  | 'miscNotes';
+
 export const CommonCellDefines = mapValues(
   {
     album: {

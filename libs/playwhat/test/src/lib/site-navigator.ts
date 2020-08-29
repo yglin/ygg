@@ -10,9 +10,7 @@ export class SiteNavigator {
     targetPage?: PageObjectCypress
   ): Cypress.Chainable<any> {
     if (!targetPage) {
-      targetPage = {
-        expectVisible: () => cy.get('body').should('exist')
-      };
+      targetPage = new PageObjectCypress('body');
     }
     const fullPathName = `/${path.join('/')}`;
     cy.log(`Go to ${fullPathName}`);

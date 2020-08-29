@@ -1,7 +1,4 @@
-import {
-  PurchaseAction,
-  ShoppingCellDefines
-} from '@ygg/shopping/core';
+import { PurchaseAction, ShoppingCellDefines } from '@ygg/shopping/core';
 import {
   Relationship,
   TheThing,
@@ -11,8 +8,11 @@ import {
 import { extend, values } from 'lodash';
 import { ImitationEquipment } from './equipment';
 import { CellDefines, CellIds } from './cell-defines';
+import { Album } from '@ygg/shared/omni-types/core';
 
-export const ImitationPlayCellDefines: { [key in CellIds]?: TheThingCellDefine } = {
+export const ImitationPlayCellDefines: {
+  [key in CellIds]?: TheThingCellDefine;
+} = {
   album: CellDefines.album.extend({
     userInput: 'required'
   }),
@@ -74,6 +74,15 @@ export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON
     }
   }
 );
+
+// ImitationPlay.pipes[`cell.${ImitationPlayCellDefines.album.id}`] = (
+//   theThing: TheThing
+// ) => {
+//   const album: Album = theThing.getCellValue(ImitationPlayCellDefines.album.id);
+//   if (album && album.cover) {
+//     theThing.image = album.cover.src;
+//   }
+// };
 
 const dataTableColumns = {};
 dataTableColumns[ImitationPlayCellDefines.introduction.id] = {

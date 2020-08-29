@@ -26,13 +26,13 @@ export class Notification implements Entity {
       inviterId: 'yggy',
       inviteeId: 'gyyg',
       email: 'ygg@ygmail.com',
-      mailSubject: sample([
+      mailSubject: `${sample([
         'Penis enlargement secret',
         'Beautiful girl wanna sex',
         'Stay home and earning $1000/month',
         'Click on link and meet local milf',
         'You have earned our big prize'
-      ]),
+      ])}_${Date.now()}`,
       mailContent: '<pre>This is a forged mail, nothing matters</pre>',
       confirmMessage:
         "You've received a forged notification. Something is wrong",
