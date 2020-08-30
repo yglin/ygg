@@ -16,9 +16,10 @@ import {
   TheThingCell,
   TheThingImitation,
   TheThingRelation,
-  TheThingAction
+  TheThingAction,
+  TheThingDisplay
 } from '@ygg/the-thing/core';
-import { isEmpty, values, remove, extend, find } from 'lodash';
+import { isEmpty, values, remove, extend, find, defaults } from 'lodash';
 import { Observable, Subscription, merge, combineLatest } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { TheThingImitationViewInterface } from '..';
@@ -44,6 +45,7 @@ export class TheThingComponent implements OnInit, OnDestroy {
   @Input() imitation: TheThingImitation;
   @Input() theThing$: Observable<TheThing>;
   @Input() showOwner = false;
+  @Input() display: TheThingDisplay;
   subscriptions: Subscription[] = [];
   // theThing$: Observable<TheThing>;
   focusSubscription: Subscription;
@@ -86,8 +88,15 @@ export class TheThingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.display = defaults(this.display, {
+      showCells: true,
+      showRelations: true
+    });
     if (this.id) {
-      this.resetFocus(this.theThingFactory.load$(this.id));
+      const collection = !!this.imitation
+        ? this.imitation.collection
+        : TheThing.collection;
+      this.resetFocus(this.theThingFactory.load$(this.id, collection));
     }
     if (!!this.theThing$) {
       this.resetFocus(this.theThing$);

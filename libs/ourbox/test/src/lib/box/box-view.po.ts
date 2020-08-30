@@ -2,16 +2,29 @@ import { PageObjectCypress } from '@ygg/shared/test/cypress';
 import { TheThing } from '@ygg/the-thing/core';
 import { User } from '@ygg/shared/user/core';
 import { UserThumbnailPageObjectCypress } from '@ygg/shared/user/test';
-import { TheThingThumbnailPageObjectCypress } from '@ygg/the-thing/test';
-import { ImitationItem } from '@ygg/ourbox/core';
+import {
+  TheThingThumbnailPageObjectCypress,
+  TheThingPageObjectCypress
+} from '@ygg/the-thing/test';
+import { ImitationItem, ImitationBox } from '@ygg/ourbox/core';
 
 export class BoxViewPageObjectCypress extends PageObjectCypress {
+  theThingPO: TheThingPageObjectCypress;
+
   selectors = {
     main: '.box-view',
     name: '.name',
     image: '.box-image img',
     buttonAddItem: 'button.add-item'
   };
+
+  constructor(parentSelector?: string) {
+    super(parentSelector);
+    this.theThingPO = new TheThingPageObjectCypress(
+      this.getSelector(),
+      ImitationBox
+    );
+  }
 
   getSelectorForMember(user: User): string {
     return `${this.getSelector()} .member-list [member-id="${user.id}"]`;
@@ -34,7 +47,7 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
   }
 
   expectName(name: string) {
-    cy.get(this.getSelector('name')).should('include.text', name);
+    this.theThingPO.expectName(name);
   }
 
   expectValue(box: TheThing) {
@@ -49,7 +62,7 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
   }
 
   expectImage(image: string) {
-    cy.get(this.getSelector('image')).should('have.attr', 'src', image);
+    this.theThingPO.expectImage(image);
   }
 
   expectItem(item: TheThing) {

@@ -11,7 +11,11 @@
         <div class="main-image">
           <img [src]="theThing.image" />
           <div class="edit" *ngIf="!readonly">
-            <button mat-mini-fab class="open-image-uploader" (click)="changeImage()">
+            <button
+              mat-mini-fab
+              class="open-image-uploader"
+              (click)="changeImage()"
+            >
               <mat-icon>edit</mat-icon>
             </button>
           </div>
@@ -88,58 +92,60 @@
   <div class="projection-middle">
     <ng-content select="[the-thing-projection-middle]"></ng-content>
   </div>
-  <div [formGroup]="formGroupCells" class="cells">
-    <div *ngFor="let cellId of orderedCellIds">
-      <div *ngIf="formGroupCells.get(cellId) as cellControl">
-        <div [attr.cell-id]="cellId" [hidden]="!isCellControlShown(cellId)">
-          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-            <ygg-title-divider [level]="4">{{
-              getCellLabel(cellId)
-            }}</ygg-title-divider>
-            <div *ngIf="!isCellRequired(cellId) && !readonly">
-              <button
-                type="button"
-                class="delete edit"
-                mat-mini-fab
-                [matTooltip]="'移除資料欄位 ' + cellId"
-                (click)="deleteCell(cellId)"
-              >
-                <mat-icon>delete</mat-icon>
-              </button>
+  <div *ngIf="display.showCells">
+    <div [formGroup]="formGroupCells" class="cells">
+      <div *ngFor="let cellId of orderedCellIds">
+        <div *ngIf="formGroupCells.get(cellId) as cellControl">
+          <div [attr.cell-id]="cellId" [hidden]="!isCellControlShown(cellId)">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+              <ygg-title-divider [level]="4">{{
+                getCellLabel(cellId)
+              }}</ygg-title-divider>
+              <div *ngIf="!isCellRequired(cellId) && !readonly">
+                <button
+                  type="button"
+                  class="delete edit"
+                  mat-mini-fab
+                  [matTooltip]="'移除資料欄位 ' + cellId"
+                  (click)="deleteCell(cellId)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
             </div>
+            <the-thing-cell
+              [formControlName]="cellId"
+              [readonly]="readonly"
+              [required]="isCellRequired(cellId)"
+            ></the-thing-cell>
           </div>
-          <the-thing-cell
-            [formControlName]="cellId"
-            [readonly]="readonly"
-            [required]="isCellRequired(cellId)"
-          ></the-thing-cell>
         </div>
       </div>
     </div>
-  </div>
-  <br /><br />
-  <div
-    fxLayout="row"
-    fxLayoutAlign="start center"
-    fxLayoutGap="10px"
-    *ngIf="!readonly && isThingValid()"
-  >
-    <h4>
-      增加其他資料
-    </h4>
-    <div>
-      <button
-        type="button"
-        mat-mini-fab
-        class="add-cell edit"
-        (click)="addCell()"
-      >
-        <mat-icon>add</mat-icon>
-      </button>
+    <br /><br />
+    <div
+      fxLayout="row"
+      fxLayoutAlign="start center"
+      fxLayoutGap="10px"
+      *ngIf="!readonly && isThingValid()"
+    >
+      <h4>
+        增加其他資料
+      </h4>
+      <div>
+        <button
+          type="button"
+          mat-mini-fab
+          class="add-cell edit"
+          (click)="addCell()"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
     </div>
+    <br /><br />
   </div>
-  <br /><br />
-  <div *ngIf="isThingValid()">
+  <div *ngIf="isThingValid() && display.showRelations">
     <div *ngFor="let relationshipMap of imitation.relationships | keyvalue">
       <div *ngIf="relationshipMap.value as relationship">
         <!-- <pre>{{ relationsMap[relationship.name] | json }}</pre> -->

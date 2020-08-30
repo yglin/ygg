@@ -4,8 +4,10 @@ import {
   BoxViewPageObjectCypress,
   ItemWarehousePageObjectCypress
 } from '@ygg/ourbox/test';
-import { theMockDatabase, getCurrentUser } from '@ygg/shared/test/cypress';
-import { login } from '@ygg/shared/test/cypress';
+import {
+  theMockDatabase,
+  logout as logoutBackground
+} from '@ygg/shared/test/cypress';
 import {
   waitForLogin,
   loginTestUser,
@@ -53,17 +55,19 @@ describe('Creation of box', () => {
   testItem02.setState(ImitationItem.stateName, ImitationItem.states.available);
 
   before(function() {
-    theMockDatabase.insert(`${User.collection}/${testUser.id}`, testUser);
-    theMockDatabase.insert(`${User.collection}/${otherUser.id}`, otherUser);
-    theMockDatabase.insert(
-      `${ImitationItem.collection}/${testItem01.id}`,
-      testItem01
-    );
-    theMockDatabase.insert(
-      `${ImitationItem.collection}/${testItem02.id}`,
-      testItem02
-    );
-    cy.visit('/');
+    logoutBackground().then(() => {
+      theMockDatabase.insert(`${User.collection}/${testUser.id}`, testUser);
+      theMockDatabase.insert(`${User.collection}/${otherUser.id}`, otherUser);
+      theMockDatabase.insert(
+        `${ImitationItem.collection}/${testItem01.id}`,
+        testItem01
+      );
+      theMockDatabase.insert(
+        `${ImitationItem.collection}/${testItem02.id}`,
+        testItem02
+      );
+      cy.visit('/');
+    });
   });
 
   after(function() {

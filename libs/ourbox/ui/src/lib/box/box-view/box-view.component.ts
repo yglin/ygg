@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ImitationItem, ImitationBox } from '@ygg/ourbox/core';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { NotificationFactoryService } from '@ygg/shared/user/ui';
-import { TheThing } from '@ygg/the-thing/core';
+import { TheThing, TheThingDisplay } from '@ygg/the-thing/core';
 import { get, isEmpty, range } from 'lodash';
 import { Observable, Subscription, merge } from 'rxjs';
 import { BoxFactoryService } from '../box-factory.service';
@@ -32,6 +32,10 @@ export class BoxViewComponent implements OnInit, OnDestroy {
   ImitationItem = ImitationItem;
   isBoxEmpty = true;
   members: User[] = [];
+  theThingDisplay: TheThingDisplay = {
+    showCells: false,
+    showRelations: false
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -41,15 +45,15 @@ export class BoxViewComponent implements OnInit, OnDestroy {
     private dialog: YggDialogService
   ) {
     this.box = get(this.route.snapshot.data, 'box', null);
+    console.log(this.box);
     if (this.box) {
-      // console.log(this.box);
       const items$: Observable<any> = this.boxFactory
         .listItemsAvailableInBox$(this.box.id)
         .pipe(tap(items => (this.items = isEmpty(items) ? [] : items)));
       const itemsInEditing$: Observable<any> = this.boxFactory
         .listMyItemsEditingInBox$(this.box.id)
         .pipe(
-          tap(items => (this.itemsInEditing = isEmpty(items) ? [] : items)),
+          tap(items => (this.itemsInEditing = isEmpty(items) ? [] : items))
           // tap(() => console.log(this.itemsInEditing))
         );
       const members$: Observable<User[]> = this.boxFactory

@@ -16,3 +16,4 @@ export * from './lib/the-thing-accessor';
 export * from './lib/relation-factory';
 export * from './lib/relation-accessor';
 export * from './lib/factory';
+export * from './lib/ui-config';
