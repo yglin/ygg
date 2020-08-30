@@ -25,6 +25,10 @@ import { TheThingImitationViewInterface } from '..';
 import { CellCreatorComponent, validateCellRequired } from '../../cell';
 import { TheThingFactoryService } from '../../the-thing-factory.service';
 import { OmniTypes } from '@ygg/shared/omni-types/core';
+import {
+  ImageUploaderComponent,
+  ImageUploaderService
+} from '@ygg/shared/omni-types/ui';
 
 interface ActionButton extends TheThingAction {
   granted: boolean;
@@ -62,10 +66,12 @@ export class TheThingComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private authorizeService: AuthorizeService,
     private dialog: YggDialogService,
-    private emcee: EmceeService
+    private emcee: EmceeService,
+    private imageUploaderService: ImageUploaderService
   ) {
     this.formGroup = this.formBuilder.group({
-      name: ['', Validators.required]
+      name: ['', Validators.required],
+      image: ''
     });
     this.formGroup.valueChanges.subscribe(value =>
       this.theThingFactory.setMeta(this.theThing, value)
@@ -214,6 +220,13 @@ export class TheThingComponent implements OnInit, OnDestroy {
     }
     if (this.actions$Subscription) {
       this.actions$Subscription.unsubscribe();
+    }
+  }
+
+  async changeImage() {
+    const images = await this.imageUploaderService.uploadImages();
+    if (!isEmpty(images)) {
+      this.formGroup.get('image').setValue(images[0].src);
     }
   }
 

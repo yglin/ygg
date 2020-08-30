@@ -9,12 +9,14 @@ import {
   Album,
   BusinessHours,
   Location,
-  TimeLength
+  TimeLength,
+  Image
 } from '@ygg/shared/omni-types/core';
 import { random } from 'lodash';
 
 export const MinimumPlay = ImitationPlay.createTheThing().fromJSON({
   name: `溜鳥鳥體驗(最少需求資料欄位)_${Date.now()}`,
+  image: Image.forge().src,
   cells: [
     ImitationPlayCellDefines.album.createCell(Album.forge()),
     ImitationPlayCellDefines.introduction.createCell(
@@ -39,6 +41,7 @@ PlayFull.upsertCells([
 export const SamplePlays = [
   {
     name: `巷弄騎乘派對_${Date.now()}`,
+    image: Image.forge().src,
     tags: ['體驗', 'play', '深度遊趣', '省府日常散策', '協力車'],
     cells: [
       ImitationPlayCellDefines.subtitle.createCell('走尋巷弄的故事'),
@@ -56,6 +59,7 @@ export const SamplePlays = [
   },
   {
     name: `省府苔球風景體驗_${Date.now()}`,
+    image: Image.forge().src,
     tags: ['體驗', 'play', '深度遊趣', '省府日常散策', '苔球'],
     cells: [
       ImitationPlayCellDefines.subtitle.createCell('帶走中興的一片記憶'),
@@ -73,6 +77,7 @@ export const SamplePlays = [
   },
   {
     name: `職人手沖咖啡評鑑體驗_${Date.now()}`,
+    image: Image.forge().src,
     tags: ['體驗', 'play', '深度遊趣', '省府日常散策', '咖啡'],
     cells: [
       ImitationPlayCellDefines.subtitle.createCell('品味中興職人咖啡'),
@@ -90,6 +95,7 @@ export const SamplePlays = [
   },
   {
     name: `省府植物拓印體驗_${Date.now()}`,
+    image: Image.forge().src,
     tags: ['體驗', 'play', '深度遊趣', '省府日常散策', '拓印'],
     cells: [
       ImitationPlayCellDefines.subtitle.createCell('封存美好記憶'),
@@ -108,6 +114,7 @@ export const SamplePlays = [
   {
     name: `省府草地野餐(建議秋冬時節)_${Date.now()}`,
     // tags: ['體驗', 'play', '深度遊趣', '省府日常散策', '野餐'],
+    image: Image.forge().src,
     cells: [
       ImitationPlayCellDefines.subtitle.createCell('草地野餐派對'),
       ImitationPlayCellDefines.album.createCell(Album.forge()),
@@ -127,6 +134,7 @@ export const SamplePlays = [
 export const SampleEquipments = [
   {
     name: `四人協力車_${Date.now()}`,
+    image: Image.forge().src,
     tags: ['addition', '設備'],
     cells: [
       ImitationEquipmentCellDefines.price.createCell(100),
@@ -137,6 +145,7 @@ export const SampleEquipments = [
   },
   {
     name: `二人協力車_${Date.now()}`,
+    image: Image.forge().src,
     tags: ['addition', '設備'],
     cells: [
       ImitationEquipmentCellDefines.price.createCell(60),

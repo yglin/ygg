@@ -4,6 +4,7 @@ import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { ImageUploaderComponent } from '../types/image/image-uploader/image-uploader.component';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { defaults } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +22,11 @@ export class ImageUploaderService extends ImageUploader implements OnDestroy {
     }
   }
 
-  async uploadImages(): Promise<Image[]> {
+  async uploadImages(options: { multi?: boolean } = {}): Promise<Image[]> {
+    options = defaults(options, { multi: true });
     const dialogRef = this.dialog.open(ImageUploaderComponent, {
-      title: '圖片上傳'
+      title: '圖片上傳',
+      data: options
     });
     return dialogRef
       .afterClosed()

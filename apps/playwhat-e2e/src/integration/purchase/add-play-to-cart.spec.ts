@@ -72,6 +72,7 @@ describe('Purchase plays and add to cart', () => {
     cy.wrap(plays).each((play: any) => {
       siteNavigator.goto();
       const playThumbnailPO = imageThumbnailListPO.getItemPageObject(play);
+      playThumbnailPO.expectVisible();
       playThumbnailPO.clickLink();
       playPO.expectVisible();
       playPO.runAction(PurchaseAction);

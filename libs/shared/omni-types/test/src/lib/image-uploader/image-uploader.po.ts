@@ -16,13 +16,17 @@ export class ImageUploaderPageObjectCypress extends ImageUploaderPageObject {
     cy.get(this.getSelector('buttonSubmit')).should('not.be.visible');
   }
 
+  addImageUrl(imageUrl: string) {
+    cy.get(this.getSelector('inputImageUrl'))
+      .clear({ force: true })
+      .invoke('val', imageUrl)
+      .trigger('input');
+    cy.get(this.getSelector('buttonAddImageUrl'), { timeout: 10000 }).click();
+  }
+
   addImagesByUrl(images: Image[]) {
     cy.wrap(images).each((image: Image) => {
-      cy.get(this.getSelector('inputImageUrl'))
-        .clear({ force: true })
-        .invoke('val', image.src).trigger('input');
-        // .type(image.src);
-      cy.get(this.getSelector('buttonAddImageUrl'), { timeout: 10000 }).click();
+      this.addImageUrl(image.src);
     });
   }
 

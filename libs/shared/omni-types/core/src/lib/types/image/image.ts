@@ -1,4 +1,4 @@
-import { sample } from 'lodash';
+import { sample, last } from 'lodash';
 import { SerializableJSON } from '@ygg/shared/infra/core';
 
 export enum ImageType {
@@ -16,8 +16,7 @@ export class Image implements SerializableJSON {
   type: ImageType;
 
   static isSupportedImageExt(url: string): boolean{
-    const urlTokens = url.split(".");
-    const urlExt = urlTokens[urlTokens.length - 1].toLowerCase();
+    const urlExt = last(url.split("."))
     if (Image.SUPPORTED_IMAGE_EXT.indexOf(urlExt) >= 0) {
       return true;
     } else {

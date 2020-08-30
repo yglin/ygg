@@ -15,7 +15,9 @@ export abstract class TheThingPageObject extends PageObject {
     name: '.name',
     buttonAddCell: 'button.add-cell',
     buttonSave: 'button.save',
-    state: '.state'
+    state: '.state',
+    buttonOpenImageUploader: '.main-image .edit button.open-image-uploader',
+    mainImage: '.main-image img'
   };
   imitation: TheThingImitation;
 

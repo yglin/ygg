@@ -1,4 +1,7 @@
-import { OmniTypeViewControlPageObjectCypress } from '@ygg/shared/omni-types/test';
+import {
+  OmniTypeViewControlPageObjectCypress,
+  ImageUploaderPageObjectCypress
+} from '@ygg/shared/omni-types/test';
 import {
   EmceePageObjectCypress,
   ImageThumbnailListPageObjectCypress,
@@ -19,6 +22,7 @@ import {
 import { TheThingPageObject } from '@ygg/the-thing/ui';
 import { values } from 'lodash';
 import { TheThingStatePageObjectCypress } from './the-thing-state.po';
+import isURL from 'validator/es/lib/isURL';
 
 export class TheThingPageObjectCypress extends TheThingPageObject {
   constructor(parentSelector: string, imitation: TheThingImitation) {
@@ -37,6 +41,7 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
 
   expectValue(theThing: TheThing): void {
     this.expectName(theThing.name);
+    this.expectImage(theThing.image);
     cy.wrap(values(theThing.cells)).each((cell: TheThingCell) => {
       cy.get(this.getSelectorForCell(cell))
         .scrollIntoView()
@@ -55,7 +60,22 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
     omniTypeViewControlPO.setValue(cell.type, cell.value);
   }
 
+  setImage(imageUrl: string) {
+    cy.get(this.getSelector('buttonOpenImageUploader')).click();
+    const imageUploaderPO = new ImageUploaderPageObjectCypress();
+    imageUploaderPO.addImageUrl(imageUrl);
+    imageUploaderPO.submit();
+    this.expectImage(imageUrl);
+  }
+
+  expectImage(imageUrl: string) {
+    cy.get(this.getSelector('mainImage')).should('have.attr', 'src', imageUrl);
+  }
+
   setValue(theThing: TheThing) {
+    if (isURL(theThing.image)) {
+      this.setImage(theThing.image);
+    }
     this.setName(theThing.name);
 
     const orderedRequiredCells = theThing.getCellsByNames(

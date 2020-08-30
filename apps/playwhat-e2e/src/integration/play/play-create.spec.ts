@@ -98,6 +98,10 @@ describe('Create play', () => {
   });
 
   it('Leave creation and back again should keep inputed data', () => {
+    playPO.setValue(MinimumPlay);
+    siteNavigator.goto(['plays', 'my'], myPlayListPO);
+    myPlayListPO.clickCreate();
+    playPO.expectVisible();
     playPO.expectValue(MinimumPlay);
   });
 

@@ -12,29 +12,25 @@ import { Image } from '@ygg/shared/omni-types/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { FormControl, Validators } from '@angular/forms';
+import isURL from 'validator/es/lib/isURL';
 // import { distinctUntilChanged, filter } from 'rxjs/operators';
 
 function validateImageUrl(control: FormControl) {
   const url = control.value;
   let result = null;
-  try {
-    const test = new URL(url);
-    if (!Image.isSupportedImageExt(url)) {
-      result = {
-        validateImageUrl: {
-          message: `${url} is not supported image extension`
-        }
-      };
-    }
-  } catch (error) {
+  if (!isURL(url)) {
     result = {
       validateImageUrl: {
         message: `${url} is not valid url`
       }
     };
+  } else if (!Image.isSupportedImageExt(url)) {
+    result = {
+      validateImageUrl: {
+        message: `${url} is not supported image extension`
+      }
+    };
   }
-  // console.log(`url = ${url}`);
-  // console.log(result);
 
   return result;
 }
@@ -60,8 +56,7 @@ export class ImageUploaderComponent implements OnDestroy {
     private fireStorageService: FireStorageService,
     private logService: LogService,
     private dialogRef: MatDialogRef<ImageUploaderComponent>
-  ) {
-  }
+  ) {}
 
   ngOnDestroy() {
     for (const subscription of this.subscriptions) {

@@ -8,6 +8,14 @@
   >
     <div class="flex-wrap-next">
       <div>
+        <div class="main-image">
+          <img [src]="theThing.image" />
+          <div class="edit" *ngIf="!readonly">
+            <button mat-mini-fab class="open-image-uploader" (click)="changeImage()">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </div>
         <ygg-omni-type-view-control
           class="name"
           formControlName="name"
@@ -83,12 +91,11 @@
   <div [formGroup]="formGroupCells" class="cells">
     <div *ngFor="let cellId of orderedCellIds">
       <div *ngIf="formGroupCells.get(cellId) as cellControl">
-        <div
-          [attr.cell-id]="cellId"
-          [hidden]="!isCellControlShown(cellId)"
-        >
+        <div [attr.cell-id]="cellId" [hidden]="!isCellControlShown(cellId)">
           <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-            <ygg-title-divider [level]="4">{{ getCellLabel(cellId) }}</ygg-title-divider>
+            <ygg-title-divider [level]="4">{{
+              getCellLabel(cellId)
+            }}</ygg-title-divider>
             <div *ngIf="!isCellRequired(cellId) && !readonly">
               <button
                 type="button"
