@@ -50,6 +50,10 @@ export abstract class ItemTransferFactory {
     this.subscription.add(
       this.theThingFactory.runAction$.subscribe(actionInfo => {
         switch (actionInfo.action.id) {
+          case ImitationItem.actions['transfer-next'].id:
+            this.giveAway(actionInfo.theThing.id);
+            break;
+
           case ImitationItemTransfer.actions['send-request'].id:
             this.sendRequest(actionInfo.theThing);
             break;
@@ -78,7 +82,7 @@ export abstract class ItemTransferFactory {
       const newItemTrnasfer = await this.theThingFactory.create({
         imitation: ImitationItemTransfer
       });
-      newItemTrnasfer.name = `${giver.name} 交付 ${item.name} 給 ${receiver.name} 的交付記錄`;
+      newItemTrnasfer.name = `${giver.name} 交付 ${item.name} 給 ${receiver.name} 的交付任務`;
       await this.relationFactory.create({
         subjectCollection: ImitationItemTransfer.collection,
         subjectId: newItemTrnasfer.id,
@@ -100,8 +104,8 @@ export abstract class ItemTransferFactory {
         objectId: receiver.id,
         objectRole: RelationshipItemTransferReceiver.role
       });
+      console.log(`New ItemTransfer id = ${newItemTrnasfer.id}`);
       this.router.navigate([
-        '/',
         ImitationItemTransfer.routePath,
         newItemTrnasfer.id
       ]);
@@ -150,6 +154,10 @@ export abstract class ItemTransferFactory {
         throw new Error(`目前沒有人正在等候索取 ${item.name}`);
       }
       const receiver: User = first(requestBorrowers);
+      const confirm = await this.emcee.confirm(`<h3>要將 ${item.name} 交付給 ${receiver.name} ？</h3>`);
+      if (!confirm) {
+        return Promise.resolve();
+      }
       const itemTransfer = await this.create(item, user, receiver);
       await this.theThingFactory.setState(
         item,
@@ -162,9 +170,9 @@ export abstract class ItemTransferFactory {
       this.router.navigate(['/', ImitationItem.routePath, item.id]);
     } catch (error) {
       this.emcee.error(
-        `建立 ${!!item ? item.name : itemId} 的交付任務失敗，錯誤原因：${
+        `<h3>建立 ${!!item ? item.name : itemId} 的交付任務失敗，錯誤原因：${
           error.message
-        }`
+        }</h3>`
       );
     }
   }
@@ -217,7 +225,7 @@ export abstract class ItemTransferFactory {
       giver = await this.getGiver(itemTransfer.id);
       receiver = await this.getReceiver(itemTransfer.id);
       const confirm = await this.emcee.confirm(
-        `<h3>確認約定時間和地點無誤，送出交付請求給${receiver.name}？</h3>`
+        `<h3>確認約定時間和地點無誤，送出交付請求給 ${receiver.name}？</h3>`
       );
       if (!confirm) {
         return;

@@ -10,10 +10,12 @@
         (mouseenter)="stopRunner = true"
         (mouseleave)="stopRunner = false"
       >
-        <ygg-user-thumbnail
-          [id]="giverId"
-          [showName]="false"
-        ></ygg-user-thumbnail>
+        <div class="giver">
+          <ygg-user-thumbnail
+            [id]="giverId"
+            [showName]="false"
+          ></ygg-user-thumbnail>
+        </div>
         <div [hidden]="runningStep === 0">
           <mat-icon>double_arrow</mat-icon>
         </div>
@@ -32,10 +34,12 @@
         <div [hidden]="runningStep !== 2">
           <the-thing-thumbnail [id]="itemId" size="small"></the-thing-thumbnail>
         </div>
-        <ygg-user-thumbnail
-          [id]="receiverId"
-          [showName]="false"
-        ></ygg-user-thumbnail>
+        <div class="receiver">
+          <ygg-user-thumbnail
+            [id]="receiverId"
+            [showName]="false"
+          ></ygg-user-thumbnail>
+        </div>
       </div>
     </div>
     <div the-thing-projection-footer>

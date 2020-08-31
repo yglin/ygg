@@ -23,7 +23,7 @@ import {
   TheThingState
 } from '@ygg/the-thing/core';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
-import { every, extend, get, isEmpty } from 'lodash';
+import { every, extend, get, isEmpty, some } from 'lodash';
 import {
   BehaviorSubject,
   combineLatest,
@@ -337,7 +337,9 @@ export class TheThingFactoryService extends TheThingFactory
       await this.commentFactory.addComment(
         theThing.id,
         new Html(
-          `📌 ${user.name} 更改狀態 <b>${!!oldState ? oldState.label : "未知狀態"} ➡ ${state.label}</b>`
+          `📌 ${user.name} 更改狀態 <b>${
+            !!oldState ? oldState.label : '未知狀態'
+          } ➡ ${state.label}</b>`
         )
       );
     } catch (error) {
@@ -392,7 +394,7 @@ export class TheThingFactoryService extends TheThingFactory
         confirm = true;
       } else {
         confirm = await this.emceeService.confirm(
-          `確定要儲存 ${theThing.name} ？`
+          `<h3>確定要儲存 ${theThing.name} ？</h3>`
         );
       }
       if (!confirm) {
@@ -431,7 +433,7 @@ export class TheThingFactoryService extends TheThingFactory
       // this.theThingSources$[result.id].local$.next(result);
       if (!!result) {
         if (!options.force) {
-          await this.emceeService.info(`已成功儲存 ${result.name}`);
+          await this.emceeService.info(`<h3>已成功儲存 ${result.name}</h3>`);
         }
         // if (theThing.id in this.theThingSources$) {
         //   this.theThingSources$[theThing.id].next(result);
@@ -443,7 +445,7 @@ export class TheThingFactoryService extends TheThingFactory
       }
     } catch (error) {
       await this.emceeService.alert(
-        `儲存失敗，錯誤原因：${error.message}`,
+        `<h3>儲存失敗，錯誤原因：${error.message}</h3>`,
         AlertType.Error
       );
       return Promise.reject(error);
@@ -585,20 +587,34 @@ export class TheThingFactoryService extends TheThingFactory
             // permission indicate a specific state
             if (typeof permission === 'string') {
               if (permission.startsWith('role')) {
-                let role = permission.split(':')[1].trim();
+                let roles = permission
+                  .split(':')[1]
+                  .trim()
+                  .split(',');
+                const roleMatches: Observable<boolean>[] = [];
+                for (const role of roles) {
+                  let exclude = false;
+                  let roleName = role;
+                  if (role.startsWith('!')) {
+                    roleName = role.substring(1);
+                    exclude = true;
+                  }
+                  roleMatches.push(
+                    this.relaitonFactory
+                      .hasRelation$(theThing.id, user.id, roleName)
+                      .pipe(map(has => (exclude ? !has : has)))
+                  );
+                }
+                if (isEmpty(roleMatches)) {
+                  return of(true);
+                } else {
+                  return combineLatest(roleMatches).pipe(
+                    map(matches => some(matches, Boolean))
+                  );
+                }
                 // console.log(
                 //   `Has relation? ${theThing.id}, ${user.id}, ${role}`
                 // );
-                let exclude = false;
-                if (role.startsWith('!')) {
-                  role = role.substring(1);
-                  exclude = true;
-                }
-                return this.relaitonFactory.hasRelation$(
-                  theThing.id,
-                  user.id,
-                  role
-                ).pipe(map(has => exclude ? !has : has));
               } else if (permission.startsWith('state')) {
                 const states = permission.split(':')[1].trim();
                 const permittedStates: string[] = states
@@ -618,6 +634,17 @@ export class TheThingFactoryService extends TheThingFactory
                   //   `action ${action.id} require states: ${permission}`
                   // );
                   return of(false);
+                }
+              } else if (permission.startsWith('relations')) {
+                const [, condition, relationName] = permission.split(':');
+                switch (condition) {
+                  case 'has':
+                    return this.relaitonFactory
+                      .findBySubjectAndRole$(theThing.id, relationName)
+                      .pipe(map(relations => !isEmpty(relations)));
+
+                  default:
+                    return of(true);
                 }
               }
             } else if (typeof permission === 'function') {

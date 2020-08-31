@@ -85,6 +85,27 @@ describe('Request for item', () => {
 
   it('Holder can not request', () => {
     itemPO.theThingPO.expectNoActionButton(ImitationItem.actions['request']);
+    logout();
+    loginTestUser(testUser2);
+    itemPO.theThingPO.expectActionButton(ImitationItem.actions['request']);
+  });
+
+  it('Can request item only in state available', () => {
+    testItem.setState(ImitationItem.stateName, ImitationItem.states.new);
+    theMockDatabase.insert(`${ImitationItem.collection}/${testItem.id}`, testItem);
+    itemPO.theThingPO.expectNoActionButton(ImitationItem.actions['request']);
+
+    testItem.setState(ImitationItem.stateName, ImitationItem.states.editing);
+    theMockDatabase.insert(`${ImitationItem.collection}/${testItem.id}`, testItem);
+    itemPO.theThingPO.expectNoActionButton(ImitationItem.actions['request']);
+
+    testItem.setState(ImitationItem.stateName, ImitationItem.states.transfer);
+    theMockDatabase.insert(`${ImitationItem.collection}/${testItem.id}`, testItem);
+    itemPO.theThingPO.expectNoActionButton(ImitationItem.actions['request']);
+
+    testItem.setState(ImitationItem.stateName, ImitationItem.states.available);
+    theMockDatabase.insert(`${ImitationItem.collection}/${testItem.id}`, testItem);
+    itemPO.theThingPO.expectActionButton(ImitationItem.actions['request']);
   });
 
   it('Request item in item view page', () => {

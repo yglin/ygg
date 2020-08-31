@@ -1,0 +1,15 @@
+<div class="my-held-items">
+  <div
+    fxLayout="row wrap"
+    fxLayoutAlign="space-around start"
+    fxLayoutGap="20px"
+    class="item-list"
+  >
+    <div *ngFor="let item of items" class="item">
+      <the-thing-thumbnail
+        [id]="item.id"
+        [imitation]="ImitationItem"
+      ></the-thing-thumbnail>
+    </div>
+  </div>
+</div>

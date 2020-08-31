@@ -11,9 +11,11 @@ import { AuthenticateUiService, UserService } from '@ygg/shared/user/ui';
 import { TheThing } from '@ygg/the-thing/core';
 import {
   RelationFactoryService,
-  TheThingFactoryService
+  TheThingFactoryService,
+  TheThingAccessService
 } from '@ygg/the-thing/ui';
 import { Observable } from 'rxjs';
+import { ItemAccessService } from './item-access.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +29,8 @@ export class ItemFactoryService extends ItemFactory
     // itemAccessor: ItemAccessService,
     theThingFactory: TheThingFactoryService,
     relationFactory: RelationFactoryService,
-    userAccessor: UserService
+    userAccessor: UserService,
+    theThingAccessor: TheThingAccessService
   ) {
     super(
       emcee,
@@ -36,7 +39,8 @@ export class ItemFactoryService extends ItemFactory
       // itemAccessor,
       theThingFactory,
       relationFactory,
-      userAccessor
+      userAccessor,
+      theThingAccessor
     );
   }
 

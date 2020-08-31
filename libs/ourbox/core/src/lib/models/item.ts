@@ -9,6 +9,7 @@ import {
 } from '@ygg/the-thing/core';
 import { values, keyBy } from 'lodash';
 import { User } from '@ygg/shared/user/core';
+import { ImitationItemTransfer } from './item-transfer';
 
 export const ImitationItemCells = keyBy(
   [
@@ -51,6 +52,7 @@ export const ImitationItem = new TheThingImitation({
   id: 'ourbox-item',
   icon: 'category',
   name: '我們的寶物',
+  image: '/assets/images/item/item.png',
   routePath: 'ouritems',
   cellsDef: values(ImitationItemCells),
   stateName: 'ourbox-item-state',
@@ -106,9 +108,28 @@ ImitationItem.actions = {
     icon: 'backspace',
     tooltip: '取消索取需求',
     permissions: [
-      `state: ${ImitationItemStates.available.name}`,
+      `state:${ImitationItemStates.available.name}`,
       `role:!${RelationshipItemHolder.name}`,
       `role:${RelationshipItemRequester.name}`
+    ]
+  },
+  'transfer-next': {
+    id: 'ourbox-transfer-to-next',
+    icon: 'next_plan',
+    tooltip: '交付給下一位索取者',
+    permissions: [
+      `state:${ImitationItemStates.available.name}`,
+      `role:${RelationshipItemHolder.name}`,
+      `relations:has:${RelationshipItemRequester.name}`
+    ]
+  },
+  'check-item-transfer': {
+    id: 'ourbox-check-item-transfer',
+    icon: 'connect_without_contact',
+    tooltip: '檢視交付任務',
+    permissions: [
+      `state:${ImitationItemStates.transfer.name}`,
+      `role:${RelationshipItemHolder.name},${RelationshipItemRequester.name}`
     ]
   }
 };

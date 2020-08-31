@@ -106,13 +106,13 @@ export class ItemComponent implements OnInit {
     return this.authUiService.isMe(userId);
   }
 
-  cancelRequest() {
-    this.itemFactory.cancelRequest(this.item.id);
-  }
+  // cancelRequest() {
+  //   this.itemFactory.cancelRequest(this.item.id);
+  // }
 
-  giveToNext() {
-    this.itemTransferFactory.giveAway(this.item.id);
-  }
+  // giveToNext() {
+  //   this.itemTransferFactory.giveAway(this.item.id);
+  // }
 
   async gotoTransfer() {
     const itemTransfer: TheThing = await this.itemTransferFactory.getLatestItemTransfer(

@@ -106,6 +106,7 @@ export const ImitationItemTransferActions: { [id: string]: TheThingAction } = {
 export const ImitationItemTransfer = new TheThingImitation({
   id: 'ourbox-item-transfer',
   name: 'item-transfer',
+  image: '/assets/images/item-transfer/item-transfer.png',
   icon: '6_ft_apart',
   collection: 'ourbox-item-transfers',
   routePath: 'ourbox-item-transfer',

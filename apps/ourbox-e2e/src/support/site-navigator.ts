@@ -52,4 +52,9 @@ export class SiteNavigator {
     this.accountWidgetPO.openUserMenu();
     this.accountWidgetPO.userMenuPO.clickMenuItem('myBoxes');
   }
+
+  gotoMyHeldItems() {
+    this.accountWidgetPO.openUserMenu();
+    this.accountWidgetPO.userMenuPO.clickMenuItem('myHeldItems');
+  }
 }

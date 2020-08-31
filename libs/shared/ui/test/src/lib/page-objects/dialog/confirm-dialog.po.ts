@@ -2,7 +2,10 @@ import { ConfirmDialogPageObject } from '@ygg/shared/ui/widgets';
 
 export class ConfirmDialogPageObjectCypress extends ConfirmDialogPageObject {
   expectMessage(message: string) {
-    cy.get(this.getSelector('content')).should('have.text', message);
+    cy.get(this.getSelector('content'), { timeout: 10000 }).should(
+      'have.text',
+      message
+    );
   }
 
   expectClosed() {

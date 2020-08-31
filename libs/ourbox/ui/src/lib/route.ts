@@ -20,6 +20,9 @@ import { BoxViewComponent } from './box/box-view/box-view.component';
 import { ItemWarehouseComponent } from './item/item-warehouse/item-warehouse.component';
 import { ItemFactoryService } from './item/item-factory.service';
 import { ItemComponent } from './item/item/item.component';
+import { MyHeldItemsComponent } from './item/my-held-items/my-held-items.component';
+import { ItemTransferComponent } from './item-transfer/item-transfer/item-transfer.component';
+import { ItemTransferFactoryService } from './item-transfer/item-transfer-factory.service';
 // import { ItemFactoryService } from './item-factory.service';
 // import { MyBoxesComponent } from './pages/box/my-boxes/my-boxes.component';
 // import { ItemTransferComponent } from './pages/item/item-transfer/item-transfer.component';
@@ -49,6 +52,10 @@ export const routes: Routes = [
       {
         path: 'item-warehouse',
         component: ItemWarehouseComponent
+      },
+      {
+        path: 'my-held-items',
+        component: MyHeldItemsComponent
       }
     ]
   },
@@ -75,17 +82,17 @@ export const routes: Routes = [
         }
       }
     ]
+  },
+  {
+    path: ImitationItemTransfer.routePath,
+    children: [
+      {
+        path: ':id',
+        component: ItemTransferComponent,
+        resolve: {
+          itemTransfer$: ItemTransferFactoryService
+        }
+      }
+    ]
   }
-  // {
-  //   path: ImitationItemTransfer.routePath,
-  //   children: [
-  //     {
-  //       path: ':id',
-  //       component: ItemTransferComponent,
-  //       resolve: {
-  //         itemTransfer$: ItemTransferFactoryService
-  //       }
-  //     }
-  //   ]
-  // }
 ];

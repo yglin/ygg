@@ -8,7 +8,8 @@ import {
   DayTimeRangeViewPageObjectCypress,
   BusinessHoursViewPageObjectCypress,
   TimeRangeViewPageObjectCypress,
-  TimeLengthViewPageObjectCypress
+  TimeLengthViewPageObjectCypress,
+  DatetimeViewPageObjectCypress
 } from './datetime';
 import { NumberViewPageObjectCypress } from './number';
 import { ContactViewPageObjectCypress } from './contact';
@@ -26,6 +27,9 @@ export class OmniTypeViewPageObjectCypress extends OmniTypeViewPageObject {
         break;
       case 'longtext':
         viewPO = new LongTextViewPageObjectCypress(this.getSelector());
+        break;
+      case 'datetime':
+        viewPO = new DatetimeViewPageObjectCypress(this.getSelector());
         break;
       case 'date-range':
         viewPO = new DateRangeViewPageObjectCypress(this.getSelector());

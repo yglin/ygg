@@ -5,10 +5,11 @@ import { get } from 'lodash';
 import { isObservable, Observable, Subscription, merge, interval } from 'rxjs';
 import { tap, switchMap, map } from 'rxjs/operators';
 import { ImitationItemTransfer } from '@ygg/ourbox/core';
-import { ItemTransferFactoryService } from '../../../item-transfer-factory.service';
+import { ItemTransferFactoryService } from '../item-transfer-factory.service';
+import { EmceeService } from '@ygg/shared/ui/widgets';
 
 @Component({
-  selector: 'ygg-item-transfer',
+  selector: 'ourbox-item-transfer',
   templateUrl: './item-transfer.component.html',
   styleUrls: ['./item-transfer.component.css']
 })
@@ -26,14 +27,26 @@ export class ItemTransferComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private itemTransferFactory: ItemTransferFactoryService
-  ) {
+    private itemTransferFactory: ItemTransferFactoryService,
+    private emcee: EmceeService
+  ) {}
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
+  }
+
+  ngOnInit(): void {
     this.itemTransfer$ = get(this.route.snapshot.data, 'itemTransfer$', null);
     if (isObservable(this.itemTransfer$)) {
       const itemTransferUpdate$ = this.itemTransfer$.pipe(
         tap(itemTransfer => {
           this.itemTransfer = itemTransfer;
-          this.showThread = !ImitationItemTransfer.isInStates(itemTransfer, [ImitationItemTransfer.states.new, ImitationItemTransfer.states.editing]);
+          this.showThread = !ImitationItemTransfer.isInStates(itemTransfer, [
+            ImitationItemTransfer.states.new,
+            ImitationItemTransfer.states.editing
+          ]);
         })
       );
       const giverId$: Observable<any> = itemTransferUpdate$.pipe(
@@ -71,14 +84,8 @@ export class ItemTransferComponent implements OnInit, OnDestroy {
           )
           .subscribe()
       );
+    } else {
+      this.emcee.error(`找不到交付任務`);
     }
   }
-
-  ngOnDestroy(): void {
-    for (const subscription of this.subscriptions) {
-      subscription.unsubscribe();
-    }
-  }
-
-  ngOnInit(): void {}
 }

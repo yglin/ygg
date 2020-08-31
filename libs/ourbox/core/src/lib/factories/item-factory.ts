@@ -8,14 +8,22 @@ import {
   RelationAccessor
 } from '@ygg/the-thing/core';
 import { Router, Emcee } from '@ygg/shared/infra/core';
-import { Subject, BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import {
+  Subject,
+  BehaviorSubject,
+  Observable,
+  of,
+  Subscription,
+  throwError
+} from 'rxjs';
 import {
   ImitationItem,
   ItemFilter,
   RelationshipBoxItem,
   RelationshipItemHolder,
   RelationshipItemRequester,
-  ImitationItemCells
+  ImitationItemCells,
+  ImitationItemStates
 } from '../models';
 import { take, filter, switchMap, tap, catchError, map } from 'rxjs/operators';
 import { ItemAccessor } from './item-accessor';
@@ -40,7 +48,8 @@ export class ItemFactory {
     // protected itemAccessor: ItemAccessor,
     protected theThingFactory: TheThingFactory,
     protected relationFactory: RelationFactory,
-    protected userAccessor: UserAccessor
+    protected userAccessor: UserAccessor,
+    protected theThingAccessor: TheThingAccessor
   ) {
     this.subscription.add(
       this.theThingFactory.runAction$.subscribe(actionInfo => {
@@ -306,6 +315,37 @@ export class ItemFactory {
         )
       );
     }
+  }
+
+  listMyHeldItems$(): Observable<TheThing[]> {
+    return this.authenticator.currentUser$.pipe(
+      switchMap(user => {
+        if (!user) {
+          return throwError(new Error(`User not login`));
+        } else {
+          return this.relationFactory.findByObjectAndRole$(
+            user.id,
+            RelationshipItemHolder.role
+          );
+        }
+      }),
+      switchMap(relations => {
+        if (isEmpty(relations)) {
+          return throwError(new Error(`Not found any held item`));
+        } else {
+          const itemIds = relations.map(r => r.subjectId);
+          return this.theThingAccessor.listByIds$(
+            itemIds,
+            ImitationItem.collection
+          );
+        }
+      }),
+      catchError(error => {
+        console.error(error.message);
+        this.emcee.error(`找不到我持有的寶物，錯誤原因：\n${error.message}`);
+        return of([]);
+      })
+    );
   }
 
   // find$(itemFilter: ItemFilter): Observable<TheThing[]> {

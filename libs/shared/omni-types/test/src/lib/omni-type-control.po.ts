@@ -7,14 +7,15 @@ import {
   DateRangeControlPageObjectCypress,
   DayTimeRangeControlPageObjectCypress,
   BusinessHoursControlPageObjectCypress,
-  TimeLengthControlPageObjectCypress
+  TimeLengthControlPageObjectCypress,
+  DatetimeControlPageObjectCypress,
+  TimeRangeControlPageObjectCypress
 } from './datetime';
 import { NumberControlPageObjectCypress } from './number';
 import { ContactControlPageObjectCypress } from './contact';
 import { AlbumControlPageObjectCypress } from './album';
 import { LocationControlPageObjectCypress } from './location';
 import { HtmlControlPageObjectCypress } from './html';
-import { TimeRangeControlPageObjectCypress } from './datetime/time-range/time-range-control.po';
 
 export class OmniTypeControlPageObjectCypress extends OmniTypeControlPageObject {
   setValue(type: OmniTypeID, value: any): void {
@@ -25,6 +26,9 @@ export class OmniTypeControlPageObjectCypress extends OmniTypeControlPageObject 
         break;
       case 'longtext':
         controlPO = new LongTextControlPageObjectCypress(this.getSelector());
+        break;
+      case 'datetime':
+        controlPO = new DatetimeControlPageObjectCypress(this.getSelector());
         break;
       case 'date-range':
         controlPO = new DateRangeControlPageObjectCypress(this.getSelector());

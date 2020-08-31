@@ -25,5 +25,11 @@ export const pages: { [id: string]: Page } = {
     icon: ImitationBox.icon,
     label: '我的寶箱',
     path: ['ourbox', 'my-boxes']
+  },
+  myHeldItems: {
+    id: 'myHeldItems',
+    icon: 'local_offer',
+    label: '持有寶物',
+    path: ['ourbox', 'my-held-items']
   }
 };
