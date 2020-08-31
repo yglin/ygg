@@ -63,7 +63,7 @@ export class ItemTransferFactoryService extends ItemTransferFactory
   ): Promise<Observable<TheThing>> {
     const id = route.paramMap.get('id');
     try {
-      console.log(`Resolve item-transfer ${id}`);
+      // console.log(`Resolve item-transfer ${id}`);
       return Promise.resolve(
         this.theThingFactory.load$(id, ImitationItemTransfer.collection)
       );

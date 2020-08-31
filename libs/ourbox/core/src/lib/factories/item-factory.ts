@@ -138,7 +138,7 @@ export class ItemFactory {
     return this.relationFactory
       .findBySubjectAndRole$(itemId, RelationshipItemHolder.role)
       .pipe(
-        tap(relations => console.log(relations)),
+        // tap(relations => console.log(relations)),
         filter(relations => !isEmpty(relations)),
         switchMap((relations: RelationRecord[]) => {
           return this.userAccessor.get$(relations[0].objectId);

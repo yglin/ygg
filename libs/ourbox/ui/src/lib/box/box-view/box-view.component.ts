@@ -45,7 +45,7 @@ export class BoxViewComponent implements OnInit, OnDestroy {
     private dialog: YggDialogService
   ) {
     this.box = get(this.route.snapshot.data, 'box', null);
-    console.log(this.box);
+    // console.log(this.box);
     if (this.box) {
       const items$: Observable<any> = this.boxFactory
         .listItemsAvailableInBox$(this.box.id)

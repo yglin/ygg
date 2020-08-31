@@ -104,7 +104,7 @@ export abstract class ItemTransferFactory {
         objectId: receiver.id,
         objectRole: RelationshipItemTransferReceiver.role
       });
-      console.log(`New ItemTransfer id = ${newItemTrnasfer.id}`);
+      // console.log(`New ItemTransfer id = ${newItemTrnasfer.id}`);
       this.router.navigate([
         ImitationItemTransfer.routePath,
         newItemTrnasfer.id
@@ -233,10 +233,11 @@ export abstract class ItemTransferFactory {
       await this.notificationFactory.create({
         type: ItemTransferNotificationType,
         inviterId: giver.id,
+        inviteeId: receiver.id,
         email: receiver.email,
         mailSubject: `${giver.name} 想要將 ${item.name} 交給你`,
         mailContent: `${giver.name} 想要將 ${item.name} 交給你，請點選以下網址檢視交付約定的相關訊息`,
-        confirmMessage: `<h3>您將前往交付通知的頁面</h3><br><h3>請確認相關約定事項</h3>`,
+        confirmMessage: `<h3>您將前往 ${item.name} 的交付任務頁面</h3><br><h3>請確認相關約定事項</h3>`,
         landingUrl: `/${ImitationItemTransfer.routePath}/${itemTransfer.id}`,
         data: {}
       });

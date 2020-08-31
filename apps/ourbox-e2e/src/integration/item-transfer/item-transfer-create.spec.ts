@@ -5,14 +5,21 @@ import {
   RelationshipBoxMember,
   RelationshipItemHolder,
   RelationshipItemRequester,
-  ImitationItemTransfer
+  ImitationItemTransfer,
+  ItemTransferNotificationType
 } from '@ygg/ourbox/core';
-import { User } from '@ygg/shared/user/core';
+import { User, Notification } from '@ygg/shared/user/core';
 import {
   theMockDatabase,
   logout as logoutBackground
 } from '@ygg/shared/test/cypress';
-import { loginTestUser, logout } from '@ygg/shared/user/test';
+import {
+  loginTestUser,
+  logout,
+  AccountWidgetPageObjectCypress,
+  NotificationPageObjectCypress,
+  MyNotificationListPageObjectCypress
+} from '@ygg/shared/user/test';
 import { RelationRecord } from '@ygg/the-thing/core';
 import { SiteNavigator } from '../../support/site-navigator';
 import {
@@ -30,6 +37,8 @@ describe('Create an item-transfer task', () => {
   const itemPO = new ItemPageObjectCypress();
   const itemTransferPO = new ItemTransferPageObjectCypress();
   const emceePO = new EmceePageObjectCypress();
+  const accountWidgetPO = new AccountWidgetPageObjectCypress();
+  const myNotificationsPO = new MyNotificationListPageObjectCypress();
 
   const testUser = User.forge();
   const testHolder = User.forge();
@@ -45,6 +54,8 @@ describe('Create an item-transfer task', () => {
     testItem.id,
     testRequester.id
   );
+  const testItemTransfer = ImitationItemTransfer.forgeTheThing();
+  testItemTransfer.name = `${testHolder.name} 交付 ${testItem.name} 給 ${testRequester.name} 的交付任務`;
 
   before(() => {
     theMockDatabase.insert(`${User.collection}/${testUser.id}`, testUser);
@@ -127,18 +138,18 @@ describe('Create an item-transfer task', () => {
     itemPO.theThingPO.runAction(ImitationItem.actions['transfer-next']);
     emceePO.confirm(`要將 ${testItem.name} 交付給 ${testRequester.name} ？`);
     itemTransferPO.expectVisible();
-    const testItemTransfer = ImitationItemTransfer.forgeTheThing();
-    testItemTransfer.name = `${testHolder.name} 交付 ${testItem.name} 給 ${testRequester.name} 的交付任務`;
     itemTransferPO.theThingPO.expectName(testItemTransfer.name);
     itemTransferPO.expectGiver(testHolder);
     itemTransferPO.expectReceiver(testRequester);
     itemTransferPO.theThingPO.setValue(testItemTransfer);
     itemTransferPO.theThingPO.save(testItemTransfer);
-    
+
     emceePO.confirm(
       `確認約定時間和地點無誤，送出交付請求給 ${testRequester.name}？`
     );
-    emceePO.alert(`已送出 ${testItem.name} 的交付要求，請等待 ${testRequester.name} 的回應`)
+    emceePO.alert(
+      `已送出 ${testItem.name} 的交付要求，請等待 ${testRequester.name} 的回應`
+    );
     itemPO.expectVisible();
     itemPO.theThingPO.expectState(ImitationItem.states.transfer);
     itemPO.theThingPO.expectActionButton(
@@ -146,5 +157,29 @@ describe('Create an item-transfer task', () => {
     );
   });
 
-  // it('Send notification about item-transfer to receiver', () => {});
+  it('Send notification about item-transfer to receiver', () => {
+    const notification: Notification = new Notification({
+      type: ItemTransferNotificationType,
+      inviterId: testHolder.id,
+      email: testRequester.email,
+      mailSubject: `${testHolder.name} 想要將 ${testItem.name} 交給你`,
+      mailContent: `${testHolder.name} 想要將 ${testItem.name} 交給你，請點選以下網址檢視交付約定的相關訊息`,
+      confirmMessage: `<h3>您將前往交付通知的頁面</h3><br><h3>請確認相關約定事項</h3>`,
+      landingUrl: ``,
+      data: {}
+    });
+
+    logout();
+    loginTestUser(testRequester);
+    accountWidgetPO.expectNotification(1);
+    accountWidgetPO.clickNotification();
+    myNotificationsPO.expectVisible();
+    myNotificationsPO.expectUnreadNotifications([notification]);
+    myNotificationsPO.clickNotification(notification);
+    emceePO.confirm(
+      `您將前往 ${testItem.name} 的交付任務頁面請確認相關約定事項`
+    );
+    itemTransferPO.expectVisible();
+    itemTransferPO.theThingPO.expectValue(testItemTransfer);
+  });
 });

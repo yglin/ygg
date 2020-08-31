@@ -30,8 +30,8 @@ export class PlayAdminComponent implements OnInit {
         label: this.imitation.states[name].label,
         theThings$: this.theThingAccessService.listByFilter$(filter)
       };
-      console.log(name);
-      console.log(filter);
+      // console.log(name);
+      // console.log(filter);
       return stateConfig;
     });
   }
