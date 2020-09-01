@@ -1,5 +1,9 @@
 import { Page } from '@ygg/shared/ui/core';
-import { ImitationItem, ImitationBox } from '@ygg/ourbox/core';
+import {
+  ImitationItem,
+  ImitationBox,
+  ImitationItemTransfer
+} from '@ygg/ourbox/core';
 
 export const pages: { [id: string]: Page } = {
   mapSearch: {
@@ -31,5 +35,11 @@ export const pages: { [id: string]: Page } = {
     icon: 'local_offer',
     label: '持有寶物',
     path: ['ourbox', 'my-held-items']
+  },
+  myItemTransfers: {
+    id: 'myItemTransfers',
+    icon: ImitationItemTransfer.icon,
+    label: '交付任務',
+    path: ['ourbox', 'my-item-transfers']
   }
 };

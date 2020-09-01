@@ -33,13 +33,13 @@ export class TheThingDataTableComponent
   implements OnInit, OnChanges, OnDestroy {
   @Input() imitation: TheThingImitation;
   @Input() theThings$: Observable<TheThing[]>;
+  @Input() dataTableConfig: DataTableConfig;
   @Input() selection: TheThing[];
   @Input() readonly: boolean;
   @Output() selectionChange: EventEmitter<TheThing[]> = new EventEmitter();
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   dataSource: TheThingDataSource;
-  dataTableConfig: DataTableConfig;
   displayedColumnsHead: string[] = ['name'];
   displayedColumnsTail: string[] = [];
   displayedColumns: string[] = [];
@@ -88,7 +88,7 @@ export class TheThingDataTableComponent
         compareFunctions
       );
 
-      if (this.imitation.dataTableConfig) {
+      if (!this.dataTableConfig && this.imitation.dataTableConfig) {
         this.dataTableConfig = this.imitation.dataTableConfig;
         imitationColumns = keys(this.dataTableConfig.columns);
         // this.displayedColumns.push('management');

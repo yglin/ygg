@@ -78,7 +78,7 @@ ImitationEvent.dataTableConfig = {
         name: '狀態',
         label: '狀態',
         valueSource: 'function',
-        valueFunc: (thing: TheThing) => ImitationEvent.getState(thing).label
+        value: (thing: TheThing) => ImitationEvent.getState(thing).label
       }
     ],
     'name'

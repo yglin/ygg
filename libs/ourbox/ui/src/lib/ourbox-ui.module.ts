@@ -20,7 +20,7 @@ import {
 } from '@ygg/shared/ui/widgets';
 import { pages } from './pages';
 import { BoxFactoryService } from './box/box-factory.service';
-import { noop } from 'lodash';
+import { noop, pick, values } from 'lodash';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BoxViewComponent } from './box/box-view/box-view.component';
 import { ItemWarehouseComponent } from './item/item-warehouse/item-warehouse.component';
@@ -28,6 +28,7 @@ import { TheThingUiModule } from '@ygg/the-thing/ui';
 import { ItemComponent } from './item/item/item.component';
 import { MyHeldItemsComponent } from './item/my-held-items/my-held-items.component';
 import { ItemTransferComponent } from './item-transfer/item-transfer/item-transfer.component';
+import { MyItemTransfersComponent } from './item-transfer/my-item-transfers/my-item-transfers.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { ItemTransferComponent } from './item-transfer/item-transfer/item-transf
     ItemWarehouseComponent,
     ItemComponent,
     MyHeldItemsComponent,
-    ItemTransferComponent
+    ItemTransferComponent,
+    MyItemTransfersComponent
   ],
   imports: [
     CommonModule,
@@ -79,7 +81,11 @@ export class OurboxUiModule {}
 
 export function initSideMenu(sideDrawer: SideDrawerService) {
   return async (): Promise<any> => {
-    for (const pageId in pages) {
+    for (const pageId in pick(pages, [
+      'mapSearch',
+      'boxCreate',
+      'itemWarehouse'
+    ])) {
       if (Object.prototype.hasOwnProperty.call(pages, pageId)) {
         const page = pages[pageId];
         sideDrawer.addPageLink(page);
@@ -96,7 +102,9 @@ export function initFactoryServices(boxFactory: BoxFactoryService) {
 
 export function configUserMenu(userMenuService: UserMenuService) {
   return () => {
-    userMenuService.addItem(UserMenuItem.fromPage(pages.myBoxes));
-    userMenuService.addItem(UserMenuItem.fromPage(pages.myHeldItems));
+    const userPages = values(pick(pages, ['myBoxes', 'myHeldItems', 'myItemTransfers']));
+    for (const page of userPages) {
+      userMenuService.addItem(UserMenuItem.fromPage(page));
+    }
   };
 }

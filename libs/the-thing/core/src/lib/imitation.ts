@@ -42,24 +42,11 @@ import {
 import { TheThingState } from './state';
 import { Relationship } from './relationship';
 import { TheThingAction } from './action';
+import { DataTableConfig } from './ui-config';
 
 export const ImitationsDataPath = 'the-thing/imitations';
 
-type ValueSource = 'cell' | 'function';
 type ValueFunction = (thing: TheThing) => any;
-
-export interface DataTableColumnConfig {
-  name: string;
-  label: string;
-  valueSource?: ValueSource | string;
-  valueFunc?: ValueFunction;
-}
-
-export interface DataTableConfig {
-  columns: {
-    [key: string]: DataTableColumnConfig;
-  };
-}
 
 export interface DisplayThumbnail {
   cells: string[];
@@ -143,6 +130,7 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
       preSave?: (theThing: TheThing) => TheThing;
       actions?: { [id: string]: TheThingAction };
       stateChanges?: ImitationStateChanges;
+      dataTableConfig?: DataTableConfig;
       [key: string]: any;
     } = {}
   ) {

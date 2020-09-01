@@ -10,6 +10,10 @@ button.edit:hover {
   margin-bottom: 30px;
 }
 
+.name {
+  max-width: 80vw;
+}
+
 .main-image {
   position: relative;
   width: fit-content;

@@ -10,11 +10,12 @@ import {
   RelationFactory,
   RelationRecord,
   TheThing,
-  TheThingFactory
+  TheThingFactory,
+  TheThingAccessor
 } from '@ygg/the-thing/core';
-import { first, isEmpty } from 'lodash';
-import { Subscription } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
+import { first, isEmpty, flatten, uniq, uniqBy } from 'lodash';
+import { Subscription, Observable, of, combineLatest } from 'rxjs';
+import { filter, take, switchMap, map } from 'rxjs/operators';
 import {
   ImitationItem,
   ImitationItemTransfer,
@@ -34,6 +35,9 @@ export interface ItemTransferCompleteInfo {
 
 export abstract class ItemTransferFactory {
   subscription: Subscription = new Subscription();
+  listMyItemTransfersIamGiver$: Observable<TheThing[]>;
+  listMyItemTransfersIamReceiver$: Observable<TheThing[]>;
+  listMyItemTransfers$: Observable<TheThing[]>;
 
   constructor(
     protected emcee: Emcee,
@@ -41,7 +45,7 @@ export abstract class ItemTransferFactory {
     protected authenticator: Authenticator,
     // protected itemAccessor: ItemAccessor,
     protected itemFactory: ItemFactory,
-    // protected theThingAccessor: TheThingAccessor,
+    protected theThingAccessor: TheThingAccessor,
     protected theThingFactory: TheThingFactory,
     protected relationFactory: RelationFactory,
     protected userAccessor: UserAccessor,
@@ -52,6 +56,10 @@ export abstract class ItemTransferFactory {
         switch (actionInfo.action.id) {
           case ImitationItem.actions['transfer-next'].id:
             this.giveAway(actionInfo.theThing.id);
+            break;
+
+          case ImitationItem.actions['check-item-transfer'].id:
+            this.gotoItemTransferOfItem(actionInfo.theThing.id);
             break;
 
           case ImitationItemTransfer.actions['send-request'].id:
@@ -69,6 +77,45 @@ export abstract class ItemTransferFactory {
           default:
             break;
         }
+      })
+    );
+
+    this.listMyItemTransfersIamGiver$ = this.authenticator.currentUser$.pipe(switchMap(user => {
+      if (!user) {
+        return of([]);
+      } else {
+        return this.relationFactory.findByObjectAndRole$(user.id, RelationshipItemTransferGiver.role);
+      }
+    }), switchMap((relations: RelationRecord[]) => {
+      if (isEmpty(relations)) {
+        return of([]);
+      } else {
+        const itemTransferIds: string[] = relations.map(r => r.subjectId);
+        return this.theThingAccessor.listByIds$(itemTransferIds, ImitationItemTransfer.collection);
+      }
+    }))
+
+    this.listMyItemTransfersIamReceiver$ = this.authenticator.currentUser$.pipe(switchMap(user => {
+      if (!user) {
+        return of([]);
+      } else {
+        return this.relationFactory.findByObjectAndRole$(user.id, RelationshipItemTransferReceiver.role);
+      }
+    }), switchMap((relations: RelationRecord[]) => {
+      if (isEmpty(relations)) {
+        return of([]);
+      } else {
+        const itemTransferIds: string[] = relations.map(r => r.subjectId);
+        return this.theThingAccessor.listByIds$(itemTransferIds, ImitationItemTransfer.collection);
+      }
+    }))
+
+    this.listMyItemTransfers$ = combineLatest([
+      this.listMyItemTransfersIamGiver$,
+      this.listMyItemTransfersIamReceiver$
+    ]).pipe(
+      map(results => {
+        return uniqBy(flatten(results), 'id');
       })
     );
   }
@@ -136,8 +183,10 @@ export abstract class ItemTransferFactory {
         relationLatest.subjectCollection
       );
     } catch (error) {
-      this.emcee.error(`找不到${item.name}的交付記錄`);
-      return Promise.reject();
+      const wrapError = new Error(
+        `找不到 ${item.name} 的最新一筆交付任務，錯誤原因：\n${error.message}`
+      );
+      return Promise.reject(wrapError);
     }
   }
 
@@ -154,7 +203,9 @@ export abstract class ItemTransferFactory {
         throw new Error(`目前沒有人正在等候索取 ${item.name}`);
       }
       const receiver: User = first(requestBorrowers);
-      const confirm = await this.emcee.confirm(`<h3>要將 ${item.name} 交付給 ${receiver.name} ？</h3>`);
+      const confirm = await this.emcee.confirm(
+        `<h3>要將 ${item.name} 交付給 ${receiver.name} ？</h3>`
+      );
       if (!confirm) {
         return Promise.resolve();
       }
@@ -336,11 +387,31 @@ export abstract class ItemTransferFactory {
           landingUrl: `/${ImitationItemTransfer.routePath}/${itemTransfer.id}`,
           data: {}
         });
-        this.emcee.info(`<h3>已通知 ${giver.name}, ${item.name} 的交付已完成</h3>`);
+        this.emcee.info(
+          `<h3>已通知 ${giver.name}, ${item.name} 的交付已完成</h3>`
+        );
       }
     } catch (error) {
       this.emcee.error(`確認完成失敗，錯誤原因：${error.message}`);
       return Promise.reject();
+    }
+  }
+
+  async gotoItemTransferOfItem(itemId: string) {
+    try {
+      const item = await this.theThingFactory.load(
+        itemId,
+        ImitationItem.collection
+      );
+      const lastItemTransfer = await this.getLatestItemTransfer(item);
+      this.router.navigate([
+        '/',
+        ImitationItemTransfer.routePath,
+        lastItemTransfer.id
+      ]);
+    } catch (error) {
+      this.emcee.error(`前往交付任務頁面失敗，錯誤原因：\n${error.message}`);
+      return Promise.reject(error);
     }
   }
 }

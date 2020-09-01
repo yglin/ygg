@@ -4,7 +4,8 @@ import {
   Relationship,
   TheThing,
   TheThingCellDefine,
-  TheThingImitation
+  TheThingImitation,
+  DataTableColumnConfig
 } from '@ygg/the-thing/core';
 import { keyBy, mapValues, values, pick, extend } from 'lodash';
 import { ImitationEvent } from './event';
@@ -96,7 +97,7 @@ ImitationTourPlan.states['approved'] = {
 ImitationTourPlan.states['paid'].permissions = ['isAdmin', 'approved'];
 
 ImitationTourPlan.dataTableConfig = {
-  columns: extend(
+  columns: extend<{ [key: string]: DataTableColumnConfig }>(
     mapValues(
       pick(CellDefinesTourPlan, [
         CellDefinesTourPlan.dateRange.id,
@@ -116,7 +117,7 @@ ImitationTourPlan.dataTableConfig = {
         name: '總價',
         label: '總價',
         valueSource: 'function',
-        valueFunc: ImitationOrder.valueFunctions['getTotalCharge']
+        value: ImitationOrder.valueFunctions['getTotalCharge']
       }
     }
   )

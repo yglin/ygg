@@ -16,7 +16,7 @@ class TourPlanDataRowPageObjectCypress extends TheThingDataRowPageObjectCypress 
         columnConfig = columnConfig as DataTableColumnConfig;
         switch (columnConfig.valueSource) {
           case 'function':
-            const value = columnConfig.valueFunc(tourPlan);
+            const value = columnConfig.value(tourPlan);
             cy.get(this.getSelectorForColumn(columnConfig.name)).contains(
               value.toString()
             );

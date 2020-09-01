@@ -1,35 +1,30 @@
 import {
   ImitationItem,
-  ImitationBox,
-  RelationshipBoxItem,
-  RelationshipBoxMember,
-  RelationshipItemHolder,
-  RelationshipItemRequester,
   ImitationItemTransfer,
-  ItemTransferNotificationType
+  ItemTransferNotificationType,
+  RelationshipItemHolder,
+  RelationshipItemRequester
 } from '@ygg/ourbox/core';
-import { User, Notification } from '@ygg/shared/user/core';
 import {
-  theMockDatabase,
-  logout as logoutBackground
+  ItemPageObjectCypress,
+  ItemTransferPageObjectCypress,
+  MyHeldItemsPageObjectCypress,
+  MyItemTransfersPageObjectCypress
+} from '@ygg/ourbox/test';
+import {
+  logout as logoutBackground,
+  theMockDatabase
 } from '@ygg/shared/test/cypress';
+import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
+import { Notification, User } from '@ygg/shared/user/core';
 import {
+  AccountWidgetPageObjectCypress,
   loginTestUser,
   logout,
-  AccountWidgetPageObjectCypress,
-  NotificationPageObjectCypress,
   MyNotificationListPageObjectCypress
 } from '@ygg/shared/user/test';
 import { RelationRecord } from '@ygg/the-thing/core';
 import { SiteNavigator } from '../../support/site-navigator';
-import {
-  MyBoxesPageObjectCypress,
-  BoxViewPageObjectCypress,
-  ItemPageObjectCypress,
-  MyHeldItemsPageObjectCypress,
-  ItemTransferPageObjectCypress
-} from '@ygg/ourbox/test';
-import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 
 describe('Create an item-transfer task', () => {
   const siteNavigator = new SiteNavigator();
@@ -39,6 +34,7 @@ describe('Create an item-transfer task', () => {
   const emceePO = new EmceePageObjectCypress();
   const accountWidgetPO = new AccountWidgetPageObjectCypress();
   const myNotificationsPO = new MyNotificationListPageObjectCypress();
+  const myItemTransfersPO = new MyItemTransfersPageObjectCypress();
 
   const testUser = User.forge();
   const testHolder = User.forge();
@@ -55,7 +51,9 @@ describe('Create an item-transfer task', () => {
     testRequester.id
   );
   const testItemTransfer = ImitationItemTransfer.forgeTheThing();
-  testItemTransfer.name = `${testHolder.name} 交付 ${testItem.name} 給 ${testRequester.name} 的交付任務`;
+  testItemTransfer.name = `${testHolder.name} 交付 ${testItem.name} 給 ${
+    testRequester.name
+  } 的交付任務_${Date.now()}`;
 
   before(() => {
     theMockDatabase.insert(`${User.collection}/${testUser.id}`, testUser);
@@ -138,7 +136,6 @@ describe('Create an item-transfer task', () => {
     itemPO.theThingPO.runAction(ImitationItem.actions['transfer-next']);
     emceePO.confirm(`要將 ${testItem.name} 交付給 ${testRequester.name} ？`);
     itemTransferPO.expectVisible();
-    itemTransferPO.theThingPO.expectName(testItemTransfer.name);
     itemTransferPO.expectGiver(testHolder);
     itemTransferPO.expectReceiver(testRequester);
     itemTransferPO.theThingPO.setValue(testItemTransfer);
@@ -150,11 +147,31 @@ describe('Create an item-transfer task', () => {
     emceePO.alert(
       `已送出 ${testItem.name} 的交付要求，請等待 ${testRequester.name} 的回應`
     );
+  });
+
+  it('Item with created item-transfer task should be in state "transfer"', () => {
     itemPO.expectVisible();
     itemPO.theThingPO.expectState(ImitationItem.states.transfer);
+  });
+
+  it('Created item-transfer can be accessed from item page', () => {
     itemPO.theThingPO.expectActionButton(
       ImitationItem.actions['check-item-transfer']
     );
+    itemPO.theThingPO.runAction(ImitationItem.actions['check-item-transfer']);
+    itemTransferPO.expectVisible();
+    itemTransferPO.theThingPO.expectValue(testItemTransfer);
+    itemTransferPO.expectGiver(testHolder);
+    itemTransferPO.expectReceiver(testRequester);
+  });
+
+  it('Created item-transfer can be accessed in my-item-transfers page', () => {
+    siteNavigator.gotoMyItemTransfers();
+    myItemTransfersPO.expectVisible();
+    myItemTransfersPO.expectItemTransfer(testItemTransfer);
+    myItemTransfersPO.gotoItemTransfer(testItemTransfer);
+    itemTransferPO.expectVisible();
+    itemTransferPO.theThingPO.expectValue(testItemTransfer);
   });
 
   it('Send notification about item-transfer to receiver', () => {

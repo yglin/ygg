@@ -4,7 +4,8 @@ import {
   TheThingState,
   TheThing,
   TheThingAction,
-  CommonCellDefines
+  CommonCellDefines,
+  DataTableConfig
 } from '@ygg/the-thing/core';
 import { values, keyBy } from 'lodash';
 
@@ -20,16 +21,19 @@ export const RelationshipItemTransferReceiver = {
   role: 'receiver'
 };
 
-export const ImitationItemTransferCellDefines = keyBy([
-  CommonCellDefines.datetime.extend({
-    label: '約定時間',
-    userInput: 'required',
-  }),
-  CommonCellDefines.location.extend({
-    label: '約定地點',
-    userInput: 'required'
-  })
-], 'id');
+export const ImitationItemTransferCellDefines = keyBy(
+  [
+    CommonCellDefines.datetime.extend({
+      label: '約定時間',
+      userInput: 'required'
+    }),
+    CommonCellDefines.location.extend({
+      label: '約定地點',
+      userInput: 'required'
+    })
+  ],
+  'id'
+);
 /* : {
   [name: string]: TheThingCellDefine;
 } = {
@@ -103,6 +107,18 @@ export const ImitationItemTransferActions: { [id: string]: TheThingAction } = {
   }
 };
 
+export const ImitationItemTransferDataTableConfig: DataTableConfig = {
+  columns: {}
+};
+
+ImitationItemTransferDataTableConfig.columns[
+  ImitationItemTransferCellDefines.datetime.id
+] = {
+  name: ImitationItemTransferCellDefines.datetime.id,
+  label: ImitationItemTransferCellDefines.datetime.label,
+  valueSource: 'cell'
+};
+
 export const ImitationItemTransfer = new TheThingImitation({
   id: 'ourbox-item-transfer',
   name: 'item-transfer',
@@ -147,5 +163,6 @@ export const ImitationItemTransfer = new TheThingImitation({
       next: ImitationItemTransferStates.editing
     }
   },
-  actions: ImitationItemTransferActions
+  actions: ImitationItemTransferActions,
+  dataTableConfig: ImitationItemTransferDataTableConfig
 });

@@ -18,7 +18,8 @@ import {
 } from '@ygg/shared/user/ui';
 import {
   RelationFactoryService,
-  TheThingFactoryService
+  TheThingFactoryService,
+  TheThingAccessService
 } from '@ygg/the-thing/ui';
 import { ItemFactoryService } from '../item/item-factory.service';
 import { Observable } from 'rxjs';
@@ -35,6 +36,7 @@ export class ItemTransferFactoryService extends ItemTransferFactory
     router: Router,
     authenticator: AuthenticateUiService,
     itemFactory: ItemFactoryService,
+    theThingAccessor: TheThingAccessService,
     theThingFactory: TheThingFactoryService,
     relationFactory: RelationFactoryService,
     userAccessor: UserService,
@@ -46,6 +48,7 @@ export class ItemTransferFactoryService extends ItemTransferFactory
       router,
       authenticator,
       itemFactory,
+      theThingAccessor,
       theThingFactory,
       relationFactory,
       userAccessor,

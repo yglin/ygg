@@ -57,4 +57,9 @@ export class SiteNavigator {
     this.accountWidgetPO.openUserMenu();
     this.accountWidgetPO.userMenuPO.clickMenuItem('myHeldItems');
   }
+
+  gotoMyItemTransfers() {
+    this.accountWidgetPO.openUserMenu();
+    this.accountWidgetPO.userMenuPO.clickMenuItem('myItemTransfers');    
+  }
 }
