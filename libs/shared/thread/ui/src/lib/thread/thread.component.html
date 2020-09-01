@@ -1,20 +1,25 @@
 <div class="thread">
-  <ygg-title-divider>留言區</ygg-title-divider>
-  <ygg-omni-type-control
-    type="html"
-    [formControl]="formControlNewComment"
-  ></ygg-omni-type-control>
-  <br />
-  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
-    <button
-      mat-mini-fab
-      (click)="submitNewComment()"
-      [disabled]="formControlNewComment.invalid"
-      matTooltip="送出留言"
-    >
-      <mat-icon> add_comment</mat-icon>
-    </button>
+  <div class="new-comment">
+    <ygg-title-divider>留言區</ygg-title-divider>
+    <ygg-omni-type-control
+      type="html"
+      [formControl]="formControlNewComment"
+    ></ygg-omni-type-control>
+    <br />
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+      <button
+        mat-mini-fab
+        class="add-comment"
+        (click)="submitNewComment()"
+        [disabled]="formControlNewComment.invalid"
+        matTooltip="送出留言"
+      >
+        <mat-icon>add_comment</mat-icon>
+      </button>
+    </div>
   </div>
   <br />
-  <ygg-comment-list [comments]='comments'></ygg-comment-list>
+  <div class="comment-list">
+    <ygg-comment-list [comments]="comments"></ygg-comment-list>
+  </div>
 </div>

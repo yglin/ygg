@@ -29,6 +29,7 @@ import { ItemComponent } from './item/item/item.component';
 import { MyHeldItemsComponent } from './item/my-held-items/my-held-items.component';
 import { ItemTransferComponent } from './item-transfer/item-transfer/item-transfer.component';
 import { MyItemTransfersComponent } from './item-transfer/my-item-transfers/my-item-transfers.component';
+import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { MyItemTransfersComponent } from './item-transfer/my-item-transfers/my-i
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
     SharedUserUiModule,
+    SharedThreadUiModule,
     TheThingUiModule,
     RouterModule.forChild(routes)
   ],

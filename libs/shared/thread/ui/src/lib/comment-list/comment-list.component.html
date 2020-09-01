@@ -5,10 +5,11 @@
         let comment of comments;
         let isEven = even;
         let isFirst = first;
-        let isLast = last
+        let isLast = last;
+        let idx = index
       "
     >
-      <div [ngClass]="{ latest: isFirst }">
+      <div [ngClass]="{ latest: isFirst }" class="comment" [attr.idx]="idx">
         <ygg-comment
           [comment]="comment"
           [horizontalAlign]="isEven ? 'left' : 'right'"

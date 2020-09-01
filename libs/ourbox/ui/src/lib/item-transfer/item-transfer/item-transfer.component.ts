@@ -44,8 +44,7 @@ export class ItemTransferComponent implements OnInit, OnDestroy {
         tap(itemTransfer => {
           this.itemTransfer = itemTransfer;
           this.showThread = !ImitationItemTransfer.isInStates(itemTransfer, [
-            ImitationItemTransfer.states.new,
-            ImitationItemTransfer.states.editing
+            ImitationItemTransfer.states.new
           ]);
         })
       );
