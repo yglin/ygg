@@ -1,10 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TheThing } from '@ygg/the-thing/core';
 import { ActivatedRoute } from '@angular/router';
-import { get } from 'lodash';
+import { get, first } from 'lodash';
 import { isObservable, Observable, Subscription, merge, interval } from 'rxjs';
 import { tap, switchMap, map } from 'rxjs/operators';
-import { ImitationItemTransfer } from '@ygg/ourbox/core';
+import {
+  ImitationItemTransfer,
+  RelationshipItemTransferGiver,
+  RelationshipItemTransferReceiver,
+  RelationshipItemTransferItem
+} from '@ygg/ourbox/core';
 import { ItemTransferFactoryService } from '../item-transfer-factory.service';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 
@@ -43,33 +48,46 @@ export class ItemTransferComponent implements OnInit, OnDestroy {
       const itemTransferUpdate$ = this.itemTransfer$.pipe(
         tap(itemTransfer => {
           this.itemTransfer = itemTransfer;
+          this.giverId = first(
+            this.itemTransfer.listUserIdsOfRole(
+              RelationshipItemTransferGiver.role
+            )
+          );
+          this.receiverId = first(
+            this.itemTransfer.listUserIdsOfRole(
+              RelationshipItemTransferReceiver.role
+            )
+          );
+          this.itemId = first(
+            this.itemTransfer.getRelationObjectIds(
+              RelationshipItemTransferItem.name
+            )
+          );
           this.showThread = !ImitationItemTransfer.isInStates(itemTransfer, [
             ImitationItemTransfer.states.new
           ]);
         })
       );
-      const giverId$: Observable<any> = itemTransferUpdate$.pipe(
-        switchMap(itemTransfer =>
-          this.itemTransferFactory.getGiver(itemTransfer.id)
-        ),
-        tap(giver => (this.giverId = giver ? giver.id : null))
-      );
-      const receiverId$: Observable<any> = itemTransferUpdate$.pipe(
-        switchMap(itemTransfer =>
-          this.itemTransferFactory.getReceiver(itemTransfer.id)
-        ),
-        tap(receiver => (this.receiverId = receiver ? receiver.id : null))
-      );
-      const itemId$: Observable<any> = itemTransferUpdate$.pipe(
-        switchMap(itemTransfer =>
-          this.itemTransferFactory.getTransferItem(itemTransfer.id)
-        ),
-        tap(item => (this.itemId = item ? item.id : null))
-      );
+      // const giverId$: Observable<any> = itemTransferUpdate$.pipe(
+      //   switchMap(itemTransfer =>
+      //     this.itemTransferFactory.getGiver(itemTransfer.id)
+      //   ),
+      //   tap(giver => (this.giverId = giver ? giver.id : null))
+      // );
+      // const receiverId$: Observable<any> = itemTransferUpdate$.pipe(
+      //   switchMap(itemTransfer =>
+      //     this.itemTransferFactory.getReceiver(itemTransfer.id)
+      //   ),
+      //   tap(receiver => (this.receiverId = receiver ? receiver.id : null))
+      // );
+      // const itemId$: Observable<any> = itemTransferUpdate$.pipe(
+      //   switchMap(itemTransfer =>
+      //     this.itemTransferFactory.getTransferItem(itemTransfer.id)
+      //   ),
+      //   tap(item => (this.itemId = item ? item.id : null))
+      // );
 
-      this.subscriptions.push(
-        merge(itemTransferUpdate$, giverId$, receiverId$, itemId$).subscribe()
-      );
+      this.subscriptions.push(itemTransferUpdate$.subscribe());
 
       // Animate running step
       this.subscriptions.push(

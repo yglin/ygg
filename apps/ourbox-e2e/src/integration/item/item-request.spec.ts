@@ -27,14 +27,10 @@ describe('Request for item', () => {
   const testUser1 = User.forge();
   const testUser2 = User.forge();
   const testBox = ImitationBox.forgeTheThing();
-  const memberRelation1 = RelationshipBoxMember.createRelationRecord(
-    testBox.id,
-    testUser1.id
-  );
-  const memberRelation2 = RelationshipBoxMember.createRelationRecord(
-    testBox.id,
+  testBox.addUsersOfRole(RelationshipBoxMember.role, [
+    testUser1.id,
     testUser2.id
-  );
+  ]);
   const testItem = ImitationItem.forgeTheThing();
   testItem.setState(ImitationItem.stateName, ImitationItem.states.available);
   const itemRelation = RelationshipBoxItem.createRelationRecord(
@@ -43,31 +39,16 @@ describe('Request for item', () => {
   );
   const itemHolder: User = testUser1;
   testItem.ownerId = itemHolder.id;
-  const holderRelation = RelationshipItemHolder.createRelationRecord(
-    testItem.id,
-    itemHolder.id
-  );
+  testItem.setUserOfRole(RelationshipItemHolder.role, itemHolder.id);
 
   before(() => {
     theMockDatabase.insert(`${User.collection}/${testUser1.id}`, testUser1);
     theMockDatabase.insert(`${User.collection}/${testUser2.id}`, testUser2);
     theMockDatabase.insert(`${testBox.collection}/${testBox.id}`, testBox);
-    theMockDatabase.insert(
-      `${RelationRecord.collection}/${memberRelation1.id}`,
-      memberRelation1
-    );
-    theMockDatabase.insert(
-      `${RelationRecord.collection}/${memberRelation2.id}`,
-      memberRelation2
-    );
     theMockDatabase.insert(`${testItem.collection}/${testItem.id}`, testItem);
     theMockDatabase.insert(
       `${RelationRecord.collection}/${itemRelation.id}`,
       itemRelation
-    );
-    theMockDatabase.insert(
-      `${RelationRecord.collection}/${holderRelation.id}`,
-      holderRelation
     );
     cy.visit('/');
     loginTestUser(testUser1);
@@ -92,19 +73,31 @@ describe('Request for item', () => {
 
   it('Can request item only in state available', () => {
     testItem.setState(ImitationItem.stateName, ImitationItem.states.new);
-    theMockDatabase.insert(`${ImitationItem.collection}/${testItem.id}`, testItem);
+    theMockDatabase.insert(
+      `${ImitationItem.collection}/${testItem.id}`,
+      testItem
+    );
     itemPO.theThingPO.expectNoActionButton(ImitationItem.actions['request']);
 
     testItem.setState(ImitationItem.stateName, ImitationItem.states.editing);
-    theMockDatabase.insert(`${ImitationItem.collection}/${testItem.id}`, testItem);
+    theMockDatabase.insert(
+      `${ImitationItem.collection}/${testItem.id}`,
+      testItem
+    );
     itemPO.theThingPO.expectNoActionButton(ImitationItem.actions['request']);
 
     testItem.setState(ImitationItem.stateName, ImitationItem.states.transfer);
-    theMockDatabase.insert(`${ImitationItem.collection}/${testItem.id}`, testItem);
+    theMockDatabase.insert(
+      `${ImitationItem.collection}/${testItem.id}`,
+      testItem
+    );
     itemPO.theThingPO.expectNoActionButton(ImitationItem.actions['request']);
 
     testItem.setState(ImitationItem.stateName, ImitationItem.states.available);
-    theMockDatabase.insert(`${ImitationItem.collection}/${testItem.id}`, testItem);
+    theMockDatabase.insert(
+      `${ImitationItem.collection}/${testItem.id}`,
+      testItem
+    );
     itemPO.theThingPO.expectActionButton(ImitationItem.actions['request']);
   });
 
@@ -129,7 +122,8 @@ describe('Request for item', () => {
   });
 
   it('Can not cancel if not in request list', () => {
-    itemPO.theThingPO.expectNoActionButton(ImitationItem.actions['cancel-request']);    
+    itemPO.theThingPO.expectNoActionButton(
+      ImitationItem.actions['cancel-request']
+    );
   });
-  
 });

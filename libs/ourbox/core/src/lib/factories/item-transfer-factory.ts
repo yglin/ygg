@@ -11,7 +11,8 @@ import {
   RelationRecord,
   TheThing,
   TheThingFactory,
-  TheThingAccessor
+  TheThingAccessor,
+  Relationship
 } from '@ygg/the-thing/core';
 import { first, isEmpty, flatten, uniq, uniqBy } from 'lodash';
 import { Subscription, Observable, of, combineLatest } from 'rxjs';
@@ -80,35 +81,53 @@ export abstract class ItemTransferFactory {
       })
     );
 
-    this.listMyItemTransfersIamGiver$ = this.authenticator.currentUser$.pipe(switchMap(user => {
-      if (!user) {
-        return of([]);
-      } else {
-        return this.relationFactory.findByObjectAndRole$(user.id, RelationshipItemTransferGiver.role);
-      }
-    }), switchMap((relations: RelationRecord[]) => {
-      if (isEmpty(relations)) {
-        return of([]);
-      } else {
-        const itemTransferIds: string[] = relations.map(r => r.subjectId);
-        return this.theThingAccessor.listByIds$(itemTransferIds, ImitationItemTransfer.collection);
-      }
-    }))
+    this.listMyItemTransfersIamGiver$ = this.authenticator.currentUser$.pipe(
+      switchMap(user => {
+        if (!user) {
+          return of([]);
+        } else {
+          return this.relationFactory.findByObjectAndRole$(
+            user.id,
+            RelationshipItemTransferGiver.role
+          );
+        }
+      }),
+      switchMap((relations: RelationRecord[]) => {
+        if (isEmpty(relations)) {
+          return of([]);
+        } else {
+          const itemTransferIds: string[] = relations.map(r => r.subjectId);
+          return this.theThingAccessor.listByIds$(
+            itemTransferIds,
+            ImitationItemTransfer.collection
+          );
+        }
+      })
+    );
 
-    this.listMyItemTransfersIamReceiver$ = this.authenticator.currentUser$.pipe(switchMap(user => {
-      if (!user) {
-        return of([]);
-      } else {
-        return this.relationFactory.findByObjectAndRole$(user.id, RelationshipItemTransferReceiver.role);
-      }
-    }), switchMap((relations: RelationRecord[]) => {
-      if (isEmpty(relations)) {
-        return of([]);
-      } else {
-        const itemTransferIds: string[] = relations.map(r => r.subjectId);
-        return this.theThingAccessor.listByIds$(itemTransferIds, ImitationItemTransfer.collection);
-      }
-    }))
+    this.listMyItemTransfersIamReceiver$ = this.authenticator.currentUser$.pipe(
+      switchMap(user => {
+        if (!user) {
+          return of([]);
+        } else {
+          return this.relationFactory.findByObjectAndRole$(
+            user.id,
+            RelationshipItemTransferReceiver.role
+          );
+        }
+      }),
+      switchMap((relations: RelationRecord[]) => {
+        if (isEmpty(relations)) {
+          return of([]);
+        } else {
+          const itemTransferIds: string[] = relations.map(r => r.subjectId);
+          return this.theThingAccessor.listByIds$(
+            itemTransferIds,
+            ImitationItemTransfer.collection
+          );
+        }
+      })
+    );
 
     this.listMyItemTransfers$ = combineLatest([
       this.listMyItemTransfersIamGiver$,
@@ -130,27 +149,17 @@ export abstract class ItemTransferFactory {
         imitation: ImitationItemTransfer
       });
       newItemTrnasfer.name = `${giver.name} 交付 ${item.name} 給 ${receiver.name} 的交付任務`;
-      await this.relationFactory.create({
-        subjectCollection: ImitationItemTransfer.collection,
-        subjectId: newItemTrnasfer.id,
-        objectCollection: ImitationItem.collection,
-        objectId: item.id,
-        objectRole: RelationshipItemTransferItem.role
-      });
-      await this.relationFactory.create({
-        subjectCollection: ImitationItemTransfer.collection,
-        subjectId: newItemTrnasfer.id,
-        objectCollection: User.collection,
-        objectId: giver.id,
-        objectRole: RelationshipItemTransferGiver.role
-      });
-      await this.relationFactory.create({
-        subjectCollection: ImitationItemTransfer.collection,
-        subjectId: newItemTrnasfer.id,
-        objectCollection: User.collection,
-        objectId: receiver.id,
-        objectRole: RelationshipItemTransferReceiver.role
-      });
+      newItemTrnasfer.addRelation(
+        RelationshipItemTransferItem.createRelation(newItemTrnasfer.id, item.id)
+      );
+      newItemTrnasfer.setUserOfRole(
+        RelationshipItemTransferGiver.role,
+        giver.id
+      );
+      newItemTrnasfer.setUserOfRole(
+        RelationshipItemTransferReceiver.role,
+        receiver.id
+      );
       // console.log(`New ItemTransfer id = ${newItemTrnasfer.id}`);
       this.router.navigate([
         ImitationItemTransfer.routePath,

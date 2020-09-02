@@ -21,18 +21,11 @@ describe('Create item in box', () => {
   const itemPO = new ItemPageObjectCypress();
   const testUser = User.forge();
   const testBox = ImitationBox.forgeTheThing();
-  const memberRelation = RelationshipBoxMember.createRelationRecord(
-    testBox.id,
-    testUser.id
-  );
+  testBox.addUsersOfRole(RelationshipBoxMember.role, [testUser.id]);
 
   before(() => {
     theMockDatabase.insert(`${User.collection}/${testUser.id}`, testUser);
     theMockDatabase.insert(`${testBox.collection}/${testBox.id}`, testBox);
-    theMockDatabase.insert(
-      `${RelationRecord.collection}/${memberRelation.id}`,
-      memberRelation
-    );
     cy.visit('/');
     loginTestUser(testUser);
   });

@@ -10,9 +10,11 @@ import {
   TheThingImitation,
   TheThing,
   TheThingRelation,
-  RelationRecord
+  RelationRecord,
+  RelationAccessor
 } from '@ygg/the-thing/core';
 import { relationFactory, relationAccessor } from '../global';
+import { User } from '@ygg/shared/user/core';
 
 export function generateOnDeleteFunctions(imitations: TheThingImitation[]) {
   const onDeleteFunctions = {};
@@ -29,12 +31,27 @@ export function generateOnDeleteFunctions(imitations: TheThingImitation[]) {
         ) => {
           try {
             const theThing = new TheThing().fromJSON(snapshot.data());
+
+            // Delete relations subject to deleted TheThing
             const relations: RelationRecord[] = theThing
               .getAllRelations()
               .map(r => r.toRelationRecord());
             for (const relation of relations) {
               await relationAccessor.delete(relation.id);
             }
+
+            // Delete role-user relations subject to deleted TheThing
+            for (const role in theThing.users) {
+              if (Object.prototype.hasOwnProperty.call(theThing.users, role)) {
+                const userIds = theThing.users[role];
+                for (const userId of userIds) {
+                  await relationAccessor.delete(
+                    RelationRecord.constructId(theThing.id, role, userId)
+                  );
+                }
+              }
+            }
+
             return Promise.resolve();
           } catch (error) {
             console.error(error.message);

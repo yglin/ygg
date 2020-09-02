@@ -252,6 +252,9 @@
     },
     "shared-ui-core": {
       "tags": ["scope:shared", "type:core"]
+    },
+    "ourbox-functions": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {

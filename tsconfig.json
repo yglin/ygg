@@ -83,7 +83,8 @@
       "@ygg/shared/thread/test": ["libs/shared/thread/test/src/index.ts"],
       "@ygg/ourbox/ui": ["libs/ourbox/ui/src/index.ts"],
       "@ygg/ourbox/test": ["libs/ourbox/test/src/index.ts"],
-      "@ygg/shared/ui/core": ["libs/shared/ui/core/src/index.ts"]
+      "@ygg/shared/ui/core": ["libs/shared/ui/core/src/index.ts"],
+      "@ygg/ourbox/functions": ["libs/ourbox/functions/src/index.ts"]
     },
     "rootDir": "."
   },

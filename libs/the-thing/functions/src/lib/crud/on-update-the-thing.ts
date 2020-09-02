@@ -13,6 +13,7 @@ import {
   RelationRecord
 } from '@ygg/the-thing/core';
 import { relationFactory, relationAccessor } from '../global';
+import { User } from '@ygg/shared/user/core';
 
 export function generateOnUpdateFunctions(imitations: TheThingImitation[]) {
   const onUpdateFunctions = {};
@@ -34,6 +35,8 @@ export function generateOnUpdateFunctions(imitations: TheThingImitation[]) {
             const theThingAfter = new TheThing().fromJSON(
               snapshot.after.data()
             );
+
+            // Sync relations subject to updated TheThing
             const relationsBefore = theThingBefore
               .getAllRelations()
               .map(r => r.toRelationRecord());
@@ -58,6 +61,58 @@ export function generateOnUpdateFunctions(imitations: TheThingImitation[]) {
             for (const relation of upsertRelations) {
               await relationAccessor.save(relation);
             }
+
+            // Sync role-user relations subject to updated TheThing
+            const deleteUserRelationIds: string[] = [];
+            const newUserRelations: RelationRecord[] = [];
+
+            // console.log(theThingBefore.users);
+            // console.log(theThingAfter.users);
+            for (const role in theThingBefore.users) {
+              if (
+                Object.prototype.hasOwnProperty.call(theThingBefore.users, role)
+              ) {
+                const userIds = theThingBefore.users[role];
+                for (const userId of userIds) {
+                  if (!theThingAfter.hasUserOfRole(role, userId)) {
+                    deleteUserRelationIds.push(
+                      RelationRecord.constructId(theThingAfter.id, role, userId)
+                    );
+                  }
+                }
+              }
+            }
+
+            for (const role in theThingAfter.users) {
+              if (
+                Object.prototype.hasOwnProperty.call(theThingAfter.users, role)
+              ) {
+                const userIds = theThingAfter.users[role];
+                for (const userId of userIds) {
+                  if (!theThingBefore.hasUserOfRole(role, userId)) {
+                    newUserRelations.push(
+                      new RelationRecord({
+                        subjectCollection: theThingAfter.collection,
+                        subjectId: theThingAfter.id,
+                        objectCollection: User.collection,
+                        objectId: userId,
+                        objectRole: role
+                      })
+                    );
+                  }
+                }
+              }
+            }
+
+            for (const deleteId of deleteUserRelationIds) {
+              console.log(`Delete relation ${deleteId}`);
+              await relationAccessor.delete(deleteId);
+            }
+            for (const newRelation of newUserRelations) {
+              console.log(`Upsert new relation ${newRelation.id}`);
+              await relationAccessor.save(newRelation);
+            }
+
             return Promise.resolve();
           } catch (error) {
             console.error(error.message);

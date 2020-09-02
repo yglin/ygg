@@ -16,7 +16,7 @@ export default function forgeDB() {
   const relationRecords: RelationRecord[] = [];
 
   // forge users
-  const users: User[] = forgeUsers({count: 50});
+  const users: User[] = forgeUsers({ count: 50 });
   users.forEach(user =>
     theMockDatabase.insert(`${User.collection}/${user.id}`, user)
   );
@@ -74,14 +74,10 @@ function forgeBoxes(
       const sampleMembers: User[] = sampleSize(options.members, countMembers);
       const owner = sample(sampleMembers);
       box.ownerId = owner.id;
-
-      for (const member of sampleMembers) {
-        const memberRelation = RelationshipBoxMember.createRelationRecord(
-          box.id,
-          member.id
-        );
-        options.relationRecords.push(memberRelation);
-      }
+      box.addUsersOfRole(
+        RelationshipBoxMember.role,
+        sampleMembers.map(member => member.id)
+      );
     }
   }
   return boxes;
@@ -121,21 +117,14 @@ function forgeItems(
       item.ownerId = sample(sampleUsers).id;
 
       const holder = sampleUsers[0];
-      const itemHolderRelation = RelationshipItemHolder.createRelationRecord(
-        item.id,
-        holder.id
-      );
-      options.relationRecords.push(itemHolderRelation);
+      item.setUserOfRole(RelationshipItemHolder.role, holder.id);
 
       const requesters = sampleUsers.slice(1);
       if (!isEmpty(requesters)) {
-        for (const requester of requesters) {
-          const requestRelation = RelationshipItemRequester.createRelationRecord(
-            item.id,
-            requester.id
-          );
-          options.relationRecords.push(requestRelation);
-        }
+        item.addUsersOfRole(
+          RelationshipItemRequester.role,
+          requesters.map(rq => rq.id)
+        );
       }
     }
   }

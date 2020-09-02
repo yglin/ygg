@@ -1,7 +1,7 @@
 import { TheThingFilter, TheThing } from '@ygg/the-thing/core';
 import { ImitationItemCells } from './item';
 import { GeoPoint } from '@ygg/shared/omni-types/core';
-import * as leaflet from 'leaflet';
+// import { latLng } from 'leaflet';
 
 export class GeoBound {
   leafletBound: any;
@@ -15,7 +15,7 @@ export class GeoBound {
   }
 
   contains(geoPoint: GeoPoint): boolean {
-    const latlng = leaflet.latLng(geoPoint.latitude, geoPoint.longitude);
+    const latlng = { lat: geoPoint.latitude, lng: geoPoint.longitude };
     return this.leafletBound.contains(latlng);
   }
 }

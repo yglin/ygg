@@ -7,6 +7,7 @@ import { TheThing } from './the-thing';
 
 export class Relationship {
   name: string;
+  label: string;
   subjectImitation: TheThingImitation;
   objectImitation: TheThingImitation;
   _subjectCollection: string;
@@ -39,6 +40,7 @@ export class Relationship {
 
   constructor(options: {
     name: string;
+    label?: string;
     subjectImitation?: TheThingImitation;
     objectImitation?: TheThingImitation;
     subjectCollection?: string;
@@ -56,6 +58,9 @@ export class Relationship {
     }
     if (options.objectCollection) {
       this._objectCollection = options.objectCollection;
+    }
+    if (!this.label) {
+      this.label = this.name;
     }
   }
 

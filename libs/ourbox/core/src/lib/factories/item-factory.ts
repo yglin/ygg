@@ -75,9 +75,11 @@ export class ItemFactory {
 
   async create(): Promise<TheThing> {
     try {
+      const user = await this.authenticator.requestLogin();
       const newItem = await this.theThingFactory.create({
         imitation: ImitationItem
       });
+      newItem.setUserOfRole(RelationshipItemHolder.role, user.id);
       this.router.navigate([ImitationItem.routePath, newItem.id]);
       return this.theThingFactory.onSave$
         .pipe(
@@ -97,12 +99,6 @@ export class ItemFactory {
               { force: true }
             );
           }
-          await this.relationFactory.create(
-            RelationshipItemHolder.createRelationRecord(
-              resultItem.id,
-              resultItem.ownerId
-            )
-          );
           return resultItem;
         });
     } catch (error) {
@@ -220,13 +216,8 @@ export class ItemFactory {
         `送出索取 ${item.name} 的請求，並且排隊等待？`
       );
       if (confirm) {
-        await this.relationFactory.create({
-          subjectCollection: item.collection,
-          subjectId: item.id,
-          objectCollection: User.collection,
-          objectId: user.id,
-          objectRole: RelationshipItemRequester.role
-        });
+        item.addUsersOfRole(RelationshipItemRequester.role, [user.id]);
+        await this.theThingAccessor.update(item, 'users', item.users);
         this.emcee.info(`已送出索取 ${item.name} 的請求`);
       }
     } catch (error) {
@@ -270,10 +261,13 @@ export class ItemFactory {
       }
       const confirm = await this.emcee.confirm(`要取消索取 ${item.name} 嗎？`);
       if (confirm) {
-        await this.relationFactory.delete(
+        item.removeUsersOfRole(RelationshipItemRequester.role, [user.id]);
+        await this.theThingAccessor.update(item, 'users', item.users);
+        await this.relationFactory.waitRelation(
           item.id,
+          user.id,
           RelationshipItemRequester.role,
-          user.id
+          true
         );
         this.emcee.info(`已取消索取 ${item.name}`);
       }
@@ -290,24 +284,9 @@ export class ItemFactory {
     try {
       item.setCellValue(ImitationItemCells.location.id, newLocation);
       ImitationItem.setState(item, ImitationItem.states.available);
-      await this.theThingFactory.save(item, {
-        imitation: ImitationItem,
-        force: true
-      });
-      await this.relationFactory.delete(
-        item.id,
-        RelationshipItemRequester.role,
-        receiver.id
-      );
-      await this.relationFactory.replaceObject(
-        new RelationRecord({
-          subjectCollection: item.collection,
-          subjectId: item.id,
-          objectCollection: User.collection,
-          objectId: receiver.id,
-          objectRole: RelationshipItemHolder.role
-        })
-      );
+      item.setUserOfRole(RelationshipItemHolder.role, receiver.id);
+      item.removeUsersOfRole(RelationshipItemRequester.role, [receiver.id]);
+      await this.theThingAccessor.update(item, 'users', item.users);
     } catch (error) {
       return Promise.reject(
         new Error(

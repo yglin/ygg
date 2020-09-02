@@ -14,7 +14,9 @@ import {
   values,
   castArray,
   flatten,
-  find
+  find,
+  uniq,
+  difference
 } from 'lodash';
 import { Tags } from '@ygg/tags/core';
 import { TheThingCell } from './cell';
@@ -62,6 +64,11 @@ export class TheThing implements Entity, ImageThumbnailItem {
 
   /** TheThingCells, define its own properties, attributes */
   cells: { [name: string]: TheThingCell };
+
+  /**
+   * Related user ids, grouped by role
+   */
+  users: { [role: string]: string[] } = {};
 
   /**
    * External relations, linked to other the-things.
@@ -276,6 +283,45 @@ export class TheThing implements Entity, ImageThumbnailItem {
 
   getCellValuesByNames(cellIds: string[]): { [cellId: string]: any } {
     return mapValues(pick(this.cells, cellIds), cell => cell.value);
+  }
+
+  /**
+   * Set the uniq user of specified role
+   *
+   * @param role Name of role
+   * @param userId The only user who plays the role
+   */
+  setUserOfRole(role: string, userId: string) {
+    this.users[role] = [userId];
+  }
+
+  addUsersOfRole(role: string, userIds: string[]) {
+    if (!(role in this.users)) {
+      this.users[role] = [];
+    }
+    this.users[role] = uniq(this.users[role].concat(userIds));
+  }
+
+  removeUsersOfRole(role: string, userIds: string[]) {
+    if (role in this.users) {
+      this.users[role] = difference(this.users[role], userIds);
+    }
+  }
+
+  listUserIdsOfRole(role: string): string[] {
+    if (role in this.users) {
+      return this.users[role];
+    } else {
+      return [];
+    }
+  }
+
+  hasUserOfRole(role: string, userId: string): boolean {
+    return (
+      role in this.users &&
+      !isEmpty(this.users[role]) &&
+      this.users[role].indexOf(userId) >= 0
+    );
   }
 
   hasRelation(relationName: string) {

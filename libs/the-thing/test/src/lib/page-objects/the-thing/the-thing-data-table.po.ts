@@ -12,6 +12,7 @@ import { timeout } from 'rxjs/operators';
 import { values, keys, get } from 'lodash';
 import { TheThingCellViewPageObjectCypress } from '../cell/cell-view.po';
 import { OmniTypeViewPageObjectCypress } from '@ygg/shared/omni-types/test';
+import { UserThumbnailPageObjectCypress } from '@ygg/shared/user/test';
 
 export class TheThingDataRowPageObjectCypress extends TheThingDataRowPageObject {
   imitation: TheThingImitation;
@@ -47,6 +48,15 @@ export class TheThingDataRowPageObjectCypress extends TheThingDataRowPageObject 
             cy.get(this.getSelectorForColumn(key)).contains(
               JSON.stringify(metaValue)
             );
+            break;
+          case 'users':
+            const userIds = theThing.listUserIdsOfRole(columnConfig.value);
+            cy.wrap(userIds).each(userId => {
+              const userThumbnail = new UserThumbnailPageObjectCypress(
+                `${this.getSelectorForColumn(key)} [user-id="${userId}"]`
+              );
+              userThumbnail.expectVisible();
+            });
             break;
           default:
             throw new Error(

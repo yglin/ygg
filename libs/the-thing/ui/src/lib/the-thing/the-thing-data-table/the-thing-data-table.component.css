@@ -1,5 +1,4 @@
 .mat-table {
-  background-color: rgba(255, 255, 255, 0.2);
   width: 100%;
 }
 
@@ -33,4 +32,9 @@ th {
 
 .mat-column-select {
   overflow: initial;
+}
+
+.name {
+  max-width: 40vw;
+  text-overflow: ellipsis;
 }

@@ -3,7 +3,9 @@ import {
   ImitationItemTransfer,
   ItemTransferNotificationType,
   RelationshipItemHolder,
-  RelationshipItemRequester
+  RelationshipItemRequester,
+  RelationshipItemTransferGiver,
+  RelationshipItemTransferReceiver
 } from '@ygg/ourbox/core';
 import {
   ItemPageObjectCypress,
@@ -39,21 +41,24 @@ describe('Create an item-transfer task', () => {
   const testUser = User.forge();
   const testHolder = User.forge();
   const testRequester = User.forge();
+  
   const testItem = ImitationItem.forgeTheThing();
   testItem.ownerId = testUser.id;
   testItem.setState(ImitationItem.stateName, ImitationItem.states.available);
-  const itemHolderRelation = RelationshipItemHolder.createRelationRecord(
-    testItem.id,
-    testHolder.id
-  );
-  const itemRequestRelation = RelationshipItemRequester.createRelationRecord(
-    testItem.id,
-    testRequester.id
-  );
+  testItem.setUserOfRole(RelationshipItemHolder.role, testHolder.id);
+  testItem.addUsersOfRole(RelationshipItemRequester.role, [testRequester.id])
+  
   const testItemTransfer = ImitationItemTransfer.forgeTheThing();
   testItemTransfer.name = `${testHolder.name} 交付 ${testItem.name} 給 ${
     testRequester.name
   } 的交付任務_${Date.now()}`;
+  testItemTransfer.setUserOfRole(RelationshipItemTransferGiver.role, testHolder.id);
+  testItemTransfer.setUserOfRole(RelationshipItemTransferReceiver.role, testRequester.id);
+
+  const testItemNoRequester = ImitationItem.forgeTheThing();
+  testItemNoRequester.ownerId = testUser.id;
+  testItemNoRequester.setState(ImitationItem.stateName, ImitationItem.states.available);
+  testItemNoRequester.setUserOfRole(RelationshipItemHolder.role, testHolder.id);
 
   before(() => {
     theMockDatabase.insert(`${User.collection}/${testUser.id}`, testUser);
@@ -67,12 +72,8 @@ describe('Create an item-transfer task', () => {
       testItem
     );
     theMockDatabase.insert(
-      `${RelationRecord.collection}/${itemHolderRelation.id}`,
-      itemHolderRelation
-    );
-    theMockDatabase.insert(
-      `${RelationRecord.collection}/${itemRequestRelation.id}`,
-      itemRequestRelation
+      `${ImitationItem.collection}/${testItemNoRequester.id}`,
+      testItemNoRequester
     );
     logoutBackground().then(() => {
       cy.visit('/');
@@ -117,22 +118,20 @@ describe('Create an item-transfer task', () => {
   });
 
   it('Can not create item-transfer if no one in request list', () => {
-    theMockDatabase.delete(
-      `${RelationRecord.collection}/${itemRequestRelation.id}`
-    );
+    siteNavigator.gotoMyHeldItems();
+    myHeldItemsPO.expectVisible();
+    myHeldItemsPO.gotoItem(testItemNoRequester);
+    itemPO.expectVisible();
     itemPO.theThingPO.expectNoActionButton(
-      ImitationItem.actions['transfer-next']
-    );
-    theMockDatabase.insert(
-      `${RelationRecord.collection}/${itemRequestRelation.id}`,
-      itemRequestRelation
-    );
-    itemPO.theThingPO.expectActionButton(
       ImitationItem.actions['transfer-next']
     );
   });
 
   it('Create an item-transfer for first requester in request list', () => {
+    siteNavigator.gotoMyHeldItems();
+    myHeldItemsPO.expectVisible();
+    myHeldItemsPO.gotoItem(testItem);
+    itemPO.expectVisible();
     itemPO.theThingPO.runAction(ImitationItem.actions['transfer-next']);
     emceePO.confirm(`要將 ${testItem.name} 交付給 ${testRequester.name} ？`);
     itemTransferPO.expectVisible();
@@ -199,4 +198,5 @@ describe('Create an item-transfer task', () => {
     itemTransferPO.expectVisible();
     itemTransferPO.theThingPO.expectValue(testItemTransfer);
   });
+
 });

@@ -30,16 +30,24 @@
     aria-label="The Thing"
   >
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>名稱</th>
-      <td mat-cell *matCellDef="let theThing" class="name" column-name="name">
-        {{ theThing.name }}
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <h3>名稱</h3>
+      </th>
+      <td mat-cell *matCellDef="let theThing" column-name="name">
+        <h4 class="name" matTooltip="theThing.name">{{ theThing.name }}</h4>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="createAt">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>送出時間</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <h3>
+          送出時間
+        </h3>
+      </th>
       <td mat-cell *matCellDef="let theThing">
-        {{ theThing.createAt }}
+        <h6>
+          {{ theThing.createAt }}
+        </h6>
       </td>
     </ng-container>
 
@@ -48,7 +56,7 @@
       [matColumnDef]="column.key"
     >
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{ column.value.label }}
+        <h3>{{ column.value.label }}</h3>
       </th>
       <td mat-cell *matCellDef="let theThing" [attr.column-name]="column.key">
         <div *ngIf="column.value as columnConfig">
@@ -63,8 +71,15 @@
               </div>
             </div>
             <div *ngSwitchCase="'meta'">
-              <div>
+              <pre>
                 {{ theThing[column.key] | json }}
+              </pre>
+            </div>
+            <div *ngSwitchCase="'users'">
+              <div *ngIf="theThing.users[columnConfig.value] as userIds">
+                <div *ngFor="let userId of userIds" [attr.user-id]="userId">
+                  <ygg-user-thumbnail [id]="userId"></ygg-user-thumbnail>
+                </div>
               </div>
             </div>
             <div *ngSwitchCase="'function'">

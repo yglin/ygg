@@ -21,14 +21,7 @@ describe('Ourbox home page, as guest(not login)', () => {
   const SampleDocuments: Document[] = [];
   const userWithoutBox: User = User.forge();
   const userWithBox: User = User.forge();
-  const sampleBoxMemberRelation = new RelationRecord({
-    subjectCollection: sampleBox.collection,
-    subjectId: sampleBox.id,
-    objectCollection: User.collection,
-    objectId: userWithBox.id,
-    objectRole: RelationshipBoxMember.role,
-    data: {}
-  });
+  sampleBox.addUsersOfRole(RelationshipBoxMember.role, [userWithBox.id]);
   SampleDocuments.push({
     path: `${User.collection}/${userWithoutBox.id}`,
     data: userWithoutBox
@@ -40,10 +33,6 @@ describe('Ourbox home page, as guest(not login)', () => {
   SampleDocuments.push({
     path: `${sampleBox.collection}/${sampleBox.id}`,
     data: sampleBox
-  });
-  SampleDocuments.push({
-    path: `${RelationRecord.collection}/${sampleBoxMemberRelation.id}`,
-    data: sampleBoxMemberRelation
   });
 
   before(() => {

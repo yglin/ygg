@@ -100,3 +100,7 @@ h6,
   -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=20)';
   filter: alpha(opacity=20);
 }
+
+.mat-table {
+  background-color: rgba(255, 255, 255, 0.2);
+}

@@ -5,21 +5,12 @@ import {
   TheThing,
   TheThingAction,
   CommonCellDefines,
-  DataTableConfig
+  DataTableConfig,
+  Relationship
 } from '@ygg/the-thing/core';
 import { values, keyBy } from 'lodash';
-
-export const RelationshipItemTransferItem = {
-  role: 'subject-item'
-};
-
-export const RelationshipItemTransferGiver = {
-  role: 'giver'
-};
-
-export const RelationshipItemTransferReceiver = {
-  role: 'receiver'
-};
+import { ImitationItem } from './item';
+import { User } from '@ygg/shared/user/core';
 
 export const ImitationItemTransferCellDefines = keyBy(
   [
@@ -77,46 +68,8 @@ export const ImitationItemTransferStates: { [name: string]: TheThingState } = {
   }
 };
 
-export const ImitationItemTransferActions: { [id: string]: TheThingAction } = {
-  'send-request': {
-    id: 'item-transfer-send-request',
-    icon: 'send',
-    tooltip: '送出約定通知給收取方',
-    permissions: [
-      `state:${ImitationItemTransferStates.editing.name}`,
-      `role:${RelationshipItemTransferGiver.role}`
-    ]
-  },
-  'consent-reception': {
-    id: 'item-transfer-consent-reception',
-    icon: 'event_available',
-    tooltip: '確定會依約收取寶物',
-    permissions: [
-      `state:${ImitationItemTransferStates.waitReceiver.name}`,
-      `role:${RelationshipItemTransferReceiver.role}`
-    ]
-  },
-  'confirm-completed': {
-    id: 'item-transfer-confirm-completed',
-    icon: 'done_all',
-    tooltip: '確認已收到寶物，交付完成',
-    permissions: [
-      `state:${ImitationItemTransferStates.consented.name}`,
-      `role:${RelationshipItemTransferReceiver.role}`
-    ]
-  }
-};
-
 export const ImitationItemTransferDataTableConfig: DataTableConfig = {
   columns: {}
-};
-
-ImitationItemTransferDataTableConfig.columns[
-  ImitationItemTransferCellDefines.datetime.id
-] = {
-  name: ImitationItemTransferCellDefines.datetime.id,
-  label: ImitationItemTransferCellDefines.datetime.label,
-  valueSource: 'cell'
 };
 
 export const ImitationItemTransfer = new TheThingImitation({
@@ -163,6 +116,84 @@ export const ImitationItemTransfer = new TheThingImitation({
       next: ImitationItemTransferStates.editing
     }
   },
-  actions: ImitationItemTransferActions,
   dataTableConfig: ImitationItemTransferDataTableConfig
 });
+
+export const RelationshipItemTransferItem = new Relationship({
+  name: 'ourbox-item-item-transfer',
+  subjectImitation: ImitationItemTransfer,
+  objectImitation: ImitationItem
+});
+
+export const RelationshipItemTransferGiver = new Relationship({
+  name: 'ourbox-item-transfer-giver',
+  label: '贈與者',
+  subjectImitation: ImitationItemTransfer,
+  objectCollection: User.collection
+});
+
+export const RelationshipItemTransferReceiver = new Relationship({
+  name: 'ourbox-item-transfer-receiver',
+  label: '受取者',
+  subjectImitation: ImitationItemTransfer,
+  objectCollection: User.collection
+});
+
+export const ImitationItemTransferActions: { [id: string]: TheThingAction } = {
+  'send-request': {
+    id: 'item-transfer-send-request',
+    icon: 'send',
+    tooltip: '送出約定通知給收取方',
+    permissions: [
+      `state:${ImitationItemTransferStates.editing.name}`,
+      `role:${RelationshipItemTransferGiver.role}`
+    ]
+  },
+  'consent-reception': {
+    id: 'item-transfer-consent-reception',
+    icon: 'event_available',
+    tooltip: '確定會依約收取寶物',
+    permissions: [
+      `state:${ImitationItemTransferStates.waitReceiver.name}`,
+      `role:${RelationshipItemTransferReceiver.role}`
+    ]
+  },
+  'confirm-completed': {
+    id: 'item-transfer-confirm-completed',
+    icon: 'done_all',
+    tooltip: '確認已收到寶物，交付完成',
+    permissions: [
+      `state:${ImitationItemTransferStates.consented.name}`,
+      `role:${RelationshipItemTransferReceiver.role}`
+    ]
+  }
+};
+
+ImitationItemTransfer.actions = ImitationItemTransferActions;
+
+ImitationItemTransferDataTableConfig.columns[
+  ImitationItemTransferCellDefines.datetime.id
+] = {
+  name: ImitationItemTransferCellDefines.datetime.id,
+  label: ImitationItemTransferCellDefines.datetime.label,
+  valueSource: 'cell'
+};
+
+ImitationItemTransferDataTableConfig.columns[
+  RelationshipItemTransferGiver.name
+] = {
+  name: RelationshipItemTransferGiver.name,
+  label: RelationshipItemTransferGiver.label,
+  valueSource: 'users',
+  value: RelationshipItemTransferGiver.name
+}
+
+ImitationItemTransferDataTableConfig.columns[
+  RelationshipItemTransferReceiver.name
+] = {
+  name: RelationshipItemTransferReceiver.name,
+  label: RelationshipItemTransferReceiver.label,
+  valueSource: 'users',
+  value: RelationshipItemTransferReceiver.name
+}
+

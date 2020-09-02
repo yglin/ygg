@@ -24,7 +24,8 @@ import {
   catchError,
   shareReplay,
   tap,
-  finalize
+  finalize,
+  take
 } from 'rxjs/operators';
 import {
   ImitationBox,
@@ -33,7 +34,8 @@ import {
   ItemFilter,
   RelationshipBoxItem,
   RelationshipBoxMember,
-  ImitationBoxThumbnailImages
+  ImitationBoxThumbnailImages,
+  ImitationBoxCells
 } from '../models';
 import { BoxCollection } from './box-accessor';
 import { ItemAccessor } from './item-accessor';
@@ -83,14 +85,8 @@ export class BoxFactory {
     memberEmails?: string[];
     isPublic?: boolean;
   }): Promise<TheThing> {
-    let owner: User;
     try {
-      owner = await this.authenticator.requestLogin();
-    } catch (error) {
-      this.emcee.warning(`必須先登入才能繼續`);
-      return;
-    }
-    try {
+      const owner = await this.authenticator.requestLogin();
       let mailsMessage = '';
       if (!isEmpty(options.memberEmails)) {
         mailsMessage =
@@ -110,12 +106,12 @@ export class BoxFactory {
       box.name = options.name;
       box.image = !!options.image ? options.image : box.image;
       box.setFlag(ImitationBoxFlags.isPublic.id, isPublic);
+      box.addUsersOfRole(RelationshipBoxMember.role, [owner.id]);
       // box.upsertCell(
       //   ImitationBoxCells.members.createCell(memberEmails.join(','))
       // );
 
       await this.theThingAccessor.upsert(box);
-      await this.addBoxMember(box.id, owner.id);
       mailsMessage = '';
       if (!isEmpty(memberEmails)) {
         for (const email of memberEmails) {
@@ -158,7 +154,6 @@ export class BoxFactory {
       mailSubject,
       mailContent,
       confirmMessage: `${this.authenticator.currentUser.name} 邀請您，是否要加入我們的寶箱：${box.name}？`,
-      landingUrl: `/${ImitationBox.routePath}/${box.id}`,
       data: {
         boxId: box.id
       }
@@ -178,13 +173,24 @@ export class BoxFactory {
   }
 
   async addBoxMember(boxId: string, userId: string) {
-    return this.relationFactory.create({
-      subjectCollection: BoxCollection,
-      subjectId: boxId,
-      objectCollection: UserConfig.user.collection,
-      objectId: userId,
-      objectRole: RelationshipBoxMember.role
-    });
+    try {
+      const box = await this.theThingAccessor.load(
+        boxId,
+        ImitationBox.collection
+      );
+      box.addUsersOfRole(RelationshipBoxMember.role, [userId]);
+      await this.theThingAccessor.update(box, 'users', box.users);
+      return await this.relationFactory.waitRelation(
+        boxId,
+        userId,
+        RelationshipBoxMember.role
+      );
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to add member "${userId}" to box "${boxId}".\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
   }
 
   async createItem(
@@ -230,6 +236,7 @@ export class BoxFactory {
         throw new Error(`找不到寶箱，id = ${boxId}`);
       }
       await this.addBoxMember(box.id, invitee.id);
+      // console.log(`Box ${box.id} member ${invitee.id} added!!!`);
       this.router.navigate(['/', ImitationBox.routePath, box.id]);
     } catch (error) {
       this.emcee.error(`加入寶箱成員失敗：錯誤原因：${error.message}`);
@@ -288,7 +295,7 @@ export class BoxFactory {
             ImitationItem.collection
           );
         }
-      }),
+      })
       // tap(items => console.log(items))
     );
   }
@@ -415,8 +422,8 @@ export class BoxFactory {
       this.listPublicBoxes$()
     ]).pipe(
       map(([myBoxes, publicBoxes]) => {
-        console.log(myBoxes);
-        console.log(publicBoxes);
+        // console.log(myBoxes);
+        // console.log(publicBoxes);
         return uniqBy(myBoxes.concat(publicBoxes), 'id');
       }),
       switchMap(boxes => {

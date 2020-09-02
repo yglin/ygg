@@ -79,7 +79,7 @@ export abstract class NotificationFactory {
       if (!notification) {
         throw new Error(`遺失通知資料，id: ${id}`);
       }
-      console.log(notification);
+      // console.log(notification);
 
       const inviter: User = await this.userAccessor.get(notification.inviterId);
       if (!inviter) {

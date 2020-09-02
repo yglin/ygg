@@ -1,7 +1,7 @@
 export interface DataTableColumnConfig {
   name: string;
   label: string;
-  valueSource: 'cell' | 'meta' | 'function'
+  valueSource: 'cell' | 'meta' | 'function' | 'users'
   value?: any;
 }
 

@@ -308,7 +308,7 @@ describe('Approve scheduled events of tour-plan', () => {
       if (isEmpty(links) || links.length < 2) {
         throw new Error(`Not found links in email body:\n${email.body}`);
       }
-      console.log(links);
+      // console.log(links);
       const link = links[1];
       cy.visit(link);
       waitForLogin();

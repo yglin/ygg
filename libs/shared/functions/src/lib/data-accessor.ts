@@ -1,9 +1,17 @@
 import { DataAccessor, Query } from '@ygg/shared/infra/core';
 import * as admin from 'firebase-admin';
 import * as firebase from 'firebase';
-import { Observable, ReplaySubject, of, combineLatest } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import {
+  Observable,
+  ReplaySubject,
+  of,
+  combineLatest,
+  race,
+  NEVER
+} from 'rxjs';
+import { map, take, timeout } from 'rxjs/operators';
 import { isEmpty } from 'lodash';
+import * as env from '@ygg/env/environments.json';
 
 type FireQueryRef =
   | FirebaseFirestore.CollectionReference
@@ -74,9 +82,22 @@ export class DataAccessorFunctions extends DataAccessor {
   }
 
   async load(collection: string, id: string): Promise<any> {
-    return this.load$(collection, id)
-      .pipe(take(1))
-      .toPromise();
+    try {
+      const snapshot = await this.firestore
+        .collection(collection)
+        .doc(id)
+        .get();
+      if (snapshot.exists) {
+        return snapshot.data();
+      } else {
+        throw new Error(`Document "${collection}/${id}" not exist`);
+      }
+    } catch (error) {
+      const wrapError = new Error(
+        `Fail to load doc "${id}" in collection "${collection}".\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
   }
 
   async delete(collection: string, id: string) {
@@ -84,6 +105,24 @@ export class DataAccessorFunctions extends DataAccessor {
     await this.firestore.doc(path).delete();
     if (path in this.ObservablesCache) {
       delete this.ObservablesCache[path];
+    }
+  }
+
+  async find(collection: string, queries: Query[]): Promise<any[]> {
+    try {
+      const ref = this.transformQueries(
+        this.firestore.collection(collection),
+        queries
+      );
+      const snapshot = await ref.get();
+      return snapshot.docs.map(doc => doc.data());
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to find in collection "${collection} with queries:\n${JSON.stringify(
+          queries
+        )}.\n${error.message}"`
+      );
+      return Promise.reject(wrapError);
     }
   }
 

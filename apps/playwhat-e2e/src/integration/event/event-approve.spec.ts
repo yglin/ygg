@@ -77,37 +77,10 @@ describe('Approve scheduled events by host', () => {
         theMockDatabase.insert(`${thing.collection}/${thing.id}`, thing);
       });
 
-      const relationEventHosts: RelationRecord[] = ScheduledEvents.map(
-        ev =>
-          new RelationRecord({
-            subjectCollection: ImitationEvent.collection,
-            subjectId: ev.id,
-            objectCollection: User.collection,
-            objectId: user.id,
-            objectRole: RelationshipHost.name
-          })
-      );
-      const relationEventOrganizers: RelationRecord[] = ScheduledEvents.map(
-        ev =>
-          new RelationRecord({
-            subjectCollection: ImitationEvent.collection,
-            subjectId: ev.id,
-            objectCollection: User.collection,
-            objectId: user.id,
-            objectRole: RelationshipOrganizer.name
-          })
-      );
-      cy.wrap(
-        RelationPlayOfEvents.concat(relationEventHosts).concat(
-          relationEventOrganizers
-        )
-      ).each((relation: RelationRecord) => {
-        theMockDatabase.insert(
-          `${RelationRecord.collection}/${relation.id}`,
-          relation
-        );
-      });
-
+      ScheduledEvents.forEach(event => {
+        event.setUserOfRole(RelationshipHost.role, user.id);
+        event.setUserOfRole(RelationshipOrganizer.role, user.id);
+      })
       cy.visit('/');
       siteNavigator.goto(
         [ImitationEvent.routePath, 'my'],

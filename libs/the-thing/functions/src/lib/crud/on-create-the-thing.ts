@@ -1,11 +1,13 @@
 import * as functions from 'firebase-functions';
-import { camelCase, upperFirst, uniq } from 'lodash';
+import { camelCase, upperFirst, uniq, forIn } from 'lodash';
 import {
   TheThingImitation,
   TheThing,
-  TheThingRelation
+  TheThingRelation,
+  RelationRecord
 } from '@ygg/the-thing/core';
-import { relationFactory } from '../global';
+import { relationAccessor } from '../global';
+import { User } from '@ygg/shared/user/core';
 
 export function generateOnCreateFunctions(imitations: TheThingImitation[]) {
   const onCreateFunctions = {};
@@ -22,12 +24,32 @@ export function generateOnCreateFunctions(imitations: TheThingImitation[]) {
         ) => {
           try {
             const theThing: TheThing = new TheThing().fromJSON(snapshot.data());
+
+            // Save relation records subject to the new TheThing
             // console.log(`Save relations of TheThing ${theThing.id}`);
             for (const relation of theThing.generateRelationRecords()) {
               // console.log(`Save relation record ${relation.id}`);
               // console.log(relation);
-              await relationFactory.save(relation);
+              await relationAccessor.save(relation);
             }
+
+            // Save role-user relations subject to the new TheThing
+            for (const role in theThing.users) {
+              if (Object.prototype.hasOwnProperty.call(theThing.users, role)) {
+                const userIds = theThing.users[role];
+                for (const userId of userIds) {
+                  const relationRecord: RelationRecord = new RelationRecord({
+                    subjectCollection: theThing.collection,
+                    subjectId: theThing.id,
+                    objectCollection: User.collection,
+                    objectId: userId,
+                    objectRole: role
+                  });
+                  await relationAccessor.save(relationRecord);
+                }
+              }
+            }
+
             return Promise.resolve();
           } catch (error) {
             console.error(error.message);

@@ -43,14 +43,8 @@ describe('Item-transfer editing', () => {
   const testItem = ImitationItem.forgeTheThing();
   testItem.ownerId = testUser.id;
   testItem.setState(ImitationItem.stateName, ImitationItem.states.available);
-  const itemHolderRelation = RelationshipItemHolder.createRelationRecord(
-    testItem.id,
-    testHolder.id
-  );
-  const itemRequestRelation = RelationshipItemRequester.createRelationRecord(
-    testItem.id,
-    testRequester.id
-  );
+  testItem.setUserOfRole(RelationshipItemHolder.role, testHolder.id);
+  testItem.addUsersOfRole(RelationshipItemRequester.role, [testRequester.id]);
   const testItemTransfer = ImitationItemTransfer.forgeTheThing();
   testItemTransfer.name = `${testHolder.name} 交付 ${testItem.name} 給 ${testRequester.name} 的交付任務`;
   const testItemTransferChanged = ImitationItemTransfer.forgeTheThing();
@@ -66,14 +60,6 @@ describe('Item-transfer editing', () => {
     theMockDatabase.insert(
       `${ImitationItem.collection}/${testItem.id}`,
       testItem
-    );
-    theMockDatabase.insert(
-      `${RelationRecord.collection}/${itemHolderRelation.id}`,
-      itemHolderRelation
-    );
-    theMockDatabase.insert(
-      `${RelationRecord.collection}/${itemRequestRelation.id}`,
-      itemRequestRelation
     );
     logoutBackground().then(() => {
       cy.visit('/');

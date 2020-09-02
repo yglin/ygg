@@ -1,12 +1,12 @@
 import { Query } from '@ygg/shared/infra/core';
-import { Observable } from 'rxjs';
-import { map, tap, take } from 'rxjs/operators';
+import { Observable, race, NEVER } from 'rxjs';
+import { map, tap, take, timeout, filter } from 'rxjs/operators';
 import { RelationRecord } from './relation';
 import { RelationAccessor } from './relation-accessor';
 import { isEmpty } from 'lodash';
+import * as env from '@ygg/env/environments.json';
 
 export abstract class RelationFactory {
-
   saveUniq = this.replaceObject;
 
   constructor(protected relationAccessor: RelationAccessor) {}
@@ -80,6 +80,32 @@ export abstract class RelationFactory {
     } catch (error) {
       console.error(error);
       return false;
+    }
+  }
+
+  async waitRelation(
+    subjectId: string,
+    objectId: string,
+    objectRole: string,
+    hasNot: boolean = false
+  ) {
+    const id = RelationRecord.constructId(subjectId, objectRole, objectId);
+    try {
+      await race(
+        this.hasRelation$(subjectId, objectId, objectRole).pipe(
+          tap(has => console.log(`Has relation ${id}? ${has}`)),
+          filter(has => (hasNot ? !has : has)),
+          take(1)
+        ),
+        NEVER.pipe(timeout(env.siteConfig.dataAccess.timeout))
+      ).toPromise();
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to wait relation ${id} ${hasNot ? 'not ' : ''}exist.\n${
+          error.message
+        }`
+      );
+      return Promise.reject(wrapError);
     }
   }
 
