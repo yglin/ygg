@@ -16,23 +16,16 @@
             [showName]="false"
           ></ygg-user-thumbnail>
         </div>
-        <div [hidden]="runningStep === 0">
-          <mat-icon>double_arrow</mat-icon>
-        </div>
-        <div [hidden]="runningStep !== 0">
-          <the-thing-thumbnail [id]="itemId" size="small"></the-thing-thumbnail>
-        </div>
-        <div [hidden]="runningStep === 1">
-          <mat-icon>double_arrow</mat-icon>
-        </div>
-        <div [hidden]="runningStep !== 1">
-          <the-thing-thumbnail [id]="itemId" size="small"></the-thing-thumbnail>
-        </div>
-        <div [hidden]="runningStep === 2">
-          <mat-icon>double_arrow</mat-icon>
-        </div>
-        <div [hidden]="runningStep !== 2">
-          <the-thing-thumbnail [id]="itemId" size="small"></the-thing-thumbnail>
+        <div fxLayout="row" fxLayoutAlign="center end" fxLayoutGap="20px">
+          <div fxFlexOrder='1'>
+            <mat-icon>double_arrow</mat-icon>
+          </div>
+          <div [fxFlexOrder]='runningStep * 2' class="item">
+            <the-thing-thumbnail [id]="itemId" size="small"></the-thing-thumbnail>
+          </div>
+          <div fxFlexOrder='3'>
+            <mat-icon>double_arrow</mat-icon>
+          </div>            
         </div>
         <div class="receiver">
           <ygg-user-thumbnail

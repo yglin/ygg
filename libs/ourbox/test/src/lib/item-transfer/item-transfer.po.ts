@@ -1,15 +1,23 @@
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
-import { TheThingPageObjectCypress } from '@ygg/the-thing/test';
-import { ImitationItemTransfer } from '@ygg/ourbox/core';
+import {
+  TheThingPageObjectCypress,
+  TheThingThumbnailPageObjectCypress
+} from '@ygg/the-thing/test';
+import { ImitationItemTransfer, ImitationItem } from '@ygg/ourbox/core';
 import { User } from '@ygg/shared/user/core';
 import { UserThumbnailPageObjectCypress } from '@ygg/shared/user/test';
-import { CommentListPageObjectCypress, ThreadPageObjectCypress } from '@ygg/shared/thread/test';
+import {
+  CommentListPageObjectCypress,
+  ThreadPageObjectCypress
+} from '@ygg/shared/thread/test';
+import { TheThing } from '@ygg/the-thing/core';
 
 export class ItemTransferPageObjectCypress extends PageObjectCypress {
   selectors = {
     main: '.item-transfer',
     giver: '.giver',
     receiver: '.receiver',
+    item: '.item',
     thread: '.comment-thread'
   };
 
@@ -23,6 +31,14 @@ export class ItemTransferPageObjectCypress extends PageObjectCypress {
       ImitationItemTransfer
     );
     this.threadPO = new ThreadPageObjectCypress(this.getSelector('thread'));
+  }
+
+  expectItem(testItem: TheThing) {
+    const theThingThumbnailPO = new TheThingThumbnailPageObjectCypress(
+      this.getSelector('item'),
+      ImitationItem
+    );
+    theThingThumbnailPO.expectValue(testItem);
   }
 
   expectReceiver(receiver: User) {

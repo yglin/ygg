@@ -146,6 +146,7 @@ describe('Create an item-transfer task', () => {
     itemTransferPO.expectVisible();
     itemTransferPO.expectGiver(testHolder);
     itemTransferPO.expectReceiver(testRequester);
+    itemTransferPO.expectItem(testItem);
     itemTransferPO.theThingPO.setValue(testItemTransfer);
     itemTransferPO.theThingPO.save(testItemTransfer);
 
