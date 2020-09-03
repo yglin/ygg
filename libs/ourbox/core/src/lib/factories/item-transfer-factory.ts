@@ -360,7 +360,7 @@ export abstract class ItemTransferFactory {
           email: giver.email,
           mailSubject: `${receiver.name} 已確認要收取 ${item.name}`,
           mailContent: `${receiver.name} 已確認要收取 ${item.name}，請點選以下網址檢視交付約定的相關訊息`,
-          confirmMessage: `<h3>您將前往交付通知的頁面</h3><br><h3>請確認相關約定事項</h3>`,
+          confirmMessage: `<h3>您將前往交付通知的頁面</h3><h3>請確認相關約定事項</h3>`,
           landingUrl: `/${ImitationItemTransfer.routePath}/${itemTransfer.id}`,
           data: {}
         });

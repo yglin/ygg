@@ -155,26 +155,27 @@ describe('Item-transfer consent reception', () => {
     );
   });
 
-  // it('Giver should get notification about the consent', () => {
-  //   const notification = new Notification({
-  //     type: ItemTransferNotificationType,
-  //     inviterId: testReceiver.id,
-  //     inviteeId: testGiver.id,
-  //     email: testGiver.email,
-  //     mailSubject: `${testReceiver.name} 已確認要收取 ${testItem.name}`,
-  //     mailContent: `${testReceiver.name} 已確認要收取 ${testItem.name}，請點選以下網址檢視交付約定的相關訊息`,
-  //     confirmMessage: `<h3>您將前往交付通知的頁面</h3><br><h3>請確認相關約定事項</h3>`,
-  //     landingUrl: `/${ImitationItemTransfer.routePath}/${testItemTransfer.id}`,
-  //     data: {}
-  //   });
-  //   logout();
-  //   loginTestUser(testGiver);
-  //   accountWidgetPO.expectNotification(1);
-  //   accountWidgetPO.clickNotification();
-  //   myNotificationsPO.expectVisible();
-  //   myNotificationsPO.expectUnreadNotifications([notification]);
-  //   myNotificationsPO.clickNotification(notification);
-  //   itemTransferPO.expectVisible();
-  //   itemTransferPO.theThingPO.expectValue(testItemTransferChanged);
-  // });
+  it('Giver should get notification about the consent', () => {
+    const notification = new Notification({
+      type: ItemTransferNotificationType,
+      inviterId: testReceiver.id,
+      inviteeId: testGiver.id,
+      email: testGiver.email,
+      mailSubject: `${testReceiver.name} 已確認要收取 ${testItem.name}`,
+      mailContent: `${testReceiver.name} 已確認要收取 ${testItem.name}，請點選以下網址檢視交付約定的相關訊息`,
+      confirmMessage: `<h3>您將前往交付通知的頁面</h3><h3>請確認相關約定事項</h3>`,
+      landingUrl: `/${ImitationItemTransfer.routePath}/${testItemTransfer.id}`,
+      data: {}
+    });
+    logout();
+    loginTestUser(testGiver);
+    accountWidgetPO.expectNotification(1);
+    accountWidgetPO.clickNotification();
+    myNotificationsPO.expectVisible();
+    myNotificationsPO.expectUnreadNotifications([notification]);
+    myNotificationsPO.clickNotification(notification);
+    emceePO.confirm(`您將前往交付通知的頁面請確認相關約定事項`);
+    itemTransferPO.expectVisible();
+    itemTransferPO.theThingPO.expectValue(testItemTransferChanged);
+  });
 });
