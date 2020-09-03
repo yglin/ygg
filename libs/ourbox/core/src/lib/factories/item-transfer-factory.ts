@@ -238,17 +238,25 @@ export abstract class ItemTransferFactory {
   }
 
   async getTransferItem(itemTransferId: string): Promise<TheThing> {
-    const relations: RelationRecord[] = await this.relationFactory
-      .findBySubjectAndRole$(itemTransferId, RelationshipItemTransferItem.role)
-      .pipe(take(1))
-      .toPromise();
-    if (isEmpty(relations)) {
-      throw new Error(`Not found item of item-transfer: ${itemTransferId}`);
+    try {
+      const itemTransfer = await this.theThingAccessor.load(
+        itemTransferId,
+        ImitationItemTransfer.collection
+      );
+      const itemId = first(
+        itemTransfer.getRelationObjectIds(RelationshipItemTransferItem.role)
+      );
+      const item = await this.theThingAccessor.load(
+        itemId,
+        ImitationItem.collection
+      );
+      return item;
+    } catch (error) {
+      const wrapError: Error = new Error(
+        `Failed to get item of item-transfer ${itemTransferId}.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
     }
-    return this.theThingFactory.load(
-      relations[0].objectId,
-      relations[0].objectCollection
-    );
   }
 
   async getReceiver(itemTransferId: string): Promise<User> {
@@ -348,6 +356,7 @@ export abstract class ItemTransferFactory {
         await this.notificationFactory.create({
           type: ItemTransferNotificationType,
           inviterId: receiver.id,
+          inviteeId: giver.id,
           email: giver.email,
           mailSubject: `${receiver.name} 已確認要收取 ${item.name}`,
           mailContent: `${receiver.name} 已確認要收取 ${item.name}，請點選以下網址檢視交付約定的相關訊息`,

@@ -92,7 +92,7 @@ export class TheThingFactoryService extends TheThingFactory
     private relaitonFactory: RelationFactoryService,
     private commentFactory: CommentFactoryService
   ) {
-    super();
+    super(theThingAccessService);
   }
 
   ngOnDestroy(): void {
@@ -123,7 +123,12 @@ export class TheThingFactoryService extends TheThingFactory
           resolve(of(theThing));
         } else if (!!id) {
           // console.log(`load ${this.imitation.id}:${id}`);
-          theThing = await this.load(id);
+          const collection = get(
+            this.imitation,
+            'colletion',
+            TheThing.collection
+          );
+          theThing = await this.load(id, collection);
           const focus$ = this.load$(theThing.id);
           resolve(focus$);
           this.focusChange$.next(focus$);
@@ -232,28 +237,28 @@ export class TheThingFactoryService extends TheThingFactory
     }
   }
 
-  async load(
-    id: string,
-    collection: string = TheThing.collection
-  ): Promise<TheThing> {
-    // console.log(collection);
-    // console.log(id);
-    // return this.load$(id, collection).pipe(take(1)).toPromise();
-    return race(
-      this.load$(id, collection).pipe(take(1)),
-      NEVER.pipe(
-        timeout(config.loadTimeout),
-        catchError(error => {
-          return throwError(
-            new Error(
-              `讀取 ${collection}/${id} 失敗，超過${config.loadTimeout /
-                1000}秒`
-            )
-          );
-        })
-      )
-    ).toPromise();
-  }
+  // async load(
+  //   id: string,
+  //   collection: string = TheThing.collection
+  // ): Promise<TheThing> {
+  //   // console.log(collection);
+  //   // console.log(id);
+  //   // return this.load$(id, collection).pipe(take(1)).toPromise();
+  //   return race(
+  //     this.load$(id, collection).pipe(take(1)),
+  //     NEVER.pipe(
+  //       timeout(config.loadTimeout),
+  //       catchError(error => {
+  //         return throwError(
+  //           new Error(
+  //             `讀取 ${collection}/${id} 失敗，超過${config.loadTimeout /
+  //               1000}秒`
+  //           )
+  //         );
+  //       })
+  //     )
+  //   ).toPromise();
+  // }
 
   connectRemoteSource(id: string, collection: string = TheThing.collection) {
     if (!(id in this.theThingSources$)) {

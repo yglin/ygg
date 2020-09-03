@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { sortBy } from 'lodash';
-import { Comment } from "@ygg/shared/thread/core";
+import { Comment } from '@ygg/shared/thread/core';
 import { CommentFactoryService } from '../comment-factory.service';
 
 @Component({
@@ -28,10 +28,11 @@ export class ThreadComponent implements OnInit {
     );
   }
 
-  submitNewComment() {
-    this.commentFactory.addComment(
+  async submitNewComment() {
+    await this.commentFactory.addComment(
       this.subjectId,
       this.formControlNewComment.value
     );
+    this.formControlNewComment.setValue('');
   }
 }

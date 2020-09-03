@@ -9,13 +9,12 @@ import { isEmpty, every, castArray } from 'lodash';
 export abstract class TheThingAccessor {
   constructor(protected dataAccessor: DataAccessor) {}
 
-  load(
+  async load(
     id: string,
     collection: string = TheThing.collection
   ): Promise<TheThing> {
-    return this.load$(id, collection)
-      .pipe(take(1))
-      .toPromise();
+    const data = await this.dataAccessor.load(collection, id);
+    return new TheThing().fromJSON(data);
   }
 
   load$(

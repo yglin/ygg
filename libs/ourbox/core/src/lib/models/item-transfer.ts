@@ -104,6 +104,10 @@ export const ImitationItemTransfer = new TheThingImitation({
       ImitationItemTransfer.isState(
         theThing,
         ImitationItemTransfer.states.editing
+      ) ||
+      ImitationItemTransfer.isState(
+        theThing,
+        ImitationItemTransfer.states.waitReceiver
       )
     );
   },
@@ -186,7 +190,7 @@ ImitationItemTransferDataTableConfig.columns[
   label: RelationshipItemTransferGiver.label,
   valueSource: 'users',
   value: RelationshipItemTransferGiver.name
-}
+};
 
 ImitationItemTransferDataTableConfig.columns[
   RelationshipItemTransferReceiver.name
@@ -195,5 +199,4 @@ ImitationItemTransferDataTableConfig.columns[
   label: RelationshipItemTransferReceiver.label,
   valueSource: 'users',
   value: RelationshipItemTransferReceiver.name
-}
-
+};

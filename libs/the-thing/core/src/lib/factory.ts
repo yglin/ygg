@@ -3,6 +3,7 @@ import { TheThing } from './the-thing';
 import { TheThingImitation } from './imitation';
 import { TheThingState } from './state';
 import { TheThingAction } from './action';
+import { TheThingAccessor } from './the-thing-accessor';
 
 // type InputAction = 'meta' | 'add-cell' | 'create' | 'save' | 'load';
 
@@ -19,12 +20,13 @@ export abstract class TheThingFactory {
     action: TheThingAction;
   }> = new Subject();
 
+  constructor(protected theThingAccessor: TheThingAccessor) {}
+
   abstract async create(options: {
     imitationId?: string;
     imitation: TheThingImitation;
   }): Promise<TheThing>;
   abstract load$(id: string, collection: string): Observable<TheThing>;
-  abstract async load(id: string, collection: string): Promise<TheThing>;
   abstract async save(
     theThing: TheThing,
     options?: {
@@ -42,6 +44,10 @@ export abstract class TheThingFactory {
     }
   );
 
+  async load(id: string, collection: string): Promise<TheThing> {
+    return this.theThingAccessor.load(id, collection);
+  }
+  
   runAction(action: TheThingAction, theThing: TheThing) {
     this.runAction$.next({
       theThing,

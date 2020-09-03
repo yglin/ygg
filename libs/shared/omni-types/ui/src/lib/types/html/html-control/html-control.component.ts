@@ -14,14 +14,8 @@ import { Html } from '@ygg/shared/omni-types/core';
 import { FormControl } from '@angular/forms';
 import { Subscription, of } from 'rxjs';
 import { FireStorageService } from '@ygg/shared/infra/data-access';
-import {
-  catchError,
-  finalize,
-  tap
-} from 'rxjs/operators';
-import {
-  AngularFireUploadTask,
-} from '@angular/fire/storage';
+import { catchError, finalize, tap } from 'rxjs/operators';
+import { AngularFireUploadTask } from '@angular/fire/storage';
 
 interface CKEditorImageResponse {
   [size: string]: string;
@@ -140,8 +134,12 @@ export class HtmlControlComponent
   }
 
   writeValue(value: Html) {
-    if (value) {
+    if (Html.isHtml(value)) {
       this.formControlContent.setValue(value.content);
+    } else if (typeof value === 'string') {
+      this.formControlContent.setValue(value);
+    } else {
+      this.formControlContent.setValue('');
     }
   }
 

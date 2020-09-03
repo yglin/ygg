@@ -41,23 +41,32 @@ describe('Create an item-transfer task', () => {
   const testUser = User.forge();
   const testHolder = User.forge();
   const testRequester = User.forge();
-  
+
   const testItem = ImitationItem.forgeTheThing();
   testItem.ownerId = testUser.id;
   testItem.setState(ImitationItem.stateName, ImitationItem.states.available);
   testItem.setUserOfRole(RelationshipItemHolder.role, testHolder.id);
-  testItem.addUsersOfRole(RelationshipItemRequester.role, [testRequester.id])
-  
+  testItem.addUsersOfRole(RelationshipItemRequester.role, [testRequester.id]);
+
   const testItemTransfer = ImitationItemTransfer.forgeTheThing();
   testItemTransfer.name = `${testHolder.name} 交付 ${testItem.name} 給 ${
     testRequester.name
   } 的交付任務_${Date.now()}`;
-  testItemTransfer.setUserOfRole(RelationshipItemTransferGiver.role, testHolder.id);
-  testItemTransfer.setUserOfRole(RelationshipItemTransferReceiver.role, testRequester.id);
+  testItemTransfer.setUserOfRole(
+    RelationshipItemTransferGiver.role,
+    testHolder.id
+  );
+  testItemTransfer.setUserOfRole(
+    RelationshipItemTransferReceiver.role,
+    testRequester.id
+  );
 
   const testItemNoRequester = ImitationItem.forgeTheThing();
   testItemNoRequester.ownerId = testUser.id;
-  testItemNoRequester.setState(ImitationItem.stateName, ImitationItem.states.available);
+  testItemNoRequester.setState(
+    ImitationItem.stateName,
+    ImitationItem.states.available
+  );
   testItemNoRequester.setUserOfRole(RelationshipItemHolder.role, testHolder.id);
 
   before(() => {
@@ -164,6 +173,12 @@ describe('Create an item-transfer task', () => {
     itemTransferPO.expectReceiver(testRequester);
   });
 
+  it('Item-transfer should now in state waitReceiver', () => {
+    itemTransferPO.theThingPO.expectState(
+      ImitationItemTransfer.states.waitReceiver
+    );
+  });
+
   it('Created item-transfer can be accessed in my-item-transfers page', () => {
     siteNavigator.gotoMyItemTransfers();
     myItemTransfersPO.expectVisible();
@@ -198,5 +213,4 @@ describe('Create an item-transfer task', () => {
     itemTransferPO.expectVisible();
     itemTransferPO.theThingPO.expectValue(testItemTransfer);
   });
-
 });
