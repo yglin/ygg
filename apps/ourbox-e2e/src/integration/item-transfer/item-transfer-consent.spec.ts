@@ -155,6 +155,10 @@ describe('Item-transfer consent reception', () => {
     );
   });
 
+  it('Can not modify item-transfer in state consent', () => {
+    itemTransferPO.theThingPO.expectReadonly();
+  });
+
   it('Giver should get notification about the consent', () => {
     const notification = new Notification({
       type: ItemTransferNotificationType,

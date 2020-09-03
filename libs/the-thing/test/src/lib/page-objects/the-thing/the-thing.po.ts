@@ -23,6 +23,7 @@ import { TheThingPageObject } from '@ygg/the-thing/ui';
 import { values } from 'lodash';
 import { TheThingStatePageObjectCypress } from './the-thing-state.po';
 import isURL from 'validator/es/lib/isURL';
+import { Location, OmniTypeID } from '@ygg/shared/omni-types/core';
 
 export class TheThingPageObjectCypress extends TheThingPageObject {
   constructor(parentSelector: string, imitation: TheThingImitation) {
@@ -98,10 +99,14 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
 
   expectCell(cell: TheThingCell) {
     cy.get(`${this.getSelectorForCell(cell.id)}`).contains(cell.label);
+    this.expectCellValue(cell.id, cell.type, cell.value);
+  }
+
+  expectCellValue(cellId: string, cellType: OmniTypeID, value: any) {
     const cellViewPagePO = new OmniTypeViewControlPageObjectCypress(
-      this.getSelectorForCell(cell.id)
+      this.getSelectorForCell(cellId)
     );
-    cellViewPagePO.expectValue(cell.type, cell.value);
+    cellViewPagePO.expectValue(cellType, value);
   }
 
   expectNoCell(cell: TheThingCell): void {

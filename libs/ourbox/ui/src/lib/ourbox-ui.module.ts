@@ -30,6 +30,8 @@ import { MyHeldItemsComponent } from './item/my-held-items/my-held-items.compone
 import { ItemTransferComponent } from './item-transfer/item-transfer/item-transfer.component';
 import { MyItemTransfersComponent } from './item-transfer/my-item-transfers/my-item-transfers.component';
 import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
+import { ItemTransferCompleteComponent } from './item-transfer/item-transfer-complete/item-transfer-complete.component';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 
 @NgModule({
   declarations: [
@@ -43,6 +45,7 @@ import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
     ItemComponent,
     MyHeldItemsComponent,
     ItemTransferComponent,
+    ItemTransferCompleteComponent,
     MyItemTransfersComponent
   ],
   imports: [
@@ -54,6 +57,7 @@ import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
     SharedUiWidgetsModule,
     SharedUserUiModule,
     SharedThreadUiModule,
+    SharedOmniTypesUiModule,
     TheThingUiModule,
     RouterModule.forChild(routes)
   ],
@@ -104,7 +108,9 @@ export function initFactoryServices(boxFactory: BoxFactoryService) {
 
 export function configUserMenu(userMenuService: UserMenuService) {
   return () => {
-    const userPages = values(pick(pages, ['myBoxes', 'myHeldItems', 'myItemTransfers']));
+    const userPages = values(
+      pick(pages, ['myBoxes', 'myHeldItems', 'myItemTransfers'])
+    );
     for (const page of userPages) {
       userMenuService.addItem(UserMenuItem.fromPage(page));
     }

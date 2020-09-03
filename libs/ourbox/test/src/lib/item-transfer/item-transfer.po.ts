@@ -41,6 +41,14 @@ export class ItemTransferPageObjectCypress extends PageObjectCypress {
     theThingThumbnailPO.expectValue(testItem);
   }
 
+  gotoItem() {
+    const theThingThumbnailPO = new TheThingThumbnailPageObjectCypress(
+      this.getSelector('item'),
+      ImitationItem
+    );
+    theThingThumbnailPO.gotoView();
+  }
+
   expectReceiver(receiver: User) {
     const userThumbnailPO = new UserThumbnailPageObjectCypress(
       this.getSelector('receiver')

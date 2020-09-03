@@ -398,6 +398,7 @@ export abstract class ItemTransferFactory {
         await this.notificationFactory.create({
           type: ItemTransferNotificationType,
           inviterId: receiver.id,
+          inviteeId: giver.id,
           email: giver.email,
           mailSubject: `${receiver.name} 已收到 ${item.name}`,
           mailContent: `${receiver.name} 已收到 ${item.name}，請點選以下網址檢視交付記錄`,
@@ -406,8 +407,10 @@ export abstract class ItemTransferFactory {
           data: {}
         });
         this.emcee.info(
-          `<h3>已通知 ${giver.name}, ${item.name} 的交付已完成</h3>`
+          `<h3>已通知 ${giver.name}, ${item.name} 的交付任務已完成</h3>`
         );
+      } else {
+        throw new Error(`必須為寶物 ${item.name} 指定新的地點`);
       }
     } catch (error) {
       this.emcee.error(`確認完成失敗，錯誤原因：${error.message}`);

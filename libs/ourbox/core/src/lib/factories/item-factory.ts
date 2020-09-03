@@ -286,13 +286,12 @@ export class ItemFactory {
       ImitationItem.setState(item, ImitationItem.states.available);
       item.setUserOfRole(RelationshipItemHolder.role, receiver.id);
       item.removeUsersOfRole(RelationshipItemRequester.role, [receiver.id]);
-      await this.theThingAccessor.update(item, 'users', item.users);
+      await this.theThingAccessor.upsert(item);
     } catch (error) {
-      return Promise.reject(
-        new Error(
-          `Failed to transfer ${item.name} to ${receiver.name}\n ${error.message} `
-        )
+      const wrapError = new Error(
+        `Failed to transfer ${item.name} to ${receiver.name}.\n${error.message}`
       );
+      return Promise.reject(wrapError);
     }
   }
 

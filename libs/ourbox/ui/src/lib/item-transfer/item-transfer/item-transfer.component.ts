@@ -8,7 +8,8 @@ import {
   ImitationItemTransfer,
   RelationshipItemTransferGiver,
   RelationshipItemTransferReceiver,
-  RelationshipItemTransferItem
+  RelationshipItemTransferItem,
+  ImitationItem
 } from '@ygg/ourbox/core';
 import { ItemTransferFactoryService } from '../item-transfer-factory.service';
 import { EmceeService } from '@ygg/shared/ui/widgets';
@@ -29,6 +30,7 @@ export class ItemTransferComponent implements OnInit, OnDestroy {
   itemId: string;
   runningStep = 0;
   stopRunner = false;
+  ImitationItem = ImitationItem;
 
   constructor(
     private route: ActivatedRoute,
