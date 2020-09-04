@@ -65,6 +65,12 @@ export const ImitationItemTransferStates: { [name: string]: TheThingState } = {
     name: 'completed',
     label: '已交付完成',
     value: 100
+  },
+  cancelled: {
+    name: 'cancelled',
+    label: '已取消',
+    value: 130,
+    requireChangeRecord: true
   }
 };
 
@@ -169,6 +175,15 @@ export const ImitationItemTransferActions: { [id: string]: TheThingAction } = {
     permissions: [
       `state:${ImitationItemTransferStates.consented.name}`,
       `role:${RelationshipItemTransferReceiver.role}`
+    ]
+  },
+  cancel: {
+    id: 'item-transfer-cancel',
+    icon: 'backspace',
+    tooltip: '取消交付任務',
+    permissions: [
+      `state:${ImitationItemTransferStates.editing.name},${ImitationItemTransferStates.waitReceiver.name},${ImitationItemTransferStates.consented.name}`,
+      `role:${RelationshipItemTransferGiver.role},${RelationshipItemTransferReceiver.role}`
     ]
   }
 };

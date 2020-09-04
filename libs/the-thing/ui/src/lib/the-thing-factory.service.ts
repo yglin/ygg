@@ -8,7 +8,7 @@ import {
 import { AlertType } from '@ygg/shared/infra/core';
 import { Html } from '@ygg/shared/omni-types/core';
 import { CommentFactoryService } from '@ygg/shared/thread/ui';
-import { EmceeService } from '@ygg/shared/ui/widgets';
+import { EmceeService, YggDialogService } from '@ygg/shared/ui/widgets';
 import { AuthenticateUiService, AuthorizeService } from '@ygg/shared/user/ui';
 import {
   Permission,
@@ -20,7 +20,8 @@ import {
   TheThingFactory,
   TheThingImitation,
   TheThingRelation,
-  TheThingState
+  TheThingState,
+  TheThingStateChangeRecord
 } from '@ygg/the-thing/core';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
 import { every, extend, get, isEmpty, some } from 'lodash';
@@ -47,6 +48,7 @@ import {
 } from 'rxjs/operators';
 import { RelationFactoryService } from './relation-factory.service';
 import { TheThingAccessService } from './the-thing-access.service';
+import { TheThingStateChangeRecordComponent } from './the-thing/the-thing-state-change-record/the-thing-state-change-record.component';
 
 export interface ITheThingCreateOptions {
   imitation?: string;
@@ -90,7 +92,8 @@ export class TheThingFactoryService extends TheThingFactory
     private emceeService: EmceeService,
     private router: Router,
     private relaitonFactory: RelationFactoryService,
-    private commentFactory: CommentFactoryService
+    private commentFactory: CommentFactoryService,
+    private dialog: YggDialogService
   ) {
     super(theThingAccessService);
   }
@@ -327,30 +330,83 @@ export class TheThingFactoryService extends TheThingFactory
     theThing: TheThing,
     imitation: TheThingImitation,
     state: TheThingState
-  ) {
+  ): Promise<TheThingStateChangeRecord> {
     try {
       const oldState = imitation.getState(theThing);
+      if (state.name === oldState.name) {
+        throw new Error(`${theThing.name} 的狀態已經是 ${state.label}`);
+      }
+      const user = await this.authUiService.requestLogin();
+      let changeRecord: TheThingStateChangeRecord = null;
+
+      let changeMessage = `📌 ${user.name} 更改狀態 <b>${
+        !!oldState ? oldState.label : '未知狀態'
+      } ➡ ${state.label}</b>`;
+      if (state.requireChangeRecord) {
+        changeRecord = await this.inquireStateChangeRecord(
+          imitation,
+          theThing,
+          oldState,
+          state
+        );
+        if (changeRecord && changeRecord.message) {
+          changeMessage += `<br/>說明：${changeRecord.message.content}`;
+        }
+      }
+
       imitation.setState(theThing, state);
+
       await this.theThingAccessService.update(
         theThing,
         `states.${imitation.stateName}`,
         state.value
       );
-      const user = await this.authUiService.requestLogin();
 
       // log state change as comment
       await this.commentFactory.addComment(
         theThing.id,
-        new Html(
-          `📌 ${user.name} 更改狀態 <b>${
-            !!oldState ? oldState.label : '未知狀態'
-          } ➡ ${state.label}</b>`
-        )
+        new Html(changeMessage)
       );
+
+      return changeRecord;
     } catch (error) {
       const wrapError = new Error(
-        `Failed to change state of ${theThing.id},\n:${error.message}`
+        `更改 ${theThing.name} 的狀態為 ${state.label} 失敗,錯誤原因：\n${error.message}`
       );
+      return Promise.reject(wrapError);
+    }
+  }
+
+  async inquireStateChangeRecord(
+    imitation: TheThingImitation,
+    theThing: TheThing,
+    oldState: TheThingState,
+    newState: TheThingState
+  ): Promise<TheThingStateChangeRecord> {
+    try {
+      const dialogRef = this.dialog.open(TheThingStateChangeRecordComponent, {
+        title: '狀態修改紀錄',
+        data: {
+          imitation,
+          theThing,
+          oldState,
+          newState
+        }
+      });
+      const changeRecord: TheThingStateChangeRecord = await dialogRef
+        .afterClosed()
+        .pipe(take(1))
+        .toPromise();
+      if (!changeRecord) {
+        throw new Error(`使用者取消`);
+      } else {
+        return changeRecord as TheThingStateChangeRecord;
+      }
+    } catch (error) {
+      const wrapError = new Error(
+        `無法取得狀態修改的紀錄，錯誤原因：\n${error.message}`
+      );
+      await this.emceeService.error(wrapError.message);
       return Promise.reject(wrapError);
     }
   }

@@ -15,7 +15,7 @@ import {
   ItemTransferPageObjectCypress,
   MyItemTransfersPageObjectCypress
 } from '@ygg/ourbox/test';
-import { Location } from '@ygg/shared/omni-types/core';
+import { Location, Html } from '@ygg/shared/omni-types/core';
 import {
   logout as logoutBackground,
   theMockDatabase
@@ -32,8 +32,10 @@ import {
   MyNotificationListPageObjectCypress
 } from '@ygg/shared/user/test';
 import { SiteNavigator } from '../../support/site-navigator';
+import { TheThingStateChangeRecordPageObjectCypress } from '@ygg/the-thing/test';
+import { Comment } from '@ygg/shared/thread/core';
 
-describe('Complete the item-transfer task', () => {
+describe('Cancel item-transfer task', () => {
   const siteNavigator = new SiteNavigator();
   // const myHeldItemsPO = new MyHeldItemsPageObjectCypress();
   const itemPO = new ItemPageObjectCypress();
@@ -73,7 +75,7 @@ describe('Complete the item-transfer task', () => {
   );
   const testItemTransferChanged = ImitationItemTransfer.forgeTheThing();
   testItemTransferChanged.name = testItemTransfer.name;
-  const newItemLocation: Location = Location.forge();
+  const testCancelReason = `林北宋，林北is愛，愛is林北`;
 
   before(() => {
     theMockDatabase.insert(`${User.collection}/${testUser.id}`, testUser);
@@ -101,7 +103,7 @@ describe('Complete the item-transfer task', () => {
     theMockDatabase.clear();
   });
 
-  it('Can complete item-transfer only in state "consented"', () => {
+  it('Can not cancel in states new, completed, and cancelled', () => {
     // State new
     testItemTransfer.setState(
       ImitationItemTransfer.stateName,
@@ -113,35 +115,7 @@ describe('Complete the item-transfer task', () => {
     );
     cy.wait(1000);
     itemTransferPO.theThingPO.expectNoActionButton(
-      ImitationItemTransfer.actions['confirm-completed']
-    );
-
-    // State editing
-    testItemTransfer.setState(
-      ImitationItemTransfer.stateName,
-      ImitationItemTransfer.states.editing
-    );
-    theMockDatabase.insert(
-      `${testItemTransfer.collection}/${testItemTransfer.id}`,
-      testItemTransfer
-    );
-    cy.wait(1000);
-    itemTransferPO.theThingPO.expectNoActionButton(
-      ImitationItemTransfer.actions['confirm-completed']
-    );
-
-    // State waitReceiver
-    testItemTransfer.setState(
-      ImitationItemTransfer.stateName,
-      ImitationItemTransfer.states.waitReceiver
-    );
-    theMockDatabase.insert(
-      `${testItemTransfer.collection}/${testItemTransfer.id}`,
-      testItemTransfer
-    );
-    cy.wait(1000);
-    itemTransferPO.theThingPO.expectNoActionButton(
-      ImitationItemTransfer.actions['confirm-completed']
+      ImitationItemTransfer.actions['cancel']
     );
 
     // State completed
@@ -155,7 +129,49 @@ describe('Complete the item-transfer task', () => {
     );
     cy.wait(1000);
     itemTransferPO.theThingPO.expectNoActionButton(
-      ImitationItemTransfer.actions['confirm-completed']
+      ImitationItemTransfer.actions['cancel']
+    );
+
+    // State cancelled
+    testItemTransfer.setState(
+      ImitationItemTransfer.stateName,
+      ImitationItemTransfer.states.cancelled
+    );
+    theMockDatabase.insert(
+      `${testItemTransfer.collection}/${testItemTransfer.id}`,
+      testItemTransfer
+    );
+    cy.wait(1000);
+    itemTransferPO.theThingPO.expectNoActionButton(
+      ImitationItemTransfer.actions['cancel']
+    );
+
+    // State editing
+    testItemTransfer.setState(
+      ImitationItemTransfer.stateName,
+      ImitationItemTransfer.states.editing
+    );
+    theMockDatabase.insert(
+      `${testItemTransfer.collection}/${testItemTransfer.id}`,
+      testItemTransfer
+    );
+    cy.wait(1000);
+    itemTransferPO.theThingPO.expectActionButton(
+      ImitationItemTransfer.actions['cancel']
+    );
+
+    // State waitReceiver
+    testItemTransfer.setState(
+      ImitationItemTransfer.stateName,
+      ImitationItemTransfer.states.waitReceiver
+    );
+    theMockDatabase.insert(
+      `${testItemTransfer.collection}/${testItemTransfer.id}`,
+      testItemTransfer
+    );
+    cy.wait(1000);
+    itemTransferPO.theThingPO.expectActionButton(
+      ImitationItemTransfer.actions['cancel']
     );
 
     // State consented
@@ -169,79 +185,110 @@ describe('Complete the item-transfer task', () => {
     );
     cy.wait(1000);
     itemTransferPO.theThingPO.expectActionButton(
-      ImitationItemTransfer.actions['confirm-completed']
+      ImitationItemTransfer.actions['cancel']
     );
   });
 
-  it('Can complete item-transfer only as receiver', () => {
+  it('Only giver and receiver can cancel', () => {
+    logout();
+    loginTestUser(testUser);
+    cy.wait(1000);
+    itemTransferPO.theThingPO.expectNoActionButton(
+      ImitationItemTransfer.actions['cancel']
+    );
+
     logout();
     loginTestUser(testGiver);
     cy.wait(1000);
-    itemTransferPO.theThingPO.expectNoActionButton(
-      ImitationItemTransfer.actions['confirm-completed']
+    itemTransferPO.theThingPO.expectActionButton(
+      ImitationItemTransfer.actions['cancel']
     );
 
     logout();
     loginTestUser(testReceiver);
     cy.wait(1000);
     itemTransferPO.theThingPO.expectActionButton(
-      ImitationItemTransfer.actions['confirm-completed']
+      ImitationItemTransfer.actions['cancel']
     );
   });
 
-  it('Complete item-transfer', () => {
+  it('Cancel the item-transfer task', () => {
     itemTransferPO.theThingPO.runAction(
-      ImitationItemTransfer.actions['confirm-completed']
+      ImitationItemTransfer.actions['cancel']
     );
     const dialogPO = new YggDialogPageObjectCypress();
-    const itemTransferCompletePO = new ItemTransferCompletePageObjectCypress(
+    const stateChangeRecordPO = new TheThingStateChangeRecordPageObjectCypress(
       dialogPO.getSelector()
     );
-    itemTransferCompletePO.expectVisible();
-    itemTransferCompletePO.expectHint(
-      `確認已收到 ${testItem.name}，請更新寶物所在的位置`
+    stateChangeRecordPO.expectVisible();
+    stateChangeRecordPO.expectHint(
+      `你將要更改 ${testItemTransfer.name} 的狀態： ${ImitationItemTransfer.states.consented.label} ➡ ${ImitationItemTransfer.states.cancelled.label}，請留言簡述原因。`
     );
-    itemTransferCompletePO.setLocation(newItemLocation);
+    stateChangeRecordPO.addMessage(testCancelReason);
     dialogPO.confirm();
     emceePO.alert(
-      `已通知 ${testGiver.name}, ${testItem.name} 的交付任務已完成`
+      `已取消 ${testItem.name} 的交付任務，並寄出通知給 ${testReceiver.name}，${testGiver.name}`
     );
     itemTransferPO.theThingPO.expectState(
-      ImitationItemTransfer.states.completed
+      ImitationItemTransfer.states.cancelled
     );
+    const stateChangeComment = new Comment({
+      subjectId: testItemTransfer.id,
+      ownerId: testReceiver.id,
+      content: new Html(
+        `📌 ${testReceiver.name} 更改狀態 ${ImitationItemTransfer.states.consented.label} ➡ ${ImitationItemTransfer.states.cancelled.label}說明：${testCancelReason}`
+      )
+    });
+    itemTransferPO.threadPO.expectLatestComment(stateChangeComment);
   });
 
   it('Item state should back to "available"', () => {
     itemTransferPO.gotoItem();
     itemPO.expectVisible();
-    itemPO.theThingPO.expectName(testItem.name);
     itemPO.theThingPO.expectState(ImitationItem.states.available);
   });
 
-  it('Item holder should now be the receiver', () => {
-    itemPO.expectHolder(testReceiver);
+  it('Item holder remains being giver', () => {
+    itemPO.expectHolder(testGiver);
   });
 
-  it('Item requesters should not include receiver', () => {
-    itemPO.expectNotRequester(testReceiver);
+  it('Receiver remains in item requesters', () => {
+    itemPO.expectRequester(testReceiver, 0);
   });
 
-  it('Item should be at new location', () => {
-    itemPO.theThingPO.expectCellValue(
-      ImitationItemCells.location.id,
-      ImitationItemCells.location.type,
-      newItemLocation
+  it('Should send notification about cancel to receiver', () => {
+    const notification = new Notification({
+      type: ItemTransferNotificationType,
+      inviterId: testReceiver.id,
+      inviteeId: testReceiver.id,
+      email: testReceiver.email,
+      mailSubject: `${testItem.name} 的交付任務已取消`,
+      mailContent: `<h3>${testReceiver.name} 已取消 ${testItem.name} 的交付任務</h3><h3>原因說明：${testCancelReason}</h3><br>請點選以下網址檢視交付記錄`,
+      confirmMessage: `<h3>您將前往交付記錄頁面</h3>`,
+      landingUrl: `/${ImitationItemTransfer.routePath}/${testItemTransfer.id}`,
+      data: {}
+    });
+    accountWidgetPO.expectNotification(1);
+    accountWidgetPO.clickNotification();
+    myNotificationsPO.expectVisible();
+    myNotificationsPO.expectUnreadNotifications([notification]);
+    myNotificationsPO.clickNotification(notification);
+    emceePO.confirm(`您將前往交付記錄頁面`);
+    itemTransferPO.expectVisible();
+    itemTransferPO.theThingPO.expectValue(testItemTransfer);
+    itemTransferPO.theThingPO.expectState(
+      ImitationItemTransfer.states.cancelled
     );
   });
 
-  it('Should send notification to giver', () => {
+  it('Should send notification about cancel to giver', () => {
     const notification = new Notification({
       type: ItemTransferNotificationType,
       inviterId: testReceiver.id,
       inviteeId: testGiver.id,
       email: testGiver.email,
-      mailSubject: `${testReceiver.name} 已收到 ${testItem.name}`,
-      mailContent: `${testReceiver.name} 已收到 ${testItem.name}，請點選以下網址檢視交付記錄`,
+      mailSubject: `${testItem.name} 的交付任務已取消`,
+      mailContent: `<h3>${testReceiver.name} 已取消 ${testItem.name} 的交付任務</h3><h3>原因說明：${testCancelReason}</h3><br>請點選以下網址檢視交付記錄`,
       confirmMessage: `<h3>您將前往交付記錄頁面</h3>`,
       landingUrl: `/${ImitationItemTransfer.routePath}/${testItemTransfer.id}`,
       data: {}
@@ -257,7 +304,7 @@ describe('Complete the item-transfer task', () => {
     itemTransferPO.expectVisible();
     itemTransferPO.theThingPO.expectValue(testItemTransfer);
     itemTransferPO.theThingPO.expectState(
-      ImitationItemTransfer.states.completed
+      ImitationItemTransfer.states.cancelled
     );
   });
 });

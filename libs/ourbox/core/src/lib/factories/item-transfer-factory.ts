@@ -12,7 +12,8 @@ import {
   TheThing,
   TheThingFactory,
   TheThingAccessor,
-  Relationship
+  Relationship,
+  TheThingStateChangeRecord
 } from '@ygg/the-thing/core';
 import { first, isEmpty, flatten, uniq, uniqBy } from 'lodash';
 import { Subscription, Observable, of, combineLatest } from 'rxjs';
@@ -73,6 +74,10 @@ export abstract class ItemTransferFactory {
 
           case ImitationItemTransfer.actions['confirm-completed'].id:
             this.completeReception(actionInfo.theThing);
+            break;
+
+          case ImitationItemTransfer.actions['cancel'].id:
+            this.cancelTransfer(actionInfo.theThing.id);
             break;
 
           default:
@@ -433,6 +438,69 @@ export abstract class ItemTransferFactory {
     } catch (error) {
       this.emcee.error(`前往交付任務頁面失敗，錯誤原因：\n${error.message}`);
       return Promise.reject(error);
+    }
+  }
+
+  async cancelTransfer(itemTransferId: string) {
+    try {
+      const user = await this.authenticator.requestLogin();
+      const itemTransfer = await this.theThingAccessor.load(
+        itemTransferId,
+        ImitationItemTransfer.collection
+      );
+      const giver = await this.getGiver(itemTransferId);
+      const receiver = await this.getReceiver(itemTransferId);
+      const item = await this.getTransferItem(itemTransferId);
+      const changeRecord: TheThingStateChangeRecord = await this.theThingFactory.setState(
+        itemTransfer,
+        ImitationItemTransfer,
+        ImitationItemTransfer.states.cancelled
+      );
+      await this.theThingFactory.setState(
+        item,
+        ImitationItem,
+        ImitationItem.states.available
+      );
+
+      const cancelReason =
+        changeRecord && changeRecord.message ? changeRecord.message : '無';
+      const mailSubject = `${item.name} 的交付任務已取消`;
+      const mailContent = `<h3>${user.name} 已取消 ${item.name} 的交付任務</h3><h3>原因說明：${cancelReason}</h3><br>請點選以下網址檢視交付記錄`;
+      const confirmMessage = `<h3>您將前往交付記錄頁面</h3>`;
+      // Send notification to receiver
+      await this.notificationFactory.create({
+        type: ItemTransferNotificationType,
+        inviterId: user.id,
+        inviteeId: receiver.id,
+        email: receiver.email,
+        mailSubject,
+        mailContent,
+        confirmMessage,
+        landingUrl: `/${ImitationItemTransfer.routePath}/${itemTransfer.id}`,
+        data: {}
+      });
+      // Send notification to giver
+      await this.notificationFactory.create({
+        type: ItemTransferNotificationType,
+        inviterId: user.id,
+        inviteeId: giver.id,
+        email: giver.email,
+        mailSubject,
+        mailContent,
+        confirmMessage,
+        landingUrl: `/${ImitationItemTransfer.routePath}/${itemTransfer.id}`,
+        data: {}
+      });
+
+      this.emcee.info(
+        `<h3>已取消 ${item.name} 的交付任務，並寄出通知給 ${receiver.name}，${giver.name}</h3>`
+      );
+    } catch (error) {
+      const wrapError = new Error(
+        `取消交付任務失敗，id=${itemTransferId}，錯誤原因：\n${error.message}`
+      );
+      this.emcee.error(wrapError.message);
+      return Promise.reject(wrapError);
     }
   }
 }

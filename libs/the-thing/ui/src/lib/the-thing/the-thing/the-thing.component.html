@@ -1,53 +1,46 @@
 <div class="the-thing" *ngIf="theThing && imitation">
   <!-- <pre>{{ theThing | json }}</pre> -->
-  <div
-    fxLayout="row wrap"
-    fxLayoutAlign="space-between center"
-    fxLayoutGap="30px"
-    [formGroup]="formGroup"
-  >
-    <div class="flex-wrap-next">
-      <div>
-        <div class="main-image">
-          <img [src]="theThing.image" />
-          <div class="edit" *ngIf="!readonly">
-            <button
-              mat-mini-fab
-              class="open-image-uploader"
-              (click)="changeImage()"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
-          </div>
-        </div>
-        <ygg-omni-type-view-control
-          class="name"
-          formControlName="name"
-          type="text"
-          [editable]="!readonly"
-          [viewStyle]="nameStyle"
+  <div class="headline" [formGroup]="formGroup">
+    <div class="main-image">
+      <img [src]="theThing.image" />
+      <div class="edit" *ngIf="!readonly">
+        <button
+          mat-mini-fab
+          class="open-image-uploader"
+          (click)="changeImage()"
         >
-          <div custom-view>
-            <ygg-page-title [icon]="imitation.icon">{{
-              formGroup.get('name').value
-            }}</ygg-page-title>
-          </div>
-          <div errors>
-            <div *ngIf="formGroup.get('name').errors?.required">
-              請填入{{ imitation.name }}名稱
-            </div>
-          </div>
-        </ygg-omni-type-view-control>
+          <mat-icon>edit</mat-icon>
+        </button>
       </div>
-      <div class="state">
-        <the-thing-state
-          [id]="theThing.id"
-          [imitation]="imitation"
-        ></the-thing-state>
+    </div>
+    <ygg-omni-type-view-control
+      class="name"
+      formControlName="name"
+      type="text"
+      [editable]="!readonly"
+      [viewStyle]="nameStyle"
+    >
+      <div custom-view>
+        <ygg-page-title [icon]="imitation.icon">{{
+          formGroup.get('name').value
+        }}</ygg-page-title>
       </div>
-      <div class="owner" *ngIf="showOwner">
-        <ygg-user-thumbnail [id]="theThing.ownerId"></ygg-user-thumbnail>
+      <div errors>
+        <div *ngIf="formGroup.get('name').errors?.required">
+          請填入{{ imitation.name }}名稱
+        </div>
       </div>
+    </ygg-omni-type-view-control>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="30px">
+    <div class="owner" *ngIf="showOwner">
+      <ygg-user-thumbnail [id]="theThing.ownerId"></ygg-user-thumbnail>
+    </div>
+    <div class="state flex-wrap-next">
+      <the-thing-state
+        [id]="theThing.id"
+        [imitation]="imitation"
+      ></the-thing-state>
     </div>
     <div
       class="actions"

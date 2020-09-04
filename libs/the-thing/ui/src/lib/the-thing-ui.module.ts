@@ -43,6 +43,7 @@ import { TheThingImitationViewComponent } from './the-thing/the-thing-imitation-
 import { TheThingStateComponent } from './the-thing/the-thing-state/the-thing-state.component';
 import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-thing-thumbnail.component';
 import { TheThingComponent } from './the-thing/the-thing/the-thing.component';
+import { TheThingStateChangeRecordComponent } from './the-thing/the-thing-state-change-record/the-thing-state-change-record.component';
 
 interface TheThingUiModuleConfig {
   imitations: TheThingImitation[];
@@ -89,7 +90,8 @@ interface TheThingUiModuleConfig {
     TheThingStateComponent,
     TheThingCellComponent,
     TheThingComponent,
-    TheThingActionButtonComponent
+    TheThingActionButtonComponent,
+    TheThingStateChangeRecordComponent
   ],
   exports: [
     CellListComponent,

@@ -1,14 +1,22 @@
 import { TheThing } from './the-thing';
+import { Html } from '@ygg/shared/omni-types/core';
 
-export type TheThingStateConfirmMessage = string | ((theThing: TheThing) => string);
+export type TheThingStateConfirmMessage =
+  | string
+  | ((theThing: TheThing) => string);
 
 export interface TheThingState {
   name: string;
   label: string;
   value: number;
   icon?: string;
+  requireChangeRecord?: boolean;
   confirmMessage?: TheThingStateConfirmMessage;
   permissions?: string[];
+}
+
+export interface TheThingStateChangeRecord {
+  message: Html;
 }
 
 export function stateConfirmMessage(

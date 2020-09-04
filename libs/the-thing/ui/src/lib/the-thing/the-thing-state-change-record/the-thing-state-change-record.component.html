@@ -1,0 +1,14 @@
+<div class="the-thing-state-change-record">
+  <div *ngIf="isInputValid">
+    <h2 class="hint">
+      你將要更改 {{ theThing.name }} 的狀態： {{ oldState?.label }} ➡
+      {{ newState.label }}，請留言簡述原因。
+    </h2>
+    <br /><br />
+    <div [formGroup]="formGroup">
+      <div class="input-message">
+        <ygg-html-control formControlName="message"></ygg-html-control>
+      </div>
+    </div>
+  </div>
+</div>

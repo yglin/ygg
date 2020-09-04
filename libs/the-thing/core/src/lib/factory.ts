@@ -1,7 +1,7 @@
 import { Subject, Observable } from 'rxjs';
 import { TheThing } from './the-thing';
 import { TheThingImitation } from './imitation';
-import { TheThingState } from './state';
+import { TheThingState, TheThingStateChangeRecord } from './state';
 import { TheThingAction } from './action';
 import { TheThingAccessor } from './the-thing-accessor';
 
@@ -42,12 +42,12 @@ export abstract class TheThingFactory {
     options?: {
       force?: boolean;
     }
-  );
+  ): Promise<TheThingStateChangeRecord>;
 
   async load(id: string, collection: string): Promise<TheThing> {
     return this.theThingAccessor.load(id, collection);
   }
-  
+
   runAction(action: TheThingAction, theThing: TheThing) {
     this.runAction$.next({
       theThing,
