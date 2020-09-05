@@ -2,10 +2,11 @@ import { castArray, isEmpty } from 'lodash';
 import {
   HeaderPageObjectCypress,
   BoxCreatePageObjectCypress,
-  ItemWarehousePageObjectCypress
+  ItemWarehousePageObjectCypress,
+  MapSearchPageObjectCypress
 } from '@ygg/ourbox/test';
 import { SideDrawerPageObjectCypress } from '@ygg/shared/ui/test';
-import { pages as OurboxPages } from '@ygg/ourbox/ui';
+import { pages as OurboxPages } from '@ygg/ourbox/core';
 import { AccountWidgetPageObjectCypress } from '@ygg/shared/user/test';
 
 export class SiteNavigator {
@@ -48,6 +49,14 @@ export class SiteNavigator {
     itemWarehousePO.expectVisible();
   }
 
+  gotoMapSearch() {
+    this.headerPO.openSideDrawer();
+    this.sideDrawerPO.expectVisible();
+    this.sideDrawerPO.clickLink(OurboxPages.mapSearch);
+    const mapSearchPO = new MapSearchPageObjectCypress();
+    mapSearchPO.expectVisible();
+  }
+
   gotoMyBoxes() {
     this.accountWidgetPO.openUserMenu();
     this.accountWidgetPO.userMenuPO.clickMenuItem('myBoxes');
@@ -60,6 +69,6 @@ export class SiteNavigator {
 
   gotoMyItemTransfers() {
     this.accountWidgetPO.openUserMenu();
-    this.accountWidgetPO.userMenuPO.clickMenuItem('myItemTransfers');    
+    this.accountWidgetPO.userMenuPO.clickMenuItem('myItemTransfers');
   }
 }

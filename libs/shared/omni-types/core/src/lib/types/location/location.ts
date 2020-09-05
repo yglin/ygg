@@ -1,6 +1,6 @@
 import { SerializableJSON } from '@ygg/shared/infra/core';
 import { Address } from './address';
-import { GeoPoint } from './geo-point';
+import { GeoPoint } from '@ygg/shared/geography/core';
 
 export class Location implements SerializableJSON {
   private _address: Address;
@@ -14,7 +14,10 @@ export class Location implements SerializableJSON {
   }
 
   static isLocation(value: any): value is Location {
-    return !!(value && (Address.isAddress(value.address) || GeoPoint.isGeoPoint(value.geoPoint)));
+    return !!(
+      value &&
+      (Address.isAddress(value.address) || GeoPoint.isGeoPoint(value.geoPoint))
+    );
   }
 
   static forge(): Location {
@@ -27,6 +30,10 @@ export class Location implements SerializableJSON {
   constructor() {
     this._address = new Address();
     this._geoPoint = new GeoPoint();
+  }
+
+  clone(): Location {
+    return new Location().fromJSON(this.toJSON());
   }
 
   fromJSON(data: any = {}): this {

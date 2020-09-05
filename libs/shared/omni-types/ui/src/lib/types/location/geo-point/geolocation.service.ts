@@ -8,7 +8,7 @@ import {
   switchMap,
   take
 } from 'rxjs/operators';
-import { GeoPoint } from '@ygg/shared/omni-types/core';
+import { GeoPoint } from '@ygg/shared/geography/core';
 import { LogService } from '@ygg/shared/infra/log';
 
 @Injectable({ providedIn: 'root' })

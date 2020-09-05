@@ -18,7 +18,6 @@ import {
   SideDrawerService,
   SharedUiWidgetsModule
 } from '@ygg/shared/ui/widgets';
-import { pages } from './pages';
 import { BoxFactoryService } from './box/box-factory.service';
 import { noop, pick, values } from 'lodash';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -32,6 +31,7 @@ import { MyItemTransfersComponent } from './item-transfer/my-item-transfers/my-i
 import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
 import { ItemTransferCompleteComponent } from './item-transfer/item-transfer-complete/item-transfer-complete.component';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
+import { pages } from '@ygg/ourbox/core';
 
 @NgModule({
   declarations: [

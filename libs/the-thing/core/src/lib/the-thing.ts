@@ -363,25 +363,29 @@ export class TheThing implements Entity, ImageThumbnailItem {
       }
 
       if (args.length >= 2) {
-        let objectId: string;
-        if (typeof args[1] === 'string') {
-          objectId = args[1];
+        if (TheThingRelation.isTheThingRelation(args[1])) {
+          this.relations[relationName].push(args[1]);
         } else {
-          objectId = args[1].id;
-        }
+          let objectId: string;
+          if (typeof args[1] === 'string') {
+            objectId = args[1];
+          } else {
+            objectId = args[1].id;
+          }
 
-        let cells: TheThingCell[] = [];
-        if (args.length >= 3 && !isEmpty(args[2])) {
-          cells = args[2];
-        }
+          let cells: TheThingCell[] = [];
+          if (args.length >= 3 && !isEmpty(args[2])) {
+            cells = args[2];
+          }
 
-        const newRelation = new TheThingRelation({
-          name: relationName,
-          subjectId: this.id,
-          objectId: objectId,
-          cells: keyBy(cells, 'name')
-        });
-        this.relations[relationName].push(newRelation);
+          const newRelation = new TheThingRelation({
+            name: relationName,
+            subjectId: this.id,
+            objectId: objectId,
+            cells: keyBy(cells, 'name')
+          });
+          this.relations[relationName].push(newRelation);
+        }
       }
     }
   }

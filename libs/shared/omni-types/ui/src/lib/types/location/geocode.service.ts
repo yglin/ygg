@@ -1,10 +1,11 @@
 /// <reference types="@types/googlemaps" />
 import { random, range } from 'lodash';
 import { Injectable } from '@angular/core';
-import { Address, GeoPoint } from '@ygg/shared/omni-types/core';
+import { Address } from '@ygg/shared/omni-types/core';
 import { Observable, of, AsyncSubject, from } from 'rxjs';
 import { delay, switchMap, timeout, catchError, map } from 'rxjs/operators';
 import { GoogleMapsApiService } from './google-maps-api.service';
+import { GeoPoint } from '@ygg/shared/geography/core';
 
 @Injectable({ providedIn: 'root' })
 export class GeocodeService {

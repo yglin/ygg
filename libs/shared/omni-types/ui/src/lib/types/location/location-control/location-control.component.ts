@@ -7,9 +7,10 @@ import {
   FormBuilder
 } from '@angular/forms';
 import { Subscription, noop, merge, of } from 'rxjs';
-import { Address, GeoPoint, Location } from '@ygg/shared/omni-types/core';
+import { Address, Location } from '@ygg/shared/omni-types/core';
 import { debounceTime, filter, switchMap, tap, finalize } from 'rxjs/operators';
 import { GeocodeService } from '../geocode.service';
+import { GeoPoint } from '@ygg/shared/geography/core';
 
 @Component({
   selector: 'ygg-location-control',

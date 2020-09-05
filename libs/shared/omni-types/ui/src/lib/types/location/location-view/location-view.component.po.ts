@@ -1,7 +1,8 @@
 import { PageObject } from '@ygg/shared/test/page-object';
-import { Location, Address, GeoPoint } from '@ygg/shared/omni-types/core';
+import { Location, Address } from '@ygg/shared/omni-types/core';
 import { AddressViewPageObject } from '../address';
 import { GeoPointViewPageObject } from '../geo-point/geo-point-view/geo-point-view.component.po';
+import { GeoPoint } from '@ygg/shared/geography/core';
 
 export abstract class LocationViewPageObject extends PageObject {
   selectors = {

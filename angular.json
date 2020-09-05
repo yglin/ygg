@@ -2595,6 +2595,32 @@
           }
         }
       }
+    },
+    "shared-geography-core": {
+      "root": "libs/shared/geography/core",
+      "sourceRoot": "libs/shared/geography/core/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/geography/core/tsconfig.lib.json",
+              "libs/shared/geography/core/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/geography/core/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/geography/core/jest.config.js",
+            "tsConfig": "libs/shared/geography/core/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

@@ -48,10 +48,10 @@ export class Relationship {
     imitation?: TheThingImitation;
     cellDefines?: { [key: string]: TheThingCellDefine };
   }) {
-    options = defaults(options, {
-      subjectCollection: TheThing.collection,
-      objectCollection: TheThing.collection
-    });
+    // options = defaults(options, {
+    //   subjectCollection: TheThing.collection,
+    //   objectCollection: TheThing.collection
+    // });
     extend(this, options);
     if (options.subjectCollection) {
       this._subjectCollection = options.subjectCollection;

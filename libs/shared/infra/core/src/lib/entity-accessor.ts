@@ -55,6 +55,14 @@ export class EntityAccessor<T extends Entity> {
       .pipe(map(dataItems => dataItems.map(dt => this.deserializer(dt))));
   }
 
+  async find(queries: Query[]): Promise<T[]> {
+    const dataItems: any[] = await this.dataAccessor.find(
+      this.collection,
+      queries
+    );
+    return dataItems.map(dataItem => this.deserializer(dataItem));
+  }
+
   async load(id: string): Promise<T> {
     const entityData = await this.dataAccessor.load(this.collection, id);
     return entityData ? this.deserializer(entityData) : null;

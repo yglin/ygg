@@ -4,16 +4,25 @@ import {
   upperFirst,
   uniq,
   difference,
-  differenceWith
+  differenceWith,
+  find,
+  filter
 } from 'lodash';
 import {
   TheThingImitation,
   TheThing,
   TheThingRelation,
-  RelationRecord
+  RelationRecord,
+  LocationRecord,
+  TheThingCell
 } from '@ygg/the-thing/core';
-import { relationFactory, relationAccessor } from '../global';
+import {
+  relationFactory,
+  relationAccessor,
+  locationRecordAccessor
+} from '../global';
 import { User } from '@ygg/shared/user/core';
+import { OmniTypes, Location } from '@ygg/shared/omni-types/core';
 
 export function generateOnUpdateFunctions(imitations: TheThingImitation[]) {
   const onUpdateFunctions = {};
@@ -111,6 +120,62 @@ export function generateOnUpdateFunctions(imitations: TheThingImitation[]) {
             for (const newRelation of newUserRelations) {
               console.log(`Upsert new relation ${newRelation.id}`);
               await relationAccessor.save(newRelation);
+            }
+
+            // Sync location records;
+            const locationCellsBefore = filter(
+              theThingBefore.cells,
+              cell => cell.type === OmniTypes.location.id
+            );
+            const locationCellsAfter = filter(
+              theThingAfter.cells,
+              cell => cell.type === OmniTypes.location.id
+            );
+
+            const isLocationCellEqual = (
+              cellA: TheThingCell,
+              cellB: TheThingCell
+            ): boolean => {
+              return (
+                Location.isLocation(cellA.value) &&
+                Location.isLocation(cellB.value) &&
+                cellA.value.geoPoint.isEqual(cellB.value.geoPoint)
+              );
+            };
+            const deleteLocationRecordIds: string[] = differenceWith(
+              locationCellsBefore,
+              locationCellsAfter,
+              isLocationCellEqual
+            ).map(cell => {
+              const location: Location = cell.value;
+              return LocationRecord.constructId(
+                location.geoPoint.latitude,
+                location.geoPoint.longitude,
+                theThingBefore.collection,
+                theThingBefore.id
+              );
+            });
+
+            const newLocationRecords: LocationRecord[] = differenceWith(
+              locationCellsAfter,
+              locationCellsBefore,
+              isLocationCellEqual
+            ).map(cell => {
+              const location: Location = cell.value;
+              return new LocationRecord({
+                latitude: location.geoPoint.latitude,
+                longitude: location.geoPoint.longitude,
+                address: location.address,
+                objectCollection: theThingAfter.collection,
+                objectId: theThingAfter.id
+              });
+            });
+
+            for (const deleteId of deleteLocationRecordIds) {
+              await locationRecordAccessor.delete(deleteId);
+            }
+            for (const locationRecord of newLocationRecords) {
+              await locationRecordAccessor.save(locationRecord);
             }
 
             return Promise.resolve();

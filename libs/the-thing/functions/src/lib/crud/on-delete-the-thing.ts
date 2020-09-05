@@ -11,10 +11,16 @@ import {
   TheThing,
   TheThingRelation,
   RelationRecord,
-  RelationAccessor
+  RelationAccessor,
+  LocationRecord
 } from '@ygg/the-thing/core';
-import { relationFactory, relationAccessor } from '../global';
+import {
+  relationFactory,
+  relationAccessor,
+  locationRecordAccessor
+} from '../global';
 import { User } from '@ygg/shared/user/core';
+import { Query } from '@ygg/shared/infra/core';
 
 export function generateOnDeleteFunctions(imitations: TheThingImitation[]) {
   const onDeleteFunctions = {};
@@ -50,6 +56,19 @@ export function generateOnDeleteFunctions(imitations: TheThingImitation[]) {
                   );
                 }
               }
+            }
+
+            // Delete location records
+            const queries: Query[] = [
+              new Query('objectCollection', '==', theThing.collection),
+              new Query('objectId', '==', theThing.id)
+            ];
+            const deleteLocationRecords: LocationRecord[] = await locationRecordAccessor.find(
+              queries
+            );
+
+            for (const deleteRecord of deleteLocationRecords) {
+              await locationRecordAccessor.delete(deleteRecord.id);
             }
 
             return Promise.resolve();

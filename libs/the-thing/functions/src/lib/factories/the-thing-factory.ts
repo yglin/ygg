@@ -3,14 +3,15 @@ import {
   TheThingFactory,
   TheThingImitation,
   TheThingState,
-  TheThingAccessor
+  TheThingAccessor,
+  TheThingStateChangeRecord
 } from '@ygg/the-thing/core';
 import { Observable } from 'rxjs';
 import { TheThingAccessorFunctions } from '../data-accessors';
 
 export class TheThingFactoryFunctions extends TheThingFactory {
-  constructor(protected theThingAccessor: TheThingAccessor) {
-    super();
+  constructor(theThingAccessor: TheThingAccessor) {
+    super(theThingAccessor);
   }
 
   create(
@@ -32,8 +33,15 @@ export class TheThingFactoryFunctions extends TheThingFactory {
     throw new Error('Method not implemented.');
   }
 
-  save(theThing: TheThing, options?: { requireOwner?: boolean; imitation?: TheThingImitation; force?: boolean; }): Promise<TheThing> {
-    throw new Error("Method not implemented.");
+  save(
+    theThing: TheThing,
+    options?: {
+      requireOwner?: boolean;
+      imitation?: TheThingImitation;
+      force?: boolean;
+    }
+  ): Promise<TheThing> {
+    throw new Error('Method not implemented.');
   }
 
   async setState(
@@ -41,8 +49,16 @@ export class TheThingFactoryFunctions extends TheThingFactory {
     imitation: TheThingImitation,
     state: TheThingState,
     options?: { force?: boolean }
-  ) {
-    imitation.setState(thing, state);
-    return this.theThingAccessor.upsert(thing);
+  ): Promise<TheThingStateChangeRecord> {
+    try {
+      imitation.setState(thing, state);
+      await this.theThingAccessor.upsert(thing);
+      return Promise.resolve(null);
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to set theThing ${thing.id} of state ${state.label}.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
   }
 }

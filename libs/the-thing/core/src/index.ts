@@ -17,3 +17,4 @@ export * from './lib/relation-factory';
 export * from './lib/relation-accessor';
 export * from './lib/factory';
 export * from './lib/ui-config';
+export * from './lib/map-finder';

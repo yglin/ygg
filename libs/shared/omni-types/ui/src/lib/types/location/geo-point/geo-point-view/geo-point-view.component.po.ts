@@ -1,5 +1,5 @@
 import { PageObject } from '@ygg/shared/test/page-object';
-import { GeoPoint } from '@ygg/shared/omni-types/core';
+import { GeoPoint } from '@ygg/shared/geography/core';
 
 export abstract class GeoPointViewPageObject extends PageObject {
   selectors = {

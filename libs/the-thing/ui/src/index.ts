@@ -8,3 +8,4 @@ export * from './lib/the-thing-access.service';
 export * from './lib/the-thing-factory.service';
 export * from './lib/relation-factory.service';
 export * from './lib/relation-access.service';
+export * from './lib/the-thing-map-finder.service';

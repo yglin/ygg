@@ -4,10 +4,12 @@ import {
   TheThingImitation,
   TheThing,
   TheThingRelation,
-  RelationRecord
+  RelationRecord,
+  LocationRecord
 } from '@ygg/the-thing/core';
-import { relationAccessor } from '../global';
+import { relationAccessor, locationRecordAccessor } from '../global';
 import { User } from '@ygg/shared/user/core';
+import { OmniTypes, Location } from '@ygg/shared/omni-types/core';
 
 export function generateOnCreateFunctions(imitations: TheThingImitation[]) {
   const onCreateFunctions = {};
@@ -48,6 +50,35 @@ export function generateOnCreateFunctions(imitations: TheThingImitation[]) {
                   await relationAccessor.save(relationRecord);
                 }
               }
+            }
+
+            // Extract and save location records
+            const locationRecords: LocationRecord[] = [];
+            for (const cellId in theThing.cells) {
+              if (
+                Object.prototype.hasOwnProperty.call(theThing.cells, cellId)
+              ) {
+                const cell = theThing.cells[cellId];
+                const location: Location = cell.value;
+                if (
+                  cell.type === OmniTypes.location.id &&
+                  Location.isLocation(cell.value)
+                ) {
+                  locationRecords.push(
+                    new LocationRecord({
+                      latitude: location.geoPoint.latitude,
+                      longitude: location.geoPoint.longitude,
+                      address: location.address,
+                      objectCollection: theThing.collection,
+                      objectId: theThing.id
+                    })
+                  );
+                }
+              }
+            }
+
+            for (const locationRecord of locationRecords) {
+              await locationRecordAccessor.save(locationRecord);
             }
 
             return Promise.resolve();

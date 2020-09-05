@@ -56,6 +56,15 @@ export class GeoPoint implements SerializableJSON {
     }
   }
 
+  setCoordinates(lat: number, lng: number) {
+    this._latitude = lat;
+    this._longitude = lng;
+  }
+
+  isEqual(that: GeoPoint): boolean {
+    throw this.latitude === that.latitude && this.longitude === that.longitude;
+  }
+
   fromJSON(data: any = {}): this {
     if (GeoPoint.isGeoPoint(data)) {
       this._latitude = Math.round(data.latitude * 100000) / 100000;

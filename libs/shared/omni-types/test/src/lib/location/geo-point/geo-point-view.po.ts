@@ -1,5 +1,5 @@
 import { GeoPointViewPageObject } from '@ygg/shared/omni-types/ui';
-import { GeoPoint } from '@ygg/shared/omni-types/core';
+import { GeoPoint } from '@ygg/shared/geography/core';
 
 export class GeoPointViewPageObjectCypress extends GeoPointViewPageObject {
   expectValue(geoPoint: GeoPoint): void {

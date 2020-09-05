@@ -31,7 +31,7 @@ import {
   ImitationBox,
   ImitationBoxFlags,
   ImitationItem,
-  ItemFilter,
+  // ItemFilter,
   RelationshipBoxItem,
   RelationshipBoxMember,
   ImitationBoxThumbnailImages,
@@ -372,7 +372,7 @@ export class BoxFactory {
     return this.ObservableCaches[cacheId];
   }
 
-  findItems$(itemFilter: ItemFilter): Observable<TheThing[]> {
+  findItems$(itemFilter: TheThingFilter): Observable<TheThing[]> {
     // itemFilter.addState(
     //   ImitationItem.stateName,
     //   ImitationItem.states.available.value
@@ -422,6 +422,7 @@ export class BoxFactory {
       this.listPublicBoxes$()
     ]).pipe(
       map(([myBoxes, publicBoxes]) => {
+        // console.log('Boxes I can see');
         // console.log(myBoxes);
         // console.log(publicBoxes);
         return uniqBy(myBoxes.concat(publicBoxes), 'id');
@@ -438,6 +439,7 @@ export class BoxFactory {
         }
       }),
       switchMap((itemIds: string[][]) => {
+        // console.log(`Item ids from boxes I can see`);
         // console.log(itemIds);
         itemFilter.ids = uniq(flatten(itemIds));
         if (isEmpty(itemFilter.ids)) {

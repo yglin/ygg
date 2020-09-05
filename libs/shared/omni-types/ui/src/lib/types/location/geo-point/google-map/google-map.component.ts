@@ -12,7 +12,7 @@ import {
   ElementRef,
   NgZone
 } from '@angular/core';
-import { GeoPoint } from '@ygg/shared/omni-types/core';
+import { GeoPoint } from '@ygg/shared/geography/core';
 import { Subscription } from 'rxjs';
 import { GeolocationService } from '../geolocation.service';
 import { finalize } from 'rxjs/operators';

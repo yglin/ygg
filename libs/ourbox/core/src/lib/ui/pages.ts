@@ -1,15 +1,11 @@
 import { Page } from '@ygg/shared/ui/core';
-import {
-  ImitationItem,
-  ImitationBox,
-  ImitationItemTransfer
-} from '@ygg/ourbox/core';
+import { ImitationItem, ImitationBox, ImitationItemTransfer } from '../models';
 
 export const pages: { [id: string]: Page } = {
   mapSearch: {
     id: 'mapSearch',
     icon: 'map',
-    label: '附近的寶物',
+    label: '藏寶圖',
     path: ['ourbox', 'map']
   },
   boxCreate: {

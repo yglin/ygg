@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GeoPoint } from '@ygg/shared/omni-types/core';
+import { GeoPoint } from '@ygg/shared/geography/core';
 
 @Component({
   selector: 'ygg-google-map-demo',
