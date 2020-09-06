@@ -5,7 +5,7 @@
 export * from './the-thing-imitation-view/imitation-view-interface.component';
 export * from './the-thing-imitation-view/the-thing-imitation-view.component';
 export * from './the-thing-finder/the-thing-finder.component';
-export * from './the-thing-finder/the-thing-finder.component.po';
+// export * from './the-thing-finder/the-thing-finder.component.po';
 export * from './the-thing-list/the-thing-list.component';
 export * from './the-thing-list/the-thing-list.component.po';
 export * from './the-thing-resolver.service';

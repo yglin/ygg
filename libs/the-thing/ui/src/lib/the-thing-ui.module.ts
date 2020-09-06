@@ -44,6 +44,7 @@ import { TheThingStateComponent } from './the-thing/the-thing-state/the-thing-st
 import { TheThingThumbnailComponent } from './the-thing/the-thing-thumbnail/the-thing-thumbnail.component';
 import { TheThingComponent } from './the-thing/the-thing/the-thing.component';
 import { TheThingStateChangeRecordComponent } from './the-thing/the-thing-state-change-record/the-thing-state-change-record.component';
+import { TheThingFinderItemDirective } from './the-thing/the-thing-finder/the-thing-finder.component';
 
 interface TheThingUiModuleConfig {
   imitations: TheThingImitation[];
@@ -70,6 +71,7 @@ interface TheThingUiModuleConfig {
     // TheThingEditorComponent,
     // TheThingViewComponent,
     TheThingFinderComponent,
+    TheThingFinderItemDirective,
     TheThingListComponent,
     TheThingThumbnailComponent,
     MyThingsComponent,

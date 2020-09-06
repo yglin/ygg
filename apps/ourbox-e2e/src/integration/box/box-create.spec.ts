@@ -1,37 +1,32 @@
 import {
+  ImitationBox,
+  ImitationItem,
+  NotificationJoinBox
+} from '@ygg/ourbox/core';
+import {
   BoxCreatePageObjectCypress,
-  HeaderPageObjectCypress,
   BoxViewPageObjectCypress,
+  HeaderPageObjectCypress,
   ItemWarehousePageObjectCypress
 } from '@ygg/ourbox/test';
+import { getEnv } from '@ygg/shared/infra/core';
 import {
-  theMockDatabase,
-  logout as logoutBackground
+  logout as logoutBackground,
+  theMockDatabase
 } from '@ygg/shared/test/cypress';
 import {
-  waitForLogin,
+  EmceePageObjectCypress,
+  SideDrawerPageObjectCypress
+} from '@ygg/shared/ui/test';
+import { Notification, User } from '@ygg/shared/user/core';
+import {
+  AccountWidgetPageObjectCypress,
   loginTestUser,
   logout,
-  AccountWidgetPageObjectCypress,
   MyNotificationListPageObjectCypress
 } from '@ygg/shared/user/test';
-import { SiteNavigator } from '../../support/site-navigator';
-import {
-  SideDrawerPageObjectCypress,
-  EmceePageObjectCypress
-} from '@ygg/shared/ui/test';
-import {
-  ImitationBox,
-  RelationshipBoxMember,
-  NotificationJoinBox,
-  ImitationItem,
-  RelationshipBoxItem
-} from '@ygg/ourbox/core';
-import { User, Notification } from '@ygg/shared/user/core';
-import { RelationRecord } from '@ygg/the-thing/core';
-import { last } from 'lodash';
-import { getEnv } from '@ygg/shared/infra/core';
 import { TheThingPageObjectCypress } from '@ygg/the-thing/test';
+import { SiteNavigator } from '../../support/site-navigator';
 
 describe('Creation of box', () => {
   const siteNavigator = new SiteNavigator();
@@ -352,6 +347,5 @@ describe('Creation of box', () => {
 
     // Can see the item as not box member
     itemWarehousePO.expectItem(testItem02);
-
   });
 });

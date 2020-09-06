@@ -1,27 +1,37 @@
+import { ImitationItem } from '@ygg/ourbox/core';
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
 import { TheThing } from '@ygg/the-thing/core';
-import { TheThingThumbnailPageObjectCypress } from '@ygg/the-thing/test';
-import { ImitationItem } from '@ygg/ourbox/core';
+import { TheThingFinderPageObjectCypress } from '@ygg/the-thing/test';
 
 export class ItemWarehousePageObjectCypress extends PageObjectCypress {
   selectors = {
     main: '.item-warehouse',
-    itemList: '.item-list'
+    itemFinder: '.item-finder'
   };
 
-  getSelectorForItem(item: TheThing): string {
-    return `${this.getSelector()} .item:contains("${item.name}")`;
+  theThingFinderPO: TheThingFinderPageObjectCypress;
+
+  constructor(parentSelector?: string) {
+    super(parentSelector);
+    this.theThingFinderPO = new TheThingFinderPageObjectCypress(
+      this.getSelector('itemFinder'),
+      ImitationItem
+    );
   }
 
   expectNotItem(item: TheThing) {
-    cy.get(this.getSelectorForItem(item)).should('not.exist');
+    this.theThingFinderPO.expectNotTheThing(item);
   }
 
   expectItem(item: TheThing) {
-    const theThingThumbnailPO = new TheThingThumbnailPageObjectCypress(
-      this.getSelectorForItem(item),
-      ImitationItem
-    );
-    theThingThumbnailPO.expectValue(item);
+    this.theThingFinderPO.expectTheThing(item);
+  }
+
+  expectItems(items: TheThing[]) {
+    cy.wrap(items).each((item: TheThing) => this.expectItem(item));
+  }
+
+  expectNotItems(items: TheThing[]) {
+    cy.wrap(items).each((item: TheThing) => this.expectNotItem(item));
   }
 }

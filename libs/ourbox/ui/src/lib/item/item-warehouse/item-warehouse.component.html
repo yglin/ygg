@@ -1,16 +1,24 @@
 <div class="item-warehouse">
-  <!-- <pre>{{ items | json }}</pre> -->
-  <div
-    fxLayout="row wrap"
-    fxLayoutAlign="space-around start"
-    fxLayoutGap="20px"
-    class="item-list"
+  <ng-template #theThingItemTemplate let-theThing="theThing">
+    <!-- <h2>This is {{ theThing.name }}</h2> -->
+    <the-thing-thumbnail
+      [theThing]="theThing"
+      [imiation]="ImitationItem"
+    ></the-thing-thumbnail>
+  </ng-template>
+
+  <the-thing-finder
+  class="item-finder"
+    [theThings$]="items$"
+    [imitation]="ImitationItem"
+    [theThingItemTemplate]="theThingItemTemplate"
   >
-    <div *ngFor="let item of items" class='item'>
+    <!-- <ng-container *theThingFinderItem="let theThing">
+      <h2>This is {{ theThing.name }}</h2>
       <the-thing-thumbnail
-        [id]="item.id"
-        [imitation]="ImitationItem"
+        [theThing]="theThing"
+        [imiation]="ImitationItem"
       ></the-thing-thumbnail>
-    </div>
-  </div>
+    </ng-container> -->
+  </the-thing-finder>
 </div>

@@ -1,25 +1,30 @@
 <div class="the-thing-finder">
   <ygg-action-bar-layout>
     <div ygg-action-bar-content>
-      <div [hidden]="hideFilter" class="filter">
+      <div class="filter">
         <the-thing-filter
-          [filter]='filter'
+          [filter]="filter"
           (filterChanged)="onFilterChanged($event)"
         ></the-thing-filter>
         <br />
       </div>
       <div class="the-thing-list">
-        <ygg-image-thumbnail-list
-          [items]="filteredTheThings"
-          [selection]="selection"
-          (selectionChange)="onSelectTheThings($event)"
-          (selectItem)="selectTheThing.emit($event)"
-          (deselectItem)="deselectTheThing.emit($event)"
-          hideAddButton
-          ><div selection-actions>
-            <ng-content select="[selection-actions]"></ng-content>
+        <div
+          fxLayout="row wrap"
+          fxLayoutAlign="space-around start"
+          fxLayoutGap="20px"
+        >
+          <div
+            *ngFor="let theThing of theThings"
+            class="the-thing-item"
+            [attr.the-thing-name]="theThing.name"
+          >
+            <!-- <h2>In Finder {{ theThing.name }}</h2> -->
+            <ng-container
+              *ngTemplateOutlet="theThingItemTemplate;context: { theThing: theThing }"
+            ></ng-container>
           </div>
-        </ygg-image-thumbnail-list>
+        </div>
       </div>
     </div>
   </ygg-action-bar-layout>
