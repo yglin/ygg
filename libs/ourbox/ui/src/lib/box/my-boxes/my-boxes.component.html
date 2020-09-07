@@ -5,16 +5,21 @@
     </div>
   </div>
   <br />
-  <div
-    fxLayout="row wrap"
-    fxLayoutAlign="space-around start"
-    fxLayoutGap="20px"
-  >
-    <div *ngFor="let box of boxes" [attr.box-id]="box.id">
+  <ng-template #theThingItemTemplate let-theThing="theThing">
+    <!-- <h2>This is {{ theThing.name }}</h2> -->
+    <div class="box">
       <the-thing-thumbnail
-        [id]="box.id"
-        [imitation]="ImitationBox"
+        [theThing]="theThing"
+        [imiation]="ImitationBox"
       ></the-thing-thumbnail>
     </div>
-  </div>
+  </ng-template>
+
+  <the-thing-finder
+    class="box-finder"
+    [theThings$]="boxes$"
+    [imitation]="ImitationBox"
+    [theThingItemTemplate]="theThingItemTemplate"
+  >
+  </the-thing-finder>
 </div>
