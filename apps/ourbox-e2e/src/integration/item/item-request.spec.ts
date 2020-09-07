@@ -26,6 +26,7 @@ describe('Request for item', () => {
 
   const testUser1 = User.forge();
   const testUser2 = User.forge();
+  const testUser3 = User.forge();
   const testBox = ImitationBox.forgeTheThing();
   testBox.addUsersOfRole(RelationshipBoxMember.role, [
     testUser1.id,
@@ -44,6 +45,7 @@ describe('Request for item', () => {
   before(() => {
     theMockDatabase.insert(`${User.collection}/${testUser1.id}`, testUser1);
     theMockDatabase.insert(`${User.collection}/${testUser2.id}`, testUser2);
+    theMockDatabase.insert(`${User.collection}/${testUser3.id}`, testUser3);
     theMockDatabase.insert(`${testBox.collection}/${testBox.id}`, testBox);
     theMockDatabase.insert(`${testItem.collection}/${testItem.id}`, testItem);
     theMockDatabase.insert(
@@ -110,7 +112,18 @@ describe('Request for item', () => {
     itemPO.expectRequester(testUser2, 0);
   });
 
+  it('Next requester takes second place in line', () => {
+    logout();
+    loginTestUser(testUser3);
+    itemPO.theThingPO.runAction(ImitationItem.actions['request']);
+    emceePO.confirm(`送出索取 ${testItem.name} 的請求，並且排隊等待？`);
+    emceePO.alert(`已送出索取 ${testItem.name} 的請求`);
+    itemPO.expectRequester(testUser3, 1);    
+  });
+
   it('Can not request if alreay in request list', () => {
+    logout();
+    loginTestUser(testUser2);
     itemPO.theThingPO.expectNoActionButton(ImitationItem.actions['request']);
   });
 
@@ -120,6 +133,11 @@ describe('Request for item', () => {
     emceePO.alert(`已取消索取 ${testItem.name}`);
     itemPO.expectNotRequester(testUser2);
   });
+
+  it('Next requester fills the vacancy', () => {
+    itemPO.expectRequester(testUser3, 0);
+  });
+  
 
   it('Can not cancel if not in request list', () => {
     itemPO.theThingPO.expectNoActionButton(
