@@ -10,11 +10,7 @@ ln -fs environments.develop.json environments.json
 cd $rootDir
 
 # build
-cd apps/$project
-tsc --project tsconfig.functions.json
-cd $rootDir
-cp dist/functions/apps/$project/src/functions/main.js dist/functions/main.js
-cp dist/functions/apps/$project/src/functions/main.js.map dist/functions/main.js.map
+ng build functions --prod
 
 #deploy
 firebase deploy --only functions

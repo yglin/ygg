@@ -3,5 +3,18 @@
     "default": "localhost-146909",
     "develop": "localhost-146909",
     "product": "playwhat-415b9"
+  },
+  "targets": {
+    "localhost-146909": {
+      "hosting": {
+        "playwhat": [
+          "playwhat",
+          "playwhat-dev"
+        ],
+        "ourbox": [
+          "ourbox-dev"
+        ]
+      }
+    }
   }
 }

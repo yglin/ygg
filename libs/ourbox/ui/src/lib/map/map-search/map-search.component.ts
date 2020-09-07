@@ -11,7 +11,7 @@ import { extend, isEmpty, mapValues } from 'lodash';
 import { merge, Observable, Subject, combineLatest, Subscription } from 'rxjs';
 import { debounceTime, map, switchMap, tap, startWith } from 'rxjs/operators';
 import { MapSearcherService } from '../map-searcher.service';
-import * as env from '@ygg/env/environments.json';
+import { getEnv } from '@ygg/shared/infra/core';
 
 class Marker {
   geoPoint: GeoPoint;
@@ -47,7 +47,7 @@ export class MapSearchComponent implements OnInit, OnDestroy {
   // keywordSearch$: Subject<string> = new Subject();
   formControlKeyword: FormControl = new FormControl();
   subscription: Subscription = new Subscription();
-  isTesting = !isEmpty(env.test);
+  isTesting = !!getEnv('test') ? true : false;
   formGroupMapBound: FormGroup;
   ImitationItem = ImitationItem;
   items: TheThing[] = [];

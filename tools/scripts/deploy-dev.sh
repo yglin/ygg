@@ -1,20 +1,27 @@
 #! /bin/bash -x
 
+
+project=$1
+rootDir=`pwd`
+
 # Point settings to develop
 firebase use develop
 cd .env
 ln -fs environments.develop.json environments.json
-cd ..
+cd $rootDir
 
-# build
-ng build --prod
+# Build
+ng build --prod $project
 
-#deploy
-firebase deploy
+# Associate project with deploy target site
+firebase target:apply hosting $project $project-dev
+
+# Deploy
+firebase deploy --only hosting:$project
 
 
 # Restore settings to local develop
 firebase use default
 cd .env
 ln -fs environments.local.json environments.json
-cd ..
+cd $rootDir
