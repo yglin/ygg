@@ -43,6 +43,7 @@ testem.log
 apps/*-e2e/data
 **/.deprecated
 **/firebase/emulators
+*.xcf
 
 # System Files
 .DS_Store
