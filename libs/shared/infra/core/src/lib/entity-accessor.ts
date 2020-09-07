@@ -21,11 +21,18 @@ export class EntityAccessor<T extends Entity> {
   }
 
   async save(entity: T) {
-    return this.dataAccessor.save(
-      this.collection,
-      entity.id,
-      this.serializer(entity)
-    );
+    try {
+      return this.dataAccessor.save(
+        this.collection,
+        entity.id,
+        this.serializer(entity)
+      );
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to save entity "${entity.id}" in collection "${this.collection}".\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
   }
 
   async update(id: string, data: any) {
@@ -46,7 +53,14 @@ export class EntityAccessor<T extends Entity> {
   }
 
   async delete(id: string) {
-    return this.dataAccessor.delete(this.collection, id);
+    try {
+      return this.dataAccessor.delete(this.collection, id);
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to delete entity ${id} in colletion ${this.collection}.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
   }
 
   find$(queries: Query[]): Observable<T[]> {

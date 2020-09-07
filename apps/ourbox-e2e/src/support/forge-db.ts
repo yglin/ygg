@@ -17,35 +17,34 @@ export default function forgeDB() {
 
   // forge users
   const users: User[] = forgeUsers({ count: 50 });
-  users.forEach(user =>
-    theMockDatabase.insert(`${User.collection}/${user.id}`, user)
-  );
 
   // forge boxes
   const boxes = forgeBoxes({
     count: 30,
-    members: users,
-    relationRecords
+    members: users
   });
-  boxes.forEach(box =>
-    theMockDatabase.insert(`${box.collection}/${box.id}`, box)
-  );
 
   // forge items
   const items = forgeItems({
     count: 100,
     users: users,
-    boxes: boxes,
-    relationRecords
+    boxes: boxes
   });
+
+  users.forEach(user =>
+    theMockDatabase.insert(`${User.collection}/${user.id}`, user)
+  );
+  boxes.forEach(box =>
+    theMockDatabase.insert(`${box.collection}/${box.id}`, box)
+  );
   items.forEach(item =>
     theMockDatabase.insert(`${item.collection}/${item.id}`, item)
   );
 
-  // Insert all relation records
-  relationRecords.forEach(rr =>
-    theMockDatabase.insert(`${RelationRecord.collection}/${rr.id}`, rr)
-  );
+  // // Insert all relation records
+  // relationRecords.forEach(rr =>
+  //   theMockDatabase.insert(`${RelationRecord.collection}/${rr.id}`, rr)
+  // );
 }
 
 function forgeUsers(options: { count?: number } = {}): User[] {
@@ -59,7 +58,6 @@ function forgeBoxes(
   options: {
     count?: number;
     members?: User[];
-    relationRecords?: RelationRecord[];
   } = {}
 ): TheThing[] {
   defaults(options, {
@@ -88,7 +86,6 @@ function forgeItems(
     count?: number;
     boxes?: TheThing[];
     users?: User[];
-    relationRecords?: RelationRecord[];
   } = {}
 ): TheThing[] {
   defaults(options, {
@@ -101,19 +98,19 @@ function forgeItems(
   if (!isEmpty(options.boxes)) {
     for (const item of items) {
       const box = sample(options.boxes);
-      const boxItemRelation = RelationshipBoxItem.createRelationRecord(
+      const boxItemRelation = RelationshipBoxItem.createRelation(
         box.id,
         item.id
       );
-      options.relationRecords.push(boxItemRelation);
+      box.addRelation(boxItemRelation);
     }
   }
   if (!isEmpty(options.users)) {
-    const sampleUsers = sampleSize(
-      options.users,
-      Math.min(random(1, 10), options.users.length)
-    );
     for (const item of items) {
+      const sampleUsers = sampleSize(
+        options.users,
+        Math.min(random(1, 10), options.users.length)
+      );
       item.ownerId = sample(sampleUsers).id;
 
       const holder = sampleUsers[0];

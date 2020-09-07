@@ -1,28 +1,35 @@
+import { Location, OmniTypes } from '@ygg/shared/omni-types/core';
+import { User } from '@ygg/shared/user/core';
+import {
+  LocationRecord,
+  RelationRecord,
+  TheThing,
+  TheThingCell,
+  TheThingImitation
+} from '@ygg/the-thing/core';
 import * as functions from 'firebase-functions';
 import {
   camelCase,
-  upperFirst,
-  uniq,
   difference,
   differenceWith,
-  find,
-  filter
+  filter,
+  uniq,
+  upperFirst
 } from 'lodash';
-import {
-  TheThingImitation,
-  TheThing,
-  TheThingRelation,
-  RelationRecord,
-  LocationRecord,
-  TheThingCell
-} from '@ygg/the-thing/core';
-import {
-  relationFactory,
-  relationAccessor,
-  locationRecordAccessor
-} from '../global';
-import { User } from '@ygg/shared/user/core';
-import { OmniTypes, Location } from '@ygg/shared/omni-types/core';
+import { locationRecordAccessor, relationAccessor } from '../global';
+
+function isLocationCellEqual(
+  cellA: TheThingCell,
+  cellB: TheThingCell
+): boolean {
+  // console.log(cellA.value);
+  // console.log(cellB.value);
+  return (
+    Location.isLocation(cellA.value) &&
+    Location.isLocation(cellB.value) &&
+    cellA.value.geoPoint.isEqual(cellB.value.geoPoint)
+  );
+}
 
 export function generateOnUpdateFunctions(imitations: TheThingImitation[]) {
   const onUpdateFunctions = {};
@@ -122,40 +129,45 @@ export function generateOnUpdateFunctions(imitations: TheThingImitation[]) {
               await relationAccessor.save(newRelation);
             }
 
+            // console.log('幹');
             // Sync location records;
             const locationCellsBefore = filter(
               theThingBefore.cells,
-              cell => cell.type === OmniTypes.location.id
+              cell =>
+                cell.type === OmniTypes.location.id &&
+                Location.isLocation(cell.value)
             );
             const locationCellsAfter = filter(
               theThingAfter.cells,
-              cell => cell.type === OmniTypes.location.id
+              cell =>
+                cell.type === OmniTypes.location.id &&
+                Location.isLocation(cell.value)
             );
 
-            const isLocationCellEqual = (
-              cellA: TheThingCell,
-              cellB: TheThingCell
-            ): boolean => {
-              return (
-                Location.isLocation(cellA.value) &&
-                Location.isLocation(cellB.value) &&
-                cellA.value.geoPoint.isEqual(cellB.value.geoPoint)
-              );
-            };
-            const deleteLocationRecordIds: string[] = differenceWith(
+            // console.log('林');
+            // console.log(locationCellsBefore);
+            // console.log(locationCellsAfter);
+            const deleteLocationCells = differenceWith(
               locationCellsBefore,
               locationCellsAfter,
               isLocationCellEqual
-            ).map(cell => {
-              const location: Location = cell.value;
-              return LocationRecord.constructId(
-                location.geoPoint.latitude,
-                location.geoPoint.longitude,
-                theThingBefore.collection,
-                theThingBefore.id
-              );
-            });
+            );
+            // console.log(deleteLocationCells);
+            const deleteLocationRecordIds: string[] = deleteLocationCells.map(
+              cell => {
+                const location: Location = cell.value;
+                // console.log(location);
+                return LocationRecord.constructId(
+                  location.geoPoint.latitude,
+                  location.geoPoint.longitude,
+                  theThingBefore.collection,
+                  theThingBefore.id
+                );
+              }
+            );
+            // console.log(deleteLocationRecordIds);
 
+            // console.log('老');
             const newLocationRecords: LocationRecord[] = differenceWith(
               locationCellsAfter,
               locationCellsBefore,
@@ -171,17 +183,24 @@ export function generateOnUpdateFunctions(imitations: TheThingImitation[]) {
               });
             });
 
+            // console.log('師');
             for (const deleteId of deleteLocationRecordIds) {
+              console.log(`Delete LocationRecord ${deleteId}`);
               await locationRecordAccessor.delete(deleteId);
             }
+
+            // console.log('勒');
             for (const locationRecord of newLocationRecords) {
+              console.log(`Upsert locationRecord ${locationRecord.id}`);
               await locationRecordAccessor.save(locationRecord);
             }
 
             return Promise.resolve();
           } catch (error) {
-            console.error(error.message);
-            return Promise.reject(error);
+            const wrapError = new Error(
+              `Failed to run functions on update ${collection}/${context.params.id}.\n${error.message}`
+            );
+            return Promise.reject(wrapError);
           }
         }
       );

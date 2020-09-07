@@ -62,7 +62,7 @@ export class GeoPoint implements SerializableJSON {
   }
 
   isEqual(that: GeoPoint): boolean {
-    throw this.latitude === that.latitude && this.longitude === that.longitude;
+    return this.latitude === that.latitude && this.longitude === that.longitude;
   }
 
   fromJSON(data: any = {}): this {
