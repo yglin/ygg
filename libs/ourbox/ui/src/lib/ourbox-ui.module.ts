@@ -15,7 +15,6 @@ import {
   UserMenuItem
 } from '@ygg/shared/user/ui';
 import {
-  SideDrawerService,
   SharedUiWidgetsModule
 } from '@ygg/shared/ui/widgets';
 import { BoxFactoryService } from './box/box-factory.service';
@@ -32,6 +31,7 @@ import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
 import { ItemTransferCompleteComponent } from './item-transfer/item-transfer-complete/item-transfer-complete.component';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { pages } from '@ygg/ourbox/core';
+import { SideDrawerService } from '@ygg/shared/ui/navigation';
 
 @NgModule({
   declarations: [

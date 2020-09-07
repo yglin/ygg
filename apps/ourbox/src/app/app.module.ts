@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { OurboxUiModule } from "@ygg/ourbox/ui";
+import { OurboxUiModule } from '@ygg/ourbox/ui';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
@@ -13,11 +13,11 @@ import { SharedUserUiModule } from '@ygg/shared/user/ui';
 import { TheThingUiModule } from '@ygg/the-thing/ui';
 import { AppComponent } from './app.component';
 import { routes } from './route';
-
+import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
     // MapComponent,
     // BoxCreateComponent,
     // BoardComponent,
@@ -34,6 +34,7 @@ import { routes } from './route';
     FormsModule,
     ReactiveFormsModule,
     SharedUiNgMaterialModule,
+    SharedUiNavigationModule,
     SharedUiWidgetsModule,
     SharedUserUiModule,
     SharedOmniTypesUiModule,

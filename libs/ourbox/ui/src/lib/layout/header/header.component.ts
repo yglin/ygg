@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SideDrawerService } from '@ygg/shared/ui/widgets';
+import { SideDrawerService } from '@ygg/shared/ui/navigation';
 
 @Component({
   selector: 'ourbox-header',

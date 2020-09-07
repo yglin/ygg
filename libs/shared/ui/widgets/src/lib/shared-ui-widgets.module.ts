@@ -33,7 +33,6 @@ import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.compone
 import { DatetimeComponent } from './datetime/datetime.component';
 import { ErrorMessagesComponent } from './error-messages/error-messages.component';
 import { ProgressDialogComponent } from './dialog/progress-dialog/progress-dialog.component';
-import { SideDrawerComponent } from './side-drawer/side-drawer.component';
 
 @NgModule({
   declarations: [
@@ -60,8 +59,7 @@ import { SideDrawerComponent } from './side-drawer/side-drawer.component';
     AlertDialogComponent,
     DatetimeComponent,
     ErrorMessagesComponent,
-    ProgressDialogComponent,
-    SideDrawerComponent
+    ProgressDialogComponent
     // ImageThumbnailSelectorComponent
   ],
   imports: [
@@ -94,8 +92,7 @@ import { SideDrawerComponent } from './side-drawer/side-drawer.component';
     NgForColorBackgroundDirective,
     ControlViewSwitchComponent,
     DatetimeComponent,
-    ErrorMessagesComponent,
-    SideDrawerComponent
+    ErrorMessagesComponent
     // ImageThumbnailSelectorComponent
   ],
   entryComponents: [

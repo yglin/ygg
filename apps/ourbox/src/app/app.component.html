@@ -1,34 +1,18 @@
 <div class="app-root">
-  <div class="background-layer">
-    <div class="background-mask"></div>
-  </div>
-  <mat-drawer-container class="main-layout">
-    <mat-drawer #drawer role="navigation" class="side-drawer">
+  <ygg-layout-page-classic
+    backgroundImage="/assets/images/background.jpg"
+    backgroundMaskColor="rgba(0, 0, 0, 0.5)"
+    [scrollToTop$]="routeChange$"
+  >
+    <div ygg-layout-page-drawer>
       <ygg-side-drawer></ygg-side-drawer>
-    </mat-drawer>
-    <mat-drawer-content role="main">
-      <div
-        class="main-content"
-        fxLayout="column"
-        fxLayoutAlign="stretch stretch"
-        fxLayoutGap="10px"
-      >
-        <div fxFlex="60px" class="header">
-          <ourbox-header></ourbox-header>
-        </div>
-        <div fxFlex class="page" #page>
-          <router-outlet (activate)="onActivate($event)"></router-outlet>
-        </div>
-        <div fxFlex="10px" class="footer"></div>
-      </div>
-      <div
-        class="button-to-top"
-        [@fadeOutAnimation]="showGoToTopButton ? 'show' : 'hide'"
-      >
-        <button mat-fab (click)="scrollToTop()" matTooltip="回到頁首">
-          <mat-icon>publish</mat-icon>
-        </button>
-      </div>
-    </mat-drawer-content>
-  </mat-drawer-container>
+    </div>
+    <div ygg-layout-page-header>
+      <ourbox-header></ourbox-header>
+    </div>
+    <div ygg-layout-page-content>
+      <router-outlet (activate)="onActivate()"></router-outlet>
+    </div>
+    <div ygg-layout-page-footer></div>
+  </ygg-layout-page-classic>
 </div>

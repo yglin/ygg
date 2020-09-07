@@ -1,0 +1,36 @@
+<div class="layout-page-classic">
+  <div class="background-layer" [ngStyle]="styles.backgroundLayer">
+    <div class="background-mask" [ngStyle]="styles.backgroundMask"></div>
+  </div>
+  <mat-drawer-container class="main-layout">
+    <mat-drawer #drawer role="navigation" class="side-drawer">
+      <ng-content select="[ygg-layout-page-drawer]"></ng-content>
+    </mat-drawer>
+    <mat-drawer-content role="main">
+      <div
+        class="main-content"
+        fxLayout="column"
+        fxLayoutAlign="stretch stretch"
+        fxLayoutGap="0px"
+      >
+        <div fxFlex="60px" class="header">
+          <ng-content select="[ygg-layout-page-header]"></ng-content>
+        </div>
+        <div fxFlex class="page" #page>
+          <ng-content select="[ygg-layout-page-content]"></ng-content>
+        </div>
+        <div fxFlex="10px" class="footer">
+          <ng-content select="[ygg-layout-page-footer]"></ng-content>
+        </div>
+      </div>
+      <div
+        class="button-to-top"
+        [@fadeOutAnimation]="showGoToTopButton ? 'show' : 'hide'"
+      >
+        <button mat-fab (click)="scrollToTop()" matTooltip="回到頁首">
+          <mat-icon>publish</mat-icon>
+        </button>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>
