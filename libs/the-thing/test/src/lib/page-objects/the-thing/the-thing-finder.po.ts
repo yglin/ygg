@@ -26,13 +26,17 @@ export class TheThingFinderPageObjectCypress extends PageObjectCypress {
     return `${this.getSelector()} [the-thing-name="${theThing.name}"]`;
   }
 
+  searchName(name: string) {
+    this.theThingFilterPO.searchName(name);
+  }
+
   expectNotTheThing(theThing: TheThing) {
-    this.theThingFilterPO.searchName(theThing.name);
+    this.searchName(theThing.name);
     cy.get(this.getSelectorForTheThing(theThing)).should('not.exist');
   }
 
   expectTheThing(theThing: TheThing) {
-    this.theThingFilterPO.searchName(theThing.name);
+    this.searchName(theThing.name);
     cy.get(this.getSelectorForTheThing(theThing)).should('be.visible');
   }
 

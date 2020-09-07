@@ -8,7 +8,7 @@
         ></the-thing-filter>
         <br />
       </div>
-      <div class="the-thing-list">
+      <div class="the-thing-list" *ngIf="!isEmptyTheThings; else emptyTheThingsHint">
         <div
           fxLayout="row wrap"
           fxLayoutAlign="space-around start"
@@ -29,3 +29,7 @@
     </div>
   </ygg-action-bar-layout>
 </div>
+
+<ng-template #emptyTheThingsHint>
+  <h2>找不到任何物件。。。</h2>
+</ng-template>

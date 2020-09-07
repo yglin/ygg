@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TheThing } from '@ygg/the-thing/core';
 import { ImitationItem } from '@ygg/ourbox/core';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { BoxFactoryService } from '../../box/box-factory.service';
 import { ItemFactoryService } from '../item-factory.service';
 
@@ -11,16 +11,12 @@ import { ItemFactoryService } from '../item-factory.service';
   styleUrls: ['./my-held-items.component.css']
 })
 export class MyHeldItemsComponent implements OnInit {
-  items: TheThing[] = [];
+  items$: Observable<TheThing[]>;
   ImitationItem = ImitationItem;
   subscription: Subscription = new Subscription();
 
   constructor(private itemFactory: ItemFactoryService) {
-    this.subscription.add(
-      this.itemFactory
-        .listMyHeldItems$()
-        .subscribe(items => (this.items = items))
-    );
+    this.items$ = this.itemFactory.listMyHeldItems$();
   }
 
   ngOnDestroy(): void {
@@ -28,5 +24,4 @@ export class MyHeldItemsComponent implements OnInit {
   }
 
   ngOnInit(): void {}
-
 }

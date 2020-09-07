@@ -1,15 +1,19 @@
 <div class="my-held-items">
-  <div
-    fxLayout="row wrap"
-    fxLayoutAlign="space-around start"
-    fxLayoutGap="20px"
-    class="item-list"
-  >
-    <div *ngFor="let item of items" class="item">
+  <ng-template #theThingItemTemplate let-theThing="theThing">
+    <!-- <h2>This is {{ theThing.name }}</h2> -->
+    <div class="item">
       <the-thing-thumbnail
-        [id]="item.id"
-        [imitation]="ImitationItem"
+        [theThing]="theThing"
+        [imiation]="ImitationItem"
       ></the-thing-thumbnail>
     </div>
-  </div>
+  </ng-template>
+
+  <the-thing-finder
+    class="item-finder"
+    [theThings$]="items$"
+    [imitation]="ImitationItem"
+    [theThingItemTemplate]="theThingItemTemplate"
+  >
+  </the-thing-finder>
 </div>

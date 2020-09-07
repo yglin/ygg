@@ -299,7 +299,7 @@ export class ItemFactory {
     return this.authenticator.currentUser$.pipe(
       switchMap(user => {
         if (!user) {
-          return throwError(new Error(`User not login`));
+          return of([]);
         } else {
           return this.relationFactory.findByObjectAndRole$(
             user.id,
@@ -309,7 +309,7 @@ export class ItemFactory {
       }),
       switchMap(relations => {
         if (isEmpty(relations)) {
-          return throwError(new Error(`Not found any held item`));
+          return of([]);
         } else {
           const itemIds = relations.map(r => r.subjectId);
           return this.theThingAccessor.listByIds$(

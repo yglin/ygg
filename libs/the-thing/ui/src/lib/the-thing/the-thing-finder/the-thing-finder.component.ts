@@ -77,6 +77,7 @@ export class TheThingFinderComponent
   theThings: TheThing[] = [];
   //@ContentChild(TheThingFinderItemDirective, { read: TemplateRef }) theThingItemTemplate;
   @Input() theThingItemTemplate: TemplateRef<any>;
+  isEmptyTheThings = true;
 
   constructor(private theThingAccessService: TheThingAccessService) {}
 
@@ -115,7 +116,10 @@ export class TheThingFinderComponent
               return theThings;
             }
           }),
-          tap(theThings => (this.theThings = theThings))
+          tap(theThings => {
+            this.theThings = theThings;
+            this.isEmptyTheThings = isEmpty(this.theThings);
+          })
         )
         .subscribe()
     );
