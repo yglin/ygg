@@ -74,7 +74,12 @@
                 fxLayoutAlign="center center"
                 fxLayoutGap="0px"
               >
-                <button mat-fab class="add-images" matTooltip="上傳圖片" (click)="addImages()">
+                <button
+                  mat-fab
+                  class="add-images"
+                  matTooltip="上傳圖片"
+                  (click)="addImages()"
+                >
                   <mat-icon>add_photo_alternate </mat-icon>
                 </button>
               </div>
@@ -107,7 +112,12 @@
                 <img src="/assets/images/box/share.png" />
               </div>
 
-              <div>
+              <div class="members-select">
+                <ygg-users-by-email-selector
+                  [formControl]="formControlMemberEmails"
+                ></ygg-users-by-email-selector>
+              </div>
+              <!-- <div>
                 <div
                   fxLayout="row"
                   fxLayoutAlign="start center"
@@ -181,7 +191,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
             <div
               fxLayout="row"

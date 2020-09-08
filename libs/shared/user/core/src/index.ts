@@ -7,3 +7,4 @@ export * from './lib/authenticator';
 export * from './lib/config';
 export * from './lib/user-accessor';
 export * from './lib/test-account';
+export * from './lib/user-factory';

@@ -8,3 +8,4 @@ export * from './lib/components';
 export * from './lib/route-guards';
 export * from './lib/notification-factory.service';
 export * from './lib/notification';
+export * from './lib/user-factory.service';

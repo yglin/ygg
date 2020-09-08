@@ -25,6 +25,7 @@ import { MailListControlComponent } from './components/mail-list/mail-list-contr
 import { routes } from './routes';
 import { NotificationComponent } from './notification/notification/notification.component';
 import { MyNotificationListComponent } from './notification/my-notification-list/my-notification-list.component';
+import { UsersByEmailSelectorComponent } from './components/users-by-email-selector/users-by-email-selector.component';
 
 // import { SharedUiWidgetsModule } from '@ygg/shared/ui-widgets';
 // import { ContactFormComponent } from './contact/contact-form/contact-form.component';
@@ -69,14 +70,15 @@ import { MyNotificationListComponent } from './notification/my-notification-list
     UserSelectorComponent,
     MailListControlComponent,
     NotificationComponent,
-    MyNotificationListComponent
+    MyNotificationListComponent,
+    UsersByEmailSelectorComponent
   ],
   entryComponents: [LoginDialogComponent],
   exports: [
     AccountWidgetComponent,
     UserThumbnailComponent,
     UserSelectorComponent,
-    MailListControlComponent
+    UsersByEmailSelectorComponent
   ]
 })
 export class SharedUserUiModule {}

@@ -1,4 +1,4 @@
-<div class="mail-list-contorl">
+<div class="users-by-email-selector">
   <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px" class='user-email-finder'>
     <div>
       <div *ngIf="foundUsers.length === 1">
@@ -31,22 +31,22 @@
     </div>
   </div>
   <div class="email-list">
-    <div *ngFor="let emailMap of emails | keyvalue" class="email">
+    <div *ngFor="let userByEmail of usersByEmail | keyvalue" class="email">
       <div
         fxLayout="row"
         fxLayoutAlign="space-between center"
         fxLayoutGap="50px"
       >
         <div>
-          <div *ngIf="emailMap.value.id">
-            <ygg-user-thumbnail [id]="emailMap.value.id"></ygg-user-thumbnail>
+          <div *ngIf="userByEmail.value?.id">
+            <ygg-user-thumbnail [id]="userByEmail.value.id"></ygg-user-thumbnail>
           </div>
-          <div *ngIf="!emailMap.value.id">
-            <h3>{{ emailMap.key }}</h3>
+          <div *ngIf="!(userByEmail.value?.id)">
+            <h3>{{ userByEmail.key }}</h3>
           </div>
         </div>
         <div>
-          <button mat-mini-fab (click)="deleteEmail(emailMap.key)">
+          <button mat-mini-fab (click)="deleteEmail(userByEmail.key)">
             <mat-icon>delete</mat-icon>
           </button>
         </div>

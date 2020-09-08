@@ -28,20 +28,20 @@ export const ImitationBoxThumbnailImages = [
   '/assets/images/box/thumbnails/08.png'
 ];
 
-export const ImitationBoxCells = {
-  public: new TheThingCellDefine({
-    id: 'public',
-    label: '公開',
-    type: OmniTypes.boolean.id,
-    userInput: 'required'
-  })
-};
+// export const ImitationBoxCells = {
+//   public: new TheThingCellDefine({
+//     id: 'public',
+//     label: '公開',
+//     type: OmniTypes.boolean.id,
+//     userInput: 'required'
+//   })
+// };
 
 export const ImitationBox = new TheThingImitation({
   collection: 'ourboxes',
   id: 'ourbox-box',
   name: '我們的寶箱',
-  cellsDef: values(ImitationBoxCells),
+  cellsDef: [],
   routePath: 'ourbox',
   icon: 'inbox',
   image: '/assets/images/box/box.png',
@@ -49,8 +49,32 @@ export const ImitationBox = new TheThingImitation({
     name: 'ourbox-box',
     tags: []
   }),
-  flags: [ImitationBoxFlags.isPublic.id]
+  flags: [ImitationBoxFlags.isPublic.id],
+  stateName: 'ourbox-box-state'
 });
+
+ImitationBox.states = {
+  new: {
+    name: 'new',
+    label: '新建立',
+    value: 10
+  },
+  open: {
+    name: 'open',
+    label: '寶箱開開的',
+    value: 50
+  },
+  close: {
+    name: 'close',
+    label: '寶箱先關起來',
+    value: 100
+  }
+};
+
+ImitationBox.stateChanges = {
+  initial: { next: ImitationBox.states.new },
+  onSave: { previous: ImitationBox.states.new, next: ImitationBox.states.open }
+};
 
 export const RelationshipBoxMember = new Relationship({
   name: 'ourbox-box-member',
@@ -64,3 +88,11 @@ export const RelationshipBoxItem = new Relationship({
   objectImitation: ImitationItem
 });
 
+ImitationBox.actions = {
+  'add-member': {
+    id: 'ourbox-box-add-member',
+    icon: 'group_add',
+    tooltip: '新增並邀請寶箱成員',
+    permissions: ['requireOwner']
+  }
+};

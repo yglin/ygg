@@ -1,31 +1,36 @@
-import { Emcee, Router, getEnv } from '@ygg/shared/infra/core';
+import { Emcee, getEnv, Router } from '@ygg/shared/infra/core';
 import {
   Authenticator,
-  config as UserConfig,
   Notification,
   NotificationFactory,
-  User
+  User,
+  UserFactory
 } from '@ygg/shared/user/core';
 import {
   RelationFactory,
   RelationRecord,
   TheThing,
   TheThingAccessor,
+  TheThingFactory,
   TheThingFilter
 } from '@ygg/the-thing/core';
 import { UserAccessor } from 'libs/shared/user/core/src/lib/user-accessor';
-import { flatten, get, isEmpty, uniq, uniqBy } from 'lodash';
-import { combineLatest, Observable, of, Subscription, throwError } from 'rxjs';
 import {
-  filter,
-  map,
-  switchMap,
-  startWith,
+  flatten,
+  get,
+  isEmpty,
+  keys,
+  map as lodashMap,
+  uniq,
+  uniqBy
+} from 'lodash';
+import { combineLatest, Observable, of, Subscription } from 'rxjs';
+import {
   catchError,
+  map,
   shareReplay,
-  tap,
-  finalize,
-  take
+  startWith,
+  switchMap
 } from 'rxjs/operators';
 import {
   ImitationBox,
@@ -33,9 +38,7 @@ import {
   ImitationItem,
   // ItemFilter,
   RelationshipBoxItem,
-  RelationshipBoxMember,
-  ImitationBoxThumbnailImages,
-  ImitationBoxCells
+  RelationshipBoxMember
 } from '../models';
 import { BoxCollection } from './box-accessor';
 import { ItemAccessor } from './item-accessor';
@@ -56,6 +59,30 @@ export class BoxFactory {
   subscriptions: Subscription[] = [];
   ObservableCaches: { [id: string]: Observable<any> } = {};
 
+  static createNotificationBoxMemberInvite(
+    box: TheThing,
+    inviter: User,
+    inviteeOrEmail: User | string
+  ): Notification {
+    const inviteeId = User.isUser(inviteeOrEmail) ? inviteeOrEmail.id : '';
+    const email = User.isUser(inviteeOrEmail)
+      ? inviteeOrEmail.email
+      : inviteeOrEmail;
+    return new Notification({
+      type: NotificationJoinBox.type,
+      inviterId: inviter.id,
+      inviteeId,
+      email,
+      mailSubject: `${getEnv('siteConfig.title')}：邀請您加入寶箱${box.name}`,
+      mailContent: `<pre><b>${inviter.name}</b>邀請您加入他的寶箱<b>${box.name}</b>，共享寶箱內的所有寶物</pre>`,
+      confirmMessage: `${inviter.name} 邀請您，是否要加入我們的寶箱：${box.name}？`,
+      landingUrl: `/${ImitationBox.routePath}/${box.id}`,
+      data: {
+        boxId: box.id
+      }
+    });
+  }
+
   constructor(
     protected authenticator: Authenticator,
     protected emcee: Emcee,
@@ -66,7 +93,9 @@ export class BoxFactory {
     protected router: Router,
     protected itemFactory: ItemFactory,
     protected itemAccessor: ItemAccessor,
-    protected theThingAccessor: TheThingAccessor
+    protected theThingAccessor: TheThingAccessor,
+    protected theThingFactory: TheThingFactory,
+    protected userFactory: UserFactory
   ) {
     this.subscriptions.push(
       this.notificationFactory.confirm$.subscribe(notification => {
@@ -74,6 +103,19 @@ export class BoxFactory {
           // console.log('Confirm notification');
           // console.log(notification);
           this.confirm(notification);
+        }
+      })
+    );
+
+    this.subscriptions.push(
+      this.theThingFactory.runAction$.subscribe(actionInfo => {
+        switch (actionInfo.action.id) {
+          case ImitationBox.actions['add-member'].id:
+            this.inviteBoxMembersByUserSelect(actionInfo.theThing);
+            break;
+
+          default:
+            break;
         }
       })
     );
@@ -107,6 +149,7 @@ export class BoxFactory {
       box.image = !!options.image ? options.image : box.image;
       box.setFlag(ImitationBoxFlags.isPublic.id, isPublic);
       box.addUsersOfRole(RelationshipBoxMember.role, [owner.id]);
+      box.setState(ImitationBox.stateName, ImitationBox.states.open);
       // box.upsertCell(
       //   ImitationBoxCells.members.createCell(memberEmails.join(','))
       // );
@@ -167,8 +210,12 @@ export class BoxFactory {
         await this.inviteBoxMember(box, email, inviter);
       }
     } catch (error) {
-      this.emcee.error(`邀請寶箱成員失敗，錯誤原因：${error.message}`);
-      return Promise.reject(error);
+      const wrapError = new Error(
+        `Failed to invite box member by emails:\n${emails.join('\n')}\n${
+          error.message
+        }`
+      );
+      return Promise.reject(wrapError);
     }
   }
 
@@ -452,6 +499,36 @@ export class BoxFactory {
         }
       })
     );
+  }
+
+  async inviteBoxMembersByUserSelect(box: TheThing) {
+    try {
+      const usersByEmail = await this.userFactory.selectUsersByEmail();
+      if (isEmpty(usersByEmail)) {
+        return;
+      }
+      const userEmailList = lodashMap(usersByEmail, (user, email) => {
+        if (User.isUser(user)) {
+          return `<h4>${email} ${user.name}</h4>`;
+        } else {
+          return `<h4>${email}</h4>`;
+        }
+      }).join('');
+      const confirm = await this.emcee.confirm(
+        `<h3>送出寶箱成員邀請給以下人員？</h3>${userEmailList}`
+      );
+      if (!confirm) {
+        return;
+      }
+      await this.inviteBoxMembers(box, keys(usersByEmail));
+      await this.emcee.info(`<h3>已送出寶箱成員邀請給：</h3>${userEmailList}`);
+    } catch (error) {
+      const wrapError = new Error(
+        `<h3>邀請寶箱成員失敗，錯誤原因：</h3><br>${error.message}`
+      );
+      this.emcee.error(wrapError.message);
+      return Promise.reject(wrapError);
+    }
   }
 
   // async createNotification(box: TheThing, mail: string): Promise<string> {

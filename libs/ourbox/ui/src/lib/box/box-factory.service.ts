@@ -10,12 +10,14 @@ import { EmceeService } from '@ygg/shared/ui/widgets';
 import {
   AuthenticateUiService,
   NotificationFactoryService,
-  UserService
+  UserService,
+  UserFactoryService
 } from '@ygg/shared/user/ui';
 import { TheThing } from '@ygg/the-thing/core';
 import {
   RelationFactoryService,
-  TheThingAccessService
+  TheThingAccessService,
+  TheThingFactoryService
 } from '@ygg/the-thing/ui';
 import { ItemAccessService } from '../item/item-access.service';
 import { ItemFactoryService } from '../item/item-factory.service';
@@ -34,7 +36,9 @@ export class BoxFactoryService extends BoxFactory implements Resolve<TheThing> {
     router: Router,
     itemFactory: ItemFactoryService,
     itemAccessor: ItemAccessService,
-    theThingAccessor: TheThingAccessService
+    theThingAccessor: TheThingAccessService,
+    theThingFactory: TheThingFactoryService,
+    userFactory: UserFactoryService
   ) {
     super(
       authenticator,
@@ -46,7 +50,9 @@ export class BoxFactoryService extends BoxFactory implements Resolve<TheThing> {
       router,
       itemFactory,
       itemAccessor,
-      theThingAccessor
+      theThingAccessor,
+      theThingFactory,
+      userFactory
     );
   }
 

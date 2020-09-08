@@ -1,6 +1,10 @@
-import { PageObjectCypress, MatCheckboxPageObjectCypress } from '@ygg/shared/test/cypress';
+import {
+  PageObjectCypress,
+  MatCheckboxPageObjectCypress
+} from '@ygg/shared/test/cypress';
 import { ImageUploaderPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { Image } from '@ygg/shared/omni-types/core';
+import { UsersByEmailSelectorPageObjectCypress } from '@ygg/shared/user/test';
 
 export class BoxCreatePageObjectCypress extends PageObjectCypress {
   selectors = {
@@ -8,9 +12,9 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
     inputName: 'input.box-name',
     buttonNextStep: 'button.next-step:visible',
     buttonSubmit: 'button.submit',
-    inputMemberEmail: 'input.member-email',
-    memberEmailList: '.member-list',
-    buttonAddEmail: 'button.add-email',
+    // inputMemberEmail: 'input.member-email',
+    selectMembers: '.members-select',
+    // buttonAddEmail: 'button.add-email',
     thumbnailImages: '.thumbnail-images',
     buttonAddImage: 'button.add-images',
     checkboxPublic: '.check-public'
@@ -27,11 +31,15 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
   }
 
   addMemberEmail(email: string) {
-    cy.get(this.getSelector('inputMemberEmail'))
-      .clear()
-      .type(email);
-    cy.get(this.getSelector('buttonAddEmail')).click();
-    cy.get(this.getSelectorForMemberEmail(email)).should('be.visible');
+    const usersByEmailSelectorPO = new UsersByEmailSelectorPageObjectCypress(
+      this.getSelector('selectMembers')
+    );
+    usersByEmailSelectorPO.addEmail(email);
+    // cy.get(this.getSelector('inputMemberEmail'))
+    //   .clear()
+    //   .type(email);
+    // cy.get(this.getSelector('buttonAddEmail')).click();
+    // cy.get(this.getSelectorForMemberEmail(email)).should('be.visible');
   }
 
   selectImage(imageSrc: string) {
