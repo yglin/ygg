@@ -50,10 +50,14 @@ export class NotificationFactoryService extends NotificationFactory
       const id = route.paramMap.get('id');
       return this.confirm(id);
     } catch (error) {
+      const wrapError = new Error(
+        `Failed to resolve route ${route.url}.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    } finally {
       this.router.navigate(['/']);
     }
   }
-
 
   async inquireEmails(): Promise<string[]> {
     return new Promise((resolve, reject) => {
