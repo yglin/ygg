@@ -50,8 +50,11 @@
             fxLayoutAlign="center center"
             fxLayoutGap="30px"
           >
-            <div class="icon" fxHide.xs="true">
-              <img src="/assets/images/box/thumbnail.png" />
+            <div class="icon step-image" fxHide.xs="true">
+              <img
+                [src]="thumbSelected"
+                alt="請點選圖示"
+              />
             </div>
             <div
               fxLayout="row wrap"
@@ -101,7 +104,7 @@
         </mat-step>
         <mat-step>
           <form>
-            <ng-template matStepLabel>邀請好友加入</ng-template>
+            <ng-template matStepLabel>邀請寶箱成員</ng-template>
             <div
               class="tab-content"
               fxLayout="row"
@@ -113,6 +116,7 @@
               </div>
 
               <div class="members-select">
+                <h2 class="step-hint">邀請寶箱成員</h2>
                 <ygg-users-by-email-selector
                   [formControl]="formControlMemberEmails"
                 ></ygg-users-by-email-selector>
@@ -222,13 +226,19 @@
               <img src="/assets/images/box/publish.png" />
             </div>
             <div fxFlex="300px" class="check-public">
-              <mat-checkbox [formControl]="formControlPublic"
-                >公開這個寶箱的內容？</mat-checkbox
+              <div
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="5px"
               >
-              <br /><br />
-              <p style="font-size: smaller;">
-                <mat-icon>info</mat-icon>{{ isPublicDescription }}
-              </p>
+                <mat-checkbox [formControl]="formControlPublic"
+                  >公開這個寶箱的內容？</mat-checkbox
+                >
+                <div class="publicity-description">
+                  <ygg-extra-info-button [extraInfo]="flagIsPublic.description">
+                  </ygg-extra-info-button>
+                </div>
+              </div>
             </div>
           </div>
           <div

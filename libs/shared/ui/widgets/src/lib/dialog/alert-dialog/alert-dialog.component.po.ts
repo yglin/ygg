@@ -9,6 +9,7 @@ export abstract class AlertDialogPageObject extends PageObject {
     main: '.alert-dialog',
     content: '.content',
     buttonConfirm: 'button.confirm',
+    icon: '.type-icon'
   };
 
   abstract expectMessage(message: string): void;

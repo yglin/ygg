@@ -7,7 +7,8 @@ import {
 } from '@angular/forms';
 import {
   ImitationBoxFlags,
-  ImitationBoxThumbnailImages
+  ImitationBoxThumbnailImages,
+  ImitationBox
 } from '@ygg/ourbox/core';
 import { Image } from '@ygg/shared/omni-types/core';
 import { ImageUploaderService } from '@ygg/shared/omni-types/ui';
@@ -36,7 +37,8 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
   isPublicDescription = ImitationBoxFlags.isPublic.description;
   subscriptions: Subscription[] = [];
   thumbnailImages = ImitationBoxThumbnailImages;
-  thumbSelected: string;
+  thumbSelected: string = "/assets/images/box/box.png";
+  flagIsPublic = ImitationBoxFlags.isPublic;
 
   constructor(
     private formBuilder: FormBuilder,

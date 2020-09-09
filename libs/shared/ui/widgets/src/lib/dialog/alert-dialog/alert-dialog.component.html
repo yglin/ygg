@@ -4,8 +4,10 @@
   fxLayoutAlign="start center"
   fxLayoutGap="20px"
 >
-  <div>
-    <mat-icon [ngClass]="iconClass">{{ typeIcon }}</mat-icon>
+  <div class="type-icon" [attr.icon-name]="typeIcon">
+    <mat-icon [ngClass]="iconClass">{{
+      typeIcon
+    }}</mat-icon>
   </div>
   <div class="content" [innerHtml]="dialogData.content"></div>
   <!-- <div

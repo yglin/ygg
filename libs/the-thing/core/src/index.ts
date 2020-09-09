@@ -18,3 +18,4 @@ export * from './lib/relation-accessor';
 export * from './lib/factory';
 export * from './lib/ui-config';
 export * from './lib/map-finder';
+export * from './lib/flag';

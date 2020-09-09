@@ -2,18 +2,20 @@ import {
   TheThingImitation,
   TheThingCellDefine,
   TheThingFilter,
-  Relationship
+  Relationship,
+  TheThingFlagDefine
 } from '@ygg/the-thing/core';
 import { OmniTypes } from '@ygg/shared/omni-types/core';
 import { values } from 'lodash';
 import { User } from '@ygg/shared/user/core';
 import { ImitationItem } from './item';
 
-export const ImitationBoxFlags = {
+export const ImitationBoxFlags: { [id: string]: TheThingFlagDefine } = {
   isPublic: {
     id: 'isPublic',
     label: '公開',
-    description: '寶箱資訊以及寶箱內的寶物是否能被公開搜尋找到，例如地圖搜尋'
+    description:
+      '<h3>公開寶箱內的寶物會顯示在公開搜尋結果中，例如藏寶圖以及寶物倉庫</h3><h3>非公開寶箱內的寶物，只有寶箱成員能看得到</h3>'
   }
 };
 

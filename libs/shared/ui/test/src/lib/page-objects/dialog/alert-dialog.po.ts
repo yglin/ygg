@@ -9,9 +9,13 @@ export class AlertDialogPageObjectCypress extends AlertDialogPageObject {
   expectMessage(message: string, options?: any) {
     // options = defaults(options, { timeout: 10000 });
     cy.get(this.getSelector('content'), { timeout: 10000 }).should(
-      'have.text',
-      message
+      'include.text',
+      message.replace(/<[^>]+>/g, '')
     );
+  }
+
+  exepctIcon(iconName: string) {
+    cy.get(this.getSelector('icon')).should('have.attr', 'icon-name', iconName);
   }
 
   // confirm(): void {

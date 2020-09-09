@@ -33,6 +33,7 @@ import { AlertDialogComponent } from './dialog/alert-dialog/alert-dialog.compone
 import { DatetimeComponent } from './datetime/datetime.component';
 import { ErrorMessagesComponent } from './error-messages/error-messages.component';
 import { ProgressDialogComponent } from './dialog/progress-dialog/progress-dialog.component';
+import { ExtraInfoButtonComponent } from './extra-info-button/extra-info-button/extra-info-button.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { ProgressDialogComponent } from './dialog/progress-dialog/progress-dialo
     AlertDialogComponent,
     DatetimeComponent,
     ErrorMessagesComponent,
-    ProgressDialogComponent
+    ProgressDialogComponent,
+    ExtraInfoButtonComponent
     // ImageThumbnailSelectorComponent
   ],
   imports: [
@@ -92,7 +94,8 @@ import { ProgressDialogComponent } from './dialog/progress-dialog/progress-dialo
     NgForColorBackgroundDirective,
     ControlViewSwitchComponent,
     DatetimeComponent,
-    ErrorMessagesComponent
+    ErrorMessagesComponent,
+    ExtraInfoButtonComponent
     // ImageThumbnailSelectorComponent
   ],
   entryComponents: [

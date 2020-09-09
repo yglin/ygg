@@ -5,6 +5,7 @@ import {
 import { ImageUploaderPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { Image } from '@ygg/shared/omni-types/core';
 import { UsersByEmailSelectorPageObjectCypress } from '@ygg/shared/user/test';
+import { ExtraInfoButtonPageObjectCypress } from '@ygg/shared/ui/test';
 
 export class BoxCreatePageObjectCypress extends PageObjectCypress {
   selectors = {
@@ -17,11 +18,26 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
     // buttonAddEmail: 'button.add-email',
     thumbnailImages: '.thumbnail-images',
     buttonAddImage: 'button.add-images',
-    checkboxPublic: '.check-public'
+    checkboxPublic: '.check-public',
+    publicityDescription: '.publicity-description',
+    stepHint: 'h2.step-hint:visible',
+    stepImage: '.step-image:visible img'
   };
+
+  expectStepHint(hint: string) {
+    cy.get(this.getSelector('stepHint')).should('include.text', hint);
+  }
 
   getSelectorForMemberEmail(email: string): string {
     return `${this.getSelector('memberEmailList')} .member[email="${email}"]`;
+  }
+
+  showPublicDescription(description: string) {
+    const extraInfoButtonPO = new ExtraInfoButtonPageObjectCypress(
+      this.getSelector('publicityDescription')
+    );
+    extraInfoButtonPO.showInfo();
+    extraInfoButtonPO.expectInfo(description);
   }
 
   inputName(name: string) {
@@ -45,7 +61,9 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
   selectImage(imageSrc: string) {
     cy.get(this.getSelector('thumbnailImages'))
       .find(`.thumbnail-image img[src="${imageSrc}"]`)
-      .click();
+      .click()
+      .parent().should('have.class', 'selected');
+    cy.get(this.getSelector('stepImage')).should('have.attr', 'src', imageSrc);
   }
 
   selectCustomImage(imageSrc: string) {

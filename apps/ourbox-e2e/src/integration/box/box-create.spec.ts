@@ -1,7 +1,8 @@
 import {
   ImitationBox,
   ImitationItem,
-  NotificationJoinBox
+  NotificationJoinBox,
+  ImitationBoxFlags
 } from '@ygg/ourbox/core';
 import {
   BoxCreatePageObjectCypress,
@@ -16,7 +17,8 @@ import {
 } from '@ygg/shared/test/cypress';
 import {
   EmceePageObjectCypress,
-  SideDrawerPageObjectCypress
+  SideDrawerPageObjectCypress,
+  YggDialogPageObjectCypress
 } from '@ygg/shared/ui/test';
 import { Notification, User } from '@ygg/shared/user/core';
 import {
@@ -217,6 +219,7 @@ describe('Creation of box', () => {
     boxCreatePO.nextStep();
 
     // Step: Add members by emails
+    boxCreatePO.expectStepHint(`邀請寶箱成員`);
     boxCreatePO.addMemberEmail(otherUser.email);
     boxCreatePO.nextStep();
 
@@ -308,6 +311,10 @@ describe('Creation of box', () => {
     boxCreatePO.nextStep();
 
     // Step: Select public or private
+    // Show the description of publicity
+    boxCreatePO.showPublicDescription(
+      ImitationBoxFlags['isPublic'].description
+    );
     // Check box as public
     boxCreatePO.checkPublic();
     boxCreatePO.submit();
