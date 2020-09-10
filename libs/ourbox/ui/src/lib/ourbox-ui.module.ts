@@ -14,9 +14,7 @@ import {
   UserMenuService,
   UserMenuItem
 } from '@ygg/shared/user/ui';
-import {
-  SharedUiWidgetsModule
-} from '@ygg/shared/ui/widgets';
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { BoxFactoryService } from './box/box-factory.service';
 import { noop, pick, values } from 'lodash';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -30,8 +28,9 @@ import { MyItemTransfersComponent } from './item-transfer/my-item-transfers/my-i
 import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
 import { ItemTransferCompleteComponent } from './item-transfer/item-transfer-complete/item-transfer-complete.component';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
-import { pages } from '@ygg/ourbox/core';
+import { pages, pagesInSideDrawer } from '@ygg/ourbox/core';
 import { SideDrawerService } from '@ygg/shared/ui/navigation';
+import { SiteHowtoComponent } from './misc/site-howto/site-howto.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +45,8 @@ import { SideDrawerService } from '@ygg/shared/ui/navigation';
     MyHeldItemsComponent,
     ItemTransferComponent,
     ItemTransferCompleteComponent,
-    MyItemTransfersComponent
+    MyItemTransfersComponent,
+    SiteHowtoComponent
   ],
   imports: [
     CommonModule,
@@ -87,11 +87,7 @@ export class OurboxUiModule {}
 
 export function initSideMenu(sideDrawer: SideDrawerService) {
   return async (): Promise<any> => {
-    for (const pageId in pick(pages, [
-      'mapSearch',
-      'boxCreate',
-      'itemWarehouse'
-    ])) {
+    for (const pageId in pick(pages, pagesInSideDrawer)) {
       if (Object.prototype.hasOwnProperty.call(pages, pageId)) {
         const page = pages[pageId];
         sideDrawer.addPageLink(page);

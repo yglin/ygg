@@ -24,6 +24,7 @@ import { MyHeldItemsComponent } from './item/my-held-items/my-held-items.compone
 import { ItemTransferComponent } from './item-transfer/item-transfer/item-transfer.component';
 import { ItemTransferFactoryService } from './item-transfer/item-transfer-factory.service';
 import { MyItemTransfersComponent } from './item-transfer/my-item-transfers/my-item-transfers.component';
+import { SiteHowtoComponent } from './misc/site-howto/site-howto.component';
 // import { ItemFactoryService } from './item-factory.service';
 // import { MyBoxesComponent } from './pages/box/my-boxes/my-boxes.component';
 // import { ItemTransferComponent } from './pages/item/item-transfer/item-transfer.component';
@@ -61,6 +62,10 @@ export const routes: Routes = [
       {
         path: 'my-item-transfers',
         component: MyItemTransfersComponent
+      },
+      {
+        path: 'site-howto',
+        component: SiteHowtoComponent
       }
     ]
   },

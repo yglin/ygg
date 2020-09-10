@@ -1,9 +1,28 @@
-<div class='home'>
-  <div fxLayout="row wrap" fxLayoutAlign="space-around center" fxLayoutGap="0px">
-    <div *ngFor="let link of links" class="link-card panel">
-      <a [routerLink]="link.path" [ngClass]="link.class">
-        <ygg-image-thumbnail [item]="link" size="big"></ygg-image-thumbnail>
-      </a>
+<div class="home">
+  <div
+    fxLayout="row wrap"
+    fxLayoutAlign="space-around center"
+    fxLayoutGap="0px"
+  >
+    <div *ngFor="let linkMapping of links | keyvalue" class="link-card panel">
+      <div *ngIf="linkMapping.value as link">
+        <a [routerLink]="link.path">
+          <div
+            fxLayout="column"
+            fxLayoutAlign="start center"
+            fxLayoutGap="10px"
+          >
+            <div class="link-image">
+              <img [src]="link.image" alt="" />
+            </div>
+            <div>
+              <h1 class="label" *ngIf="link.label" [matTooltip]="link.label">
+                {{ link.label }}
+              </h1>
+            </div>
+          </div>
+        </a>
+      </div>
     </div>
   </div>
 </div>
