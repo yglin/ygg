@@ -75,8 +75,10 @@ export class CustomPageComponent implements OnInit, OnDestroy {
     this.isEditMode = false;
   }
 
-  save() {
+  async save() {
     this.customPage.content = this.formGroup.get('content').value;
-    this.customPageFactory.save(this.customPage);
+    await this.customPageFactory.save(this.customPage);
+    this.tabIndex = 1;
+    this.isEditMode = false;
   }
 }

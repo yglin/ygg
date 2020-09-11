@@ -35,7 +35,9 @@ export class CustomPagePageObjectCypress extends PageObjectCypress {
   }
 
   expectReadonly() {
-    cy.get(`.edit`).should('not.be.visible');
+    cy.get(`${this.getSelector()} .edit`).should('not.be.visible');
+    cy.get(`${this.getSelector()} .html-view`).should('be.visible');
+    this.expectTabsHeaderHidden();
   }
 
   openEditor() {
@@ -48,6 +50,10 @@ export class CustomPagePageObjectCypress extends PageObjectCypress {
 
   expectPreview(contentHtml: Html) {
     this.htmlViewPO.expectValue(contentHtml);
+  }
+
+  expectTabsHeaderHidden() {
+    cy.get(`${this.getSelector()} .tab-header`).should('not.be.visible');
   }
 
   save() {

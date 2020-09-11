@@ -56,6 +56,8 @@ describe('Edit site-howto page in place', () => {
 
   it('Save and expect the edit persistent', () => {
     siteHowtoPO.customPagePO.save();
+    siteHowtoPO.customPagePO.expectTabsHeaderHidden();
+    siteHowtoPO.customPagePO.expectPreview(contentHtml);
     siteNavigator.gotoHome();
     siteNavigator.gotoSiteHowto();
     siteHowtoPO.expectVisible();
@@ -69,6 +71,7 @@ describe('Edit site-howto page in place', () => {
     siteHowtoPO.customPagePO.switchToPreview();
     siteHowtoPO.customPagePO.expectPreview(contentHtml2Cancel);
     siteHowtoPO.customPagePO.cancel();
+    siteHowtoPO.customPagePO.expectTabsHeaderHidden();
     siteHowtoPO.customPagePO.expectPreview(contentHtml);
     siteNavigator.gotoHome();
     siteNavigator.gotoSiteHowto();
