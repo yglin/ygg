@@ -3,7 +3,7 @@ import {
   HeaderPageObjectCypress,
   BoxCreatePageObjectCypress,
   ItemWarehousePageObjectCypress,
-  MapSearchPageObjectCypress
+  MapSearchPageObjectCypress, SiteHowtoPageObjectCypress
 } from '@ygg/ourbox/test';
 import { SideDrawerPageObjectCypress } from '@ygg/shared/ui/test';
 import { pages as OurboxPages } from '@ygg/ourbox/core';
@@ -31,6 +31,14 @@ export class SiteNavigator {
 
   gotoHome() {
     cy.get('.header .home').click();
+  }
+
+  gotoSiteHowto() {
+    this.headerPO.openSideDrawer();
+    this.sideDrawerPO.expectVisible();
+    this.sideDrawerPO.clickLink(OurboxPages.siteHowto);
+    const siteHowtoPO = new SiteHowtoPageObjectCypress();
+    siteHowtoPO.expectVisible();
   }
 
   gotoBoxCreatePage() {

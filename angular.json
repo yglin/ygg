@@ -2621,6 +2621,92 @@
           }
         }
       }
+    },
+    "shared-custom-page-core": {
+      "root": "libs/shared/custom-page/core",
+      "sourceRoot": "libs/shared/custom-page/core/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/custom-page/core/tsconfig.lib.json",
+              "libs/shared/custom-page/core/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/custom-page/core/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/custom-page/core/jest.config.js",
+            "tsConfig": "libs/shared/custom-page/core/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "shared-custom-page-test": {
+      "root": "libs/shared/custom-page/test",
+      "sourceRoot": "libs/shared/custom-page/test/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/custom-page/test/tsconfig.lib.json",
+              "libs/shared/custom-page/test/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/custom-page/test/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/custom-page/test/jest.config.js",
+            "tsConfig": "libs/shared/custom-page/test/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "shared-custom-page-ui": {
+      "projectType": "library",
+      "root": "libs/shared/custom-page/ui",
+      "sourceRoot": "libs/shared/custom-page/ui/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/custom-page/ui/tsconfig.lib.json",
+              "libs/shared/custom-page/ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/custom-page/ui/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/custom-page/ui/jest.config.js",
+            "tsConfig": "libs/shared/custom-page/ui/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/shared/custom-page/ui/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

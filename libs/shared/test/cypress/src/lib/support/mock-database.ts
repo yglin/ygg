@@ -1,4 +1,5 @@
 import { Entity, toJSONDeep, isEntity } from '@ygg/shared/infra/core';
+import { User } from '@ygg/shared/user/core';
 import {
   TheThing,
   TheThingImitation,
@@ -66,6 +67,12 @@ export class MockDatabase {
       cy.wrap(data).as(alias);
     });
     return cy.get(`@${alias}`, { timeout: 5000 });
+  }
+
+  insertUsers(users: User[]) {
+    cy.wrap(users).each((user: User) =>
+      this.insert(`${User.collection}/${user.id}`, user)
+    );
   }
 
   update(path: string, data: any): Cypress.Chainable<any> {

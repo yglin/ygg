@@ -14,7 +14,7 @@ import { Html } from '@ygg/shared/omni-types/core';
 import { FormControl } from '@angular/forms';
 import { Subscription, of } from 'rxjs';
 import { FireStorageService } from '@ygg/shared/infra/data-access';
-import { catchError, finalize, tap } from 'rxjs/operators';
+import { auditTime, catchError, debounceTime, finalize, tap } from 'rxjs/operators';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 
 interface CKEditorImageResponse {
@@ -101,12 +101,16 @@ export class HtmlControlComponent
   ) {
     this.formControlContent = new FormControl('');
     this.subscriptions.push(
-      this.formControlContent.valueChanges.subscribe(value => {
-        const html = new Html(
-          domSanitizer.sanitize(SecurityContext.HTML, value)
-        );
-        this.emitChange(html);
-      })
+      this.formControlContent.valueChanges
+        .pipe(auditTime(500))
+        .subscribe(value => {
+          const html = new Html(
+            this.domSanitizer.sanitize(SecurityContext.HTML, value)
+          );
+          // console.log('emit html change!!');
+          // console.log(html);
+          this.emitChange(html);
+        })
     );
     this.config = {
       placeholder: '從這裡開始編輯',

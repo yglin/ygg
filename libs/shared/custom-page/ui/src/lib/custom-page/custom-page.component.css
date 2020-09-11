@@ -1,0 +1,3 @@
+::ng-deep .hide-tab-header .mat-tab-header {
+  display: none;
+}

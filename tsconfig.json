@@ -85,7 +85,14 @@
       "@ygg/ourbox/test": ["libs/ourbox/test/src/index.ts"],
       "@ygg/shared/ui/core": ["libs/shared/ui/core/src/index.ts"],
       "@ygg/ourbox/functions": ["libs/ourbox/functions/src/index.ts"],
-      "@ygg/shared/geography/core": ["libs/shared/geography/core/src/index.ts"]
+      "@ygg/shared/geography/core": ["libs/shared/geography/core/src/index.ts"],
+      "@ygg/shared/custom-page/core": [
+        "libs/shared/custom-page/core/src/index.ts"
+      ],
+      "@ygg/shared/custom-page/test": [
+        "libs/shared/custom-page/test/src/index.ts"
+      ],
+      "@ygg/shared/custom-page/ui": ["libs/shared/custom-page/ui/src/index.ts"]
     },
     "rootDir": "."
   },

@@ -1,0 +1,53 @@
+<div class="custom-page">
+  <div
+    fxLayout="row"
+    fxLayoutAlign="end center"
+    fxLayoutGap="10px"
+    *ngIf="editable"
+  >
+    <div [hidden]="isEditMode">
+      <button mat-fab class="edit open-editor" (click)="showEditor()" matTooltip="編輯本頁內容">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </div>
+    <div [hidden]="!isEditMode">
+      <button mat-fab class="edit cancel" (click)="cancel()" matTooltip="取消修改">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div [hidden]="!isEditMode">
+      <button mat-fab class="edit save" (click)="save()" matTooltip="儲存修改">
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+  </div>
+  <br />
+  <mat-tab-group
+    [selectedIndex]="tabIndex"
+    (selectedIndexChange)="onTabChange($event)"
+    [ngClass]="{ 'hide-tab-header': !isEditMode }"
+  >
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <div class="tab-header editor">
+          <h2>編輯</h2>
+        </div>
+      </ng-template>
+      <div [formGroup]="formGroup">
+        <div class="html-editor">
+          <ygg-html-control formControlName="content"></ygg-html-control>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <div class="tab-header preview">
+          <h2>預覽</h2>
+        </div>
+      </ng-template>
+      <div class="html-view">
+        <ygg-html-view [html]="formGroup.get('content').value"></ygg-html-view>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

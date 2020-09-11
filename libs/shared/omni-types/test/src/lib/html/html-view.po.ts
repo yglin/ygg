@@ -17,6 +17,9 @@ function encodeHtmlEntity(str: string) {
 
 export class HtmlViewPageObjectCypress extends HtmlViewPageObject {
   expectValue(html: Html) {
-    cy.get(this.getSelector('content')).should('have.text', html.content);
+    cy.get(this.getSelector('content'), { timeout: 10000 }).should(
+      'include.text',
+      html.content
+    );
   }
 }

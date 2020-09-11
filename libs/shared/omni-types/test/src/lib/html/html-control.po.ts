@@ -2,6 +2,10 @@ import { HtmlControlPageObject } from '@ygg/shared/omni-types/ui';
 import { Html } from '@ygg/shared/omni-types/core';
 
 export class HtmlControlPageObjectCypress extends HtmlControlPageObject {
+  expectVisible() {
+    cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
+  }
+
   expectValue(value: Html) {
     // XXX 2020/02/23 yglin
     // This is no guaranteed way to test html in CKEditor
@@ -22,5 +26,6 @@ export class HtmlControlPageObjectCypress extends HtmlControlPageObject {
       .clear({ force: true })
       .should('have.value', '')
       .type(html.content);
+    cy.wait(1000);
   }
 }

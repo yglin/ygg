@@ -31,6 +31,7 @@ import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { pages, pagesInSideDrawer } from '@ygg/ourbox/core';
 import { SideDrawerService } from '@ygg/shared/ui/navigation';
 import { SiteHowtoComponent } from './misc/site-howto/site-howto.component';
+import { SharedCustomPageUiModule } from '@ygg/shared/custom-page/ui';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { SiteHowtoComponent } from './misc/site-howto/site-howto.component';
     SharedThreadUiModule,
     SharedOmniTypesUiModule,
     TheThingUiModule,
+    SharedCustomPageUiModule,
     RouterModule.forChild(routes)
   ],
   exports: [MapSearchComponent, HeaderComponent, HomeComponent],

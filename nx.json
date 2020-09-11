@@ -517,6 +517,24 @@
         "scope:shared",
         "type:core"
       ]
+    },
+    "shared-custom-page-core": {
+      "tags": [
+        "scope:shared",
+        "type:core"
+      ]
+    },
+    "shared-custom-page-test": {
+      "tags": [
+        "scope:shared",
+        "type:test"
+      ]
+    },
+    "shared-custom-page-ui": {
+      "tags": [
+        "scope:shared",
+        "type:ui"
+      ]
     }
   },
   "tasksRunnerOptions": {
