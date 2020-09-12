@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import * as BalloonEditor from '@ckeditor/ckeditor5-build-balloon';
 import { Html } from '@ygg/shared/omni-types/core';
 import { FormControl } from '@angular/forms';
 import { Subscription, of } from 'rxjs';
@@ -88,7 +89,7 @@ class YggUploadAdapter {
 export class HtmlControlComponent
   implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() label: string;
-  editor: any = ClassicEditor;
+  editor: any = BalloonEditor;
   config: any = {};
   formControlContent: FormControl;
   emitChange: (value: Html) => any = noop;
