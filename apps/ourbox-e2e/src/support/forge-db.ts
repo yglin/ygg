@@ -41,6 +41,12 @@ export default function forgeDB() {
     theMockDatabase.insert(`${item.collection}/${item.id}`, item)
   );
 
+  // Set PlaywhatTF and yglin as admin users
+  theMockDatabase.setAdmins([
+    'cenKm7JFZTgqP307xmuE5SLIVtV2',
+    'lkMGtk5WErSIz8tmt05lcfwsJGj2'
+  ]);
+
   // // Insert all relation records
   // relationRecords.forEach(rr =>
   //   theMockDatabase.insert(`${RelationRecord.collection}/${rr.id}`, rr)
