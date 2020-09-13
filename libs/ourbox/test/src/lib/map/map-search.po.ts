@@ -34,7 +34,7 @@ export class MapSearchPageObjectCypress extends PageObjectCypress {
   expectItems(items: TheThing[]) {
     cy.wrap(items).each((item: TheThing) => {
       const theThingThumbnailPO = new TheThingThumbnailPageObjectCypress(
-        `${this.getSelector('itemList')} [item-id="${item.id}"]`,
+        `${this.getSelector('itemList')} [item-name="${item.name}"]`,
         ImitationItem
       );
       theThingThumbnailPO.expectValue(item);
@@ -43,7 +43,7 @@ export class MapSearchPageObjectCypress extends PageObjectCypress {
 
   expectNotItems(items: TheThing[]) {
     cy.wrap(items).each((item: TheThing) => {
-      cy.get(`${this.getSelector('itemList')} [item-id="${item.id}"]`).should(
+      cy.get(`${this.getSelector('itemList')} [item-name="${item.name}"]`).should(
         'not.exist'
       );
     });
