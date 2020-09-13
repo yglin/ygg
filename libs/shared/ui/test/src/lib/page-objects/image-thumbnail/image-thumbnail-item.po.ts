@@ -5,7 +5,7 @@ import {
 
 export class ImageThumbnailItemPageObjectCypress extends ImageThumbnailItemPageObject {
   clickLink() {
-    cy.get(this.getSelector('buttonOpenLink')).click();
+    cy.get(this.getSelector('buttonOpenLink')).click({ force: true });
   }
 
   expectVisible(): void {

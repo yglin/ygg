@@ -96,5 +96,14 @@ ImitationBox.actions = {
     icon: 'group_add',
     tooltip: '新增並邀請寶箱成員',
     permissions: ['requireOwner']
+  },
+  'create-item': {
+    id: 'ourbox-box-create-item',
+    icon: 'addchart',
+    tooltip: '新增寶物',
+    permissions: [
+      `state:${ImitationBox.states.open.name}`,
+      `role:${RelationshipBoxMember.role}`
+    ]
   }
 };

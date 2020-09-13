@@ -15,7 +15,8 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
     main: '.box-view',
     name: '.name',
     image: '.box-image img',
-    buttonAddItem: 'button.add-item'
+    buttonAddItem: 'button.add-item',
+    createItemHint: '.create-item-hint'
   };
 
   constructor(parentSelector?: string) {
@@ -99,5 +100,19 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
 
   gotoCreateItem() {
     cy.get(this.getSelector('buttonAddItem')).click();
+  }
+
+  expectCreateItemHint() {
+    cy.get(this.getSelector('createItemHint')).should(
+      'include.text',
+      `寶箱中還沒有任何寶物，新增寶物？`
+    );
+    cy.get(this.getSelector('createItemHint'))
+      .find('button.create-item')
+      .should('be.visible');
+  }
+
+  expectNoCreateItemHint() {
+    cy.get(this.getSelector('createItemHint')).should('not.be.visible');
   }
 }

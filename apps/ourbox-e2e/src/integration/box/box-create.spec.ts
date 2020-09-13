@@ -269,7 +269,7 @@ describe('Creation of box', () => {
     emceePO.alert(`寶箱 ${testBox.name} 已建立`);
 
     boxViewPO.expectVisible();
-    boxViewPO.gotoCreateItem();
+    boxViewPO.theThingPO.runAction(ImitationBox.actions['create-item']);
 
     itemPO.expectVisible();
     itemPO.setValue(testItem01);
@@ -323,7 +323,7 @@ describe('Creation of box', () => {
     emceePO.alert(`寶箱 ${testBox.name} 已建立`);
 
     boxViewPO.expectVisible();
-    boxViewPO.gotoCreateItem();
+    boxViewPO.theThingPO.runAction(ImitationBox.actions['create-item']);
 
     itemPO.expectVisible();
     itemPO.setValue(testItem02);

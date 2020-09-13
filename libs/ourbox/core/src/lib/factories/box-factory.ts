@@ -110,6 +110,12 @@ export class BoxFactory {
     this.subscriptions.push(
       this.theThingFactory.runAction$.subscribe(actionInfo => {
         switch (actionInfo.action.id) {
+          case ImitationBox.actions['create-item'].id:
+            this.createItem(actionInfo.theThing.id, {
+              backUrl: `/${ImitationBox.routePath}/${actionInfo.theThing.id}`
+            });
+            break;
+
           case ImitationBox.actions['add-member'].id:
             this.inviteBoxMembersByUserSelect(actionInfo.theThing);
             break;

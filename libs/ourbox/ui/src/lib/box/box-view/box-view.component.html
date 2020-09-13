@@ -21,18 +21,18 @@
       </div>
       <br />
       <div>
-        <div *ngIf="isBoxEmpty">
+        <div *ngIf="isBoxEmpty" class="create-item-hint">
           <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
             <h2>寶箱中還沒有任何寶物，新增寶物？</h2>
             <div>
-              <button mat-fab (click)="createItem()" class="add-item">
-                <mat-icon>add</mat-icon>
+              <button mat-fab (click)="createItem()" class="create-item">
+                <mat-icon>addchart</mat-icon>
               </button>
             </div>
           </div>
         </div>
         <div *ngIf="items?.length > 0">
-          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+          <!-- <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
             <div>
               <button mat-fab (click)="inviteMember()" matTooltip="邀請好友">
                 <mat-icon>group_add</mat-icon>
@@ -48,7 +48,7 @@
                 <mat-icon>add</mat-icon>
               </button>
             </div>
-          </div>
+          </div> -->
           <br />
           <div
             fxLayout="row wrap"
