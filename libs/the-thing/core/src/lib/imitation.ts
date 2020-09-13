@@ -158,7 +158,11 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     return name in this.cellsDef ? this.cellsDef[name] : null;
   }
 
-  forgeTheThing(): TheThing {
+  forgeTheThing(
+    options: {
+      optionalCells?: string[] | string;
+    } = {}
+  ): TheThing {
     const theThing = this.createTheThing();
     theThing.name = `${this.name}_這是一個假造資料_${Date.now()}`;
     if (!isEmpty(this.flags)) {
@@ -169,7 +173,11 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     for (const cellId in this.cellsDef) {
       if (this.cellsDef.hasOwnProperty(cellId)) {
         const cellDef = this.cellsDef[cellId];
-        if (cellDef.userInput === 'required' || random(1, true) > 0.5) {
+        if (
+          cellDef.userInput === 'required' ||
+          options.optionalCells === 'all' ||
+          find(options.optionalCells, cellId)
+        ) {
           const cell = theThing.getCell(cellId);
           if (!cell || !cell.value) {
             theThing.upsertCell(cellDef.forgeCell());

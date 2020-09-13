@@ -96,4 +96,21 @@ describe('Create item in box', () => {
     itemPO.expectHolder(testUser);
     itemPO.expectNoRequester();
   });
+
+  it('Create an item with optional data cells', () => {
+    const testItem4 = ImitationItem.forgeTheThing({ optionalCells: 'all' });
+    siteNavigator.gotoMyBoxes();
+    myBoxesPO.expectVisible();
+    myBoxesPO.gotoBox(testBox);
+    boxViewPO.expectVisible();
+    boxViewPO.theThingPO.runAction(ImitationBox.actions['create-item']);
+    itemPO.expectVisible();
+    itemPO.createItem(testItem4, { makeAvailable: true });
+    boxViewPO.expectVisible();
+    cy.wait(1000);
+    boxViewPO.expectItemAvailable(testItem4);
+    boxViewPO.gotoItem(testItem4);
+    itemPO.expectVisible();
+    itemPO.expectItem(testItem4);
+  });
 });

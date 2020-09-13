@@ -17,8 +17,12 @@ export const ImitationItemCells = keyBy(
       userInput: 'required'
     }),
     CommonCellDefines.location.extend({
-      label: '物品所在地',
+      label: '寶物所在地',
       userInput: 'required'
+    }),
+    CommonCellDefines.introduction.extend({
+      label: '寶物描述',
+      userInput: 'optional'
     })
   ],
   'id'
