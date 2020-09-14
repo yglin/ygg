@@ -9,6 +9,13 @@ export class ItemTransferCompletePageObjectCypress extends PageObjectCypress {
     inputLocation: '.input-location'
   };
 
+  expectLocation(location: Location) {
+    const locationControlPO = new LocationControlPageObjectCypress(
+      this.getSelector('inputLocation')
+    );
+    locationControlPO.expectValue(location);
+  }
+
   setLocation(location: Location) {
     const locationControlPO = new LocationControlPageObjectCypress(
       this.getSelector('inputLocation')

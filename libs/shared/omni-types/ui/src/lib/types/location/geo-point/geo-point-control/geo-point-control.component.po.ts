@@ -9,4 +9,5 @@ export abstract class GeoPointControlPageObject extends PageObject {
   };
 
   abstract setValue(geoPoint: GeoPoint): void;
+  abstract expectValue(geoPoint: GeoPoint): void;
 }

@@ -23,4 +23,15 @@ export abstract class LocationControlPageObject extends PageObject {
       }
     }
   }
+
+  expectValue(location: Location) {
+    if (Location.isLocation(location)) {
+      if (Address.isAddress(location.address)) {
+        this.addressControlPO.expectValue(location.address);
+      }
+      if (GeoPoint.isGeoPoint(location.geoPoint)) {
+        this.geoPointControlPO.expectValue(location.geoPoint);
+      }
+    }
+  }
 }

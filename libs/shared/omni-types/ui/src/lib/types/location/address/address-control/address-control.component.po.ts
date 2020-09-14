@@ -24,4 +24,5 @@ export abstract class AddressControlPageObject extends PageObject {
   }
 
   abstract setValue(value: Address): void;
+  abstract expectValue(address: Address): void;
 }

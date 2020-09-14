@@ -4,7 +4,11 @@ import { Observable, Subject, Subscription } from 'rxjs';
 import { TheThing } from '@ygg/the-thing/core';
 import { FormControl } from '@angular/forms';
 import { OmniTypes, Location } from '@ygg/shared/omni-types/core';
-import { ItemTransferCompleteInfo } from '@ygg/ourbox/core';
+import {
+  ImitationItem,
+  ImitationItemCells,
+  ItemTransferCompleteInfo
+} from '@ygg/ourbox/core';
 
 @Component({
   selector: 'ygg-item-transfer-complete',
@@ -35,6 +39,10 @@ export class ItemTransferCompleteComponent
   ngOnInit(): void {
     if (this.dialogData) {
       this.item = this.dialogData.item;
+      this.formControl.setValue(
+        this.item.getCellValue(ImitationItemCells.location.id),
+        { emitEvent: false }
+      );
     }
   }
 

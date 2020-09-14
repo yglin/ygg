@@ -73,6 +73,9 @@ describe('Complete the item-transfer task', () => {
   );
   const testItemTransferChanged = ImitationItemTransfer.forgeTheThing();
   testItemTransferChanged.name = testItemTransfer.name;
+  const oldItemLocation: Location = testItem.getCellValue(
+    ImitationItemCells.location.id
+  );
   const newItemLocation: Location = Location.forge();
 
   before(() => {
@@ -201,6 +204,7 @@ describe('Complete the item-transfer task', () => {
     itemTransferCompletePO.expectHint(
       `確認已收到 ${testItem.name}，請更新寶物所在的位置`
     );
+    itemTransferCompletePO.expectLocation(oldItemLocation);
     itemTransferCompletePO.setLocation(newItemLocation);
     dialogPO.confirm();
     emceePO.alert(
