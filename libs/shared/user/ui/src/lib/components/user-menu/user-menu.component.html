@@ -1,6 +1,8 @@
 <div class="user-menu">
-  <div class="menu-trigger" [matMenuTriggerFor]="userMenu">
-    <ng-content></ng-content>
+  <div [matMenuTriggerFor]="userMenu">
+    <div class="menu-trigger">
+      <ng-content></ng-content>
+    </div>
   </div>
   <mat-menu #userMenu="matMenu">
     <div *ngFor="let menuItem of menuItems" class="user-menu-item">

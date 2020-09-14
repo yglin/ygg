@@ -159,6 +159,7 @@ describe('Create an item-transfer task', () => {
   });
 
   it('Item with created item-transfer task should be in state "transfer"', () => {
+    itemTransferPO.gotoItem();
     itemPO.expectVisible();
     itemPO.theThingPO.expectState(ImitationItem.states.transfer);
   });

@@ -83,6 +83,7 @@ describe('Item-transfer editing', () => {
     emceePO.cancel(
       `確認約定時間和地點無誤，送出交付請求給 ${testRequester.name}？`
     );
+    itemTransferPO.gotoItem();
     itemPO.expectVisible();
     itemPO.theThingPO.expectState(ImitationItem.states.transfer);
     itemPO.theThingPO.runAction(ImitationItem.actions['check-item-transfer']);

@@ -178,8 +178,11 @@ export abstract class ItemTransferFactory {
         .toPromise();
       await this.sendRequest(itemTransfer);
     } catch (error) {
-      this.emcee.error(`新增交付約定記錄失敗，錯誤原因：${error.message}`);
-      return;
+      const wrapError = new Error(
+        `新增交付約定記錄失敗，錯誤原因：${error.message}`
+      );
+      this.emcee.error(wrapError.message);
+      return Promise.reject(wrapError);
     }
   }
 
@@ -232,7 +235,9 @@ export abstract class ItemTransferFactory {
           force: true
         }
       );
-      this.router.navigate(['/', ImitationItem.routePath, item.id]);
+
+      // 2020/09/14 yglin: Stay in item-transfer page
+      // this.router.navigate(['/', ImitationItem.routePath, item.id]);
     } catch (error) {
       this.emcee.error(
         `<h3>建立 ${!!item ? item.name : itemId} 的交付任務失敗，錯誤原因：${
@@ -265,28 +270,39 @@ export abstract class ItemTransferFactory {
   }
 
   async getReceiver(itemTransferId: string): Promise<User> {
-    const relations: RelationRecord[] = await this.relationFactory
-      .findBySubjectAndRole$(
+    try {
+      const itemTransfer = await this.theThingAccessor.load(
         itemTransferId,
-        RelationshipItemTransferReceiver.role
-      )
-      .pipe(take(1))
-      .toPromise();
-    if (isEmpty(relations)) {
-      throw new Error(`Not found receiver of item-transfer: ${itemTransferId}`);
+        ImitationItemTransfer.collection
+      );
+      const receiverId = first(
+        itemTransfer.listUserIdsOfRole(RelationshipItemTransferReceiver.role)
+      );
+      return await this.userAccessor.get(receiverId);
+    } catch (error) {
+      const wrapError = new Error(
+        `Can not find receiver of item-transfer: ${itemTransferId}`
+      );
+      return Promise.reject(wrapError);
     }
-    return this.userAccessor.get(relations[0].objectId);
   }
 
   async getGiver(itemTransferId: string): Promise<User> {
-    const relations: RelationRecord[] = await this.relationFactory
-      .findBySubjectAndRole$(itemTransferId, RelationshipItemTransferGiver.role)
-      .pipe(take(1))
-      .toPromise();
-    if (isEmpty(relations)) {
-      throw new Error(`Not found giver of item-transfer: ${itemTransferId}`);
+    try {
+      const itemTransfer = await this.theThingAccessor.load(
+        itemTransferId,
+        ImitationItemTransfer.collection
+      );
+      const giverId = first(
+        itemTransfer.listUserIdsOfRole(RelationshipItemTransferGiver.role)
+      );
+      return await this.userAccessor.get(giverId);
+    } catch (error) {
+      const wrapError = new Error(
+        `Can not find giver of item-transfer: ${itemTransferId}`
+      );
+      return Promise.reject(wrapError);
     }
-    return this.userAccessor.get(relations[0].objectId);
   }
 
   async sendRequest(itemTransfer: TheThing) {
@@ -324,7 +340,7 @@ export abstract class ItemTransferFactory {
         `<h3>已送出 ${item.name} 的交付要求，請等待 ${receiver.name} 的回應</h3>`
       );
     } catch (error) {
-      this.emcee.error(
+      const wrapError = new Error(
         `送出${
           giver && item && receiver
             ? ' ' +
@@ -337,6 +353,8 @@ export abstract class ItemTransferFactory {
             : ''
         }交付約定失敗，錯誤原因：${error.message}`
       );
+      this.emcee.error(wrapError.message);
+      return Promise.reject(wrapError);
     }
   }
 
