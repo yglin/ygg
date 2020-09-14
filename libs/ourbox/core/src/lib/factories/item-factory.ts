@@ -216,16 +216,23 @@ export class ItemFactory {
         `送出索取 ${item.name} 的請求，並且排隊等待？`
       );
       if (confirm) {
+        this.emcee.showProgress({
+          message: `處理 ${item.name} 的索取請求中...`
+        });
         item.addUsersOfRole(RelationshipItemRequester.role, [user.id]);
         await this.theThingAccessor.update(item, 'users', item.users);
         this.emcee.info(`已送出索取 ${item.name} 的請求`);
       }
     } catch (error) {
-      this.emcee.error(
+      const wrapError = new Error(
         `索取 ${itemId} ${item ? item.name : ''} 失敗，錯誤原因：${
           error.message
         }`
       );
+      await this.emcee.error(wrapError.message);
+      return Promise.reject(wrapError);
+    } finally {
+      this.emcee.hideProgress();
     }
   }
 
