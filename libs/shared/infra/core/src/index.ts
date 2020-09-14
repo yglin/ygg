@@ -10,3 +10,4 @@ export * from './lib/query';
 export * from './lib/hash-string-to-color';
 export * from './lib/environment';
 export * from './lib/local-profiler';
+export * from './lib/content-credit';

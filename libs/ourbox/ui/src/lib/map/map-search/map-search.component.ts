@@ -57,6 +57,7 @@ export class MapSearchComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder
   ) {
     const itemsInMapBound$: Observable<TheThing[]> = this.boundChange$.pipe(
+      debounceTime(500),
       switchMap(bound => this.mapSearcher.searchItemsInBound$(bound))
       // tap(items => {
       //   console.log('Found items in bound');
@@ -142,11 +143,20 @@ export class MapSearchComponent implements OnInit, OnDestroy {
   }
 
   addMarkers(markers: Marker[]) {
+    const markerIcon = leaflet.icon({
+      iconUrl: '/assets/images/map/marker.png',
+      shadowUrl: '/assets/images/map/marker-shadow.png',
+      iconSize: [64, 64],
+      shadowSize: [64, 64],
+      iconAnchor: [32, 64],
+      shadowAnchor: [0, 64],
+      popupAnchor: [0, -70]
+    });
     for (const marker of markers) {
-      const lfMarker = leaflet.marker([
-        marker.geoPoint.latitude,
-        marker.geoPoint.longitude
-      ]);
+      const lfMarker = leaflet.marker(
+        [marker.geoPoint.latitude, marker.geoPoint.longitude],
+        { icon: markerIcon }
+      );
       const link = `/${ImitationItem.routePath}/${marker.id}`;
       const target = `ourbox_item_${marker.id}`;
       const popup = lfMarker.bindPopup(

@@ -44,6 +44,7 @@ apps/*-e2e/data
 **/.deprecated
 **/firebase/emulators
 *.xcf
+**/gimp
 
 # System Files
 .DS_Store

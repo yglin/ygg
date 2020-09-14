@@ -101,6 +101,10 @@ describe('Search items in warehouse page', () => {
   });
   forgedBoxes.push(boxOther);
 
+  // To avoid name conflict
+  forgedItems.forEach((item, index) => {
+    item.name += `_${index}`;
+  });
   forgedTheThings.push(...forgedItems);
   forgedTheThings.push(...forgedBoxes);
 
