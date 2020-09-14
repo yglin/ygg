@@ -1,13 +1,13 @@
-import { Query } from '@ygg/shared/infra/core';
+import { getEnv, Query } from '@ygg/shared/infra/core';
 import { Observable, race, NEVER } from 'rxjs';
 import { map, tap, take, timeout, filter } from 'rxjs/operators';
 import { RelationRecord } from './relation';
 import { RelationAccessor } from './relation-accessor';
 import { isEmpty } from 'lodash';
-import * as env from '@ygg/env/environments.json';
 
 export abstract class RelationFactory {
   saveUniq = this.replaceObject;
+  siteConfig = getEnv('siteConfig');
 
   constructor(protected relationAccessor: RelationAccessor) {}
 
@@ -97,7 +97,7 @@ export abstract class RelationFactory {
           filter(has => (hasNot ? !has : has)),
           take(1)
         ),
-        NEVER.pipe(timeout(env.siteConfig.dataAccess.timeout))
+        NEVER.pipe(timeout(this.siteConfig.dataAccess.timeout))
       ).toPromise();
     } catch (error) {
       const wrapError = new Error(

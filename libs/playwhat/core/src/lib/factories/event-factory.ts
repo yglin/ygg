@@ -25,7 +25,6 @@ import { switchMap, shareReplay, take } from 'rxjs/operators';
 import { ImitationPlay } from '../imitations';
 import { Router } from '@ygg/shared/infra/core';
 import { TimeRange } from '@ygg/shared/omni-types/core';
-// import * as env from "@ygg/env/environments.json";
 
 export const NotificationHostEvent = {
   type: 'host-event'

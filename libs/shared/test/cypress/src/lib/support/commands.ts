@@ -25,11 +25,11 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 import * as firebase from 'firebase/app';
 import attachCustomCommands from './attachCustomCommands';
-import * as env from '@ygg/env/environments.local.json';
 import './email';
 import './drag-n-drop';
+import { getEnv } from '@ygg/shared/infra/core';
 
 export function configCommands() {
-  firebase.initializeApp(env.firebase);
+  firebase.initializeApp(getEnv('firebase'));
   attachCustomCommands({ Cypress, cy, firebase });
 }

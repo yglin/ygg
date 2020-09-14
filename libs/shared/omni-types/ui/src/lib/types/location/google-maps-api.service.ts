@@ -1,7 +1,7 @@
 /// <reference types="@types/googlemaps" />
 import { Injectable, NgZone } from '@angular/core';
+import { getEnv } from '@ygg/shared/infra/core';
 // @ts-ignore
-import { default as env } from '@ygg/env/environments.json';
 import { LogService } from '@ygg/shared/infra/log';
 
 class GoogleMapsApiSiteConfig {
@@ -16,6 +16,7 @@ class GoogleMapsApiSiteConfig {
 
 @Injectable({ providedIn: 'root' })
 export class GoogleMapsApiService {
+  googleEnv = getEnv('google');
   private googleMapsApi$: Promise<any>;
 
   constructor(
@@ -50,18 +51,18 @@ export class GoogleMapsApiService {
 
           if (
             !GoogleMapsApiSiteConfig.isGoogleMapsApiSiteConfig(
-              env.google.mapsApi
+              this.googleEnv.mapsApi
             )
           ) {
             const error = new Error(
               `Incorrect config for GoogleMapsApi:\n ${JSON.stringify(
-                env.google
+                this.googleEnv
               )}`
             );
             throw error;
           }
 
-          const url = `${env.google.mapsApi.url}?key=${env.google.mapsApi.key}&language=${env.google.mapsApi.language}&callback=initGoogleMapsApi`;
+          const url = `${this.googleEnv.mapsApi.url}?key=${this.googleEnv.mapsApi.key}&language=${this.googleEnv.mapsApi.language}&callback=initGoogleMapsApi`;
           this.logService.info('Start loading google maps api...');
           const scriptElement = document.createElement('script');
           scriptElement.type = 'text/javascript';

@@ -1,4 +1,3 @@
-import * as env from '@ygg/env/environments.json';
 import {
   ImitationEvent,
   ImitationEventCellDefines,
@@ -12,6 +11,7 @@ import {
   TourPlanPageObjectCypress
 } from '@ygg/playwhat/test';
 import { SchedulePageObjectCypress } from '@ygg/schedule/test';
+import { getEnv } from '@ygg/shared/infra/core';
 import { TimeRange, DateRange } from '@ygg/shared/omni-types/core';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
@@ -32,7 +32,8 @@ import {
   TourPlanUnscheduledOnePlay
 } from '../schedule/sample-schedules';
 
-const mailSlurpInbox = env.mailslurp.inboxes[0];
+const mailslurpConfig = getEnv('mailslurp');
+const mailSlurpInbox = mailslurpConfig.inboxes[0];
 
 describe('Approve scheduled events of tour-plan', () => {
   const siteNavigator = new SiteNavigator();

@@ -5,9 +5,9 @@ import { AngularFirestoreModule, SETTINGS } from '@angular/fire/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 // import { environment } from '../environments/environment';
-import * as env from "@ygg/env/environments.json"
 //@ts-ignore
 import { default as FirebaseJSON } from "firebase.json";
+import { getEnv } from '@ygg/shared/infra/core';
 
 let useLocalEmulators = false;
 let firestoreEmulatorHost: string;
@@ -33,7 +33,7 @@ try {
 @NgModule({
   imports: [
     CommonModule,
-    AngularFireModule.initializeApp(env.firebase),
+    AngularFireModule.initializeApp(getEnv('firebase')),
     AngularFirestoreModule,
     AngularFireDatabaseModule,
     AngularFireStorageModule

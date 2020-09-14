@@ -1,9 +1,11 @@
 #! /bin/bash -x
+project=$1
+rootDir=`pwd`
 
 # Point settings to production
 firebase use product
 cd .env
-ln -fs environments.production.json environments.json
+ln -fs $project/environments.production.json environments.json
 cd ..
 
 # build
@@ -16,5 +18,5 @@ firebase deploy
 # Restore settings to local develop
 firebase use default
 cd .env
-ln -fs environments.local.json environments.json
+ln -fs $project/environments.local.json environments.json
 cd ..

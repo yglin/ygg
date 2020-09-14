@@ -11,7 +11,6 @@ import {
 } from 'rxjs';
 import { map, take, timeout } from 'rxjs/operators';
 import { isEmpty } from 'lodash';
-import * as env from '@ygg/env/environments.json';
 
 type FireQueryRef =
   | FirebaseFirestore.CollectionReference

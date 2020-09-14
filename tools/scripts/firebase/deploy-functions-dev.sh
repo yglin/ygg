@@ -6,7 +6,7 @@ rootDir=`pwd`
 # Channel settings to product project
 firebase use develop
 cd .env
-ln -fs environments.develop.json environments.json
+ln -fs $project/environments.develop.json environments.json
 cd $rootDir
 
 # build
@@ -19,5 +19,5 @@ firebase deploy --only functions
 # Restore settings to develop project
 firebase use default
 cd .env
-ln -fs environments.local.json environments.json
+ln -fs $project/environments.local.json environments.json
 cd $rootDir

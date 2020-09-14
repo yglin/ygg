@@ -3,7 +3,7 @@ import { isObject, isBoolean } from 'lodash';
 import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/firestore';
-import * as env from '@ygg/env/environments.local.json';
+import { getEnv } from '@ygg/shared/infra/core';
 
 // Constants
 const FIREBASE_TOOLS_YES_ARGUMENT = '-y';
@@ -12,7 +12,7 @@ const FIREBASE_EXTRA_PATH = '$(npm bin)/firebase-extra';
 
 export function attachCustomCommands({ Cypress, cy, firebase }) {
   if (!(window as any).fbInstance) {
-    firebase.initializeApp(env.firebase);
+    firebase.initializeApp(getEnv('firebase'));
   }
 
   /**

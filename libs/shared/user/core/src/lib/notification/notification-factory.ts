@@ -2,6 +2,7 @@ import {
   DataAccessor,
   Emcee,
   generateID,
+  getEnv,
   Query,
   Router
 } from '@ygg/shared/infra/core';
@@ -13,9 +14,10 @@ import { User } from '../user';
 import { UserAccessor } from '../user-accessor';
 import { Notification } from './notification';
 import { NotificationAccessor } from './notification-accessor';
-import * as env from '@ygg/env/environments.json';
 
 export abstract class NotificationFactory {
+  siteConfig = getEnv('siteConfig');
+
   constructor(
     protected userAccessor: UserAccessor,
     protected dataAccessor: DataAccessor,
@@ -39,11 +41,11 @@ export abstract class NotificationFactory {
     data: any;
   }): Promise<Notification> {
     const id = generateID();
-    const notificationLink = `${env.siteConfig.url.protocol}://${env.siteConfig.url.domain}/notifications/${id}`;
+    const notificationLink = `${this.siteConfig.url.protocol}://${this.siteConfig.url.domain}/notifications/${id}`;
     const mailSubject =
-      options.mailSubject || `來自 ${env.siteConfig.title} 的通知`;
+      options.mailSubject || `來自 ${this.siteConfig.title} 的通知`;
     const mailContent = `
-      <h3>來自 ${env.siteConfig.title} 的通知，此為系統自動寄發，請勿回覆</h3>
+      <h3>來自 ${this.siteConfig.title} 的通知，此為系統自動寄發，請勿回覆</h3>
       <br>
       ${options.mailContent}
       <br><br>

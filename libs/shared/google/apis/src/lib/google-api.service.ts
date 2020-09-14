@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-//@ts-ignore
-import { default as env } from '@ygg/env/environments.json';
+import { getEnv } from "@ygg/shared/infra/core";
 
 @Injectable({
   providedIn: 'root'
 })
 export class GoogleApiService {
+  googleEnv = getEnv('google');
   constructor() {}
 
   async loadGoogleApiClient(): Promise<any> {
@@ -23,10 +23,10 @@ export class GoogleApiService {
         gapi.load('client:auth2', () => {
           gapi.client
             .init({
-              apiKey: env.google.api.key,
-              clientId: env.google.api.clientId,
-              discoveryDocs: env.google.api.discoveryDocs,
-              scope: env.google.api.scope
+              apiKey: this.googleEnv.api.key,
+              clientId: this.googleEnv.api.clientId,
+              discoveryDocs: this.googleEnv.api.discoveryDocs,
+              scope: this.googleEnv.api.scope
             })
             .then(
               () => {
@@ -64,21 +64,21 @@ export class GoogleApiService {
     return new Promise((resolve, reject) => {
       try {
         window['onLoadGoogleApi'] = () => {
-          console.log(`Done loading google api from ${env.google.api.url}`);
+          console.log(`Done loading google api from ${this.googleEnv.api.url}`);
           resolve(window['gapi']);
         };
         const scriptElement = document.createElement('script');
         scriptElement.type = 'text/javascript';
-        scriptElement.src = env.google.api.url;
+        scriptElement.src = this.googleEnv.api.url;
         scriptElement.setAttribute('onload', 'onLoadGoogleApi()');
         scriptElement.setAttribute(
           'onreadystatechange',
           "if (this.readyState === 'complete') this.onload()"
         );
-        console.log(`Start loading google api from ${env.google.api.url}`);
+        console.log(`Start loading google api from ${this.googleEnv.api.url}`);
         document.getElementsByTagName('head')[0].appendChild(scriptElement);
       } catch (error) {
-        console.error(`Failed to load ${env.google.api.url}, ${error.message}`);
+        console.error(`Failed to load ${this.googleEnv.api.url}, ${error.message}`);
         reject(error);
       }
     });

@@ -5,8 +5,8 @@ import * as admin from 'firebase-admin';
 import * as path from 'path';
 import { Tag, Tags, Taggable, Tagging } from "@ygg/tags/core";
 import { FeaturesList } from 'firebase-functions-test/lib/features';
-import * as env from '@ygg/env/environments.json';
 import { createOnWriteTrigger } from "./on-write-taggable";
+import { getEnv } from '@ygg/shared/infra/core';
 
 // you should pass projectConfig and path to serviceAccountKey like this
 // path.resolve defaults to directory where you're executing test command
@@ -30,6 +30,8 @@ class StubTaggable implements Taggable {
     }
   }
 }
+
+const firebaseConfig = getEnv('firebase');
 
 
 describe('Tags modification on write to Taggable', () => {
@@ -136,7 +138,7 @@ describe('Tags modification on write to Taggable', () => {
 
   beforeAll(async done => {
     testEnv = functionsTest(
-      env.firebase,
+      firebaseConfig,
       path.resolve('.firebase/serviceAccount.json')
     );
     wrappedFunction = testEnv.wrap(createOnWriteTrigger(stubCollection));

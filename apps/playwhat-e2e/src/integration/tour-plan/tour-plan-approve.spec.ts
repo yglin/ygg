@@ -11,6 +11,7 @@ import {
   TourPlanAdminPageObjectCypress,
   TourPlanPageObjectCypress
 } from '@ygg/playwhat/test';
+import { getEnv } from '@ygg/shared/infra/core';
 import { Html } from '@ygg/shared/omni-types/core';
 import {
   getCurrentUser,
@@ -38,9 +39,10 @@ import {
   TourPlanScheduledOneEvent
 } from '../schedule/sample-schedules';
 import { TourPlanWithPlaysNoEquipment } from './sample-tour-plan';
-import * as env from '@ygg/env/environments.json';
 
-const mailSlurpInbox = env.mailslurp.inboxes[0];
+const siteConfig = getEnv('siteConfig');
+const mailSlurpConfig = getEnv('mailslurp');
+const mailSlurpInbox = mailSlurpConfig.inboxes[0];
 
 describe('Approve scheduled events of tour-plan', () => {
   const siteNavigator = new SiteNavigator();
@@ -172,7 +174,7 @@ describe('Approve scheduled events of tour-plan', () => {
       // console.log(email);
       // Extract link
       const regEx = new RegExp(
-        `href="${env.siteConfig.url.protocol}://${env.siteConfig.url.domain}/(.*)"`
+        `href="${siteConfig.url.protocol}://${siteConfig.url.domain}/(.*)"`
       );
       const links = regEx.exec(email.body);
       if (isEmpty(links) || links.length < 2) {
@@ -302,7 +304,7 @@ describe('Approve scheduled events of tour-plan', () => {
         `您的遊程：${TourPlanScheduled3Events.name} 已確認可成行，可以開始付款流程。`
       );
       const regEx = new RegExp(
-        `href="${env.siteConfig.url.protocol}://${env.siteConfig.url.domain}/(.*)"`
+        `href="${siteConfig.url.protocol}://${siteConfig.url.domain}/(.*)"`
       );
       const links = regEx.exec(email.body);
       if (isEmpty(links) || links.length < 2) {

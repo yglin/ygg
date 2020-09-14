@@ -7,7 +7,7 @@ rootDir=`pwd`
 # Point settings to develop
 firebase use develop
 cd .env
-ln -fs environments.develop.json environments.json
+ln -fs $project/environments.develop.json environments.json
 cd $rootDir
 
 # Build
@@ -23,5 +23,5 @@ firebase deploy --only hosting:$project
 # Restore settings to local develop
 firebase use default
 cd .env
-ln -fs environments.local.json environments.json
+ln -fs $project/environments.local.json environments.json
 cd $rootDir
