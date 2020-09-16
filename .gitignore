@@ -45,6 +45,7 @@ apps/*-e2e/data
 **/firebase/emulators
 *.xcf
 **/gimp
+serviceAccount.json
 
 # System Files
 .DS_Store
