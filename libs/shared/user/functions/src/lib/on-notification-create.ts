@@ -1,9 +1,8 @@
 import * as functions from 'firebase-functions';
 import { Notification } from '@ygg/shared/user/core';
-const mailgun = require('mailgun-js')({
-  apiKey: 'key-ec2a8df6896b9c64bcd02fa7c64ba663',
-  domain: 'mail.ygg.tw'
-});
+import { getEnv } from '@ygg/shared/infra/core';
+const mailgunConfig = getEnv('mailgun');
+const mailgun = require('mailgun-js')(mailgunConfig);
 const MailComposer = require('nodemailer/lib/mail-composer');
 
 // const NotificationCollection = 'notifications';
