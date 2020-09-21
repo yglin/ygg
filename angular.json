@@ -2111,7 +2111,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ourbox:build"
+            "browserTarget": "ourbox:build",
+            "port": 54088
           },
           "configurations": {
             "production": {

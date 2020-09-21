@@ -1,14 +1,18 @@
 import { ImitationTourPlan } from '@ygg/playwhat/core';
+import { getEnv } from '@ygg/shared/infra/core';
 import { User } from '@ygg/shared/user/core';
 import { userAccessor, notificationFactory } from '@ygg/shared/user/functions';
 import { TheThing } from '@ygg/the-thing/core';
 import * as functions from 'firebase-functions';
 
+const firebaseEnv = getEnv('firebase');
+
 // const notificationFactory: NotificationFactory;
 
 // const NotificationCollection = 'notifications';
-export const onTourPlanStateApproved = functions.firestore
-  .document(`${ImitationTourPlan.collection}/{id}`)
+export const onTourPlanStateApproved = functions
+  .region(firebaseEnv.region)
+  .firestore.document(`${ImitationTourPlan.collection}/{id}`)
   .onUpdate(async (change, context) => {
     const tourPlanBefore: TheThing = TheThing.deserializerJSON(
       change.before.data()

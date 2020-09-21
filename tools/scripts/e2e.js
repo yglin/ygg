@@ -1,11 +1,12 @@
 const fs = require('fs');
 const { entries } = require('lodash');
 const spawn = require('child-process-promise').spawn;
-var args = process.argv.slice(2);
-var project = args[0];
-var rootDir = process.cwd();
-var projectDir = `${rootDir}/apps/${project}`;
-var envDir = `${rootDir}/.env`;
+const args = process.argv.slice(2);
+const project = args[0];
+const rootDir = process.cwd();
+const projectDir = `${rootDir}/apps/${project}`;
+const envDir = `${rootDir}/.env`;
+const scriptSetupEnv = `${rootDir}/tools/scripts/setup-environments.js`;
 
 async function run(command, args, options) {
   args = args || [];
@@ -48,10 +49,10 @@ async function main() {
   // await run('npx', ['cypress-firebase', 'createTestEnvFile'], {
   //   cwd: projectDir
   // });
-  
-  // Point enviroments to project's environments json
+
+  // Setup enviroments to project's environments json
   const projectTarget = project.replace(/-e2e/g, '');
-  await run('ln', ['-fs', `${projectTarget}/environments.local.json`, `environments.json`], {cwd: envDir})
+  await run('node', [scriptSetupEnv, projectTarget, 'local'], { cwd: rootDir });
 
   await runPreScript(`${projectDir}/pre-e2e.sh`, {
     cwd: projectDir

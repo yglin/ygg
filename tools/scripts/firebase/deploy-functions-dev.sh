@@ -3,11 +3,9 @@
 project=$1
 rootDir=`pwd`
 
-# Channel settings to product project
+# Setup environment to develop
 firebase use develop
-cd .env
-ln -fs $project/environments.develop.json environments.json
-cd $rootDir
+node tools/scripts/setup-environments.js $project develop
 
 # build
 ng build functions --prod

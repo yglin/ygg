@@ -36,7 +36,7 @@ export class Notification implements Entity {
       mailContent: '<pre>This is a forged mail, nothing matters</pre>',
       confirmMessage:
         "You've received a forged notification. Something is wrong",
-      landingUrl: 'http:localhost:4200'
+      landingUrl: 'http:localhost:54088'
     });
     return ntf;
   }

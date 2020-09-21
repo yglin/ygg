@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "./tools/scripts/serve.sh",
     "build": "ng build",
     "test": "ng test",
     "lint": "./node_modules/.bin/nx workspace-lint && ng lint",
@@ -126,7 +126,7 @@
     "async": "^3.1.0",
     "child-process-promise": "^2.2.1",
     "codelyzer": "~5.1.0",
-    "cypress": "^5.1.0",
+    "cypress": "^5.2.0",
     "cypress-firebase": "^1.0.0",
     "cypress-promise": "^1.1.0",
     "dotenv": "8.0.0",

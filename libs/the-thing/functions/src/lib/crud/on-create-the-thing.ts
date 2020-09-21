@@ -10,6 +10,9 @@ import {
 import { relationAccessor, locationRecordAccessor } from '../global';
 import { User } from '@ygg/shared/user/core';
 import { OmniTypes, Location } from '@ygg/shared/omni-types/core';
+import { getEnv } from '@ygg/shared/infra/core';
+
+const firebaseEnv = getEnv('firebase');
 
 export function generateOnCreateFunctions(imitations: TheThingImitation[]) {
   const onCreateFunctions = {};
@@ -17,7 +20,7 @@ export function generateOnCreateFunctions(imitations: TheThingImitation[]) {
   for (const collection of collections) {
     onCreateFunctions[
       `onCreateTheThing${upperFirst(camelCase(collection))}`
-    ] = functions.firestore
+    ] = functions.region(firebaseEnv.region).firestore
       .document(`${collection}/{id}`)
       .onCreate(
         async (

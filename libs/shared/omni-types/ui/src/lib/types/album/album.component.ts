@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   Output
 } from '@angular/core';
-import { Album } from '@ygg/shared/omni-types/core';
+import { Album, Image } from '@ygg/shared/omni-types/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { ImageUploaderComponent } from '../image/image-uploader/image-uploader.component';
@@ -28,8 +28,8 @@ export class AlbumComponent implements OnInit, OnDestroy, OnChanges {
 
   get coverSrc(): string {
     return (
-      (this.album && this.album.cover && this.album.cover.src) ||
-      'https://firebasestorage.googleapis.com/v0/b/localhost-146909.appspot.com/o/images%2Fno-image.jpg?alt=media&token=d6182b16-e1b5-4719-b19d-7530a480e472'
+      (this.album && this.album.cover && this.album.cover.src) || 
+      Image.DEFAULT_IMAGE_SRC
     );
   }
 

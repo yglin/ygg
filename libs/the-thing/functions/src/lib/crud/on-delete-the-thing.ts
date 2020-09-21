@@ -20,7 +20,9 @@ import {
   locationRecordAccessor
 } from '../global';
 import { User } from '@ygg/shared/user/core';
-import { Query } from '@ygg/shared/infra/core';
+import { getEnv, Query } from '@ygg/shared/infra/core';
+
+const firebaseEnv = getEnv('firebase');
 
 export function generateOnDeleteFunctions(imitations: TheThingImitation[]) {
   const onDeleteFunctions = {};
@@ -28,7 +30,7 @@ export function generateOnDeleteFunctions(imitations: TheThingImitation[]) {
   for (const collection of collections) {
     onDeleteFunctions[
       `onDeleteTheThing${upperFirst(camelCase(collection))}`
-    ] = functions.firestore
+    ] = functions.region(firebaseEnv.region).firestore
       .document(`${collection}/{id}`)
       .onDelete(
         async (

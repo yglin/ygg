@@ -4,9 +4,7 @@ rootDir=`pwd`
 
 # Point settings to production
 firebase use product
-cd .env
-ln -fs $project/environments.production.json environments.json
-cd ..
+node tools/scripts/setup-environments.js $project product
 
 # build
 ng build --prod

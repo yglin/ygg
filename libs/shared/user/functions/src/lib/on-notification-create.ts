@@ -4,10 +4,12 @@ import { getEnv } from '@ygg/shared/infra/core';
 const mailgunConfig = getEnv('mailgun');
 const mailgun = require('mailgun-js')(mailgunConfig);
 const MailComposer = require('nodemailer/lib/mail-composer');
+const firebaseEnv = getEnv('firebase');
 
 // const NotificationCollection = 'notifications';
-export const onNotificationCreate = functions.firestore
-  .document(`${Notification.collection}/{id}`)
+export const onNotificationCreate = functions
+  .region(firebaseEnv.region)
+  .firestore.document(`${Notification.collection}/{id}`)
   .onCreate((snap, context) => {
     const notification: Notification = Notification.deserializer(snap.data());
     // const mailData = {

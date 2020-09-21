@@ -9,7 +9,7 @@ export enum ImageType {
 }
 
 export class Image implements SerializableJSON {
-  static DEFAULT_IMAGE_SRC = 'https://firebasestorage.googleapis.com/v0/b/localhost-146909.appspot.com/o/images%2Fno-image.jpg?alt=media&token=d6182b16-e1b5-4719-b19d-7530a480e472';
+  static DEFAULT_IMAGE_SRC = '/assets/images/no-image.jpg';
   static SUPPORTED_IMAGE_EXT = ['jpg', 'png', 'gif', 'jpeg'];
 
   private _src: string;

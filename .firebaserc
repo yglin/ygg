@@ -1,18 +1,13 @@
 {
   "projects": {
-    "default": "localhost-146909",
-    "develop": "localhost-146909",
-    "product": "playwhat-415b9"
+    "default": "develop-289806",
+    "develop": "develop-289806"
   },
   "targets": {
-    "localhost-146909": {
+    "develop-289806": {
       "hosting": {
-        "playwhat": [
-          "playwhat",
-          "playwhat-dev"
-        ],
         "ourbox": [
-          "ourbox-dev"
+          "ourbox-90759"
         ]
       }
     }

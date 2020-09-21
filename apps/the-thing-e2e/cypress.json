@@ -9,6 +9,6 @@
   "screenshotsFolder": "../../dist/cypress/apps/the-thing-e2e/screenshots",
   "chromeWebSecurity": false,
   "testFiles": "**/*.spec.*",
-  "baseUrl": "http://localhost:4200",
+  "baseUrl": "http://localhost:54088",
   "watchForFileChanges": false
 }

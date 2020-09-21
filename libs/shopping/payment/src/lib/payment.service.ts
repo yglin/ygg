@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class PaymentService {
   apiUrl =
-    'https://us-central1-localhost-146909.cloudfunctions.net/api/payments';
+    'https://us-central1-develop-289806.cloudfunctions.net/api/payments';
   collection = 'payments';
 
   constructor(

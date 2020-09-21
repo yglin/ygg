@@ -1,3 +1,4 @@
+import { getEnv } from '@ygg/shared/infra/core';
 import { Location, OmniTypes } from '@ygg/shared/omni-types/core';
 import { User } from '@ygg/shared/user/core';
 import {
@@ -18,6 +19,8 @@ import {
 } from 'lodash';
 import { locationRecordAccessor, relationAccessor } from '../global';
 
+const firebaseEnv = getEnv('firebase');
+
 function isLocationCellEqual(
   cellA: TheThingCell,
   cellB: TheThingCell
@@ -37,7 +40,7 @@ export function generateOnUpdateFunctions(imitations: TheThingImitation[]) {
   for (const collection of collections) {
     onUpdateFunctions[
       `onUpdateTheThing${upperFirst(camelCase(collection))}`
-    ] = functions.firestore
+    ] = functions.region(firebaseEnv.region).firestore
       .document(`${collection}/{id}`)
       .onUpdate(
         async (

@@ -4,10 +4,14 @@ import { TheThing } from '@ygg/the-thing/core';
 import { take } from 'rxjs/operators';
 import { relationFactory } from '@ygg/the-thing/functions';
 import { tourPlanFactory } from '../factories';
+import { getEnv } from '@ygg/shared/infra/core';
+
+const firebaseEnv = getEnv('firebase');
 
 // const NotificationCollection = 'notifications';
-export const onEventApprovalOfHost = functions.firestore
-  .document(`${ImitationEvent.collection}/{id}`)
+export const onEventApprovalOfHost = functions
+  .region(firebaseEnv.region)
+  .firestore.document(`${ImitationEvent.collection}/{id}`)
   .onUpdate(async (change, context) => {
     // console.log('HI~!! MAMA!!!');
     const eventBefore = TheThing.deserializerJSON(change.before.data());
