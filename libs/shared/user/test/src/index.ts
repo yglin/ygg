@@ -6,3 +6,4 @@ export * from './lib/my-notification-list.po';
 export * from './lib/notification.po';
 export * from './lib/user-thumbnail.po';
 export * from './lib/users-by-email-selector.po';
+export * from './lib/forge-users';

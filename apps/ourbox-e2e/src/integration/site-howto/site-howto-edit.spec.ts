@@ -6,15 +6,15 @@ import {
   theMockDatabase
 } from '@ygg/shared/test/cypress';
 import { User } from '@ygg/shared/user/core';
-import { loginTestUser, logout } from '@ygg/shared/user/test';
+import { loginTestUser, logout, testUsers } from '@ygg/shared/user/test';
 import { SiteNavigator } from '../../support/site-navigator';
 
 describe('Edit site-howto page in place', () => {
   const siteNavigator = new SiteNavigator();
   const siteHowtoPO = new SiteHowtoPageObjectCypress();
 
-  const regularUser = User.forge();
-  const adminUser = User.forge();
+  const regularUser = testUsers[0];
+  const adminUser = testUsers[1];
   const users: User[] = [regularUser, adminUser];
   const testContent = `地球上提供給我們的物質財富足以滿足每個人的需求，但不足以滿足每個人的貪慾。原文網址：https://kknews.cc/essay/l88gynb.html`;
   const contentHtml = new Html(testContent);

@@ -44,7 +44,7 @@ export function loginTestUser(
   }
   const account: TestAccount = {
     email: user.email,
-    password: getEnv('test.account.password')
+    password: user.password
   };
   loginDialogPO.loginTest(account);
   return accountWidgetPO.expectLoggedIn();

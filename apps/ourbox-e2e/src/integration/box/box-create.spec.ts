@@ -25,7 +25,8 @@ import {
   AccountWidgetPageObjectCypress,
   loginTestUser,
   logout,
-  MyNotificationListPageObjectCypress
+  MyNotificationListPageObjectCypress,
+  testUsers
 } from '@ygg/shared/user/test';
 import { TheThingPageObjectCypress } from '@ygg/the-thing/test';
 import { SiteNavigator } from '../../support/site-navigator';
@@ -44,8 +45,8 @@ describe('Creation of box', () => {
   const itemWarehousePO = new ItemWarehousePageObjectCypress();
   const itemPO = new TheThingPageObjectCypress('', ImitationItem);
 
-  const testUser = User.forge();
-  const otherUser = User.forge();
+  const testUser = testUsers[0];
+  const otherUser = testUsers[1];
   const testItem01 = ImitationItem.forgeTheThing();
   testItem01.setState(ImitationItem.stateName, ImitationItem.states.available);
   const testItem02 = ImitationItem.forgeTheThing();
@@ -53,8 +54,9 @@ describe('Creation of box', () => {
 
   before(function() {
     logoutBackground().then(() => {
-      theMockDatabase.insert(`${User.collection}/${testUser.id}`, testUser);
-      theMockDatabase.insert(`${User.collection}/${otherUser.id}`, otherUser);
+      cy.wrap(testUsers).each((user: User) => {
+        theMockDatabase.insert(`${User.collection}/${user.id}`, user);
+      });
       theMockDatabase.insert(
         `${ImitationItem.collection}/${testItem01.id}`,
         testItem01

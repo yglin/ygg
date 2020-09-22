@@ -22,7 +22,7 @@ import {
   MyBoxesPageObjectCypress
 } from '@ygg/ourbox/test';
 import { Location } from '@ygg/shared/omni-types/core';
-import { logout, loginTestUser } from '@ygg/shared/user/test';
+import { logout, loginTestUser, testUsers } from '@ygg/shared/user/test';
 
 describe('Search items on map', () => {
   // Page objects
@@ -38,8 +38,8 @@ describe('Search items on map', () => {
   // const myNotificationsPO = new MyNotificationListPageObjectCypress();
   // const myItemTransfersPO = new MyItemTransfersPageObjectCypress();
 
-  const me: User = User.forge();
-  const anotherboxMember: User = User.forge();
+  const me: User = testUsers[0];
+  const anotherboxMember: User = testUsers[1];
 
   const mapBound1: GeoBound = new GeoBound({
     north: 23.93688,

@@ -11,16 +11,19 @@ import {
 } from '@ygg/ourbox/test';
 import { SiteNavigator } from '../../support/site-navigator';
 import { User } from '@ygg/shared/user/core';
-import { theMockDatabase } from '@ygg/shared/test/cypress';
+import {
+  theMockDatabase,
+  logout as logoutBackground
+} from '@ygg/shared/test/cypress';
 import { RelationRecord } from '@ygg/the-thing/core';
-import { loginTestUser } from '@ygg/shared/user/test';
+import { loginTestUser, testUsers } from '@ygg/shared/user/test';
 
 describe('Create item in box', () => {
   const siteNavigator = new SiteNavigator();
   const myBoxesPO = new MyBoxesPageObjectCypress();
   const boxViewPO = new BoxViewPageObjectCypress();
   const itemPO = new ItemPageObjectCypress();
-  const testUser = User.forge();
+  const testUser = testUsers[0];
   const testBox = ImitationBox.forgeTheThing();
   testBox.ownerId = testUser.id;
   testBox.setState(ImitationBox.stateName, ImitationBox.states.open);
@@ -29,15 +32,17 @@ describe('Create item in box', () => {
   testItem.setState(ImitationItem.stateName, ImitationItem.states.available);
 
   before(() => {
-    theMockDatabase.insert(`${User.collection}/${testUser.id}`, testUser);
-    theMockDatabase.insert(`${testBox.collection}/${testBox.id}`, testBox);
-    theMockDatabase.insert(`${testItem.collection}/${testItem.id}`, testItem);
-    cy.visit('/');
-    loginTestUser(testUser);
-    siteNavigator.gotoMyBoxes();
-    myBoxesPO.expectVisible();
-    myBoxesPO.gotoBox(testBox);
-    boxViewPO.expectVisible();
+    logoutBackground().then(() => {
+      theMockDatabase.insert(`${User.collection}/${testUser.id}`, testUser);
+      theMockDatabase.insert(`${testBox.collection}/${testBox.id}`, testBox);
+      theMockDatabase.insert(`${testItem.collection}/${testItem.id}`, testItem);
+      cy.visit('/');
+      loginTestUser(testUser);
+      siteNavigator.gotoMyBoxes();
+      myBoxesPO.expectVisible();
+      myBoxesPO.gotoBox(testBox);
+      boxViewPO.expectVisible();
+    });
   });
 
   after(() => {

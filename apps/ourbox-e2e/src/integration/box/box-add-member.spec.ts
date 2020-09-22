@@ -20,13 +20,13 @@ import {
   logout,
   AccountWidgetPageObjectCypress,
   MyNotificationListPageObjectCypress,
-  UsersByEmailSelectorPageObjectCypress
+  UsersByEmailSelectorPageObjectCypress,
+  testUsers
 } from '@ygg/shared/user/test';
 import {
   YggDialogPageObjectCypress,
   EmceePageObjectCypress
 } from '@ygg/shared/ui/test';
-import { getEnv, generateID } from '@ygg/shared/infra/core';
 
 describe('Adding and invite new box member', () => {
   const siteNavigator = new SiteNavigator();
@@ -40,13 +40,9 @@ describe('Adding and invite new box member', () => {
   const accountWidgetPO = new AccountWidgetPageObjectCypress();
   const myNotificationsPO = new MyNotificationListPageObjectCypress();
 
-  const users: User[] = [];
-  const boxOwner: User = User.forge();
-  users.push(boxOwner);
-  const boxMember1: User = User.forge();
-  users.push(boxMember1);
-  const newMember: User = User.forge();
-  users.push(newMember);
+  const boxOwner: User = testUsers[0]
+  const boxMember1: User = testUsers[1];
+  const newMember: User = testUsers[2];
 
   const theThings: TheThing[] = [];
   const box = ImitationBox.forgeTheThing();
@@ -57,7 +53,7 @@ describe('Adding and invite new box member', () => {
 
   before(function() {
     logoutBackground().then(() => {
-      cy.wrap(users).each((user: User) => {
+      cy.wrap(testUsers).each((user: User) => {
         theMockDatabase.insert(`${User.collection}/${user.id}`, user);
       });
       cy.wrap(theThings).each((theThing: TheThing) => {

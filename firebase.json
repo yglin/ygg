@@ -6,6 +6,12 @@
     ],
     "source": "dist/apps/functions"
   },
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  },
   "hosting": [
     {
       "target": "ourbox",

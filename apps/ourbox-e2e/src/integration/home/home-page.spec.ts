@@ -14,7 +14,7 @@ import {
 import { Document, theMockDatabase } from '@ygg/shared/test/cypress';
 import { SideDrawerPageObjectCypress } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
-import { loginTestUser, logout } from '@ygg/shared/user/test';
+import { loginTestUser, logout, testUsers } from '@ygg/shared/user/test';
 import { SiteNavigator } from '../../support/site-navigator';
 import { Page } from '@ygg/shared/ui/core';
 
@@ -34,8 +34,8 @@ describe('Ourbox home page, as guest(not login)', () => {
 
   const sampleBox = ImitationBox.forgeTheThing();
   const SampleDocuments: Document[] = [];
-  const userWithoutBox: User = User.forge();
-  const userWithBox: User = User.forge();
+  const userWithoutBox: User = testUsers[0];
+  const userWithBox: User = testUsers[1];
 
   sampleBox.addUsersOfRole(RelationshipBoxMember.role, [userWithBox.id]);
   SampleDocuments.push({

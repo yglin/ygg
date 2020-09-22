@@ -24,6 +24,7 @@ export class User implements Entity {
   avatarUrl: URL;
   providers: any;
   state: UserState;
+  password?: string;
 
   static isUser(value: any): value is User {
     return !!(value && value.id);

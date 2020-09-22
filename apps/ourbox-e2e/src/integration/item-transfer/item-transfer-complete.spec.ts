@@ -29,7 +29,8 @@ import {
   AccountWidgetPageObjectCypress,
   loginTestUser,
   logout,
-  MyNotificationListPageObjectCypress
+  MyNotificationListPageObjectCypress,
+  testUsers
 } from '@ygg/shared/user/test';
 import { SiteNavigator } from '../../support/site-navigator';
 
@@ -43,9 +44,9 @@ describe('Complete the item-transfer task', () => {
   const myNotificationsPO = new MyNotificationListPageObjectCypress();
   const myItemTransfersPO = new MyItemTransfersPageObjectCypress();
 
-  const testUser = User.forge();
-  const testGiver = User.forge();
-  const testReceiver = User.forge();
+  const testUser = testUsers[0];
+  const testGiver = testUsers[1];
+  const testReceiver = testUsers[2];
   const testItem = ImitationItem.forgeTheThing();
   testItem.ownerId = testUser.id;
   testItem.setState(ImitationItem.stateName, ImitationItem.states.transfer);

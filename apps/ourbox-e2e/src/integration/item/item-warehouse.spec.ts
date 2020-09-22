@@ -17,7 +17,7 @@ import {
 import { SiteNavigator } from '../../support/site-navigator';
 import { MapSearchPageObjectCypress, ItemWarehousePageObjectCypress } from '@ygg/ourbox/test';
 import { Location } from '@ygg/shared/omni-types/core';
-import { loginTestUser } from '@ygg/shared/user/test';
+import { loginTestUser, testUsers } from '@ygg/shared/user/test';
 
 describe('Search items in warehouse page', () => {
   // Page objects
@@ -32,7 +32,7 @@ describe('Search items in warehouse page', () => {
   // const myItemTransfersPO = new MyItemTransfersPageObjectCypress();
   const itemWarehousePO = new ItemWarehousePageObjectCypress();
 
-  const me: User = User.forge();
+  const me: User = testUsers[0];
 
   function placeItemInBound(item: TheThing, bound: GeoBound) {
     const latitude = random(bound.south, bound.north, true);

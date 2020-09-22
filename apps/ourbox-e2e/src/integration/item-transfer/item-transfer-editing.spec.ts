@@ -22,7 +22,8 @@ import {
   AccountWidgetPageObjectCypress,
   loginTestUser,
   logout,
-  MyNotificationListPageObjectCypress
+  MyNotificationListPageObjectCypress,
+  testUsers
 } from '@ygg/shared/user/test';
 import { RelationRecord } from '@ygg/the-thing/core';
 import { SiteNavigator } from '../../support/site-navigator';
@@ -37,9 +38,9 @@ describe('Item-transfer editing', () => {
   const myNotificationsPO = new MyNotificationListPageObjectCypress();
   const myItemTransfersPO = new MyItemTransfersPageObjectCypress();
 
-  const testUser = User.forge();
-  const testHolder = User.forge();
-  const testRequester = User.forge();
+  const testUser = testUsers[0];
+  const testHolder = testUsers[1];
+  const testRequester = testUsers[2];
   const testItem = ImitationItem.forgeTheThing();
   testItem.ownerId = testUser.id;
   testItem.setState(ImitationItem.stateName, ImitationItem.states.available);

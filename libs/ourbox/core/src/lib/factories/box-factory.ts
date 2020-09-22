@@ -398,6 +398,8 @@ export class BoxFactory {
     if (!(cacheId in this.ObservableCaches)) {
       this.ObservableCaches[cacheId] = this.authenticator.currentUser$.pipe(
         switchMap(user => {
+          // console.log(`Find my member boxes`);
+          // console.log(user);
           if (!user) {
             return of([]);
           } else {

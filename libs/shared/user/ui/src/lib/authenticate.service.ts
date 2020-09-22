@@ -63,15 +63,10 @@ export class AuthenticateService implements OnDestroy {
 
   async loginTestAccount(account: TestAccount) {
     try {
-      const password = getEnv('test.account.password');
-      if (!password) {
-        throw new Error(
-          `Not found password of test account, test login not supported`
-        );
-      }
-      if (account.password !== password) {
-        throw new Error(`Password not match`);
-      }
+      await this.angularFireAuth.auth.signInWithEmailAndPassword(
+        account.email,
+        account.password
+      );
       const user: User = await this.userService.findByEmail(account.email);
       this.currentUser$.next(user);
     } catch (error) {
