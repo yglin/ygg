@@ -40,14 +40,16 @@ export function generateOnUpdateFunctions(imitations: TheThingImitation[]) {
   for (const collection of collections) {
     onUpdateFunctions[
       `onUpdateTheThing${upperFirst(camelCase(collection))}`
-    ] = functions.region(firebaseEnv.region).firestore
-      .document(`${collection}/{id}`)
+    ] = functions
+      .region(firebaseEnv.region)
+      .firestore.document(`${collection}/{id}`)
       .onUpdate(
         async (
           snapshot: functions.Change<functions.firestore.QueryDocumentSnapshot>,
           context: functions.EventContext
         ) => {
           try {
+            console.log(`On update TheThing ${context.params.id}`);
             const theThingBefore = new TheThing().fromJSON(
               snapshot.before.data()
             );

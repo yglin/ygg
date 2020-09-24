@@ -11,21 +11,11 @@ import {
   MyItemTransfersPageObjectCypress
 } from '@ygg/ourbox/test';
 import { Html } from '@ygg/shared/omni-types/core';
-import {
-  logout as logoutBackground,
-  theMockDatabase
-} from '@ygg/shared/test/cypress';
+import { beforeAll, theMockDatabase } from '@ygg/shared/test/cypress';
 import { Comment } from '@ygg/shared/thread/core';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
-import {
-  AccountWidgetPageObjectCypress,
-  loginTestUser,
-  logout,
-  MyNotificationListPageObjectCypress,
-  testUsers
-} from '@ygg/shared/user/test';
-import { RelationRecord } from '@ygg/the-thing/core';
+import { loginTestUser, logout, testUsers } from '@ygg/shared/user/test';
 import { SiteNavigator } from '../../support/site-navigator';
 
 describe('Item-transfer editing', () => {
@@ -34,8 +24,6 @@ describe('Item-transfer editing', () => {
   const itemPO = new ItemPageObjectCypress();
   const itemTransferPO = new ItemTransferPageObjectCypress();
   const emceePO = new EmceePageObjectCypress();
-  const accountWidgetPO = new AccountWidgetPageObjectCypress();
-  const myNotificationsPO = new MyNotificationListPageObjectCypress();
   const myItemTransfersPO = new MyItemTransfersPageObjectCypress();
 
   const testUser = testUsers[0];
@@ -52,6 +40,7 @@ describe('Item-transfer editing', () => {
   testItemTransferChanged.name = testItemTransfer.name;
 
   before(() => {
+    beforeAll();
     theMockDatabase.insert(`${User.collection}/${testUser.id}`, testUser);
     theMockDatabase.insert(`${User.collection}/${testHolder.id}`, testHolder);
     theMockDatabase.insert(
@@ -62,14 +51,12 @@ describe('Item-transfer editing', () => {
       `${ImitationItem.collection}/${testItem.id}`,
       testItem
     );
-    logoutBackground().then(() => {
-      cy.visit('/');
-      loginTestUser(testHolder);
-      siteNavigator.gotoMyHeldItems();
-      myHeldItemsPO.expectVisible();
-      myHeldItemsPO.gotoItem(testItem);
-      itemPO.expectVisible();
-    });
+    cy.visit('/');
+    loginTestUser(testHolder);
+    siteNavigator.gotoMyHeldItems();
+    myHeldItemsPO.expectVisible();
+    myHeldItemsPO.gotoItem(testItem);
+    itemPO.expectVisible();
   });
 
   it('Create the item-transfer but stay in state editing', () => {

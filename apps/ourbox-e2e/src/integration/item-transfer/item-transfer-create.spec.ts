@@ -13,10 +13,7 @@ import {
   MyHeldItemsPageObjectCypress,
   MyItemTransfersPageObjectCypress
 } from '@ygg/ourbox/test';
-import {
-  logout as logoutBackground,
-  theMockDatabase
-} from '@ygg/shared/test/cypress';
+import { beforeAll, theMockDatabase } from '@ygg/shared/test/cypress';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 import { Notification, User } from '@ygg/shared/user/core';
 import {
@@ -26,7 +23,6 @@ import {
   MyNotificationListPageObjectCypress,
   testUsers
 } from '@ygg/shared/user/test';
-import { RelationRecord } from '@ygg/the-thing/core';
 import { SiteNavigator } from '../../support/site-navigator';
 
 describe('Create an item-transfer task', () => {
@@ -71,6 +67,7 @@ describe('Create an item-transfer task', () => {
   testItemNoRequester.setUserOfRole(RelationshipItemHolder.role, testHolder.id);
 
   before(() => {
+    beforeAll();
     theMockDatabase.insert(`${User.collection}/${testUser.id}`, testUser);
     theMockDatabase.insert(`${User.collection}/${testHolder.id}`, testHolder);
     theMockDatabase.insert(
@@ -85,14 +82,12 @@ describe('Create an item-transfer task', () => {
       `${ImitationItem.collection}/${testItemNoRequester.id}`,
       testItemNoRequester
     );
-    logoutBackground().then(() => {
-      cy.visit('/');
-      loginTestUser(testHolder);
-      siteNavigator.gotoMyHeldItems();
-      myHeldItemsPO.expectVisible();
-      myHeldItemsPO.gotoItem(testItem);
-      itemPO.expectVisible();
-    });
+    cy.visit('/');
+    loginTestUser(testHolder);
+    siteNavigator.gotoMyHeldItems();
+    myHeldItemsPO.expectVisible();
+    myHeldItemsPO.gotoItem(testItem);
+    itemPO.expectVisible();
   });
 
   it('Can not create item-transfer if item not available', () => {

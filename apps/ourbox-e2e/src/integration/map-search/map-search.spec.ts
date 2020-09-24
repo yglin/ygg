@@ -1,28 +1,25 @@
-import { GeoBound } from '@ygg/shared/geography/core';
-import { range, random } from 'lodash';
 import {
-  ImitationItem,
   ImitationBox,
   ImitationBoxFlags,
+  ImitationItem,
+  ImitationItemCells,
   RelationshipBoxItem,
-  RelationshipBoxMember,
-  ImitationItemCells
+  RelationshipBoxMember
 } from '@ygg/ourbox/core';
-import { TheThing } from '@ygg/the-thing/core';
-import { User } from '@ygg/shared/user/core';
-import {
-  theMockDatabase,
-  logout as logoutBackground
-} from '@ygg/shared/test/cypress';
-import { SiteNavigator } from '../../support/site-navigator';
 import {
   BoxViewPageObjectCypress,
   ItemPageObjectCypress,
   MapSearchPageObjectCypress,
   MyBoxesPageObjectCypress
 } from '@ygg/ourbox/test';
+import { GeoBound } from '@ygg/shared/geography/core';
 import { Location } from '@ygg/shared/omni-types/core';
-import { logout, loginTestUser, testUsers } from '@ygg/shared/user/test';
+import { beforeAll, theMockDatabase } from '@ygg/shared/test/cypress';
+import { User } from '@ygg/shared/user/core';
+import { loginTestUser, logout, testUsers } from '@ygg/shared/user/test';
+import { TheThing } from '@ygg/the-thing/core';
+import { random, range } from 'lodash';
+import { SiteNavigator } from '../../support/site-navigator';
 
 describe('Search items on map', () => {
   // Page objects
@@ -138,6 +135,7 @@ describe('Search items on map', () => {
   forgedTheThings.push(...forgedBoxes);
 
   before(() => {
+    beforeAll();
     theMockDatabase.insert(`${User.collection}/${me.id}`, me);
     theMockDatabase.insert(
       `${User.collection}/${anotherboxMember.id}`,
@@ -146,10 +144,8 @@ describe('Search items on map', () => {
     cy.wrap(forgedTheThings).each((theThing: TheThing) => {
       theMockDatabase.insert(`${theThing.collection}/${theThing.id}`, theThing);
     });
-    logoutBackground().then(() => {
-      cy.visit('/');
-      loginTestUser(me);
-    });
+    cy.visit('/');
+    loginTestUser(me);
   });
 
   after(() => {

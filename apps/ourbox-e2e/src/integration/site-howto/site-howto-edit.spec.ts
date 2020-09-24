@@ -1,10 +1,6 @@
 import { SiteHowtoPageObjectCypress } from '@ygg/ourbox/test';
 import { Html } from '@ygg/shared/omni-types/core';
-import {
-  loginAdmin,
-  logout as logoutBackground,
-  theMockDatabase
-} from '@ygg/shared/test/cypress';
+import { beforeAll, theMockDatabase } from '@ygg/shared/test/cypress';
 import { User } from '@ygg/shared/user/core';
 import { loginTestUser, logout, testUsers } from '@ygg/shared/user/test';
 import { SiteNavigator } from '../../support/site-navigator';
@@ -20,12 +16,11 @@ describe('Edit site-howto page in place', () => {
   const contentHtml = new Html(testContent);
 
   before(() => {
+    beforeAll();
     theMockDatabase.insertUsers(users);
     theMockDatabase.setAdmins([adminUser.id]);
-    logoutBackground().then(() => {
-      cy.visit('/');
-      siteNavigator.gotoSiteHowto();
-    });
+    cy.visit('/');
+    siteNavigator.gotoSiteHowto();
   });
 
   after(() => {

@@ -288,12 +288,15 @@ export class BoxFactory {
       if (!box) {
         throw new Error(`找不到寶箱，id = ${boxId}`);
       }
+      this.emcee.showProgress({ message: `加入寶箱 ${box.name} 中` });
       await this.addBoxMember(box.id, invitee.id);
       // console.log(`Box ${box.id} member ${invitee.id} added!!!`);
       this.router.navigate(['/', ImitationBox.routePath, box.id]);
     } catch (error) {
       this.emcee.error(`加入寶箱成員失敗：錯誤原因：${error.message}`);
       return Promise.reject(error);
+    } finally {
+      this.emcee.hideProgress();
     }
   }
 

@@ -12,7 +12,7 @@ import {
 } from '@ygg/ourbox/test';
 import { getEnv } from '@ygg/shared/infra/core';
 import {
-  logout as logoutBackground,
+  beforeAll,
   theMockDatabase
 } from '@ygg/shared/test/cypress';
 import {
@@ -53,20 +53,19 @@ describe('Creation of box', () => {
   testItem02.setState(ImitationItem.stateName, ImitationItem.states.available);
 
   before(function() {
-    logoutBackground().then(() => {
-      cy.wrap(testUsers).each((user: User) => {
-        theMockDatabase.insert(`${User.collection}/${user.id}`, user);
-      });
-      theMockDatabase.insert(
-        `${ImitationItem.collection}/${testItem01.id}`,
-        testItem01
-      );
-      theMockDatabase.insert(
-        `${ImitationItem.collection}/${testItem02.id}`,
-        testItem02
-      );
-      cy.visit('/');
+    beforeAll();
+    cy.wrap(testUsers).each((user: User) => {
+      theMockDatabase.insert(`${User.collection}/${user.id}`, user);
     });
+    theMockDatabase.insert(
+      `${ImitationItem.collection}/${testItem01.id}`,
+      testItem01
+    );
+    theMockDatabase.insert(
+      `${ImitationItem.collection}/${testItem02.id}`,
+      testItem02
+    );
+    cy.visit('/');
   });
 
   after(function() {

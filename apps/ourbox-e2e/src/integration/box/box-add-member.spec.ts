@@ -12,7 +12,7 @@ import {
   BoxViewPageObjectCypress
 } from '@ygg/ourbox/test';
 import {
-  logout as logoutBackground,
+  beforeAll,
   theMockDatabase
 } from '@ygg/shared/test/cypress';
 import {
@@ -27,6 +27,7 @@ import {
   YggDialogPageObjectCypress,
   EmceePageObjectCypress
 } from '@ygg/shared/ui/test';
+import { getEnv } from '@ygg/shared/infra/core';
 
 describe('Adding and invite new box member', () => {
   const siteNavigator = new SiteNavigator();
@@ -40,7 +41,7 @@ describe('Adding and invite new box member', () => {
   const accountWidgetPO = new AccountWidgetPageObjectCypress();
   const myNotificationsPO = new MyNotificationListPageObjectCypress();
 
-  const boxOwner: User = testUsers[0]
+  const boxOwner: User = testUsers[0];
   const boxMember1: User = testUsers[1];
   const newMember: User = testUsers[2];
 
@@ -52,22 +53,18 @@ describe('Adding and invite new box member', () => {
   theThings.push(box);
 
   before(function() {
-    logoutBackground().then(() => {
-      cy.wrap(testUsers).each((user: User) => {
-        theMockDatabase.insert(`${User.collection}/${user.id}`, user);
-      });
-      cy.wrap(theThings).each((theThing: TheThing) => {
-        theMockDatabase.insert(
-          `${theThing.collection}/${theThing.id}`,
-          theThing
-        );
-      });
-      cy.visit('/');
-      loginTestUser(boxOwner);
-      siteNavigator.gotoMyBoxes();
-      myBoxesPO.expectVisible();
-      myBoxesPO.gotoBox(box);
+    beforeAll();
+    cy.wrap(testUsers).each((user: User) => {
+      theMockDatabase.insert(`${User.collection}/${user.id}`, user);
     });
+    cy.wrap(theThings).each((theThing: TheThing) => {
+      theMockDatabase.insert(`${theThing.collection}/${theThing.id}`, theThing);
+    });
+    cy.visit('/');
+    loginTestUser(boxOwner);
+    siteNavigator.gotoMyBoxes();
+    myBoxesPO.expectVisible();
+    myBoxesPO.gotoBox(box);
   });
 
   after(function() {
@@ -101,7 +98,9 @@ describe('Adding and invite new box member', () => {
     emceePO.confirm(
       `送出寶箱成員邀請給以下人員？${newMember.email} ${newMember.name}${emailWithoutUser}`
     );
-    emceePO.alert(`已送出寶箱成員邀請給：${newMember.email} ${newMember.name}${emailWithoutUser}`);
+    emceePO.alert(
+      `已送出寶箱成員邀請給：${newMember.email} ${newMember.name}${emailWithoutUser}`
+    );
     logout();
     loginTestUser(newMember);
     accountWidgetPO.expectNotification(1);
@@ -110,8 +109,8 @@ describe('Adding and invite new box member', () => {
     myNotificationsPO.expectUnreadNotifications([notificationBoxMemberInvite]);
     myNotificationsPO.clickFirstUnreadNotification();
     emceePO.confirm(notificationBoxMemberInvite.confirmMessage);
+    cy.wait(getEnv("siteConfig.dataAccess.timeoutLong", 5000));
     boxViewPO.expectVisible();
     boxViewPO.expectMember(newMember);
   });
-
 });

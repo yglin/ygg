@@ -15,6 +15,7 @@ import { TimeRange } from '@ygg/shared/omni-types/core';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
+import { testUsers } from '@ygg/shared/user/test';
 import { RelationPurchase } from '@ygg/shopping/core';
 import { RelationRecord, TheThing } from '@ygg/the-thing/core';
 import {
@@ -33,29 +34,21 @@ import {
 
 describe('Approve scheduled events by host', () => {
   const siteNavigator = new SiteNavigator();
+  const eventPO = new TheThingPageObjectCypress('', ImitationEvent);
+  const myCalendarPO = new MyCalendarPageObjectCypress();
+  const emceePO = new EmceePageObjectCypress();
+  const myHostEventsDataTablePO = new TheThingDataTablePageObjectCypress(
+    '',
+    ImitationEvent
+  );
+
   ScheduledEvents.forEach(ev =>
     ImitationEvent.setState(ev, ImitationEvent.states.new)
   );
   const SampleThings = SamplePlays.concat(SampleEquipments)
     .concat(ScheduledEvents)
     .concat([TourPlanScheduledOneEvent, TourPlanScheduled3Events]);
-  const tourPlanPO = new TourPlanPageObjectCypress();
-  const myTourPlansPO = new MyThingsDataTablePageObjectCypress(
-    '',
-    ImitationTourPlan
-  );
-  const myHostEventsDataTablePO = new TheThingDataTablePageObjectCypress(
-    '',
-    ImitationEvent
-  );
-  const eventPO = new TheThingPageObjectCypress('', ImitationEvent);
-  const myCalendarPO = new MyCalendarPageObjectCypress();
-  const emceePO = new EmceePageObjectCypress();
-  const plays: TheThing[] = TourPlanScheduled3Events.getRelations(
-    RelationPurchase.name
-  )
-    .map(r => find(SamplePlays, p => p.id === r.objectId))
-    .filter(p => !!p);
+
   const testEvent: TheThing = find(ScheduledEvents, ev =>
     TourPlanScheduledOneEvent.hasRelationTo(
       RelationshipScheduleEvent.name,
@@ -63,11 +56,11 @@ describe('Approve scheduled events by host', () => {
     )
   );
   ImitationEvent.setState(testEvent, ImitationEvent.states['wait-approval']);
-  let me: User;
+  const eventHost: User = testUsers[0];
 
   before(() => {
     // Only tour-plans of state applied can make schedule
-    login().then(user => {
+    logoutBackground().then(user => {
       me = user;
       // Only Admin user can make schedule
       theMockDatabase.setAdmins([user.id]);

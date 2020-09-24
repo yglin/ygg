@@ -16,10 +16,7 @@ import {
   MyItemTransfersPageObjectCypress
 } from '@ygg/ourbox/test';
 import { Location } from '@ygg/shared/omni-types/core';
-import {
-  logout as logoutBackground,
-  theMockDatabase
-} from '@ygg/shared/test/cypress';
+import { beforeAll, theMockDatabase } from '@ygg/shared/test/cypress';
 import {
   EmceePageObjectCypress,
   YggDialogPageObjectCypress
@@ -80,6 +77,7 @@ describe('Complete the item-transfer task', () => {
   const newItemLocation: Location = Location.forge();
 
   before(() => {
+    beforeAll();
     theMockDatabase.insert(`${User.collection}/${testUser.id}`, testUser);
     theMockDatabase.insert(`${User.collection}/${testGiver.id}`, testGiver);
     theMockDatabase.insert(
@@ -91,14 +89,12 @@ describe('Complete the item-transfer task', () => {
       `${ImitationItemTransfer.collection}/${testItemTransfer.id}`,
       testItemTransfer
     );
-    logoutBackground().then(() => {
-      cy.visit('/');
-      loginTestUser(testReceiver);
-      siteNavigator.gotoMyItemTransfers();
-      myItemTransfersPO.expectVisible();
-      myItemTransfersPO.gotoItemTransfer(testItemTransfer);
-      itemTransferPO.expectVisible();
-    });
+    cy.visit('/');
+    loginTestUser(testReceiver);
+    siteNavigator.gotoMyItemTransfers();
+    myItemTransfersPO.expectVisible();
+    myItemTransfersPO.gotoItemTransfer(testItemTransfer);
+    itemTransferPO.expectVisible();
   });
 
   after(() => {

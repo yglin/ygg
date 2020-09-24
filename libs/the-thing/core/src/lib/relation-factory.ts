@@ -1,6 +1,6 @@
 import { getEnv, Query } from '@ygg/shared/infra/core';
-import { Observable, race, NEVER } from 'rxjs';
-import { map, tap, take, timeout, filter } from 'rxjs/operators';
+import { Observable, race, NEVER, of, throwError } from 'rxjs';
+import { map, tap, take, timeout, filter, catchError } from 'rxjs/operators';
 import { RelationRecord } from './relation';
 import { RelationAccessor } from './relation-accessor';
 import { isEmpty } from 'lodash';
@@ -90,6 +90,10 @@ export abstract class RelationFactory {
     hasNot: boolean = false
   ) {
     const id = RelationRecord.constructId(subjectId, objectRole, objectId);
+    const timeoutLength =
+      this.siteConfig.dataAccess.timeoutLong ||
+      this.siteConfig.dataAccess.timeout ||
+      5000;
     try {
       await race(
         this.hasRelation$(subjectId, objectId, objectRole).pipe(
@@ -97,7 +101,12 @@ export abstract class RelationFactory {
           filter(has => (hasNot ? !has : has)),
           take(1)
         ),
-        NEVER.pipe(timeout(this.siteConfig.dataAccess.timeout))
+        NEVER.pipe(
+          timeout(timeoutLength),
+          catchError(() =>
+            throwError(new Error(`Timeout after ${timeoutLength} ms`))
+          )
+        )
       ).toPromise();
     } catch (error) {
       const wrapError = new Error(

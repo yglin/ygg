@@ -12,10 +12,7 @@ import {
 } from '@ygg/ourbox/test';
 import { SiteNavigator } from '../../support/site-navigator';
 import { User } from '@ygg/shared/user/core';
-import {
-  theMockDatabase,
-  logout as logoutBackground
-} from '@ygg/shared/test/cypress';
+import { beforeAll, theMockDatabase } from '@ygg/shared/test/cypress';
 import { RelationRecord } from '@ygg/the-thing/core';
 import { loginTestUser, logout, testUsers } from '@ygg/shared/user/test';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
@@ -46,25 +43,24 @@ describe('Request for item', () => {
   testItem.setUserOfRole(RelationshipItemHolder.role, itemHolder.id);
 
   before(() => {
-    logoutBackground().then(() => {
-      theMockDatabase.insert(`${User.collection}/${testUser1.id}`, testUser1);
-      theMockDatabase.insert(`${User.collection}/${testUser2.id}`, testUser2);
-      theMockDatabase.insert(`${User.collection}/${testUser3.id}`, testUser3);
-      theMockDatabase.insert(`${testBox.collection}/${testBox.id}`, testBox);
-      theMockDatabase.insert(`${testItem.collection}/${testItem.id}`, testItem);
-      theMockDatabase.insert(
-        `${RelationRecord.collection}/${itemRelation.id}`,
-        itemRelation
-      );
-      cy.visit('/');
-      loginTestUser(testUser1);
-      siteNavigator.gotoMyBoxes();
-      myBoxesPO.expectVisible();
-      myBoxesPO.gotoBox(testBox);
-      boxViewPO.expectVisible();
-      boxViewPO.gotoItem(testItem);
-      itemPO.expectVisible();
-    });
+    beforeAll();
+    theMockDatabase.insert(`${User.collection}/${testUser1.id}`, testUser1);
+    theMockDatabase.insert(`${User.collection}/${testUser2.id}`, testUser2);
+    theMockDatabase.insert(`${User.collection}/${testUser3.id}`, testUser3);
+    theMockDatabase.insert(`${testBox.collection}/${testBox.id}`, testBox);
+    theMockDatabase.insert(`${testItem.collection}/${testItem.id}`, testItem);
+    theMockDatabase.insert(
+      `${RelationRecord.collection}/${itemRelation.id}`,
+      itemRelation
+    );
+    cy.visit('/');
+    loginTestUser(testUser1);
+    siteNavigator.gotoMyBoxes();
+    myBoxesPO.expectVisible();
+    myBoxesPO.gotoBox(testBox);
+    boxViewPO.expectVisible();
+    boxViewPO.gotoItem(testItem);
+    itemPO.expectVisible();
   });
 
   after(() => {

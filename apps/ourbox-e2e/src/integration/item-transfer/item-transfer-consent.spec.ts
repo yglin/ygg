@@ -5,18 +5,15 @@ import {
   RelationshipItemHolder,
   RelationshipItemRequester,
   RelationshipItemTransferGiver,
-  RelationshipItemTransferReceiver,
-  RelationshipItemTransferItem
+  RelationshipItemTransferItem,
+  RelationshipItemTransferReceiver
 } from '@ygg/ourbox/core';
 import {
   ItemTransferPageObjectCypress,
   MyItemTransfersPageObjectCypress
 } from '@ygg/ourbox/test';
 import { Html } from '@ygg/shared/omni-types/core';
-import {
-  logout as logoutBackground,
-  theMockDatabase
-} from '@ygg/shared/test/cypress';
+import { beforeAll, theMockDatabase } from '@ygg/shared/test/cypress';
 import { Comment } from '@ygg/shared/thread/core';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 import { Notification, User } from '@ygg/shared/user/core';
@@ -71,6 +68,7 @@ describe('Item-transfer consent reception', () => {
   testItemTransferChanged.name = testItemTransfer.name;
 
   before(() => {
+    beforeAll();
     theMockDatabase.insert(`${User.collection}/${testUser.id}`, testUser);
     theMockDatabase.insert(`${User.collection}/${testGiver.id}`, testGiver);
     theMockDatabase.insert(
@@ -85,19 +83,17 @@ describe('Item-transfer consent reception', () => {
       `${ImitationItemTransfer.collection}/${testItemTransfer.id}`,
       testItemTransfer
     );
-    logoutBackground().then(() => {
-      cy.visit('/');
-      loginTestUser(testReceiver);
-      siteNavigator.gotoMyItemTransfers();
-      myItemTransfersPO.expectVisible();
-      myItemTransfersPO.gotoItemTransfer(testItemTransfer);
-      itemTransferPO.expectVisible();
-    });
+    cy.visit('/');
+    loginTestUser(testReceiver);
+    siteNavigator.gotoMyItemTransfers();
+    myItemTransfersPO.expectVisible();
+    myItemTransfersPO.gotoItemTransfer(testItemTransfer);
+    itemTransferPO.expectVisible();
   });
 
   after(() => {
     theMockDatabase.clear();
-  })
+  });
 
   it('Can leave comments upon item-transfer in state waitReceiver', () => {
     const commentByReceiver = new Comment({
