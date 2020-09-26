@@ -30,7 +30,7 @@ export const ImitationEquipmentCellDefines: {
 );
 
 export const ImitationEquipment: TheThingImitation = new TheThingImitation({
-  id: 'equipment',
+  id: 'playwhat-equipment',
   name: '設備',
   description: '體驗租借用的設備或器具',
   icon: 'headset_mic',

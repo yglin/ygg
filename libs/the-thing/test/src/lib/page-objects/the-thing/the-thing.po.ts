@@ -122,7 +122,7 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
       values(this.imitation.cellsDef)
     );
     cellCreatorPO.setCell(cell);
-    cellCreatorPO.setCellValue(cell);
+    // cellCreatorPO.setCellValue(cell);
     dialogPO.confirm();
     dialogPO.expectClosed();
   }

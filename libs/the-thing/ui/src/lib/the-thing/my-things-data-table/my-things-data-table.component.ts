@@ -4,6 +4,7 @@ import { AuthenticateService } from '@ygg/shared/user/ui';
 import { TheThing, TheThingImitation } from '@ygg/the-thing/core';
 import { Observable, Subscription } from 'rxjs';
 import { TheThingAccessService } from '../../the-thing-access.service';
+import { TheThingFactoryService } from '../../the-thing-factory.service';
 
 @Component({
   selector: 'my-things-data-table',
@@ -20,6 +21,7 @@ export class MyThingsDataTableComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private theThingAccessService: TheThingAccessService,
+    private theThingFactory: TheThingFactoryService,
     private authService: AuthenticateService
   ) {}
 
@@ -61,7 +63,7 @@ export class MyThingsDataTableComponent implements OnInit {
   }
 
   gotoCreate() {
-    const routePath = this.imitation.id || 'the-things';
-    this.router.navigate(['/', 'the-things', routePath, 'create']);
+    // console.log(this.imitation);
+    this.theThingFactory.launchCreation(this.imitation);
   }
 }

@@ -1,9 +1,10 @@
 import { Subject, Observable } from 'rxjs';
-import { TheThing } from './the-thing';
-import { TheThingImitation } from './imitation';
-import { TheThingState, TheThingStateChangeRecord } from './state';
-import { TheThingAction } from './action';
-import { TheThingAccessor } from './the-thing-accessor';
+import { TheThing } from '../the-thing';
+import { TheThingImitation } from '../imitation';
+import { TheThingState, TheThingStateChangeRecord } from '../state';
+import { TheThingAction } from '../action';
+import { TheThingAccessor } from '../the-thing-accessor';
+import { ImitationFactory } from './imitatioin-factory';
 
 // type InputAction = 'meta' | 'add-cell' | 'create' | 'save' | 'load';
 
@@ -13,19 +14,18 @@ import { TheThingAccessor } from './the-thing-accessor';
 // }
 
 export abstract class TheThingFactory {
-  imitation: TheThingImitation;
   onSave$: Subject<TheThing>;
   runAction$: Subject<{
     theThing: TheThing;
     action: TheThingAction;
   }> = new Subject();
 
-  constructor(protected theThingAccessor: TheThingAccessor) {}
+  constructor(
+    protected theThingAccessor: TheThingAccessor,
+    protected imitationFactory: ImitationFactory
+  ) {}
 
-  abstract async create(options: {
-    imitationId?: string;
-    imitation: TheThingImitation;
-  }): Promise<TheThing>;
+  abstract async create(imitation: TheThingImitation): Promise<TheThing>;
   abstract load$(id: string, collection: string): Observable<TheThing>;
   abstract async save(
     theThing: TheThing,

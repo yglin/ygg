@@ -61,13 +61,6 @@ export class EventFactoryService extends EventFactory {
       try {
         const id = route.paramMap.get('id');
         if (!!id) {
-          this.theThingFactory.imitation = ImitationEvent;
-          // await this.theThingFactory.load(
-          //   id,
-          //   ImitationEvent.collection
-          // );
-          // this.event$ = this.theThingFactory.load$(id);
-          // this.tourPlan$.next(tourPlan);
           resolve(this.theThingFactory.load$(id, ImitationEvent.collection));
         } else reject(new Error(`Require id in route path, got ${id}`));
       } catch (error) {

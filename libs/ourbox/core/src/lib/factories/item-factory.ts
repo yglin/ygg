@@ -76,9 +76,7 @@ export class ItemFactory {
   async create(): Promise<TheThing> {
     try {
       const user = await this.authenticator.requestLogin();
-      const newItem = await this.theThingFactory.create({
-        imitation: ImitationItem
-      });
+      const newItem = await this.theThingFactory.create(ImitationItem);
       newItem.setUserOfRole(RelationshipItemHolder.role, user.id);
       this.router.navigate([ImitationItem.routePath, newItem.id]);
       return this.theThingFactory.onSave$

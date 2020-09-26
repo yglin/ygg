@@ -1,35 +1,30 @@
-import { Component, OnDestroy, OnInit, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators,
-  AbstractControl
+  Validators
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AlertType } from '@ygg/shared/infra/core';
+import { OmniTypes } from '@ygg/shared/omni-types/core';
+import { ImageUploaderService } from '@ygg/shared/omni-types/ui';
 import { EmceeService, YggDialogService } from '@ygg/shared/ui/widgets';
 import { AuthorizeService } from '@ygg/shared/user/ui';
 import {
   Relationship,
   TheThing,
-  TheThingCell,
-  TheThingImitation,
-  TheThingRelation,
   TheThingAction,
-  TheThingDisplay
+  TheThingCell,
+  TheThingDisplay,
+  TheThingImitation,
+  TheThingRelation
 } from '@ygg/the-thing/core';
-import { isEmpty, values, remove, extend, find, defaults } from 'lodash';
-import { Observable, Subscription, merge, combineLatest } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
-import { TheThingImitationViewInterface } from '..';
+import { defaults, extend, find, isEmpty, remove, values } from 'lodash';
+import { merge, Observable, Subscription } from 'rxjs';
+import { filter, switchMap, tap } from 'rxjs/operators';
 import { CellCreatorComponent, validateCellRequired } from '../../cell';
 import { TheThingFactoryService } from '../../the-thing-factory.service';
-import { OmniTypes } from '@ygg/shared/omni-types/core';
-import {
-  ImageUploaderComponent,
-  ImageUploaderService
-} from '@ygg/shared/omni-types/ui';
 
 interface ActionButton extends TheThingAction {
   granted: boolean;
@@ -46,9 +41,9 @@ export class TheThingComponent implements OnInit, OnDestroy {
   @Input() theThing$: Observable<TheThing>;
   @Input() showOwner = false;
   @Input() display: TheThingDisplay;
-  subscriptions: Subscription[] = [];
+  subscription: Subscription = new Subscription();
   // theThing$: Observable<TheThing>;
-  focusSubscription: Subscription;
+  // focusSubscription: Subscription;
   theThing: TheThing;
   formGroup: FormGroup;
   formGroupCells: FormGroup;
@@ -60,7 +55,8 @@ export class TheThingComponent implements OnInit, OnDestroy {
   orderedCellIds: string[] = [];
   relationsMap: { [name: string]: TheThingRelation[] } = {};
   actionButtons: ActionButton[] = [];
-  actions$Subscription: Subscription;
+  reloadSubscriptions: Subscription = new Subscription();
+  // actions$Subscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -69,7 +65,8 @@ export class TheThingComponent implements OnInit, OnDestroy {
     private authorizeService: AuthorizeService,
     private dialog: YggDialogService,
     private emcee: EmceeService,
-    private imageUploaderService: ImageUploaderService
+    private imageUploaderService: ImageUploaderService,
+    private router: Router
   ) {
     this.formGroup = this.formBuilder.group({
       name: ['', Validators.required],
@@ -79,157 +76,145 @@ export class TheThingComponent implements OnInit, OnDestroy {
       this.theThingFactory.setMeta(this.theThing, value)
     );
     this.formGroupCells = this.formBuilder.group({});
-    this.subscriptions.push(
-      this.theThingFactory.focusChange$.subscribe(focus$ => {
-        this.imitation = this.theThingFactory.imitation;
-        this.resetFocus(focus$);
-      })
-    );
   }
 
-  ngOnInit() {
+  reload(): void {
+    // console.log('TheThingComponent reload~!!!');
+    this.reloadSubscriptions.unsubscribe();
+    this.reloadSubscriptions = new Subscription();
+
     this.display = defaults(this.display, {
       showCells: true,
       showRelations: true
     });
-    if (this.id) {
-      const collection = !!this.imitation
-        ? this.imitation.collection
-        : TheThing.collection;
-      this.resetFocus(this.theThingFactory.load$(this.id, collection));
-    }
-    if (!!this.theThing$) {
-      this.resetFocus(this.theThing$);
-    }
-  }
 
-  async resetFocus(theThing$: Observable<TheThing>) {
-    // Clear form
-    // this.formGroup.reset();
+    this.imitation = this.route.snapshot.data.imitation || this.imitation;
+    if (!this.imitation) {
+      this.emcee.error(`資料載入失敗，Not found Imitation`);
+      this.router.navigate([]);
+      return;
+    }
+
+    this.theThing$ = this.route.snapshot.data.theThing$ || this.theThing$;
+    if (!this.theThing$ && this.id) {
+      this.theThing$ = this.theThingFactory.load$(
+        this.id,
+        this.imitation.collection
+      );
+    }
+    if (!this.theThing$) {
+      this.emcee.error(`資料載入失敗，Not found theThing$`);
+      this.router.navigate([]);
+      return;
+    }
+
     for (const cellId in this.formGroupCells.controls) {
       if (this.formGroupCells.controls.hasOwnProperty(cellId)) {
         this.formGroupCells.removeControl(cellId);
       }
     }
 
-    if (theThing$) {
-      const updateTheThing$ = theThing$.pipe(
-        // tap(theThing => {
-        //   console.log('Update the thing');
-        //   console.dir(theThing);
-        // }),
-        tap(theThing => (this.theThing = theThing)),
-        tap(() => {
-          this.formGroup.patchValue(this.theThing);
+    const updateTheThing$ = this.theThing$.pipe(
+      // tap(theThing => {
+      //   console.log('Update the thing');
+      //   console.dir(theThing);
+      // }),
+      tap(theThing => (this.theThing = theThing)),
+      tap(() => {
+        this.formGroup.patchValue(this.theThing);
 
-          const requiredCellDefs = this.imitation.getRequiredCellDefs();
-          // Add required cell controls
-          for (const requiredCellDef of requiredCellDefs) {
-            let cell = this.theThing.getCell(requiredCellDef.id);
-            if (!cell) {
-              cell = requiredCellDef.createCell();
-            }
-            this.addCellControl(cell, { required: true });
+        const requiredCellDefs = this.imitation.getRequiredCellDefs();
+        // Add required cell controls
+        for (const requiredCellDef of requiredCellDefs) {
+          let cell = this.theThing.getCell(requiredCellDef.id);
+          if (!cell) {
+            cell = requiredCellDef.createCell();
           }
+          this.addCellControl(cell, { required: true });
+        }
 
-          // Add additional cell controls if theThing is valid
-          const additionalCells = this.imitation.pickNonRequiredCells(
-            values(this.theThing.cells)
-          );
-          for (const additionalCell of additionalCells) {
-            this.addCellControl(additionalCell);
-          }
+        // Add additional cell controls if theThing is valid
+        const additionalCells = this.imitation.pickNonRequiredCells(
+          values(this.theThing.cells)
+        );
+        for (const additionalCell of additionalCells) {
+          this.addCellControl(additionalCell);
+        }
 
-          // Remove redundant controls
-          for (const cellId in this.formGroupCells) {
-            if (this.formGroupCells.hasOwnProperty(cellId)) {
-              if (!this.theThing.hasCell(cellId)) {
-                this.formGroupCells.removeControl(cellId);
-              }
+        // Remove redundant controls
+        for (const cellId in this.formGroupCells) {
+          if (this.formGroupCells.hasOwnProperty(cellId)) {
+            if (!this.theThing.hasCell(cellId)) {
+              this.formGroupCells.removeControl(cellId);
             }
           }
+        }
 
-          // Extract relations
-          this.relationsMap = {};
-          for (const name in this.imitation.relationships) {
-            if (this.imitation.relationships.hasOwnProperty(name)) {
-              const relationship = this.imitation.relationships[name];
-              this.relationsMap[relationship.name] = this.theThing.getRelations(
-                relationship.name
-              );
-            }
+        // Extract relations
+        this.relationsMap = {};
+        for (const name in this.imitation.relationships) {
+          if (this.imitation.relationships.hasOwnProperty(name)) {
+            const relationship = this.imitation.relationships[name];
+            this.relationsMap[relationship.name] = this.theThing.getRelations(
+              relationship.name
+            );
           }
-        })
-      );
+        }
+      })
+    );
+    this.reloadSubscriptions.add(updateTheThing$.subscribe());
 
-      const canModify$ = updateTheThing$.pipe(
-        switchMap(() => this.authorizeService.canModify$(this.theThing)),
-        tap(canModify => {
-          this.readonly = !(
-            canModify && this.imitation.canModify(this.theThing)
-          );
-        })
-      );
+    const canModify$ = updateTheThing$.pipe(
+      switchMap(() => this.authorizeService.canModify$(this.theThing)),
+      tap(canModify => {
+        this.readonly = !(canModify && this.imitation.canModify(this.theThing));
+      })
+    );
+    this.reloadSubscriptions.add(canModify$.subscribe());
 
-      if (this.focusSubscription) {
-        this.focusSubscription.unsubscribe();
-      }
-      this.focusSubscription = merge(updateTheThing$, canModify$).subscribe();
-    } else {
-      console.warn(`TheThingComponent: theThing$ is empty: ${theThing$}`);
-    }
-
-    if (this.actions$Subscription) {
-      this.actions$Subscription.unsubscribe();
-    }
-    if (theThing$ && this.imitation && !isEmpty(this.imitation.actions)) {
+    if (!isEmpty(this.imitation.actions)) {
       this.actionButtons = values(this.imitation.actions).map(action =>
         extend(action, { granted: false })
       );
-      this.actions$Subscription = theThing$
-        .pipe(
-          // tap(() => console.log(`Hi~ MAMA!!`)),
-          switchMap(theThing => {
-            const actionPermissionChecks: Observable<any>[] = [];
-            for (const actionButton of this.actionButtons) {
-              actionPermissionChecks.push(
-                this.theThingFactory
-                  .isActionGranted$(theThing.id, actionButton, this.imitation)
-                  .pipe(
-                    // tap(isGranted =>
-                    //   console.log(
-                    //     `Action ${actionButton.id} is granted: ${isGranted}`
-                    //   )
-                    // ),
-                    tap(isGranted => (actionButton.granted = isGranted))
-                  )
-              );
-            }
-            return merge(...actionPermissionChecks);
-          })
-        )
-        .subscribe();
-      // this.actions$Subscription = this.theThingFactory
-      //   .getPermittedActions$(theThing$, this.imitation)
-      //   .subscribe(actions => {
-      //     this.actions = actions.filter(
-      //       action => !(action && action.display && action.display.position)
-      //     );
-      //     // console.dir(this.actions);
-      //   });
+      for (const actionButton of this.actionButtons) {
+        this.reloadSubscriptions.add(
+          this.theThing$
+            .pipe(
+              switchMap(theThing =>
+                this.theThingFactory.isActionGranted$(
+                  theThing,
+                  actionButton,
+                  this.imitation
+                )
+              ),
+              tap(isGranted => {
+                // console.log(
+                //   `Action ${actionButton.id} is granted: ${isGranted}`
+                // );
+                actionButton.granted = isGranted;
+              })
+            )
+            .subscribe()
+        );
+      }
     }
   }
 
+  ngOnInit() {
+    this.reload();
+    this.subscription.add(
+      this.router.events
+        .pipe(
+          filter(event => event instanceof NavigationEnd),
+          tap(() => this.reload())
+        )
+        .subscribe()
+    );
+  }
+
   ngOnDestroy(): void {
-    for (const subcsription of this.subscriptions) {
-      subcsription.unsubscribe();
-    }
-    if (this.focusSubscription) {
-      this.focusSubscription.unsubscribe();
-    }
-    if (this.actions$Subscription) {
-      this.actions$Subscription.unsubscribe();
-    }
+    this.subscription.unsubscribe();
+    this.reloadSubscriptions.unsubscribe();
   }
 
   async changeImage() {
@@ -248,7 +233,7 @@ export class TheThingComponent implements OnInit, OnDestroy {
       }
       control = new FormControl(null, validators);
       this.formGroupCells.setControl(cell.id, control);
-      this.subscriptions.push(
+      this.reloadSubscriptions.add(
         control.valueChanges.subscribe((_cell: TheThingCell) =>
           this.theThingFactory.setCell(this.theThing, _cell, this.imitation)
         )
@@ -314,11 +299,24 @@ export class TheThingComponent implements OnInit, OnDestroy {
     }
   }
 
-  save() {
-    this.theThingFactory.save(this.theThing, {
+  async save() {
+    // console.log(`Save TheThing ${this.theThing.id}`);
+    // this.theThing$.subscribe(theThing => {
+    //   console.log(`FUUUUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQQQQQ~~~!!!!`);
+    //   console.dir(theThing);
+    // });
+    await this.theThingFactory.save(this.theThing, {
       imitation: this.imitation,
       requireOwner: true
     });
+    // if (
+    //   !(
+    //     this.theThing$ ===
+    //     this.theThingFactory.theThingSources$[this.theThing.id].local$
+    //   )
+    // ) {
+    //   console.log(`MAMA What's going on !!! I can't stand it`);
+    // }
   }
 
   addCell() {

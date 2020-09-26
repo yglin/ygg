@@ -150,9 +150,9 @@ export abstract class ItemTransferFactory {
 
   async create(item: TheThing, giver: User, receiver: User): Promise<TheThing> {
     try {
-      const newItemTrnasfer = await this.theThingFactory.create({
-        imitation: ImitationItemTransfer
-      });
+      const newItemTrnasfer = await this.theThingFactory.create(
+        ImitationItemTransfer
+      );
       newItemTrnasfer.name = `${giver.name} 交付 ${item.name} 給 ${receiver.name} 的交付任務`;
       newItemTrnasfer.addRelation(
         RelationshipItemTransferItem.createRelation(newItemTrnasfer.id, item.id)

@@ -48,7 +48,7 @@ export const ImitationPlayCellDefines: {
 
 export const ImitationPlay: TheThingImitation = new TheThingImitation().fromJSON(
   {
-    id: 'play',
+    id: 'playwhat-play',
     name: '體驗',
     description: '體驗項目，包含簡介、照片、費用、體驗時長和人數限制...等',
     icon: 'local_play',
@@ -128,8 +128,10 @@ ImitationPlay.states = {
 };
 
 export const RelationshipEquipment = new Relationship({
-  name: ImitationEquipment.name,
-  imitation: ImitationEquipment
+  name: `relationship-${ImitationPlay.id}-${ImitationEquipment.id}`,
+  label: '體驗租用設備',
+  subjectImitation: ImitationPlay,
+  objectImitation: ImitationEquipment
 });
 
 ImitationPlay.relationships[RelationshipEquipment.name] = RelationshipEquipment;

@@ -72,7 +72,7 @@ export class EquipmentFactoryService implements OnDestroy, Resolve<TheThing> {
     subject: TheThing,
     imitation: TheThingImitation
   ): Promise<TheThing> {
-    console.log(imitation.routePath);
+    // console.log(imitation.routePath);
     const routeChange: boolean = await this.router.navigate([
       '/',
       imitation.routePath,
@@ -103,9 +103,7 @@ export class EquipmentFactoryService implements OnDestroy, Resolve<TheThing> {
 
   async create(): Promise<TheThing> {
     if (!this.cacheCreated) {
-      this.cacheCreated = await this.theThingFactory.create({
-        imitationId: ImitationEquipment.id
-      });
+      this.cacheCreated = await this.theThingFactory.create(ImitationEquipment);
     }
     this.theThing = this.cacheCreated;
     return this.theThing;
@@ -136,6 +134,7 @@ export class EquipmentFactoryService implements OnDestroy, Resolve<TheThing> {
       return;
     }
     await this.theThingFactory.save(this.theThing, {
+      imitation: ImitationEquipment,
       requireOwner: true
     });
     await this.emcee.alert(`已成功儲存 ${this.theThing.name}`, AlertType.Info);

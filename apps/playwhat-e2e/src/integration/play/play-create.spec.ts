@@ -4,13 +4,16 @@ import {
   RelationshipEquipment
 } from '@ygg/playwhat/core';
 import { SiteNavigator } from '@ygg/playwhat/test';
-import { login, theMockDatabase } from '@ygg/shared/test/cypress';
+import { theMockDatabase } from '@ygg/shared/test/cypress';
+import { User } from '@ygg/shared/user/core';
+import { loginTestUser, testUsers } from '@ygg/shared/user/test';
 import { TheThingCell, TheThingCellDefine } from '@ygg/the-thing/core';
 import {
   MyThingsDataTablePageObjectCypress,
   TheThingPageObjectCypress
 } from '@ygg/the-thing/test';
 import { values } from 'lodash';
+import { beforeAll } from '../../support/before-all';
 import {
   MinimumPlay,
   PlayFull,
@@ -27,11 +30,12 @@ describe('Create play', () => {
   const playPO = new TheThingPageObjectCypress('', ImitationPlay);
   const equipPO = new TheThingPageObjectCypress('', ImitationEquipment);
   // const equipPO = new EquipmentViewPageObjectCypress();
+  const me: User = testUsers[0];
 
   before(() => {
-    login().then(user => {
-      cy.visit('/');
-    });
+    beforeAll();
+    cy.visit('/');
+    loginTestUser(me);
   });
 
   beforeEach(() => {

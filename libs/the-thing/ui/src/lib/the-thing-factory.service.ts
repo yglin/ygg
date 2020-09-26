@@ -24,10 +24,11 @@ import {
   TheThingStateChangeRecord
 } from '@ygg/the-thing/core';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
-import { every, extend, get, isEmpty, some } from 'lodash';
+import { defaults, every, extend, get, isEmpty, some } from 'lodash';
 import {
   BehaviorSubject,
   combineLatest,
+  merge,
   NEVER,
   Observable,
   of,
@@ -39,6 +40,7 @@ import {
 } from 'rxjs';
 import {
   catchError,
+  filter,
   first,
   map,
   shareReplay,
@@ -46,6 +48,7 @@ import {
   take,
   timeout
 } from 'rxjs/operators';
+import { ImitationFactoryService } from './imitation-factory.service';
 import { RelationFactoryService } from './relation-factory.service';
 import { TheThingAccessService } from './the-thing-access.service';
 import { TheThingStateChangeRecordComponent } from './the-thing/the-thing-state-change-record/the-thing-state-change-record.component';
@@ -66,8 +69,7 @@ export const config = {
   providedIn: 'root'
 })
 export class TheThingFactoryService extends TheThingFactory
-  implements OnDestroy, Resolve<Observable<TheThing>> {
-  imitation: TheThingImitation;
+  implements OnDestroy {
   // theThing$: BehaviorSubject<TheThing> = new BehaviorSubject(null);
   focusChange$: BehaviorSubject<Observable<TheThing>> = new BehaviorSubject(
     null
@@ -85,66 +87,23 @@ export class TheThingFactoryService extends TheThingFactory
   subscriptions: Subscription[] = [];
 
   constructor(
+    theThingAccessService: TheThingAccessService,
+    imitationFactory: ImitationFactoryService,
     private authUiService: AuthenticateUiService,
     private authorizeService: AuthorizeService,
-    private theThingAccessService: TheThingAccessService,
-    private imitationAccessServcie: TheThingImitationAccessService,
     private emceeService: EmceeService,
     private router: Router,
     private relaitonFactory: RelationFactoryService,
     private commentFactory: CommentFactoryService,
     private dialog: YggDialogService
   ) {
-    super(theThingAccessService);
+    super(theThingAccessService, imitationFactory);
   }
 
   ngOnDestroy(): void {
     for (const subscription of this.subscriptions) {
       subscription.unsubscribe();
     }
-  }
-
-  resolve(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<any> | Promise<any> | any {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const imitationId = route.paramMap.get('imitation');
-        const id = route.paramMap.get('id');
-        if (!this.imitation || this.imitation.id !== imitationId) {
-          this.imitation = await this.imitationAccessServcie
-            .get$(imitationId)
-            .pipe(first(), timeout(3000))
-            .toPromise();
-        }
-        let theThing: TheThing;
-        if (id === 'create') {
-          // console.log(`create ${this.imitation.id}`);
-          theThing = await this.create();
-          this.router.navigate(['/', 'the-things', imitationId, theThing.id]);
-          resolve(of(theThing));
-        } else if (!!id) {
-          // console.log(`load ${this.imitation.id}:${id}`);
-          const collection = get(
-            this.imitation,
-            'colletion',
-            TheThing.collection
-          );
-          theThing = await this.load(id, collection);
-          const focus$ = this.load$(theThing.id);
-          resolve(focus$);
-          this.focusChange$.next(focus$);
-        } else {
-          throw new Error(`Invalid id in route: ${id}`);
-        }
-      } catch (error) {
-        console.error(error.message);
-        this.emceeService.error(`載入頁面失敗，錯誤原因：${error.message}`);
-        this.router.navigate([]);
-        return reject(error);
-      }
-    });
   }
 
   // reset() {
@@ -183,51 +142,48 @@ export class TheThingFactoryService extends TheThingFactory
   //   this.subjectThing.addCells(cells);
   // }
 
-  async create(
-    options: {
-      imitationId?: string;
-      imitation?: TheThingImitation;
-    } = {}
-  ): Promise<TheThing> {
-    let newThing: TheThing;
-    if (options.imitation) {
-      this.imitation = options.imitation;
-    } else if (
-      options.imitationId &&
-      !(this.imitation && this.imitation.id === options.imitationId)
-    ) {
-      try {
-        this.imitation = await race(
-          this.imitationAccessServcie.get$(options.imitationId).pipe(take(1)),
-          NEVER.pipe(timeout(config.loadTimeout))
-        ).toPromise();
-      } catch (error) {
-        const wrapError = new Error(
-          `Failed to load imitation: ${options.imitationId};\n${error.message}`
-        );
-        console.error(wrapError.message);
-        throw wrapError;
+  async create(imitation: TheThingImitation): Promise<TheThing> {
+    try {
+      if (!imitation) {
+        throw new Error(`Can not create TheThing without specified Imitation`);
       }
-    }
 
-    if (this.imitation) {
-      if (this.imitation.id in this.createCache) {
-        newThing = this.createCache[this.imitation.id];
+      let newThing: TheThing;
+      if (imitation.id in this.createCache) {
+        newThing = this.createCache[imitation.id];
       } else {
-        newThing = this.imitation.createTheThing();
-        this.createCache[this.imitation.id] = newThing;
+        newThing = imitation.createTheThing();
+        this.createCache[imitation.id] = newThing;
       }
-    } else {
-      throw new Error(`Creating TheThing requires TheThingImitation`);
-    }
 
-    if (!(newThing.id in this.theThingSources$)) {
-      this.theThingSources$[newThing.id] = {
-        local$: new BehaviorSubject(newThing)
-      };
-      this.theThingSources$[newThing.id].local$.next(newThing);
+      if (!(newThing.id in this.theThingSources$)) {
+        this.theThingSources$[newThing.id] = {
+          local$: new ReplaySubject(1)
+        };
+        this.theThingSources$[newThing.id].local$.next(newThing);
+      }
+      // console.log(`Created new thing ${newThing.id}`);
+
+      return newThing;
+    } catch (error) {
+      const imitationName = get(imitation, 'name', 'Unknown');
+      const wrapError = new Error(
+        `Failed to create TheThing of ${imitationName}.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
     }
-    return newThing;
+  }
+
+  async launchCreation(imitation: TheThingImitation) {
+    try {
+      const newThing = await this.create(imitation);
+      this.router.navigate(['/', 'the-things', imitation.id, newThing.id]);
+    } catch (error) {
+      this.emceeService.error(
+        `<h3>建立 ${imitation.name} 失敗\n${error.message}</h3>`
+      );
+      return Promise.reject(error);
+    }
   }
 
   emitChange(theThing: TheThing) {
@@ -240,59 +196,48 @@ export class TheThingFactoryService extends TheThingFactory
     }
   }
 
-  // async load(
-  //   id: string,
-  //   collection: string = TheThing.collection
-  // ): Promise<TheThing> {
-  //   // console.log(collection);
-  //   // console.log(id);
-  //   // return this.load$(id, collection).pipe(take(1)).toPromise();
-  //   return race(
-  //     this.load$(id, collection).pipe(take(1)),
-  //     NEVER.pipe(
-  //       timeout(config.loadTimeout),
-  //       catchError(error => {
-  //         return throwError(
-  //           new Error(
-  //             `讀取 ${collection}/${id} 失敗，超過${config.loadTimeout /
-  //               1000}秒`
-  //           )
-  //         );
+  // connectRemoteSource(id: string, collection: string = TheThing.collection) {
+  //   if (!(id in this.theThingSources$)) {
+  //     // Not created, directly load from remote
+  //     console.log(`Instantiate local$ of ${id}`);
+  //     this.theThingSources$[id] = {
+  //       local$: new ReplaySubject(1)
+  //     };
+  //   }
+  //   if (!this.theThingSources$[id].remote$) {
+  //     this.theThingSources$[id].remote$ = this.theThingAccessor.load$(
+  //       id,
+  //       collection
+  //     );
+  //     this.subscriptions.push(
+  //       this.theThingSources$[id].remote$.subscribe(theThing => {
+  //         console.log(`Forward remote change of theThing ${theThing.id}`);
+  //         this.theThingSources$[id].local$.next(theThing);
   //       })
-  //     )
-  //   ).toPromise();
+  //     );
+  //   }
   // }
-
-  connectRemoteSource(id: string, collection: string = TheThing.collection) {
-    if (!(id in this.theThingSources$)) {
-      // Not created, directly load from remote
-      this.theThingSources$[id] = {
-        local$: new ReplaySubject(1)
-      };
-    }
-    if (!this.theThingSources$[id].remote$) {
-      this.theThingSources$[id].remote$ = this.theThingAccessService.load$(
-        id,
-        collection
-      );
-      this.subscriptions.push(
-        this.theThingSources$[id].remote$.subscribe(theThing => {
-          // console.log(`Remote change of theThing ${theThing.id}`);
-          this.theThingSources$[id].local$.next(theThing);
-        })
-      );
-    }
-  }
 
   load$(
     id: string,
     collection: string = TheThing.collection
   ): Observable<TheThing> {
+    // console.log(`Load TheThing ${id}`);
     if (!(id in this.theThingSources$)) {
-      // Not created, directly load from remote
-      this.connectRemoteSource(id, collection);
+      this.theThingSources$[id] = {
+        local$: new ReplaySubject(1)
+      };
     }
-    return this.theThingSources$[id].local$;
+    if (!this.theThingSources$[id].remote$) {
+      this.theThingSources$[id].remote$ = this.theThingAccessor.load$(
+        id,
+        collection
+      );
+    }
+    return merge(
+      this.theThingSources$[id].local$,
+      this.theThingSources$[id].remote$
+    ).pipe(filter(theThing => !isEmpty(theThing)));
   }
 
   setMeta(theThing: TheThing, value: any): void {
@@ -356,7 +301,7 @@ export class TheThingFactoryService extends TheThingFactory
 
       imitation.setState(theThing, state);
 
-      await this.theThingAccessService.update(
+      await this.theThingAccessor.update(
         theThing,
         `states.${imitation.stateName}`,
         state.value
@@ -433,14 +378,15 @@ export class TheThingFactoryService extends TheThingFactory
   async save(
     theThing: TheThing,
     options: {
+      imitation: TheThingImitation;
       requireOwner?: boolean;
-      imitation?: TheThingImitation;
       force?: boolean;
-    } = {
-      requireOwner: true
     }
   ): Promise<TheThing> {
-    const imitation: TheThingImitation = options.imitation || this.imitation;
+    options = defaults(options, {
+      requireOwner: true
+    });
+    const imitation: TheThingImitation = options.imitation;
     if (options.requireOwner && !theThing.ownerId) {
       try {
         const currentUser = await this.authUiService.requireLogin();
@@ -470,10 +416,10 @@ export class TheThingFactoryService extends TheThingFactory
       ) {
         imitation.setState(theThing, imitation.stateChanges['onSave'].next);
       }
-      await this.theThingAccessService.upsert(theThing);
+      await this.theThingAccessor.upsert(theThing);
       // await this.saveRelations(theThing);
       // Connect to remote source
-      this.connectRemoteSource(theThing.id, theThing.collection);
+      // this.connectRemoteSource(theThing.id, theThing.collection);
 
       // Clear create cache
       for (const imitationId in this.createCache) {
@@ -528,23 +474,15 @@ export class TheThingFactoryService extends TheThingFactory
     waitCreation
       .pipe(take(1))
       .toPromise()
-      .then(objectThing => {
+      .then(object => {
         // Connect relation to created object
-        subject.addRelation(
-          new TheThingRelation({
-            name: relationship.name,
-            subjectId: subject.id,
-            objectId: objectThing.id
-          })
-        );
+        subject.addRelation(relationship.createRelation(subject.id, object.id));
         // Redirect back to current url
         this.router.navigateByUrl(backUrl);
       });
 
-    // Navigate to the route of new object creation
-    const routePath =
-      relationship.imitation.routePath || relationship.imitation.id;
-    this.router.navigate(['/', 'the-things', routePath, 'create']);
+    // Create related object
+    this.launchCreation(relationship.objectImitation);
   }
 
   // getPermittedActions$(
@@ -621,34 +559,51 @@ export class TheThingFactoryService extends TheThingFactory
 
   checkPermission$(
     permission: Permission,
-    theThingId: string,
+    theThing: TheThing,
     imitation: TheThingImitation
   ): Observable<boolean> {
-    const theThing$ = this.load$(theThingId);
+    const theThing$ = this.load$(theThing.id, theThing.collection);
     const user$ = this.authUiService.currentUser$;
     return combineLatest([theThing$, user$]).pipe(
-      switchMap(([theThing, user]) => {
-        if (!theThing) {
+      switchMap(([_theThing, user]) => {
+        if (!_theThing) {
+          // console.log(`Not found theThing, permission denied`);
           return of(false);
         }
-        if (!user) {
-          return of(false);
-        }
+
+        // yglin 2020/09/25 User can be guest
+        // if (!user) {
+        //   console.log(`Not found user, permission denied`);
+        //   return of(false);
+        // }
+
+        // console.log(
+        //   `Check permission "${permission}" against TheThing ${theThing.id}`
+        // );
+
         switch (permission) {
           case 'requireOwner':
-            if (theThing.ownerId !== user.id) {
+            if (!user || _theThing.ownerId !== user.id) {
+              // console.log(`Not owner, permission denied`);
               return of(false);
+            } else {
+              return of(true);
             }
-            break;
           case 'requireAdmin':
-            return this.authorizeService.isAdmin$(user.id);
-            break;
+            if (!user) {
+              return of(false);
+            } else {
+              return this.authorizeService.isAdmin$(user.id);
+            }
 
           default:
             // permission indicate a specific state
             if (typeof permission === 'string') {
               if (permission.startsWith('role')) {
-                let roles = permission
+                if (!user) {
+                  return of(false);
+                }
+                const roles = permission
                   .split(':')[1]
                   .trim()
                   .split(',');
@@ -662,7 +617,7 @@ export class TheThingFactoryService extends TheThingFactory
                   }
                   roleMatches.push(
                     this.relaitonFactory
-                      .hasRelation$(theThing.id, user.id, roleName)
+                      .hasRelation$(_theThing.id, user.id, roleName)
                       .pipe(map(has => (exclude ? !has : has)))
                   );
                 }
@@ -674,7 +629,7 @@ export class TheThingFactoryService extends TheThingFactory
                   );
                 }
                 // console.log(
-                //   `Has relation? ${theThing.id}, ${user.id}, ${role}`
+                //   `Has relation? ${_theThing.id}, ${user.id}, ${role}`
                 // );
               } else if (permission.startsWith('state')) {
                 const states = permission.split(':')[1].trim();
@@ -685,7 +640,7 @@ export class TheThingFactoryService extends TheThingFactory
                 let matchAny = false;
                 for (const stateName of permittedStates) {
                   const state = get(imitation.states, stateName, null);
-                  if (state && imitation.isState(theThing, state)) {
+                  if (state && imitation.isState(_theThing, state)) {
                     matchAny = true;
                     break;
                   }
@@ -701,7 +656,7 @@ export class TheThingFactoryService extends TheThingFactory
                 switch (condition) {
                   case 'has':
                     return this.relaitonFactory
-                      .findBySubjectAndRole$(theThing.id, relationName)
+                      .findBySubjectAndRole$(_theThing.id, relationName)
                       .pipe(map(relations => !isEmpty(relations)));
 
                   default:
@@ -709,19 +664,21 @@ export class TheThingFactoryService extends TheThingFactory
                 }
               }
             } else if (typeof permission === 'function') {
-              if (!permission(theThing)) {
+              if (!permission(_theThing)) {
                 return of(false);
               }
+            } else {
+              return of(true);
             }
-            break;
         }
+
         return of(true);
       }),
       catchError(error => {
         console.error(error);
         return throwError(
           new Error(
-            `Failed to check permission ${permission}, theThingId: ${theThingId}`
+            `Failed to check permission ${permission} of TheThing ${theThing.id}`
           )
         );
       })
@@ -729,11 +686,11 @@ export class TheThingFactoryService extends TheThingFactory
   }
 
   isActionGranted$(
-    theThingId: string,
+    theThing: TheThing,
     action: TheThingAction,
     imitation: TheThingImitation
   ): Observable<boolean> {
-    const cacheId = `${action.id}_${theThingId}`;
+    const cacheId = `${imitation.id}_${action.id}_${theThing.id}`;
     // console.log(`FUCK!! MAMA~`);
     if (!(cacheId in this.isActionGranted$Cache)) {
       if (isEmpty(action.permissions)) {
@@ -742,10 +699,11 @@ export class TheThingFactoryService extends TheThingFactory
         // );
         this.isActionGranted$Cache[cacheId] = of(true);
       } else {
+        // console.log(`Check permission of action ${action.id}`);
         const checkPermissions: Observable<boolean>[] = [];
         for (const permission of action.permissions) {
           checkPermissions.push(
-            this.checkPermission$(permission, theThingId, imitation)
+            this.checkPermission$(permission, theThing, imitation)
           );
         }
         this.isActionGranted$Cache[cacheId] = combineLatest(

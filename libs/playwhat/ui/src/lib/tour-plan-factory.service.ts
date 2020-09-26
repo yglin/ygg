@@ -18,7 +18,11 @@ import {
 import { Schedule, ServiceEvent, ScheduleFactory } from '@ygg/schedule/core';
 import { ScheduleFactoryService } from '@ygg/schedule/ui';
 import { EmceeService } from '@ygg/shared/ui/widgets';
-import { Purchase, RelationPurchase, ShoppingCellDefines } from '@ygg/shopping/core';
+import {
+  Purchase,
+  RelationPurchase,
+  ShoppingCellDefines
+} from '@ygg/shopping/core';
 import { CartSubmitPack, ShoppingCartService } from '@ygg/shopping/ui';
 import {
   TheThing,
@@ -96,9 +100,7 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
           if (!!cartSubmit.order) {
             tourPlan = cartSubmit.order;
           } else {
-            tourPlan = await this.theThingFactory.create({
-              imitationId: ImitationTourPlan.id
-            });
+            tourPlan = await this.theThingFactory.create(ImitationTourPlan);
           }
           tourPlan.setRelation(
             RelationPurchase.name,
@@ -118,9 +120,9 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
       try {
         const id = route.paramMap.get('id');
         if (id === 'create') {
-          const newTourPlan = await this.theThingFactory.create({
-            imitationId: ImitationTourPlan.id
-          });
+          const newTourPlan = await this.theThingFactory.create(
+            ImitationTourPlan
+          );
           this.router.navigate([
             '/',
             ImitationTourPlan.routePath,
@@ -129,8 +131,10 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
           // this.tourPlan$.next(newTourPlan);
           resolve(newTourPlan);
         } else if (!!id) {
-          this.theThingFactory.imitation = ImitationTourPlan;
-          const tourPlan = await this.theThingFactory.load(id);
+          const tourPlan = await this.theThingFactory.load(
+            id,
+            ImitationTourPlan.collection
+          );
           this.tourPlan$ = this.theThingFactory.load$(id);
           // this.tourPlan$.next(tourPlan);
           resolve(tourPlan);
@@ -416,8 +420,11 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
           );
           if (purchase) {
             const newEvent: TheThing = await this.eventFactory.createFromService(
-              play, {
-                numParticipants: purchase.getCellValue(ShoppingCellDefines.quantity.id)
+              play,
+              {
+                numParticipants: purchase.getCellValue(
+                  ShoppingCellDefines.quantity.id
+                )
               }
             );
             // console.log(newEvent);
@@ -435,7 +442,11 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
       );
       const outSchedule = await this.scheduleFactory.edit(inSchedule);
       if (outSchedule !== ScheduleFactory.signalCancel) {
-        await this.saveScheduleForTourPlan(tourPlan, outSchedule as Schedule, tEvents);
+        await this.saveScheduleForTourPlan(
+          tourPlan,
+          outSchedule as Schedule,
+          tEvents
+        );
       }
       // console.log(outSchedule);
       this.router.navigate(['/', ImitationTourPlan.routePath, tourPlan.id]);
@@ -445,7 +456,11 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     }
   }
 
-  async saveScheduleForTourPlan(tourPlan: TheThing, schedule: Schedule, tEvents: TheThing[]) {
+  async saveScheduleForTourPlan(
+    tourPlan: TheThing,
+    schedule: Schedule,
+    tEvents: TheThing[]
+  ) {
     try {
       if (!Schedule.isSchedule(schedule)) {
         throw new Error(`Input not a valid schedule`);
@@ -501,7 +516,9 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
       });
       this.theThingFactory.emitChange(tourPlan);
     } catch (error) {
-      const wrapError = new Error(`Failed to save schedule for tour-plan.\n${error.message}`);
+      const wrapError = new Error(
+        `Failed to save schedule for tour-plan.\n${error.message}`
+      );
       return Promise.reject(wrapError);
     } finally {
       this.emcee.hideProgress();

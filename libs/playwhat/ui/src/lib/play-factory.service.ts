@@ -81,9 +81,8 @@ export class PlayFactoryService implements OnDestroy, Resolve<TheThing> {
 
   async create(): Promise<TheThing> {
     if (!this.cacheCreated) {
-      this.cacheCreated = await this.theThingFactory.create({
-        imitationId: ImitationPlay.id
-      });
+      this.cacheCreated = await this.theThingFactory.create(ImitationPlay
+      );
     }
     this.theThing = this.cacheCreated;
     return this.cacheCreated;
@@ -114,6 +113,7 @@ export class PlayFactoryService implements OnDestroy, Resolve<TheThing> {
       return;
     }
     await this.theThingFactory.save(this.theThing, {
+      imitation: ImitationPlay,
       requireOwner: true
     });
     // if (

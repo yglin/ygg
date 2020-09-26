@@ -147,7 +147,7 @@
           [attr.relation-name]="relationship.name"
         >
           <ygg-title-divider [level]="3" *ngIf="relations?.length > 0">{{
-            relationship.name
+            relationship.label
           }}</ygg-title-divider>
           <div
             fxLayout="row wrap"
@@ -158,7 +158,7 @@
               <!-- <pre>{{ relation | json }}</pre> -->
               <the-thing-thumbnail
                 [id]="relation.objectId"
-                [imitation]="relationship.imitation"
+                [imitation]="relationship.objectImitation"
               ></the-thing-thumbnail>
             </div>
           </div>
@@ -168,7 +168,7 @@
             fxLayoutGap="10px"
             *ngIf="!readonly"
           >
-            <h4>增加{{ relationship.name }}</h4>
+            <h4>增加<b>{{ relationship.label }}</b></h4>
             <div>
               <button
                 type="button"

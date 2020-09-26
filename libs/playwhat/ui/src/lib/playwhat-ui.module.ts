@@ -8,7 +8,8 @@ import {
   ImitationTourPlan,
   ImitationEquipment,
   RelationshipEquipment,
-  ImitationEvent
+  ImitationEvent,
+  TheThingImitations
 } from '@ygg/playwhat/core';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
@@ -16,7 +17,7 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { SharedUserUiModule, UserMenuService } from '@ygg/shared/user/ui';
 import { ShoppingUiModule } from '@ygg/shopping/ui';
 import { TheThingImitationAccessService } from '@ygg/the-thing/data-access';
-import { TheThingUiModule } from '@ygg/the-thing/ui';
+import { ImitationFactoryService, TheThingUiModule } from '@ygg/the-thing/ui';
 // import { TheThingEditorService } from 'libs/the-thing/ui/src/lib/the-thing-editor.service';
 import { routes } from './routes';
 import { MyPlayListComponent } from './play/my-play-list/my-play-list.component';
@@ -94,16 +95,6 @@ registerLocaleData(localeZhHant);
   providers: [
     {
       provide: APP_INITIALIZER,
-      useFactory: configTheThingImitation,
-      deps: [
-        TheThingImitationAccessService
-        // TheThingViewsService
-        // TheThingEditorService
-      ],
-      multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
       useFactory: configUserMenu,
       deps: [UserMenuService],
       multi: true
@@ -116,11 +107,17 @@ registerLocaleData(localeZhHant);
     },
     {
       provide: APP_INITIALIZER,
+      useFactory: configTheThingModule,
+      deps: [ImitationFactoryService],
+      multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
       useFactory: configShoppingModule,
       deps: [PurchaseService],
       multi: true
     }
-  ],
+  ]
   // exports: [TourViewComponent /* TourPlanViewComponent */]
 })
 export class PlaywhatUiModule {}
@@ -133,37 +130,13 @@ export function initFactoryServices(
   return noop;
 }
 
-export function configTheThingImitation(
-  imitationAccessService: TheThingImitationAccessService
-  // theThingViewsService: TheThingViewsService
-  // theThingEditorService: TheThingEditorService
+export function configTheThingModule(
+  imitationFactory: ImitationFactoryService
 ) {
   return () => {
-    imitationAccessService.addLocal([
-      ImitationPlay,
-      ImitationTourPlan,
-      ImitationEquipment
-    ]);
-    // theThingViewsService.addView('play', {
-    //   id: 'play',
-    //   label: '體驗',
-    //   component: PlayViewComponent
-    // });
-    // theThingViewsService.addView('tour', {
-    //   id: 'tour',
-    //   label: '體驗組合',
-    //   component: TourViewComponent
-    // });
-    // theThingViewsService.addView('tour-plan', {
-    //   id: 'tour-plan',
-    //   label: '遊程規劃',
-    //   component: TourPlanViewComponent
-    // });
-    // theThingEditorService.addEditor({
-    //   id: 'tour-plan',
-    //   label: '遊程規劃',
-    //   component: TourPlanBuilderComponent
-    // });
+    TheThingImitations.forEach(imitation =>
+      imitationFactory.registerImitation(imitation)
+    );
   };
 }
 

@@ -7,7 +7,7 @@ import {
 import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
 import { SchedulePageObjectCypress } from '@ygg/schedule/test';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
-import { waitForLogin } from '@ygg/shared/user/test';
+import { loginTestUser, testUsers, waitForLogin } from '@ygg/shared/user/test';
 import { TheThing } from '@ygg/the-thing/core';
 import {
   MyThingsDataTablePageObjectCypress,
@@ -20,6 +20,7 @@ import {
   TourPlanUnscheduled
 } from '../schedule/sample-schedules';
 import { TimeRange } from '@ygg/shared/omni-types/core';
+import { beforeAll } from '../../support/before-all';
 
 describe('Create events', () => {
   const siteNavigator = new SiteNavigator();
@@ -46,17 +47,18 @@ describe('Create events', () => {
     )
   });
 
+  const me = testUsers[0];
+
   before(() => {
-    login().then(user => {
-      // Only Admin user can make schedule
-      theMockDatabase.setAdmins([user.id]);
-      cy.wrap(SampleThings).each((thing: any) => {
-        thing.ownerId = user.id;
-        theMockDatabase.insert(`${thing.collection}/${thing.id}`, thing);
-      });
-      cy.visit('/');
-      waitForLogin();
+    beforeAll();
+    // Only Admin user can make schedule
+    theMockDatabase.setAdmins([me.id]);
+    cy.wrap(SampleThings).each((thing: any) => {
+      thing.ownerId = me.id;
+      theMockDatabase.insert(`${thing.collection}/${thing.id}`, thing);
     });
+    cy.visit('/');
+    loginTestUser(me);
   });
 
   after(() => {

@@ -1,17 +1,17 @@
-import { login, theMockDatabase } from '@ygg/shared/test/cypress';
+import { theMockDatabase } from '@ygg/shared/test/cypress';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
-import { Notification } from '@ygg/shared/user/core';
+import { Notification, User } from '@ygg/shared/user/core';
 import {
   AccountWidgetPageObjectCypress,
+  loginTestUser,
   MyNotificationListPageObjectCypress,
-  NotificationPageObjectCypress,
-  waitForLogin
+  testUsers
 } from '@ygg/shared/user/test';
+import { beforeAll } from '../../support/before-all';
 
 describe('Read new unread notifications', () => {
   const accountWidgetPO = new AccountWidgetPageObjectCypress();
   const myNotificationsPO = new MyNotificationListPageObjectCypress();
-  const notificationPO = new NotificationPageObjectCypress();
   const notifications: Notification[] = [];
   const countNotifications = 5;
   const countUnreadNotifications = 2;
@@ -27,19 +27,19 @@ describe('Read new unread notifications', () => {
     0,
     countUnreadNotifications
   );
+  const me: User = testUsers[0];
 
   before(() => {
-    login().then(user => {
-      notifications.forEach(ntf => {
-        ntf.inviterId = user.id;
-        ntf.inviteeId = user.id;
-      });
-      cy.wrap(notifications).each((ntf: Notification) => {
-        theMockDatabase.insert(`${Notification.collection}/${ntf.id}`, ntf);
-      });
-      cy.visit('/');
-      waitForLogin();
+    beforeAll();
+    notifications.forEach(ntf => {
+      ntf.inviterId = me.id;
+      ntf.inviteeId = me.id;
     });
+    cy.wrap(notifications).each((ntf: Notification) => {
+      theMockDatabase.insert(`${Notification.collection}/${ntf.id}`, ntf);
+    });
+    cy.visit('/');
+    loginTestUser(me);
   });
 
   after(() => {

@@ -42,7 +42,7 @@ export class TheThingStateComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.id && this.imitation) {
-      if (this.id !== changes.id.previousValue) {
+      if (changes.id && this.id !== changes.id.previousValue) {
         this.subscriptions.push(
           this.theThingFactory
             .load$(this.id)
@@ -56,7 +56,7 @@ export class TheThingStateComponent implements OnInit, OnChanges, OnDestroy {
             .subscribe()
         );
       }
-      if (this.imitation !== changes.imitation.previousValue) {
+      if (changes.imitation && this.imitation !== changes.imitation.previousValue) {
         this.currentState = this.imitation.getState(this.theThing);
       }
     }

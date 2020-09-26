@@ -4,6 +4,7 @@ import { TheThingCellDefine } from './cell-define';
 import { TheThingRelation, RelationRecord } from './relation';
 import { TheThingCell } from './cell';
 import { TheThing } from './the-thing';
+import { SerializableJSON } from '@ygg/shared/infra/core';
 
 export class Relationship {
   name: string;
@@ -61,6 +62,17 @@ export class Relationship {
     }
     if (!this.label) {
       this.label = this.name;
+    }
+  }
+    
+  toJSON(): any {
+    return {
+      name: this.name,
+      label: this.label,
+      subjectImitation: this.subjectImitation ? this.subjectImitation.name : "",
+      subjectCollection: this.subjectCollection || "",
+      objectImitation: this.objectImitation ? this.objectImitation.name : "",
+      objectCollection: this.objectCollection || ""
     }
   }
 

@@ -6,7 +6,7 @@ import {
   ImageThumbnailListPageObjectCypress
 } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
-import { logout } from '@ygg/shared/user/test';
+import { loginTestUser, logout, testUsers } from '@ygg/shared/user/test';
 import { PurchaseAction } from '@ygg/shopping/core';
 import { TheThing, TheThingState } from '@ygg/the-thing/core';
 import {
@@ -15,6 +15,7 @@ import {
 } from '@ygg/the-thing/test';
 import promisify from 'cypress-promise';
 import { omit, values } from 'lodash';
+import { beforeAll } from '../../support/before-all';
 import { MinimumPlay, SampleEquipments, SamplePlays } from './sample-plays';
 
 describe('Manipulate play states', () => {
@@ -27,7 +28,7 @@ describe('Manipulate play states', () => {
   const playAdminPO = new PlayAdminPageObjectCypress();
   const SampleThings = SamplePlays.concat(SampleEquipments);
   const homePlayList = new ImageThumbnailListPageObjectCypress();
-  let user: User;
+  const me: User = testUsers[0];
 
   // const playForRequestAssess = MinimumPlay.clone();
   // playForRequestAssess.name = '測試新體驗送審核操作流程';
@@ -58,24 +59,17 @@ describe('Manipulate play states', () => {
   }
 
   before(() => {
-    login().then(_user => {
-      user = _user;
-      theMockDatabase.setAdmins([]);
-      cy.wrap(SampleThings).each((thing: any) => {
-        thing.ownerId = user.id;
-        theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
-      });
-      cy.visit('/');
+    beforeAll();
+    theMockDatabase.setAdmins([]);
+    cy.wrap(SampleThings).each((thing: any) => {
+      thing.ownerId = me.id;
+      theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
     });
-  });
-
-  beforeEach(() => {
-    //Reset plays by states
-    // getCurrentUser().then(user => {
-    //   cy.wrap(values(playsByState)).each((thing: any) => {
-    //     theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
-    //   });
-    // });
+    cy.visit('/');
+    loginTestUser(me);
+    siteNavigator.goto(['plays', 'my'], myPlayListPO);
+    myPlayListPO.clickCreate();
+    playPO.expectVisible();
   });
 
   after(() => {
@@ -89,9 +83,6 @@ describe('Manipulate play states', () => {
   });
 
   it('State of just created play should be "new"', () => {
-    siteNavigator.goto(['plays', 'my'], myPlayListPO);
-    myPlayListPO.clickCreate();
-    playPO.expectVisible();
     playPO.expectState(ImitationPlay.states.new);
   });
 
@@ -112,7 +103,7 @@ describe('Manipulate play states', () => {
   it('State of "editing" play accessibility of owner', () => {
     playPO.expectModifiable();
     for (const action of values(ImitationPlay.actions)) {
-      if (action.id === 'request-assess') {
+      if (action.id === ImitationPlay.actions["request-assess"].id) {
         playPO.expectActionButton(action);
       } else {
         playPO.expectNoActionButton(action);
@@ -138,7 +129,7 @@ describe('Manipulate play states', () => {
   });
 
   it('Show plays of state "assess" in admin page', () => {
-    theMockDatabase.setAdmins([user.id]).then(() => {
+    theMockDatabase.setAdmins([me.id]).then(() => {
       siteNavigator.goto(['admin', 'play'], playAdminPO);
       playAdminPO.switchToTab(ImitationPlay.states.assess.name);
       playAdminPO.theThingDataTables[

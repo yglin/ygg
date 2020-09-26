@@ -10,7 +10,7 @@ import {
   YggDialogPageObjectCypress
 } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
-import { waitForLogin } from '@ygg/shared/user/test';
+import { loginTestUser, testUsers, waitForLogin } from '@ygg/shared/user/test';
 import {
   Purchase,
   PurchaseAction,
@@ -32,6 +32,7 @@ import {
   values,
   find
 } from 'lodash';
+import { beforeAll } from '../../support/before-all';
 import { HeaderPageObjectCypress } from '../../support/header.po';
 import {
   PlaysWithEquipment,
@@ -54,7 +55,7 @@ describe('Purchase plays and add to cart', () => {
   const headerPO = new HeaderPageObjectCypress();
   // const tourPlanViewPO = new TourPlanViewPageObjectCypress();
   const playPO = new TheThingPageObjectCypress('', ImitationPlay);
-  let currentUser: User;
+  const me: User = testUsers[0];
   let purchasesGlobal: Purchase[];
 
   function purchasePlays(plays: TheThing[]): Purchase[] {
@@ -87,15 +88,14 @@ describe('Purchase plays and add to cart', () => {
   }
 
   before(() => {
-    login().then(user => {
-      currentUser = user;
-      theMockDatabase.setAdmins([user.id]);
-      cy.wrap(SampleThings).each((thing: any) => {
-        thing.ownerId = user.id;
-        theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
-      });
-      cy.visit('/');
+    beforeAll();
+    theMockDatabase.setAdmins([me.id]);
+    cy.wrap(SampleThings).each((thing: any) => {
+      thing.ownerId = me.id;
+      theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
     });
+    cy.visit('/');
+    loginTestUser(me);
   });
 
   beforeEach(() => {

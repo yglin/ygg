@@ -60,7 +60,7 @@ const cellsOrder = [
 ];
 
 export const ImitationTourPlan: TheThingImitation = ImitationOrder.extend({
-  id: 'tour-plan',
+  id: 'playwhat-tour-plan',
   name: '旅遊',
   description: '規劃你想玩的體驗組合，預計出遊日期、參加人數，以及其他細節',
   icon: 'directions_bike',

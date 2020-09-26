@@ -15,7 +15,7 @@ export * from './lib/action';
 export * from './lib/the-thing-accessor';
 export * from './lib/relation-factory';
 export * from './lib/relation-accessor';
-export * from './lib/factory';
 export * from './lib/ui-config';
 export * from './lib/map-finder';
 export * from './lib/flag';
+export * from './lib/factories';

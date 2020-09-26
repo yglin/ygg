@@ -40,7 +40,7 @@ export const ImitationEventCellDefines = extend(
 );
 
 export const ImitationEvent: TheThingImitation = new TheThingImitation({
-  id: 'event',
+  id: 'playwhat-event',
   name: '體驗活動',
   icon: 'event',
   collection: 'events',
