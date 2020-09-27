@@ -23,11 +23,15 @@ export class AccountWidgetPageObjectCypress extends AccountWidgetPageObject {
       .should('be.visible');
   }
 
-  expectNotification(countUnread: number) {
-    cy.get(this.getSelector('buttonNotification')).should(
-      'include.text',
-      countUnread.toString()
-    );
+  expectNotification(countUnread?: number) {
+    if (typeof countUnread === 'number') {
+      cy.get(this.getSelector('buttonNotification')).should(
+        'include.text',
+        countUnread.toString()
+      );
+    } else {
+      cy.get(this.getSelector('buttonNotification')).should('be.visible');
+    }
   }
 
   expectNotificationHidden() {

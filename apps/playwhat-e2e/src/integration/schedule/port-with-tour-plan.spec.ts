@@ -1,48 +1,50 @@
 import {
   CellDefinesTourPlan,
-  ImitationTourPlan,
-  ScheduleAdapter,
-  ImitationTourPlanCellDefines,
-  ImitationEvent,
   ImitationEventCellDefines,
-  RelationshipEventService
+  ImitationTourPlan,
+  ImitationTourPlanCellDefines,
+  RelationshipEventService,
+  ScheduleAdapter
 } from '@ygg/playwhat/core';
 import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
+import { Schedule, ServiceEvent } from '@ygg/schedule/core';
 import { SchedulePageObjectCypress } from '@ygg/schedule/test';
-import { login, theMockDatabase } from '@ygg/shared/test/cypress';
-import { waitForLogin } from '@ygg/shared/user/test';
+import { TimeRange } from '@ygg/shared/omni-types/core';
+import { theMockDatabase } from '@ygg/shared/test/cypress';
+import { loginTestUser, testUsers } from '@ygg/shared/user/test';
 import { TheThing } from '@ygg/the-thing/core';
 import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
+import { find } from 'lodash';
+import { beforeAll } from '../../support/before-all';
 import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import {
-  ScheduleTrivial,
-  TourPlanUnscheduled,
   ScheduledEvents,
-  RelationPlayOfEvents
+  ScheduleTrivial,
+  TourPlanUnscheduled
 } from './sample-schedules';
-import { find } from 'lodash';
-import { TimeRange } from '@ygg/shared/omni-types/core';
-import { ServiceEvent, Schedule } from '@ygg/schedule/core';
 
 describe('Create/Attach schedule data from/to tour-plan', () => {
   const siteNavigator = new SiteNavigator();
+  const tourPlanPO = new TourPlanPageObjectCypress();
+  const myTourPlansPO = new MyThingsDataTablePageObjectCypress(
+    '',
+    ImitationTourPlan
+  );
 
   const TourPlanUnscheduledWithoutDayTimeRange = TourPlanUnscheduled.clone();
   TourPlanUnscheduledWithoutDayTimeRange.name = `測試遊程(尚未規劃行程，沒有遊玩時段)_${Date.now()}`;
   TourPlanUnscheduledWithoutDayTimeRange.deleteCell(
     ImitationTourPlanCellDefines.dayTimeRange.id
   );
-  ImitationTourPlan.setState(TourPlanUnscheduledWithoutDayTimeRange, ImitationTourPlan.states.applied);
+  ImitationTourPlan.setState(
+    TourPlanUnscheduledWithoutDayTimeRange,
+    ImitationTourPlan.states.applied
+  );
 
   const SampleThings = SamplePlays.concat(SampleEquipments).concat([
     TourPlanUnscheduled,
     TourPlanUnscheduledWithoutDayTimeRange
   ]);
-  const tourPlanPO = new TourPlanPageObjectCypress();
-  const myTourPlansPO = new MyThingsDataTablePageObjectCypress(
-    '',
-    ImitationTourPlan
-  );
   // Only tour-plans of state applied can make schedule
   ImitationTourPlan.setState(
     TourPlanUnscheduled,
@@ -91,17 +93,18 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
   //   return event;
   // });
 
+  const me = testUsers[0];
+
   before(() => {
-    login().then(user => {
-      // Only Admin user can make schedule
-      theMockDatabase.setAdmins([user.id]);
-      cy.wrap(SampleThings).each((thing: any) => {
-        thing.ownerId = user.id;
-        theMockDatabase.insert(`${thing.collection}/${thing.id}`, thing);
-      });
-      cy.visit('/');
-      waitForLogin();
+    beforeAll();
+    // Only Admin user can make schedule
+    theMockDatabase.setAdmins([me.id]);
+    cy.wrap(SampleThings).each((thing: any) => {
+      thing.ownerId = me.id;
+      theMockDatabase.insert(`${thing.collection}/${thing.id}`, thing);
     });
+    cy.visit('/');
+    loginTestUser(me);
   });
 
   after(() => {
@@ -208,11 +211,12 @@ describe('Create/Attach schedule data from/to tour-plan', () => {
 
   it('Apply default dayTimeRange if not found in tour-plan', () => {
     siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduledWithoutDayTimeRange);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(
+      TourPlanUnscheduledWithoutDayTimeRange
+    );
     tourPlanPO.expectVisible();
     tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
     schedulePO.expectVisible();
     schedulePO.expectDayTimeRange(Schedule.Defaults.dayTimeRange);
   });
-  
 });

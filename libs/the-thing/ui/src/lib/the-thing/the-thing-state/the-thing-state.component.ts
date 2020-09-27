@@ -45,7 +45,7 @@ export class TheThingStateComponent implements OnInit, OnChanges, OnDestroy {
       if (changes.id && this.id !== changes.id.previousValue) {
         this.subscriptions.push(
           this.theThingFactory
-            .load$(this.id)
+            .load$(this.id, this.imitation.collection)
             .pipe(
               filter(thing => !!thing),
               tap(thing => {

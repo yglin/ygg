@@ -1,8 +1,16 @@
 import * as functions from 'firebase-functions';
-import { ImitationEvent, RelationshipScheduleEvent } from '@ygg/playwhat/core';
+import {
+  ImitationEvent,
+  ImitationTourPlan,
+  RelationshipScheduleEvent
+} from '@ygg/playwhat/core';
 import { TheThing } from '@ygg/the-thing/core';
 import { take } from 'rxjs/operators';
-import { relationFactory } from '@ygg/the-thing/functions';
+import {
+  relationFactory,
+  theThingAccessor,
+  theThingFactory
+} from '@ygg/the-thing/functions';
 import { tourPlanFactory } from '../factories';
 import { getEnv } from '@ygg/shared/infra/core';
 
@@ -43,7 +51,20 @@ export const onEventApprovalOfHost = functions
         //     .join('\n')}`
         // );
         for (const relationRecord of relationsOfTourPlan) {
-          await tourPlanFactory.checkApproval(relationRecord.subjectId);
+          const allEventsApproved = await tourPlanFactory.checkApproval(
+            relationRecord.subjectId
+          );
+          if (allEventsApproved) {
+            const tourPlan = await theThingAccessor.load(
+              relationRecord.subjectId,
+              ImitationTourPlan.collection
+            );
+            await theThingFactory.setState(
+              tourPlan,
+              ImitationTourPlan,
+              ImitationTourPlan.states['approved']
+            );
+          }
           // console.log(
           //   `Done checking approval of tour-plan ${relationRecord.subjectId}`
           // );
@@ -51,7 +72,10 @@ export const onEventApprovalOfHost = functions
       }
       return Promise.resolve();
     } catch (error) {
-      console.error(error.message);
-      return Promise.reject();
+      const wrapError = new Error(
+        `Failed to check approve of parent tour-plan of event ${context.params.id}.\n${error.message}`
+      );
+      console.error(wrapError.message);
+      return Promise.reject(wrapError);
     }
   });

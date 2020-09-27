@@ -122,7 +122,7 @@ export class EquipmentFactoryService implements OnDestroy, Resolve<TheThing> {
 
   load$(id: string): Observable<TheThing> {
     return this.theThingFactory
-      .load$(id)
+      .load$(id, ImitationEquipment.collection)
       .pipe(tap(theThing => (this.theThing = theThing)));
   }
 
@@ -133,8 +133,7 @@ export class EquipmentFactoryService implements OnDestroy, Resolve<TheThing> {
     if (!confirm) {
       return;
     }
-    await this.theThingFactory.save(this.theThing, {
-      imitation: ImitationEquipment,
+    await this.theThingFactory.save(this.theThing, ImitationEquipment, {
       requireOwner: true
     });
     await this.emcee.alert(`已成功儲存 ${this.theThing.name}`, AlertType.Info);

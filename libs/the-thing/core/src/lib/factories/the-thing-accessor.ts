@@ -1,5 +1,5 @@
-import { TheThing } from './the-thing';
-import { TheThingFilter } from './filter';
+import { TheThing } from '../the-thing';
+import { TheThingFilter } from '../filter';
 import { Observable, throwError } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 import { DataAccessor, Query } from '@ygg/shared/infra/core';
@@ -56,6 +56,14 @@ export abstract class TheThingAccessor {
     return this.dataAccessor
       .listByIds$(collection, ids)
       .pipe(map(items => items.map(item => new TheThing().fromJSON(item))));
+  }
+
+  async listByIds(
+    ids: string[],
+    collection: string = TheThing.collection
+  ): Promise<TheThing[]> {
+    const dataItems: any[] = await this.dataAccessor.listByIds(collection, ids);
+    return dataItems.map(dataItem => new TheThing().fromJSON(dataItem));
   }
 
   findByTags$(tags: Tags | string[]): Observable<TheThing[]> {

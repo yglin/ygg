@@ -1,5 +1,5 @@
-import { TourPlanFactory } from "@ygg/playwhat/core";
+import { TourPlanFactoryBasic } from "@ygg/playwhat/core";
 
-export class TourPlanFactoryFunctions extends TourPlanFactory {
+export class TourPlanFactoryFunctions extends TourPlanFactoryBasic {
 }
 

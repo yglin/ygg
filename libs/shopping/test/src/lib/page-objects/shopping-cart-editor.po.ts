@@ -4,7 +4,7 @@ import {
   YggDialogPageObjectCypress,
   ErrorMessagesPageObjectCypress
 } from '@ygg/shared/ui/test';
-import { Purchase } from '@ygg/shopping/core';
+import { ImitationProduct, Purchase } from '@ygg/shopping/core';
 import {
   IPurchasePack,
   PurchaseRowPageObject,
@@ -74,23 +74,24 @@ export class ShoppingCartEditorPageObjectCypress extends ShoppingCartEditorPageO
     purchaseRowPO.setQuantity(quantity);
   }
 
-  purchasePack(pack: IPurchasePack): void {
-    cy.get(this.getSelector('buttonAddPurchase')).click();
-    const dialogPO = new YggDialogPageObjectCypress();
-    const theThingFinderPO = new TheThingFinderPageObjectCypress(
-      dialogPO.getSelector()
-    );
-    dialogPO.expectVisible();
-    theThingFinderPO.expectVisible();
-    theThingFinderPO.theThingFilterPO.expectFilter(pack.filter);
-    const products: TheThing[] = pack.purchases.map(p =>
-      theMockDatabase.getEntity(p.productId)
-    );
-    theThingFinderPO.selectItems(products);
-    dialogPO.confirm();
-    dialogPO.expectClosed();
-    this.updatePurchases(pack.purchases);
-  }
+  // purchasePack(pack: IPurchasePack): void {
+  //   cy.get(this.getSelector('buttonAddPurchase')).click();
+  //   const dialogPO = new YggDialogPageObjectCypress();
+  //   const theThingFinderPO = new TheThingFinderPageObjectCypress(
+  //     dialogPO.getSelector(),
+  //     ImitationProduct
+  //   );
+  //   dialogPO.expectVisible();
+  //   theThingFinderPO.expectVisible();
+  //   theThingFinderPO.theThingFilterPO.expectFilter(pack.filter);
+  //   const products: TheThing[] = pack.purchases.map(p =>
+  //     theMockDatabase.getEntity(p.productId)
+  //   );
+  //   theThingFinderPO.selectItems(products);
+  //   dialogPO.confirm();
+  //   dialogPO.expectClosed();
+  //   this.updatePurchases(pack.purchases);
+  // }
 
   updatePurchases(purchases: Purchase[]): void {
     cy.wrap(purchases).each((purchase: any) => {

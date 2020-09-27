@@ -1,5 +1,6 @@
 import { Query } from './query';
 import { Observable } from 'rxjs';
+import { isEmpty } from 'lodash';
 
 export abstract class DataAccessor {
   abstract async save(collection: string, id: string, data: any);
@@ -12,4 +13,13 @@ export abstract class DataAccessor {
   abstract async delete(collection: string, id: string);
   abstract find$(collection: string, queries: Query[]): Observable<any[]>;
   abstract async find(collection: string, queries: Query[]): Promise<any[]>; 
+
+  async listByIds(collection: string, ids: string[]): Promise<any[]> {
+    if (isEmpty(ids)) {
+      return [];
+    } else {
+      return Promise.all(ids.map(id => this.load(collection, id)));
+    }
+  }
+
 }

@@ -482,18 +482,20 @@ export class TheThing implements Entity, ImageThumbnailItem {
   /**
    * Get the only one relation object's id
    */
-  getRelationObjectId(): string {
-    for (const key in this.relations) {
-      if (this.relations.hasOwnProperty(key)) {
-        const relationObjectIds = this.relations[key].map(
-          relation => relation.objectId
-        );
-        if (!isEmpty(relationObjectIds)) {
-          return relationObjectIds[0];
-        }
-      }
+  getRelationObjectId(relationName: string): string {
+    if (!this.hasRelation(relationName)) {
+      throw new Error(`TheThing ${this.id} has no relation ${relationName}`);
     }
-    return null;
+    const relationObjectIds = this.relations[relationName].map(
+      relation => relation.objectId
+    );
+    if (isEmpty(relationObjectIds)) {
+      throw new Error(
+        `TheThing ${this.id} has relation ${relationName} but contains no object`
+      );
+    } else {
+      return relationObjectIds[0];
+    }
   }
 
   forEachRelation(handler: (relation: TheThingRelation) => void) {

@@ -10,3 +10,4 @@ export * from './lib/relation-factory.service';
 export * from './lib/relation-access.service';
 export * from './lib/the-thing-map-finder.service';
 export * from './lib/imitation-factory.service';
+export * from './lib/the-thing-source.service';

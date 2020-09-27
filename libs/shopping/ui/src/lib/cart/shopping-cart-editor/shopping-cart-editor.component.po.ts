@@ -62,7 +62,7 @@ export abstract class ShoppingCartEditorPageObject extends PageObject {
   }
 
   abstract setQuantity(productId: string, quantity: number): void;
-  abstract purchasePack(pack: IPurchasePack): void;
+  // abstract purchasePack(pack: IPurchasePack): void;
   abstract updatePurchases(purchases: Purchase[]): void;
   abstract expectPurchases(purchases: Purchase[]): void;
   abstract submit(): void;

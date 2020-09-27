@@ -22,6 +22,7 @@ import {
   TourPlanScheduled3Events,
   TourPlanScheduledOneEvent
 } from '../schedule/sample-schedules';
+import { hostApproveEvent } from './event-testbot';
 
 describe('Approve scheduled events by host', () => {
   const siteNavigator = new SiteNavigator();
@@ -66,13 +67,13 @@ describe('Approve scheduled events by host', () => {
     });
 
     cy.visit('/');
-    loginTestUser(eventHost);
-    siteNavigator.goto(
-      [ImitationEvent.routePath, 'my'],
-      myHostEventsDataTablePO
-    );
-    myHostEventsDataTablePO.gotoTheThingView(testEvent);
-    eventPO.expectVisible();
+    // loginTestUser(eventHost);
+    // siteNavigator.goto(
+    //   [ImitationEvent.routePath, 'my'],
+    //   myHostEventsDataTablePO
+    // );
+    // myHostEventsDataTablePO.gotoTheThingView(testEvent);
+    // eventPO.expectVisible();
   });
 
   after(() => {
@@ -80,12 +81,13 @@ describe('Approve scheduled events by host', () => {
   });
 
   it('Approve event as host and redirect to calendar', () => {
-    eventPO.runAction(ImitationEvent.actions['host-approve']);
-    emceePO.confirm(`確定會以負責人身份出席參加行程${testEvent.name}？`);
-    emceePO.alert(`已確認參加，之後若要取消請聯絡主辦者${eventOrganizer.name}`);
-    myCalendarPO.expectVisible();
-    // myCalendarPO.expectMonth(testEventTimeRange.start);
-    myCalendarPO.expectEvent(testEvent);
+    hostApproveEvent(eventHost, eventOrganizer, testEvent);
+    // eventPO.runAction(ImitationEvent.actions['host-approve']);
+    // emceePO.confirm(`確定會以負責人身份出席參加行程${testEvent.name}？`);
+    // emceePO.alert(`已確認參加，之後若要取消請聯絡主辦者${eventOrganizer.name}`);
+    // myCalendarPO.expectVisible();
+    // // myCalendarPO.expectMonth(testEventTimeRange.start);
+    // myCalendarPO.expectEvent(testEvent);
   });
 
   it('Click on event in calendar redirect to view page', () => {

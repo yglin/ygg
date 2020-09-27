@@ -305,8 +305,7 @@ export class TheThingComponent implements OnInit, OnDestroy {
     //   console.log(`FUUUUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQQQQQ~~~!!!!`);
     //   console.dir(theThing);
     // });
-    await this.theThingFactory.save(this.theThing, {
-      imitation: this.imitation,
+    await this.theThingFactory.save(this.theThing, this.imitation, {
       requireOwner: true
     });
     // if (

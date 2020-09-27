@@ -20,12 +20,13 @@ import {
   TimeLength
 } from '@ygg/shared/omni-types/core';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
-import { waitForLogin } from '@ygg/shared/user/test';
+import { loginTestUser, testUsers, waitForLogin } from '@ygg/shared/user/test';
 import { RelationPurchase, ShoppingCellDefines } from '@ygg/shopping/core';
 import { RelationRecord, TheThing } from '@ygg/the-thing/core';
 import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
 import { random } from 'lodash';
 import * as moment from 'moment';
+import { beforeAll } from '../../support/before-all';
 import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import { TourPlanUnscheduled } from './sample-schedules';
 
@@ -42,7 +43,9 @@ function forgeApprovedEventsForPlay(
   timeRange: TimeRange
 ): TheThing[] {
   const maximum = play.getCellValue(ImitationPlayCellDefines.maximum.id);
-  const timeLength = (play.getCellValue(ImitationPlayCellDefines.timeLength.id) as TimeLength).getLength();
+  const timeLength = (play.getCellValue(
+    ImitationPlayCellDefines.timeLength.id
+  ) as TimeLength).getLength();
   const events: TheThing[] = [];
   const timeIterator = moment(timeRange.start);
   timeIterator.add(30 * random(1, 4), 'minute');
@@ -217,32 +220,32 @@ describe('Schedule edit', () => {
   );
   approvedEvents.push(approvedEvent02);
 
+  const me = testUsers[0];
+
   before(() => {
-    // Only tour-plans of state applied can make schedule
-    login().then(user => {
-      // Only Admin user can make schedule
-      theMockDatabase.setAdmins([user.id]);
-      cy.wrap(SampleThings).each((thing: any) => {
-        thing.ownerId = user.id;
-        theMockDatabase.insert(`${thing.collection}/${thing.id}`, thing);
-      });
-      stubBusisnessHourForPlay(testPlay1, testBusinessHours01);
-      stubBusisnessHourForPlay(testPlay2, testBusinessHours02);
-      stubBusisnessHourForPlay(testPlay3, testBusinessHours03);
-      cy.wrap(approvedEvents).each((event: TheThing) => {
-        stubEvent(event, testPlay3);
-      });
-      cy.visit('/');
-      waitForLogin();
-      siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-      myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
-      tourPlanPO.expectVisible();
-      tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
-      schedulePO.expectVisible();
-      // Wait for loading service availabilities
-      cy.wait(3000);
-      // cy.pause();
+    beforeAll();
+    // Only Admin user can make schedule
+    theMockDatabase.setAdmins([me.id]);
+    cy.wrap(SampleThings).each((thing: any) => {
+      thing.ownerId = me.id;
+      theMockDatabase.insert(`${thing.collection}/${thing.id}`, thing);
     });
+    stubBusisnessHourForPlay(testPlay1, testBusinessHours01);
+    stubBusisnessHourForPlay(testPlay2, testBusinessHours02);
+    stubBusisnessHourForPlay(testPlay3, testBusinessHours03);
+    cy.wrap(approvedEvents).each((event: TheThing) => {
+      stubEvent(event, testPlay3);
+    });
+    cy.visit('/');
+    loginTestUser(me);
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(TourPlanUnscheduled);
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.runAction(ImitationTourPlan.actions['schedule']);
+    schedulePO.expectVisible();
+    // Wait for loading service availabilities
+    cy.wait(3000);
+    // cy.pause();
   });
 
   after(() => {
@@ -251,7 +254,7 @@ describe('Schedule edit', () => {
     // siteNavigator.goto(['the-things', 'my'], myThingsPO);
     // cy.wait(3000);
     // myThingsPO.deleteAll();
-    // theMockDatabase.clear();
+    theMockDatabase.clear();
   });
 
   it('Click on event shows its business-hours', () => {

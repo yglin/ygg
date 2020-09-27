@@ -37,7 +37,7 @@ export const routes: Route[] = [
         path: ':id',
         component: TourPlanComponent,
         resolve: {
-          tourPlan: TourPlanFactoryService
+          tourPlan$: TourPlanFactoryService
         }
       }
     ]

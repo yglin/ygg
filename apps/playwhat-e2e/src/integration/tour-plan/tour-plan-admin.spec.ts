@@ -14,43 +14,45 @@ import {
 import { keys, values, flatten } from 'lodash';
 import { Month } from '@ygg/shared/omni-types/core';
 import { ImitationTourPlan } from '@ygg/playwhat/core';
-import { waitForLogin } from '@ygg/shared/user/test';
-
-const tourPlansByStateAndMonth: {
-  [state: string]: TheThing[];
-} = stubTourPlansByStateAndMonth();
-const TourPlanCompletedThisMonth =
-  tourPlansByStateAndMonth[ImitationTourPlan.states.completed.name][0];
-const purchases: Purchase[] = TourPlanCompletedThisMonth.getRelations(
-  RelationPurchase.name
-).map(r => Purchase.fromRelation(r));
-
-const siteNavigator = new SiteNavigator();
-// const SampleTourPlans = [TourPlanCompleted];
-const SampleThings = SamplePlays.concat(SampleEquipments)
-  // .concat(SampleTourPlans)
-  .concat(flatten(values(tourPlansByStateAndMonth)));
-
-const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();
-// const tourPlanView = new TourPlanViewPageObjectCypress();
-let incomeRecord: IncomeRecord;
+import { loginTestUser, testUsers, waitForLogin } from '@ygg/shared/user/test';
+import { User } from '@ygg/shared/user/core';
+import { beforeAll } from '../../support/before-all';
 
 describe('Tour-plan administration', () => {
-  before(() => {
-    login().then(user => {
-      theMockDatabase.setAdmins([user.id]);
-      cy.wrap(SampleThings).each((thing: any) => {
-        thing.ownerId = user.id;
-        theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
-      });
-      incomeRecord = new IncomeRecord({
-        producerId: user.id,
-        purchases: purchases
-      });
+  const tourPlansByStateAndMonth: {
+    [state: string]: TheThing[];
+  } = stubTourPlansByStateAndMonth();
+  const TourPlanCompletedThisMonth =
+    tourPlansByStateAndMonth[ImitationTourPlan.states.completed.name][0];
+  const purchases: Purchase[] = TourPlanCompletedThisMonth.getRelations(
+    RelationPurchase.name
+  ).map(r => Purchase.fromRelation(r));
 
-      cy.visit('/');
-      waitForLogin();
+  const siteNavigator = new SiteNavigator();
+  // const SampleTourPlans = [TourPlanCompleted];
+  const SampleThings = SamplePlays.concat(SampleEquipments)
+    // .concat(SampleTourPlans)
+    .concat(flatten(values(tourPlansByStateAndMonth)));
+
+  const tourPlanAdminPO = new TourPlanAdminPageObjectCypress();
+  // const tourPlanView = new TourPlanViewPageObjectCypress();
+  let incomeRecord: IncomeRecord;
+  const me: User = testUsers[0];
+
+  before(() => {
+    beforeAll();
+    theMockDatabase.setAdmins([me.id]);
+    cy.wrap(SampleThings).each((thing: any) => {
+      thing.ownerId = me.id;
+      theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
     });
+    incomeRecord = new IncomeRecord({
+      producerId: me.id,
+      purchases: purchases
+    });
+
+    cy.visit('/');
+    loginTestUser(me);
   });
 
   beforeEach(() => {
@@ -58,14 +60,7 @@ describe('Tour-plan administration', () => {
   });
 
   after(() => {
-    // // Goto my-things page and delete all test things
-    // const myThingsPO = new MyThingsPageObjectCypress();
-    // siteNavigator.goto(['the-things', 'my'], myThingsPO);
-    // cy.wait(3000);
-    // myThingsPO.deleteAll();
-
     theMockDatabase.clear();
-    // theMockDatabase.restoreRTDB();
   });
 
   it('Filter tour-plans by month', () => {

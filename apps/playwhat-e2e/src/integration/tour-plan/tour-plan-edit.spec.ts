@@ -2,11 +2,13 @@
 import { ImitationTourPlan } from '@ygg/playwhat/core';
 import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
-import { waitForLogin } from '@ygg/shared/user/test';
+import { User } from '@ygg/shared/user/core';
+import { loginTestUser, testUsers, waitForLogin } from '@ygg/shared/user/test';
 import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
 import promisify from 'cypress-promise';
 import { values } from 'lodash';
+import { beforeAll } from '../../support/before-all';
 import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import { MinimalTourPlan, TourPlanFull } from './sample-tour-plan';
 
@@ -33,16 +35,17 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     tourPlan
   ]);
 
+  const me: User = testUsers[0];
+
   before(() => {
-    login().then(user => {
-      MinimalTourPlan.ownerId = user.id;
-      cy.wrap(SampleThings).each((thing: any) => {
-        thing.ownerId = user.id;
-        theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
-      });
-      cy.visit('/');
-      waitForLogin();
+    beforeAll();
+    MinimalTourPlan.ownerId = me.id;
+    cy.wrap(SampleThings).each((thing: any) => {
+      thing.ownerId = me.id;
+      theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
     });
+    cy.visit('/');
+    loginTestUser(me);
   });
 
   // beforeEach(() => {

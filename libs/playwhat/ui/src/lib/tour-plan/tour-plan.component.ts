@@ -1,17 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   ImitationEvent,
   ImitationTourPlan,
   RelationshipScheduleEvent
 } from '@ygg/playwhat/core';
+import { EmceeService } from '@ygg/shared/ui/widgets';
 import { AuthorizeService } from '@ygg/shared/user/ui';
 import {
   evalTotalChargeFromRelations,
   RelationPurchase
 } from '@ygg/shopping/core';
 import { TheThing, TheThingRelation } from '@ygg/the-thing/core';
-import { TheThingFactoryService } from '@ygg/the-thing/ui';
-import { Subscription } from 'rxjs';
+import { get } from 'lodash';
+import { Observable, Subscription } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { TourPlanFactoryService } from '../tour-plan-factory.service';
 
@@ -23,6 +25,7 @@ import { TourPlanFactoryService } from '../tour-plan-factory.service';
 export class TourPlanComponent implements OnInit, OnDestroy {
   readonly: boolean;
   tourPlan: TheThing;
+  tourPlan$: Observable<TheThing>;
   imitation = ImitationTourPlan;
   subscriptions: Subscription[] = [];
   purchaseRelations: TheThingRelation[] = [];
@@ -38,53 +41,11 @@ export class TourPlanComponent implements OnInit, OnDestroy {
   // });
 
   constructor(
-    private theThingFactory: TheThingFactoryService,
+    private route: ActivatedRoute,
     private tourPlanFactory: TourPlanFactoryService,
-    private authorizeService: AuthorizeService
-  ) {
-    this.subscriptions.push(
-      this.tourPlanFactory.tourPlan$
-        .pipe(
-          filter(tourPlan => {
-            this.reset();
-            this.tourPlan = tourPlan;
-            return !!tourPlan;
-          }),
-          tap(async tourPlan => {
-            this.purchaseRelations = this.tourPlan.getRelations(
-              RelationPurchase.name
-            );
-            this.totalCharge = await evalTotalChargeFromRelations(
-              this.purchaseRelations
-            );
-            this.eventIds = this.tourPlan
-              .getRelations(RelationshipScheduleEvent.name)
-              .map(r => r.objectId);
-            this.showThread = !ImitationTourPlan.isState(
-              this.tourPlan,
-              ImitationTourPlan.states.new
-            );
-          }),
-          switchMap(tourPlan => this.authorizeService.canModify$(tourPlan)),
-          tap(
-            canModify =>
-              (this.readonly = !(
-                canModify && ImitationTourPlan.canModify(this.tourPlan)
-              ))
-          )
-        )
-        .subscribe()
-    );
-    // this.subscriptions.push(
-    //   merge(
-    //     ...[this.actionSchedule, this.actionSAR].map((action: any) =>
-    //       this.theThingFactory
-    //         .isActionGranted$(this.tourPlan.id, action, ImitationTourPlan)
-    //         .pipe(tap(isGranted => (action.granted = isGranted)))
-    //     )
-    //   ).subscribe()
-    // );
-  }
+    private authorizeService: AuthorizeService,
+    private emcee: EmceeService
+  ) {}
 
   reset() {
     this.purchaseRelations.length = 0;
@@ -92,7 +53,46 @@ export class TourPlanComponent implements OnInit, OnDestroy {
     this.eventIds.length = 0;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.tourPlan$ = get(this.route.snapshot.data, 'tourPlan$', null);
+    if (this.tourPlan$) {
+      this.subscriptions.push(
+        this.tourPlan$
+          .pipe(
+            filter(tourPlan => {
+              this.reset();
+              this.tourPlan = tourPlan;
+              return !!tourPlan;
+            }),
+            tap(async tourPlan => {
+              this.purchaseRelations = this.tourPlan.getRelations(
+                RelationPurchase.name
+              );
+              this.totalCharge = await evalTotalChargeFromRelations(
+                this.purchaseRelations
+              );
+              this.eventIds = this.tourPlan
+                .getRelations(RelationshipScheduleEvent.name)
+                .map(r => r.objectId);
+              this.showThread = !ImitationTourPlan.isState(
+                this.tourPlan,
+                ImitationTourPlan.states.new
+              );
+            }),
+            switchMap(tourPlan => this.authorizeService.canModify$(tourPlan)),
+            tap(
+              canModify =>
+                (this.readonly = !(
+                  canModify && ImitationTourPlan.canModify(this.tourPlan)
+                ))
+            )
+          )
+          .subscribe()
+      );
+    } else {
+      this.emcee.error(`找不到遊程的資料來源`);
+    }
+  }
 
   ngOnDestroy() {
     for (const subscription of this.subscriptions) {

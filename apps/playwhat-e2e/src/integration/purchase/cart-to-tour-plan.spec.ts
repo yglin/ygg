@@ -4,14 +4,14 @@ import {
   RelationshipEquipment
 } from '@ygg/playwhat/core';
 import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
-import { login, theMockDatabase } from '@ygg/shared/test/cypress';
+import { theMockDatabase } from '@ygg/shared/test/cypress';
 import {
   EmceePageObjectCypress,
   ImageThumbnailListPageObjectCypress,
   YggDialogPageObjectCypress
 } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
-import { waitForLogin } from '@ygg/shared/user/test';
+import { loginTestUser, logout, testUsers, waitForLogin } from '@ygg/shared/user/test';
 import {
   Purchase,
   PurchaseAction,
@@ -28,7 +28,8 @@ import {
   // MyThingsPageObjectCypress,
   TheThingPageObjectCypress
 } from '@ygg/the-thing/test';
-import { chunk, isEmpty, keyBy, random, sampleSize, sum, result } from 'lodash';
+import { chunk, isEmpty, keyBy, random, sampleSize, sum } from 'lodash';
+import { beforeAll } from '../../support/before-all';
 import { HeaderPageObjectCypress } from '../../support/header.po';
 import {
   PlaysWithEquipment,
@@ -66,7 +67,7 @@ describe('Import/export purchases between cart and tour-plan', () => {
     ImitationTourPlan
   );
 
-  let currentUser: User;
+  const me: User = testUsers[0];
 
   const purchasesTourPlanWithPlaysNoEquipment: Purchase[] = TourPlanWithPlaysNoEquipment.getRelations(
     RelationPurchase.name
@@ -132,16 +133,14 @@ describe('Import/export purchases between cart and tour-plan', () => {
   }
 
   before(() => {
-    login().then(user => {
-      currentUser = user;
-      theMockDatabase.setAdmins([user.id]);
-      cy.wrap(SampleThings).each((thing: any) => {
-        thing.ownerId = user.id;
-        theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
-      });
-      cy.visit('/');
-      waitForLogin();
+    beforeAll();
+    theMockDatabase.setAdmins([me.id]);
+    cy.wrap(SampleThings).each((thing: any) => {
+      thing.ownerId = me.id;
+      theMockDatabase.insert(`${TheThing.collection}/${thing.id}`, thing);
     });
+    cy.visit('/');
+    loginTestUser(me);
   });
 
   // beforeEach(() => {
@@ -159,6 +158,64 @@ describe('Import/export purchases between cart and tour-plan', () => {
     // myThingsPO.deleteAll();
     theMockDatabase.clear();
     // theMockDatabase.restoreRTDB();
+  });
+
+  it('Save tour plan with purchased plays', () => {
+    // cy.pause();
+    const plays = PlaysWithoutEquipment;
+    purchasePlays(plays).then(purchases => {
+      resultTourPlan.setRelation(
+        RelationPurchase.name,
+        purchases.map(p => p.toRelation())
+      );
+      const totalCharge = sum(purchases.map(p => p.charge));
+
+      // Start test
+      siteNavigator.goto(['shopping', 'cart'], cartPO);
+      cartPO.submit();
+      // cy.pause();
+      tourPlanPO.expectVisible();
+      tourPlanPO.theThingPO.setValue(resultTourPlan);
+      tourPlanPO.theThingPO.save(resultTourPlan);
+      siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+      myTourPlansPO.theThingDataTablePO.gotoTheThingView(resultTourPlan);
+      // cy.pause();
+      tourPlanPO.expectVisible();
+      tourPlanPO.theThingPO.expectValue(resultTourPlan);
+      tourPlanPO.expectPurchases(purchases);
+      tourPlanPO.expectTotalCharge(totalCharge);
+      siteNavigator.goto(['shopping', 'cart'], cartPO);
+      cartPO.removeAll();
+    });
+  });
+
+  it('Edit exist tour-plan altering purchases', () => {
+    // const resultTourPlan = MinimalTourPlan.clone();
+    // resultTourPlan.name = `測試遊程修改(加購體驗，含設備)_${Date.now()}`;
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(resultTourPlan);
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.runAction(
+      ImitationTourPlan.actions['alter-shopping-cart']
+    );
+    cartPO.expectVisible();
+    cartPO.removeAll();
+    const plays: TheThing[] = PlaysWithEquipment;
+    purchasePlays(plays).then(purchases => {
+      const totalCharge = sum(purchases.map(p => p.charge));
+      siteNavigator.goto(['shopping', 'cart'], cartPO);
+      cartPO.expectSubmitTarget(resultTourPlan.name);
+      cartPO.submit();
+      tourPlanPO.expectVisible();
+      tourPlanPO.expectPurchases(purchases);
+      tourPlanPO.theThingPO.save(resultTourPlan);
+      siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+      myTourPlansPO.theThingDataTablePO.gotoTheThingView(resultTourPlan);
+      tourPlanPO.expectVisible();
+      // tourPlanPO.expectValue(resultTourPlan);
+      tourPlanPO.expectPurchases(purchases);
+      tourPlanPO.expectTotalCharge(totalCharge);
+    });
   });
 
   it('Submit purchases to tour-plan creation page', () => {
@@ -213,63 +270,6 @@ describe('Import/export purchases between cart and tour-plan', () => {
     cartPO.expectPurchases(purchasesTourPlanWithPlaysNoEquipment);
     cartPO.expectTotalCharge(totalChargeTourPlanWithPlaysNoEquipment);
     cartPO.removeAll();
-  });
-
-  it('Save tour plan with purchased plays', () => {
-    cy.visit('/');
-    waitForLogin();
-    const plays = PlaysWithoutEquipment;
-    purchasePlays(plays).then(purchases => {
-      resultTourPlan.setRelation(
-        RelationPurchase.name,
-        purchases.map(p => p.toRelation())
-      );
-      const totalCharge = sum(purchases.map(p => p.charge));
-
-      // Start test
-      siteNavigator.goto(['shopping', 'cart'], cartPO);
-      cartPO.submit();
-      tourPlanPO.expectVisible();
-      tourPlanPO.theThingPO.setValue(resultTourPlan);
-      tourPlanPO.theThingPO.save(resultTourPlan);
-      siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-      myTourPlansPO.theThingDataTablePO.gotoTheThingView(resultTourPlan);
-      tourPlanPO.expectVisible();
-      tourPlanPO.theThingPO.expectValue(resultTourPlan);
-      tourPlanPO.expectPurchases(purchases);
-      tourPlanPO.expectTotalCharge(totalCharge);
-      siteNavigator.goto(['shopping', 'cart'], cartPO);
-      cartPO.removeAll();
-    });
-  });
-
-  it('Edit exist tour-plan altering purchases', () => {
-    // const resultTourPlan = MinimalTourPlan.clone();
-    // resultTourPlan.name = `測試遊程修改(加購體驗，含設備)_${Date.now()}`;
-    const plays: TheThing[] = PlaysWithEquipment;
-    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-    myTourPlansPO.theThingDataTablePO.gotoTheThingView(resultTourPlan);
-    tourPlanPO.expectVisible();
-    tourPlanPO.theThingPO.runAction(
-      ImitationTourPlan.actions['alter-shopping-cart']
-    );
-    cartPO.expectVisible();
-    cartPO.removeAll();
-    purchasePlays(plays).then(purchases => {
-      const totalCharge = sum(purchases.map(p => p.charge));
-      siteNavigator.goto(['shopping', 'cart'], cartPO);
-      cartPO.expectSubmitTarget(resultTourPlan.name);
-      cartPO.submit();
-      tourPlanPO.expectVisible();
-      tourPlanPO.expectPurchases(purchases);
-      tourPlanPO.theThingPO.save(resultTourPlan);
-      siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
-      myTourPlansPO.theThingDataTablePO.gotoTheThingView(resultTourPlan);
-      tourPlanPO.expectVisible();
-      // tourPlanPO.expectValue(resultTourPlan);
-      tourPlanPO.expectPurchases(purchases);
-      tourPlanPO.expectTotalCharge(totalCharge);
-    });
   });
 
   it('Remove purchases', () => {

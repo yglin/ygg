@@ -40,6 +40,7 @@ export const onTourPlanStateApproved = functions
         notificationFactory.create({
           type: 'tour-plan-approved',
           inviterId: owner.id,
+          inviteeId: owner.id,
           email: owner.email,
           mailSubject: `您的遊程：${tourPlanAfter.name} 已確認可成行`,
           mailContent: `您的遊程：${tourPlanAfter.name} 已確認可成行，可以開始付款流程。`,

@@ -73,7 +73,7 @@ export class TourPlanPageObjectCypress extends TourPlanPageObject {
   }
 
   expectName(name: string) {
-    cy.get(this.getSelector('name')).should('include.text', name);
+    this.theThingPO.expectName(name);
   }
 
   expectCell(cell: TheThingCell) {
@@ -405,7 +405,7 @@ export class TourPlanPageObjectCypress extends TourPlanPageObject {
       ImitationEvent
     );
     theThingThumbnailPO.expectValue(event);
-}
+  }
 
   expectEvents(events: TheThing[]) {
     for (const event of events) {

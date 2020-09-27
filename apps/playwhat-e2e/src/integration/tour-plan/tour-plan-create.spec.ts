@@ -17,11 +17,14 @@ import {
 import { User } from '@ygg/shared/user/core';
 import {
   LoginDialogPageObjectCypress,
+  loginTestUser,
   logout,
+  testUsers,
   waitForLogin
 } from '@ygg/shared/user/test';
 import { TheThingCell } from '@ygg/the-thing/core';
 import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
+import { beforeAll } from '../../support/before-all';
 import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import { MinimalTourPlan, TourPlanFull } from './sample-tour-plan';
 
@@ -35,18 +38,16 @@ describe('Tour-plan create', () => {
     '',
     ImitationTourPlan
   );
-  let currentUser: User;
+  const me: User = testUsers[0];
 
   before(() => {
-    login().then(user => {
-      currentUser = user;
-      cy.wrap(SampleThings).each((thing: any) => {
-        thing.ownerId = user.id;
-        theMockDatabase.insert(`${thing.collection}/${thing.id}`, thing);
-      });
-      cy.visit('/');
-      waitForLogin();
+    beforeAll();
+    cy.wrap(SampleThings).each((thing: any) => {
+      thing.ownerId = me.id;
+      theMockDatabase.insert(`${thing.collection}/${thing.id}`, thing);
     });
+    cy.visit('/');
+    loginTestUser(me);
   });
 
   // beforeEach(() => {
@@ -108,12 +109,9 @@ describe('Tour-plan create', () => {
       dialogPO.getSelector()
     );
     contactControlPO.importFromUser();
-    contactControlPO.expectValue(new Contact().fromUser(currentUser));
+    contactControlPO.expectValue(new Contact().fromUser(me));
     dialogPO.confirm();
-    omniTypeViewControl.expectValue(
-      'contact',
-      new Contact().fromUser(currentUser)
-    );
+    omniTypeViewControl.expectValue('contact', new Contact().fromUser(me));
   });
 
   it('Can not add duplicate named cell', () => {

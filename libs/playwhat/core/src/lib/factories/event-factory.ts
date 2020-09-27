@@ -114,14 +114,15 @@ export class EventFactory {
     throw new Error('Method not implemented.');
   }
 
-  async getPlay(event: TheThing) {
+  async getPlay(event: TheThing): Promise<TheThing> {
     try {
-      return this.theThingAccessor.load(
-        event.getRelations(RelationshipEventService.name)[0].objectId,
-        ImitationPlay.collection
-      );
+      const playId = event.getRelationObjectId(RelationshipEventService.name);
+      return this.theThingAccessor.load(playId, ImitationPlay.collection);
     } catch (error) {
-      throw new Error(`找不到行程${event.name}的體驗資料，${error.message}`);
+      const wrapError = new Error(
+        `Failed to get Play of Event ${event.name}.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
     }
   }
 
@@ -133,25 +134,29 @@ export class EventFactory {
         .toPromise();
       return this.userAccessor.get(relations[0].objectId);
     } catch (error) {
-      return Promise.reject(
-        new Error(`找不到行程${event.name}的主辦者，${error.message}`)
+      const wrapError = new Error(
+        `Failed to get Organizer of Event ${event.name}.\n${error.message}`
       );
+      return Promise.reject(wrapError);
     }
   }
 
   async sendApprovalRequest(event: TheThing) {
     try {
-      const play = await this.getPlay(event);
-      // console.log('Hi~ MAMA');
+      const play: TheThing = await this.getPlay(event);
+      // console.debug('Hi~ MAMA');
+      // console.debug(play);
 
       // const serviceId = event.getRelationObjectIds(RelationshipEventService.name)[0];
       // const service: TheThing = await this.theThingAccessor.load(serviceId);
-      const host = await this.userAccessor.get(play.ownerId);
+      const host: User = await this.userAccessor.get(play.ownerId);
+      // console.debug(host);
       const mailSubject = `您有一項${event.name}的行程活動邀請`;
       const mailContent = `<pre>您有一項行程活動邀請，以行程<b>${event.name}</b>的負責人身分參加</pre>`;
       await this.notificationFactory.create({
         type: NotificationHostEvent.type,
         inviterId: this.authenticator.currentUser.id,
+        inviteeId: host.id,
         email: host.email,
         mailSubject,
         mailContent,
@@ -162,8 +167,7 @@ export class EventFactory {
       await this.theThingFactory.setState(
         event,
         ImitationEvent,
-        ImitationEvent.states['wait-approval'],
-        { force: true }
+        ImitationEvent.states['wait-approval']
       );
       // console.log('Hi~ PAPA');
     } catch (error) {
@@ -222,8 +226,7 @@ export class EventFactory {
         await this.theThingFactory.setState(
           event,
           ImitationEvent,
-          ImitationEvent.states['host-approved'],
-          { force: true }
+          ImitationEvent.states['host-approved']
         );
         await this.emcee.info(
           `<h3>已確認參加，之後若要取消請聯絡主辦者${organizer.name}</h3>`

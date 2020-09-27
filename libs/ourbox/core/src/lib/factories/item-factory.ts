@@ -93,8 +93,7 @@ export class ItemFactory {
             await this.theThingFactory.setState(
               resultItem,
               ImitationItem,
-              ImitationItem.states.available,
-              { force: true }
+              ImitationItem.states.available
             );
           }
           return resultItem;
@@ -118,8 +117,7 @@ export class ItemFactory {
         await this.theThingFactory.setState(
           item,
           ImitationItem,
-          ImitationItem.states.available,
-          { force: true }
+          ImitationItem.states.available
         );
         await this.emcee.info(`<h3>寶物 ${item.name} 已開放讓人索取</h3>`);
       }

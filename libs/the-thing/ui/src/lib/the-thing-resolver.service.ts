@@ -7,11 +7,12 @@ import { first } from 'rxjs/operators';
 import { ImitationFactoryService } from './imitation-factory.service';
 import { TheThingAccessService } from './the-thing-access.service';
 import { TheThingFactoryService } from './the-thing-factory.service';
+import { TheThingSourceService } from './the-thing-source.service';
 
 @Injectable({ providedIn: 'root' })
 export class TheThingResolver implements Resolve<Observable<TheThing>> {
   constructor(
-    private theThingFactory: TheThingFactoryService,
+    private theThingSource: TheThingSourceService,
     private imitaionFactory: ImitationFactoryService,
     private emcee: EmceeService
   ) {}
@@ -28,7 +29,7 @@ export class TheThingResolver implements Resolve<Observable<TheThing>> {
           throw new Error(`Not found TheThing ID in route path`);
         }
         const imitation = await this.imitaionFactory.get(imitationId);
-        resolve(this.theThingFactory.load$(id, imitation.collection));
+        resolve(this.theThingSource.load$(id, imitation.collection));
       } catch (error) {
         this.emcee.error(`<h3>載入頁面失敗，錯誤原因：\n${error.message}</h3>`);
         reject(error);

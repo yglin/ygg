@@ -4,51 +4,21 @@ import {
   TheThingImitation,
   TheThingState,
   TheThingAccessor,
-  TheThingStateChangeRecord
+  TheThingStateChangeRecord,
+  TheThingFactoryBasic
 } from '@ygg/the-thing/core';
 import { Observable } from 'rxjs';
 import { TheThingAccessorFunctions } from '../data-accessors';
 
-export class TheThingFactoryFunctions extends TheThingFactory {
-  constructor(theThingAccessor: TheThingAccessor) {
-    super(theThingAccessor);
-  }
-
-  create(
-    options:
-      | {
-          imitationId?: string;
-          imitation: TheThingImitation;
-        }
-      | TheThingImitation
-  ): Promise<TheThing> {
-    throw new Error('Method not implemented.');
-  }
-
-  load$(id: string, collection: string): Observable<TheThing> {
-    throw new Error('Method not implemented.');
-  }
-
-  load(id: string, collection: string): Promise<TheThing> {
-    throw new Error('Method not implemented.');
-  }
-
-  save(
-    theThing: TheThing,
-    options?: {
-      requireOwner?: boolean;
-      imitation?: TheThingImitation;
-      force?: boolean;
-    }
-  ): Promise<TheThing> {
-    throw new Error('Method not implemented.');
+export class TheThingFactoryFunctions extends TheThingFactoryBasic {
+  constructor(private theThingAccessor: TheThingAccessor) {
+    super();
   }
 
   async setState(
     thing: TheThing,
     imitation: TheThingImitation,
-    state: TheThingState,
-    options?: { force?: boolean }
+    state: TheThingState
   ): Promise<TheThingStateChangeRecord> {
     try {
       imitation.setState(thing, state);

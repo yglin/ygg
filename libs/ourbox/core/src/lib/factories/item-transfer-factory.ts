@@ -10,22 +10,20 @@ import {
   RelationFactory,
   RelationRecord,
   TheThing,
-  TheThingFactory,
   TheThingAccessor,
-  Relationship,
+  TheThingFactory,
   TheThingStateChangeRecord
 } from '@ygg/the-thing/core';
-import { first, isEmpty, flatten, uniq, uniqBy } from 'lodash';
-import { Subscription, Observable, of, combineLatest } from 'rxjs';
-import { filter, take, switchMap, map } from 'rxjs/operators';
+import { first, flatten, isEmpty, uniqBy } from 'lodash';
+import { combineLatest, Observable, of, Subscription } from 'rxjs';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import {
   ImitationItem,
   ImitationItemTransfer,
+  ImitationItemTransferStates,
   RelationshipItemTransferGiver,
   RelationshipItemTransferItem,
-  RelationshipItemTransferReceiver,
-  ImitationItemTransferActions,
-  ImitationItemTransferStates
+  RelationshipItemTransferReceiver
 } from '../models';
 import { ItemFactory } from './item-factory';
 
@@ -230,10 +228,7 @@ export abstract class ItemTransferFactory {
       await this.theThingFactory.setState(
         item,
         ImitationItem,
-        ImitationItem.states.transfer,
-        {
-          force: true
-        }
+        ImitationItem.states.transfer
       );
 
       // 2020/09/14 yglin: Stay in item-transfer page
@@ -333,8 +328,7 @@ export abstract class ItemTransferFactory {
       await this.theThingFactory.setState(
         itemTransfer,
         ImitationItemTransfer,
-        ImitationItemTransferStates.waitReceiver,
-        { force: true }
+        ImitationItemTransferStates.waitReceiver
       );
       await this.emcee.info(
         `<h3>已送出 ${item.name} 的交付要求，請等待 ${receiver.name} 的回應</h3>`
@@ -373,8 +367,7 @@ export abstract class ItemTransferFactory {
         await this.theThingFactory.setState(
           itemTransfer,
           ImitationItemTransfer,
-          ImitationItemTransfer.states.consented,
-          { force: true }
+          ImitationItemTransfer.states.consented
         );
         await this.notificationFactory.create({
           type: ItemTransferNotificationType,
@@ -415,8 +408,7 @@ export abstract class ItemTransferFactory {
         await this.theThingFactory.setState(
           itemTransfer,
           ImitationItemTransfer,
-          ImitationItemTransfer.states.completed,
-          { force: true }
+          ImitationItemTransfer.states.completed
         );
         await this.notificationFactory.create({
           type: ItemTransferNotificationType,

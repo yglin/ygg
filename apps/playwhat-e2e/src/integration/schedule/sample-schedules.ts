@@ -62,7 +62,6 @@ ImitationTourPlan.setState(
 );
 
 export const ScheduledEvents: TheThing[] = [];
-export const RelationPlayOfEvents: RelationRecord[] = [];
 
 const dateRange = TourPlanUnscheduled.getCellValue(
   ImitationTourPlanCellDefines.dateRange.id
@@ -89,16 +88,6 @@ for (const relation of TourPlanUnscheduled.getRelations(
     );
     // console.log(tEvent);
     ScheduledEvents.push(tEvent);
-
-    RelationPlayOfEvents.push(
-      new RelationRecord({
-        subjectCollection: ImitationEvent.collection,
-        subjectId: tEvent.id,
-        objectCollection: ImitationPlay.collection,
-        objectId: play.id,
-        objectRole: RelationshipEventService.name
-      })
-    );
 
     const sEvent = ScheduleAdapter.fromTheThingEventToServiceEvent(
       tEvent,

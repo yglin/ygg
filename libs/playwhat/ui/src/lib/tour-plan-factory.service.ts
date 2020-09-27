@@ -7,17 +7,18 @@ import {
 } from '@angular/router';
 import {
   ImitationEvent,
-  ImitationTourPlan,
-  RelationshipScheduleEvent,
-  RelationshipOrganizer,
-  ImitationTourPlanCellDefines,
+  ImitationEventCellDefines,
   ImitationPlay,
+  ImitationTourPlan,
   RelationshipEventService,
-  ImitationEventCellDefines
+  RelationshipOrganizer,
+  RelationshipScheduleEvent
 } from '@ygg/playwhat/core';
-import { Schedule, ServiceEvent, ScheduleFactory } from '@ygg/schedule/core';
+import { Schedule, ScheduleFactory, ServiceEvent } from '@ygg/schedule/core';
 import { ScheduleFactoryService } from '@ygg/schedule/ui';
+import { TimeRange } from '@ygg/shared/omni-types/core';
 import { EmceeService } from '@ygg/shared/ui/widgets';
+import { User } from '@ygg/shared/user/core';
 import {
   Purchase,
   RelationPurchase,
@@ -25,24 +26,21 @@ import {
 } from '@ygg/shopping/core';
 import { CartSubmitPack, ShoppingCartService } from '@ygg/shopping/ui';
 import {
+  RelationRecord,
   TheThing,
   TheThingAction,
-  TheThingRelation,
-  RelationRecord
+  TheThingRelation
 } from '@ygg/the-thing/core';
 import {
-  TheThingAccessService,
+  RelationFactoryService,
   TheThingFactoryService,
-  RelationFactoryService
+  TheThingSourceService
 } from '@ygg/the-thing/ui';
-import { Observable, Subscription, of } from 'rxjs';
+import { find, isEmpty } from 'lodash';
+import { Observable, of, Subscription } from 'rxjs';
+import { map, switchMap, take } from 'rxjs/operators';
 import { EventFactoryService } from './event-factory.service';
 import { ScheduleAdapterService } from './schedule-adapter.service';
-import { User } from '@ygg/shared/user/core';
-import { UserService } from '@ygg/shared/user/ui';
-import { DateRange, TimeRange } from '@ygg/shared/omni-types/core';
-import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
-import { isEmpty, find } from 'lodash';
 
 export interface IModifyRequest {
   command: 'update' | 'add' | 'delete';
@@ -62,8 +60,9 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
   subscriptions: Subscription[] = [];
 
   constructor(
-    private theThingAccessor: TheThingAccessService,
+    // private theThingAccessor: TheThingAccessService,
     private theThingFactory: TheThingFactoryService,
+    private theThingSource: TheThingSourceService,
     private shoppingCart: ShoppingCartService,
     private emcee: EmceeService,
     private router: Router,
@@ -106,6 +105,7 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
             RelationPurchase.name,
             cartSubmit.purchases.map(p => p.toRelation())
           );
+          this.theThingSource.updateLocal(tourPlan);
           this.router.navigate(['/', ImitationTourPlan.routePath, tourPlan.id]);
         }
       )
@@ -119,26 +119,30 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
     return new Promise(async (resolve, reject) => {
       try {
         const id = route.paramMap.get('id');
-        if (id === 'create') {
-          const newTourPlan = await this.theThingFactory.create(
-            ImitationTourPlan
-          );
-          this.router.navigate([
-            '/',
-            ImitationTourPlan.routePath,
-            newTourPlan.id
-          ]);
-          // this.tourPlan$.next(newTourPlan);
-          resolve(newTourPlan);
-        } else if (!!id) {
-          const tourPlan = await this.theThingFactory.load(
-            id,
-            ImitationTourPlan.collection
-          );
-          this.tourPlan$ = this.theThingFactory.load$(id);
+        if (id) {
+          // const tourPlan = await this.theThingSource.load(
+          //   id,
+          //   ImitationTourPlan.collection
+          // );
+          if (id === 'create') {
+            const newTourPlan: TheThing = await this.theThingFactory.create(
+              ImitationTourPlan
+            );
+            this.tourPlan$ = this.theThingFactory.load$(
+              newTourPlan.id,
+              newTourPlan.collection
+            );
+          } else {
+            this.tourPlan$ = this.theThingSource.load$(
+              id,
+              ImitationTourPlan.collection
+            );
+          }
           // this.tourPlan$.next(tourPlan);
-          resolve(tourPlan);
-        } else reject(new Error(`Require id in route path, got ${id}`));
+          resolve(this.tourPlan$);
+        } else {
+          throw new Error(`Require id in route path, got ${id}`);
+        }
       } catch (error) {
         console.error(error);
         this.emcee.error(`導向 ${route.url} 失敗，錯誤原因：${error.message}`);
@@ -315,17 +319,30 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
 
   async approveAvailable(tourPlan: TheThing) {
     const confirm = await this.emcee.confirm(
-      `<h3>請確定遊程 ${tourPlan.name} 中各行程的負責人已確認該負責行程可成行，</h3><h3>將標記遊程 ${tourPlan.name} 為可成行並等待付款？</h3>`
+      `<h3>請確定遊程 ${tourPlan.name} 中各行程的負責人已確認該負責行程可成行，</h3><h3>強制標記遊程 ${tourPlan.name} 為可成行並等待付款？</h3>`
     );
     if (confirm) {
-      await this.theThingFactory.setState(
-        tourPlan,
-        ImitationTourPlan,
-        ImitationTourPlan.states.approved
-      );
-      await this.emcee.info(
-        `<h3>遊程 ${tourPlan.name} 已標記為可成行。</h3><h3>請通知客戶付款。</h3>`
-      );
+      try {
+        this.emcee.showProgress({
+          message: `強制標記遊程 ${tourPlan.name} 為可成行`
+        });
+        await this.theThingFactory.setState(
+          tourPlan,
+          ImitationTourPlan,
+          ImitationTourPlan.states.approved
+        );
+        await this.emcee.info(
+          `<h3>遊程 ${tourPlan.name} 已標記為可成行。</h3><h3>請通知客戶付款。</h3>`
+        );
+      } catch (error) {
+        const wrapError = new Error(
+          `強制標記遊程可成行失敗，錯誤原因：\n${error.message}`
+        );
+        this.emcee.error(wrapError.message);
+        return Promise.reject(wrapError);
+      } finally {
+        this.emcee.hideProgress();
+      }
     }
   }
 
@@ -365,7 +382,7 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
           if (isEmpty(relations)) {
             return of([]);
           } else {
-            return this.theThingAccessor.listByIds$(
+            return this.theThingSource.listByIds$(
               relations.map(r => r.objectId),
               ImitationEvent.collection
             );
@@ -390,7 +407,7 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
           if (isEmpty(relations)) {
             return of([]);
           } else {
-            return this.theThingAccessor.listByIds$(
+            return this.theThingSource.listByIds$(
               relations.map(r => r.objectId),
               ImitationPlay.collection
             );
@@ -509,12 +526,11 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
       }
 
       // Save tour-plan
-      await this.theThingFactory.save(tourPlan, {
+      await this.theThingFactory.save(tourPlan, ImitationTourPlan, {
         requireOwner: true,
-        imitation: ImitationTourPlan,
         force: true
       });
-      this.theThingFactory.emitChange(tourPlan);
+      // this.theThingFactory.emitLocalChange(tourPlan);
     } catch (error) {
       const wrapError = new Error(
         `Failed to save schedule for tour-plan.\n${error.message}`
@@ -527,10 +543,11 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
 
   async sendApprovalRequests(tourPlan: TheThing) {
     const confirm = await this.emcee.confirm(
-      `<h3>將送出行程中各活動時段資訊給各活動負責人，並等待負責人確認。</h3><br><h3>等待期間無法修改行程表，請確認行程中各活動時段已安排妥善，確定送出？</h3>`
+      `<h3>將送出各行程時段資訊給各行程負責人，並等待負責人確認。</h3><br><h3>等待期間無法修改行程表，請確認各行程時段已安排妥善，確定送出？</h3>`
     );
     if (confirm) {
       try {
+        this.emcee.showProgress({ message: `送出行程確認中` });
         const relations: TheThingRelation[] = tourPlan.getRelations(
           RelationshipScheduleEvent.name
         );
@@ -550,7 +567,9 @@ export class TourPlanFactoryService implements OnDestroy, Resolve<TheThing> {
         );
         this.emcee.info(`<h3>已送出行程確認，等待各活動負責人確認中</h3>`);
       } catch (error) {
-        this.emcee.error(`送出行程確認失敗，錯誤原因：${error.message}`);
+        this.emcee.error(`送出行程確認失敗，錯誤原因：\n${error.message}`);
+      } finally {
+        this.emcee.hideProgress();
       }
     }
   }

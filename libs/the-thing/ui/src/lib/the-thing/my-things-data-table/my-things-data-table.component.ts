@@ -5,6 +5,7 @@ import { TheThing, TheThingImitation } from '@ygg/the-thing/core';
 import { Observable, Subscription } from 'rxjs';
 import { TheThingAccessService } from '../../the-thing-access.service';
 import { TheThingFactoryService } from '../../the-thing-factory.service';
+import { TheThingSourceService } from '../../the-thing-source.service';
 
 @Component({
   selector: 'my-things-data-table',
@@ -20,7 +21,7 @@ export class MyThingsDataTableComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private theThingAccessService: TheThingAccessService,
+    private theThingSource: TheThingSourceService,
     private theThingFactory: TheThingFactoryService,
     private authService: AuthenticateService
   ) {}
@@ -36,7 +37,10 @@ export class MyThingsDataTableComponent implements OnInit {
       // const filterMy = new TheThingFilter();
       filterMy.ownerId = this.authService.currentUser.id;
       // console.dir(filterMy);
-      this.theThings$ = this.theThingAccessService.listByFilter$(filterMy);
+      this.theThings$ = this.theThingSource.listByFilter$(
+        filterMy,
+        this.imitation.collection
+      );
     } else {
       console.error(
         `Error Input imitation:${this.imitation} for component MyThingsDataTableComponent`
@@ -54,7 +58,7 @@ export class MyThingsDataTableComponent implements OnInit {
     const namesMessage = this.selection.map(s => s.name).join('\n');
     if (confirm(`確定要永久刪除以下物件？\n${namesMessage}`)) {
       try {
-        await this.theThingAccessService.delete(this.selection);
+        await this.theThingSource.delete(this.selection);
         alert(`已刪除以下物件\n${namesMessage}`);
       } catch (error) {
         alert(`刪除失敗，錯誤原因： ${error.message}`);

@@ -4,7 +4,8 @@ import {
   RelationRecord,
   TheThing,
   TheThingAccessor,
-  TheThingFactory
+  TheThingFactory,
+  TheThingFactoryBasic
 } from '@ygg/the-thing/core';
 import { every } from 'lodash';
 import { switchMap, take } from 'rxjs/operators';
@@ -14,30 +15,31 @@ import {
   RelationshipScheduleEvent
 } from '../imitations';
 
-export class TourPlanFactory {
-  constructor(
-    protected emcee: Emcee,
-    protected theThingAccessor: TheThingAccessor,
-    protected theThingFactory: TheThingFactory,
-    protected relationFactory: RelationFactory
-  ) {}
+export class TourPlanFactoryBasic {
+  constructor(protected theThingAccessor: TheThingAccessor) {}
 
   async getEvents(tourPlanId: string): Promise<TheThing[]> {
-    return this.relationFactory
-      .findBySubjectAndRole$(tourPlanId, RelationshipScheduleEvent.name)
-      .pipe(
-        switchMap((relations: RelationRecord[]) =>
-          this.theThingAccessor.listByIds$(
-            relations.map(r => r.objectId),
-            ImitationEvent.collection
-          )
-        ),
-        take(1)
-      )
-      .toPromise();
+    try {
+      const tourPlan = await this.theThingAccessor.load(
+        tourPlanId,
+        ImitationTourPlan.collection
+      );
+      const eventIds = tourPlan.getRelationObjectIds(
+        RelationshipScheduleEvent.name
+      );
+      return this.theThingAccessor.listByIds(
+        eventIds,
+        ImitationEvent.collection
+      );
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to get events from tour-plan ${tourPlanId}.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
   }
 
-  async checkApproval(tourPlanId: string) {
+  async checkApproval(tourPlanId: string): Promise<boolean> {
     try {
       const tourPlan = await this.theThingAccessor.load(
         tourPlanId,
@@ -45,7 +47,7 @@ export class TourPlanFactory {
       );
       const events: TheThing[] = await this.getEvents(tourPlanId);
       // console.log(events);
-      const allApproved: boolean = every(
+      return every(
         events.map(ev => {
           const isApproved = ImitationEvent.isState(
             ev,
@@ -55,19 +57,17 @@ export class TourPlanFactory {
           return isApproved;
         })
       );
-      if (allApproved) {
-        // console.log(`All events of tour-plan ${tourPlan.name} approved `);
-        await this.theThingFactory.setState(
-          tourPlan,
-          ImitationTourPlan,
-          ImitationTourPlan.states['approved']
-        );
-      }
     } catch (error) {
-      await this.emcee.error(
-        `任務失敗：檢查所有行程的負責人確認參加，錯誤原因：${error.message}`
+      const wrapError = new Error(
+        `Failed to check approval of tour-plan ${tourPlanId}.\n${error.message}`
       );
-      return Promise.reject();
+      return Promise.reject(wrapError);
     }
+  }
+}
+
+export class TourPlanFactory extends TourPlanFactoryBasic {
+  constructor(theThingAccessor: TheThingAccessor) {
+    super(theThingAccessor);
   }
 }

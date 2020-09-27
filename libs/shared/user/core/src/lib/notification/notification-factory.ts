@@ -40,33 +40,40 @@ export abstract class NotificationFactory {
     landingUrl?: string;
     data: any;
   }): Promise<Notification> {
-    const id = generateID();
-    const notificationLink = `${this.siteConfig.url.protocol}://${this.siteConfig.url.domain}/notifications/${id}`;
-    const mailSubject =
-      options.mailSubject || `來自 ${this.siteConfig.title} 的通知`;
-    const mailContent = `
-      <h3>來自 ${this.siteConfig.title} 的通知，此為系統自動寄發，請勿回覆</h3>
-      <br>
-      ${options.mailContent}
-      <br><br>
-      <h3>點擊以下網址繼續：</h3>
-      <br>
-      <a href="${notificationLink}">${notificationLink}</a>
-    `;
-    const notification: Notification = new Notification({
-      id,
-      type: options.type,
-      inviterId: options.inviterId,
-      inviteeId: options.inviteeId,
-      email: options.email,
-      mailSubject,
-      mailContent,
-      confirmMessage: options.confirmMessage,
-      landingUrl: options.landingUrl,
-      data: options.data
-    });
-    await this.notificationAccessor.save(notification);
-    return notification;
+    try {
+      const id = generateID();
+      const notificationLink = `${this.siteConfig.url.protocol}://${this.siteConfig.url.domain}/notifications/${id}`;
+      const mailSubject =
+        options.mailSubject || `來自 ${this.siteConfig.title} 的通知`;
+      const mailContent = `
+        <h3>來自 ${this.siteConfig.title} 的通知，此為系統自動寄發，請勿回覆</h3>
+        <br>
+        ${options.mailContent}
+        <br><br>
+        <h3>點擊以下網址繼續：</h3>
+        <br>
+        <a href="${notificationLink}">${notificationLink}</a>
+      `;
+      const notification: Notification = new Notification({
+        id,
+        type: options.type,
+        inviterId: options.inviterId,
+        inviteeId: options.inviteeId,
+        email: options.email,
+        mailSubject,
+        mailContent,
+        confirmMessage: options.confirmMessage,
+        landingUrl: options.landingUrl,
+        data: options.data
+      });
+      await this.notificationAccessor.save(notification);
+      return notification;
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to create notification.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
   }
 
   async confirm(id: string): Promise<Notification> {

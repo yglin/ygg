@@ -28,11 +28,18 @@ export abstract class UserAccessor {
   }
 
   async get(id: string): Promise<User> {
-    const dataItem = await this.dataAccessor.load(this.collection, id);
-    if (isEmpty(dataItem)) {
-      return null;
-    } else {
-      return new User().fromJSON(dataItem);
+    try {
+      const dataItem = await this.dataAccessor.load(this.collection, id);
+      if (isEmpty(dataItem)) {
+        return null;
+      } else {
+        return new User().fromJSON(dataItem);
+      }
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to get User by id ${id}.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
     }
   }
 
