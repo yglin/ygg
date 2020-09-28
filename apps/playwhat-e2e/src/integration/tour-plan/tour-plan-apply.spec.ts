@@ -1,32 +1,23 @@
 import { ImitationTourPlan } from '@ygg/playwhat/core';
 import {
+  forgeTourPlansByState,
   SiteNavigator,
   TourPlanAdminPageObjectCypress,
   TourPlanPageObjectCypress
 } from '@ygg/playwhat/test';
 import { Html } from '@ygg/shared/omni-types/core';
-import {
-  getCurrentUser,
-  login,
-  theMockDatabase
-} from '@ygg/shared/test/cypress';
+import { theMockDatabase } from '@ygg/shared/test/cypress';
 import { Comment } from '@ygg/shared/thread/core';
-import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
-import { TheThing, TheThingState } from '@ygg/the-thing/core';
-import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
-import promisify from 'cypress-promise';
-import { flatten, mapValues, values } from 'lodash';
-import { SampleEquipments, SamplePlays } from '../play/sample-plays';
-import {
-  stubTourPlansByStateAndMonth,
-  TourPlanInApplication,
-  TourPlanPaid,
-  TourPlanWithPlaysAndEquipments
-} from './sample-tour-plan';
 import { CommentListPageObjectCypress } from '@ygg/shared/thread/test';
-import { beforeAll } from '../../support/before-all';
-import { loginTestUser, logout, testUsers } from '@ygg/shared/user/test';
+import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
+import { loginTestUser, logout, testUsers } from '@ygg/shared/user/test';
+import { TheThing } from '@ygg/the-thing/core';
+import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
+import { values } from 'lodash';
+import { beforeAll } from '../../support/before-all';
+import { SampleEquipments, SamplePlays } from '../play/sample-plays';
+import { TourPlanWithPlaysAndEquipments } from './sample-tour-plan';
 
 describe('Tour-plan scenario of applying to admin assessment', () => {
   const siteNavigator = new SiteNavigator();
@@ -51,12 +42,7 @@ describe('Tour-plan scenario of applying to admin assessment', () => {
   // .concat(values(tourPlansByState));
 
   // let incomeRecord: IncomeRecord;
-  const tourPlansByState = mapValues(ImitationTourPlan.states, state => {
-    const tourPlanByState = TourPlanWithPlaysAndEquipments.clone();
-    tourPlanByState.name = `測試遊程狀態：${state.label}_${Date.now()}`;
-    ImitationTourPlan.setState(tourPlanByState, state);
-    return tourPlanByState;
-  });
+  const tourPlansByState = forgeTourPlansByState();
   SampleThings.push(...values(tourPlansByState));
 
   // const tourPlanInEditingButNotMine = TourPlanWithPlaysAndEquipments.clone();

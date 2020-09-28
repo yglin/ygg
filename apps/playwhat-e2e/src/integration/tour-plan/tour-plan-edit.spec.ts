@@ -1,13 +1,17 @@
 // import { sampleSize, values, pick, sum, sumBy, random, find } from 'lodash';
 import { ImitationTourPlan } from '@ygg/playwhat/core';
-import { SiteNavigator, TourPlanPageObjectCypress } from '@ygg/playwhat/test';
+import {
+  forgeTourPlansByState,
+  SiteNavigator,
+  TourPlanPageObjectCypress
+} from '@ygg/playwhat/test';
 import { login, theMockDatabase } from '@ygg/shared/test/cypress';
 import { User } from '@ygg/shared/user/core';
 import { loginTestUser, testUsers, waitForLogin } from '@ygg/shared/user/test';
 import { TheThing, TheThingCell } from '@ygg/the-thing/core';
 import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
 import promisify from 'cypress-promise';
-import { values } from 'lodash';
+import { filter, values } from 'lodash';
 import { beforeAll } from '../../support/before-all';
 import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import { MinimalTourPlan, TourPlanFull } from './sample-tour-plan';
@@ -26,13 +30,17 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
     '',
     ImitationTourPlan
   );
+
   // const playPO = new TheThingPageObjectCypress('', ImitationPlay);
   const tourPlan = TourPlanFull.clone();
   tourPlan.name = `測試遊程(修改資料)_${Date.now()}`;
   ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.new);
+  const tourPlansByState = forgeTourPlansByState();
+
   const SampleThings = SamplePlays.concat(SampleEquipments).concat([
     MinimalTourPlan,
-    tourPlan
+    tourPlan,
+    ...values(tourPlansByState)
   ]);
 
   const me: User = testUsers[0];
@@ -107,75 +115,62 @@ describe('Edit exist tour-plans from my-tour-plans page', () => {
   });
 
   it('Editable in state new', () => {
-    ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.new);
-    theMockDatabase
-      .insert(`${tourPlan.collection}/${tourPlan.id}`, tourPlan)
-      .then(() => {
-        tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.new);
-        tourPlanPO.expectEditable();
-      });
+    const tourPlanNew = tourPlansByState[ImitationTourPlan.states['new'].name];
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(tourPlanNew);
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.new);
+    tourPlanPO.expectEditable();
   });
 
   it('Editable in state editing', () => {
-    ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.editing);
-    theMockDatabase
-      .insert(`${tourPlan.collection}/${tourPlan.id}`, tourPlan)
-      .then(() => {
-        tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.editing);
-        tourPlanPO.expectEditable();
-      });
+    const tourPlanEditing =
+      tourPlansByState[ImitationTourPlan.states['editing'].name];
+    siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+    myTourPlansPO.theThingDataTablePO.gotoTheThingView(tourPlanEditing);
+    tourPlanPO.expectVisible();
+    tourPlanPO.theThingPO.expectState(ImitationTourPlan.states.editing);
+    tourPlanPO.expectEditable();
   });
 
-  it('Readonly in other states', async () => {
-    const otherStates = values(ImitationTourPlan.states).filter(
+  it('Readonly in other states', () => {
+    const otherStates = filter(
+      ImitationTourPlan.states,
       state =>
-        !(
-          state.name === ImitationTourPlan.states.new.name ||
-          state.name === ImitationTourPlan.states.editing.name
-        )
+        !(state.name === 'new' || state.name === 'editing')
     );
     for (const state of otherStates) {
-      await promisify(
-        cy.wrap(
-          new Cypress.Promise((resolve, reject) => {
-            cy.log(`Set state of ${tourPlan.id}: ${state.name}`);
-            ImitationTourPlan.setState(tourPlan, state);
-            // console.log(ImitationTourPlan.getState(tourPlan));
-            theMockDatabase
-              .insert(`${tourPlan.collection}/${tourPlan.id}`, tourPlan)
-              .then(() => {
-                tourPlanPO.theThingPO.expectState(state);
-                tourPlanPO.expectReadonly();
-                resolve();
-              });
-          }),
-          { timeout: 20000 }
-        )
-      );
+      const _tourPlan =
+      tourPlansByState[state.name];
+      siteNavigator.goto(['tour-plans', 'my'], myTourPlansPO);
+      myTourPlansPO.theThingDataTablePO.gotoTheThingView(_tourPlan);
+      tourPlanPO.expectVisible();
+      tourPlanPO.theThingPO.expectState(state);
+      tourPlanPO.expectReadonly();        
     }
   });
 
-  it('Readonly if not owner', async () => {
-    tourPlan.ownerId = 'You not see me, am ghost';
-    // Readonly for all state
-    for (const state of values(ImitationTourPlan.states)) {
-      await promisify(
-        cy.wrap(
-          new Cypress.Promise((resolve, reject) => {
-            cy.log(`Set state of ${tourPlan.id}: ${state.name}`);
-            ImitationTourPlan.setState(tourPlan, state);
-            // console.log(ImitationTourPlan.getState(tourPlan));
-            theMockDatabase
-              .insert(`${tourPlan.collection}/${tourPlan.id}`, tourPlan)
-              .then(() => {
-                tourPlanPO.theThingPO.expectState(state);
-                tourPlanPO.expectReadonly();
-                resolve();
-              });
-          }),
-          { timeout: 20000 }
-        )
-      );
-    }
-  });
+  // it('Readonly if not owner', async () => {
+  //   tourPlan.ownerId = 'You not see me, am ghost';
+  //   // Readonly for all state
+  //   for (const state of values(ImitationTourPlan.states)) {
+  //     await promisify(
+  //       cy.wrap(
+  //         new Cypress.Promise((resolve, reject) => {
+  //           cy.log(`Set state of ${tourPlan.id}: ${state.name}`);
+  //           ImitationTourPlan.setState(tourPlan, state);
+  //           // console.log(ImitationTourPlan.getState(tourPlan));
+  //           theMockDatabase
+  //             .insert(`${tourPlan.collection}/${tourPlan.id}`, tourPlan)
+  //             .then(() => {
+  //               tourPlanPO.theThingPO.expectState(state);
+  //               tourPlanPO.expectReadonly();
+  //               resolve();
+  //             });
+  //         }),
+  //         { timeout: 20000 }
+  //       )
+  //     );
+  //   }
+  // });
 });

@@ -1,5 +1,6 @@
 import { ImitationTourPlan } from '@ygg/playwhat/core';
 import {
+  forgeTourPlansByState,
   SiteNavigator,
   TourPlanAdminPageObjectCypress,
   TourPlanPageObjectCypress
@@ -12,7 +13,7 @@ import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
 import { loginTestUser, logout, testUsers } from '@ygg/shared/user/test';
 import { MyThingsDataTablePageObjectCypress } from '@ygg/the-thing/test';
-import { mapValues, values } from 'lodash';
+import { values } from 'lodash';
 import { beforeAll } from '../../support/before-all';
 import { SampleEquipments, SamplePlays } from '../play/sample-plays';
 import { TourPlanWithPlaysAndEquipments } from './sample-tour-plan';
@@ -32,12 +33,7 @@ const tourPlan = TourPlanWithPlaysAndEquipments.clone();
 tourPlan.name = `測試遊程(全部完成流程)_${Date.now()}`;
 ImitationTourPlan.setState(tourPlan, ImitationTourPlan.states.paid);
 
-const tourPlansByState = mapValues(ImitationTourPlan.states, state => {
-  const tourPlanByState = TourPlanWithPlaysAndEquipments.clone();
-  tourPlanByState.name = `測試遊程狀態：${state.label}_${Date.now()}`;
-  ImitationTourPlan.setState(tourPlanByState, state);
-  return tourPlanByState;
-});
+const tourPlansByState = forgeTourPlansByState();
 const SampleTourPlans = [tourPlan, ...values(tourPlansByState)];
 SampleThings.push(...SampleTourPlans);
 
