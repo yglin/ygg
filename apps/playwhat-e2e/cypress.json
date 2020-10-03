@@ -4,7 +4,7 @@
   "integrationFolder": "./src/integration",
   "pluginsFile": "./src/plugins/index.js",
   "supportFile": "./src/support/index.ts",
-  "video": false,
+  "video": true,
   "videosFolder": "../../dist/out-tsc/apps/playwhat-e2e/videos",
   "screenshotsFolder": "../../dist/out-tsc/apps/playwhat-e2e/screenshots",
   "chromeWebSecurity": false,

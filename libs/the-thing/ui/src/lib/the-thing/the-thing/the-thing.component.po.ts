@@ -17,6 +17,7 @@ export abstract class TheThingPageObject extends PageObject {
     buttonSave: 'button.save',
     state: '.state',
     buttonOpenImageUploader: '.main-image .edit button.open-image-uploader',
+    buttonSetImageFromAlbumCover: '.main-image .edit button.set-album-cover',
     mainImage: '.main-image img'
   };
   imitation: TheThingImitation;

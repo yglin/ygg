@@ -4,15 +4,28 @@
     <div class="main-image">
       <img [src]="theThing.image" />
       <div class="edit" *ngIf="!readonly">
-        <button
-          mat-mini-fab
-          class="open-image-uploader"
-          (click)="changeImage()"
-        >
-          <mat-icon>edit</mat-icon>
-        </button>
+        <div>
+          <button
+            mat-mini-fab
+            class="open-image-uploader"
+            (click)="changeImage()"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+        <div [hidden]="!album">
+          <button
+            mat-mini-fab
+            class="set-album-cover"
+            (click)="setImageAlbumCover()"
+            matTooltip="套用相簿封面照片"
+          >
+            <mat-icon>collections</mat-icon>
+          </button>
+        </div>
       </div>
     </div>
+    <br>
     <ygg-omni-type-view-control
       class="name"
       formControlName="name"
@@ -168,7 +181,9 @@
             fxLayoutGap="10px"
             *ngIf="!readonly"
           >
-            <h4>增加<b>{{ relationship.label }}</b></h4>
+            <h4>
+              增加<b>{{ relationship.label }}</b>
+            </h4>
             <div>
               <button
                 type="button"

@@ -187,6 +187,30 @@ export class TheThing implements Entity, ImageThumbnailItem {
     return this.tags.include(tags);
   }
 
+  hasCellOfType(type: OmniTypeID): boolean {
+    for (const id in this.cells) {
+      if (Object.prototype.hasOwnProperty.call(this.cells, id)) {
+        const cell = this.cells[id];
+        if (cell.type === type) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  getCellValueOfType(type: OmniTypeID): any {
+    for (const id in this.cells) {
+      if (Object.prototype.hasOwnProperty.call(this.cells, id)) {
+        const cell = this.cells[id];
+        if (cell.type === type && (cell.value || cell.value === 0)) {
+          return cell.value;
+        }
+      }
+    }
+    return null;
+  }
+
   hasCell(cell: TheThingCell | string, type?: OmniTypeID): boolean {
     let cellId: string;
     if (typeof cell === 'string') {

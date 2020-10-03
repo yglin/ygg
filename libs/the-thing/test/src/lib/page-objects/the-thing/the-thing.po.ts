@@ -23,7 +23,7 @@ import { TheThingPageObject } from '@ygg/the-thing/ui';
 import { values } from 'lodash';
 import { TheThingStatePageObjectCypress } from './the-thing-state.po';
 import isURL from 'validator/es/lib/isURL';
-import { Location, OmniTypeID } from '@ygg/shared/omni-types/core';
+import { Album, Location, OmniTypeID } from '@ygg/shared/omni-types/core';
 
 export class TheThingPageObjectCypress extends TheThingPageObject {
   constructor(parentSelector: string, imitation: TheThingImitation) {
@@ -32,6 +32,7 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
       this.getSelector('state')
     );
   }
+
   expectVisible(): Cypress.Chainable<any> {
     return cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
   }
@@ -54,6 +55,10 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
     });
   }
 
+  expectNoElement(elementName: string) {
+    cy.get(this.getSelector(elementName)).should('not.be.visible');
+  }
+
   setCell(cell: TheThingCell) {
     const omniTypeViewControlPO = new OmniTypeViewControlPageObjectCypress(
       this.getSelectorForCell(cell.id)
@@ -67,6 +72,10 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
     imageUploaderPO.addImageUrl(imageUrl);
     imageUploaderPO.submit();
     this.expectImage(imageUrl);
+  }
+
+  setAlbumCoverAsImage(album: Album) {
+    cy.get(this.getSelector('buttonSetImageFromAlbumCover')).click();
   }
 
   expectImage(imageUrl: string) {

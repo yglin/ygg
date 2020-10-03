@@ -1,9 +1,11 @@
 import {
   ImitationEquipment,
   ImitationPlay,
+  ImitationPlayCellDefines,
   RelationshipEquipment
 } from '@ygg/playwhat/core';
 import { SiteNavigator } from '@ygg/playwhat/test';
+import { Album } from '@ygg/shared/omni-types/core';
 import { theMockDatabase } from '@ygg/shared/test/cypress';
 import { User } from '@ygg/shared/user/core';
 import { loginTestUser, testUsers } from '@ygg/shared/user/test';
@@ -45,13 +47,7 @@ describe('Create play', () => {
   });
 
   after(() => {
-    // // Goto my-things page and delete all test things
-    // const myThingsPO = new MyThingsPageObjectCypress();
-    // siteNavigator.goto(['the-things', 'my'], myThingsPO);
-    // cy.wait(3000);
-    // myThingsPO.deleteAll();
     theMockDatabase.clear();
-    // theMockDatabase.restoreRTDB();
   });
 
   it('Show required cells step-by-step', () => {
@@ -199,4 +195,14 @@ describe('Create play', () => {
       equipment2
     ]);
   });
+
+  it('Use album cover as thumbnail image', () => {
+    const albumCell = MinimumPlay.getCell(ImitationPlayCellDefines.album.id);
+    const album: Album = albumCell.value;
+    playPO.expectNoElement('buttonSetImageFromAlbumCover');    
+    playPO.setCell(albumCell);
+    playPO.setAlbumCoverAsImage(album);
+    playPO.expectImage(album.cover.src);
+  });
+
 });

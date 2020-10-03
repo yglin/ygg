@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AlertType } from '@ygg/shared/infra/core';
-import { OmniTypes } from '@ygg/shared/omni-types/core';
+import { Album, OmniTypes } from '@ygg/shared/omni-types/core';
 import { ImageUploaderService } from '@ygg/shared/omni-types/ui';
 import { EmceeService, YggDialogService } from '@ygg/shared/ui/widgets';
 import { AuthorizeService } from '@ygg/shared/user/ui';
@@ -57,6 +57,7 @@ export class TheThingComponent implements OnInit, OnDestroy {
   actionButtons: ActionButton[] = [];
   reloadSubscriptions: Subscription = new Subscription();
   // actions$Subscription: Subscription;
+  album: Album = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -122,6 +123,8 @@ export class TheThingComponent implements OnInit, OnDestroy {
       tap(theThing => (this.theThing = theThing)),
       tap(() => {
         this.formGroup.patchValue(this.theThing);
+
+        this.album = this.theThing.getCellValueOfType(OmniTypes.album.id);
 
         const requiredCellDefs = this.imitation.getRequiredCellDefs();
         // Add required cell controls
@@ -234,9 +237,10 @@ export class TheThingComponent implements OnInit, OnDestroy {
       control = new FormControl(null, validators);
       this.formGroupCells.setControl(cell.id, control);
       this.reloadSubscriptions.add(
-        control.valueChanges.subscribe((_cell: TheThingCell) =>
-          this.theThingFactory.setCell(this.theThing, _cell, this.imitation)
-        )
+        control.valueChanges.subscribe((_cell: TheThingCell) => {
+          this.theThingFactory.setCell(this.theThing, _cell, this.imitation);
+          this.album = this.theThing.getCellValueOfType(OmniTypes.album.id);
+        })
       );
     }
     control.setValue(cell, { emitEvent: false });
@@ -365,5 +369,11 @@ export class TheThingComponent implements OnInit, OnDestroy {
 
   runAction(action: TheThingAction) {
     this.theThingFactory.runAction(action, this.theThing);
+  }
+
+  setImageAlbumCover() {
+    if (this.album && this.album.cover) {
+      this.theThing.image = this.album.cover.src;
+    }
   }
 }
