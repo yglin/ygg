@@ -75,47 +75,47 @@ describe('Add tags to item and filter with tags', () => {
     theMockDatabase.clear();
   });
 
-  // it('Create item with tags', () => {
-  //   boxViewPO.theThingPO.runAction(ImitationBox.actions['create-item']);
-  //   itemPO.expectVisible();
-  //   itemPO.theThingPO.setTags(testItem1.tags);
-  //   itemPO.createItem(testItem1);
-  //   boxViewPO.expectVisible();
-  //   cy.wait(1000);
-  //   boxViewPO.expectItemInEditing(testItem1);
-  //   boxViewPO.gotoItem(testItem1);
-  //   itemPO.expectVisible();
-  //   itemPO.expectItem(testItem1);
-  //   itemPO.theThingPO.expectTags(testItem1.tags);
-  // });
+  it('Create item with tags', () => {
+    boxViewPO.theThingPO.runAction(ImitationBox.actions['create-item']);
+    itemPO.expectVisible();
+    itemPO.theThingPO.setTags(testItem1.tags);
+    itemPO.createItem(testItem1);
+    boxViewPO.expectVisible();
+    cy.wait(1000);
+    boxViewPO.expectItemInEditing(testItem1);
+    boxViewPO.gotoItem(testItem1);
+    itemPO.expectVisible();
+    itemPO.expectItem(testItem1);
+    itemPO.theThingPO.expectTags(testItem1.tags);
+  });
 
-  // it('Edit item tags', () => {
-  //   const deleteTag: string = testItem1.tags.tags[0];
-  //   const addTag = 'YYGGVERYGGYY';
-  //   itemPO.theThingPO.openTagsEdit();
-  //   const dialogPO = new YggDialogPageObjectCypress();
-  //   const tagsControlPO = new TagsControlPageObjectCypress(
-  //     dialogPO.getSelector()
-  //   );
-  //   tagsControlPO.deleteTag(deleteTag);
-  //   tagsControlPO.addTag(addTag);
-  //   dialogPO.confirm();
-  //   itemPO.theThingPO.save(testItem1);
-  //   siteNavigator.gotoMyBoxes();
-  //   myBoxesPO.expectVisible();
-  //   myBoxesPO.gotoBox(testBox);
-  //   boxViewPO.expectVisible();
-  //   boxViewPO.gotoItem(testItem1);
-  //   itemPO.expectVisible();
-  //   const tagViewPO = new TagsViewPageObjectCypress(itemPO.getSelector());
-  //   tagViewPO.expectTag(addTag);
-  //   tagViewPO.expectNoTag(deleteTag);
-  // });
+  it('Edit item tags', () => {
+    const deleteTag: string = testItem1.tags.tags[0];
+    const addTag = 'YYGGVERYGGYY';
+    itemPO.theThingPO.openTagsEdit();
+    const dialogPO = new YggDialogPageObjectCypress();
+    const tagsControlPO = new TagsControlPageObjectCypress(
+      dialogPO.getSelector()
+    );
+    tagsControlPO.deleteTag(deleteTag);
+    tagsControlPO.addTag(addTag);
+    dialogPO.confirm();
+    itemPO.theThingPO.save(testItem1);
+    siteNavigator.gotoMyBoxes();
+    myBoxesPO.expectVisible();
+    myBoxesPO.gotoBox(testBox);
+    boxViewPO.expectVisible();
+    boxViewPO.gotoItem(testItem1);
+    itemPO.expectVisible();
+    const tagViewPO = new TagsViewPageObjectCypress(itemPO.getSelector());
+    tagViewPO.expectTag(addTag);
+    tagViewPO.expectNoTag(deleteTag);
+  });
 
-  // it('Can not edit tags after made available', () => {
-  //   itemPO.publishAvailable(testItem1);
-  //   itemPO.theThingPO.expectNoTagsEditButton();
-  // });
+  it('Can not edit tags after made available', () => {
+    itemPO.publishAvailable(testItem1);
+    itemPO.theThingPO.expectNoTagsEditButton();
+  });
 
   it("Add tag to item increment the tag's popularity", () => {
     siteNavigator.gotoItemWarehouse();

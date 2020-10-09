@@ -4,7 +4,7 @@ export class ConfirmDialogPageObjectCypress extends ConfirmDialogPageObject {
   expectMessage(message: string) {
     cy.get(this.getSelector('content'), { timeout: 10000 }).should(
       'have.text',
-      message
+      Cypress.$(`<div>${message}</div>`).text().replace(/\r?\n|\r/g, '')
     );
   }
 

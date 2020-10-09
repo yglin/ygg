@@ -8,13 +8,11 @@ import {
   BoxCreatePageObjectCypress,
   BoxViewPageObjectCypress,
   HeaderPageObjectCypress,
+  ItemPageObjectCypress,
   ItemWarehousePageObjectCypress
 } from '@ygg/ourbox/test';
 import { getEnv } from '@ygg/shared/infra/core';
-import {
-  beforeAll,
-  theMockDatabase
-} from '@ygg/shared/test/cypress';
+import { beforeAll, theMockDatabase } from '@ygg/shared/test/cypress';
 import {
   EmceePageObjectCypress,
   SideDrawerPageObjectCypress,
@@ -43,7 +41,7 @@ describe('Creation of box', () => {
   const sideDrawerPO = new SideDrawerPageObjectCypress();
   const emceePO = new EmceePageObjectCypress();
   const itemWarehousePO = new ItemWarehousePageObjectCypress();
-  const itemPO = new TheThingPageObjectCypress('', ImitationItem);
+  const itemPO = new ItemPageObjectCypress();
 
   const testUser = testUsers[0];
   const otherUser = testUsers[1];
@@ -273,13 +271,7 @@ describe('Creation of box', () => {
     boxViewPO.theThingPO.runAction(ImitationBox.actions['create-item']);
 
     itemPO.expectVisible();
-    itemPO.setValue(testItem01);
-    itemPO.save(testItem01);
-    // emceePO.confirm(`確定要儲存 ${testItem01.name} ？`);
-    // emceePO.alert(`已成功儲存 ${testItem01.name}`);
-    emceePO.confirm(
-      `順便開放寶物 ${testItem01.name} 讓人索取嗎？開放後資料無法修改喔`
-    );
+    itemPO.createItem(testItem01, { makeAvailable: true });
 
     boxViewPO.expectVisible({ timeout: 20000 });
     boxViewPO.expectItem(testItem01);
@@ -327,13 +319,7 @@ describe('Creation of box', () => {
     boxViewPO.theThingPO.runAction(ImitationBox.actions['create-item']);
 
     itemPO.expectVisible();
-    itemPO.setValue(testItem02);
-    itemPO.save(testItem02);
-    // emceePO.confirm(`確定要儲存 ${testItem01.name} ？`);
-    // emceePO.alert(`已成功儲存 ${testItem01.name}`);
-    emceePO.confirm(
-      `順便開放寶物 ${testItem02.name} 讓人索取嗎？開放後資料無法修改喔`
-    );
+    itemPO.createItem(testItem02, { makeAvailable: true });
 
     boxViewPO.expectVisible({ timeout: 20000 });
     boxViewPO.expectItem(testItem02);

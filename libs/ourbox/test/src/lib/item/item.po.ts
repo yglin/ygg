@@ -1,6 +1,6 @@
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
 import { TheThingPageObjectCypress } from '@ygg/the-thing/test';
-import { ImitationItem } from '@ygg/ourbox/core';
+import { ImitationItem, messages } from '@ygg/ourbox/core';
 import { TheThing } from '@ygg/the-thing/core';
 import { defaults } from 'lodash';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
@@ -40,7 +40,7 @@ export class ItemPageObjectCypress extends PageObjectCypress {
     this.theThingPO.setValue(item);
     this.theThingPO.save(item);
     const emceePO = new EmceePageObjectCypress();
-    const confirmMessage = `順便開放寶物 ${item.name} 讓人索取嗎？開放後資料無法修改喔`;
+    const confirmMessage = `順便開放寶物 ${item.name} 讓人索取嗎？<br>${messages.itemAvailableNote}`;
     if (options.makeAvailable) {
       emceePO.confirm(confirmMessage);
     } else {
@@ -81,7 +81,7 @@ export class ItemPageObjectCypress extends PageObjectCypress {
   publishAvailable(item: TheThing) {
     this.theThingPO.runAction(ImitationItem.actions['publish-available']);
     const emceePO = new EmceePageObjectCypress();
-    emceePO.confirm(`開放寶物 ${item.name} 讓人索取嗎？開放後資料便無法修改喔`);
+    emceePO.confirm(`開放寶物 ${item.name} 讓人索取嗎？<br>${messages.itemAvailableNote}`);
     emceePO.alert(`寶物 ${item.name} 已開放讓人索取`);
   }
 }

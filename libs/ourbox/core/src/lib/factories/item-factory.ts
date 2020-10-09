@@ -30,6 +30,7 @@ import { ItemAccessor } from './item-accessor';
 import { User, UserAccessor, Authenticator } from '@ygg/shared/user/core';
 import { isEmpty, first } from 'lodash';
 import { Location } from '@ygg/shared/omni-types/core';
+import { messages } from '../ui';
 
 export class ItemFactory {
   // creatingPool: {
@@ -87,7 +88,7 @@ export class ItemFactory {
         .toPromise()
         .then(async (resultItem: TheThing) => {
           const confirm = await this.emcee.confirm(
-            `<h3>順便開放寶物 ${resultItem.name} 讓人索取嗎？<h3><h3>開放後資料無法修改喔</h3>`
+            `<h3>順便開放寶物 ${resultItem.name} 讓人索取嗎？<h3>${messages.itemAvailableNote}`
           );
           if (confirm) {
             await this.theThingFactory.setState(
@@ -111,7 +112,7 @@ export class ItemFactory {
   async publishAvailable(item: TheThing) {
     try {
       const confirm = await this.emcee.confirm(
-        `<h3>開放寶物 ${item.name} 讓人索取嗎？<h3><h3>開放後資料便無法修改喔</h3>`
+        `<h3>開放寶物 ${item.name} 讓人索取嗎？<h3>${messages.itemAvailableNote}`
       );
       if (confirm) {
         await this.theThingFactory.setState(
