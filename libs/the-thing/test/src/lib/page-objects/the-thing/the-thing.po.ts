@@ -24,6 +24,11 @@ import { values } from 'lodash';
 import { TheThingStatePageObjectCypress } from './the-thing-state.po';
 import isURL from 'validator/es/lib/isURL';
 import { Album, Location, OmniTypeID } from '@ygg/shared/omni-types/core';
+import { Tags } from '@ygg/tags/core';
+import {
+  TagsControlPageObjectCypress,
+  TagsViewPageObjectCypress
+} from '@ygg/tags/test';
 
 export class TheThingPageObjectCypress extends TheThingPageObject {
   constructor(parentSelector: string, imitation: TheThingImitation) {
@@ -246,5 +251,28 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
 
   expectReadonly(): void {
     cy.get(this.getSelectorForModifyButtons()).should('not.be.visible');
+  }
+
+  openTagsEdit() {
+    cy.get(this.getSelector('buttonEditTags')).click();
+  }
+
+  setTags(tags: Tags) {
+    this.openTagsEdit();
+    const dialogPO = new YggDialogPageObjectCypress();
+    const tagsControlPO = new TagsControlPageObjectCypress(
+      dialogPO.getSelector()
+    );
+    tagsControlPO.setValue(tags);
+    dialogPO.confirm();
+  }
+
+  expectTags(tags: Tags) {
+    const tagsViewPO = new TagsViewPageObjectCypress(this.getSelector('tags'));
+    tagsViewPO.expectValue(tags);
+  }
+
+  expectNoTagsEditButton() {
+    cy.get(this.getSelector('buttonEditTags')).should('not.be.visible');
   }
 }

@@ -74,7 +74,7 @@ export abstract class TheThingAccessor {
       // Ugly I know, Elasticsearch could be a better alternative
       // https://firebase.google.com/docs/firestore/query-data/queries
       const [firstTag, ...restTags] = Tags.isTags(tags)
-        ? tags.toNameArray()
+        ? tags.tags
         : tags;
       const queries: Query[] = [];
       queries.push(new Query('tags', 'array-contains', firstTag));

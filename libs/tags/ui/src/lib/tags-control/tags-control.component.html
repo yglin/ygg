@@ -1,4 +1,18 @@
 <div class="tags-control">
+  <div class="top-tags" [hidden]="!topTags || topTags.length <= 0">
+    <h3 class="title">熱門標籤</h3>
+    <mat-chip-list multiple aria-label="Top Tags">
+      <div *ngFor="let topTag of topTags">
+        <mat-chip
+          class="tag"
+          color="accent"
+          (click)="onClickTopTag(topTag.name)"
+          [selected]="isTopTagSelected(topTag.name)"
+          >{{ topTag.name }}</mat-chip
+        >
+      </div>
+    </mat-chip-list>
+  </div>
   <ygg-chips-control
     [label]="label"
     [formControl]="chipsControl"

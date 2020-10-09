@@ -7,10 +7,11 @@ import {
   RelationRecord,
   LocationRecord
 } from '@ygg/the-thing/core';
-import { relationAccessor, locationRecordAccessor } from '../global';
+import { relationAccessor, locationRecordAccessor, tagsAccessor } from '../global';
 import { User } from '@ygg/shared/user/core';
 import { OmniTypes, Location } from '@ygg/shared/omni-types/core';
 import { getEnv } from '@ygg/shared/infra/core';
+import { Tag, Tags } from '@ygg/tags/core';
 
 const firebaseEnv = getEnv('firebase');
 
@@ -28,6 +29,7 @@ export function generateOnCreateFunctions(imitations: TheThingImitation[]) {
           context: functions.EventContext
         ) => {
           try {
+            // console.debug(`On Create TheThing ${context.params.id}`);
             const theThing: TheThing = new TheThing().fromJSON(snapshot.data());
 
             // Save relation records subject to the new TheThing
@@ -79,9 +81,21 @@ export function generateOnCreateFunctions(imitations: TheThingImitation[]) {
                 }
               }
             }
-
             for (const locationRecord of locationRecords) {
               await locationRecordAccessor.save(locationRecord);
+            }
+
+            // Accumulate tag records
+            const tagNames: string[] = Tags.isTags(theThing.tags) ? theThing.tags.tags : [];
+            // console.debug('Found new tags');
+            // console.debug(tagNames);
+            for (const tagName of tagNames) {
+              const tagExist = await tagsAccessor.has(tagName);
+              if (tagExist) {
+                tagsAccessor.increment(tagName, 'popularity');
+              } else {
+                tagsAccessor.save(new Tag(tagName));
+              }
             }
 
             return Promise.resolve();

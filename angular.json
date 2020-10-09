@@ -2709,6 +2709,32 @@
         }
       },
       "schematics": {}
+    },
+    "tags-test": {
+      "root": "libs/tags/test",
+      "sourceRoot": "libs/tags/test/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/tags/test/tsconfig.lib.json",
+              "libs/tags/test/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/tags/test/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/tags/test/jest.config.js",
+            "tsConfig": "libs/tags/test/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

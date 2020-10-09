@@ -20,7 +20,7 @@ import { CommentFactory } from '@ygg/shared/thread/core';
 // }
 
 export abstract class TheThingFactoryBasic {
-  async abstract setState(
+  abstract async setState(
     thing: TheThing,
     imitation: TheThingImitation,
     state: TheThingState
@@ -114,6 +114,7 @@ export abstract class TheThingFactory extends TheThingFactoryBasic {
       if (!confirm) {
         return;
       }
+      this.emcee.showProgress({ message: `儲存 ${theThing.name}` });
       if (imitation && typeof imitation.preSave === 'function') {
         theThing = imitation.preSave(theThing);
       }
@@ -160,6 +161,8 @@ export abstract class TheThingFactory extends TheThingFactoryBasic {
     } catch (error) {
       await this.emcee.error(`<h3>儲存失敗，錯誤原因：${error.message}</h3>`);
       return Promise.reject(error);
+    } finally {
+      this.emcee.hideProgress();
     }
   }
 
@@ -167,7 +170,7 @@ export abstract class TheThingFactory extends TheThingFactoryBasic {
     return this.theThingSource.load(id, collection);
   }
 
-  async abstract inquireStateChangeRecord(
+  abstract async inquireStateChangeRecord(
     imitation: TheThingImitation,
     theThing: TheThing,
     oldState: TheThingState,

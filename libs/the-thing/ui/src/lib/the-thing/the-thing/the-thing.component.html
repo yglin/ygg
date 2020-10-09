@@ -25,7 +25,7 @@
         </div>
       </div>
     </div>
-    <br>
+    <br />
     <ygg-omni-type-view-control
       class="name"
       formControlName="name"
@@ -45,15 +45,26 @@
       </div>
     </ygg-omni-type-view-control>
   </div>
+  <div class="owner" *ngIf="showOwner">
+    <ygg-user-thumbnail [id]="theThing.ownerId"></ygg-user-thumbnail>
+  </div>
   <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="30px">
-    <div class="owner" *ngIf="showOwner">
-      <ygg-user-thumbnail [id]="theThing.ownerId"></ygg-user-thumbnail>
-    </div>
     <div class="state flex-wrap-next">
       <the-thing-state
         [id]="theThing.id"
         [imitation]="imitation"
       ></the-thing-state>
+      <div
+        class="tags"
+        fxLayout="row"
+        fxLayoutAlign="start start"
+        fxLayoutGap="10px"
+      >
+        <ygg-tags-view [tags]="theThing.tags"></ygg-tags-view>
+        <div [hidden]="readonly">
+          <button mat-mini-fab class="edit" (click)="openTagsEdit()"><mat-icon>edit</mat-icon></button>
+        </div>
+      </div>
     </div>
     <div
       class="actions"

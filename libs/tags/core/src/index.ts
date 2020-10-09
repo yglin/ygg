@@ -1,4 +1,2 @@
-export * from './lib/tag';
-export * from './lib/tags';
-export * from './lib/taggable';
-export * from './lib/tagging';
+export * from './lib/factories';
+export * from './lib/models';

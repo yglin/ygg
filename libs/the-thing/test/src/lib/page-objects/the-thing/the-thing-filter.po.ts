@@ -1,6 +1,6 @@
 import { TheThingFilterPageObject } from '@ygg/the-thing/ui';
-import { ChipsControlPageObjectCypress } from '@ygg/shared/test/cypress';
 import { TheThingFilter } from '@ygg/the-thing/core';
+import { ChipsControlPageObjectCypress } from '@ygg/shared/ui/test';
 
 export class TheThingFilterPageObjectCypress extends TheThingFilterPageObject {
   chipControlPO: ChipsControlPageObjectCypress;

@@ -156,14 +156,14 @@ describe('TagsControlComponent as Reactive Form Controller(ControlValueAccessor)
     await fixture.whenStable();
     fixture.detectChanges();
     expect(mockChipsControlComponent.writeValue).toHaveBeenCalledWith(
-      testTags.toNameArray()
+      testTags.tags
     );
     done();
   });
 
   it('should pass changed value from ygg-chips-control component to parent form', async done => {
     const testTags = Tags.forge();
-    mockChipsControlComponent.__simulateChange(testTags.toNameArray());
+    mockChipsControlComponent.__simulateChange(testTags.tags);
     await fixture.whenStable();
     fixture.detectChanges();
     const formTags: Tags = formComponent.formGroup.get('tags').value;

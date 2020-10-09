@@ -8,22 +8,22 @@ describe('Tags', () => {
 
   it('getNames() should return names array', () => {
     const tags1 = new Tags(tagsArray);
-    expect(tags1.getNames()).toEqual(tagsArray.map(tag => tag.name));
+    expect(tags1.tags).toEqual(tagsArray.map(tag => tag.name));
   });
   
   it('can be newed by Tags or Tag array or string array', () => {
     const tags1 = new Tags(tagsArray);
-    expect(tags1.getNames()).toEqual(tagsArray.map(tag => tag.name));
+    expect(tags1.tags).toEqual(tagsArray.map(tag => tag.name));
     const tags2 = new Tags(tags1);
-    expect(tags2.getNames()).toEqual(tags1.getNames());
-    const tags3 = new Tags(tags2.getNames());
-    expect(tags3.getNames()).toEqual(tags2.getNames());
+    expect(tags2.tags).toEqual(tags1.tags);
+    const tags3 = new Tags(tags2.tags);
+    expect(tags3.tags).toEqual(tags2.tags);
   });
 
   it('should only add unique tags by names', () => {
     const tags = new Tags();
     tags.push(...['APPLE', 'ORANGE', 'APPLE', 'BANANA']);
-    expect(tags.getNames()).toEqual(['APPLE', 'ORANGE', 'BANANA']);
+    expect(tags.tags).toEqual(['APPLE', 'ORANGE', 'BANANA']);
   });
 
   it('can test if has specific tag by name', () => {
@@ -37,13 +37,13 @@ describe('Tags', () => {
     const tags = new Tags();
     tags.push(...['DOG', 'CAT', 'BIRB', 'BUNNY']);
     tags.remove('BIRB');
-    expect(tags.getNames()).toEqual(['DOG', 'CAT', 'BUNNY']);
+    expect(tags.tags).toEqual(['DOG', 'CAT', 'BUNNY']);
   });
 
   it('can clear all tags', () => {
     const tags = new Tags(tagsArray);
     tags.clear();
-    expect(tags.toNameArray().length).toBe(0);
+    expect(tags.tags.length).toBe(0);
   });
   
 });

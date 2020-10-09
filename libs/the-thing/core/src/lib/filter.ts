@@ -51,7 +51,7 @@ export class TheThingFilter implements SerializableJSON {
       const name = `${this.name} ＆ ${filter.name}`;
       const tags = new Tags(this.tags)
         .merge(new Tags(filter.tags))
-        .toNameArray();
+        .tags;
       const keywordName = `${!!this.keywordName ? this.keywordName : ''} ${
         !!filter.keywordName ? filter.keywordName : ''
       }`.trim();
@@ -78,7 +78,7 @@ export class TheThingFilter implements SerializableJSON {
     if (!!this.ownerId && theThing.ownerId !== this.ownerId) {
       return false;
     }
-    if (!isEmpty(this.tags) && !theThing.tags.include(this.tags)) {
+    if (!isEmpty(this.tags) && !theThing.tags.includeAny(this.tags)) {
       return false;
     }
     if (!isEmpty(this.keywordName)) {

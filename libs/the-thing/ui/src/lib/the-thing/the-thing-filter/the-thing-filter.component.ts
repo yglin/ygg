@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 import { TheThingFilter } from '@ygg/the-thing/core';
 import { TheThingFilterAccessService } from '@ygg/the-thing/data-access';
 import { debounceTime } from 'rxjs/operators';
+import { Tags } from '@ygg/tags/core';
 
 @Component({
   selector: 'the-thing-filter',
@@ -42,8 +43,13 @@ export class TheThingFilterComponent implements OnInit, OnDestroy, OnChanges {
       keywordName: ''
     });
     this.subscriptions.push(
-      this.formGroup.valueChanges.subscribe(value => {
-        this.filterChanged.emit(new TheThingFilter(value));
+      this.formGroup.valueChanges.subscribe(payload => {
+        this.filterChanged.emit(
+          new TheThingFilter().fromJSON({
+            keywordName: payload.keywordName,
+            tags: payload.tags ? (payload.tags as Tags).tags : []
+          })
+        );
       })
     );
     this.subscriptions.push(

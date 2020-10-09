@@ -11,6 +11,8 @@ import { Album, OmniTypes } from '@ygg/shared/omni-types/core';
 import { ImageUploaderService } from '@ygg/shared/omni-types/ui';
 import { EmceeService, YggDialogService } from '@ygg/shared/ui/widgets';
 import { AuthorizeService } from '@ygg/shared/user/ui';
+import { Tags } from '@ygg/tags/core';
+import { TagsFactoryService, TagsStoryService } from '@ygg/tags/ui';
 import {
   Relationship,
   TheThing,
@@ -67,7 +69,8 @@ export class TheThingComponent implements OnInit, OnDestroy {
     private dialog: YggDialogService,
     private emcee: EmceeService,
     private imageUploaderService: ImageUploaderService,
-    private router: Router
+    private router: Router,
+    private tagsStory: TagsStoryService
   ) {
     this.formGroup = this.formBuilder.group({
       name: ['', Validators.required],
@@ -374,6 +377,15 @@ export class TheThingComponent implements OnInit, OnDestroy {
   setImageAlbumCover() {
     if (this.album && this.album.cover) {
       this.theThing.image = this.album.cover.src;
+    }
+  }
+
+  async openTagsEdit() {
+    const tags = await this.tagsStory.editTags(this.theThing.tags);
+    // console.log('TheThingComponent');
+    // console.log(tags);
+    if (Tags.isTags(tags)) {
+      this.theThing.tags = tags;
     }
   }
 }

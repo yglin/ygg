@@ -17,10 +17,11 @@ import {
 import {
   relationFactory,
   relationAccessor,
-  locationRecordAccessor
+  locationRecordAccessor, tagsAccessor
 } from '../global';
 import { User } from '@ygg/shared/user/core';
 import { getEnv, Query } from '@ygg/shared/infra/core';
+import { Tags } from '@ygg/tags/core';
 
 const firebaseEnv = getEnv('firebase');
 
@@ -72,6 +73,18 @@ export function generateOnDeleteFunctions(imitations: TheThingImitation[]) {
             for (const deleteRecord of deleteLocationRecords) {
               await locationRecordAccessor.delete(deleteRecord.id);
             }
+
+            // Decrement tag popularity
+            const tagNames: string[] = Tags.isTags(theThing.tags) ? theThing.tags.tags : [];
+            // console.debug('Found new tags');
+            // console.debug(tagNames);
+            for (const tagName of tagNames) {
+              const tagExist = await tagsAccessor.has(tagName);
+              if (tagExist) {
+                tagsAccessor.decrement(tagName, 'popularity');
+              }
+            }
+
 
             return Promise.resolve();
           } catch (error) {

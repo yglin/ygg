@@ -1,6 +1,7 @@
 import { getEnv } from '@ygg/shared/infra/core';
 import { Location, OmniTypes } from '@ygg/shared/omni-types/core';
 import { User } from '@ygg/shared/user/core';
+import { Tag, Tags } from '@ygg/tags/core';
 import {
   LocationRecord,
   RelationRecord,
@@ -17,7 +18,7 @@ import {
   uniq,
   upperFirst
 } from 'lodash';
-import { locationRecordAccessor, relationAccessor } from '../global';
+import { locationRecordAccessor, relationAccessor, tagsAccessor } from '../global';
 
 const firebaseEnv = getEnv('firebase');
 
@@ -198,6 +199,28 @@ export function generateOnUpdateFunctions(imitations: TheThingImitation[]) {
             for (const locationRecord of newLocationRecords) {
               console.log(`Upsert locationRecord ${locationRecord.id}`);
               await locationRecordAccessor.save(locationRecord);
+            }
+
+            // Sync tags popularity
+            const tagNamesBefore: string[] = Tags.isTags(theThingBefore.tags) ? theThingBefore.tags.tags : [];
+            const tagNamesAfter: string[] = Tags.isTags(theThingAfter.tags) ? theThingAfter.tags.tags : [];
+            const tagNamesAdd: string[] = difference(tagNamesAfter, tagNamesBefore);
+            const tagNamesRemove: string[] = difference(tagNamesBefore, tagNamesAfter);
+
+            for (const tagName of tagNamesAdd) {
+              const tagExist = await tagsAccessor.has(tagName);
+              if (tagExist) {
+                tagsAccessor.increment(tagName, 'popularity');
+              } else {
+                tagsAccessor.save(new Tag(tagName));
+              }
+            }
+
+            for (const tagName of tagNamesRemove) {
+              const tagExist = await tagsAccessor.has(tagName);
+              if (tagExist) {
+                tagsAccessor.decrement(tagName, 'popularity');
+              }
             }
 
             return Promise.resolve();

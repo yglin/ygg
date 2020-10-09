@@ -43,6 +43,10 @@ export class EntityAccessor<T extends Entity> {
     return this.dataAccessor.has$(this.collection, id);
   }
 
+  async has(id: string): Promise<boolean> {
+    return this.dataAccessor.has(this.collection, id);
+  }
+
   load$(id: string): Observable<T> {
     // console.log(`load$ ${this.collection}/${id}`);
     return this.dataAccessor.load$(this.collection, id).pipe(
@@ -82,6 +86,12 @@ export class EntityAccessor<T extends Entity> {
     return entityData ? this.deserializer(entityData) : null;
   }
 
+  listAll$(): Observable<T[]> {
+    return this.dataAccessor
+      .list$(this.collection)
+      .pipe(map(items => items.map(item => this.deserializer(item))));
+  }
+
   listByIds$(ids: string[]): Observable<T[]> {
     if (isEmpty(ids)) {
       return of([]);
@@ -89,5 +99,13 @@ export class EntityAccessor<T extends Entity> {
       return combineLatest(ids.map(id => this.load$(id))).pipe(
         map(items => items.filter(item => !!item))
       );
+  }
+
+  async increment(id: string, field: string) {
+    return this.dataAccessor.increment(this.collection, id, field);
+  }
+
+  async decrement(id: string, field: string) {
+    return this.dataAccessor.increment(this.collection, id, field, -1);
   }
 }

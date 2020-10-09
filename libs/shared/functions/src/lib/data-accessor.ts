@@ -80,6 +80,41 @@ export class DataAccessorFunctions extends DataAccessor {
     return this.load$(collection, id).pipe(map(data => !!data));
   }
 
+  async has(collection: string, id: string): Promise<boolean> {
+    try {
+      const snapshot = await this.firestore
+        .collection(collection)
+        .doc(id)
+        .get();
+      return snapshot.exists;
+    } catch (error) {
+      const wrapError = new Error(
+        `DataAccessor.has(): Failed to check document ${collection}/${id} exist.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
+  }
+
+  async increment(
+    collection: string,
+    id: string,
+    field: string,
+    amount: number = 1
+  ) {
+    try {
+      const increment = admin.firestore.FieldValue.increment(amount);
+      return this.firestore
+        .collection(collection)
+        .doc(id)
+        .update({ [field]: increment });
+    } catch (error) {
+      const wrapError = new Error(
+        `DataAccessor.increment(): Failed to increment document ${collection}/${id}, field ${field}.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
+  }
+
   async load(collection: string, id: string): Promise<any> {
     try {
       const snapshot = await this.firestore

@@ -4,6 +4,7 @@ import {
   AngularFirestore,
   AngularFirestoreCollection
 } from '@angular/fire/firestore';
+import * as firebase from 'firebase';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { LogService } from '@ygg/shared/infra/log';
 import { Observable, race, NEVER, of, combineLatest } from 'rxjs';
@@ -90,6 +91,19 @@ export class FireStoreAccessService extends DataAccessor {
       .pipe(map(action => action.payload.exists));
   }
 
+  async has(collection: string, id: string): Promise<boolean> {
+    try {
+      return this.has$(collection, id)
+        .pipe(take(1))
+        .toPromise();
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to check document ${collection}/${id} exist.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
+  }
+
   load$(collection: string, id: string): Observable<any> {
     return this.getCollection(collection)
       .doc(id)
@@ -161,5 +175,26 @@ export class FireStoreAccessService extends DataAccessor {
     return this.find$(collection, queries)
       .pipe(take(1))
       .toPromise();
+  }
+
+  async increment(
+    collection: string,
+    id: string,
+    field: string,
+    amount: number = 1
+  ) {
+    try {
+      const increment = firebase.firestore.FieldValue.increment(amount);
+      const updatePayload = { [field]: increment };
+      return this.firestore
+        .collection(collection)
+        .doc(id)
+        .update(updatePayload);
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to increment document ${collection}/${id}, field ${field}.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
   }
 }

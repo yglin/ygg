@@ -1,4 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 import { Tags } from '@ygg/tags/core';
 import { isArray, isEmpty } from 'lodash';
 
@@ -7,20 +13,21 @@ import { isArray, isEmpty } from 'lodash';
   templateUrl: './tags-view.component.html',
   styleUrls: ['./tags-view.component.css']
 })
-export class TagsViewComponent implements OnInit {
+export class TagsViewComponent implements OnInit, OnChanges {
   @Input() tags: Tags | string[];
   tagNames: string[] = [];
-  
-  constructor() { }
 
-  ngOnInit() {
-//    console.log(this.tags);
+  constructor() {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // console.log('TagsViewComponent');
+    // console.log(this.tags);
     if (Tags.isTags(this.tags)) {
-      this.tagNames = this.tags.getNames();
+      this.tagNames = this.tags.tags;
     } else if (isArray(this.tags) && !isEmpty(this.tags)) {
       this.tagNames = this.tags;
     }
-//    console.log(this.tagNames);
   }
 
+  ngOnInit() {}
 }

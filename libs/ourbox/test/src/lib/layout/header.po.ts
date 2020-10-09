@@ -7,6 +7,6 @@ export class HeaderPageObjectCypress extends PageObjectCypress {
   };
 
   openSideDrawer() {
-    cy.get(this.getSelector('buttonOpenSideDrawer')).click();
+    cy.get(this.getSelector('buttonOpenSideDrawer')).scrollIntoView().click();
   }
 }

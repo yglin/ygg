@@ -54,7 +54,7 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
     const chipsControlPO = new ChipsControlPageObjectCypress(
       this.getSelector()
     );
-    chipsControlPO.expectValue(theThing.tags.toNameArray());
+    chipsControlPO.expectValue(theThing.tags.tags);
     cy.get(this.getSelector('inputMetaName'))
       .invoke('val')
       .should('equal', theThing.name);
@@ -62,7 +62,7 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
   }
 
   setValue(theThing: TheThing) {
-    this.setTags(theThing.tags.toNameArray());
+    this.setTags(theThing.tags.tags);
     this.setName(theThing.name);
     this.setView(theThing.view);
     this.theThingCellsEditorPO.addValue(values(theThing.cells));
@@ -154,7 +154,7 @@ export class TheThingEditorPageObjectCypress extends TheThingEditorPageObject {
   }
 
   extendValue(theThing: TheThing) {
-    this.setTags(theThing.tags.toNameArray());
+    this.setTags(theThing.tags.tags);
     this.setName(theThing.name);
     this.setView(theThing.view);
     this.theThingCellsEditorPO.updateValue(values(theThing.cells));

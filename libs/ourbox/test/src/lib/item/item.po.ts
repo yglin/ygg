@@ -6,6 +6,7 @@ import { defaults } from 'lodash';
 import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
 import { UserThumbnailPageObjectCypress } from '@ygg/shared/user/test';
+import { Tags } from '@ygg/tags/core';
 
 export class ItemPageObjectCypress extends PageObjectCypress {
   selectors = {
@@ -75,5 +76,12 @@ export class ItemPageObjectCypress extends PageObjectCypress {
     cy.get(this.getSelector('requesterList'))
       .find(`.requester:contains("${requester.name}")`)
       .should('have.length', 0);
+  }
+
+  publishAvailable(item: TheThing) {
+    this.theThingPO.runAction(ImitationItem.actions['publish-available']);
+    const emceePO = new EmceePageObjectCypress();
+    emceePO.confirm(`開放寶物 ${item.name} 讓人索取嗎？開放後資料便無法修改喔`);
+    emceePO.alert(`寶物 ${item.name} 已開放讓人索取`);
   }
 }

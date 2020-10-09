@@ -1,6 +1,6 @@
 .chips-control {
-  width: 100%;
-  max-width: 640px;
+  min-width: 100px;
+  max-width: 60vw;
 }
 
 .action-bar {

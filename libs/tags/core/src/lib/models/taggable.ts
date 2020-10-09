@@ -1,8 +1,25 @@
 import { Tags } from './tags';
 
-export interface Taggable {
+export class Taggable {
   id: string;
   tags: Tags;
+
+  constructor() {
+    this.tags = new Tags();
+  }
+
+  hasTags(tags: string[]): boolean {
+    return this.tags.include(tags);
+  }
+
+  setTags(tags: Tags) {
+    this.tags = tags;
+  }
+
+  addTag(tag: string) {
+    this.tags.push(tag);
+  }
+
 }
 
 export interface TaggableType {

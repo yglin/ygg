@@ -5,6 +5,7 @@ import { isEmpty } from 'lodash';
 export abstract class DataAccessor {
   abstract async save(collection: string, id: string, data: any);
   abstract async update(collection: string, id: string, data: any);
+  abstract has(collection: string, id: string): Promise<boolean>;
   abstract has$(collection: string, id: string): Observable<boolean>;
   abstract load$(collection: string, id: string): Observable<any>;
   abstract list$(collection: string): Observable<any[]>;
@@ -13,6 +14,7 @@ export abstract class DataAccessor {
   abstract async delete(collection: string, id: string);
   abstract find$(collection: string, queries: Query[]): Observable<any[]>;
   abstract async find(collection: string, queries: Query[]): Promise<any[]>; 
+  abstract async increment(collection: string, id: string, field: string, amount?: number);
 
   async listByIds(collection: string, ids: string[]): Promise<any[]> {
     if (isEmpty(ids)) {

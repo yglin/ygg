@@ -18,7 +18,7 @@ import {
   uniq,
   difference
 } from 'lodash';
-import { Tags } from '@ygg/tags/core';
+import { Taggable, Tags } from '@ygg/tags/core';
 import { TheThingCell } from './cell';
 import { OmniTypeID, Image, TimeRange } from '@ygg/shared/omni-types/core';
 import {
@@ -32,11 +32,14 @@ import { TheThingRelation, RelationRecord } from './relation';
 import { TheThingState } from './state';
 import { DeserializerJSON, SerializerJSON } from '@ygg/shared/infra/core';
 import { config } from './config';
+import { use } from 'typescript-mix';
 
-export class TheThing implements Entity, ImageThumbnailItem {
+export interface TheThing extends Taggable, Entity, ImageThumbnailItem {}
+
+export class TheThing {
   static collection = config.collection;
 
-  id: string;
+  @use(Taggable) this: TheThing;
 
   /** Category, group, table, or collection name */
   collection: string;
@@ -178,13 +181,8 @@ export class TheThing implements Entity, ImageThumbnailItem {
     this.name = '';
     this.createAt = new Date().valueOf();
     this.modifyAt = this.createAt;
-    this.tags = new Tags();
     this.cells = {};
     this.relations = {};
-  }
-
-  hasTags(tags: string[]): boolean {
-    return this.tags.include(tags);
   }
 
   hasCellOfType(type: OmniTypeID): boolean {

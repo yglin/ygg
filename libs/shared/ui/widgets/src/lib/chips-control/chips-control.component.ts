@@ -49,7 +49,7 @@ export class ChipsControlComponent
   implements OnInit, OnDestroy, AfterViewInit, ControlValueAccessor {
   @Input() label: string;
   @Input() autocompleteOptions: string[] = [];
-  @Input() chipMinLength = 2;
+  @Input() chipMinLength = 1;
   autocompleteOptionsFiltered: string[] = [];
   emitChange: (chips: string[]) => any = noop;
   chips: string[] = [];
@@ -99,7 +99,7 @@ export class ChipsControlComponent
       if (inputKeyword && inputKeyword.length >= this.chipMinLength) {
         this.showButtonAdd = true;
         // console.log('Show button-add');
-        // console.dir(autocompleteTagsSource.getNames());
+        // console.dir(autocompleteTagsSource.tags);
         // console.log(this.autocompleteOptions);
         this.autocompleteOptionsFiltered = this.autocompleteOptions.filter(
           chip => chip.includes(inputKeyword)

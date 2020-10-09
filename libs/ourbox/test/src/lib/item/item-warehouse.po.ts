@@ -2,6 +2,7 @@ import { ImitationItem } from '@ygg/ourbox/core';
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
 import { TheThing } from '@ygg/the-thing/core';
 import { TheThingFinderPageObjectCypress } from '@ygg/the-thing/test';
+import { defaults } from 'lodash';
 
 export class ItemWarehousePageObjectCypress extends PageObjectCypress {
   selectors = {
@@ -27,11 +28,15 @@ export class ItemWarehousePageObjectCypress extends PageObjectCypress {
     this.theThingFinderPO.expectTheThing(item);
   }
 
-  expectItems(items: TheThing[]) {
-    cy.wrap(items).each((item: TheThing) => this.expectItem(item));
+  expectItems(items: TheThing[], options: { exact?: boolean } = {}) {
+    this.theThingFinderPO.expectTheThings(items, options);
   }
 
   expectNotItems(items: TheThing[]) {
     cy.wrap(items).each((item: TheThing) => this.expectNotItem(item));
+  }
+
+  setFilterTags(tags: string[]) {
+    this.theThingFinderPO.setFilterTags(tags);
   }
 }

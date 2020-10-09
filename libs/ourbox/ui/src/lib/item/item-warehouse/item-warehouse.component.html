@@ -8,17 +8,10 @@
   </ng-template>
 
   <the-thing-finder
-  class="item-finder"
+    class="item-finder"
     [theThings$]="items$"
     [imitation]="ImitationItem"
     [theThingItemTemplate]="theThingItemTemplate"
   >
-    <!-- <ng-container *theThingFinderItem="let theThing">
-      <h2>This is {{ theThing.name }}</h2>
-      <the-thing-thumbnail
-        [theThing]="theThing"
-        [imiation]="ImitationItem"
-      ></the-thing-thumbnail>
-    </ng-container> -->
   </the-thing-finder>
 </div>
