@@ -12,4 +12,13 @@ export class PageObjectCypress extends PageObject {
   ): Cypress.Chainable<any> {
     return cy.get(this.getSelector(), options).should('be.visible');
   }
+
+  expectNotVisible(
+    options: any = {
+      timeout: 10000
+    }
+  ): Cypress.Chainable<any> {
+    cy.wait(1000);
+    return cy.get(this.getSelector(), options).should('not.be.visible');
+  }
 }

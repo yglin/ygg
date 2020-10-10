@@ -7,6 +7,7 @@ import { EmceePageObjectCypress } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
 import { UserThumbnailPageObjectCypress } from '@ygg/shared/user/test';
 import { Tags } from '@ygg/tags/core';
+import { ThreadPageObjectCypress } from '@ygg/shared/thread/test';
 
 export class ItemPageObjectCypress extends PageObjectCypress {
   selectors = {
@@ -15,6 +16,7 @@ export class ItemPageObjectCypress extends PageObjectCypress {
     requesterList: '.requester-list'
   };
   theThingPO: TheThingPageObjectCypress;
+  threadPO: ThreadPageObjectCypress;
 
   constructor(parentSelector?: string) {
     super(parentSelector);
@@ -22,6 +24,7 @@ export class ItemPageObjectCypress extends PageObjectCypress {
       this.getSelector(),
       ImitationItem
     );
+    this.threadPO = new ThreadPageObjectCypress(this.getSelector());
   }
 
   getSelectorForRequesterAt(place: number): string {
@@ -81,7 +84,9 @@ export class ItemPageObjectCypress extends PageObjectCypress {
   publishAvailable(item: TheThing) {
     this.theThingPO.runAction(ImitationItem.actions['publish-available']);
     const emceePO = new EmceePageObjectCypress();
-    emceePO.confirm(`開放寶物 ${item.name} 讓人索取嗎？<br>${messages.itemAvailableNote}`);
+    emceePO.confirm(
+      `開放寶物 ${item.name} 讓人索取嗎？<br>${messages.itemAvailableNote}`
+    );
     emceePO.alert(`寶物 ${item.name} 已開放讓人索取`);
   }
 }

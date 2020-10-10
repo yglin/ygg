@@ -24,7 +24,6 @@ export class ItemTransferComponent implements OnInit, OnDestroy {
   itemTransfer: TheThing;
   subscriptions: Subscription[] = [];
   ImitationItemTransfer = ImitationItemTransfer;
-  showThread = true;
   giverId: string;
   receiverId: string;
   itemId: string;
@@ -65,9 +64,6 @@ export class ItemTransferComponent implements OnInit, OnDestroy {
               RelationshipItemTransferItem.name
             )
           );
-          this.showThread = !ImitationItemTransfer.isInStates(itemTransfer, [
-            ImitationItemTransfer.states.new
-          ]);
         })
       );
       // const giverId$: Observable<any> = itemTransferUpdate$.pipe(

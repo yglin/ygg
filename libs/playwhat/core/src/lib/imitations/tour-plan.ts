@@ -85,13 +85,15 @@ export const RelationshipScheduleEvent: Relationship = new Relationship({
 ImitationTourPlan.states['waitApproval'] = {
   name: 'waitApproval',
   label: '等待確認',
-  value: 38
+  value: 38,
+  threadable: true
 };
 
 ImitationTourPlan.states['approved'] = {
   name: 'approved',
   label: '可成行',
-  value: 40
+  value: 40,
+  threadable: true
 };
 
 ImitationTourPlan.states['paid'].permissions = ['isAdmin', 'approved'];

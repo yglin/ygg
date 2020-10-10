@@ -13,8 +13,47 @@
       </mat-form-field>
     </div>
     <br />
-    <div *ngIf="isTesting" [formGroup]="formGroupMapBound" class="bound-input">
-      <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="10px">
+    <div *ngIf="isTesting">
+      <div
+        [formGroup]="formGroupMapCenter"
+        class="center"
+        fxLayout="row wrap"
+        fxLayoutAlign="start center"
+        fxLayoutGap="10px"
+      >
+        <div>
+          <mat-form-field>
+            <input
+              matInput
+              placeholder="center-lat"
+              formControlName="lat"
+              class="lat"
+            />
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <input
+              matInput
+              placeholder="center-lng"
+              formControlName="lng"
+              class="lng"
+            />
+          </mat-form-field>
+        </div>
+        <div>
+          <button mat-button class="set-center" (click)="setMapCenter()">
+            Set Center
+          </button>
+        </div>
+      </div>
+      <div
+        [formGroup]="formGroupMapBound"
+        class="bound-input"
+        fxLayout="row wrap"
+        fxLayoutAlign="start center"
+        fxLayoutGap="10px"
+      >
         <div>
           <mat-form-field>
             <input

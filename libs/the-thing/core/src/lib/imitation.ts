@@ -403,6 +403,12 @@ export class TheThingImitation implements ImageThumbnailItem, SerializableJSON {
     return false;
   }
 
+  isThreadable(theThing: TheThing): boolean {
+    const state = this.getState(theThing);
+    console.log(state);
+    return state && state.threadable;
+  }
+
   fromJSON(data: any = {}): this {
     extend(this, data);
     if (!isEmpty(data.cellsDef)) {

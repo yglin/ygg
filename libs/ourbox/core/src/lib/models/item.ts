@@ -42,7 +42,8 @@ export const ImitationItemStates: { [name: string]: TheThingState } = {
   available: {
     name: 'available',
     label: '開放索取',
-    value: 100
+    value: 100,
+    threadable: true
   },
   transfer: {
     name: 'transfer',

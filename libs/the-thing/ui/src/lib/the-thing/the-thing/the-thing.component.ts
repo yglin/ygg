@@ -60,6 +60,7 @@ export class TheThingComponent implements OnInit, OnDestroy {
   reloadSubscriptions: Subscription = new Subscription();
   // actions$Subscription: Subscription;
   album: Album = null;
+  showThread = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -166,6 +167,10 @@ export class TheThingComponent implements OnInit, OnDestroy {
             );
           }
         }
+
+        // Show thread
+        this.showThread = this.imitation.isThreadable(this.theThing);
+        console.log(`showThread = ${this.showThread}`);
       })
     );
     this.reloadSubscriptions.add(updateTheThing$.subscribe());

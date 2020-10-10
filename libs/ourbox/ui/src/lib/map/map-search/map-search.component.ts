@@ -49,6 +49,7 @@ export class MapSearchComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
   isTesting = !!getEnv('test') ? true : false;
   formGroupMapBound: FormGroup;
+  formGroupMapCenter: FormGroup;
   ImitationItem = ImitationItem;
   items: TheThing[] = [];
 
@@ -104,6 +105,11 @@ export class MapSearchComponent implements OnInit, OnDestroy {
       west: null,
       north: null,
       south: null
+    });
+
+    this.formGroupMapCenter = this.formBuilder.group({
+      lat: null,
+      lng: null
     });
   }
 
@@ -193,6 +199,14 @@ export class MapSearchComponent implements OnInit, OnDestroy {
       [geoBound.north, geoBound.east]
     ]);
     this.boundChange$.next(geoBound);
+  }
+
+  setMapCenter() {
+    const lat = parseFloat(this.formGroupMapCenter.get('lat').value);
+    const lng = parseFloat(this.formGroupMapCenter.get('lng').value);
+    if (lat !== NaN && lng !== NaN) {
+      this.map.panTo({ lat, lng });
+    }
   }
 
   initMap(center: GeoPoint): void {

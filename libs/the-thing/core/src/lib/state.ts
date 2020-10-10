@@ -13,6 +13,7 @@ export interface TheThingState {
   requireChangeRecord?: boolean;
   confirmMessage?: TheThingStateConfirmMessage;
   permissions?: string[];
+  threadable?: boolean;
 }
 
 export interface TheThingStateChangeRecord {

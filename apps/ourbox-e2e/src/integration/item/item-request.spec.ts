@@ -34,10 +34,10 @@ describe('Request for item', () => {
   ]);
   const testItem = ImitationItem.forgeTheThing();
   testItem.setState(ImitationItem.stateName, ImitationItem.states.available);
-  const itemRelation = RelationshipBoxItem.createRelationRecord(
+  testBox.addRelation(RelationshipBoxItem.createRelation(
     testBox.id,
     testItem.id
-  );
+  ));
   const itemHolder: User = testUser1;
   testItem.ownerId = itemHolder.id;
   testItem.setUserOfRole(RelationshipItemHolder.role, itemHolder.id);
@@ -49,10 +49,6 @@ describe('Request for item', () => {
     theMockDatabase.insert(`${User.collection}/${testUser3.id}`, testUser3);
     theMockDatabase.insert(`${testBox.collection}/${testBox.id}`, testBox);
     theMockDatabase.insert(`${testItem.collection}/${testItem.id}`, testItem);
-    theMockDatabase.insert(
-      `${RelationRecord.collection}/${itemRelation.id}`,
-      itemRelation
-    );
     cy.visit('/');
     loginTestUser(testUser1);
     siteNavigator.gotoMyBoxes();

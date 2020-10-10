@@ -49,28 +49,33 @@ export const ImitationItemTransferStates: { [name: string]: TheThingState } = {
   editing: {
     name: 'editing',
     label: '修改中',
-    value: 15
+    value: 15,
+    threadable: true
   },
   waitReceiver: {
     name: 'waitReceiver',
     label: '等候收取方同意',
-    value: 20
+    value: 20,
+    threadable: true
   },
   consented: {
     name: 'consented',
     label: '雙方已同意進行交付',
-    value: 30
+    value: 30,
+    threadable: true
   },
   completed: {
     name: 'completed',
     label: '已交付完成',
-    value: 100
+    value: 100,
+    threadable: true
   },
   cancelled: {
     name: 'cancelled',
     label: '已取消',
     value: 130,
-    requireChangeRecord: true
+    requireChangeRecord: true,
+    threadable: true
   }
 };
 

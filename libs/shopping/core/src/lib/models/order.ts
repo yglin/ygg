@@ -40,7 +40,9 @@ const states: TheThingState[] = [
     value: 30,
     icon: 'send',
     permissions: ['requireOwner', 'state:new'],
-    confirmMessage: (theThing: TheThing) => `送出訂單 ${theThing.name} 的申請？`
+    confirmMessage: (theThing: TheThing) =>
+      `送出訂單 ${theThing.name} 的申請？`,
+    threadable: true
   },
   {
     name: 'paid',
@@ -49,7 +51,8 @@ const states: TheThingState[] = [
     icon: 'payment',
     permissions: ['requireAdmin', 'state:applied'],
     confirmMessage: (theThing: TheThing) =>
-      `已收到訂單 ${theThing.name} 的所有款項？`
+      `已收到訂單 ${theThing.name} 的所有款項？`,
+    threadable: true
   },
   {
     name: 'completed',
@@ -58,7 +61,8 @@ const states: TheThingState[] = [
     icon: 'done_all',
     permissions: ['requireAdmin', 'state:paid'],
     confirmMessage: (theThing: TheThing) =>
-      `此訂單 ${theThing.name} 的所有活動及商品已交付完成？`
+      `此訂單 ${theThing.name} 的所有活動及商品已交付完成？`,
+    threadable: true
   }
 ];
 

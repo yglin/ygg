@@ -30,7 +30,7 @@ export class ItemTransferPageObjectCypress extends PageObjectCypress {
       this.getSelector(),
       ImitationItemTransfer
     );
-    this.threadPO = new ThreadPageObjectCypress(this.getSelector('thread'));
+    this.threadPO = new ThreadPageObjectCypress(this.theThingPO.getSelector());
   }
 
   expectItem(testItem: TheThing) {

@@ -210,6 +210,9 @@
       </div>
     </div>
   </div>
+  <div *ngIf="showThread">
+    <ygg-thread [subjectId]='theThing.id'></ygg-thread>
+  </div>
   <br /><br />
   <div class="projection-footer">
     <ng-content select="[the-thing-projection-footer]"></ng-content>
