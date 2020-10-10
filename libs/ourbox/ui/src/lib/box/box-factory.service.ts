@@ -67,7 +67,7 @@ export class BoxFactoryService extends BoxFactory implements Resolve<TheThing> {
       if (!box) {
         throw new Error(`找不到寶箱，id: ${id}`);
       }
-      const meMember = await this.isMember(id);
+      const meMember = await this.amIMember(id);
       if (!meMember) {
         throw new Error(`非寶箱成員無法檢視寶箱 ${box.name} 的內容`);
       }

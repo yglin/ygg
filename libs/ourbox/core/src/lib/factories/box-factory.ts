@@ -370,19 +370,36 @@ export class BoxFactory {
       );
   }
 
+  async amIMember(boxId: string): Promise<boolean> {
+    try {
+      const userId =
+        this.authenticator.currentUser && this.authenticator.currentUser.id;
+      if (!userId) {
+        return false;
+      }
+      const box = await this.theThingAccessor.load(
+        boxId,
+        ImitationBox.collection
+      );
+      return box.hasUserOfRole(RelationshipBoxMember.role, userId);
+    } catch (error) {
+      const wrapError = new Error(
+        `Failed to check if I am member of box ${boxId}.\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
+  }
+
   async isMember(boxId: string, userId?: string): Promise<boolean> {
     if (!userId) {
-      userId =
-        this.authenticator.currentUser && this.authenticator.currentUser.id;
+      return this.amIMember(boxId);
+    } else {
+      const box = await this.theThingAccessor.load(
+        boxId,
+        ImitationBox.collection
+      );
+      return box.hasUserOfRole(RelationshipBoxMember.role, userId);
     }
-    if (!userId) {
-      return false;
-    }
-    return this.relationFactory.hasRelation(
-      boxId,
-      userId,
-      RelationshipBoxMember.role
-    );
   }
 
   listPublicBoxes$(): Observable<TheThing[]> {
