@@ -14,7 +14,12 @@ import {
 import { catchError, map, skip, switchMap, take, tap } from 'rxjs/operators';
 
 import { UserError, UserErrorCode } from './error';
-import { User, Authenticator, TestAccount } from '@ygg/shared/user/core';
+import {
+  User,
+  Authenticator,
+  TestAccount,
+  messages
+} from '@ygg/shared/user/core';
 import { UserService } from './user.service';
 import { EmceeService } from '@ygg/shared/ui/widgets';
 import { getEnv } from '@ygg/shared/infra/core';
@@ -101,6 +106,10 @@ export class AuthenticateService implements OnDestroy {
           break;
 
         case 'facebook':
+          const siteMode = getEnv('siteConfig.mode');
+          if (siteMode === 'develop' || siteMode === 'local') {
+            await this.emcee.confirm(messages.FacebookLoginNoteInDevelopMode);
+          }
           provider = new firebase.auth.FacebookAuthProvider();
           provider.addScope('email');
           provider.addScope('user_link');
