@@ -121,7 +121,14 @@ export class AuthenticateService implements OnDestroy {
 
       await this.angularFireAuth.auth.signInWithPopup(provider);
     } catch (error) {
-      this.emcee.warning(`無法登入，錯誤原因如下：${error.message}`);
+      // console.debug(error);
+      let errorMessage = error.message;
+      if (error.code === 'auth/account-exists-with-different-credential') {
+        errorMessage = `相同的電子信箱帳號 ${error.email} 已存在，請嘗試用別的登入方法登入`;
+      }
+      this.emcee.warning(
+        `<h3>無法登入，錯誤原因如下：</h3><h3>${errorMessage}</h3>`
+      );
     } finally {
       this.toggleLoggingIn$.next(false);
     }
