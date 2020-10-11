@@ -1,5 +1,5 @@
 <div class="account-widget">
-  <div *ngIf="user" class="logged-in">
+  <div *ngIf="user && !isLoggingIn" class="logged-in">
     <div
       fxLayout="row"
       fxLayoutAlign="end center"
@@ -12,8 +12,10 @@
           [showName]="!isViewPortXSmall"
         ></ygg-user-thumbnail>
       </ygg-user-menu>
-      <div class="notification" [hidden]='!numNotifications'>
-        <button mat-mini-fab color='warn' (click)="gotoMyNotifications()">{{ numNotifications }}</button>
+      <div class="notification" [hidden]="!numNotifications">
+        <button mat-mini-fab color="warn" (click)="gotoMyNotifications()">
+          {{ numNotifications }}
+        </button>
       </div>
       <!--
         <ygg-user-thumbnail [user]='currentUser' [matMenuTriggerFor]="userMenu"></ygg-user-thumbnail>
@@ -29,7 +31,12 @@
       -->
     </div>
   </div>
-  <div *ngIf="!user" class="logged-out">
-    <button class="login" mat-button (click)="login()">登入<mat-icon>login</mat-icon></button>
+  <div *ngIf="!user && !isLoggingIn" class="logged-out">
+    <button class="login" mat-button (click)="login()">
+      登入<mat-icon>login</mat-icon>
+    </button>
+  </div>
+  <div *ngIf="isLoggingIn">
+    <mat-spinner mode="indeterminate" [diameter]="30"> </mat-spinner>
   </div>
 </div>

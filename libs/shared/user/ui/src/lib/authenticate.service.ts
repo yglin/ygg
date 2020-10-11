@@ -7,10 +7,11 @@ import {
   from,
   Observable,
   of,
+  Subject,
   Subscription,
   throwError
 } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, skip, switchMap, take, tap } from 'rxjs/operators';
 
 import { UserError, UserErrorCode } from './error';
 import { User, Authenticator, TestAccount } from '@ygg/shared/user/core';
@@ -22,6 +23,7 @@ import { getEnv } from '@ygg/shared/infra/core';
 export class AuthenticateService implements OnDestroy {
   currentUser: User;
   currentUser$: BehaviorSubject<User>;
+  toggleLoggingIn$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   subscription: Subscription = new Subscription();
 
   constructor(
@@ -44,6 +46,7 @@ export class AuthenticateService implements OnDestroy {
             }
           }),
           tap(user => this.currentUser$.next(user)),
+          tap(() => this.toggleLoggingIn$.next(false)),
           catchError(error => {
             this.emcee.error(`登入失敗，錯誤原因：${error.message}`);
             return of(null);
@@ -51,6 +54,9 @@ export class AuthenticateService implements OnDestroy {
         )
         .subscribe()
     );
+
+    // Firebase initially auto login
+    this.toggleLoggingIn$.next(true);
   }
 
   ngOnDestroy(): void {
@@ -63,6 +69,7 @@ export class AuthenticateService implements OnDestroy {
 
   async loginTestAccount(account: TestAccount) {
     try {
+      this.toggleLoggingIn$.next(true);
       await this.angularFireAuth.auth.signInWithEmailAndPassword(
         account.email,
         account.password
@@ -75,11 +82,14 @@ export class AuthenticateService implements OnDestroy {
       );
       this.emcee.error(`<h3>${wrapError.message}</h3>`);
       return Promise.reject(error);
+    } finally {
+      this.toggleLoggingIn$.next(false);
     }
   }
 
   async login(providerName: string) {
     try {
+      this.toggleLoggingIn$.next(true);
       let provider:
         | firebase.auth.GoogleAuthProvider
         | firebase.auth.FacebookAuthProvider;
@@ -103,6 +113,8 @@ export class AuthenticateService implements OnDestroy {
       await this.angularFireAuth.auth.signInWithPopup(provider);
     } catch (error) {
       this.emcee.warning(`無法登入，錯誤原因如下：${error.message}`);
+    } finally {
+      this.toggleLoggingIn$.next(false);
     }
   }
 

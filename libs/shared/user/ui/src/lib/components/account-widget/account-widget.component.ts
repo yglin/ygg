@@ -24,6 +24,7 @@ export class AccountWidgetComponent implements OnInit, OnDestroy {
   isViewPortXSmall = false;
   numNotifications = 0;
   subscriptions: Subscription[] = [];
+  isLoggingIn = false;
 
   constructor(
     private authenticateService: AuthenticateService,
@@ -34,6 +35,11 @@ export class AccountWidgetComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.subscriptions.push(
+      this.authenticateService.toggleLoggingIn$.subscribe(
+        isLoggingIn => (this.isLoggingIn = isLoggingIn)
+      )
+    );
     this.subscriptions.push(
       this.breakpointObserver
         .observe([Breakpoints.XSmall])
@@ -47,9 +53,9 @@ export class AccountWidgetComponent implements OnInit, OnDestroy {
         })
     );
     this.subscriptions.push(
-      this.authenticateService.currentUser$.subscribe(
-        user => (this.user = user)
-      )
+      this.authenticateService.currentUser$.subscribe(user => {
+        this.user = user;
+      })
     );
     this.subscriptions.push(
       this.notificationFactory
