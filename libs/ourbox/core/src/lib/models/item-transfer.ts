@@ -44,38 +44,44 @@ export const ImitationItemTransferStates: { [name: string]: TheThingState } = {
   new: {
     name: 'new',
     label: '新建立',
-    value: 10
+    value: 10,
+    icon: 'drafts'
   },
   editing: {
     name: 'editing',
     label: '修改中',
     value: 15,
-    threadable: true
+    threadable: true,
+    icon: 'edit'
   },
   waitReceiver: {
     name: 'waitReceiver',
     label: '等候收取方同意',
     value: 20,
-    threadable: true
+    threadable: true,
+    icon: 'send'
   },
   consented: {
     name: 'consented',
     label: '雙方已同意進行交付',
     value: 30,
-    threadable: true
+    threadable: true,
+    icon: 'event_available'
   },
   completed: {
     name: 'completed',
     label: '已交付完成',
     value: 100,
-    threadable: true
+    threadable: true,
+    icon: 'done_all'
   },
   cancelled: {
     name: 'cancelled',
     label: '已取消',
     value: 130,
     requireChangeRecord: true,
-    threadable: true
+    threadable: true,
+    icon: 'backspace'
   }
 };
 
@@ -157,7 +163,7 @@ export const RelationshipItemTransferReceiver = new Relationship({
 export const ImitationItemTransferActions: { [id: string]: TheThingAction } = {
   'send-request': {
     id: 'item-transfer-send-request',
-    icon: 'send',
+    icon: ImitationItemTransferStates.waitReceiver.icon,
     tooltip: '送出約定通知給收取方',
     permissions: [
       `state:${ImitationItemTransferStates.editing.name}`,
@@ -166,7 +172,7 @@ export const ImitationItemTransferActions: { [id: string]: TheThingAction } = {
   },
   'consent-reception': {
     id: 'item-transfer-consent-reception',
-    icon: 'event_available',
+    icon: ImitationItemTransferStates.consented.icon,
     tooltip: '確定會依約收取寶物',
     permissions: [
       `state:${ImitationItemTransferStates.waitReceiver.name}`,
@@ -175,7 +181,7 @@ export const ImitationItemTransferActions: { [id: string]: TheThingAction } = {
   },
   'confirm-completed': {
     id: 'item-transfer-confirm-completed',
-    icon: 'done_all',
+    icon: ImitationItemTransferStates.completed.icon,
     tooltip: '確認已收到寶物，交付完成',
     permissions: [
       `state:${ImitationItemTransferStates.consented.name}`,
@@ -184,7 +190,7 @@ export const ImitationItemTransferActions: { [id: string]: TheThingAction } = {
   },
   cancel: {
     id: 'item-transfer-cancel',
-    icon: 'backspace',
+    icon: ImitationItemTransferStates.cancelled.icon,
     tooltip: '取消交付任務',
     permissions: [
       `state:${ImitationItemTransferStates.editing.name},${ImitationItemTransferStates.waitReceiver.name},${ImitationItemTransferStates.consented.name}`,

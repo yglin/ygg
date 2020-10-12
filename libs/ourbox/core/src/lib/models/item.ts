@@ -32,23 +32,28 @@ export const ImitationItemStates: { [name: string]: TheThingState } = {
   new: {
     name: 'new',
     label: '新建立',
-    value: 10
+    value: 10,
+    icon: 'drafts'
   },
   editing: {
     name: 'editing',
     label: '修改中',
-    value: 30
+    value: 30,
+    icon: 'edit'
   },
   available: {
     name: 'available',
     label: '開放索取',
     value: 100,
-    threadable: true
+    threadable: true,
+    icon: 'card_giftcard'
   },
   transfer: {
     name: 'transfer',
     label: '正在讓渡',
-    value: 110
+    value: 110,
+    icon: 'connect_without_contact',
+    threadable: true
   }
 };
 

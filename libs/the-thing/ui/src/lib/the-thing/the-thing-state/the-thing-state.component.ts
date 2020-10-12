@@ -11,6 +11,7 @@ import {
   TheThingImitation,
   TheThingState
 } from '@ygg/the-thing/core';
+import { get } from 'lodash';
 import { Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { TheThingFactoryService } from '../../the-thing-factory.service';
@@ -23,6 +24,7 @@ import { TheThingFactoryService } from '../../the-thing-factory.service';
 export class TheThingStateComponent implements OnInit, OnChanges, OnDestroy {
   @Input() id: string;
   @Input() imitation: TheThingImitation;
+  icon: string = "flag";
   theThing: TheThing;
   currentState: TheThingState;
   enabledStates: string[] = [];
@@ -51,6 +53,7 @@ export class TheThingStateComponent implements OnInit, OnChanges, OnDestroy {
               tap(thing => {
                 this.theThing = thing;
                 this.currentState = this.imitation.getState(this.theThing);
+                this.icon = get(this.currentState, 'icon', this.icon);
               })
             )
             .subscribe()

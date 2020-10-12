@@ -3,7 +3,8 @@ import {
   TheThingCellDefine,
   TheThingFilter,
   Relationship,
-  TheThingFlagDefine
+  TheThingFlagDefine,
+  TheThing
 } from '@ygg/the-thing/core';
 import { OmniTypes } from '@ygg/shared/omni-types/core';
 import { values } from 'lodash';
@@ -59,17 +60,21 @@ ImitationBox.states = {
   new: {
     name: 'new',
     label: '新建立',
-    value: 10
+    value: 10,
+    icon: 'drafts'
   },
   open: {
     name: 'open',
     label: '寶箱開開的',
-    value: 50
+    value: 50,
+    icon: 'inbox',
+    threadable: true
   },
   close: {
     name: 'close',
     label: '寶箱先關起來',
-    value: 100
+    value: 100,
+    icon: 'lock'
   }
 };
 
@@ -77,6 +82,9 @@ ImitationBox.stateChanges = {
   initial: { next: ImitationBox.states.new },
   onSave: { previous: ImitationBox.states.new, next: ImitationBox.states.open }
 };
+
+ImitationBox.canModify = (theThing: TheThing) =>
+  ImitationBox.isState(theThing, ImitationBox.states.new);
 
 export const RelationshipBoxMember = new Relationship({
   name: 'ourbox-box-member',
