@@ -1511,7 +1511,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "the-thing:build"
+            "browserTarget": "the-thing:build",
+            "port": 54088
           },
           "configurations": {
             "production": {
