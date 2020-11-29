@@ -270,6 +270,13 @@
     },
     "tags-test": {
       "tags": ["scope:tags", "type:test"]
+    },
+    "recycle-cup": {
+      "tags": ["scope:recycle-cup", "type:app"]
+    },
+    "recycle-cup-e2e": {
+      "tags": [],
+      "implicitDependencies": ["recycle-cup"]
     }
   },
   "tasksRunnerOptions": {
