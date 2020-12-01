@@ -277,6 +277,12 @@
     "recycle-cup-e2e": {
       "tags": [],
       "implicitDependencies": ["recycle-cup"]
+    },
+    "recycle-cup-core": {
+      "tags": ["scope:recycle-cup", "type:core"]
+    },
+    "recycle-cup-story": {
+      "tags": ["scope:recycle-cup", "type:story"]
     }
   },
   "tasksRunnerOptions": {

@@ -3002,6 +3002,7 @@
               "apps/recycle-cup/src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/purple-green.css",
               "apps/recycle-cup/src/styles.css"
             ],
             "scripts": []
@@ -3107,6 +3108,64 @@
               "**/node_modules/**",
               "!apps/recycle-cup-e2e/**"
             ]
+          }
+        }
+      }
+    },
+    "recycle-cup-core": {
+      "root": "libs/recycle-cup/core",
+      "sourceRoot": "libs/recycle-cup/core/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/recycle-cup/core/tsconfig.lib.json",
+              "libs/recycle-cup/core/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/recycle-cup/core/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/recycle-cup/core/jest.config.js",
+            "tsConfig": "libs/recycle-cup/core/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "recycle-cup-story": {
+      "root": "libs/recycle-cup/story",
+      "sourceRoot": "libs/recycle-cup/story/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/recycle-cup/story/tsconfig.lib.json",
+              "libs/recycle-cup/story/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/recycle-cup/story/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/recycle-cup/story/jest.config.js",
+            "tsConfig": "libs/recycle-cup/story/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }

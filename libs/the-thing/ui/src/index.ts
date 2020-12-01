@@ -11,3 +11,4 @@ export * from './lib/relation-access.service';
 export * from './lib/the-thing-map-finder.service';
 export * from './lib/imitation-factory.service';
 export * from './lib/the-thing-source.service';
+export * from './lib/the-thing-route-resolver.service';

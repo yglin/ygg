@@ -1,1 +1,18 @@
-<router-outlet></router-outlet>
+<div class="app-root">
+  <ygg-layout-page-classic
+    backgroundImage="/assets/images/background.jpg"
+    backgroundMaskColor="rgba(0, 0, 0, 0.5)"
+    [scrollToTop$]="routeChange$"
+  >
+    <div ygg-layout-page-drawer>
+      <ygg-side-drawer></ygg-side-drawer>
+    </div>
+    <div ygg-layout-page-header>
+      <recycle-cup-header></recycle-cup-header>
+    </div>
+    <div ygg-layout-page-content>
+      <router-outlet (activate)="onActivate()"></router-outlet>
+    </div>
+    <div ygg-layout-page-footer></div>
+  </ygg-layout-page-classic>
+</div>

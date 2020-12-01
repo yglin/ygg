@@ -1,0 +1,33 @@
+<div class="recycle-cup-header">
+  <mat-toolbar
+    color="primary"
+    class="toolbar"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+  >
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <div>
+        <button
+          mat-icon-button
+          class="open-side-drawer"
+          (click)="openSideDrawer()"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+      <div>
+        <button
+          [routerLink]="['/']"
+          class="home"
+          mat-mini-fab
+          matTooltip="回首頁"
+        >
+          <mat-icon>home</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div>
+      <ygg-account-widget></ygg-account-widget>
+    </div>
+  </mat-toolbar>
+</div>
