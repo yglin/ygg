@@ -1,3 +1,28 @@
 <div class="register">
-  <the-thing [theThing$]="cup$" [imitation]="ImitationRecycleCup"></the-thing>
+  <h1>註冊飲料杯</h1>
+  <br />
+  <div>
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+      <mat-form-field>
+        <input matInput placeholder="註冊數量" type="number" />
+      </mat-form-field>
+      <button mat-raised-button [disabled]="formGroup.invalid">註冊</button>
+    </div>
+    <form [formGroup]="formGroup">
+      <h3>材質</h3>
+      <mat-select placeholder="請選擇杯子材質" formControlName="material">
+        <mat-option *ngFor="let material of materials" [value]="material">
+          {{ material }}
+        </mat-option>
+      </mat-select>
+      <br>
+      <mat-divider></mat-divider>
+      <br>
+      <h3>容量</h3>
+      <ygg-omni-type-control
+        type="number"
+        formControlName="capacity"
+      ></ygg-omni-type-control>
+    </form>
+  </div>
 </div>

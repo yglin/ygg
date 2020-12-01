@@ -15,17 +15,21 @@ import { SharedUserUiModule } from '@ygg/shared/user/ui';
 import { HeaderComponent } from './layout/header/header.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 
 @NgModule({
   declarations: [AppComponent, RegisterComponent, HeaderComponent],
   imports: [
     BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
     FlexLayoutModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule,
     SharedUiNavigationModule,
     SharedUserUiModule,
-    TheThingUiModule,
+    SharedOmniTypesUiModule,
     RouterModule.forRoot(routes, { initialNavigation: 'enabled' }),
     BrowserAnimationsModule
   ],
