@@ -3,9 +3,6 @@
   <br />
   <div>
     <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
-      <mat-form-field>
-        <input matInput placeholder="註冊數量" type="number" />
-      </mat-form-field>
       <button mat-raised-button [disabled]="formGroup.invalid">註冊</button>
     </div>
     <form [formGroup]="formGroup">
@@ -15,13 +12,21 @@
           {{ material }}
         </mat-option>
       </mat-select>
-      <br>
+      <br />
       <mat-divider></mat-divider>
-      <br>
-      <h3>容量</h3>
+      <br />
+      <h3>容量（C.C.）</h3>
       <ygg-omni-type-control
         type="number"
         formControlName="capacity"
+      ></ygg-omni-type-control>
+      <br />
+      <mat-divider></mat-divider>
+      <br />
+      <h3>照片</h3>
+      <ygg-omni-type-control
+        type="album"
+        formControlName="album"
       ></ygg-omni-type-control>
     </form>
   </div>
