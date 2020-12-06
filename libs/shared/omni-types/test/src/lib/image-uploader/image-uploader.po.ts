@@ -13,7 +13,7 @@ export class ImageUploaderPageObjectCypress extends ImageUploaderPageObject {
   }
 
   expectClose() {
-    cy.get(this.getSelector('buttonSubmit')).should('not.be.visible');
+    cy.get(this.getSelector('buttonSubmit')).should('not.exist');
   }
 
   addImageUrl(imageUrl: string) {
@@ -31,6 +31,8 @@ export class ImageUploaderPageObjectCypress extends ImageUploaderPageObject {
   }
 
   submit() {
-    cy.get(this.getSelector('buttonSubmit'), { timeout: 10000 }).click();
+    cy.get(this.getSelector('buttonSubmit'), { timeout: 10000 })
+      .scrollIntoView()
+      .click();
   }
 }

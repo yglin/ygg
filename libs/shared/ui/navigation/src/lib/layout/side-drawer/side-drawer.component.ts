@@ -26,4 +26,8 @@ export class SideDrawerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {}
+
+  onClickPageLink() {
+    this.sideDrawer.close();
+  }
 }

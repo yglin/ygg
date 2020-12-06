@@ -37,7 +37,8 @@ export const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        component: HomeComponent
+        // component: HomeComponent
+        redirectTo: 'map'
       },
       {
         path: 'map',

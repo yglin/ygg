@@ -67,78 +67,82 @@ describe('Ourbox home page, as guest(not login)', () => {
     theMockDatabase.clear();
   });
 
-  it('Should show link of site-howto if first visit', () => {
-    // Hide link of map-search
-    cy.get(getPageLink(OurboxPages.mapSearch)).should('not.be.visible');
-
-    cy.get(getPageLink(OurboxPages.siteHowto)).click({ force: true });
-    siteHowtoPO.expectVisible({ timeout: 10000 });
-  });
-
-  it('Should show link of site-howto in side-drawer', () => {
-    headerPO.openSideDrawer();
-    sideDrawerPO.expectVisible();
-    sideDrawerPO.clickLink(OurboxPages.siteHowto);
-    siteHowtoPO.expectVisible({ timeout: 10000 });
-  });
-
-  it('Should show link of map-search if not first visit', () => {
-    cy.visit('/');
-    // Hide link of site-howto
-    cy.get(getPageLink(OurboxPages.siteHowto)).should('not.be.visible');
-
-    cy.get(getPageLink(OurboxPages.mapSearch)).click({ force: true });
+  it('Should redirect to map search page at home route', () => {
     mapSearchPO.expectVisible({ timeout: 10000 });
   });
+  
+  // it('Should show link of site-howto if first visit', () => {
+  //   // Hide link of map-search
+  //   cy.get(getPageLink(OurboxPages.mapSearch)).should('not.be.visible');
 
-  it('Should show link of map-search in side-drawer', () => {
-    headerPO.openSideDrawer();
-    sideDrawerPO.expectVisible();
-    sideDrawerPO.clickLink(OurboxPages.mapSearch);
-    mapSearchPO.expectVisible({ timeout: 10000 });
-  });
+  //   cy.get(getPageLink(OurboxPages.siteHowto)).click({ force: true });
+  //   siteHowtoPO.expectVisible({ timeout: 10000 });
+  // });
 
-  it('Should show link of box-create if user has no box', () => {
-    loginTestUser(userWithoutBox);
-    // Hide link of my-boxes
-    cy.get(getPageLink(OurboxPages.myBoxes)).should('not.be.visible');
-    cy.get(getPageLink(OurboxPages.boxCreate)).click({ force: true });
-    boxCreatePO.expectVisible({ timeout: 10000 });
-    logout();
-  });
+  // it('Should show link of site-howto in side-drawer', () => {
+  //   headerPO.openSideDrawer();
+  //   sideDrawerPO.expectVisible();
+  //   sideDrawerPO.clickLink(OurboxPages.siteHowto);
+  //   siteHowtoPO.expectVisible({ timeout: 10000 });
+  // });
 
-  it('Should show link of box-create in side-drawer', () => {
-    headerPO.openSideDrawer();
-    sideDrawerPO.expectVisible();
-    sideDrawerPO.clickLink(OurboxPages.boxCreate);
-    boxCreatePO.expectVisible({ timeout: 10000 });
-  });
+  // it('Should show link of map-search if not first visit', () => {
+  //   cy.visit('/');
+  //   // Hide link of site-howto
+  //   cy.get(getPageLink(OurboxPages.siteHowto)).should('not.be.visible');
 
-  it('Should show link of my-boxes if user is member of any box', () => {
-    loginTestUser(userWithBox);
-    // Hide link of box-create
-    cy.get(getPageLink(OurboxPages.boxCreate), { timeout: 10000 }).should(
-      'not.be.visible'
-    );
-    cy.get(getPageLink(OurboxPages.myBoxes), { timeout: 10000 }).click({
-      force: true
-    });
-    myBoxesPO.expectVisible({ timeout: 10000 });
-    logout();
-  });
+  //   cy.get(getPageLink(OurboxPages.mapSearch)).click({ force: true });
+  //   mapSearchPO.expectVisible({ timeout: 10000 });
+  // });
 
-  it('Should show links of box-create as guest', () => {
-    // Hide link of my-boxes
-    cy.get(getPageLink(OurboxPages.myBoxes)).should('not.be.visible');
+  // it('Should show link of map-search in side-drawer', () => {
+  //   headerPO.openSideDrawer();
+  //   sideDrawerPO.expectVisible();
+  //   sideDrawerPO.clickLink(OurboxPages.mapSearch);
+  //   mapSearchPO.expectVisible({ timeout: 10000 });
+  // });
 
-    cy.get(getPageLink(OurboxPages.boxCreate)).click({ force: true });
-    boxCreatePO.expectVisible({ timeout: 10000 });
-  });
+  // it('Should show link of box-create if user has no box', () => {
+  //   loginTestUser(userWithoutBox);
+  //   // Hide link of my-boxes
+  //   cy.get(getPageLink(OurboxPages.myBoxes)).should('not.be.visible');
+  //   cy.get(getPageLink(OurboxPages.boxCreate)).click({ force: true });
+  //   boxCreatePO.expectVisible({ timeout: 10000 });
+  //   logout();
+  // });
 
-  it('Should show link of item-warehouse in side-drawer', () => {
-    headerPO.openSideDrawer();
-    sideDrawerPO.expectVisible();
-    sideDrawerPO.clickLink(OurboxPages.itemWarehouse);
-    itemWarehousePO.expectVisible({ timeout: 10000 });
-  });
+  // it('Should show link of box-create in side-drawer', () => {
+  //   headerPO.openSideDrawer();
+  //   sideDrawerPO.expectVisible();
+  //   sideDrawerPO.clickLink(OurboxPages.boxCreate);
+  //   boxCreatePO.expectVisible({ timeout: 10000 });
+  // });
+
+  // it('Should show link of my-boxes if user is member of any box', () => {
+  //   loginTestUser(userWithBox);
+  //   // Hide link of box-create
+  //   cy.get(getPageLink(OurboxPages.boxCreate), { timeout: 10000 }).should(
+  //     'not.be.visible'
+  //   );
+  //   cy.get(getPageLink(OurboxPages.myBoxes), { timeout: 10000 }).click({
+  //     force: true
+  //   });
+  //   myBoxesPO.expectVisible({ timeout: 10000 });
+  //   logout();
+  // });
+
+  // it('Should show links of box-create as guest', () => {
+  //   // Hide link of my-boxes
+  //   cy.get(getPageLink(OurboxPages.myBoxes)).should('not.be.visible');
+
+  //   cy.get(getPageLink(OurboxPages.boxCreate)).click({ force: true });
+  //   boxCreatePO.expectVisible({ timeout: 10000 });
+  // });
+
+  // it('Should show link of item-warehouse in side-drawer', () => {
+  //   headerPO.openSideDrawer();
+  //   sideDrawerPO.expectVisible();
+  //   sideDrawerPO.clickLink(OurboxPages.itemWarehouse);
+  //   itemWarehousePO.expectVisible({ timeout: 10000 });
+  // });
 });

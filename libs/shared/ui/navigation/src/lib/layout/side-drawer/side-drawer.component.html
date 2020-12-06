@@ -5,6 +5,7 @@
       *ngFor="let pageLink of pageLinks"
       class="link"
       [attr.link-id]="pageLink.id"
+      (click)="onClickPageLink()"
     >
       <a [routerLink]="pageLink.path">
         <span>

@@ -35,7 +35,7 @@ export class CustomPagePageObjectCypress extends PageObjectCypress {
   }
 
   expectReadonly() {
-    cy.get(`${this.getSelector()} .edit`).should('not.be.visible');
+    cy.get(`${this.getSelector()} .edit`).should('not.exist');
     cy.get(`${this.getSelector()} .html-view`).should('be.visible');
     this.expectTabsHeaderHidden();
   }

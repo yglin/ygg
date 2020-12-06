@@ -14,6 +14,6 @@ export class YggDialogPageObjectCypress extends YggDialogPageObject {
   }
 
   expectClosed(): void {
-    cy.get(this.getSelector(), { timeout: 10000 }).should('not.be.visible');
+    cy.get(this.getSelector(), { timeout: 10000 }).should('not.exist');
   }
 }

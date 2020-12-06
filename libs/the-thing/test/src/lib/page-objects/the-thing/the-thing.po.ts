@@ -228,7 +228,7 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
   }
 
   expectNoActionButton(action: TheThingAction) {
-    cy.get(this.getSelectorForActionButton(action)).should('not.be.visible');
+    cy.get(this.getSelectorForActionButton(action)).should('not.exist');
   }
 
   expectModifiable(): void {
@@ -236,6 +236,6 @@ export class TheThingPageObjectCypress extends TheThingPageObject {
   }
 
   expectReadonly(): void {
-    cy.get(this.getSelectorForModifyButtons()).should('not.be.visible');
+    cy.get(this.getSelectorForModifyButtons()).should('not.exist');
   }
 }

@@ -113,6 +113,6 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
   }
 
   expectNoCreateItemHint() {
-    cy.get(this.getSelector('createItemHint')).should('not.be.visible');
+    cy.get(this.getSelector('createItemHint')).should('not.exist');
   }
 }
