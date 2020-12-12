@@ -1,1 +1,2 @@
 export * from './lib/error';
+export * from './lib/utils';
