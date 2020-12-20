@@ -6,11 +6,15 @@ import { TheThingAction } from '../action';
 import { TheThingAccessor } from './the-thing-accessor';
 import { ImitationFactory } from './imitatioin-factory';
 import { TheThingSource } from './the-thing-source';
-import { defaults, get } from 'lodash';
+import { defaults, get, isEmpty, keyBy, random, sampleSize } from 'lodash';
 import { Authenticator } from '@ygg/shared/user/core';
 import { AlertType, Emcee } from '@ygg/shared/infra/core';
 import { Html } from '@ygg/shared/omni-types/core';
 import { CommentFactory } from '@ygg/shared/thread/core';
+import { sample } from "lodash";
+import { Tags } from '@ygg/tags/core';
+import { Image } from "@ygg/shared/omni-types/core";
+import { TheThingCell } from '../cell';
 
 // type InputAction = 'meta' | 'add-cell' | 'create' | 'save' | 'load';
 
@@ -20,7 +24,7 @@ import { CommentFactory } from '@ygg/shared/thread/core';
 // }
 
 export abstract class TheThingFactoryBasic {
-  async abstract setState(
+  abstract setState(
     thing: TheThing,
     imitation: TheThingImitation,
     state: TheThingState
@@ -167,7 +171,7 @@ export abstract class TheThingFactory extends TheThingFactoryBasic {
     return this.theThingSource.load(id, collection);
   }
 
-  async abstract inquireStateChangeRecord(
+  abstract inquireStateChangeRecord(
     imitation: TheThingImitation,
     theThing: TheThing,
     oldState: TheThingState,
@@ -231,6 +235,57 @@ export abstract class TheThingFactory extends TheThingFactoryBasic {
       action
     });
   }
+
+
+  async forge(imitation: TheThingImitation, options: any = {}): Promise<TheThing> {
+    const thing = await this.create(imitation);
+    thing.name =
+      options.name ||
+      sample([
+        'The Thing(1982)',
+        'The Thing(2011)',
+        '痔瘡',
+        'Jim Carry',
+        '兩津',
+        '會心的一擊',
+        '咕嚕咕嚕',
+        '屁股毛',
+        '肉雞',
+        '便便'
+      ]);
+    thing.tags = !!options.tags ? new Tags(options.tags) : Tags.forge();
+    thing.image = options.image || Image.forge().src;
+
+    if (options.cells) {
+      thing.cells = options.cells;
+    } else {
+      thing.cells = keyBy(
+        sampleSize(
+          [
+            '身高',
+            '體重',
+            '性別',
+            '血型',
+            '售價',
+            '棲息地',
+            '主食',
+            '喜歡',
+            '天敵',
+            '討厭'
+          ],
+          random(3, 6)
+        ).map(label => TheThingCell.forge({ label })),
+        'id'
+      );
+    }
+
+    if (!isEmpty(options.relations)) {
+      thing.relations = options.relations;
+    }
+
+    return thing;
+  }
+
 }
 
 // export class TheThingFactory {
