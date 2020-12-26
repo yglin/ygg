@@ -85,7 +85,7 @@ export class TourPlanViewPageObjectCypress extends TourPlanViewPageObject {
       }
     }
     // if (tourPlan.hasRelation(RelationPurchase.name)) {
-    //   // tslint:disable-next-line: no-unused-expression
+    // eslint-disable-next-line , @typescript-eslint/no-unused-expressions
     //   const purchases = tourPlan.getRelations(RelationPurchase.name).map(r => {
     //     const product: TheThing = theMockDatabase.getEntity(
     //       `${TheThing.collection}/${r.objectId}`

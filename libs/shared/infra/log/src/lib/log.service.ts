@@ -24,7 +24,7 @@ export class LogService {
     this.filter = new LogFilter(this.config.threshold);
 
     // Build wrapper functions for each level
-    // tslint:disable-next-line: forin
+    // eslint-disable-next-line guard-for-in
     for (const key in LogLevel) {
       const level = parseInt(key, 10);
       if (level >= 0) {

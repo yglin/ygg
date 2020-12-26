@@ -36,13 +36,13 @@ export function getProject<TProjectType extends ProjectType = ProjectType.Applic
 }
 
 // TODO(hans): change this any to unknown when google3 supports TypeScript 3.0.
-// tslint:disable-next-line:no-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isWorkspaceSchema(workspace: any): workspace is WorkspaceSchema {
   return !!(workspace && (workspace as WorkspaceSchema).projects);
 }
 
 // TODO(hans): change this any to unknown when google3 supports TypeScript 3.0.
-// tslint:disable-next-line:no-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isWorkspaceProject(project: any): project is WorkspaceProject {
   return !!(project && (project as WorkspaceProject).projectType);
 }

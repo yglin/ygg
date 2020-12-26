@@ -19,14 +19,14 @@ import { isEmpty } from 'lodash';
 import { from, fromEvent, Subscription } from 'rxjs';
 
 @Component({
-  // tslint:disable-next-line: component-selector
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: '[ygg-error-messages]',
   templateUrl: './error-messages.component.html',
   styleUrls: ['./error-messages.component.css']
 })
 export class ErrorMessagesComponent
   implements OnChanges {
-  // tslint:disable-next-line: no-input-rename
+  // eslint-disable-next-line @angular-eslint/no-input-rename
   @Input('ygg-error-messages') errorMessages: string[];
   numErrors = 0;
   hidden = true;

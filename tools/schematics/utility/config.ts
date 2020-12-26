@@ -94,7 +94,7 @@ export interface AppConfig {
    */
   styles?: (string | {
       input?: string;
-      [name: string]: any; // tslint:disable-line:no-any
+      [name: string]: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   })[];
   /**
    * Options to pass to style preprocessors
@@ -110,7 +110,7 @@ export interface AppConfig {
    */
   scripts?: (string | {
       input: string;
-      [name: string]: any; // tslint:disable-line:no-any
+      [name: string]: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   })[];
   /**
    * Source file for environment config.
@@ -120,7 +120,7 @@ export interface AppConfig {
    * Name and corresponding file for environment config.
    */
   environments?: {
-      [name: string]: any; // tslint:disable-line:no-any
+      [name: string]: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   };
   appShell?: {
     app: string;
