@@ -36,7 +36,7 @@ export class SiteNavigator {
   gotoSiteHowto() {
     this.headerPO.openSideDrawer();
     this.sideDrawerPO.expectVisible();
-    this.sideDrawerPO.clickLink(OurboxPages.siteHowto);
+    this.sideDrawerPO.clickLink(OurboxPages.siteHowto.id);
     const siteHowtoPO = new SiteHowtoPageObjectCypress();
     siteHowtoPO.expectVisible();
   }
@@ -44,7 +44,7 @@ export class SiteNavigator {
   gotoBoxCreatePage() {
     this.headerPO.openSideDrawer();
     this.sideDrawerPO.expectVisible();
-    this.sideDrawerPO.clickLink(OurboxPages.boxCreate);
+    this.sideDrawerPO.clickLink(OurboxPages.boxCreate.id);
     const boxCreatePO = new BoxCreatePageObjectCypress();
     boxCreatePO.expectVisible();
   }
@@ -52,7 +52,7 @@ export class SiteNavigator {
   gotoItemWarehouse() {
     this.headerPO.openSideDrawer();
     this.sideDrawerPO.expectVisible();
-    this.sideDrawerPO.clickLink(OurboxPages.itemWarehouse);
+    this.sideDrawerPO.clickLink(OurboxPages.itemWarehouse.id);
     const itemWarehousePO = new ItemWarehousePageObjectCypress();
     itemWarehousePO.expectVisible();
   }
@@ -60,7 +60,7 @@ export class SiteNavigator {
   gotoMapSearch() {
     this.headerPO.openSideDrawer();
     this.sideDrawerPO.expectVisible();
-    this.sideDrawerPO.clickLink(OurboxPages.mapSearch);
+    this.sideDrawerPO.clickLink(OurboxPages.mapSearch.id);
     const mapSearchPO = new MapSearchPageObjectCypress();
     mapSearchPO.expectVisible();
   }
