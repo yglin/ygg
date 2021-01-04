@@ -30,7 +30,7 @@ export class User implements Entity {
     return !!(value && value.id);
   }
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
+  // tslint:disable-next-line: member-ordering
   static forgedCount = 0;
   static forge(): User {
     const forged = new User();

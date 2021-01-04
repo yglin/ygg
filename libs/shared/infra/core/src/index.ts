@@ -11,4 +11,3 @@ export * from './lib/hash-string-to-color';
 export * from './lib/environment';
 export * from './lib/local-profiler';
 export * from './lib/content-credit';
-export * from './lib/entity-factory';

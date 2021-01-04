@@ -25,9 +25,7 @@ import {
   generateID,
   toJSONDeep,
   Entity,
-  hashStringToColor,
-  DataAccessor,
-  Emcee
+  hashStringToColor
 } from '@ygg/shared/infra/core';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 import { TheThingRelation, RelationRecord } from './relation';
@@ -35,22 +33,34 @@ import { TheThingState } from './state';
 import { DeserializerJSON, SerializerJSON } from '@ygg/shared/infra/core';
 import { config } from './config';
 
-export class TheThing extends Entity implements ImageThumbnailItem {
-  // static collection = config.collection;
+export class TheThing implements Entity, ImageThumbnailItem {
+  static collection = config.collection;
 
-  // id: string;
+  id: string;
 
-  // /** Category, group, table, or collection name */
-  // collection: string;
+  /** Category, group, table, or collection name */
+  collection: string;
+
+  /** Owner's user id */
+  ownerId: string;
+
+  /** Display name */
+  name: string;
 
   //** Type tags for query and search */
   tags: Tags;
 
+  /** Create time */
+  createAt: number;
+
+  /** Last modified time */
+  modifyAt: number;
+
   // /** Imitation id */
   // imitation: string;
 
-  // /** TheThingView id */
-  // view: string;
+  /** TheThingView id */
+  view: string;
 
   /** TheThingCells, define its own properties, attributes */
   cells: { [name: string]: TheThingCell };
@@ -94,77 +104,80 @@ export class TheThing extends Entity implements ImageThumbnailItem {
   states: { [name: string]: number } = {};
   stateTimestamps: { [name: string]: Date } = {};
 
-  // static serializerJSON: SerializerJSON = (item: TheThing): any => {
-  //   const data = toJSONDeep(item);
-  //   for (const name in data.relations) {
-  //     if (data.relations.hasOwnProperty(name)) {
-  //       const relations = data.relations[name];
-  //       if (isEmpty(relations)) {
-  //         delete data.relations[name];
-  //       }
-  //     }
-  //   }
-  //   return data;
-  // };
+  static serializerJSON: SerializerJSON = (item: TheThing): any => {
+    const data = toJSONDeep(item);
+    for (const name in data.relations) {
+      if (data.relations.hasOwnProperty(name)) {
+        const relations = data.relations[name];
+        if (isEmpty(relations)) {
+          delete data.relations[name];
+        }
+      }
+    }
+    return data;
+  };
 
-  // static deserializerJSON: DeserializerJSON = (data: any): TheThing => {
-  //   const theThing = new TheThing();
-  //   theThing.fromJSON(data);
-  //   return theThing;
-  // };
+  static deserializerJSON: DeserializerJSON = (data: any): TheThing => {
+    const theThing = new TheThing();
+    theThing.fromJSON(data);
+    return theThing;
+  };
 
-  // static forge(options: any = {}): TheThing {
-  //   const thing = new TheThing();
-  //   thing.name =
-  //     options.name ||
-  //     sample([
-  //       'The Thing(1982)',
-  //       'The Thing(2011)',
-  //       '痔瘡',
-  //       'Jim Carry',
-  //       '兩津',
-  //       '會心的一擊',
-  //       '咕嚕咕嚕',
-  //       '屁股毛',
-  //       '肉雞',
-  //       '便便'
-  //     ]);
-  //   thing.tags = !!options.tags ? new Tags(options.tags) : Tags.forge();
-  //   thing.image = options.image || Image.forge().src;
+  static forge(options: any = {}): TheThing {
+    const thing = new TheThing();
+    thing.name =
+      options.name ||
+      sample([
+        'The Thing(1982)',
+        'The Thing(2011)',
+        '痔瘡',
+        'Jim Carry',
+        '兩津',
+        '會心的一擊',
+        '咕嚕咕嚕',
+        '屁股毛',
+        '肉雞',
+        '便便'
+      ]);
+    thing.tags = !!options.tags ? new Tags(options.tags) : Tags.forge();
+    thing.image = options.image || Image.forge().src;
 
-  //   if (options.cells) {
-  //     thing.cells = options.cells;
-  //   } else {
-  //     thing.cells = keyBy(
-  //       sampleSize(
-  //         [
-  //           '身高',
-  //           '體重',
-  //           '性別',
-  //           '血型',
-  //           '售價',
-  //           '棲息地',
-  //           '主食',
-  //           '喜歡',
-  //           '天敵',
-  //           '討厭'
-  //         ],
-  //         random(3, 6)
-  //       ).map(label => TheThingCell.forge({ label })),
-  //       'id'
-  //     );
-  //   }
+    if (options.cells) {
+      thing.cells = options.cells;
+    } else {
+      thing.cells = keyBy(
+        sampleSize(
+          [
+            '身高',
+            '體重',
+            '性別',
+            '血型',
+            '售價',
+            '棲息地',
+            '主食',
+            '喜歡',
+            '天敵',
+            '討厭'
+          ],
+          random(3, 6)
+        ).map(label => TheThingCell.forge({ label })),
+        'id'
+      );
+    }
 
-  //   if (!isEmpty(options.relations)) {
-  //     thing.relations = options.relations;
-  //   }
+    if (!isEmpty(options.relations)) {
+      thing.relations = options.relations;
+    }
 
-  //   return thing;
-  // }
+    return thing;
+  }
 
-  constructor(protected dataAccessor: DataAccessor, protected emcee: Emcee) {
-    super(dataAccessor, emcee);
-    this.collection = config.collection;
+  constructor() {
+    this.collection = TheThing.collection;
+    this.id = generateID();
+    this.name = '';
+    this.createAt = new Date().valueOf();
+    this.modifyAt = this.createAt;
     this.tags = new Tags();
     this.cells = {};
     this.relations = {};
@@ -497,7 +510,7 @@ export class TheThing extends Entity implements ImageThumbnailItem {
   }
 
   clone(): TheThing {
-    return new TheThing(this.dataAccessor, this.emcee).fromJSON(
+    return new TheThing().fromJSON(
       omit(this.toJSON(), [
         'id',
         'createAt',
