@@ -15,4 +15,17 @@
       </a>
     </div>
   </div>
+  <div class="actions">
+    <div
+      *ngFor="let action of actions"
+      class="action"
+      [attr.action-id]="action.id"
+      (click)="onClickAction(action)"
+    >
+      <span>
+        <mat-icon>{{ action.icon }}</mat-icon
+        >&nbsp;{{ action.label }}
+      </span>
+    </div>
+  </div>
 </div>

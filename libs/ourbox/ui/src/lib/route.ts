@@ -25,6 +25,7 @@ import { ItemTransferComponent } from './item-transfer/item-transfer/item-transf
 import { ItemTransferFactoryService } from './item-transfer/item-transfer-factory.service';
 import { MyItemTransfersComponent } from './item-transfer/my-item-transfers/my-item-transfers.component';
 import { SiteHowtoComponent } from './misc/site-howto/site-howto.component';
+import { TreasureEditComponent } from './treasure/treasure-edit/treasure-edit.component';
 // import { ItemFactoryService } from './item-factory.service';
 // import { MyBoxesComponent } from './pages/box/my-boxes/my-boxes.component';
 // import { ItemTransferComponent } from './pages/item/item-transfer/item-transfer.component';
@@ -32,78 +33,87 @@ import { SiteHowtoComponent } from './misc/site-howto/site-howto.component';
 
 export const routes: Routes = [
   {
-    path: 'ourbox',
+    path: 'treasure',
     children: [
       {
-        path: '',
-        pathMatch: 'full',
-        // component: HomeComponent
-        redirectTo: 'map'
-      },
-      {
-        path: 'map',
-        component: MapSearchComponent
-      },
-      {
-        path: 'create-box',
-        component: BoxCreateComponent
-      },
-      {
-        path: 'my-boxes',
-        component: MyBoxesComponent
-      },
-      {
-        path: 'item-warehouse',
-        component: ItemWarehouseComponent
-      },
-      {
-        path: 'my-held-items',
-        component: MyHeldItemsComponent
-      },
-      {
-        path: 'my-item-transfers',
-        component: MyItemTransfersComponent
-      },
-      {
-        path: 'site-howto',
-        component: SiteHowtoComponent
-      }
-    ]
-  },
-  {
-    path: ImitationBox.routePath,
-    children: [
-      {
-        path: ':id',
-        component: BoxViewComponent,
-        resolve: {
-          box: BoxFactoryService
-        }
-      }
-    ]
-  },
-  {
-    path: ImitationItem.routePath,
-    children: [
-      {
-        path: ':id',
-        component: ItemComponent,
-        resolve: {
-          item$: ItemFactoryService
-        }
-      }
-    ]
-  },
-  {
-    path: ImitationItemTransfer.routePath,
-    children: [
-      {
-        path: ':id',
-        component: ItemTransferComponent,
-        resolve: {
-          itemTransfer$: ItemTransferFactoryService
-        }
+        path: 'edit',
+        component: TreasureEditComponent
       }
     ]
   }
+  // {
+  //   path: 'ourbox',
+  //   children: [
+  //     {
+  //       path: '',
+  //       pathMatch: 'full',
+  //       // component: HomeComponent
+  //       redirectTo: 'map'
+  //     },
+  //     {
+  //       path: 'map',
+  //       component: MapSearchComponent
+  //     },
+  //     {
+  //       path: 'create-box',
+  //       component: BoxCreateComponent
+  //     },
+  //     {
+  //       path: 'my-boxes',
+  //       component: MyBoxesComponent
+  //     },
+  //     {
+  //       path: 'item-warehouse',
+  //       component: ItemWarehouseComponent
+  //     },
+  //     {
+  //       path: 'my-held-items',
+  //       component: MyHeldItemsComponent
+  //     },
+  //     {
+  //       path: 'my-item-transfers',
+  //       component: MyItemTransfersComponent
+  //     },
+  //     {
+  //       path: 'site-howto',
+  //       component: SiteHowtoComponent
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: ImitationBox.routePath,
+  //   children: [
+  //     {
+  //       path: ':id',
+  //       component: BoxViewComponent,
+  //       resolve: {
+  //         box: BoxFactoryService
+  //       }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: ImitationItem.routePath,
+  //   children: [
+  //     {
+  //       path: ':id',
+  //       component: ItemComponent,
+  //       resolve: {
+  //         item$: ItemFactoryService
+  //       }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: ImitationItemTransfer.routePath,
+  //   children: [
+  //     {
+  //       path: ':id',
+  //       component: ItemTransferComponent,
+  //       resolve: {
+  //         itemTransfer$: ItemTransferFactoryService
+  //       }
+  //     }
+  //   ]
+  // }
 ];

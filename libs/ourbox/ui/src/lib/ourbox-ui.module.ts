@@ -28,10 +28,54 @@ import { MyItemTransfersComponent } from './item-transfer/my-item-transfers/my-i
 import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
 import { ItemTransferCompleteComponent } from './item-transfer/item-transfer-complete/item-transfer-complete.component';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
-import { pages, pagesInSideDrawer } from '@ygg/ourbox/core';
-import { SideDrawerService } from '@ygg/shared/ui/navigation';
+import {
+  pages,
+  pagesInSideDrawer,
+  uiActions,
+  connectUiActions
+} from '@ygg/ourbox/core';
+import {
+  ActionBeaconService,
+  SideDrawerService
+} from '@ygg/shared/ui/navigation';
 import { SiteHowtoComponent } from './misc/site-howto/site-howto.component';
 import { SharedCustomPageUiModule } from '@ygg/shared/custom-page/ui';
+import { OurboxTourGuideService } from './ourbox-tour-guide.service';
+import { TreasureEditComponent } from './treasure/treasure-edit/treasure-edit.component';
+
+export function initSideMenu(sideDrawer: SideDrawerService) {
+  return async (): Promise<any> => {
+    for (const pageId in pick(pages, pagesInSideDrawer)) {
+      if (Object.prototype.hasOwnProperty.call(pages, pageId)) {
+        const page = pages[pageId];
+        sideDrawer.addPageLink(page);
+      }
+    }
+    for (const actionId in uiActions) {
+      if (Object.prototype.hasOwnProperty.call(uiActions, actionId)) {
+        const action = uiActions[actionId];
+        sideDrawer.addAction(action);
+      }
+    }
+    return Promise.resolve();
+  };
+}
+
+export function initFactoryServices(boxFactory: BoxFactoryService) {
+  // Do nothing, just to call constructors of factories
+  return noop;
+}
+
+export function configUserMenu(userMenuService: UserMenuService) {
+  return () => {
+    const userPages = values(
+      pick(pages, ['myBoxes', 'myHeldItems', 'myItemTransfers'])
+    );
+    for (const page of userPages) {
+      userMenuService.addItem(UserMenuItem.fromPage(page));
+    }
+  };
+}
 
 @NgModule({
   declarations: [
@@ -47,7 +91,8 @@ import { SharedCustomPageUiModule } from '@ygg/shared/custom-page/ui';
     ItemTransferComponent,
     ItemTransferCompleteComponent,
     MyItemTransfersComponent,
-    SiteHowtoComponent
+    SiteHowtoComponent,
+    TreasureEditComponent
   ],
   imports: [
     CommonModule,
@@ -82,35 +127,14 @@ import { SharedCustomPageUiModule } from '@ygg/shared/custom-page/ui';
       useFactory: initFactoryServices,
       deps: [BoxFactoryService],
       multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (actionBeacon, ourboxTourGuide) => () =>
+        connectUiActions(actionBeacon, ourboxTourGuide),
+      deps: [ActionBeaconService, OurboxTourGuideService],
+      multi: true
     }
   ]
 })
 export class OurboxUiModule {}
-
-export function initSideMenu(sideDrawer: SideDrawerService) {
-  return async (): Promise<any> => {
-    for (const pageId in pick(pages, pagesInSideDrawer)) {
-      if (Object.prototype.hasOwnProperty.call(pages, pageId)) {
-        const page = pages[pageId];
-        sideDrawer.addPageLink(page);
-      }
-    }
-    return Promise.resolve();
-  };
-}
-
-export function initFactoryServices(boxFactory: BoxFactoryService) {
-  // Do nothing, just to call constructors of factories
-  return noop;
-}
-
-export function configUserMenu(userMenuService: UserMenuService) {
-  return () => {
-    const userPages = values(
-      pick(pages, ['myBoxes', 'myHeldItems', 'myItemTransfers'])
-    );
-    for (const page of userPages) {
-      userMenuService.addItem(UserMenuItem.fromPage(page));
-    }
-  };
-}

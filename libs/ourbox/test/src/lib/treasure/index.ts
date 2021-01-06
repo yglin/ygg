@@ -1,1 +1,1 @@
-export * from './treasure.po';
+export * from './treasure-edit.po';

@@ -1,13 +1,13 @@
 import {
   HeaderPageObjectCypress,
-  TreasurePageObjectCypress
+  TreasureEditPageObjectCypress
 } from '@ygg/ourbox/test';
 import { SideDrawerPageObjectCypress } from '@ygg/shared/ui/test';
 
 describe('Create a treasure from the ground up', () => {
   const headerPO = new HeaderPageObjectCypress();
   const sideDrawerPO = new SideDrawerPageObjectCypress();
-  const treasurePO = new TreasurePageObjectCypress();
+  const treasureEditPO = new TreasureEditPageObjectCypress();
 
   before(() => {
     cy.visit('/');
@@ -16,8 +16,8 @@ describe('Create a treasure from the ground up', () => {
   it('Navigate to creating page from link in side menu', () => {
     headerPO.openSideDrawer();
     sideDrawerPO.expectVisible();
-    sideDrawerPO.clickLink('create-treasure');
-    treasurePO.expectVisible();
+    sideDrawerPO.clickAction('create-treasure');
+    treasureEditPO.expectVisible();
   });
 
   // it('Fill required data', () => {});
