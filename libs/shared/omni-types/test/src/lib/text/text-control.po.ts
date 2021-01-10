@@ -10,4 +10,8 @@ export class TextControlPageObjectCypress extends TextControlPageObject {
   submit() {
     cy.get(this.getSelector('buttonSubmit')).click();
   }
+
+  expectHint(hintMessage: string) {
+    cy.get(this.getSelector('inputText')).contains(hintMessage);
+  }
 }

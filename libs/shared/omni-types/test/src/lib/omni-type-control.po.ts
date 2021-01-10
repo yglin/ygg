@@ -18,7 +18,18 @@ import { LocationControlPageObjectCypress } from './location';
 import { HtmlControlPageObjectCypress } from './html';
 
 export class OmniTypeControlPageObjectCypress extends OmniTypeControlPageObject {
-  setValue(type: OmniTypeID, value: any): void {
+  controlPO: ControlPageObject;
+
+  constructor(parentSelector: string, type?: OmniTypeID) {
+    super(parentSelector);
+    try {
+      this.controlPO = this.getTypedControlPageObject(type);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  getTypedControlPageObject(type: OmniTypeID) {
     let controlPO: ControlPageObject;
     switch (type) {
       case 'text':
@@ -70,6 +81,17 @@ export class OmniTypeControlPageObjectCypress extends OmniTypeControlPageObject 
         );
         break;
     }
-    controlPO.setValue(value);
+    return controlPO
+  }
+
+  expectHint(hintMessage: string) {
+    this.controlPO.expectHint(hintMessage);
+  }
+
+  setValue(type: OmniTypeID, value: any): void {
+    if (!this.controlPO) {
+      this.controlPO = this.getTypedControlPageObject(type);
+    }
+    this.controlPO.setValue(value);
   }
 }

@@ -4,3 +4,4 @@ export * from './lib/factories';
 export * from './lib/ui';
 export * from './lib/tour-guide';
 export * from './lib/initialize';
+export * from './lib/treasure';

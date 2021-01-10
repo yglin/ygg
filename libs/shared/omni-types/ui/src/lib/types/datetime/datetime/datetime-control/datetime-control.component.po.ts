@@ -1,9 +1,9 @@
-import { PageObject } from '@ygg/shared/test/page-object';
-import { DayTimeControlPageObject } from '../../day-time';
-import { DateControlPageObject } from '../../date/date-control/date-control.component.po';
 import { DayTime } from '@ygg/shared/omni-types/core';
+import { ControlPageObject } from '@ygg/shared/test/page-object';
+import { DateControlPageObject } from '../../date/date-control/date-control.component.po';
+import { DayTimeControlPageObject } from '../../day-time';
 
-export abstract class DatetimeControlPageObject extends PageObject {
+export abstract class DatetimeControlPageObject extends ControlPageObject {
   selectors = {
     main: '.datetime-control',
     dateControl: '.date-control',

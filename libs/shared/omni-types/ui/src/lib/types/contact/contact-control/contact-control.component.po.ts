@@ -1,7 +1,7 @@
-import { PageObject } from '@ygg/shared/test/page-object';
 import { Contact } from '@ygg/shared/omni-types/core';
+import { ControlPageObject } from '@ygg/shared/test/page-object';
 
-export abstract class ContactControlPageObject extends PageObject {
+export abstract class ContactControlPageObject extends ControlPageObject {
   selectors = {
     main: 'ygg-contact-control',
     inputName: 'input#name',

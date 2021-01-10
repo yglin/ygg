@@ -1,10 +1,10 @@
-import { PageObject } from '@ygg/shared/test/page-object';
+import { ControlPageObject } from '@ygg/shared/test/page-object';
 
-export class AlbumControlPageObject extends PageObject {
+export class AlbumControlPageObject extends ControlPageObject {
   selectors = {
     main: '.album-control',
     buttonClearAll: '#clear-all',
-    addPhotots: '#add-photos',
+    addPhotos: '#add-photos',
     cover: '.cover'
   };
 

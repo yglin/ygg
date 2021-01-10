@@ -1,8 +1,8 @@
-import { PageObject } from '@ygg/shared/test/page-object';
+import { ControlPageObject } from '@ygg/shared/test/page-object';
 
-export abstract class NumberControlPageObject extends PageObject {
+export abstract class NumberControlPageObject extends ControlPageObject {
   selectors = {
-    main:'.ygg-number-control',
+    main: '.ygg-number-control',
     numberInput: '.number-input input'
   };
 

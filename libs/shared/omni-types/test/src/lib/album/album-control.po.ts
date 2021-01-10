@@ -14,7 +14,7 @@ export class AlbumControlPageObjectCypress extends AlbumControlPageObject {
 
   setValue(album: Album) {
     cy.get(this.getSelector('buttonClearAll')).click();
-    cy.get(this.getSelector('addPhotots')).click();
+    cy.get(this.getSelector('addPhotos')).click();
     const imageUploader =  new ImageUploaderPageObjectCypress();
     imageUploader.expectOpen();
     imageUploader.addImagesByUrl(album.photos);
@@ -22,6 +22,10 @@ export class AlbumControlPageObjectCypress extends AlbumControlPageObject {
     // imageUploader.expectClose();
     // Click to set cover photo
     cy.get(this.getSelectorForPhoto(album.cover.src)).first().click();
+  }
+
+  expectHint(hintMessage: string) {
+    cy.get(this.getSelector('addPhotos')).contains(hintMessage);
   }
 }
 

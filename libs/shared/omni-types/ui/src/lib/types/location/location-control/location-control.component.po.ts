@@ -1,10 +1,10 @@
-import { PageObject } from '@ygg/shared/test/page-object';
-import { Location, Address } from '@ygg/shared/omni-types/core';
+import { GeoPoint } from '@ygg/shared/geography/core';
+import { Address, Location } from '@ygg/shared/omni-types/core';
+import { ControlPageObject } from '@ygg/shared/test/page-object';
 import { AddressControlPageObject } from '../address';
 import { GeoPointControlPageObject } from '../geo-point/geo-point-control/geo-point-control.component.po';
-import { GeoPoint } from '@ygg/shared/geography/core';
 
-export abstract class LocationControlPageObject extends PageObject {
+export abstract class LocationControlPageObject extends ControlPageObject {
   selectors = {
     main: '.location-control',
     address: '.address',

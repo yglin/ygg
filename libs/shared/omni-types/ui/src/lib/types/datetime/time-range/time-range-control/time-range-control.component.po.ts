@@ -1,8 +1,8 @@
-import { PageObject } from '@ygg/shared/test/page-object';
 import { TimeRange } from '@ygg/shared/omni-types/core';
+import { ControlPageObject } from '@ygg/shared/test/page-object';
 import { DayTimeControlPageObject } from '../../day-time';
 
-export abstract class TimeRangeControlPageObject extends PageObject {
+export abstract class TimeRangeControlPageObject extends ControlPageObject {
   selectors = {
     main: '.ygg-time-range-control',
     inputStartDate: 'input.start-date',
@@ -14,5 +14,5 @@ export abstract class TimeRangeControlPageObject extends PageObject {
   startDayTimeControlPO: DayTimeControlPageObject;
   endDayTimeControlPO: DayTimeControlPageObject;
 
-  abstract setValue(TimeRange: TimeRange): any;
+  abstract setValue(timeRange: TimeRange): any;
 }

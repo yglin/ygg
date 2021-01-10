@@ -1,5 +1,11 @@
 import { PageObject } from './page-object';
 
 export abstract class ControlPageObject extends PageObject {
-  abstract setValue(value: any): void;
+  expectHint(hintMessage: string) {
+    throw new Error('Method not implemented.');
+  }
+
+  setValue(value: any) {
+    throw new Error('Method not implemented.');
+  }
 }
