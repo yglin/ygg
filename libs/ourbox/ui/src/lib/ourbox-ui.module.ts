@@ -42,6 +42,7 @@ import { SiteHowtoComponent } from './misc/site-howto/site-howto.component';
 import { SharedCustomPageUiModule } from '@ygg/shared/custom-page/ui';
 import { OurboxTourGuideService } from './ourbox-tour-guide.service';
 import { TreasureEditComponent } from './treasure/treasure-edit/treasure-edit.component';
+import { TreasureCreateComponent } from './treasure/treasure-create/treasure-create.component';
 
 export function initSideMenu(sideDrawer: SideDrawerService) {
   return async (): Promise<any> => {
@@ -92,7 +93,8 @@ export function configUserMenu(userMenuService: UserMenuService) {
     ItemTransferCompleteComponent,
     MyItemTransfersComponent,
     SiteHowtoComponent,
-    TreasureEditComponent
+    TreasureEditComponent,
+    TreasureCreateComponent
   ],
   imports: [
     CommonModule,

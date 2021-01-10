@@ -19,19 +19,19 @@ describe('Create a treasure from the ground up', () => {
   it('Navigate to creating page from link in side menu', () => {
     headerPO.openSideDrawer();
     sideDrawerPO.expectVisible();
-    sideDrawerPO.clickAction('create-treasure');
+    sideDrawerPO.clickLink('create-treasure');
     treasureEditPO.expectVisible();
   });
 
   it('Fill required data', () => {
     treasureEditPO.expectHint('album', '請至少新增一張寶物的照片');
-    treasureEditPO.setAlbum(treasure01.album);
-    treasureEditPO.nextStep();
-    treasureEditPO.expectHint('name', '寶物的名稱是...？');
-    treasureEditPO.setName(treasure01.name);
-    treasureEditPO.nextStep();
-    treasureEditPO.expectHint('location', '請設定寶物的所在地，才能顯示在地圖上');
-    treasureEditPO.setLocation(treasure01.location);
+    // treasureEditPO.setAlbum(treasure01.album);
+    // treasureEditPO.nextStep();
+    // treasureEditPO.expectHint('name', '寶物的名稱是...？');
+    // treasureEditPO.setName(treasure01.name);
+    // treasureEditPO.nextStep();
+    // treasureEditPO.expectHint('location', '請設定寶物的所在地，才能顯示在地圖上');
+    // treasureEditPO.setLocation(treasure01.location);
   });
 
   // it('Ask for login before submit', () => {});

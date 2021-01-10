@@ -26,6 +26,8 @@ import { ItemTransferFactoryService } from './item-transfer/item-transfer-factor
 import { MyItemTransfersComponent } from './item-transfer/my-item-transfers/my-item-transfers.component';
 import { SiteHowtoComponent } from './misc/site-howto/site-howto.component';
 import { TreasureEditComponent } from './treasure/treasure-edit/treasure-edit.component';
+import { TreasureCreateComponent } from './treasure/treasure-create/treasure-create.component';
+import { TreasureCreateResolver } from './treasure/treasure-create/treasure-create.resolver';
 // import { ItemFactoryService } from './item-factory.service';
 // import { MyBoxesComponent } from './pages/box/my-boxes/my-boxes.component';
 // import { ItemTransferComponent } from './pages/item/item-transfer/item-transfer.component';
@@ -36,50 +38,53 @@ export const routes: Routes = [
     path: 'treasure',
     children: [
       {
-        path: 'edit',
-        component: TreasureEditComponent
+        path: 'create',
+        component: TreasureCreateComponent,
+        resolve: {
+          treasure: TreasureCreateResolver
+        }
       }
     ]
-  }
-  // {
-  //   path: 'ourbox',
-  //   children: [
-  //     {
-  //       path: '',
-  //       pathMatch: 'full',
-  //       // component: HomeComponent
-  //       redirectTo: 'map'
-  //     },
-  //     {
-  //       path: 'map',
-  //       component: MapSearchComponent
-  //     },
-  //     {
-  //       path: 'create-box',
-  //       component: BoxCreateComponent
-  //     },
-  //     {
-  //       path: 'my-boxes',
-  //       component: MyBoxesComponent
-  //     },
-  //     {
-  //       path: 'item-warehouse',
-  //       component: ItemWarehouseComponent
-  //     },
-  //     {
-  //       path: 'my-held-items',
-  //       component: MyHeldItemsComponent
-  //     },
-  //     {
-  //       path: 'my-item-transfers',
-  //       component: MyItemTransfersComponent
-  //     },
-  //     {
-  //       path: 'site-howto',
-  //       component: SiteHowtoComponent
-  //     }
-  //   ]
-  // },
+  },
+  {
+    path: 'ourbox',
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        // component: HomeComponent
+        redirectTo: 'map'
+      },
+      {
+        path: 'map',
+        component: MapSearchComponent
+      },
+      {
+        path: 'create-box',
+        component: BoxCreateComponent
+      },
+      {
+        path: 'my-boxes',
+        component: MyBoxesComponent
+      },
+      {
+        path: 'item-warehouse',
+        component: ItemWarehouseComponent
+      },
+      {
+        path: 'my-held-items',
+        component: MyHeldItemsComponent
+      },
+      {
+        path: 'my-item-transfers',
+        component: MyItemTransfersComponent
+      },
+      {
+        path: 'site-howto',
+        component: SiteHowtoComponent
+      }
+    ]
+  },
   // {
   //   path: ImitationBox.routePath,
   //   children: [

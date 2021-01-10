@@ -2,6 +2,12 @@ import { Page } from '@ygg/shared/ui/core';
 import { ImitationItem, ImitationBox, ImitationItemTransfer } from '../models';
 
 export const pages: { [id: string]: Page } = {
+  createTreasure: {
+    id: 'create-treasure',
+    icon: 'local_pizza',
+    label: '分享我的寶物',
+    path: ['/', 'treasure', 'create']
+  },
   mapSearch: {
     id: 'mapSearch',
     icon: 'map',
@@ -52,6 +58,7 @@ export const pages: { [id: string]: Page } = {
 };
 
 export const pagesInSideDrawer = [
+  'createTreasure',
   'mapSearch',
   'boxCreate',
   'itemWarehouse',
