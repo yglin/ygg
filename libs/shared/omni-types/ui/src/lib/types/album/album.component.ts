@@ -31,11 +31,13 @@ export class AlbumComponent implements OnInit, OnDestroy, OnChanges {
   fxLayout = 'row wrap';
   subscriptions: Subscription[] = [];
   initHint = false;
+  noImageSrc =
+    'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg';
 
   get coverSrc(): string {
     return (
       (this.album && this.album.cover && this.album.cover.src) ||
-      Image.DEFAULT_IMAGE_SRC
+      this.noImageSrc
     );
   }
 
