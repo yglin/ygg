@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Treasure } from '@ygg/ourbox/core';
 import { get, isEmpty } from 'lodash';
 
@@ -12,11 +12,16 @@ import { get, isEmpty } from 'lodash';
 export class TreasureEditComponent implements OnInit {
   @Input() value: Treasure;
   hints: any = {};
-  formGroup: FormGroup;
+  formGroupStep1: FormGroup;
+  formGroupStep2: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {
-    this.formGroup = this.formBuilder.group({
-      album: null
+    this.formGroupStep1 = this.formBuilder.group({
+      album: [null, Validators.required]
+    });
+    this.formGroupStep2 = this.formBuilder.group({
+      name: ['', Validators.required],
+      description: ''
     });
   }
 
@@ -25,7 +30,7 @@ export class TreasureEditComponent implements OnInit {
     if (!album || isEmpty(album.photos)) {
       this.hints.init = '請至少新增一張寶物的照片';
     } else {
-      this.formGroup.get('album').setValue(album);
+      this.formGroupStep1.get('album').setValue(album);
     }
   }
 }
