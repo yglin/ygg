@@ -1,9 +1,7 @@
 <div class="album" *ngIf="album">
   <div [fxLayout]="fxLayout" fxLayoutAlign="start start">
     <div class="mat-elevation-z12 cover">
-      <img
-        [src]="coverSrc"
-      />
+      <img [src]="coverSrc" />
     </div>
     <div
       fxFlex
@@ -38,8 +36,13 @@
         fxLayoutAlign="start start"
         fxLayoutGap="10px"
       >
-        <div id="add-photos" (click)="addPhoto()">
-          <button type="button" mat-fab><mat-icon>add</mat-icon></button>
+        <div
+          id="add-photos"
+          (click)="addPhoto()"
+          #tooltipHintInit="matTooltip"
+          [matTooltip]="hints.init"
+        >
+          <button type="button" mat-fab [color]='initHint ? "warn" : "primary"'><mat-icon>add</mat-icon></button>
         </div>
         <div id="clear-all" (click)="clearAll()">
           <button type="button" mat-fab>

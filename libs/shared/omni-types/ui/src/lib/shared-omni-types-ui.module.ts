@@ -61,7 +61,7 @@ import { TimeLengthViewComponent } from './types/datetime/time-length/time-lengt
     CKEditorModule,
     HttpClientModule,
     ImageUploadModule.forRoot(),
-    SharedUiNgMaterialModule
+    SharedUiNgMaterialModule,
   ],
   declarations: [
     HtmlControlComponent,

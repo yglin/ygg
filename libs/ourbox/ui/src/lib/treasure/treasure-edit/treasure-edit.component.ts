@@ -23,7 +23,7 @@ export class TreasureEditComponent implements OnInit {
   ngOnInit(): void {
     const album = get(this.value, 'album', null);
     if (!album || isEmpty(album.photos)) {
-      this.hints.start = '請至少新增一張寶物的照片';
+      this.hints.init = '請至少新增一張寶物的照片';
     } else {
       this.formGroup.get('album').setValue(album);
     }

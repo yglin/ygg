@@ -4,6 +4,7 @@ import { Album } from '@ygg/shared/omni-types/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ygg-album-control',
   templateUrl: './album-control.component.html',
   styleUrls: ['./album-control.component.css'],
@@ -17,6 +18,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class AlbumControlComponent implements ControlValueAccessor {
   @Input() label: string;
+  @Input() hints: any = {};
   _album: Album = new Album();
   set album(value: Album) {
     if (value) {

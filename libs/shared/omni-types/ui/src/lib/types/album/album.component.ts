@@ -7,28 +7,34 @@ import {
   EventEmitter,
   OnDestroy,
   SimpleChanges,
-  Output
+  Output,
+  ViewChild
 } from '@angular/core';
 import { Album, Image } from '@ygg/shared/omni-types/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { ImageUploaderComponent } from '../image/image-uploader/image-uploader.component';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ygg-album',
   templateUrl: './album.component.html',
   styleUrls: ['./album.component.css']
 })
 export class AlbumComponent implements OnInit, OnDestroy, OnChanges {
+  @ViewChild('tooltipHintInit', { static: false }) tooltipHintInit: MatTooltip;
   @Input() album: Album;
   @Input() readonly: boolean;
+  @Input() hints: any = {};
   @Output() albumChanged: EventEmitter<Album> = new EventEmitter();
   fxLayout = 'row wrap';
   subscriptions: Subscription[] = [];
+  initHint = false;
 
   get coverSrc(): string {
     return (
-      (this.album && this.album.cover && this.album.cover.src) || 
+      (this.album && this.album.cover && this.album.cover.src) ||
       Image.DEFAULT_IMAGE_SRC
     );
   }
@@ -45,6 +51,15 @@ export class AlbumComponent implements OnInit, OnDestroy, OnChanges {
     this.readonly = this.readonly !== undefined && this.readonly !== false;
     if (this.album && this.readonly) {
       this.album = this.album.clone();
+    }
+  }
+
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+    if (this.hints.init) {
+      this.tooltipHintInit.show();
+      this.initHint = true;
     }
   }
 
@@ -90,6 +105,8 @@ export class AlbumComponent implements OnInit, OnDestroy, OnChanges {
         }
       })
     );
+    this.initHint = false;
+    this.tooltipHintInit.hide();
   }
 
   clearAll() {
