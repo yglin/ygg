@@ -25,7 +25,7 @@ describe('Create a treasure from the ground up', () => {
 
   it('Fill required data', () => {
     treasureEditPO.expectHint('album', '請至少新增一張寶物的照片');
-    // treasureEditPO.setAlbum(treasure01.album);
+    treasureEditPO.setValue('album', treasure01.album);
     // treasureEditPO.nextStep();
     // treasureEditPO.expectHint('name', '寶物的名稱是...？');
     // treasureEditPO.setName(treasure01.name);

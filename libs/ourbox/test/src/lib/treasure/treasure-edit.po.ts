@@ -57,13 +57,9 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
     controlPO.expectHint(hintMessage);
   }
 
-  setControlValue(controlName: string) {}
-
-  setAlbum(album: Album) {
-    const omniTypeControlPO = new OmniTypeControlPageObjectCypress(
-      this.getSelector('.album.control')
-    );
-    omniTypeControlPO.setValue(OmniTypes.album.id, album);
+  setValue(controlName: string, value: any) {
+    const controlPO = this.controlPOs[controlName].pageObject;
+    controlPO.setValue(value);
   }
 
   nextStep() {
