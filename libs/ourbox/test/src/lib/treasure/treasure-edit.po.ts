@@ -4,21 +4,27 @@ import {
   OmniTypeID,
   OmniTypes
 } from '@ygg/shared/omni-types/core';
-import { OmniTypeControlPageObjectCypress } from '@ygg/shared/omni-types/test';
+import {
+  AlbumControlPageObjectCypress,
+  LocationControlPageObjectCypress,
+  OmniTypeControlPageObjectCypress
+} from '@ygg/shared/omni-types/test';
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
+import { ControlPageObject } from '@ygg/shared/test/page-object';
+import { TextControlPageObjectCypress } from 'libs/shared/omni-types/test/src/lib/text';
 
 export class TreasureEditPageObjectCypress extends PageObjectCypress {
   selectors = {
     main: '.treasure-edit',
     'album-control': '.album.control',
     'name-control': '.name.control',
-    'location-control': '.location.control',
+    'location-control': '.location.control'
   };
 
   controlPOs: {
     [controlName: string]: {
       type: OmniTypeID;
-      pageObject: OmniTypeControlPageObjectCypress;
+      pageObject: ControlPageObject;
     };
   } = {};
 
@@ -27,20 +33,20 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
     this.controlPOs = {
       album: {
         type: OmniTypes.album.id,
-        pageObject: new OmniTypeControlPageObjectCypress(
-          this.getSelector('album-control'), OmniTypes.album.id
+        pageObject: new AlbumControlPageObjectCypress(
+          this.getSelector('album-control')
         )
       },
       name: {
         type: OmniTypes.text.id,
-        pageObject: new OmniTypeControlPageObjectCypress(
-          this.getSelector('name-control'), OmniTypes.text.id
+        pageObject: new TextControlPageObjectCypress(
+          this.getSelector('name-control')
         )
       },
       location: {
         type: OmniTypes.location.id,
-        pageObject: new OmniTypeControlPageObjectCypress(
-          this.getSelector('location-control'), OmniTypes.location.id
+        pageObject: new LocationControlPageObjectCypress(
+          this.getSelector('location-control')
         )
       }
     };
