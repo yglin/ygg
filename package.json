@@ -30,7 +30,7 @@
     "deploy:functions": "./tools/scripts/firebase/deploy-functions.sh",
     "deploy": "./tools/scripts/deploy.sh",
     "nx": "nx",
-    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points; npm link @ckeditor/ckeditor5-build-balloon"
+    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points && npm link @ckeditor/ckeditor5-build-balloon"
   },
   "private": true,
   "dependencies": {
@@ -128,7 +128,7 @@
     "async": "^3.1.0",
     "child-process-promise": "^2.2.1",
     "codelyzer": "~5.1.0",
-    "cypress": "^6.2.0",
+    "cypress": "^6.3.0",
     "cypress-firebase": "^1.0.0",
     "cypress-promise": "^1.1.0",
     "dotenv": "8.0.0",
