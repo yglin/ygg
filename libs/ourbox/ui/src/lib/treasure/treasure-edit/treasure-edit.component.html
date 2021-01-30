@@ -6,7 +6,7 @@
         <div class="album control">
           <ygg-album-control
             formControlName="album"
-            [hints]="hints"
+            [hints]="hints.album"
           ></ygg-album-control>
         </div>
       </form>
@@ -15,9 +15,37 @@
       </div>
     </mat-step>
     <mat-step [stepControl]="formGroupStep2">
+      <ng-template matStepLabel>寶物的名稱</ng-template>
       <form [formGroup]="formGroupStep2">
-        <div class="name control"></div>
+        <div class="name control">
+          <ygg-text-control
+            formControlName="name"
+            placeholder="請輸入寶物的名稱"
+          ></ygg-text-control>
+        </div>
       </form>
+      <div>
+        <button mat-button matStepperPrevious class="previous-step">
+          上一步
+        </button>
+        <button mat-button matStepperNext class="next-step">下一步</button>
+      </div>
+    </mat-step>
+    <mat-step [stepControl]="formGroupStep3">
+      <ng-template matStepLabel>寶物所在地</ng-template>
+      <form [formGroup]="formGroupStep3">
+        <div class="location control">
+          <ygg-location-control
+            formControlName="location"
+          ></ygg-location-control>
+        </div>
+      </form>
+      <div>
+        <button mat-button matStepperPrevious class="previous-step">
+          上一步
+        </button>
+        <button mat-button matStepperNext (click)="submit()">完成送出</button>
+      </div>
     </mat-step>
   </mat-vertical-stepper>
 </div>

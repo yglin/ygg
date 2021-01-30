@@ -12,6 +12,6 @@ export class TextControlPageObjectCypress extends TextControlPageObject {
   }
 
   expectHint(hintMessage: string) {
-    cy.get(this.getSelector('inputText')).contains(hintMessage);
+    cy.get('.mat-tooltip').contains(hintMessage);
   }
 }

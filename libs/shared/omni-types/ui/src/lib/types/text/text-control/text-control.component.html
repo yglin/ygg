@@ -1,5 +1,10 @@
 <div class="text-control">
-  <mat-form-field>
-    <input name="omni-type-text" matInput placeholder="。。。" [(ngModel)]="value" />
+  <mat-form-field #tooltipHintInit="matTooltip" [matTooltip]>
+    <input
+      name="omni-type-text"
+      matInput
+      [placeholder]="placeholder"
+      [(ngModel)]="value"
+    />
   </mat-form-field>
 </div>

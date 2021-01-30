@@ -65,18 +65,4 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
   nextStep() {
     cy.get('.next-step:visible').click();
   }
-
-  setName(name: string) {
-    const omniTypeControlPO = new OmniTypeControlPageObjectCypress(
-      this.getSelector('.name.control')
-    );
-    omniTypeControlPO.setValue(OmniTypes.text.id, name);
-  }
-
-  setLocation(location: Location) {
-    const omniTypeControlPO = new OmniTypeControlPageObjectCypress(
-      this.getSelector('.location.control')
-    );
-    omniTypeControlPO.setValue(OmniTypes.location.id, location);
-  }
 }

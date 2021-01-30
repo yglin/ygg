@@ -3,6 +3,7 @@ import { Album, Location } from '@ygg/shared/omni-types/core';
 
 export class Treasure {
   name: string;
+  description: string;
   album: Album;
   location: Location;
 

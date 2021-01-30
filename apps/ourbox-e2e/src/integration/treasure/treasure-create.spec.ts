@@ -27,11 +27,13 @@ describe('Create a treasure from the ground up', () => {
     treasureEditPO.expectHint('album', '請至少新增一張寶物的照片');
     treasureEditPO.setValue('album', treasure01.album);
     treasureEditPO.nextStep();
-    // treasureEditPO.expectHint('name', '寶物的名稱是...？');
-    // treasureEditPO.setName(treasure01.name);
-    // treasureEditPO.nextStep();
-    // treasureEditPO.expectHint('location', '請設定寶物的所在地，才能顯示在地圖上');
-    // treasureEditPO.setLocation(treasure01.location);
+    treasureEditPO.setValue('name', treasure01.name);
+    treasureEditPO.nextStep();
+    // treasureEditPO.expectHint(
+    //   'location',
+    //   '請設定寶物的所在地，才能顯示在地圖上'
+    // );
+    treasureEditPO.setValue('location', treasure01.location);
   });
 
   // it('Ask for login before submit', () => {});
