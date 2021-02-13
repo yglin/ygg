@@ -10,7 +10,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { Treasure } from '@ygg/ourbox/core';
-import { get, isEmpty } from 'lodash';
+import { extend, get, isEmpty } from 'lodash';
 import { Subject, Subscription } from 'rxjs';
 
 @Component({
@@ -89,7 +89,13 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  submit() {
-    console.log(' Do nothing...')
+  async submit() {
+    const payload = extend(
+      this.formGroupStep1.value,
+      this.formGroupStep2.value,
+      this.formGroupStep3.value
+    );
+    this.value.update(payload);
+    await this.value.save();
   }
 }

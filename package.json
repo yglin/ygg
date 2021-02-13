@@ -128,7 +128,7 @@
     "async": "^3.1.0",
     "child-process-promise": "^2.2.1",
     "codelyzer": "~5.1.0",
-    "cypress": "^6.3.0",
+    "cypress": "^6.4.0",
     "cypress-firebase": "^1.0.0",
     "cypress-promise": "^1.1.0",
     "dotenv": "8.0.0",

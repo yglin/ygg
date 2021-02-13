@@ -1,3 +1,4 @@
+import { Box } from '@ygg/ourbox/core';
 import {
   Album,
   Location,
@@ -6,19 +7,17 @@ import {
 } from '@ygg/shared/omni-types/core';
 import {
   AlbumControlPageObjectCypress,
-  LocationControlPageObjectCypress,
-  OmniTypeControlPageObjectCypress
+  LocationControlPageObjectCypress
 } from '@ygg/shared/omni-types/test';
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
 import { ControlPageObject } from '@ygg/shared/test/page-object';
 import { TextControlPageObjectCypress } from 'libs/shared/omni-types/test/src/lib/text';
 
-export class TreasureEditPageObjectCypress extends PageObjectCypress {
+export class BoxEditPageObjectCypress extends PageObjectCypress {
   selectors = {
     main: '.treasure-edit',
-    'album-control': '.album.control',
     'name-control': '.name.control',
-    'location-control': '.location.control'
+    'album-control': '.album.control'
   };
 
   controlPOs: {
@@ -52,9 +51,9 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
     };
   }
 
-  expectHint(controlName: string, hintMessage: string) {
-    const controlPO = this.controlPOs[controlName].pageObject;
-    controlPO.expectHint(hintMessage);
+  create(box: Box) {
+    this.setValue('name', box.name);
+    this.setValue('album', box.album);
   }
 
   setValue(controlName: string, value: any) {

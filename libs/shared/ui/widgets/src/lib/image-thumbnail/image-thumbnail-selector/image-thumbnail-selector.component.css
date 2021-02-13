@@ -1,5 +1,9 @@
 .image-thumbnail-selector {
   width: 100%;
+  min-width: 40vw;
+  max-width: 80vw;
+  min-height: 60vh;
+  max-height: 80vh;
 }
 
 .item {

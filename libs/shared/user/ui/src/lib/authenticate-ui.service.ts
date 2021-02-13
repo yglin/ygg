@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { YggDialogService } from '@ygg/shared/ui/widgets';
+import { EmceeService, YggDialogService } from '@ygg/shared/ui/widgets';
 import { LoginDialogComponent } from './components/login-dialog/login-dialog.component';
 import { User, Authenticator } from '@ygg/shared/user/core';
 import { AuthenticateService } from './authenticate.service';
@@ -25,24 +25,26 @@ export class AuthenticateUiService extends Authenticator {
 
   constructor(
     private dialog: YggDialogService,
-    private authenticateService: AuthenticateService
+    private authenticateService: AuthenticateService,
+    private emcee: EmceeService
   ) {
     super();
     this.currentUser$ = this.authenticateService.currentUser$;
-    this.currentUser$.subscribe(
-      user => (this.currentUser = user)
-    );
+    this.currentUser$.subscribe(user => (this.currentUser = user));
   }
 
-  async requireLogin(): Promise<User> {
+  async requireLogin(options: any = {}): Promise<User> {
     if (!!this.authenticateService.currentUser) {
       return Promise.resolve(this.authenticateService.currentUser);
     } else {
       try {
+        if (options.message) {
+          await this.emcee.info(options.message);
+        }
         const loginUser = await this.openLoginDialog();
         return loginUser;
       } catch (error) {
-        alert(`未登入，錯誤原因：${error.message}`);
+        await this.emcee.error(`未登入，錯誤原因：${error.message}`);
         return Promise.reject(error);
       }
       // const cancel$: Observable<any> = this.loginDialogRef

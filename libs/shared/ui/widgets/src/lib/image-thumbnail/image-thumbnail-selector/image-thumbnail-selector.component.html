@@ -1,30 +1,28 @@
 <div class="image-thumbnail-selector" *ngIf="items">
-  <ygg-action-bar-layout>
-    <div ygg-action-bar-button *ngIf="dialogSubmit$.observers.length > 0">
-      <button mat-fab [disabled]="selection.length <= 0" (click)="onSubmit()">
-        <mat-icon>check</mat-icon>
-      </button>
-    </div>
-    <div
-      ygg-action-bar-content
-      fxLayout="row wrap"
-      fxLayoutAlign="start center"
-      fxLayoutGap="20px"
+  <!-- <div *ngIf="isDialog">
+    <button
+      class="submit"
+      mat-fab
+      [disabled]="selection.length <= 0"
+      (click)="onSubmit()"
     >
-      <div
-        *ngFor="let item of items; let isLast = last; let isFirst = first"
-        [attr.item-id]="item.id"
-        [attr.item-name]="item.name"
-        class="item"
-        [ngClass]="{
-          'last-item': isLast,
-          'first-item': isFirst,
-          selected: isSelected(item)
-        }"
-        (click)="onSelectItem(item)"
-      >
-        <ygg-image-thumbnail [item]="item"></ygg-image-thumbnail>
-      </div>
+      <mat-icon>check</mat-icon>
+    </button>
+  </div> -->
+  <div class="item-list" fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="20px">
+    <div
+      *ngFor="let item of items; let isLast = last; let isFirst = first"
+      [attr.item-id]="item.id"
+      [attr.item-name]="item.name"
+      class="item"
+      [ngClass]="{
+        'last-item': isLast,
+        'first-item': isFirst,
+        selected: isSelected(item)
+      }"
+      (click)="onSelectItem(item)"
+    >
+      <ygg-image-thumbnail [item]="item"></ygg-image-thumbnail>
     </div>
-  </ygg-action-bar-layout>
+  </div>
 </div>

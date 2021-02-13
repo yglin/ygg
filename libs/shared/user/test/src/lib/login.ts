@@ -40,8 +40,8 @@ export function loginTestUser(
   const loginDialogPO = new LoginDialogPageObjectCypress();
   if (options.openLoginDialog) {
     accountWidgetPO.login();
-    loginDialogPO.expectVisible();
   }
+  loginDialogPO.expectVisible();
   const account: TestAccount = {
     email: user.email,
     password: user.password

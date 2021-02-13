@@ -1,4 +1,4 @@
-import { sample, last } from 'lodash';
+import { sample, last, extend, isEmpty } from 'lodash';
 import { SerializableJSON } from '@ygg/shared/infra/core';
 
 export enum ImageType {
@@ -15,8 +15,19 @@ export class Image implements SerializableJSON {
   private _src: string;
   type: ImageType;
 
-  static isSupportedImageExt(url: string): boolean{
-    const urlExt = last(url.split("."))
+  constructor(options: any = {}) {
+    if (typeof options === 'string') {
+      this.src = options;
+    } else if (!isEmpty(options)) {
+      extend(this, options);
+    } else {
+      this.type = ImageType.Asset;
+      this._src = Image.DEFAULT_IMAGE_SRC;
+    }
+  }
+
+  static isSupportedImageExt(url: string): boolean {
+    const urlExt = last(url.split('.'));
     if (Image.SUPPORTED_IMAGE_EXT.indexOf(urlExt) >= 0) {
       return true;
     } else {
@@ -34,7 +45,7 @@ export class Image implements SerializableJSON {
     } catch (error) {
       return false;
     }
-  }  
+  }
 
   static forge(): Image {
     const src = sample([
@@ -110,15 +121,6 @@ export class Image implements SerializableJSON {
 
   get isDefault(): boolean {
     return this._src === Image.DEFAULT_IMAGE_SRC;
-  }
-
-  constructor(src?: string) {
-    if (src) {
-      this.src = src;
-    } else {
-      this.type = ImageType.Asset;
-      this._src = Image.DEFAULT_IMAGE_SRC;
-    }
   }
 
   // isDataUrl(): boolean {

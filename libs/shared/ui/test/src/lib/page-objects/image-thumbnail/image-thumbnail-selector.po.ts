@@ -1,31 +1,38 @@
-// import {
-//   ImageThumbnailSelectorPageObject,
-//   ImageThumbnailItem
-// } from '@ygg/shared/ui/widgets';
+import { PageObjectCypress } from '@ygg/shared/test/cypress';
+import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 
-// export class ImageThumbnailSelectorPageObjectCypress extends ImageThumbnailSelectorPageObject {
-//   expectVisible(flag: boolean = true) {
-//     if (flag) {
-//       cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
-//     } else {
-//       cy.get(this.getSelector(), { timeout: 10000 }).should('not.be.visible');
-//     }
-//   }
+export class ImageThumbnailSelectorPageObjectCypress extends PageObjectCypress {
+  selectors = {
+    main: '.image-thumbnail-selector',
+    buttonSubmit: 'button.submit'
+  };
 
-//   expectItem(item: ImageThumbnailItem) {
-//     cy.get(`${this.getSelector()} .item img[src="${item.image}"]`).should('exist');
-//     cy.get(`${this.getSelector()} .item`).contains(item.name).should('exist');
-//   }
+  // getSelectorByItemName(name: string): string {
+  //   return `${this.getSelector()} .item:contains("${name}")`;
+  // }
 
-//   expectItems(items: ImageThumbnailItem[]) {
-//     cy.wrap(items).each((item: any) => this.expectItem(item));
-//   }
+  getSelectorForItem(item: ImageThumbnailItem): string {
+    return `${this.getSelector()} .item:contains("${name}")`;
+  }
 
-//   selectItem(item: ImageThumbnailItem) {
-//     cy.get(this.getSelectorForItem(item)).click({ force: true });
-//   }
+  expectItem(item: ImageThumbnailItem) {
+    cy.get(`${this.getSelector()} .item img[src="${item.image}"]`).should(
+      'exist'
+    );
+    cy.get(`${this.getSelector()} .item`)
+      .contains(item.name)
+      .should('exist');
+  }
 
-//   submit() {
-//     cy.get(this.getSelector('buttonSubmit')).click({ force: true });
-//   }
-// }
+  expectItems(items: ImageThumbnailItem[]) {
+    cy.wrap(items).each((item: any) => this.expectItem(item));
+  }
+
+  selectItem(item: ImageThumbnailItem) {
+    cy.get(this.getSelectorForItem(item)).click({ force: true });
+  }
+
+  submit() {
+    cy.get(this.getSelector('buttonSubmit')).click({ force: true });
+  }
+}

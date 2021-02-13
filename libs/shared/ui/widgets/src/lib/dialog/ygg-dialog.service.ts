@@ -5,7 +5,7 @@ import { YggDialogComponentData } from './ygg-dialog';
 import { YggDialogComponent } from './ygg-dialog.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
-import { Subscription } from 'rxjs';
+import { isObservable, Subscription } from 'rxjs';
 import { find, isArray } from 'lodash';
 import { AlertType, Dialog } from '@ygg/shared/infra/core';
 

@@ -22,8 +22,8 @@ import { ActionBarLayoutComponent } from './action-bar-layout/action-bar-layout.
 import { PriceComponent } from './price/price.component';
 import {
   ImageThumbnailComponent,
-  ImageThumbnailListComponent
-  // ImageThumbnailSelectorComponent
+  ImageThumbnailListComponent,
+  ImageThumbnailSelectorComponent
 } from './image-thumbnail';
 import { AngularFittextModule } from 'angular-fittext';
 import { NgForColorBackgroundDirective } from './ng-for-color-background/ng-for-color-background.directive';
@@ -61,8 +61,8 @@ import { ExtraInfoButtonComponent } from './extra-info-button/extra-info-button/
     DatetimeComponent,
     ErrorMessagesComponent,
     ProgressDialogComponent,
-    ExtraInfoButtonComponent
-    // ImageThumbnailSelectorComponent
+    ExtraInfoButtonComponent,
+    ImageThumbnailSelectorComponent
   ],
   imports: [
     CommonModule,
@@ -95,15 +95,15 @@ import { ExtraInfoButtonComponent } from './extra-info-button/extra-info-button/
     ControlViewSwitchComponent,
     DatetimeComponent,
     ErrorMessagesComponent,
-    ExtraInfoButtonComponent
-    // ImageThumbnailSelectorComponent
+    ExtraInfoButtonComponent,
+    ImageThumbnailSelectorComponent
   ],
-  entryComponents: [
-    ProgressSpinnerComponent,
-    YggDialogComponent,
-    ImageThumbnailListComponent,
-    ConfirmDialogComponent
-    // ImageThumbnailSelectorComponent
-  ]
+  // entryComponents: [
+  //   ProgressSpinnerComponent,
+  //   YggDialogComponent,
+  //   ImageThumbnailListComponent,
+  //   ConfirmDialogComponent
+  //   // ImageThumbnailSelectorComponent
+  // ]
 })
 export class SharedUiWidgetsModule {}

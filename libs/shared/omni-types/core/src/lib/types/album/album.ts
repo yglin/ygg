@@ -1,4 +1,4 @@
-import { isArray, range, random, sample, isEmpty } from 'lodash';
+import { isArray, range, random, sample, isEmpty, extend } from 'lodash';
 import { Image } from '../image/image';
 import { toJSONDeep, SerializableJSON } from '@ygg/shared/infra/core';
 
@@ -7,6 +7,18 @@ export class Album implements SerializableJSON {
 
   cover: Image;
   photos: Image[];
+
+  constructor(options: any = {}) {
+    // this.cover = new Image();
+    this.photos = [];
+    extend(this, options);
+    if (options.cover) {
+      this.cover = new Image(options.cover);
+    }
+    if (isArray(options.photos)) {
+      this.photos = options.photos.map(p => new Image(p));
+    }
+  }
 
   // TODO: Deprecated
   static fromAlbum(album: Album): Album {
@@ -26,13 +38,8 @@ export class Album implements SerializableJSON {
     return forged;
   }
 
-  constructor() {
-    // this.cover = new Image();
-    this.photos = [];
-  }
-
   clear() {
-    this.cover = undefined;// = new Image();
+    this.cover = undefined; // = new Image();
     this.photos = [];
   }
 

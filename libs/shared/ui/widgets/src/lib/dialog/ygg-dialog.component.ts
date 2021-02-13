@@ -1,24 +1,20 @@
-import { ComponentType } from '@angular/cdk/portal';
 import {
-  AfterViewInit,
   Component,
   ComponentFactoryResolver,
   Directive,
   Inject,
   OnInit,
-  TemplateRef,
   ViewChild,
-  ViewContainerRef,
-  Type
+  ViewContainerRef
 } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   YggDialogComponentData,
   YggDialogContentComponent
 } from './ygg-dialog';
-import { take } from 'rxjs/operators';
 
 @Directive({
+  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[ygg-dialog-content-host]'
 })
 export class YggDialogContentHostDirective {
@@ -26,15 +22,16 @@ export class YggDialogContentHostDirective {
 }
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ygg-ygg-dialog',
   templateUrl: './ygg-dialog.component.html',
   styleUrls: ['./ygg-dialog.component.css']
 })
 export class YggDialogComponent implements OnInit {
-  title: string;
-  id: string | number;
   @ViewChild(YggDialogContentHostDirective, { static: true })
   contentHost: YggDialogContentHostDirective;
+  title: string;
+  id: string | number;
   contentComponent: YggDialogContentComponent;
   hasOutput = false;
   hasOutputValue = false;

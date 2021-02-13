@@ -1,3 +1,5 @@
+import { isArray } from 'lodash';
+
 export interface SerializableJSON {
   fromJSON: (data: any) => this;
   toJSON: () => any;
@@ -17,7 +19,10 @@ export function toJSONDeep(obj: any = {}): any {
           continue;
         } else if (typeof property.toJSON === 'function') {
           data[key] = property.toJSON();
-        } else {
+        } else if (
+          ['string', 'number', 'boolean'].includes(typeof property) ||
+          isArray(property)
+        ) {
           try {
             data[key] = JSON.parse(JSON.stringify(property));
           } catch (error) {
@@ -30,11 +35,11 @@ export function toJSONDeep(obj: any = {}): any {
         }
       }
     }
+    return data;
   } catch (error) {
     const wrapError = new Error(
       `toJSONDeep(): Failed to convert to JSON.\n${error.message}`
     );
     throw wrapError;
   }
-  return data;
 }

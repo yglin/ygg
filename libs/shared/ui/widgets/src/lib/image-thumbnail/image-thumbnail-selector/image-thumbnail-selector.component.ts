@@ -13,6 +13,7 @@ import { YggDialogContentComponent } from '../../dialog';
 import { Subject } from 'rxjs';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ygg-image-thumbnail-selector',
   templateUrl: './image-thumbnail-selector.component.html',
   styleUrls: ['./image-thumbnail-selector.component.css']
@@ -20,39 +21,40 @@ import { Subject } from 'rxjs';
 export class ImageThumbnailSelectorComponent
   implements OnInit, YggDialogContentComponent {
   @Input() items: ImageThumbnailItem[];
-  @Input() singleSelect: boolean;
+  @Input() multiSelect = false;
   @Input() selection: ImageThumbnailItem[] = [];
-  isDialog: boolean;
   @Output() selectionChange: EventEmitter<
     ImageThumbnailItem[]
   > = new EventEmitter();
   dialogData: any;
-  dialogSubmit$: Subject<
+  dialogOutput$: Subject<
     ImageThumbnailItem[] | ImageThumbnailItem
   > = new Subject();
+  isDialog: boolean;
 
   constructor() {}
 
   ngOnInit() {
-    if (this.dialogData) {
-      extend(this, this.dialogData);
-    }
     this.isDialog = !!this.dialogData;
-    this.singleSelect =
-      this.singleSelect !== undefined && this.singleSelect !== false;
-    // console.log(this.dialogSubmit$.observers);
+    this.multiSelect =
+      this.multiSelect !== undefined && this.multiSelect !== false;
+    if (this.dialogData) {
+      this.items = isEmpty(this.dialogData.items) ? [] : this.dialogData.items;
+      this.multiSelect = !!this.dialogData.multiSelect;
+    }
   }
 
   onSelectItem(item: ImageThumbnailItem) {
     if (find(this.selection, selected => selected.id === item.id)) {
       remove(this.selection, selected => selected.id === item.id);
     } else {
-      if (this.singleSelect) {
+      if (!this.multiSelect) {
         this.selection.length = 0;
       }
       this.selection.push(item);
     }
     this.selectionChange.emit(this.selection);
+    this.dialogOutput$.next(this.selection);
   }
 
   isEmptySelection(): boolean {
@@ -66,11 +68,11 @@ export class ImageThumbnailSelectorComponent
     );
   }
 
-  onSubmit() {
-    let selection: any = this.selection;
-    if (this.singleSelect) {
-      selection = isEmpty(this.selection) ? null : this.selection[0];
-    }
-    this.dialogSubmit$.next(selection);
-  }
+  // onSubmit() {
+  //   let selection: any = this.selection;
+  //   if (!this.multiSelect) {
+  //     selection = isEmpty(this.selection) ? null : this.selection[0];
+  //   }
+  //   this.dialogOutput$.next(selection);
+  // }
 }
