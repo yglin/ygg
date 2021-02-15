@@ -1,13 +1,21 @@
 import { Page } from '@ygg/shared/ui/core';
+import { Box } from '../box';
 // import { ImitationItem, ImitationBox, ImitationItemTransfer } from '../models';
 
 export const pages: { [id: string]: Page } = {
-  createTreasure: {
+  'create-treasure': {
     id: 'create-treasure',
     icon: 'local_pizza',
     label: '分享我的寶物',
     path: ['/', 'treasure', 'create']
   },
+  'my-boxes': {
+    id: 'my-boxes',
+    icon: Box.icon,
+    label: '我的寶箱',
+    image: '/assets/images/box/box.png',
+    path: ['/', 'my-boxes']
+  }
   // mapSearch: {
   //   id: 'mapSearch',
   //   icon: 'map',
@@ -28,13 +36,6 @@ export const pages: { [id: string]: Page } = {
   //   label: '寶物倉庫',
 
   //   path: ['/', 'ourbox', 'item-warehouse']
-  // },
-  // myBoxes: {
-  //   id: 'myBoxes',
-  //   icon: ImitationBox.icon,
-  //   label: '我的寶箱',
-  //   image: '/assets/images/box/box.png',
-  //   path: ['/', 'ourbox', 'my-boxes']
   // },
   // myHeldItems: {
   //   id: 'myHeldItems',
@@ -58,9 +59,10 @@ export const pages: { [id: string]: Page } = {
 };
 
 export const pagesInSideDrawer = [
-  'createTreasure',
-  'mapSearch',
-  'boxCreate',
-  'itemWarehouse',
-  'siteHowto'
+  'create-treasure',
+  'my-boxes'
+  // 'mapSearch',
+  // 'boxCreate',
+  // 'itemWarehouse',
+  // 'siteHowto'
 ];

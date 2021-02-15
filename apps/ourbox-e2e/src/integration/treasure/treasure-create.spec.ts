@@ -1,29 +1,39 @@
 import { Box, Treasure } from '@ygg/ourbox/core';
 import {
   HeaderPageObjectCypress,
+  MyBoxesPageObjectCypress,
   TreasureEditPageObjectCypress
 } from '@ygg/ourbox/test';
+import { Album } from '@ygg/shared/omni-types/core';
 import { logout, theMockDatabase } from '@ygg/shared/test/cypress';
 import {
   EmceePageObjectCypress,
+  ImageThumbnailListPageObjectCypress,
   ImageThumbnailSelectorPageObjectCypress,
+  PageTitlePageObjectCypress,
   SideDrawerPageObjectCypress,
   YggDialogPageObjectCypress
 } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
 import { loginTestUser, testUsers } from '@ygg/shared/user/test';
 
-describe('Create a treasure from the ground up', () => {
+describe('Create a treasure and put it into my default box', () => {
+  const me = testUsers[0];
   const treasure01 = Treasure.forge();
+  const boxDefault = Box.forge();
+  boxDefault.name = `${me.name}的寶箱`;
+  boxDefault.album = new Album(Box.thumbnailSrc);
+
   // const box01 = Box.forge();
   const headerPO = new HeaderPageObjectCypress();
   const sideDrawerPO = new SideDrawerPageObjectCypress();
   const treasureEditPO = new TreasureEditPageObjectCypress();
+  const myBoxesPO = new ImageThumbnailListPageObjectCypress();
+  const treasuresPO = new ImageThumbnailListPageObjectCypress();
+  const pageTitlePO = new PageTitlePageObjectCypress();
   // const boxEditPO = new BoxEditPageObjectCypress();
 
   const emceePO = new EmceePageObjectCypress();
-
-  const me = testUsers[0];
 
   before(() => {
     cy.wrap(testUsers).each((user: User) => {
@@ -42,6 +52,7 @@ describe('Create a treasure from the ground up', () => {
     sideDrawerPO.expectVisible();
     sideDrawerPO.clickLink('create-treasure');
     treasureEditPO.expectVisible();
+    pageTitlePO.expectText(`新增你的共享寶物`);
   });
 
   it('Fill required data', () => {
@@ -61,29 +72,35 @@ describe('Create a treasure from the ground up', () => {
     treasureEditPO.submit();
     emceePO.info(`新增寶物前請先登入帳號`);
     loginTestUser(me, { openLoginDialog: false });
-    emceePO.info(`寶物 ${treasure01.name} 已成功新增`);
+    emceePO.info(`成功新增寶物 ${treasure01.name} ！`);
   });
 
-  it('Create a default box of user', () => {
-    const boxName = `${me.name}的寶箱`;
+  it('Put it into my default box', () => {
     emceePO.confirm(
-      `請選擇一個寶箱來存放 ${treasure01.name}。未放在寶箱內的寶物預設為公開檢視。`
+      `請選擇一個寶箱來存放 ${treasure01.name}。沒放進寶箱裡的寶物，別人就看不到它了喔～`
     );
     const dialogPO = new YggDialogPageObjectCypress();
     const boxSelectorPO = new ImageThumbnailSelectorPageObjectCypress(
       dialogPO.getSelector()
     );
     boxSelectorPO.expectVisible();
-    boxSelectorPO.expectItem({
-      image: Box.thumbnailSrc,
-      name: boxName
-    });
-    boxSelectorPO.selectItem({ name: boxName });
+    boxSelectorPO.expectItem(boxDefault);
+    boxSelectorPO.selectItem(boxDefault);
     dialogPO.confirm();
-    emceePO.info(`寶物 ${treasure01.name} 已加入寶箱 ${boxName}`);
+    emceePO.info(`寶物 ${treasure01.name} 已加入寶箱 ${boxDefault.name}`);
   });
 
-  // it('Navigate to the default box, the treasure should be there', () => {});
+  it('Navigate to the default box, the treasure should be there', () => {
+    headerPO.openSideDrawer();
+    sideDrawerPO.expectVisible();
+    sideDrawerPO.clickLink('my-boxes');
+    pageTitlePO.expectText('我的寶箱');
+    myBoxesPO.expectVisible();
+    myBoxesPO.clickItem(boxDefault);
+    pageTitlePO.expectText(`${boxDefault.name}`);
+    treasuresPO.expectVisible();
+    treasuresPO.expectItem(treasure01);
+  });
 
   // it('Navigate to the treasure, check data consistency', () => {});
 });

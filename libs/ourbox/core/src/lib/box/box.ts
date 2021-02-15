@@ -7,6 +7,7 @@ import { Treasure } from '../treasure';
 export class Box {
   static collection = 'boxes';
   static thumbnailSrc = '/assets/images/box/box.png';
+  static icon = 'inventory';
 
   id: string;
   name: string;
@@ -18,6 +19,9 @@ export class Box {
     extend(this, options);
     if (options && Album.isAlbum(options.album)) {
       this.album = new Album().fromJSON(options.album);
+    }
+    if (!this.album) {
+      this.album = new Album(Box.thumbnailSrc);
     }
   }
 

@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { routes } from './route';
 // import { HomeComponent } from './home/home.component';
 // import { BoxCreateComponent } from './box/box-create/box-create.component';
-// import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
+import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
 import { HeaderComponent } from './layout/header/header.component';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -18,7 +18,7 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { BoxFactoryService } from './box/box-factory.service';
 import { noop, pick, values } from 'lodash';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-// import { BoxViewComponent } from './box/box-view/box-view.component';
+import { BoxViewComponent } from './box/box-view/box-view.component';
 // import { ItemWarehouseComponent } from './item/item-warehouse/item-warehouse.component';
 // import { TheThingUiModule } from '@ygg/the-thing/ui';
 // import { ItemComponent } from './item/item/item.component';
@@ -89,8 +89,8 @@ export function initAgents(boxAgent: BoxAgentService) {
   declarations: [
     // MapSearchComponent,
     // BoxCreateComponent,
-    // BoxViewComponent,
-    // MyBoxesComponent,
+    BoxViewComponent,
+    MyBoxesComponent,
     HeaderComponent,
     // HomeComponent,
     // ItemWarehouseComponent,

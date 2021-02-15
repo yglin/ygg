@@ -8,7 +8,7 @@ import {
 import { wrapError } from '@ygg/shared/infra/error';
 import { Album, Location } from '@ygg/shared/omni-types/core';
 import { Authenticator } from '@ygg/shared/user/core';
-import { extend } from 'lodash';
+import { extend, get } from 'lodash';
 import { OurboxHeadQuarter } from '../head-quarter';
 
 export class Treasure {
@@ -56,6 +56,10 @@ export class Treasure {
     return treasure;
   }
 
+  get image(): string {
+    return get(this.album, 'cover.src', '/assets/treasure/treasure.png');
+  }
+
   async inquireData() {
     this.router.navigate(['treasure', 'edit']);
   }
@@ -87,7 +91,7 @@ export class Treasure {
         throw new Error(`抱歉，你不是 ${this.name} 的所有者`);
       }
       await this.dataAccessor.save(Treasure.collection, this.id, this.toJSON());
-      await this.emcee.info(`寶物 ${this.name} 已成功${actionName}`);
+      await this.emcee.info(`成功${actionName}寶物 ${this.name} ！`);
       this.headquarter.emit('treasure.save.post', this);
     } catch (error) {
       const wrpErr = wrapError(error, `儲存寶物失敗，錯誤原因：`);

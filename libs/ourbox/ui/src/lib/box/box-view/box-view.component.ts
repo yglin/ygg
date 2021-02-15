@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ImitationItem, ImitationBox } from '@ygg/ourbox/core';
+// import { ImitationItem, ImitationBox } from '@ygg/ourbox/core';
 import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { NotificationFactoryService } from '@ygg/shared/user/ui';
 import { TheThing, TheThingDisplay } from '@ygg/the-thing/core';
@@ -9,87 +9,63 @@ import { Observable, Subscription, merge } from 'rxjs';
 import { BoxFactoryService } from '../box-factory.service';
 import { tap } from 'rxjs/operators';
 import { User } from '@ygg/shared/user/core';
+import { BoxFinderService } from '../box-finder.service';
+import { Box, Treasure } from '@ygg/ourbox/core';
 
 function forgeItems(): TheThing[] {
   return range(10).map(() => {
-    const item = TheThing.forge();
-    item.link = `items/${item.id}`;
-    return item;
+    const treasure = TheThing.forge();
+    treasure.link = `treasures/${treasure.id}`;
+    return treasure;
   });
 }
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ourbox-box-view',
   templateUrl: './box-view.component.html',
   styleUrls: ['./box-view.component.css']
 })
 export class BoxViewComponent implements OnInit, OnDestroy {
-  box: TheThing;
-  items: TheThing[] = [];
-  itemsInEditing: TheThing[] = [];
-  subscriptions: Subscription[] = [];
-  ImitationBox = ImitationBox;
-  ImitationItem = ImitationItem;
+  box: Box;
+  treasures: Treasure[] = [];
   isBoxEmpty = true;
-  members: User[] = [];
-  theThingDisplay: TheThingDisplay = {
-    showCells: false,
-    showRelations: false
-  };
+  pageIcon = Box.icon;
+  // members: User[] = [];
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
-    private boxFactory: BoxFactoryService,
-    private notificationFactory: NotificationFactoryService,
-    private dialog: YggDialogService
-  ) {
-    this.box = get(this.route.snapshot.data, 'box', null);
-    // console.log(this.box);
-    if (this.box) {
-      const items$: Observable<any> = this.boxFactory
-        .listItemsAvailableInBox$(this.box.id)
-        .pipe(tap(items => (this.items = isEmpty(items) ? [] : items)));
-      const itemsInEditing$: Observable<any> = this.boxFactory
-        .listMyItemsEditingInBox$(this.box.id)
-        .pipe(
-          tap(items => (this.itemsInEditing = isEmpty(items) ? [] : items))
-          // tap(() => console.log(this.itemsInEditing))
-        );
-      const members$: Observable<User[]> = this.boxFactory
-        .listMembers$(this.box.id)
-        .pipe(tap(members => (this.members = members)));
+    private boxFinder: BoxFinderService
+  ) {}
 
-      this.subscriptions.push(
-        merge(items$, itemsInEditing$, members$)
-          .pipe(
-            tap(() => {
-              this.isBoxEmpty =
-                isEmpty(this.items) && isEmpty(this.itemsInEditing);
-            })
-          )
-          .subscribe()
-      );
+  async loadTreasures() {
+    this.treasures = await this.boxFinder.findTreasuresInBox(this.box);
+    // console.dir(this.treasures);
+  }
+
+  ngOnInit(): void {
+    this.box = get(this.route.snapshot.data, 'box', null);
+    // console.dir(this.box);
+    if (!!this.box) {
+      this.loadTreasures();
     }
   }
 
-  ngOnInit(): void {}
-
   ngOnDestroy() {
-    for (const subscription of this.subscriptions) {
-      subscription.unsubscribe();
-    }
+    // for (const subscription of this.subscriptions) {
+    //   subscription.unsubscribe();
+    // }
   }
 
   createItem() {
-    this.boxFactory.createItem(this.box.id, { backUrl: this.router.url });
+    // this.boxFactory.createItem(this.box.id, { backUrl: this.router.url });
   }
 
   async inviteMember() {
-    const emails = await this.notificationFactory.inquireEmails();
-    // console.log(emails);
-    if (!isEmpty(emails)) {
-      this.boxFactory.inviteBoxMembers(this.box, emails);
-    }
+    // const emails = await this.notificationFactory.inquireEmails();
+    // // console.log(emails);
+    // if (!isEmpty(emails)) {
+    //   this.boxFactory.inviteBoxMembers(this.box, emails);
+    // }
   }
 }

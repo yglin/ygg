@@ -2,6 +2,7 @@ import { DataAccessor, Query } from '@ygg/shared/infra/core';
 import { wrapError } from '@ygg/shared/infra/error';
 import { extend } from 'lodash';
 import { Treasure } from '../treasure';
+import { Box } from './box';
 
 export class RelationBoxTreasure {
   static collection = 'boxes-treasures';
@@ -21,6 +22,10 @@ export class RelationBoxTreasure {
 
   static queryBoxesByTreasure(treasure: Treasure): Query[] {
     return [new Query('treasureId', '==', treasure.id)];
+  }
+
+  static queryTreasuresByBox(box: Box): Query[] {
+    return [new Query('boxId', '==', box.id)];
   }
 
   get id() {

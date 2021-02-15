@@ -20,12 +20,12 @@ export abstract class ImageThumbnailListPageObject extends PageObject {
   getSelectorForItem(item?: ImageThumbnailItem): string {
     if (item === undefined) {
       return `${this.getSelector()} .item`;
-    } else if (item.image) {
-      return `${this.getSelector()} .item[item-image="${
-        item.image
-      }"]:contains("${item.name}")`;
     } else {
-      return `${this.getSelector()} .item:contains("${item.name}")`;
+      const selector = `${this.getSelector()} .item:contains("${item.name}")`;
+      // if (!!item.image) {
+      //   selector += ` img[src="${item.image}"]`;
+      // }
+      return selector;
     }
   }
 

@@ -1,38 +1,38 @@
 <div class="box-view" *ngIf="box">
-  <the-thing [id]="box.id" [imitation]="ImitationBox" [display]="theThingDisplay">
-    <div the-thing-projection-middle>
-      <div>
-        <div
-          fxLayout="row wrap"
-          fxLayoutAlign="start end"
-          fxLayoutGap="5px"
-          class="member-list"
-        >
-          <div fxLayoutGap="15px">
-            <mat-icon matTooltip="寶箱成員">people</mat-icon>
-          </div>
-          <div *ngFor="let member of members" [attr.member-id]="member.id">
-            <ygg-user-thumbnail
-              [id]="member.id"
-              [showName]="false"
-            ></ygg-user-thumbnail>
+  <ygg-page-title [icon]="pageIcon">{{ box.name }}</ygg-page-title>
+  <div>
+    <div>
+      <div
+        fxLayout="row wrap"
+        fxLayoutAlign="start end"
+        fxLayoutGap="5px"
+        class="member-list"
+      >
+        <div fxLayoutGap="15px">
+          <mat-icon matTooltip="寶箱成員">people</mat-icon>
+        </div>
+        <div *ngFor="let member of members" [attr.member-id]="member.id">
+          <ygg-user-thumbnail
+            [id]="member.id"
+            [showName]="false"
+          ></ygg-user-thumbnail>
+        </div>
+      </div>
+    </div>
+    <br />
+    <div>
+      <div *ngIf="isBoxEmpty" class="create-treasure-hint">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+          <h2>寶箱中還沒有任何寶物，新增寶物？</h2>
+          <div>
+            <button mat-fab (click)="createItem()" class="create-treasure">
+              <mat-icon>addchart</mat-icon>
+            </button>
           </div>
         </div>
       </div>
-      <br />
-      <div>
-        <div *ngIf="isBoxEmpty" class="create-item-hint">
-          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-            <h2>寶箱中還沒有任何寶物，新增寶物？</h2>
-            <div>
-              <button mat-fab (click)="createItem()" class="create-item">
-                <mat-icon>addchart</mat-icon>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div *ngIf="items?.length > 0">
-          <!-- <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+      <div *ngIf="treasures?.length > 0">
+        <!-- <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
             <div>
               <button mat-fab (click)="inviteMember()" matTooltip="邀請好友">
                 <mat-icon>group_add</mat-icon>
@@ -43,31 +43,19 @@
                 mat-fab
                 (click)="createItem()"
                 matTooltip="新增寶物"
-                class="add-item"
+                class="add-treasure"
               >
                 <mat-icon>add</mat-icon>
               </button>
             </div>
           </div> -->
-          <br />
-          <div
-            fxLayout="row wrap"
-            fxLayoutAlign="space-around start"
-            fxLayoutGap="30px"
-            class="item-available-list"
-          >
-            <div *ngFor="let item of items" class="item-list">
-              <div class="item">
-                <the-thing-thumbnail
-                  [id]="item.id"
-                  [imitation]="ImitationItem"
-                ></the-thing-thumbnail>
-              </div>
-            </div>
-          </div>
-        </div>
         <br />
-        <div *ngIf="itemsInEditing?.length > 0">
+        <ygg-image-thumbnail-list
+          [items]="treasures"
+        ></ygg-image-thumbnail-list>
+      </div>
+      <br />
+      <!-- <div *ngIf="treasuresInEditing?.length > 0">
           <ygg-title-divider [level]="5">
             編輯中的寶物
           </ygg-title-divider>
@@ -77,17 +65,16 @@
             fxLayoutAlign="space-around start"
             fxLayoutGap="30px"
           >
-            <div *ngFor="let item of itemsInEditing" class="item-editing-list">
-              <div class="item">
+            <div *ngFor="let treasure of treasuresInEditing" class="treasure-editing-list">
+              <div class="treasure">
                 <the-thing-thumbnail
-                  [id]="item.id"
+                  [id]="treasure.id"
                   [imitation]="ImitationItem"
                 ></the-thing-thumbnail>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </div> -->
     </div>
-  </the-thing>
+  </div>
 </div>

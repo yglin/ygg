@@ -2,7 +2,7 @@ import { DataAccessor, Query } from '@ygg/shared/infra/core';
 import { wrapError } from '@ygg/shared/infra/error';
 import { User } from '@ygg/shared/user/core';
 import { isArray } from 'lodash';
-import { Treasure } from '../treasure';
+import { Treasure, TreasureFinder } from '../treasure';
 import { Box } from './box';
 import { BoxFactory } from './box-factory';
 import { RelationBoxTreasure } from './box-treasure';
@@ -11,7 +11,8 @@ import { UserBoxRelation } from './user-box';
 export class BoxFinder {
   constructor(
     protected dataAccessor: DataAccessor,
-    protected boxFactory: BoxFactory
+    protected boxFactory: BoxFactory,
+    protected treasureFinder: TreasureFinder
   ) {}
 
   async countUserBoxes(user: User): Promise<number> {
@@ -25,6 +26,20 @@ export class BoxFinder {
         `Failed to count boxes of user ${user.name}`
       );
       return Promise.reject(wrpErr);
+    }
+  }
+
+  async findById(id: string): Promise<Box> {
+    try {
+      const boxData = await this.dataAccessor.load(Box.collection, id);
+      if (!!boxData) {
+        return this.boxFactory.create(boxData);
+      } else {
+        throw new Error(`Load empty data ${boxData}`);
+      }
+    } catch (error) {
+      const wrpErr = wrapError(error, `Failed to load box by id ${id}`);
+      return Promise.reject(error);
     }
   }
 
@@ -54,5 +69,15 @@ export class BoxFinder {
     return this.dataAccessor
       .listByIds(Box.collection, boxIds)
       .then(items => items.map(item => this.boxFactory.create(item)));
+  }
+
+  async findTreasuresInBox(box: Box): Promise<Treasure[]> {
+    const queries: Query[] = RelationBoxTreasure.queryTreasuresByBox(box);
+    const relations: RelationBoxTreasure[] = await this.dataAccessor.find(
+      RelationBoxTreasure.collection,
+      queries
+    );
+    // console.dir(relations);
+    return this.treasureFinder.listByIds(relations.map(r => r.treasureId));
   }
 }

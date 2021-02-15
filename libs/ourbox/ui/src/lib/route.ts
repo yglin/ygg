@@ -1,4 +1,7 @@
 import { Routes } from '@angular/router';
+import { LoggedInGuard } from '@ygg/shared/user/ui';
+import { BoxResolverService } from './box/box-resolver.service';
+import { BoxViewComponent } from './box/box-view/box-view.component';
 // import { HomeComponent } from './pages/home/home.component';
 // import { MapSearchComponent } from './map/map-search/map-search.component';
 // import { BoxCreateComponent } from './pages/box/box-create/box-create.component';
@@ -13,7 +16,7 @@ import { Routes } from '@angular/router';
 //   ImitationBox
 // } from '@ygg/ourbox/core';
 // import { BoxCreateComponent } from './box/box-create/box-create.component';
-// import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
+import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
 // import { HomeComponent } from './home/home.component';
 // import { BoxFactoryService } from './box/box-factory.service';
 // import { BoxViewComponent } from './box/box-view/box-view.component';
@@ -47,6 +50,23 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'my-boxes',
+    component: MyBoxesComponent,
+    canActivate: [LoggedInGuard]
+  },
+  {
+    path: 'box',
+    children: [
+      {
+        path: ':id',
+        component: BoxViewComponent,
+        resolve: {
+          box: BoxResolverService
+        }
+      }
+    ]
+  },
+  {
     path: 'ourbox',
     children: [
       {
@@ -54,7 +74,7 @@ export const routes: Routes = [
         pathMatch: 'full',
         component: TreasureCreateComponent
         // redirectTo: 'map'
-      },
+      }
       // {
       //   path: 'map',
       //   component: MapSearchComponent
@@ -84,7 +104,7 @@ export const routes: Routes = [
       //   component: SiteHowtoComponent
       // }
     ]
-  },
+  }
   // {
   //   path: ImitationBox.routePath,
   //   children: [

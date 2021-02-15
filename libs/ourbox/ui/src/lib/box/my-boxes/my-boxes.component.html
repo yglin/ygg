@@ -1,25 +1,10 @@
 <div class="my-boxes">
+  <ygg-page-title>我的寶箱</ygg-page-title>
   <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
     <div>
       <button mat-fab (click)="createNew()"><mat-icon>add</mat-icon></button>
     </div>
   </div>
   <br />
-  <ng-template #theThingItemTemplate let-theThing="theThing">
-    <!-- <h2>This is {{ theThing.name }}</h2> -->
-    <div class="box">
-      <the-thing-thumbnail
-        [theThing]="theThing"
-        [imiation]="ImitationBox"
-      ></the-thing-thumbnail>
-    </div>
-  </ng-template>
-
-  <the-thing-finder
-    class="box-finder"
-    [theThings$]="boxes$"
-    [imitation]="ImitationBox"
-    [theThingItemTemplate]="theThingItemTemplate"
-  >
-  </the-thing-finder>
+  <ygg-image-thumbnail-list [items]='boxes' (clickItem)='gotoBox($event)'></ygg-image-thumbnail-list>
 </div>

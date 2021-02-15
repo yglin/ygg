@@ -14,6 +14,7 @@ import { ImageThumbnailListPageObject } from './image-thumbnail-list.component.p
 import { ImageThumbnailItemSize } from '../image-thumbnail-item/image-thumbnail.component.po';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ygg-image-thumbnail-list',
   templateUrl: './image-thumbnail-list.component.html',
   styleUrls: ['./image-thumbnail-list.component.css']
@@ -37,8 +38,8 @@ export class ImageThumbnailListComponent
   @Output() selectItem: EventEmitter<ImageThumbnailItem> = new EventEmitter();
   @Output() deselectItem: EventEmitter<ImageThumbnailItem> = new EventEmitter();
   @Input() hideAddButton: boolean;
-  isSelectable: boolean = false;
-  isItemDeletable: boolean = false;
+  isSelectable = false;
+  isItemDeletable = false;
   subscriptions: Subscription[] = [];
 
   dialogData: any;

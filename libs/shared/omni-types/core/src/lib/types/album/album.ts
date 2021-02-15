@@ -11,7 +11,11 @@ export class Album implements SerializableJSON {
   constructor(options: any = {}) {
     // this.cover = new Image();
     this.photos = [];
-    extend(this, options);
+    if (typeof options === 'string') {
+      const image = new Image(options);
+      this.cover = image;
+      this.photos = [image];
+    }
     if (options.cover) {
       this.cover = new Image(options.cover);
     }
