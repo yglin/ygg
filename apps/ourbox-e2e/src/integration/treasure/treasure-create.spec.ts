@@ -102,5 +102,6 @@ describe('Create a treasure and put it into my default box', () => {
     treasuresPO.expectItem(treasure01);
   });
 
-  // it('Navigate to the treasure, check data consistency', () => {});
+  // it('Navigate to the treasure, check data consistency', () => {
+  // });
 });

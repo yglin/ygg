@@ -27,7 +27,7 @@ export class Box {
 
   static forge(): Box {
     const forged = new Box(null, null);
-    forged.name = `Fake Box ${Date.now()}`;
+    forged.name = `Troll Box ${Date.now()}`;
     forged.album = Album.forge();
     return forged;
   }

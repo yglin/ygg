@@ -51,7 +51,7 @@ export class Treasure {
   static forge(): Treasure {
     const treasure = new Treasure(null, null, null, null, null);
     treasure.album = Album.forge();
-    treasure.name = `我的有點害羞的寶物`;
+    treasure.name = `MyPrecious_${Date.now()}`;
     treasure.location = Location.forge();
     return treasure;
   }
