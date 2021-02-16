@@ -21,7 +21,7 @@
     </div>
     <br />
     <div>
-      <div *ngIf="isBoxEmpty" class="create-treasure-hint">
+      <div *ngIf="treasures?.length <= 0" class="create-treasure-hint">
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
           <h2>寶箱中還沒有任何寶物，新增寶物？</h2>
           <div>
