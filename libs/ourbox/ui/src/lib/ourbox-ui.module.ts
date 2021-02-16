@@ -44,6 +44,7 @@ import { SharedCustomPageUiModule } from '@ygg/shared/custom-page/ui';
 import { TreasureEditComponent } from './treasure/treasure-edit/treasure-edit.component';
 import { TreasureCreateComponent } from './treasure/treasure-create/treasure-create.component';
 import { BoxAgentService } from './box/box-agent.service';
+import { TreasureViewComponent } from './treasure/treasure-view/treasure-view.component';
 
 export function initSideMenu(sideDrawer: SideDrawerService) {
   return async (): Promise<any> => {
@@ -101,7 +102,8 @@ export function initAgents(boxAgent: BoxAgentService) {
     // MyItemTransfersComponent,
     // SiteHowtoComponent,
     TreasureEditComponent,
-    TreasureCreateComponent
+    TreasureCreateComponent,
+    TreasureViewComponent
   ],
   imports: [
     CommonModule,

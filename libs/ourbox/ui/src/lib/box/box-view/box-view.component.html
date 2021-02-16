@@ -52,6 +52,7 @@
         <br />
         <ygg-image-thumbnail-list
           [items]="treasures"
+          (clickItem)="gotoTreasure($event)"
         ></ygg-image-thumbnail-list>
       </div>
       <br />

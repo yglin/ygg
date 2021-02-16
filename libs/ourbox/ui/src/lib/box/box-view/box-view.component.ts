@@ -35,6 +35,7 @@ export class BoxViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private boxFinder: BoxFinderService
   ) {}
 
@@ -67,5 +68,9 @@ export class BoxViewComponent implements OnInit, OnDestroy {
     // if (!isEmpty(emails)) {
     //   this.boxFactory.inviteBoxMembers(this.box, emails);
     // }
+  }
+
+  gotoTreasure(treasure: Treasure) {
+    this.router.navigate(['/', 'treasure', treasure.id]);
   }
 }

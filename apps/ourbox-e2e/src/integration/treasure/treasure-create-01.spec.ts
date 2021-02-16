@@ -1,8 +1,8 @@
 import { Box, Treasure } from '@ygg/ourbox/core';
 import {
   HeaderPageObjectCypress,
-  MyBoxesPageObjectCypress,
-  TreasureEditPageObjectCypress
+  TreasureEditPageObjectCypress,
+  TreasureViewPageObjectCypress
 } from '@ygg/ourbox/test';
 import { Album } from '@ygg/shared/omni-types/core';
 import { logout, theMockDatabase } from '@ygg/shared/test/cypress';
@@ -31,6 +31,7 @@ describe('Create a treasure and put it into my default box', () => {
   const myBoxesPO = new ImageThumbnailListPageObjectCypress();
   const treasuresPO = new ImageThumbnailListPageObjectCypress();
   const pageTitlePO = new PageTitlePageObjectCypress();
+  const treasureViewPO = new TreasureViewPageObjectCypress();
   // const boxEditPO = new BoxEditPageObjectCypress();
 
   const emceePO = new EmceePageObjectCypress();
@@ -57,7 +58,9 @@ describe('Create a treasure and put it into my default box', () => {
 
   it('Fill required data', () => {
     treasureEditPO.expectHint('album', '請至少新增一張寶物的照片');
+    // console.dir(treasure01.album);
     treasureEditPO.setValue('album', treasure01.album);
+    // cy.pause();
     treasureEditPO.nextStep();
     treasureEditPO.setValue('name', treasure01.name);
     treasureEditPO.nextStep();
@@ -102,6 +105,10 @@ describe('Create a treasure and put it into my default box', () => {
     treasuresPO.expectItem(treasure01);
   });
 
-  // it('Navigate to the treasure, check data consistency', () => {
-  // });
+  it('Navigate to the treasure, check data consistency', () => {
+    treasuresPO.clickItem(treasure01);
+    treasureViewPO.expectVisible();
+    // console.dir(treasure01.album);
+    treasureViewPO.expectValue(treasure01);
+  });
 });

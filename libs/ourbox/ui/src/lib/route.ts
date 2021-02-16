@@ -31,6 +31,8 @@ import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
 // import { TreasureEditComponent } from './treasure/treasure-edit/treasure-edit.component';
 import { TreasureCreateComponent } from './treasure/treasure-create/treasure-create.component';
 import { TreasureCreateResolver } from './treasure/treasure-create/treasure-create.resolver';
+import { TreasureResolverService } from './treasure/treasure-resolver.service';
+import { TreasureViewComponent } from './treasure/treasure-view/treasure-view.component';
 // import { ItemFactoryService } from './item-factory.service';
 // import { MyBoxesComponent } from './pages/box/my-boxes/my-boxes.component';
 // import { ItemTransferComponent } from './pages/item/item-transfer/item-transfer.component';
@@ -45,6 +47,13 @@ export const routes: Routes = [
         component: TreasureCreateComponent,
         resolve: {
           treasure: TreasureCreateResolver
+        }
+      },
+      {
+        path: ':id',
+        component: TreasureViewComponent,
+        resolve: {
+          treasure: TreasureResolverService
         }
       }
     ]

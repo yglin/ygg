@@ -1,0 +1,12 @@
+<div class="ourbox-treasure-view" *ngIf="treasure">
+  <ygg-page-title [icon]="treasure.icon">{{ treasure.name }}</ygg-page-title>
+  <br />
+  <br />
+  <div class="album">
+    <ygg-album-view [value]="treasure.album"></ygg-album-view>
+  </div>
+  <br />
+  <div class="location">
+    <ygg-location-view [value]="treasure.location"></ygg-location-view>
+  </div>
+</div>

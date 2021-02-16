@@ -13,8 +13,10 @@ import { OurboxHeadQuarter } from '../head-quarter';
 
 export class Treasure {
   static collection = 'treasures';
+  static icon = 'category';
 
   id: string;
+  icon: string;
   name: string;
   description: string;
   album: Album;
@@ -33,6 +35,7 @@ export class Treasure {
     options: any = {}
   ) {
     this.id = generateID();
+    this.icon = Treasure.icon;
     extend(this, options);
     if (options.location) {
       this.location = new Location().fromJSON(options.location);

@@ -6,9 +6,9 @@ export class AlbumControlPageObjectCypress extends AlbumControlPageObject {
   selector: string;
 
   expectValue(album: Album) {
-    cy.get(this.getSelectorForCover(album.cover.src)).should('exist');
+    cy.get(this.getSelectorForCover(album.cover.src)).should('be.visible');
     cy.wrap(album.photos).each((photo: any) => {
-      cy.get(this.getSelectorForPhoto(photo.src)).should('exist');
+      cy.get(this.getSelectorForPhoto(photo.src)).should('be.visible');
     });
   }
 
@@ -23,7 +23,9 @@ export class AlbumControlPageObjectCypress extends AlbumControlPageObject {
     // Click to set cover photo
     cy.get(this.getSelectorForPhoto(album.cover.src))
       .first()
-      .click();
+      .scrollIntoView()
+      .click({ force: true });
+    this.expectValue(album);
   }
 
   expectHint(hintMessage: string) {

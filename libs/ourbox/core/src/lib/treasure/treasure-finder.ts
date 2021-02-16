@@ -16,4 +16,9 @@ export class TreasureFinder {
     // console.dir(treasureDatas);
     return treasureDatas.map(data => this.treasureFactory.create(data));
   }
+
+  async findById(id: string): Promise<Treasure> {
+    const treasureData = await this.dataAccessor.load(Treasure.collection, id);
+    return this.treasureFactory.create(treasureData);
+  }
 }
