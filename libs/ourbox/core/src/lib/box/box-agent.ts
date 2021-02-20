@@ -41,11 +41,11 @@ export class BoxAgent {
             selectedBox = null;
           }
         }
-        if (!selectedBox) {
-          await this.emcee.info(
-            `寶物 ${treasure.name} 將會公開，之後若要將寶物移至寶箱中，可至寶物頁面中操作`
-          );
-        } else {
+        if (selectedBox) {
+        //   await this.emcee.info(
+        //     `寶物 ${treasure.name} 將會公開，之後若要將寶物移至寶箱中，可至寶物頁面中操作`
+        //   );
+        // } else {
           await this.addTreasureToBox(treasure, selectedBox);
         }
       }

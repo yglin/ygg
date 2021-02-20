@@ -1,0 +1,7 @@
+<div class="ourbox-my-treasures">
+  <ygg-page-title [icon]="treasureIcon">我的寶物</ygg-page-title>
+  <ygg-image-thumbnail-list
+    [items]="treasures"
+    (clickItem)="gotoTreasure($event)"
+  ></ygg-image-thumbnail-list>
+</div>

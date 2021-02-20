@@ -1,12 +1,13 @@
 import { Page } from '@ygg/shared/ui/core';
 import { Box } from '../box';
+import { Treasure } from '../treasure';
 // import { ImitationItem, ImitationBox, ImitationItemTransfer } from '../models';
 
 export const pages: { [id: string]: Page } = {
   'create-treasure': {
     id: 'create-treasure',
     icon: 'local_pizza',
-    label: '分享我的寶物',
+    label: '分享寶物',
     path: ['/', 'treasure', 'create']
   },
   'my-boxes': {
@@ -14,7 +15,13 @@ export const pages: { [id: string]: Page } = {
     icon: Box.icon,
     label: '我的寶箱',
     image: '/assets/images/box/box.png',
-    path: ['/', 'my-boxes']
+    path: ['/', 'my', 'boxes']
+  },
+  'my-treasures': {
+    id: 'my-treasures',
+    icon: Treasure.icon,
+    label: '我的寶物',
+    path: ['/', 'my', 'treasures']
   }
   // mapSearch: {
   //   id: 'mapSearch',
@@ -60,6 +67,7 @@ export const pages: { [id: string]: Page } = {
 
 export const pagesInSideDrawer = [
   'create-treasure',
+  'my-treasures',
   'my-boxes'
   // 'mapSearch',
   // 'boxCreate',

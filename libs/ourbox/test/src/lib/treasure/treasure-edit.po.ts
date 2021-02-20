@@ -63,12 +63,14 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
   }
 
   nextStep() {
-    cy.get('.next-step:visible')
+    cy.get(`${this.getSelector()} .next-step:visible`)
       .scrollIntoView()
       .click();
   }
 
   submit() {
-    cy.get('button.submit').scrollIntoView().click();
+    cy.get(`${this.getSelector()} button.submit`)
+      .scrollIntoView()
+      .click();
   }
 }

@@ -17,6 +17,7 @@ import { BoxViewComponent } from './box/box-view/box-view.component';
 // } from '@ygg/ourbox/core';
 // import { BoxCreateComponent } from './box/box-create/box-create.component';
 import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
+import { MyTreasuresComponent } from './treasure/my-treasures/my-treasures.component';
 // import { HomeComponent } from './home/home.component';
 // import { BoxFactoryService } from './box/box-factory.service';
 // import { BoxViewComponent } from './box/box-view/box-view.component';
@@ -59,9 +60,18 @@ export const routes: Routes = [
     ]
   },
   {
-    path: 'my-boxes',
-    component: MyBoxesComponent,
-    canActivate: [LoggedInGuard]
+    path: 'my',
+    canActivateChild: [LoggedInGuard],
+    children: [
+      {
+        path: 'boxes',
+        component: MyBoxesComponent
+      },
+      {
+        path: 'treasures',
+        component: MyTreasuresComponent
+      }
+    ]
   },
   {
     path: 'box',

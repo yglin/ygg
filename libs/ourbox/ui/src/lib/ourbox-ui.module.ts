@@ -45,6 +45,7 @@ import { TreasureEditComponent } from './treasure/treasure-edit/treasure-edit.co
 import { TreasureCreateComponent } from './treasure/treasure-create/treasure-create.component';
 import { BoxAgentService } from './box/box-agent.service';
 import { TreasureViewComponent } from './treasure/treasure-view/treasure-view.component';
+import { MyTreasuresComponent } from './treasure/my-treasures/my-treasures.component';
 
 export function initSideMenu(sideDrawer: SideDrawerService) {
   return async (): Promise<any> => {
@@ -103,7 +104,8 @@ export function initAgents(boxAgent: BoxAgentService) {
     // SiteHowtoComponent,
     TreasureEditComponent,
     TreasureCreateComponent,
-    TreasureViewComponent
+    TreasureViewComponent,
+    MyTreasuresComponent
   ],
   imports: [
     CommonModule,

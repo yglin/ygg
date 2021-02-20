@@ -6,12 +6,12 @@ export class SideDrawerPageObjectCypress extends PageObjectCypress {
     main: '.side-drawer'
   };
 
-  getSelectorForLink(linkId: string): string {
-    return `${this.getSelector()} [link-id="${linkId}"]`;
+  getSelectorForLink(linkName: string): string {
+    return `${this.getSelector()} a:contains("${linkName}")`;
   }
 
-  clickLink(linkId: string) {
-    cy.get(`${this.getSelectorForLink(linkId)} a`).click();
+  clickLink(linkName: string) {
+    cy.get(this.getSelectorForLink(linkName)).click();
   }
 
   clickAction(actionId: string) {

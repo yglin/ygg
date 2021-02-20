@@ -9,544 +9,274 @@
   },
   "projects": {
     "payment": {
-      "tags": [
-        "scope:shopping",
-        "type:feature",
-        "platform:desktop"
-      ]
+      "tags": ["scope:shopping", "type:feature", "platform:desktop"]
     },
     "order": {
-      "tags": [
-        "scope:shopping",
-        "type:feature",
-        "platform:desktop"
-      ]
+      "tags": ["scope:shopping", "type:feature", "platform:desktop"]
     },
     "shopping-cart": {
-      "tags": [
-        "scope:shopping",
-        "type:feature",
-        "platform:desktop"
-      ]
+      "tags": ["scope:shopping", "type:feature", "platform:desktop"]
     },
     "shared-infra-error": {
-      "tags": [
-        "scope:shared",
-        "type:infrastructure"
-      ]
+      "tags": ["scope:shared", "type:infrastructure"]
     },
     "shared-ui-widgets": {
-      "tags": [
-        "scope:shared",
-        "type:ui",
-        "platform:desktop"
-      ]
+      "tags": ["scope:shared", "type:ui", "platform:desktop"]
     },
     "shared-ui-themes": {
-      "tags": [
-        "scope:shared",
-        "type:ui"
-      ]
+      "tags": ["scope:shared", "type:ui"]
     },
     "sandbox": {
       "tags": []
     },
     "sandbox-e2e": {
       "tags": [],
-      "implicitDependencies": [
-        "sandbox"
-      ]
+      "implicitDependencies": ["sandbox"]
     },
     "playwhat": {
-      "tags": [
-        "scope:playwhat",
-        "type:app"
-      ]
+      "tags": ["scope:playwhat", "type:app"]
     },
     "playwhat-e2e": {
-      "tags": [
-        "scope:playwhat",
-        "type:e2e",
-        "platform:mobile"
-      ],
-      "implicitDependencies": [
-        "playwhat"
-      ]
+      "tags": ["scope:playwhat", "type:e2e", "platform:mobile"],
+      "implicitDependencies": ["playwhat"]
     },
     "playwhat-scheduler": {
-      "tags": [
-        "scope:playwhat",
-        "type:feature",
-        "platform:mobile"
-      ]
+      "tags": ["scope:playwhat", "type:feature", "platform:mobile"]
     },
     "playwhat-resource": {
-      "tags": [
-        "scope:playwhat",
-        "type:feature",
-        "platform:mobile"
-      ]
+      "tags": ["scope:playwhat", "type:feature", "platform:mobile"]
     },
     "shared-infra-data-access": {
-      "tags": [
-        "scope:shared",
-        "type:data-access"
-      ]
+      "tags": ["scope:shared", "type:data-access"]
     },
     "shared-types": {
-      "tags": [
-        "scope:shared",
-        "type:utils"
-      ]
+      "tags": ["scope:shared", "type:utils"]
     },
     "playwhat-admin": {
-      "tags": [
-        "scope:playwhat",
-        "type:feature",
-        "platform:mobile"
-      ]
+      "tags": ["scope:playwhat", "type:feature", "platform:mobile"]
     },
     "shared-ui-navigation": {
-      "tags": [
-        "scope:shared",
-        "type:ui",
-        "platform:mobile"
-      ]
+      "tags": ["scope:shared", "type:ui", "platform:mobile"]
     },
     "playwhat-play": {
-      "tags": [
-        "scope:playwhat",
-        "type:feature",
-        "platform:mobile"
-      ]
+      "tags": ["scope:playwhat", "type:feature", "platform:mobile"]
     },
     "shared-infra-device-adapter": {
-      "tags": [
-        "scope:shared",
-        "type:utils"
-      ]
+      "tags": ["scope:shared", "type:utils"]
     },
     "shared-types-demo-e2e": {
       "tags": [],
-      "implicitDependencies": [
-        "shared-types-demo"
-      ]
+      "implicitDependencies": ["shared-types-demo"]
     },
     "shared-types-demo": {
-      "tags": [
-        "scope:demo",
-        "type:app"
-      ]
+      "tags": ["scope:demo", "type:app"]
     },
     "shared-infra-log": {
-      "tags": [
-        "scope:shared",
-        "type:util"
-      ]
+      "tags": ["scope:shared", "type:util"]
     },
     "shared-ui-ng-material": {
-      "tags": [
-        "scope:shared",
-        "type:ui"
-      ]
+      "tags": ["scope:shared", "type:ui"]
     },
     "tags-core": {
-      "tags": [
-        "scope:tags",
-        "type:feature"
-      ]
+      "tags": ["scope:tags", "type:feature"]
     },
     "tags-ui": {
-      "tags": [
-        "scope:tags",
-        "type:ui"
-      ]
+      "tags": ["scope:tags", "type:ui"]
     },
     "tags-admin": {
-      "tags": [
-        "scope:tags",
-        "type:ui"
-      ]
+      "tags": ["scope:tags", "type:ui"]
     },
     "tags-firebase-functions": {
-      "tags": [
-        "scope:tags",
-        "type:backend"
-      ]
+      "tags": ["scope:tags", "type:backend"]
     },
     "tags-data-access": {
-      "tags": [
-        "scope:tags",
-        "type:data-access"
-      ]
+      "tags": ["scope:tags", "type:data-access"]
     },
     "shared-test-page-object": {
-      "tags": [
-        "scope:shared",
-        "type:test"
-      ]
+      "tags": ["scope:shared", "type:test"]
     },
     "shared-test-angular-jest": {
-      "tags": [
-        "scope:shared",
-        "type:test"
-      ]
+      "tags": ["scope:shared", "type:test"]
     },
     "schedule-core": {
-      "tags": [
-        "scope:schedule",
-        "type:feature"
-      ]
+      "tags": ["scope:schedule", "type:feature"]
     },
     "schedule-data-access": {
-      "tags": [
-        "scope:schedule",
-        "type:data-access"
-      ]
+      "tags": ["scope:schedule", "type:data-access"]
     },
     "schedule-ui": {
-      "tags": [
-        "scope:schedule",
-        "type:ui"
-      ]
+      "tags": ["scope:schedule", "type:ui"]
     },
     "schedule-admin": {
-      "tags": [
-        "scope:schedule",
-        "type:admin"
-      ]
+      "tags": ["scope:schedule", "type:admin"]
     },
     "schedule-frontend": {
-      "tags": [
-        "scope:schedule",
-        "type:ui"
-      ]
+      "tags": ["scope:schedule", "type:ui"]
     },
     "schedule-factory": {
-      "tags": [
-        "scope:schedule",
-        "type:factory"
-      ]
+      "tags": ["scope:schedule", "type:factory"]
     },
     "shopping-core": {
-      "tags": [
-        "scope:shopping",
-        "type:feature"
-      ]
+      "tags": ["scope:shopping", "type:feature"]
     },
     "shopping-ui": {
-      "tags": [
-        "scope:shopping",
-        "type:ui"
-      ]
+      "tags": ["scope:shopping", "type:ui"]
     },
     "shopping-data-access": {
-      "tags": [
-        "scope:shopping",
-        "type:data-access"
-      ]
+      "tags": ["scope:shopping", "type:data-access"]
     },
     "shopping-factory": {
-      "tags": [
-        "scope:shopping",
-        "type:feature"
-      ]
+      "tags": ["scope:shopping", "type:feature"]
     },
     "resource-core": {
-      "tags": [
-        "scope:resource",
-        "type:core"
-      ]
+      "tags": ["scope:resource", "type:core"]
     },
     "resource-data-access": {
-      "tags": [
-        "scope:resource",
-        "type:data-access"
-      ]
+      "tags": ["scope:resource", "type:data-access"]
     },
     "resource-ui": {
-      "tags": [
-        "scope:resource",
-        "type:ui"
-      ]
+      "tags": ["scope:resource", "type:ui"]
     },
     "shared-ui-dynamic-form": {
-      "tags": [
-        "scope:shared",
-        "type:ui"
-      ]
+      "tags": ["scope:shared", "type:ui"]
     },
     "resource-factory": {
-      "tags": [
-        "scope:resource",
-        "type:factory"
-      ]
+      "tags": ["scope:resource", "type:factory"]
     },
     "the-thing-e2e": {
-      "tags": [
-        "scope:the-thing",
-        "type:test"
-      ],
-      "implicitDependencies": [
-        "the-thing"
-      ]
+      "tags": ["scope:the-thing", "type:test"],
+      "implicitDependencies": ["the-thing"]
     },
     "the-thing": {
-      "tags": [
-        "scope:the-thing",
-        "type:app"
-      ]
+      "tags": ["scope:the-thing", "type:app"]
     },
     "shared-test-cypress": {
-      "tags": [
-        "scope:shared",
-        "type:test"
-      ]
+      "tags": ["scope:shared", "type:test"]
     },
     "the-thing-core": {
-      "tags": [
-        "scope:the-thing",
-        "type:core"
-      ]
+      "tags": ["scope:the-thing", "type:core"]
     },
     "the-thing-admin": {
-      "tags": [
-        "scope:the-thing",
-        "type:frontend"
-      ]
+      "tags": ["scope:the-thing", "type:frontend"]
     },
     "the-thing-data-access": {
-      "tags": [
-        "scope:the-thing",
-        "type:data-access"
-      ]
+      "tags": ["scope:the-thing", "type:data-access"]
     },
     "the-thing-ui": {
-      "tags": [
-        "scope:the-thing",
-        "type:ui"
-      ]
+      "tags": ["scope:the-thing", "type:ui"]
     },
     "the-thing-test": {
-      "tags": [
-        "scope:the-thing",
-        "type:test"
-      ]
+      "tags": ["scope:the-thing", "type:test"]
     },
     "shared-omni-types-ui": {
-      "tags": [
-        "scope:shared",
-        "type:ui"
-      ]
+      "tags": ["scope:shared", "type:ui"]
     },
     "shared-omni-types-core": {
-      "tags": [
-        "scope:shared",
-        "type:core",
-        "package:omni-types"
-      ]
+      "tags": ["scope:shared", "type:core", "package:omni-types"]
     },
     "shared-omni-types-test": {
-      "tags": [
-        "scope:shared",
-        "type:test",
-        "package:omni-types"
-      ]
+      "tags": ["scope:shared", "type:test", "package:omni-types"]
     },
     "playwhat-ui": {
-      "tags": [
-        "scope:playwhat",
-        "type:feature"
-      ]
+      "tags": ["scope:playwhat", "type:feature"]
     },
     "shared-ui-test": {
-      "tags": [
-        "scope:shared",
-        "type:test",
-        "type:ui"
-      ]
+      "tags": ["scope:shared", "type:test", "type:ui"]
     },
     "playwhat-core": {
-      "tags": [
-        "scope:playwhat",
-        "type:core"
-      ]
+      "tags": ["scope:playwhat", "type:core"]
     },
     "shopping-test": {
-      "tags": [
-        "scope:shopping"
-      ]
+      "tags": ["scope:shopping"]
     },
     "playwhat-test": {
-      "tags": [
-        "scope:playwhat",
-        "type:test"
-      ]
+      "tags": ["scope:playwhat", "type:test"]
     },
     "shared-user-ui": {
-      "tags": [
-        "scope:shared",
-        "type:ui"
-      ]
+      "tags": ["scope:shared", "type:ui"]
     },
     "shared-user-core": {
-      "tags": [
-        "scope:shared",
-        "type:core"
-      ]
+      "tags": ["scope:shared", "type:core"]
     },
     "shared-user-test": {
-      "tags": [
-        "scope:shared",
-        "type:test"
-      ]
+      "tags": ["scope:shared", "type:test"]
     },
     "shared-infra-core": {
-      "tags": [
-        "scope:shared",
-        "type:core"
-      ]
+      "tags": ["scope:shared", "type:core"]
     },
     "ourbox": {
-      "tags": [
-        "scope:ourbox",
-        "type:app"
-      ]
+      "tags": ["scope:ourbox", "type:app"]
     },
     "ourbox-e2e": {
-      "tags": [
-        "scope:ourbox",
-        "type:e2e"
-      ],
-      "implicitDependencies": [
-        "ourbox"
-      ]
+      "tags": ["scope:ourbox", "type:e2e"],
+      "implicitDependencies": ["ourbox"]
     },
     "ourbox-core": {
-      "tags": [
-        "scope:ourbox",
-        "type:core"
-      ]
+      "tags": ["scope:ourbox", "type:core"]
     },
     "shared-user-functions": {
-      "tags": [
-        "scope:shared",
-        "type:functions"
-      ]
+      "tags": ["scope:shared", "type:functions"]
     },
     "functions": {
-      "tags": [
-        "scope:firebase",
-        "type:functions"
-      ]
+      "tags": ["scope:firebase", "type:functions"]
     },
     "schedule-test": {
-      "tags": [
-        "scope:schedule",
-        "type:test"
-      ]
+      "tags": ["scope:schedule", "type:test"]
     },
     "playwhat-functions": {
-      "tags": [
-        "scope:playwhat",
-        "type:functions"
-      ]
+      "tags": ["scope:playwhat", "type:functions"]
     },
     "the-thing-functions": {
-      "tags": [
-        "scope:the-thing",
-        "type:functions"
-      ]
+      "tags": ["scope:the-thing", "type:functions"]
     },
     "shared-functions": {
-      "tags": [
-        "scope:shared",
-        "type:functions"
-      ]
+      "tags": ["scope:shared", "type:functions"]
     },
     "shared-thread-core": {
-      "tags": [
-        "scope:shared",
-        "type:core"
-      ]
+      "tags": ["scope:shared", "type:core"]
     },
     "shared-thread-ui": {
-      "tags": [
-        "scope:shared",
-        "type:ui"
-      ]
+      "tags": ["scope:shared", "type:ui"]
     },
     "shared-google-apis": {
-      "tags": [
-        "scope:shared",
-        "type:ext-api"
-      ]
+      "tags": ["scope:shared", "type:ext-api"]
     },
     "shared-thread-test": {
-      "tags": [
-        "scope:shared",
-        "type:test"
-      ]
+      "tags": ["scope:shared", "type:test"]
     },
     "ourbox-ui": {
-      "tags": [
-        "scope:ourbox",
-        "type:ui"
-      ]
+      "tags": ["scope:ourbox", "type:ui"]
     },
     "ourbox-test": {
-      "tags": [
-        "scope:ourbox",
-        "type:test"
-      ]
+      "tags": ["scope:ourbox", "type:test"]
     },
     "shared-ui-core": {
-      "tags": [
-        "scope:shared",
-        "type:core"
-      ]
+      "tags": ["scope:shared", "type:core"]
     },
     "ourbox-functions": {
-      "tags": [
-        "scope:ourbox",
-        "type:functions"
-      ]
+      "tags": ["scope:ourbox", "type:functions"]
     },
     "shared-geography-core": {
-      "tags": [
-        "scope:shared",
-        "type:core"
-      ]
+      "tags": ["scope:shared", "type:core"]
     },
     "shared-custom-page-core": {
-      "tags": [
-        "scope:shared",
-        "type:core"
-      ]
+      "tags": ["scope:shared", "type:core"]
     },
     "shared-custom-page-test": {
-      "tags": [
-        "scope:shared",
-        "type:test"
-      ]
+      "tags": ["scope:shared", "type:test"]
     },
     "shared-custom-page-ui": {
-      "tags": [
-        "scope:shared",
-        "type:ui"
-      ]
+      "tags": ["scope:shared", "type:ui"]
+    },
+    "shared-geography-test": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ]
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
       }
     }
   }

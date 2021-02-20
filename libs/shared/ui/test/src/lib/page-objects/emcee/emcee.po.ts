@@ -9,6 +9,7 @@ export class EmceePageObjectCypress extends PageObject {
   selectors = {
     main: ''
   };
+  dialogPO = new YggDialogPageObjectCypress();
 
   confirm(
     message: string,
@@ -17,16 +18,15 @@ export class EmceePageObjectCypress extends PageObject {
       // hasFollowedDialog?: boolean;
     } = { doConfirm: true }
   ) {
-    const dialogPO = new YggDialogPageObjectCypress();
     const confirmDialogPO = new ConfirmDialogPageObjectCypress(
-      dialogPO.getSelector()
+      this.dialogPO.getSelector()
     );
     confirmDialogPO.expectMessage(message);
     // cy.pause();
     if (options.doConfirm) {
-      dialogPO.confirm();
+      this.dialogPO.confirm();
     } else {
-      dialogPO.cancel();
+      this.dialogPO.cancel();
     }
     // // console.log(options);
     // if (!options.hasFollowedDialog) {
@@ -35,28 +35,29 @@ export class EmceePageObjectCypress extends PageObject {
   }
 
   alert(message: string, options?: any) {
-    const dialogPO = new YggDialogPageObjectCypress();
     const alertDialogPO = new AlertDialogPageObjectCypress(
-      dialogPO.getSelector()
+      this.dialogPO.getSelector()
     );
     alertDialogPO.expectMessage(message, options);
     // cy.pause();
-    dialogPO.confirm();
+    this.dialogPO.confirm();
     // alertDialogPO.expectClosed();
   }
 
-  info(message: string, options?: any) 
-  {    
-    const dialogPO = new YggDialogPageObjectCypress();
+  info(message: string, options?: any) {
     const alertDialogPO = new AlertDialogPageObjectCypress(
-      dialogPO.getSelector()
+      this.dialogPO.getSelector()
     );
     alertDialogPO.exepctIcon('info');
     alertDialogPO.expectMessage(message, options);
-    dialogPO.confirm();
+    this.dialogPO.confirm();
   }
 
-  cancel(message: string) {
-    this.confirm(message, { doConfirm: false });
+  cancel(message?: string) {
+    if (message) {
+      this.confirm(message, { doConfirm: false });
+    } else {
+      this.dialogPO.cancel();
+    }
   }
 }

@@ -2,12 +2,14 @@ import {
   DataAccessor,
   Emcee,
   generateID,
+  Query,
   Router,
   toJSONDeep
 } from '@ygg/shared/infra/core';
 import { wrapError } from '@ygg/shared/infra/error';
-import { Album, Location } from '@ygg/shared/omni-types/core';
-import { Authenticator } from '@ygg/shared/user/core';
+import { Album } from '@ygg/shared/omni-types/core';
+import { Location } from "@ygg/shared/geography/core";
+import { Authenticator, User } from '@ygg/shared/user/core';
 import { extend, get } from 'lodash';
 import { OurboxHeadQuarter } from '../head-quarter';
 
@@ -49,6 +51,10 @@ export class Treasure {
     if (options.modifyAt) {
       this.modifyAt = new Date(options.modifyAt);
     }
+  }
+
+  static queryOwner(owner: User): Query {
+    return new Query('ownerId', '==', owner.id);
   }
 
   static forge(): Treasure {

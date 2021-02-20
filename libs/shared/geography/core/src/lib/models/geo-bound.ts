@@ -16,6 +16,15 @@ export class GeoBound {
     extend(this, options);
   }
 
+  static fromGeoPoint(gp: GeoPoint, offsets: number[]) {
+    return new GeoBound({
+      east: gp.longitude + offsets[1],
+      west: gp.longitude - offsets[1],
+      north: gp.latitude + offsets[0],
+      south: gp.latitude - offsets[0]
+    });
+  }
+
   contains(geoPoint: GeoPoint): boolean {
     return (
       geoPoint.latitude < this.north &&

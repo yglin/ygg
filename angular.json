@@ -2709,6 +2709,32 @@
         }
       },
       "schematics": {}
+    },
+    "shared-geography-test": {
+      "root": "libs/shared/geography/test",
+      "sourceRoot": "libs/shared/geography/test/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/geography/test/tsconfig.lib.json",
+              "libs/shared/geography/test/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/geography/test/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/geography/test/jest.config.js",
+            "tsConfig": "libs/shared/geography/test/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {
