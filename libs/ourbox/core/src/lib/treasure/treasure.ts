@@ -22,7 +22,7 @@ export class Treasure {
   name: string;
   description: string;
   album: Album;
-  location: Location;
+  // location: Location;
   ownerId: string;
   createAt: Date;
   modifyAt: Date;
@@ -39,9 +39,9 @@ export class Treasure {
     this.id = generateID();
     this.icon = Treasure.icon;
     extend(this, options);
-    if (options.location) {
-      this.location = new Location().fromJSON(options.location);
-    }
+    // if (options.location) {
+    //   this.location = new Location().fromJSON(options.location);
+    // }
     if (options.album) {
       this.album = new Album().fromJSON(options.album);
     }
@@ -61,7 +61,7 @@ export class Treasure {
     const treasure = new Treasure(null, null, null, null, null);
     treasure.album = Album.forge();
     treasure.name = `MyPrecious_${Date.now()}`;
-    treasure.location = Location.forge();
+    // treasure.location = Location.forge();
     return treasure;
   }
 

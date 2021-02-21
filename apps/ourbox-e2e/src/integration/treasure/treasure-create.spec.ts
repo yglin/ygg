@@ -17,7 +17,14 @@ import {
 import { User } from '@ygg/shared/user/core';
 import { loginTestUser, testUsers } from '@ygg/shared/user/test';
 import { range } from 'lodash';
-import { expectMyTreasure, expectTreasureInBox, expectTreasureOnMap, gotoCreatePage, setTreasureData } from './treasure-create';
+import {
+  createTreasure,
+  expectMyTreasure,
+  expectTreasureInBox,
+  gotoCreatePage,
+  message,
+  setTreasureData
+} from './treasure-create';
 
 describe('Create a treasure', () => {
   const me = testUsers[0];
@@ -51,8 +58,8 @@ describe('Create a treasure', () => {
   });
 
   beforeEach(() => {
-    gotoCreatePage();    
-  })
+    gotoCreatePage();
+  });
 
   after(() => {
     theMockDatabase.clear();
@@ -72,7 +79,7 @@ describe('Create a treasure', () => {
     treasureEditPO.submit();
     emceePO.info(`新增寶物前請先登入帳號`);
     loginTestUser(me, { openLoginDialog: false });
-    emceePO.info(`成功新增寶物 ${treasure01.name} ！`);
+    emceePO.info(message('createSuccess', treasure01.name));
     // Skip putting into box
     emceePO.cancel();
     expectMyTreasure(treasure01);
@@ -80,19 +87,15 @@ describe('Create a treasure', () => {
 
   it('Should show prompt for putting into box', () => {
     const treasure02 = treasures[1];
-    setTreasureData(treasure02);
-    treasureEditPO.submit();
-    emceePO.info(`成功新增寶物 ${treasure02.name} ！`);
-    emceePO.cancel(`請選擇一個寶箱來存放 ${treasure02.name}。沒放進寶箱裡的寶物，別人就看不到它了喔～`);
+    createTreasure(treasure02);
+    emceePO.cancel(message('confirmAddToBox', treasure02.name));
     expectMyTreasure(treasure02);
   });
 
   it('Create and put into my default box', () => {
     const treasure03 = treasures[2];
-    setTreasureData(treasure03);
-    treasureEditPO.submit();
-    emceePO.info(`成功新增寶物 ${treasure03.name} ！`);
-    emceePO.confirm(`請選擇一個寶箱來存放 ${treasure03.name}。沒放進寶箱裡的寶物，別人就看不到它了喔～`);
+    createTreasure(treasure03);
+    emceePO.confirm(message('confirmAddToBox', treasure03.name));
     const dialogPO = new YggDialogPageObjectCypress();
     const boxSelectorPO = new ImageThumbnailSelectorPageObjectCypress(
       dialogPO.getSelector()
@@ -101,29 +104,30 @@ describe('Create a treasure', () => {
     boxSelectorPO.expectItem(boxMyDefault);
     boxSelectorPO.selectItem(boxMyDefault);
     dialogPO.confirm();
-    emceePO.info(`寶物 ${treasure03.name} 已加入寶箱 ${boxMyDefault.name}`);
+    emceePO.info(
+      message('putTreasureIntoBox', { treasure: treasure03, box: boxMyDefault })
+    );
     expectTreasureInBox(treasure03, boxMyDefault);
   });
-  
-  it('Create and put into all-public box, should show on map', () => {
-    const treasure04 = treasures[3];
-    setTreasureData(treasure04);
-    treasureEditPO.submit();
-    emceePO.info(`成功新增寶物 ${treasure04.name} ！`);
-    emceePO.confirm(`請選擇一個寶箱來存放 ${treasure04.name}。沒放進寶箱裡的寶物，別人就看不到它了喔～`);
-    const dialogPO = new YggDialogPageObjectCypress();
-    const boxSelectorPO = new ImageThumbnailSelectorPageObjectCypress(
-      dialogPO.getSelector()
-    );
-    boxSelectorPO.expectVisible();
-    boxSelectorPO.expectItem(boxAllPublic);
-    boxSelectorPO.selectItem(boxAllPublic);
-    dialogPO.confirm();
-    emceePO.info(`寶物 ${treasure04.name} 已加入寶箱 ${boxAllPublic.name}`);
-    expectTreasureOnMap(treasure04);
-  });
-  
-  
+
+  // it('Create and put into all-public box, should show on map', () => {
+  //   const treasure04 = treasures[3];
+  //   setTreasureData(treasure04);
+  //   treasureEditPO.submit();
+  //   emceePO.info(message('createSuccess', treasure04.name));
+  //   emceePO.confirm(`請選擇一個寶箱來存放 ${treasure04.name}。沒放進寶箱裡的寶物，別人就看不到它了喔～`);
+  //   const dialogPO = new YggDialogPageObjectCypress();
+  //   const boxSelectorPO = new ImageThumbnailSelectorPageObjectCypress(
+  //     dialogPO.getSelector()
+  //   );
+  //   boxSelectorPO.expectVisible();
+  //   boxSelectorPO.expectItem(boxAllPublic);
+  //   boxSelectorPO.selectItem(boxAllPublic);
+  //   dialogPO.confirm();
+  //   emceePO.info(`寶物 ${treasure04.name} 已加入寶箱 ${boxAllPublic.name}`);
+  //   expectTreasureOnMap(treasure04);
+  // });
+
   // it('Create a treasure and put it into my default box', () => {
   //   setTreasureData(treasure01);
   // });

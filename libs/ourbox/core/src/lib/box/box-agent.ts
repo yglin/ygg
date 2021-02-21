@@ -30,7 +30,7 @@ export class BoxAgent {
       const boxes = await this.boxFinder.findByTreasure(treasure);
       if (isEmpty(boxes)) {
         const confirmSelectBox = await this.emcee.confirm(
-          `請選擇一個寶箱來存放 ${treasure.name}。<br>沒放進寶箱裡的寶物，別人就看不到它了喔～`
+          `請選擇一個寶箱來存放 ${treasure.name}。<br>沒放進寶箱裡的寶物，別人就找不到它了喔～`
         );
         let selectedBox: Box;
         if (confirmSelectBox) {

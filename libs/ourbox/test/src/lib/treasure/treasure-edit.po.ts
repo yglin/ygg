@@ -52,10 +52,16 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
     };
   }
 
-  expectHint(controlName: string, hintMessage: string) {
-    const controlPO = this.controlPOs[controlName].pageObject;
-    controlPO.expectHint(hintMessage);
+  expectStep(stepName: string) {
+    cy.get(`${this.getSelector()} .mat-step-label-active`).contains(
+      stepName
+    );
   }
+
+  // expectHint(controlName: string, hintMessage: string) {
+  //   const controlPO = this.controlPOs[controlName].pageObject;
+  //   controlPO.expectHint(hintMessage);
+  // }
 
   setValue(controlName: string, value: any) {
     const controlPO = this.controlPOs[controlName].pageObject;

@@ -1,12 +1,11 @@
 <div class="treasure-edit">
   <mat-vertical-stepper linear #stepper>
     <mat-step [stepControl]="formGroupStep1">
-      <ng-template matStepLabel>新增寶物的相片</ng-template>
+      <ng-template matStepLabel>寶物的照片</ng-template>
       <form [formGroup]="formGroupStep1">
         <div class="album control">
           <ygg-album-control
             formControlName="album"
-            [hints]="hints.album"
           ></ygg-album-control>
         </div>
       </form>
@@ -28,10 +27,13 @@
         <button mat-button matStepperPrevious class="previous-step">
           上一步
         </button>
-        <button mat-button matStepperNext class="next-step">下一步</button>
+        <button mat-button matStepperNext (click)="submit()" class="submit">
+          完成送出
+        </button>
+        <!-- <button mat-button matStepperNext class="next-step">下一步</button> -->
       </div>
     </mat-step>
-    <mat-step [stepControl]="formGroupStep3">
+    <!-- <mat-step [stepControl]="formGroupStep3">
       <ng-template matStepLabel>寶物所在地</ng-template>
       <form [formGroup]="formGroupStep3">
         <div class="location control">
@@ -48,6 +50,6 @@
           完成送出
         </button>
       </div>
-    </mat-step>
+    </mat-step> -->
   </mat-vertical-stepper>
 </div>

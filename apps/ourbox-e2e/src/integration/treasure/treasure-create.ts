@@ -2,7 +2,7 @@ import { Box, Treasure } from '@ygg/ourbox/core';
 import {
   HeaderPageObjectCypress,
   TreasureEditPageObjectCypress,
-  TreasureViewPageObjectCypress,
+  TreasureViewPageObjectCypress
 } from '@ygg/ourbox/test';
 import { Album } from '@ygg/shared/omni-types/core';
 import { logout, theMockDatabase } from '@ygg/shared/test/cypress';
@@ -16,7 +16,7 @@ import {
 } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
 import { loginTestUser, testUsers } from '@ygg/shared/user/test';
-import { MapPageObjectCypress } from "@ygg/shared/geography/test";
+import { MapPageObjectCypress } from '@ygg/shared/geography/test';
 
 const headerPO = new HeaderPageObjectCypress();
 const sideDrawerPO = new SideDrawerPageObjectCypress();
@@ -43,27 +43,40 @@ export function gotoMyTreasures() {
   treasuresPO.expectVisible();
   pageTitlePO.expectText(`我的寶物`);
 }
+export function message(id: string, data: any) {
+  switch (id) {
+    case 'confirmAddToBox':
+      return `請選擇一個寶箱來存放 ${data}。沒放進寶箱裡的寶物，別人就找不到它了喔～`;
+
+    case 'createSuccess':
+      return `成功新增寶物 ${data} ！`;
+
+    case 'putTreasureIntoBox':
+      return `寶物 ${data.treasure.name} 已加入寶箱 ${data.box.name}`;
+
+    default:
+      return '';
+  }
+}
 
 export function setTreasureData(treasure: Treasure) {
-  treasureEditPO.expectHint('album', '請至少新增一張寶物的照片');
+  // treasureEditPO.expectHint('album', '請至少新增一張寶物的照片');
   // console.dir(treasure01.album);
+  treasureEditPO.expectStep('寶物的照片');
   treasureEditPO.setValue('album', treasure.album);
   // cy.pause();
   treasureEditPO.nextStep();
+  treasureEditPO.expectStep('寶物的名稱');
   treasureEditPO.setValue('name', treasure.name);
-  treasureEditPO.nextStep();
-  // treasureEditPO.expectHint(
-  //   'location',
-  //   '請設定寶物的所在地，才能顯示在地圖上'
-  // );
-  treasureEditPO.setValue('location', treasure.location);
+  // treasureEditPO.nextStep();
+  // treasureEditPO.setValue('location', treasure.location);
 }
 
 export function createTreasure(treasure: Treasure) {
   gotoCreatePage();
   setTreasureData(treasure);
   treasureEditPO.submit();
-  emceePO.info(`成功新增寶物 ${treasure.name} ！`);
+  emceePO.info(message('createSuccess', treasure.name));
 }
 
 export function expectMyTreasure(treasure: Treasure) {
@@ -95,7 +108,7 @@ export function gotoMap() {
   pageTitlePO.expectText('藏寶圖');
 }
 
-export function expectTreasureOnMap(treasure: Treasure) {
-  gotoMap();
-  mapPO.locateItem(treasure);
-}
+// export function expectTreasureOnMap(treasure: Treasure) {
+//   gotoMap();
+//   mapPO.locateItem(treasure);
+// }
