@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Box, BoxAgent } from '@ygg/ourbox/core';
 import { wrapError } from '@ygg/shared/infra/error';
 import {
@@ -10,6 +11,7 @@ import { AuthenticateUiService } from '@ygg/shared/user/ui';
 import { HeadQuarterService } from '../head-quarter.service';
 import { BoxFactoryService } from './box-factory.service';
 import { BoxFinderService } from './box-finder.service';
+import { GeographyAgentService } from '@ygg/shared/geography/ui';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +23,19 @@ export class BoxAgentService extends BoxAgent {
     boxFactory: BoxFactoryService,
     boxFinder: BoxFinderService,
     headquarter: HeadQuarterService,
+    router: Router,
+    geographyAgent: GeographyAgentService,
     protected dialog: YggDialogService
   ) {
-    super(emcee, auth, boxFactory, boxFinder, headquarter);
+    super(
+      emcee,
+      auth,
+      boxFactory,
+      boxFinder,
+      headquarter,
+      router,
+      geographyAgent
+    );
   }
 
   async openMyBoxSelector(): Promise<Box> {

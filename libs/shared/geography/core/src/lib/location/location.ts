@@ -1,6 +1,6 @@
 import { SerializableJSON } from '@ygg/shared/infra/core';
 import { Address } from './address';
-import { GeoPoint } from '../models';
+import { GeoPoint } from './geo-point';
 
 export class Location implements SerializableJSON {
   private _address: Address;

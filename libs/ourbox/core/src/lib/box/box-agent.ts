@@ -1,4 +1,4 @@
-import { Emcee } from '@ygg/shared/infra/core';
+import { Emcee, Router } from '@ygg/shared/infra/core';
 import { wrapError } from '@ygg/shared/infra/error';
 import { Album } from '@ygg/shared/omni-types/core';
 import { Authenticator } from '@ygg/shared/user/core';
@@ -8,7 +8,7 @@ import { Treasure } from '../treasure';
 import { Box } from './box';
 import { BoxFactory } from './box-factory';
 import { BoxFinder } from './box-finder';
-import { RelationBoxTreasure } from './box-treasure';
+import { GeographyAgent, Location } from '@ygg/shared/geography/core';
 
 export class BoxAgent {
   constructor(
@@ -16,7 +16,9 @@ export class BoxAgent {
     protected authenticator: Authenticator,
     protected boxFactory: BoxFactory,
     protected boxFinder: BoxFinder,
-    protected headquarter: OurboxHeadQuarter
+    protected headquarter: OurboxHeadQuarter,
+    protected router: Router,
+    protected geographyAgent: GeographyAgent
   ) {
     this.headquarter.registerReaction('treasure.save.post', treasure =>
       this.onTreasureSave(treasure)
@@ -42,10 +44,10 @@ export class BoxAgent {
           }
         }
         if (selectedBox) {
-        //   await this.emcee.info(
-        //     `寶物 ${treasure.name} 將會公開，之後若要將寶物移至寶箱中，可至寶物頁面中操作`
-        //   );
-        // } else {
+          //   await this.emcee.info(
+          //     `寶物 ${treasure.name} 將會公開，之後若要將寶物移至寶箱中，可至寶物頁面中操作`
+          //   );
+          // } else {
           await this.addTreasureToBox(treasure, selectedBox);
         }
       }
@@ -99,8 +101,34 @@ export class BoxAgent {
     try {
       await this.boxFactory.addTreasureToBox(treasure, box);
       await this.emcee.info(`寶物 ${treasure.name} 已加入寶箱 ${box.name}`);
+      this.router.navigate(['/', 'box', box.id]);
     } catch (error) {
       return Promise.reject(error);
+    }
+  }
+
+  async requireBoxLocation(box: Box) {
+    try {
+      if (Location.isLocation(box.location)) {
+        return;
+      }
+      const confirm = await this.emcee.confirm(
+        `寶箱 ${box.name} 還沒有設定地點，在地圖上會找不到，現在設定地點？`
+      );
+      if (confirm) {
+        const location = await this.geographyAgent.userInputLocation();
+        if (Location.isLocation(location)) {
+          await box.save();
+        }
+        return box;
+      }
+    } catch (error) {
+      const wrpErr = wrapError(
+        error,
+        `Failed to set location of box ${box.name}`
+      );
+      this.emcee.warning(wrpErr.message);
+      return Promise.reject(wrpErr);
     }
   }
 }

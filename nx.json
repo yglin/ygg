@@ -270,6 +270,9 @@
     },
     "shared-geography-test": {
       "tags": []
+    },
+    "shared-geography-ui": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {

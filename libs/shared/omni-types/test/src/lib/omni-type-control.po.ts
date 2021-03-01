@@ -14,7 +14,7 @@ import {
 import { NumberControlPageObjectCypress } from './number';
 import { ContactControlPageObjectCypress } from './contact';
 import { AlbumControlPageObjectCypress } from './album';
-import { LocationControlPageObjectCypress } from './location';
+import { LocationControlPageObjectCypress } from '@ygg/shared/geography/test';
 import { HtmlControlPageObjectCypress } from './html';
 
 export class OmniTypeControlPageObjectCypress extends OmniTypeControlPageObject {

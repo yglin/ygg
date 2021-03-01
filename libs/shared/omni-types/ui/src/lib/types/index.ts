@@ -4,6 +4,5 @@ export * from './number';
 export * from './contact';
 export * from './image';
 export * from './album';
-export * from './location';
 export * from './text';
 export * from './long-text';

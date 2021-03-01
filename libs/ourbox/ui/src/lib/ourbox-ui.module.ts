@@ -46,6 +46,7 @@ import { TreasureCreateComponent } from './treasure/treasure-create/treasure-cre
 import { BoxAgentService } from './box/box-agent.service';
 import { TreasureViewComponent } from './treasure/treasure-view/treasure-view.component';
 import { MyTreasuresComponent } from './treasure/my-treasures/my-treasures.component';
+import { SharedGeographyUiModule } from '@ygg/shared/geography/ui';
 
 export function initSideMenu(sideDrawer: SideDrawerService) {
   return async (): Promise<any> => {
@@ -119,6 +120,7 @@ export function initAgents(boxAgent: BoxAgentService) {
     SharedOmniTypesUiModule,
     // TheThingUiModule,
     SharedCustomPageUiModule,
+    SharedGeographyUiModule,
     RouterModule.forChild(routes)
   ],
   exports: [HeaderComponent],

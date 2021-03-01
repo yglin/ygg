@@ -1,14 +1,5 @@
-import {
-  Album,
-  Location,
-  OmniTypeID,
-  OmniTypes
-} from '@ygg/shared/omni-types/core';
-import {
-  AlbumControlPageObjectCypress,
-  LocationControlPageObjectCypress,
-  OmniTypeControlPageObjectCypress
-} from '@ygg/shared/omni-types/test';
+import { OmniTypeID, OmniTypes } from '@ygg/shared/omni-types/core';
+import { AlbumControlPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
 import { ControlPageObject } from '@ygg/shared/test/page-object';
 import { TextControlPageObjectCypress } from 'libs/shared/omni-types/test/src/lib/text';
@@ -42,20 +33,18 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
         pageObject: new TextControlPageObjectCypress(
           this.getSelector('name-control')
         )
-      },
-      location: {
-        type: OmniTypes.location.id,
-        pageObject: new LocationControlPageObjectCypress(
-          this.getSelector('location-control')
-        )
       }
+      // location: {
+      //   type: OmniTypes.location.id,
+      //   pageObject: new LocationControlPageObjectCypress(
+      //     this.getSelector('location-control')
+      //   )
+      // }
     };
   }
 
   expectStep(stepName: string) {
-    cy.get(`${this.getSelector()} .mat-step-label-active`).contains(
-      stepName
-    );
+    cy.get(`${this.getSelector()} .mat-step-label-active`).contains(stepName);
   }
 
   // expectHint(controlName: string, hintMessage: string) {

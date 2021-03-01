@@ -15,6 +15,7 @@ import {
   UserService,
   UserFactoryService
 } from '@ygg/shared/user/ui';
+import { BoxAgentService } from './box-agent.service';
 import { BoxFinderService } from './box-finder.service';
 // import { TheThing } from '@ygg/the-thing/core';
 // import {
@@ -32,6 +33,7 @@ import { BoxFinderService } from './box-finder.service';
 export class BoxResolverService implements Resolve<Box> {
   constructor(
     private authenticator: AuthenticateUiService,
+    private boxAgent: BoxAgentService,
     private boxFinder: BoxFinderService,
     private emcee: EmceeService,
     private router: Router
@@ -43,8 +45,8 @@ export class BoxResolverService implements Resolve<Box> {
   ): Promise<Box> {
     const id = route.paramMap.get('id');
     try {
-      await this.authenticator.requestLogin();
-      const box = await this.boxFinder.findById(id);
+      const currentUser = await this.authenticator.requestLogin();
+      let box = await this.boxFinder.findById(id);
       if (!box) {
         throw new Error(`找不到寶箱，id: ${id}`);
       }
@@ -53,6 +55,9 @@ export class BoxResolverService implements Resolve<Box> {
       //   throw new Error(`非寶箱成員無法檢視寶箱 ${box.name} 的內容`);
       // }
       // console.dir(box);
+      if (box.belongsTo(currentUser)) {
+        box = await this.boxAgent.requireBoxLocation(box); 
+      }
       return box;
     } catch (error) {
       await this.emcee.error(`頁面載入失敗，錯誤原因：${error.message}`);

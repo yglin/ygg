@@ -54,6 +54,9 @@ export function message(id: string, data: any) {
     case 'putTreasureIntoBox':
       return `寶物 ${data.treasure.name} 已加入寶箱 ${data.box.name}`;
 
+    case 'boxShouldHaveLocation':
+      return `寶箱 ${data.box.name} 還沒有設定地點，在地圖上會找不到，現在設定地點？`;
+
     default:
       return '';
   }

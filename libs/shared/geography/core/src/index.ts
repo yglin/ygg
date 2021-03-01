@@ -1,2 +1,2 @@
-export * from './lib/models';
 export * from './lib/location';
+export * from './lib/geogrphy-agent';

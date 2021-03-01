@@ -14,7 +14,7 @@ import {
 import { NumberViewPageObjectCypress } from './number';
 import { ContactViewPageObjectCypress } from './contact';
 import { AlbumViewPageObjectCypress } from './album';
-import { LocationViewPageObjectCypress } from './location';
+import { LocationViewPageObjectCypress } from '@ygg/shared/geography/test';
 import { HtmlViewPageObjectCypress } from './html';
 
 export class OmniTypeViewPageObjectCypress extends OmniTypeViewPageObject {

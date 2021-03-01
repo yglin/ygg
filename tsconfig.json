@@ -93,7 +93,8 @@
         "libs/shared/custom-page/test/src/index.ts"
       ],
       "@ygg/shared/custom-page/ui": ["libs/shared/custom-page/ui/src/index.ts"],
-      "@ygg/shared/geography/test": ["libs/shared/geography/test/src/index.ts"]
+      "@ygg/shared/geography/test": ["libs/shared/geography/test/src/index.ts"],
+      "@ygg/shared/geography/ui": ["libs/shared/geography/ui/src/index.ts"]
     },
     "rootDir": "."
   },

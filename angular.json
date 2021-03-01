@@ -2735,6 +2735,34 @@
           }
         }
       }
+    },
+    "shared-geography-ui": {
+      "projectType": "library",
+      "root": "libs/shared/geography/ui",
+      "sourceRoot": "libs/shared/geography/ui/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/geography/ui/tsconfig.lib.json",
+              "libs/shared/geography/ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/geography/ui/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/geography/ui/jest.config.js",
+            "tsConfig": "libs/shared/geography/ui/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/shared/geography/ui/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

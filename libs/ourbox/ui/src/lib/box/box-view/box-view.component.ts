@@ -11,6 +11,7 @@ import { tap } from 'rxjs/operators';
 import { User } from '@ygg/shared/user/core';
 import { BoxFinderService } from '../box-finder.service';
 import { Box, Treasure } from '@ygg/ourbox/core';
+import { BoxAgentService } from '../box-agent.service';
 
 function forgeItems(): TheThing[] {
   return range(10).map(() => {
@@ -36,7 +37,8 @@ export class BoxViewComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private boxFinder: BoxFinderService
+    private boxFinder: BoxFinderService,
+    private boxAgent: BoxAgentService
   ) {}
 
   async loadTreasures() {
