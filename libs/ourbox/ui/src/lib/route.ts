@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoggedInGuard } from '@ygg/shared/user/ui';
+import { BoxCreateComponent } from './box/box-create/box-create.component';
 import { BoxResolverService } from './box/box-resolver.service';
 import { BoxViewComponent } from './box/box-view/box-view.component';
 // import { HomeComponent } from './pages/home/home.component';
@@ -76,6 +77,10 @@ export const routes: Routes = [
   {
     path: 'box',
     children: [
+      {
+        path: 'create',
+        component: BoxCreateComponent
+      },
       {
         path: ':id',
         component: BoxViewComponent,

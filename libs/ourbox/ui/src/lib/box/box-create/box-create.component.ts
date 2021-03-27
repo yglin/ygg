@@ -5,28 +5,24 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import {
-  ImitationBoxFlags,
-  ImitationBoxThumbnailImages,
-  ImitationBox
-} from '@ygg/ourbox/core';
-import { Image } from '@ygg/shared/omni-types/core';
+import { Box } from '@ygg/ourbox/core';
+import { wrapError } from '@ygg/shared/infra/error';
+import { Album, Image } from '@ygg/shared/omni-types/core';
 import { ImageUploaderService } from '@ygg/shared/omni-types/ui';
-import { User } from '@ygg/shared/user/core';
-import { UserService } from '@ygg/shared/user/ui';
-import { find, isEmpty, keys } from 'lodash';
-import { combineLatest, Subscription } from 'rxjs';
-import { debounceTime, filter, tap } from 'rxjs/operators';
-import isEmail from 'validator/lib/isEmail';
+import { EmceeService } from '@ygg/shared/ui/widgets';
+import { isEmpty } from 'lodash';
+import { Subscription } from 'rxjs';
 import { BoxFactoryService } from '../box-factory.service';
 
 @Component({
-  selector: 'ygg-box-create',
+  // eslint-disable-next-line @angular-eslint/component-selector
+  selector: 'ourbox-box-create',
   templateUrl: './box-create.component.html',
   styleUrls: ['./box-create.component.css']
 })
 export class BoxCreateComponent implements OnInit, OnDestroy {
   firstFormGroup: FormGroup;
+  formGroupLocation: FormGroup;
   // secondFormGroup: FormGroup;
   // formControlMemberEmail: FormControl = new FormControl('', [Validators.email]);
   formControlMemberEmails: FormControl = new FormControl([]);
@@ -34,56 +30,29 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
   // members: { [email: string]: { id: string } } = {};
   // foundUsers: User[] = [];
   // isEmail = isEmail;
-  isPublicDescription = ImitationBoxFlags.isPublic.description;
-  subscriptions: Subscription[] = [];
-  thumbnailImages = ImitationBoxThumbnailImages;
-  thumbSelected: string = "/assets/images/box/box.png";
-  flagIsPublic = ImitationBoxFlags.isPublic;
+  isPublicDescription = '';
+  subscription: Subscription = new Subscription();
+  thumbnailImages = Box.sampleImages;
+  thumbSelected = '/assets/images/box/box.png';
+  flagIsPublic = {
+    id: 'isPublic',
+    label: '公開',
+    description:
+      '<h3>公開寶箱內的寶物會顯示在公開搜尋結果中，例如藏寶圖以及寶物倉庫</h3><h3>非公開寶箱內的寶物，只有寶箱成員能看得到</h3>'
+  };
 
   constructor(
     private formBuilder: FormBuilder,
-    private userService: UserService,
     private boxFactory: BoxFactoryService,
-    private imageUploader: ImageUploaderService
+    private imageUploader: ImageUploaderService,
+    private emcee: EmceeService
   ) {
     this.firstFormGroup = this.formBuilder.group({
       name: [null, Validators.required]
     });
-    // const inputEmailChange$ = this.formControlMemberEmail.valueChanges.pipe(
-    //   debounceTime(300),
-    //   filter(value => value && value.length >= 3)
-    // );
-    // this.subscriptions.push(
-    //   combineLatest([inputEmailChange$, this.userService.listAll$()])
-    //     .pipe(
-    //       tap(([emailKeyword, users]) => {
-    //         this.foundUsers = users.filter(
-    //           user => user.email && user.email.includes(emailKeyword)
-    //         );
-    //       })
-    //     )
-    //     .subscribe()
-    // );
-
-    // this.formControlMemberEmail.valueChanges
-    //   .pipe(
-    //     debounceTime(5000),
-    //     filter(value => value && value.length >= 3),
-    //     filter(keyword => {
-    //       const foundUser = find(this.foundUsers, user => user.email === email);
-    //       if (foundUser) {
-    //         this.foundUser = foundUser;
-    //         return false;
-    //       } else {
-    //         return true;
-    //       }
-    //     }),
-    //     switchMap((email: string) =>
-    //       this.userService.findWithIdOrEmail$(null, email)
-    //     ),
-    //     tap(users => (this.foundUsers = isEmpty(users) ? [] : users))
-    //   )
-    //   .subscribe();
+    this.formGroupLocation = this.formBuilder.group({
+      location: [null, Validators.required]
+    });
   }
 
   ngOnInit(): void {}
@@ -91,39 +60,29 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
-    for (const subscription of this.subscriptions) {
-      subscription.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 
-  submit() {
-    this.boxFactory.create({
-      name: this.firstFormGroup.get('name').value,
-      image: this.thumbSelected,
-      memberEmails: this.formControlMemberEmails.value,
-      isPublic: this.formControlPublic.value
+  async submit() {
+    const box = this.boxFactory.create();
+    box.name = this.firstFormGroup.get('name').value;
+    const boxThumb = new Image(this.thumbSelected);
+    box.album = new Album({
+      cover: boxThumb,
+      photos: [boxThumb]
     });
+    box.location = this.formGroupLocation.get('location').value;
+    box.public = this.formControlPublic.value;
+    await box.save();
   }
-
-  // addMember() {
-  //   const email = this.formControlMemberEmail.value;
-  //   if (isEmail(email)) {
-  //     const foundUser = find(this.foundUsers, user => user.email === email);
-  //     this.members[email] = { id: !!foundUser ? foundUser.id : null };
-  //     this.formControlMemberEmail.setValue(null, { emitEvent: false });
-  //   }
-  // }
-
-  // deleteMember(email: string) {
-  //   if (email in this.members) {
-  //     delete this.members[email];
-  //   }
-  // }
 
   async addImages() {
     const images: Image[] = await this.imageUploader.uploadImages();
     if (!isEmpty(images)) {
-      this.thumbnailImages.push(...images.map(img => img.src));
+      this.thumbnailImages.push.apply(
+        this.thumbnailImages,
+        images.map(img => img.src)
+      );
     }
   }
 }

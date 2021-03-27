@@ -12,11 +12,11 @@ export class GeographyAgentService extends GeographyAgent {
     super();
   }
 
-  async userInputLocation(location?: Location): Promise<Location> {
+  async userInputLocation(options: any = {}): Promise<Location> {
     try {
       const dialogRef = this.dialog.open(LocationControlComponent, {
-        title: `輸入一個地點`,
-        data: location
+        title: options.title || `請輸入一個地點`,
+        data: options.location
       });
       return dialogRef.afterClosed().toPromise();
     } catch (error) {

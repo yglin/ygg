@@ -20,14 +20,13 @@ import { range } from 'lodash';
 import {
   createTreasure,
   expectMyTreasure,
-  expectTreasureInBox,
   gotoCreatePage,
-  gotoMyBoxes,
   message,
   setTreasureData
 } from './treasure-create';
 import { Location } from '@ygg/shared/geography/core';
 import { LocationControlPageObjectCypress } from '@ygg/shared/geography/test';
+import { createBox } from '../box/box-create';
 
 describe('Create a treasure from the ground up', () => {
   const me = testUsers[0];
@@ -35,10 +34,13 @@ describe('Create a treasure from the ground up', () => {
   const boxMyDefault = Box.forge();
   boxMyDefault.name = `${me.name}的寶箱`;
   boxMyDefault.album = new Album(Box.thumbnailSrc);
+  boxMyDefault.location = null;
 
-  const boxAllPublic = Box.forge();
-  boxAllPublic.name = `所有人的大寶箱`;
-  boxAllPublic.album = new Album(Box.thumbnailSrc);
+  // const boxAllPublic = Box.forge();
+  // boxAllPublic.name = `所有人的大寶箱`;
+  // boxAllPublic.album = new Album(Box.thumbnailSrc);
+
+  const boxMyOtherOne = Box.forge();
 
   // const box01 = Box.forge();
   const headerPO = new HeaderPageObjectCypress();
@@ -70,14 +72,6 @@ describe('Create a treasure from the ground up', () => {
     theMockDatabase.clear();
   });
 
-  // it('Navigate to creating page from link in side menu', () => {
-  //   headerPO.openSideDrawer();
-  //   sideDrawerPO.expectVisible();
-  //   sideDrawerPO.clickLink('create-treasure');
-  //   treasureEditPO.expectVisible();
-  //   pageTitlePO.expectText(`新增你的共享寶物`);
-  // });
-
   it('Should show prompt for putting into box', () => {
     const treasure02 = treasures[1];
     createTreasure(treasure02);
@@ -92,6 +86,7 @@ describe('Create a treasure from the ground up', () => {
     const boxSelectorPO = new ImageThumbnailSelectorPageObjectCypress(
       dialogPO.getSelector()
     );
+    dialogPO.expectTitle(message('selectBoxToStoreTreasure', treasure03));
     boxSelectorPO.expectVisible();
     boxSelectorPO.expectItem(boxMyDefault);
     boxSelectorPO.selectItem(boxMyDefault);
@@ -101,8 +96,9 @@ describe('Create a treasure from the ground up', () => {
     );
 
     // Redircet to my default box page
-    // Guide user to set box location
+    // Prompt user to set box location
     emceePO.confirm(message('boxShouldHaveLocation', { box: boxMyDefault }));
+    dialogPO.expectTitle(message('inputBoxLocation', boxMyDefault));
     const locationControlPO = new LocationControlPageObjectCypress(
       dialogPO.getSelector()
     );
@@ -111,8 +107,40 @@ describe('Create a treasure from the ground up', () => {
 
     // Expect new treasure in the list
     pageTitlePO.expectText(`${boxMyDefault.name}`);
+    treasuresPO.scrollIntoView();
     treasuresPO.expectVisible();
     treasuresPO.expectItem(treasure03);
+  });
+
+  it('Create and put into some new box', () => {
+    const treasure04 = treasures[3];
+    createTreasure(treasure04);
+    emceePO.confirm(message('confirmAddToBox', treasure04.name));
+    const boxSelectorPO = new ImageThumbnailSelectorPageObjectCypress(
+      dialogPO.getSelector()
+    );
+    boxSelectorPO.expectVisible();
+    dialogPO.expectTitle(message('selectBoxToStoreTreasure', treasure04));
+    boxSelectorPO.gotoCreateNew();
+    createBox(boxMyOtherOne);
+    // Redirect to new box page after create
+    pageTitlePO.expectText(`${boxMyOtherOne.name}`);
+    boxSelectorPO.expectVisible();
+    boxSelectorPO.expectItem(boxMyOtherOne);
+    boxSelectorPO.selectItem(boxMyOtherOne);
+    dialogPO.confirm();
+    emceePO.info(
+      message('putTreasureIntoBox', {
+        treasure: treasure04,
+        box: boxMyOtherOne
+      })
+    );
+
+    // Expect new treasure in the list
+    pageTitlePO.expectText(`${boxMyOtherOne.name}`);
+    treasuresPO.scrollIntoView();
+    treasuresPO.expectVisible();
+    treasuresPO.expectItem(treasure04);
   });
 
   it('Should request login if not yet', () => {
@@ -127,68 +155,4 @@ describe('Create a treasure from the ground up', () => {
     emceePO.cancel();
     expectMyTreasure(treasure01);
   });
-
-  // it('Create and put into all-public box, should show on map', () => {
-  //   const treasure04 = treasures[3];
-  //   setTreasureData(treasure04);
-  //   treasureEditPO.submit();
-  //   emceePO.info(message('createSuccess', treasure04.name));
-  //   emceePO.confirm(message('confirmAddToBox', treasure04.name));
-  //   const dialogPO = new YggDialogPageObjectCypress();
-  //   const boxSelectorPO = new ImageThumbnailSelectorPageObjectCypress(
-  //     dialogPO.getSelector()
-  //   );
-  //   boxSelectorPO.expectVisible();
-  //   boxSelectorPO.expectItem(boxAllPublic);
-  //   boxSelectorPO.selectItem(boxAllPublic);
-  //   dialogPO.confirm();
-  //   emceePO.info(
-  //     message('putTreasureIntoBox', { treasure: treasure04, box: boxAllPublic })
-  //   );
-  //   // expectTreasureOnMap(treasure04);
-  // });
-
-  // it('Create a treasure and put it into my default box', () => {
-  //   setTreasureData(treasure01);
-  // });
-
-  // it('Fill required data', () => {
-  // });
-
-  // it('Ask for login before submit', () => {
-  // });
-
-  // it('Put it into my default box', () => {
-  //   emceePO.confirm(
-  //     `請選擇一個寶箱來存放 ${treasure01.name}。沒放進寶箱裡的寶物，別人就看不到它了喔～`
-  //   );
-  //   const dialogPO = new YggDialogPageObjectCypress();
-  //   const boxSelectorPO = new ImageThumbnailSelectorPageObjectCypress(
-  //     dialogPO.getSelector()
-  //   );
-  //   boxSelectorPO.expectVisible();
-  //   boxSelectorPO.expectItem(boxMyDefault);
-  //   boxSelectorPO.selectItem(boxMyDefault);
-  //   dialogPO.confirm();
-  //   emceePO.info(`寶物 ${treasure01.name} 已加入寶箱 ${boxMyDefault.name}`);
-  // });
-
-  // it('Navigate to the default box, the treasure should be there', () => {
-  //   headerPO.openSideDrawer();
-  //   sideDrawerPO.expectVisible();
-  //   sideDrawerPO.clickLink('my-boxes');
-  //   pageTitlePO.expectText('我的寶箱');
-  //   myBoxesPO.expectVisible();
-  //   myBoxesPO.clickItem(boxMyDefault);
-  //   pageTitlePO.expectText(`${boxMyDefault.name}`);
-  //   treasuresPO.expectVisible();
-  //   treasuresPO.expectItem(treasure01);
-  // });
-
-  // it('Navigate to the treasure, check data consistency', () => {
-  //   treasuresPO.clickItem(treasure01);
-  //   treasureViewPO.expectVisible();
-  //   // console.dir(treasure01.album);
-  //   treasureViewPO.expectValue(treasure01);
-  // });
 });

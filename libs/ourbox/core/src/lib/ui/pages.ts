@@ -10,6 +10,12 @@ export const pages: { [id: string]: Page } = {
     label: '分享寶物',
     path: ['/', 'treasure', 'create']
   },
+  'box-create': {
+    id: 'box-create',
+    icon: 'library_add',
+    label: '開新寶箱',
+    path: ['/', 'box', 'create']
+  },
   'my-boxes': {
     id: 'my-boxes',
     icon: Box.icon,
@@ -29,13 +35,6 @@ export const pages: { [id: string]: Page } = {
   //   label: '藏寶圖',
   //   image: '/assets/images/map.png',
   //   path: ['/', 'ourbox', 'map']
-  // },
-  // boxCreate: {
-  //   id: 'boxCreate',
-  //   icon: 'library_add',
-  //   label: '開一個新寶箱',
-  //   image: '/assets/images/box/create.png',
-  //   path: ['/', 'ourbox', 'create-box']
   // },
   // itemWarehouse: {
   //   id: 'itemWarehouse',
@@ -67,6 +66,7 @@ export const pages: { [id: string]: Page } = {
 
 export const pagesInSideDrawer = [
   'create-treasure',
+  'box-create',
   'my-treasures',
   'my-boxes'
   // 'mapSearch',

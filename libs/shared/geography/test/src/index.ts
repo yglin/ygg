@@ -1,2 +1,2 @@
-export * from './lib/map.po';
+export * from './lib/map-navigator.po';
 export * from './lib/location';

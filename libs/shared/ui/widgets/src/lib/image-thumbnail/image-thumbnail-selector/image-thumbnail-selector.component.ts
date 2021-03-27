@@ -23,13 +23,12 @@ export class ImageThumbnailSelectorComponent
   @Input() items: ImageThumbnailItem[];
   @Input() multiSelect = false;
   @Input() selection: ImageThumbnailItem[] = [];
+  @Input() canCreate = false;
   @Output() selectionChange: EventEmitter<
     ImageThumbnailItem[]
   > = new EventEmitter();
   dialogData: any;
-  dialogOutput$: Subject<
-    ImageThumbnailItem[] | ImageThumbnailItem
-  > = new Subject();
+  dialogOutput$: Subject<any> = new Subject();
   isDialog: boolean;
 
   constructor() {}
@@ -41,6 +40,7 @@ export class ImageThumbnailSelectorComponent
     if (this.dialogData) {
       this.items = isEmpty(this.dialogData.items) ? [] : this.dialogData.items;
       this.multiSelect = !!this.dialogData.multiSelect;
+      this.canCreate = !!this.dialogData.canCreate;
     }
   }
 
@@ -66,6 +66,10 @@ export class ImageThumbnailSelectorComponent
       !isEmpty(this.selection) &&
       !!find(this.selection, selected => selected.id === item.id)
     );
+  }
+
+  onClickCreate() {
+    this.dialogOutput$.next({ data: 'create', close: true });
   }
 
   // onSubmit() {

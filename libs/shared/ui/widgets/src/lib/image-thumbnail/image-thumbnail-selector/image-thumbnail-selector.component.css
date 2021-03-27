@@ -6,6 +6,11 @@
   max-height: 80vh;
 }
 
+.item-list {
+  height: 80%;
+  overflow-y: auto;
+}
+
 .item {
   margin-bottom: 5vh;
   cursor: pointer;

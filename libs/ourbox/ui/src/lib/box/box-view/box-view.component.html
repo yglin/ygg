@@ -1,8 +1,13 @@
 <div class="box-view" *ngIf="box">
   <ygg-page-title [icon]="pageIcon">{{ box.name }}</ygg-page-title>
+  <h3 class="publicity">
+    <span *ngIf="box.public; else privateBox">公開寶箱</span>
+    <ng-template #privateBox>私人寶箱</ng-template>
+  </h3>
   <div>
     <div>
-      <div
+      <ygg-album-view [value]="box.album"></ygg-album-view>
+      <!-- <div
         fxLayout="row wrap"
         fxLayoutAlign="start end"
         fxLayoutGap="5px"
@@ -17,7 +22,11 @@
             [showName]="false"
           ></ygg-user-thumbnail>
         </div>
-      </div>
+      </div> -->
+    </div>
+    <br />
+    <div>
+      <ygg-location-view [value]="box.location"></ygg-location-view>
     </div>
     <br />
     <div>

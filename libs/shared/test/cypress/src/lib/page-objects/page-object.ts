@@ -12,4 +12,8 @@ export class PageObjectCypress extends PageObject {
   ): Cypress.Chainable<any> {
     return cy.get(this.getSelector(), options).should('be.visible');
   }
+
+  scrollIntoView() {
+    return cy.get(this.getSelector()).scrollIntoView();
+  }
 }

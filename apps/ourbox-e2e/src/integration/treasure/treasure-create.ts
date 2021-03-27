@@ -1,32 +1,21 @@
-import { Box, Treasure } from '@ygg/ourbox/core';
+import { Treasure } from '@ygg/ourbox/core';
 import {
   HeaderPageObjectCypress,
-  TreasureEditPageObjectCypress,
-  TreasureViewPageObjectCypress
+  TreasureEditPageObjectCypress
 } from '@ygg/ourbox/test';
-import { Album } from '@ygg/shared/omni-types/core';
-import { logout, theMockDatabase } from '@ygg/shared/test/cypress';
 import {
   EmceePageObjectCypress,
   ImageThumbnailListPageObjectCypress,
-  ImageThumbnailSelectorPageObjectCypress,
   PageTitlePageObjectCypress,
-  SideDrawerPageObjectCypress,
-  YggDialogPageObjectCypress
+  SideDrawerPageObjectCypress
 } from '@ygg/shared/ui/test';
-import { User } from '@ygg/shared/user/core';
-import { loginTestUser, testUsers } from '@ygg/shared/user/test';
-import { MapPageObjectCypress } from '@ygg/shared/geography/test';
 
 const headerPO = new HeaderPageObjectCypress();
 const sideDrawerPO = new SideDrawerPageObjectCypress();
 const treasureEditPO = new TreasureEditPageObjectCypress();
-const myBoxesPO = new ImageThumbnailListPageObjectCypress();
 const treasuresPO = new ImageThumbnailListPageObjectCypress();
 const pageTitlePO = new PageTitlePageObjectCypress();
-const treasureViewPO = new TreasureViewPageObjectCypress();
 const emceePO = new EmceePageObjectCypress();
-const mapPO = new MapPageObjectCypress();
 
 export function gotoCreatePage() {
   headerPO.openSideDrawer();
@@ -57,6 +46,12 @@ export function message(id: string, data: any) {
     case 'boxShouldHaveLocation':
       return `寶箱 ${data.box.name} 還沒有設定地點，在地圖上會找不到，現在設定地點？`;
 
+    case 'selectBoxToStoreTreasure':
+      return `請選擇一個寶箱來放置 ${data.name}`;
+
+    case 'inputBoxLocation':
+      return `請輸入寶箱 ${data.name} 的所在地`;
+
     default:
       return '';
   }
@@ -84,22 +79,6 @@ export function createTreasure(treasure: Treasure) {
 
 export function expectMyTreasure(treasure: Treasure) {
   gotoMyTreasures();
-  treasuresPO.expectVisible();
-  treasuresPO.expectItem(treasure);
-}
-
-export function gotoMyBoxes() {
-  headerPO.openSideDrawer();
-  sideDrawerPO.expectVisible();
-  sideDrawerPO.clickLink('我的寶箱');
-  pageTitlePO.expectText('我的寶箱');
-  myBoxesPO.expectVisible();
-}
-
-export function expectTreasureInBox(treasure: Treasure, box: Box) {
-  gotoMyBoxes();
-  myBoxesPO.clickItem(box);
-  pageTitlePO.expectText(`${box.name}`);
   treasuresPO.expectVisible();
   treasuresPO.expectItem(treasure);
 }

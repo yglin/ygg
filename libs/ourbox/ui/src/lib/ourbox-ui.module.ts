@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { routes } from './route';
 // import { HomeComponent } from './home/home.component';
-// import { BoxCreateComponent } from './box/box-create/box-create.component';
+import { BoxCreateComponent } from './box/box-create/box-create.component';
 import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
 import { HeaderComponent } from './layout/header/header.component';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
@@ -91,7 +91,7 @@ export function initAgents(boxAgent: BoxAgentService) {
 @NgModule({
   declarations: [
     // MapSearchComponent,
-    // BoxCreateComponent,
+    BoxCreateComponent,
     BoxViewComponent,
     MyBoxesComponent,
     HeaderComponent,

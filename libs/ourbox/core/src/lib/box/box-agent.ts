@@ -20,7 +20,7 @@ export class BoxAgent {
     protected router: Router,
     protected geographyAgent: GeographyAgent
   ) {
-    this.headquarter.registerReaction('treasure.save.post', treasure =>
+    this.headquarter.subscribe('treasure.save.post', treasure =>
       this.onTreasureSave(treasure)
     );
   }
@@ -36,9 +36,11 @@ export class BoxAgent {
         );
         let selectedBox: Box;
         if (confirmSelectBox) {
-          selectedBox = await this.selectMyBoxes();
-          if (!isEmpty(selectedBox)) {
-            selectedBox = selectedBox[0];
+          const selectedBoxes = await this.selectMyBoxes({
+            title: `請選擇一個寶箱來放置 ${treasure.name}`
+          });
+          if (!isEmpty(selectedBoxes)) {
+            selectedBox = selectedBoxes[0];
           } else {
             selectedBox = null;
           }
@@ -58,16 +60,54 @@ export class BoxAgent {
     }
   }
 
-  async selectMyBoxes(): Promise<Box> {
+  async selectMyBoxes(options: any = {}): Promise<Box[]> {
     try {
+      const title = options.title || '選擇一個寶箱';
       await this.authenticator.requestLogin();
       await this.createMyDefaultBox();
-      const selectedBoxes = await this.openMyBoxSelector();
-      return selectedBoxes;
+
+      let result = await this.openMyBoxSelector({ title });
+      while (typeof result === 'string' && result === 'create') {
+        await this.createBox();
+        result = await this.openMyBoxSelector({ title });
+      }
+      return result as Box[];
     } catch (error) {
       const wrpErr = wrapError(error, `Failed to select my box`);
       return Promise.reject(wrpErr);
     }
+  }
+
+  async createBox(): Promise<Box> {
+    const promiseCreateBox = new Promise<Box>((resolve, reject) => {
+      const subscriptionSaved = this.headquarter.subscribe(
+        'box.save.success',
+        (box: Box) => {
+          subscriptionSaved.unsubscribe();
+          resolve(box);
+          this.router.navigate(['/', 'box', box.id]);
+        }
+      );
+      const subscriptionSaveFail = this.headquarter.subscribe(
+        'box.save.fail',
+        () => {
+          subscriptionSaved.unsubscribe();
+          subscriptionSaveFail.unsubscribe();
+          reject('fail');
+        }
+      );
+      const subscriptionEditCancel = this.headquarter.subscribe(
+        'box.edit.cancel',
+        () => {
+          subscriptionSaved.unsubscribe();
+          subscriptionSaveFail.unsubscribe();
+          subscriptionEditCancel.unsubscribe();
+          reject('cancel');
+        }
+      );
+    });
+    this.router.navigate(['/', 'box', 'create']);
+    return promiseCreateBox;
   }
 
   async createMyDefaultBox() {
@@ -91,7 +131,7 @@ export class BoxAgent {
     }
   }
 
-  async openMyBoxSelector(): Promise<Box> {
+  async openMyBoxSelector(options: any = {}): Promise<Box[] | string> {
     throw new Error(
       `${this.constructor.name}.openMyBoxSelector not implemented, should be override`
     );
@@ -101,6 +141,10 @@ export class BoxAgent {
     try {
       await this.boxFactory.addTreasureToBox(treasure, box);
       await this.emcee.info(`寶物 ${treasure.name} 已加入寶箱 ${box.name}`);
+      this.headquarter.emit('treasure.addToBox.success', {
+        treasure,
+        box
+      });
       this.router.navigate(['/', 'box', box.id]);
     } catch (error) {
       return Promise.reject(error);
@@ -110,13 +154,15 @@ export class BoxAgent {
   async requireBoxLocation(box: Box) {
     try {
       if (Location.isLocation(box.location)) {
-        return;
+        return box;
       }
       const confirm = await this.emcee.confirm(
         `寶箱 ${box.name} 還沒有設定地點，在地圖上會找不到，現在設定地點？`
       );
       if (confirm) {
-        const location = await this.geographyAgent.userInputLocation();
+        const location = await this.geographyAgent.userInputLocation({
+          title: `請輸入寶箱 ${box.name} 的所在地`
+        });
         if (Location.isLocation(location)) {
           await box.save();
         }

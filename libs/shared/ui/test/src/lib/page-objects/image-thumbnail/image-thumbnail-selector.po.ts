@@ -4,7 +4,8 @@ import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 export class ImageThumbnailSelectorPageObjectCypress extends PageObjectCypress {
   selectors = {
     main: '.image-thumbnail-selector',
-    buttonSubmit: 'button.submit'
+    buttonSubmit: 'button.submit',
+    buttonCreate: 'button.create'
   };
 
   // getSelectorByItemName(name: string): string {
@@ -12,7 +13,7 @@ export class ImageThumbnailSelectorPageObjectCypress extends PageObjectCypress {
   // }
 
   getSelectorForItem(item: ImageThumbnailItem): string {
-    return `${this.getSelector()} .item:contains("${name}")`;
+    return `${this.getSelector()} .item:contains("${item.name}")`;
   }
 
   expectItem(item: ImageThumbnailItem) {
@@ -34,5 +35,9 @@ export class ImageThumbnailSelectorPageObjectCypress extends PageObjectCypress {
 
   submit() {
     cy.get(this.getSelector('buttonSubmit')).click({ force: true });
+  }
+
+  gotoCreateNew() {
+    cy.get(this.getSelector('buttonCreate')).click();
   }
 }

@@ -58,6 +58,7 @@ export class BoxResolverService implements Resolve<Box> {
       if (box.belongsTo(currentUser)) {
         box = await this.boxAgent.requireBoxLocation(box); 
       }
+      // console.dir(box);
       return box;
     } catch (error) {
       await this.emcee.error(`頁面載入失敗，錯誤原因：${error.message}`);

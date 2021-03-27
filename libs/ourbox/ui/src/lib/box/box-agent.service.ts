@@ -38,13 +38,13 @@ export class BoxAgentService extends BoxAgent {
     );
   }
 
-  async openMyBoxSelector(): Promise<Box> {
+  async openMyBoxSelector(options: any = {}): Promise<Box[]> {
     try {
       const currentUser = await this.authenticator.requestLogin();
       const myBoxes = await this.boxFinder.findUserBoxes(currentUser);
       // console.dir(myBoxes);
       const dialogRef = this.dialog.open(ImageThumbnailSelectorComponent, {
-        title: '選擇一個我的寶箱',
+        title: options.title,
         data: { items: myBoxes }
       });
       const selectedBox = await dialogRef.afterClosed().toPromise();

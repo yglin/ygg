@@ -10,8 +10,9 @@ import { BoxFactoryService } from '../box-factory.service';
 import { tap } from 'rxjs/operators';
 import { User } from '@ygg/shared/user/core';
 import { BoxFinderService } from '../box-finder.service';
-import { Box, Treasure } from '@ygg/ourbox/core';
+import { Box, OurboxHeadQuarter, Treasure } from '@ygg/ourbox/core';
 import { BoxAgentService } from '../box-agent.service';
+import { HeadQuarterService } from '../../head-quarter.service';
 
 function forgeItems(): TheThing[] {
   return range(10).map(() => {
@@ -33,12 +34,13 @@ export class BoxViewComponent implements OnInit, OnDestroy {
   isBoxEmpty = true;
   pageIcon = Box.icon;
   // members: User[] = [];
+  subscription = new Subscription();
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private boxFinder: BoxFinderService,
-    private boxAgent: BoxAgentService
+    private headquarter: HeadQuarterService
   ) {}
 
   async loadTreasures() {
@@ -51,6 +53,13 @@ export class BoxViewComponent implements OnInit, OnDestroy {
     // console.dir(this.box);
     if (!!this.box) {
       this.loadTreasures();
+      this.subscription.add(
+        this.headquarter.subscribe('treasure.addToBox.success', data => {
+          if (data.box && data.box.id === this.box.id) {
+            this.loadTreasures();
+          }
+        })
+      );
     }
   }
 
@@ -58,6 +67,7 @@ export class BoxViewComponent implements OnInit, OnDestroy {
     // for (const subscription of this.subscriptions) {
     //   subscription.unsubscribe();
     // }
+    this.subscription.unsubscribe();
   }
 
   createItem() {

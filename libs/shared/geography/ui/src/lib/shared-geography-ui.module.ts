@@ -29,6 +29,7 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
     ReactiveFormsModule,
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule
-  ]
+  ],
+  exports: [LocationControlComponent, LocationViewComponent]
 })
 export class SharedGeographyUiModule {}

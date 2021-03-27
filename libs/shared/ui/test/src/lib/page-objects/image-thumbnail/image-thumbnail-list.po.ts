@@ -1,12 +1,31 @@
-import {
-  ImageThumbnailListPageObject,
-  ImageThumbnailItem,
-  ImageThumbnailItemPageObject
-} from '@ygg/shared/ui/widgets';
-import { ImageThumbnailItemPageObjectCypress } from './image-thumbnail-item.po';
+import { PageObjectCypress } from '@ygg/shared/test/cypress';
+import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 import { defaults } from 'lodash';
+import { ImageThumbnailItemPageObjectCypress } from './image-thumbnail-item.po';
 
-export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageObject {
+export class ImageThumbnailListPageObjectCypress extends PageObjectCypress {
+  selectors = {
+    main: '.image-thumbnail-list',
+    firstItem: '.first-item',
+    lastItem: '.last-item',
+    buttonSubmit: 'button.submit',
+    buttonSelectAll: 'button.select-all',
+    buttonClearSelection: 'button.clear-selection',
+    selectionHint: '.selection-hint'
+  };
+
+  getSelectorForItem(item?: ImageThumbnailItem): string {
+    if (item === undefined) {
+      return `${this.getSelector()} .item`;
+    } else {
+      const selector = `${this.getSelector()} .item:contains("${item.name}")`;
+      // if (!!item.image) {
+      //   selector += ` img[src="${item.image}"]`;
+      // }
+      return selector;
+    }
+  }
+
   getItemPageObject(
     item: ImageThumbnailItem
   ): ImageThumbnailItemPageObjectCypress {
@@ -71,14 +90,6 @@ export class ImageThumbnailListPageObjectCypress extends ImageThumbnailListPageO
     cy.get(`${this.getSelector()} .item`, { timeout: 10000 }).should(
       'not.exist'
     );
-  }
-
-  expectVisible(flag: boolean = true) {
-    if (flag) {
-      cy.get(this.getSelector(), { timeout: 10000 }).should('be.visible');
-    } else {
-      cy.get(this.getSelector(), { timeout: 10000 }).should('not.be.visible');
-    }
   }
 
   selectAll() {

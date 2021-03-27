@@ -6,6 +6,9 @@ import { ImageUploaderPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { Image } from '@ygg/shared/omni-types/core';
 import { UsersByEmailSelectorPageObjectCypress } from '@ygg/shared/user/test';
 import { ExtraInfoButtonPageObjectCypress } from '@ygg/shared/ui/test';
+import { Box } from '@ygg/ourbox/core';
+import { Location } from '@ygg/shared/geography/core';
+import { LocationControlPageObjectCypress } from '@ygg/shared/geography/test';
 
 export class BoxCreatePageObjectCypress extends PageObjectCypress {
   selectors = {
@@ -21,8 +24,26 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
     checkboxPublic: '.check-public',
     publicityDescription: '.publicity-description',
     stepHint: 'h2.step-hint:visible',
-    stepImage: '.step-image:visible img'
+    stepImage: '.step-image:visible img',
+    location: '.location'
   };
+
+  setValue(box: Box) {
+    this.setName(box.name);
+    this.nextStep();
+    this.selectImage(box.image);
+    this.nextStep();
+    this.setLocation(box.location);
+    this.nextStep();
+    this.setPublic(box.public);
+  }
+
+  setLocation(location: Location) {
+    const locationControlPO = new LocationControlPageObjectCypress(
+      this.getSelector('location')
+    );
+    locationControlPO.setValue(location);
+  }
 
   expectStepHint(hint: string) {
     cy.get(this.getSelector('stepHint')).should('include.text', hint);
@@ -40,7 +61,7 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
     extraInfoButtonPO.expectInfo(description);
   }
 
-  inputName(name: string) {
+  setName(name: string) {
     cy.get(this.getSelector('inputName'))
       .clear()
       .type(name);
@@ -62,7 +83,8 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
     cy.get(this.getSelector('thumbnailImages'))
       .find(`.thumbnail-image img[src="${imageSrc}"]`)
       .click()
-      .parent().should('have.class', 'selected');
+      .parent()
+      .should('have.class', 'selected');
     cy.get(this.getSelector('stepImage')).should('have.attr', 'src', imageSrc);
   }
 
@@ -79,11 +101,13 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
     cy.get(this.getSelector('buttonNextStep')).click();
   }
 
-  checkPublic() {
-    const matCheckboxPO = new MatCheckboxPageObjectCypress(
-      this.getSelector('checkboxPublic')
-    );
-    matCheckboxPO.check();
+  setPublic(isPublic: boolean) {
+    if (isPublic) {
+      const matCheckboxPO = new MatCheckboxPageObjectCypress(
+        this.getSelector('checkboxPublic')
+      );
+      matCheckboxPO.check();
+    }
   }
 
   submit() {

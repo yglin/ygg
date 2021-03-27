@@ -6,9 +6,9 @@ export class AlbumControlPageObjectCypress extends AlbumControlPageObject {
   selector: string;
 
   expectValue(album: Album) {
-    cy.get(this.getSelectorForCover(album.cover.src)).should('be.visible');
+    cy.get(this.getSelectorForCover(album.cover.src)).should('exist');
     cy.wrap(album.photos).each((photo: any) => {
-      cy.get(this.getSelectorForPhoto(photo.src)).should('be.visible');
+      cy.get(this.getSelectorForPhoto(photo.src)).should('exist');
     });
   }
 

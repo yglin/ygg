@@ -1,6 +1,6 @@
-import { isArray, range, random, sample, isEmpty, extend } from 'lodash';
+import { SerializableJSON, toJSONDeep } from '@ygg/shared/infra/core';
+import { isArray, random, range, sample } from 'lodash';
 import { Image } from '../image/image';
-import { toJSONDeep, SerializableJSON } from '@ygg/shared/infra/core';
 
 export class Album implements SerializableJSON {
   static clone = Album.fromAlbum;
@@ -35,7 +35,7 @@ export class Album implements SerializableJSON {
 
   static forge(options: any = {}): Album {
     const forged = new Album();
-    forged.photos = isEmpty(options.photos)
+    forged.photos = !isArray(options.photos)
       ? range(random(3, 10)).map(() => Image.forge())
       : options.photos;
     forged.cover = !!options.cover ? options.cover : sample(forged.photos);

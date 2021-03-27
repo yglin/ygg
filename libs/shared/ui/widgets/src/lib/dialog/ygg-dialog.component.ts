@@ -64,6 +64,10 @@ export class YggDialogComponent implements OnInit {
           this.contentComponent.dialogOutput$.subscribe(output => {
             this.hasOutputValue = true;
             this.output = output;
+            if (output.close && output.data) {
+              this.output = output.data;
+              this.confirmOutput();
+            }
           });
         }
       }

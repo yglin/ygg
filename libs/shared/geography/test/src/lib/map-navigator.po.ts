@@ -1,12 +1,13 @@
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
-import { GeoBound } from '@ygg/shared/geography/core';
+import { GeoBound, Location } from '@ygg/shared/geography/core';
 import { Located } from '@ygg/shared/geography/core';
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
+import { Box } from '@ygg/ourbox/core';
 
-export class MapPageObjectCypress extends PageObjectCypress {
+export class MapNavigatorPageObjectCypress extends PageObjectCypress {
   selectors = {
-    main: '.map-search',
+    main: '.map-navigator',
     inputBoundEast: '.bound-input input.east',
     inputBoundWest: '.bound-input input.west',
     inputBoundNorth: '.bound-input input.north',
@@ -44,6 +45,14 @@ export class MapPageObjectCypress extends PageObjectCypress {
   }
 
   expecItem(item: Located) {}
+
+  expectNoItem(item: Located) {
+    throw new Error('Method not implemented.');
+  }
+
+  panTo(location: Location) {
+    throw new Error('Method not implemented.');
+  }
 
   // expectItems(items: TheThing[]) {
   //   cy.wrap(items).each((item: TheThing) => {
