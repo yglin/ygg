@@ -7,7 +7,7 @@ export class SideDrawerPageObjectCypress extends PageObjectCypress {
   };
 
   getSelectorForLink(linkName: string): string {
-    return `${this.getSelector()} a:contains("${linkName}")`;
+    return `${this.getSelector()} .link:contains("${linkName}")`;
   }
 
   clickLink(linkName: string) {

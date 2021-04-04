@@ -1,0 +1,8 @@
+<div class="treasure-map">
+  <ygg-page-title icon="map">藏寶地圖</ygg-page-title>
+  <br />
+  <ygg-map-navigator
+    [items]="boxes"
+    (boundChanged)="onMapBoundChange($event)"
+  ></ygg-map-navigator>
+</div>

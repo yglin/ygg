@@ -1,9 +1,7 @@
 import { Box, Treasure } from '@ygg/ourbox/core';
-import {
-  HeaderPageObjectCypress,
-  TreasureEditPageObjectCypress,
-  TreasureViewPageObjectCypress
-} from '@ygg/ourbox/test';
+import { TreasureEditPageObjectCypress } from '@ygg/ourbox/test';
+import { Location } from '@ygg/shared/geography/core';
+import { LocationControlPageObjectCypress } from '@ygg/shared/geography/test';
 import { Album } from '@ygg/shared/omni-types/core';
 import { logout, theMockDatabase } from '@ygg/shared/test/cypress';
 import {
@@ -11,12 +9,12 @@ import {
   ImageThumbnailListPageObjectCypress,
   ImageThumbnailSelectorPageObjectCypress,
   PageTitlePageObjectCypress,
-  SideDrawerPageObjectCypress,
   YggDialogPageObjectCypress
 } from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
 import { loginTestUser, testUsers } from '@ygg/shared/user/test';
 import { range } from 'lodash';
+import { createBox } from '../box/box-create';
 import {
   createTreasure,
   expectMyTreasure,
@@ -24,9 +22,6 @@ import {
   message,
   setTreasureData
 } from './treasure-create';
-import { Location } from '@ygg/shared/geography/core';
-import { LocationControlPageObjectCypress } from '@ygg/shared/geography/test';
-import { createBox } from '../box/box-create';
 
 describe('Create a treasure from the ground up', () => {
   const me = testUsers[0];
@@ -43,13 +38,9 @@ describe('Create a treasure from the ground up', () => {
   const boxMyOtherOne = Box.forge();
 
   // const box01 = Box.forge();
-  const headerPO = new HeaderPageObjectCypress();
-  const sideDrawerPO = new SideDrawerPageObjectCypress();
   const treasureEditPO = new TreasureEditPageObjectCypress();
-  const myBoxesPO = new ImageThumbnailListPageObjectCypress();
   const treasuresPO = new ImageThumbnailListPageObjectCypress();
   const pageTitlePO = new PageTitlePageObjectCypress();
-  const treasureViewPO = new TreasureViewPageObjectCypress();
   const dialogPO = new YggDialogPageObjectCypress();
   // const boxEditPO = new BoxEditPageObjectCypress();
 
@@ -80,6 +71,7 @@ describe('Create a treasure from the ground up', () => {
   });
 
   it('Create and put into my default box', () => {
+    theMockDatabase.clearFromOwner(Box.collection, me.id);
     const treasure03 = treasures[2];
     createTreasure(treasure03);
     emceePO.confirm(message('confirmAddToBox', treasure03.name));

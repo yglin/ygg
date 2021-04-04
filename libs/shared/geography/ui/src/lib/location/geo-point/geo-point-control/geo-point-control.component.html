@@ -31,5 +31,10 @@
       </mat-form-field>
     </div>
   </div>
-  <ygg-google-map [geoPoint]="geoPoint" (changeGeoPoint)='onChangeMapMarker($event)'></ygg-google-map>
+  <ng-container *ngIf="showMap">
+    <ygg-google-map
+      [geoPoint]="geoPoint"
+      (changeGeoPoint)="onChangeMapMarker($event)"
+    ></ygg-google-map>
+  </ng-container>
 </div>

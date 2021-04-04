@@ -1,17 +1,13 @@
 import { Observable, combineLatest } from 'rxjs';
 import { TheThing, TheThingMapFinder } from '@ygg/the-thing/core';
-import { BoxFactory } from './box-factory';
 import { GeoBound } from '@ygg/shared/geography/core';
 import { switchMap, map } from 'rxjs/operators';
-import { ImitationItem } from '../models';
+import { Located } from './location';
 
 export abstract class MapSearcher {
-  constructor(
-    private boxFactory: BoxFactory,
-    private theThingMapFinder: TheThingMapFinder
-  ) {}
+  constructor() {}
 
-  searchItemsInBound$(bound: GeoBound): Observable<TheThing[]> {
+  searchItemsInBound$(bound: GeoBound): Observable<Located[]> {
     const itemIdsInBound$: Observable<string[]> = this.theThingMapFinder
       .findInBound$(bound)
       .pipe(

@@ -85,4 +85,8 @@ export class BoxViewComponent implements OnInit, OnDestroy {
   gotoTreasure(treasure: Treasure) {
     this.router.navigate(['/', 'treasure', treasure.id]);
   }
+
+  showOnMap() {
+    this.headquarter.emit('box.showOnMap', this.box);
+  }
 }

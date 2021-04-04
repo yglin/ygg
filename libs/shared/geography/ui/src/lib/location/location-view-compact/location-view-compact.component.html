@@ -1,0 +1,10 @@
+<div class="location-view" *ngIf="location">
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+    <div class="address" *ngIf="location.address">
+      <ygg-address-view [address]="location.address"></ygg-address-view>
+    </div>
+    <button class="goto-map" mat-icon-button (click)="gotoMap()">
+      <mat-icon>map</mat-icon>
+    </button>
+  </div>
+</div>

@@ -1,17 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
-import { ImitationItemCells, ImitationItem } from '@ygg/ourbox/core';
-import { GeoPoint, GeoBound } from '@ygg/shared/geography/core';
+import { GeoPoint, GeoBound, Located } from '@ygg/shared/geography/core';
 import { Location } from '@ygg/shared/omni-types/core';
 import { TheThing } from '@ygg/the-thing/core';
 import * as leaflet from 'leaflet';
 import 'leaflet/dist/images/marker-icon-2x.png';
 import 'leaflet/dist/images/marker-shadow.png';
-import { extend, isEmpty, mapValues } from 'lodash';
-import { merge, Observable, Subject, combineLatest, Subscription } from 'rxjs';
+import { extend, mapValues } from 'lodash';
+import { Observable, Subject, combineLatest, Subscription } from 'rxjs';
 import { debounceTime, map, switchMap, tap, startWith } from 'rxjs/operators';
 import { MapSearcherService } from '../map-searcher.service';
 import { getEnv } from '@ygg/shared/infra/core';
+import { Box, BoxFinder } from '@ygg/ourbox/core';
 
 class Marker {
   geoPoint: GeoPoint;
@@ -19,28 +19,27 @@ class Marker {
   imgUrl: string;
   id: string;
 
-  static fromItem(item: TheThing): Marker {
+  constructor(options: any = {}) {
+    extend(this, options);
+  }
+
+  static fromItem(item: Located): Marker {
     return new Marker({
       id: item.id,
       name: item.name,
       imgUrl: item.image,
-      geoPoint: (item.getCellValue(ImitationItemCells.location.id) as Location)
-        .geoPoint
+      geoPoint: item.location.geoPoint
     });
-  }
-
-  constructor(options: any = {}) {
-    extend(this, options);
   }
 }
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ourbox-map-search',
   templateUrl: './map-search.component.html',
   styleUrls: ['./map-search.component.css']
 })
 export class MapSearchComponent implements OnInit, OnDestroy {
-  private map: any;
   markersLayer = leaflet.layerGroup();
   center: GeoPoint;
   boundChange$: Subject<GeoBound> = new Subject();
@@ -49,20 +48,17 @@ export class MapSearchComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
   isTesting = !!getEnv('test') ? true : false;
   formGroupMapBound: FormGroup;
-  ImitationItem = ImitationItem;
-  items: TheThing[] = [];
+  boxes: Box[] = [];
+
+  private map: any;
 
   constructor(
-    private mapSearcher: MapSearcherService,
+    private boxFinder: BoxFinder,
     private formBuilder: FormBuilder
   ) {
-    const itemsInMapBound$: Observable<TheThing[]> = this.boundChange$.pipe(
+    const boxesInMapBound$: Observable<Box[]> = this.boundChange$.pipe(
       debounceTime(500),
-      switchMap(bound => this.mapSearcher.searchItemsInBound$(bound))
-      // tap(items => {
-      //   console.log('Found items in bound');
-      //   console.log(items);
-      // })
+      switchMap(bound => this.boxFinder.findBoxesInMapBound(bound))
     );
 
     const keyword$: Observable<string> = this.formControlKeyword.valueChanges.pipe(
@@ -70,30 +66,26 @@ export class MapSearchComponent implements OnInit, OnDestroy {
       startWith('')
     );
 
-    const filteredItems$: Observable<TheThing[]> = combineLatest([
-      itemsInMapBound$,
+    const filteredBoxes$: Observable<Box[]> = combineLatest([
+      boxesInMapBound$,
       keyword$
     ]).pipe(
-      map(([items, keyword]) => {
+      map(([boxes, keyword]) => {
         if (!!keyword) {
-          return items.filter(item => item.name.includes(keyword));
+          return boxes.filter(item => item.name.includes(keyword));
         } else {
-          return items;
+          return boxes;
         }
       })
-      // tap(items => {
-      //   console.log(`Items filtered by keyword`);
-      //   console.log(items);
-      // })
     );
 
     this.subscription.add(
-      filteredItems$
+      filteredBoxes$
         .pipe(
-          tap((items: TheThing[]) => {
-            this.items = items;
+          tap((boxes: Box[]) => {
+            this.boxes = boxes;
             this.clearMarkers();
-            this.addMarkers(items.map(item => Marker.fromItem(item)));
+            this.addMarkers(boxes.map(item => Marker.fromItem(item)));
           })
         )
         .subscribe()
@@ -157,7 +149,7 @@ export class MapSearchComponent implements OnInit, OnDestroy {
         [marker.geoPoint.latitude, marker.geoPoint.longitude],
         { icon: markerIcon }
       );
-      const link = `/${ImitationItem.routePath}/${marker.id}`;
+      const link = `/box/${marker.id}`;
       const target = `ourbox_item_${marker.id}`;
       const popup = lfMarker.bindPopup(
         `<a href="${link}" target="${target}">

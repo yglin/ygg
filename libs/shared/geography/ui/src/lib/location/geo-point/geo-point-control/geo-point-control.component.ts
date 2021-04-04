@@ -9,6 +9,7 @@ import { Subscription, noop } from 'rxjs';
 import { GeoPoint } from '@ygg/shared/geography/core';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ygg-geo-point-control',
   templateUrl: './geo-point-control.component.html',
   styleUrls: ['./geo-point-control.component.css'],
@@ -23,6 +24,10 @@ import { GeoPoint } from '@ygg/shared/geography/core';
 export class GeoPointControlComponent
   implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() label: string;
+  @Input() showMap = true;
+  emitChange: (value: GeoPoint) => any = noop;
+  subscriptions: Subscription[] = [];
+  formGroup: FormGroup;
   private _geoPoint: GeoPoint = new GeoPoint();
   set geoPoint(value: GeoPoint) {
     if (GeoPoint.isGeoPoint(value)) {
@@ -33,9 +38,6 @@ export class GeoPointControlComponent
   get geoPoint(): GeoPoint {
     return this._geoPoint;
   }
-  emitChange: (value: GeoPoint) => any = noop;
-  subscriptions: Subscription[] = [];
-  formGroup: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {
     this.formGroup = this.formBuilder.group(this.geoPoint.toJSON());

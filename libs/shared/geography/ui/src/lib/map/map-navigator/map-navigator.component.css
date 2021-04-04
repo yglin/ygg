@@ -1,0 +1,40 @@
+.map-container {
+  height: 80vh;
+  min-height: 300px;
+}
+
+.map {
+  height: 100%;
+  border-radius: 2%;
+  background: rgb(154, 125, 109);
+  background: linear-gradient(
+    0deg,
+    rgba(154, 125, 109, 1) 0%,
+    rgba(251, 255, 138, 1) 52%,
+    rgba(182, 255, 254, 1) 100%
+  );
+}
+
+:host ::ng-deep .leaflet-popup-content-wrapper {
+  min-width: 150px;
+  min-height: 150px;
+  text-align: center;
+  padding: 5px;
+  box-shadow: 5px 5px 20px #0a2412;
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.8) 15%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(0, 0, 0, 0.8) 85%
+  );
+}
+
+:host ::ng-deep .leaflet-popup-content-wrapper a {
+  text-decoration: none;
+}
+
+::ng-deep .leaflet-popup-content img {
+  max-width: 128px;
+  max-height: 128px;
+}

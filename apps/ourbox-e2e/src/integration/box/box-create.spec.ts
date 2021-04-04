@@ -8,11 +8,12 @@ import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
 import { loginTestUser, testUsers } from '@ygg/shared/user/test';
 import { User } from '@ygg/shared/user/core';
 import { logout, theMockDatabase } from '@ygg/shared/test/cypress';
+import { gotoMapNavigatorPage } from '../map/map';
 
 describe('Create box', () => {
   const boxes = range(10).map(() => Box.forge());
 
-  // const mapNavigatorPO = new MapNavigatorPageObjectCypress();
+  const mapNavigatorPO = new MapNavigatorPageObjectCypress();
   const boxViewPO = new BoxViewPageObjectCypress();
   const myBoxesPO = new ImageThumbnailListPageObjectCypress();
 
@@ -34,32 +35,62 @@ describe('Create box', () => {
   });
 
   it('Create a private box', () => {
-    const box01 = boxes[0];
-    box01.public = false;
+    const boxPrivate = boxes[0];
+    boxPrivate.public = false;
     // Navigate to box create page
     gotoBoxCreatePage();
 
     // Set box values and submit
-    createBox(box01);
-
-    // Go to my boxes
-    gotoMyBoxes();
-    myBoxesPO.expectItem(box01);
-
-    // Go to the created box
-    myBoxesPO.clickItem(box01);
+    createBox(boxPrivate);
     boxViewPO.expectVisible();
 
     // Expect data consistency
-    boxViewPO.expectValue(box01);
+    boxViewPO.expectValue(boxPrivate);
+
+    // Go to my boxes
+    gotoMyBoxes();
+
+    // Expect the new box
+    myBoxesPO.expectItem(boxPrivate);
+
+    // Go to the created box
+    myBoxesPO.clickItem(boxPrivate);
+
+    // Expect data consistency
+    boxViewPO.expectValue(boxPrivate);
+
+    // Go to map-navigator page
+    gotoMapNavigatorPage();
+
+    // Pan to box's location
+    mapNavigatorPO.panTo(boxPrivate.location);
+
+    // Box should not show on map
+    mapNavigatorPO.expectNoItem(boxPrivate);
   });
 
-  // it('Create a public box', () => {
-  //   // Navigate to box create page
-  //   // Set box values
-  //   // Redirect to map page
-  //   // Should show on map
-  // });
+  it('Create a public box', () => {
+    const boxPublic = boxes[1];
+    boxPublic.public = true;
+    // Navigate to box create page
+    gotoBoxCreatePage();
+
+    // Set box values and submit
+    createBox(boxPublic);
+
+    // Should redirect to box view page
+    boxViewPO.expectVisible();
+    boxViewPO.expectValue(boxPublic);
+
+    // Go to map-navigator page
+    gotoMapNavigatorPage();
+
+    // Pan to box's location
+    mapNavigatorPO.panTo(boxPublic.location);
+
+    // Box should show on map
+    mapNavigatorPO.expectItem(boxPublic);
+  });
 
   // it('Put treasure in public box', () => {
   //   // Navigate to box create page

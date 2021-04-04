@@ -1,14 +1,7 @@
 import { Box } from '@ygg/ourbox/core';
-import {
-  Album,
-  Location,
-  OmniTypeID,
-  OmniTypes
-} from '@ygg/shared/omni-types/core';
-import {
-  AlbumControlPageObjectCypress,
-  LocationControlPageObjectCypress
-} from '@ygg/shared/omni-types/test';
+import { LocationControlPageObjectCypress } from '@ygg/shared/geography/test';
+import { OmniTypeID, OmniTypes } from '@ygg/shared/omni-types/core';
+import { AlbumControlPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
 import { ControlPageObject } from '@ygg/shared/test/page-object';
 import { TextControlPageObjectCypress } from 'libs/shared/omni-types/test/src/lib/text';

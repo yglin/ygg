@@ -18,7 +18,7 @@ export class MockDatabase {
   documents: { [path: string]: Document } = {};
   documentsBackup: { [path: string]: any } = {};
   entities: { [path: string]: any } = {};
-  RTDBBackup: { [path: string]: any } = {};
+  backupOfRTDB: { [path: string]: any } = {};
 
   constructor() {}
 
@@ -87,9 +87,11 @@ export class MockDatabase {
         }
       }
     });
-    return cy.callFirestore('update', path, data).then(() => {
-      return cy.log(`Update test data at ${path} in firebase firestore DB`);
-    });
+    return cy
+      .callFirestore('update', path, data)
+      .then(() =>
+        cy.log(`Update test data at ${path} in firebase firestore DB`)
+      );
   }
 
   restoreDocuments() {
@@ -117,8 +119,8 @@ export class MockDatabase {
   insertRTDB(path: string, data: any): Cypress.Chainable<any> {
     // Backup RTDB
     cy.callRtdb('get', path).then(backupData => {
-      if (!(path in this.RTDBBackup)) {
-        this.RTDBBackup[path] = !!backupData ? backupData : null;
+      if (!(path in this.backupOfRTDB)) {
+        this.backupOfRTDB[path] = !!backupData ? backupData : null;
       }
     });
     const now = new Date().valueOf();
@@ -139,6 +141,17 @@ export class MockDatabase {
     cy.callFirestore('delete', path);
   }
 
+  clearFromOwner(collection: string, ownerId: string) {
+    return cy.callFirestore(
+      'delete',
+      collection,
+      {},
+      {
+        where: ['ownerId', '==', ownerId]
+      }
+    );
+  }
+
   deleteRTDB(path: string) {
     cy.log(`Delete data at ${path} in firebase realtime DB`);
     // @ts-ignore
@@ -149,7 +162,7 @@ export class MockDatabase {
     const aliasName = `backup-RTDB-${path}`;
     // @ts-ignore
     cy.callRtdb('get', path).then(data => {
-      this.RTDBBackup[path] = data;
+      this.backupOfRTDB[path] = data;
       cy.wrap(data).as(aliasName);
     });
     return cy.get(`@${aliasName}`);
@@ -157,14 +170,14 @@ export class MockDatabase {
 
   restoreRTDB(path?: string) {
     if (path) {
-      if (path in this.RTDBBackup) {
+      if (path in this.backupOfRTDB) {
         // @ts-ignore
-        cy.callRtdb('set', path, this.RTDBBackup[path]).then(() => {
+        cy.callRtdb('set', path, this.backupOfRTDB[path]).then(() => {
           cy.log(`Restore backup data at ${path} in firebase realtime DB`);
         });
       }
     } else {
-      cy.wrap(entries(this.RTDBBackup)).each((entry: any) => {
+      cy.wrap(entries(this.backupOfRTDB)).each((entry: any) => {
         let restoreOp: Cypress.Chainable<any>;
         if (entry && entry.length >= 2) {
           const _path = entry[0];
@@ -175,7 +188,7 @@ export class MockDatabase {
             restoreOp = cy.callRtdb('delete', _path);
           }
           restoreOp.then(() => {
-            delete this.RTDBBackup[path];
+            delete this.backupOfRTDB[path];
           });
         }
       });

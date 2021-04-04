@@ -4,19 +4,31 @@ import { Located } from '@ygg/shared/geography/core';
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
 import { Box } from '@ygg/ourbox/core';
+import { GeoPointControlPageObjectCypress } from './location';
 
 export class MapNavigatorPageObjectCypress extends PageObjectCypress {
+  //   this.itemListPO.expectItem((item as unknown) as ImageThumbnailItem);
+  // }
   selectors = {
     main: '.map-navigator',
-    inputBoundEast: '.bound-input input.east',
-    inputBoundWest: '.bound-input input.west',
-    inputBoundNorth: '.bound-input input.north',
-    inputBoundSouth: '.bound-input input.south',
-    buttonSetBound: '.bound-input button.set-bound',
+    centerControl: '.center-control',
+    // inputBoundEast: '.bound-input input.east',
+    // inputBoundWest: '.bound-input input.west',
+    // inputBoundNorth: '.bound-input input.north',
+    // inputBoundSouth: '.bound-input input.south',
+    // buttonSetBound: '.bound-input button.set-bound',
     itemList: '.item-list'
   };
 
-  itemListPO = new ImageThumbnailListPageObjectCypress();
+  centerControlPO: GeoPointControlPageObjectCypress;
+  // itemListPO = new ImageThumbnailListPageObjectCypress();
+
+  constructor(parentSelector: string = '') {
+    super(parentSelector);
+    this.centerControlPO = new GeoPointControlPageObjectCypress(
+      this.getSelector('centerControl')
+    );
+  }
 
   setMapBound(bound: GeoBound) {
     cy.get(this.getSelector(`inputBoundEast`))
@@ -38,20 +50,32 @@ export class MapNavigatorPageObjectCypress extends PageObjectCypress {
     return GeoBound.fromGeoPoint(item.location.geoPoint, [0.01, 0.02]);
   }
 
-  locateItem(item: Located) {
-    const bound = this.estimateBound(item);
-    this.setMapBound(bound);
-    this.itemListPO.expectItem((item as unknown) as ImageThumbnailItem);
+  // locateItem(item: Located) {
+  //   const bound = this.estimateBound(item);
+  //   this.setMapBound(bound);
+  //   this.itemListPO.expectItem((item as unknown) as ImageThumbnailItem);
+  // }
+
+  getSelectorOfMarker(item: Located): any {
+    return `${this.getSelector()} .map-container img.leaflet-marker-icon[alt="${
+      item.name
+    }"]`;
   }
 
-  expecItem(item: Located) {}
+  expectItem(item: Located) {
+    cy.get(this.getSelectorOfMarker(item)).should('be.visible');
+  }
 
   expectNoItem(item: Located) {
-    throw new Error('Method not implemented.');
+    cy.get(this.getSelectorOfMarker(item)).should('not.exist');
   }
 
   panTo(location: Location) {
-    throw new Error('Method not implemented.');
+    this.setCenter(location);
+  }
+
+  setCenter(location: Location) {
+    this.centerControlPO.setValue(location.geoPoint);
   }
 
   // expectItems(items: TheThing[]) {

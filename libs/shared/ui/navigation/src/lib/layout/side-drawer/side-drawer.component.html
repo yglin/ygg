@@ -5,17 +5,15 @@
       *ngFor="let pageLink of pageLinks"
       class="link"
       [attr.link-id]="pageLink.id"
-      (click)="onClickPageLink()"
+      (click)="onClickPageLink(pageLink)"
     >
-      <a [routerLink]="pageLink.path">
         <span>
           <mat-icon>{{ pageLink.icon }}</mat-icon
           >&nbsp;{{ pageLink.label }}
         </span>
-      </a>
     </div>
   </div>
-  <div class="actions">
+  <!-- <div class="actions">
     <div
       *ngFor="let action of actions"
       class="action"
@@ -27,5 +25,5 @@
         >&nbsp;{{ action.label }}
       </span>
     </div>
-  </div>
+  </div> -->
 </div>

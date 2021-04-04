@@ -8,7 +8,7 @@ const headerPO = new HeaderPageObjectCypress();
 const sideDrawerPO = new SideDrawerPageObjectCypress();
 const pageTitlePO = new PageTitlePageObjectCypress();
 
-export function gotoMapPage() {
+export function gotoMapNavigatorPage() {
   headerPO.openSideDrawer();
   sideDrawerPO.expectVisible();
   sideDrawerPO.clickLink('藏寶地圖');

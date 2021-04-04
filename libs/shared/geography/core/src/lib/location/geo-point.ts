@@ -83,4 +83,8 @@ export class GeoPoint implements SerializableJSON {
   toGoogleMapsLatLng(): google.maps.LatLngLiteral {
     return { lat: this.latitude, lng: this.longitude };
   }
+
+  toCoordsString() {
+    return `${this.latitude},${this.longitude}`;
+  }
 }

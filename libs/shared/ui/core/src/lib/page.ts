@@ -3,5 +3,6 @@ export interface Page {
   icon: string;
   label: string;
   image?: string;
-  path: string[];
+  path?: string[];
+  event?: { name: string; data?: any };
 }

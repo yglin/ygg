@@ -1,9 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { SideDrawerService } from './side-drawer.service';
-import { Page, Action } from '@ygg/shared/ui/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Page } from '@ygg/shared/ui/core';
 import { values } from 'lodash';
 import { Subscription } from 'rxjs';
-import { ActionBeaconService } from '../../action-beacon.service';
+import { SideDrawerService } from './side-drawer.service';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -13,17 +12,12 @@ import { ActionBeaconService } from '../../action-beacon.service';
 })
 export class SideDrawerComponent implements OnInit, OnDestroy {
   pageLinks: Page[] = [];
-  actions: Action[] = [];
   subscription: Subscription = new Subscription();
 
-  constructor(
-    private sideDrawer: SideDrawerService,
-    private actionBeacon: ActionBeaconService
-  ) {
+  constructor(private sideDrawer: SideDrawerService) {
     this.subscription.add(
       this.sideDrawer.sideMenu$.subscribe(sideMenu => {
         this.pageLinks = values(sideMenu.links);
-        this.actions = values(sideMenu.actions);
       })
     );
   }
@@ -34,11 +28,7 @@ export class SideDrawerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {}
 
-  onClickPageLink() {
-    this.sideDrawer.close();
-  }
-
-  onClickAction(action: Action) {
-    this.actionBeacon.run(action.id);
+  onClickPageLink(page: Page) {
+    this.sideDrawer.clickOnPage(page.id);
   }
 }

@@ -1,4 +1,8 @@
-import { Location } from '@ygg/shared/geography/core';
+import {
+  Location,
+  LocationRecord,
+  LocationRecordAccessor
+} from '@ygg/shared/geography/core';
 import {
   DataAccessor,
   Emcee,
@@ -38,6 +42,7 @@ export class Box {
     protected auth: Authenticator,
     protected headquarter: OurboxHeadQuarter,
     protected emcee: Emcee,
+    protected locationRecordAccessor: LocationRecordAccessor,
     options: any = {}
   ) {
     this.id = generateID();
@@ -61,7 +66,7 @@ export class Box {
   }
 
   static forge(): Box {
-    const forged = new Box(null, null, null, null);
+    const forged = new Box(null, null, null, null, null);
     forged.name = `Troll Box ${Date.now()}`;
     forged.album = Album.forge({
       cover: new Image(sample(Box.sampleImages)),
@@ -82,6 +87,16 @@ export class Box {
         this.ownerId = currentUser.id;
       }
       await this.dataAccessor.save(Box.collection, this.id, this.toJSON());
+      if (Location.isLocation(this.location)) {
+        const locationRecord = new LocationRecord({
+          latitude: this.location.geoPoint.latitude,
+          longitude: this.location.geoPoint.longitude,
+          address: this.location.address,
+          objectCollection: Box.collection,
+          objectId: this.id
+        });
+        await this.locationRecordAccessor.save(locationRecord);
+      }
       this.headquarter.emit('box.save.success', this);
     } catch (error) {
       const wrpErr = wrapError(error, `儲存寶箱 ${this.name} 失敗，錯誤原因：`);

@@ -8,7 +8,7 @@ import { Treasure } from '../treasure';
 import { Box } from './box';
 import { BoxFactory } from './box-factory';
 import { BoxFinder } from './box-finder';
-import { GeographyAgent, Location } from '@ygg/shared/geography/core';
+import { GeographyAgent, GeoPoint, Location } from '@ygg/shared/geography/core';
 
 export class BoxAgent {
   constructor(
@@ -23,6 +23,12 @@ export class BoxAgent {
     this.headquarter.subscribe('treasure.save.post', treasure =>
       this.onTreasureSave(treasure)
     );
+    this.headquarter.subscribe('box.create', () => {
+      this.createBox();
+    });
+    this.headquarter.subscribe('box.showOnMap', (box: Box) => {
+      this.showBoxOnMap(box);
+    });
   }
 
   async onTreasureSave(treasure: Treasure) {
@@ -175,6 +181,25 @@ export class BoxAgent {
       );
       this.emcee.warning(wrpErr.message);
       return Promise.reject(wrpErr);
+    }
+  }
+
+  async showBoxOnMap(box: Box) {
+    try {
+      if (!box.public) {
+        throw new Error(`${box.name} 為私人寶箱`);
+      }
+      const location = box.location;
+      if (!location || !GeoPoint.isGeoPoint(location.geoPoint)) {
+        throw new Error(`${box.name} 寶箱沒有座標資料`);
+      }
+      this.router.navigate(['/', 'map'], { queryParams: {
+        center: location.geoPoint.toCoordsString()
+      } });
+    } catch (error) {
+      const wrpErr = wrapError(error, `無法在地圖上顯示寶箱，錯誤原因：`);
+      this.emcee.warning(wrpErr.message);
+      return Promise.reject();
     }
   }
 }

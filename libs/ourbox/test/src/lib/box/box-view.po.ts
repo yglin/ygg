@@ -1,6 +1,6 @@
 import { Box } from '@ygg/ourbox/core';
 import { Location } from '@ygg/shared/geography/core';
-import { LocationViewPageObjectCypress } from '@ygg/shared/geography/test';
+import { LocationViewCompactPageObjectCypress } from '@ygg/shared/geography/test';
 import { Album } from '@ygg/shared/omni-types/core';
 import { AlbumViewPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
@@ -9,18 +9,20 @@ import { PageTitlePageObjectCypress } from '@ygg/shared/ui/test';
 export class BoxViewPageObjectCypress extends PageObjectCypress {
   pageTitlePO: PageTitlePageObjectCypress;
   albumViewPO: AlbumViewPageObjectCypress;
-  locationPO: LocationViewPageObjectCypress;
+  locationPO: LocationViewCompactPageObjectCypress;
 
   selectors = {
     main: '.box-view',
-    public: '.publicity',
+    public: '.publicity'
   };
 
   constructor(parentSelector?: string) {
     super(parentSelector);
     this.pageTitlePO = new PageTitlePageObjectCypress(this.getSelector());
     this.albumViewPO = new AlbumViewPageObjectCypress(this.getSelector());
-    this.locationPO = new LocationViewPageObjectCypress(this.getSelector());
+    this.locationPO = new LocationViewCompactPageObjectCypress(
+      this.getSelector()
+    );
   }
 
   // getSelectorForMember(user: User): string {
@@ -65,6 +67,10 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
     this.expectAlbum(box.album);
     this.expectLocation(box.location);
     this.expectPublicity(box.public);
+  }
+
+  showOnMap() {
+    this.locationPO.clickShowOnMap();
   }
 
   // expectMember(user: User) {

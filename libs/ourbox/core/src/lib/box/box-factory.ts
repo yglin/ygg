@@ -1,3 +1,4 @@
+import { LocationRecordAccessor } from '@ygg/shared/geography/core';
 import { DataAccessor, Emcee } from '@ygg/shared/infra/core';
 import { wrapError } from '@ygg/shared/infra/error';
 import { Authenticator } from '@ygg/shared/user/core';
@@ -11,7 +12,8 @@ export class BoxFactory {
     protected dataAccessor: DataAccessor,
     protected authenticator: Authenticator,
     protected headquarter: OurboxHeadQuarter,
-    protected emcee: Emcee
+    protected emcee: Emcee,
+    protected locationRecordAccessor: LocationRecordAccessor
   ) {}
 
   create(data: any = {}): Box {
@@ -20,6 +22,7 @@ export class BoxFactory {
       this.authenticator,
       this.headquarter,
       this.emcee,
+      this.locationRecordAccessor,
       data
     );
     return newBox;

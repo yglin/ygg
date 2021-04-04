@@ -29,6 +29,7 @@ import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
 // import { ItemTransferCompleteComponent } from './item-transfer/item-transfer-complete/item-transfer-complete.component';
 import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
 import {
+  OurboxHeadQuarter,
   pages,
   pagesInSideDrawer,
   uiActions
@@ -47,19 +48,21 @@ import { BoxAgentService } from './box/box-agent.service';
 import { TreasureViewComponent } from './treasure/treasure-view/treasure-view.component';
 import { MyTreasuresComponent } from './treasure/my-treasures/my-treasures.component';
 import { SharedGeographyUiModule } from '@ygg/shared/geography/ui';
+import { HeadQuarterService } from './head-quarter.service';
+import { TreasureMapComponent } from './treasure-map/treasure-map.component';
 
-export function initSideMenu(sideDrawer: SideDrawerService) {
+export function initSideMenu(
+  sideDrawer: SideDrawerService,
+  hq: HeadQuarterService
+) {
   return async (): Promise<any> => {
     for (const pageId in pick(pages, pagesInSideDrawer)) {
       if (Object.prototype.hasOwnProperty.call(pages, pageId)) {
         const page = pages[pageId];
         sideDrawer.addPageLink(page);
-      }
-    }
-    for (const actionId in uiActions) {
-      if (Object.prototype.hasOwnProperty.call(uiActions, actionId)) {
-        const action = uiActions[actionId];
-        sideDrawer.addAction(action);
+        if (page.event) {
+          hq.connect(sideDrawer.eventEmitter, page.event.name);
+        }
       }
     }
     return Promise.resolve();
@@ -106,7 +109,8 @@ export function initAgents(boxAgent: BoxAgentService) {
     TreasureEditComponent,
     TreasureCreateComponent,
     TreasureViewComponent,
-    MyTreasuresComponent
+    MyTreasuresComponent,
+    TreasureMapComponent
   ],
   imports: [
     CommonModule,
@@ -128,7 +132,7 @@ export function initAgents(boxAgent: BoxAgentService) {
     {
       provide: APP_INITIALIZER,
       useFactory: initSideMenu,
-      deps: [SideDrawerService],
+      deps: [SideDrawerService, HeadQuarterService],
       multi: true
     },
     {

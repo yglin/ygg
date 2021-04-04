@@ -1,6 +1,6 @@
 import { wrapError } from '@ygg/shared/infra/error';
-import { get, has, set, isArray } from 'lodash';
-import { isObservable, Subject, Subscription } from 'rxjs';
+import { get, has, set, isArray, merge } from 'lodash';
+import { isObservable, Observable, Subject, Subscription } from 'rxjs';
 
 export class OurboxHeadQuarter {
   beacons: any = {};
@@ -10,6 +10,14 @@ export class OurboxHeadQuarter {
 
   onDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  connect(source: Observable<any>, eventName: string) {
+    if (!has(this.beacons, eventName)) {
+      set(this.beacons, eventName, new Subject());
+    }
+    const subject: Subject<any> = get(this.beacons, eventName);
+    this.subscription.add(source.subscribe(data => subject.next(data)));
   }
 
   subscribe(

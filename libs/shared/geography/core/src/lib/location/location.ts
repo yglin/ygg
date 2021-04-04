@@ -1,6 +1,7 @@
 import { SerializableJSON } from '@ygg/shared/infra/core';
 import { Address } from './address';
 import { GeoPoint } from './geo-point';
+import { Image } from '@ygg/shared/omni-types/core';
 
 export class Location implements SerializableJSON {
   private _address: Address;
@@ -61,5 +62,8 @@ export class Location implements SerializableJSON {
 }
 
 export interface Located {
+  id?: string;
+  name?: string;
+  image?: string;
   location: Location;
 }

@@ -12,6 +12,8 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
+import { LocationViewCompactComponent } from './location/location-view-compact/location-view-compact.component';
+import { MapNavigatorComponent } from './map/map-navigator/map-navigator.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
     GeoPointViewComponent,
     GoogleMapComponent,
     LocationControlComponent,
-    LocationViewComponent
+    LocationViewComponent,
+    LocationViewCompactComponent,
+    MapNavigatorComponent
   ],
   imports: [
     CommonModule,
@@ -30,6 +34,11 @@ import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
     SharedUiNgMaterialModule,
     SharedUiWidgetsModule
   ],
-  exports: [LocationControlComponent, LocationViewComponent]
+  exports: [
+    LocationControlComponent,
+    LocationViewComponent,
+    LocationViewCompactComponent,
+    MapNavigatorComponent
+  ]
 })
 export class SharedGeographyUiModule {}

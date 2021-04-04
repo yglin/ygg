@@ -1,3 +1,8 @@
+import {
+  GeoBound,
+  LocationRecord,
+  MapFinder
+} from '@ygg/shared/geography/core';
 import { DataAccessor, Query } from '@ygg/shared/infra/core';
 import { wrapError } from '@ygg/shared/infra/error';
 import { User } from '@ygg/shared/user/core';
@@ -12,7 +17,8 @@ export class BoxFinder {
   constructor(
     protected dataAccessor: DataAccessor,
     protected boxFactory: BoxFactory,
-    protected treasureFinder: TreasureFinder
+    protected treasureFinder: TreasureFinder,
+    protected mapFinder: MapFinder
   ) {}
 
   async countUserBoxes(user: User): Promise<number> {
@@ -39,6 +45,17 @@ export class BoxFinder {
       }
     } catch (error) {
       const wrpErr = wrapError(error, `Failed to load box by id ${id}`);
+      return Promise.reject(error);
+    }
+  }
+
+  async findByIds(ids: string[]): Promise<Box[]> {
+    try {
+      const dataItems = await this.dataAccessor.listByIds(Box.collection, ids);
+      return dataItems.map(dataItem => this.boxFactory.create(dataItem));
+    } catch (error) {
+      const wrpErr = wrapError(error, `Failed to load box by ids ${ids}`);
+      console.error(wrpErr.message);
       return Promise.reject(error);
     }
   }
@@ -79,5 +96,19 @@ export class BoxFinder {
     );
     // console.dir(relations);
     return this.treasureFinder.listByIds(relations.map(r => r.treasureId));
+  }
+
+  async findPublicBoxesInMapBound(bound: GeoBound): Promise<Box[]> {
+    const locationRecods: LocationRecord[] = await this.mapFinder.findInBound(
+      bound
+    );
+    // console.dir(locationRecods);
+    const locaitonRecordsOfBoxes = locationRecods.filter(
+      lr => lr.objectCollection === Box.collection
+    );
+    const boxes: Box[] = await this.findByIds(
+      locaitonRecordsOfBoxes.map(lr => lr.objectId)
+    );
+    return boxes.filter(b => b.public);
   }
 }

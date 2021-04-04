@@ -3,8 +3,6 @@ import { LoggedInGuard } from '@ygg/shared/user/ui';
 import { BoxCreateComponent } from './box/box-create/box-create.component';
 import { BoxResolverService } from './box/box-resolver.service';
 import { BoxViewComponent } from './box/box-view/box-view.component';
-// import { HomeComponent } from './pages/home/home.component';
-// import { MapSearchComponent } from './map/map-search/map-search.component';
 // import { BoxCreateComponent } from './pages/box/box-create/box-create.component';
 // import { BoardComponent } from './pages/board/board.component';
 // import { BoxViewComponent } from './pages/box/box-view/box-view.component';
@@ -18,6 +16,7 @@ import { BoxViewComponent } from './box/box-view/box-view.component';
 // } from '@ygg/ourbox/core';
 // import { BoxCreateComponent } from './box/box-create/box-create.component';
 import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
+import { TreasureMapComponent } from './treasure-map/treasure-map.component';
 import { MyTreasuresComponent } from './treasure/my-treasures/my-treasures.component';
 // import { HomeComponent } from './home/home.component';
 // import { BoxFactoryService } from './box/box-factory.service';
@@ -91,13 +90,17 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'treasure-map',
+    component: TreasureMapComponent
+  },
+  {
     path: 'ourbox',
     children: [
       {
         path: '',
         pathMatch: 'full',
-        component: TreasureCreateComponent
-        // redirectTo: 'map'
+        // component: TreasureCreateComponent
+        redirectTo: 'treasure-map'
       }
       // {
       //   path: 'map',

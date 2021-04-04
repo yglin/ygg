@@ -4,7 +4,7 @@ import { AddressViewPageObjectCypress } from './address';
 import { GeoPointViewPageObjectCypress } from './geo-point/geo-point-view.po';
 
 export class LocationViewPageObjectCypress extends ViewPageObject {
-  selectors = {
+  selectors: any = {
     main: '.location-view',
     address: '.address',
     geoPoint: '.geo-point'

@@ -14,7 +14,7 @@ export const pages: { [id: string]: Page } = {
     id: 'box-create',
     icon: 'library_add',
     label: '開新寶箱',
-    path: ['/', 'box', 'create']
+    event: { name: 'box.create' }
   },
   'my-boxes': {
     id: 'my-boxes',
@@ -28,14 +28,13 @@ export const pages: { [id: string]: Page } = {
     icon: Treasure.icon,
     label: '我的寶物',
     path: ['/', 'my', 'treasures']
+  },
+  'treasure-map': {
+    id: 'treasure-map',
+    icon: 'map',
+    label: '藏寶地圖',
+    path: ['/', 'treasure-map']
   }
-  // mapSearch: {
-  //   id: 'mapSearch',
-  //   icon: 'map',
-  //   label: '藏寶圖',
-  //   image: '/assets/images/map.png',
-  //   path: ['/', 'ourbox', 'map']
-  // },
   // itemWarehouse: {
   //   id: 'itemWarehouse',
   //   icon: ImitationItem.icon,
@@ -65,6 +64,7 @@ export const pages: { [id: string]: Page } = {
 };
 
 export const pagesInSideDrawer = [
+  'treasure-map',
   'create-treasure',
   'box-create',
   'my-treasures',
