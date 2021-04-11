@@ -1,14 +1,21 @@
-import { Box } from '@ygg/ourbox/core';
+import { Box, Treasure } from '@ygg/ourbox/core';
 import { range } from 'lodash';
 import { createBox, gotoCreatePage as gotoBoxCreatePage } from './box-create';
 import { MapNavigatorPageObjectCypress } from '@ygg/shared/geography/test';
-import { BoxViewPageObjectCypress } from '@ygg/ourbox/test';
+import {
+  BoxViewPageObjectCypress,
+  TreasureViewPageObjectCypress
+} from '@ygg/ourbox/test';
 import { gotoMyBoxes } from './box';
-import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
+import {
+  ImageThumbnailListPageObjectCypress,
+  YggDialogPageObjectCypress
+} from '@ygg/shared/ui/test';
 import { loginTestUser, testUsers } from '@ygg/shared/user/test';
 import { User } from '@ygg/shared/user/core';
 import { logout, theMockDatabase } from '@ygg/shared/test/cypress';
 import { gotoMapNavigatorPage } from '../map/map';
+import { addToBox, createTreasure } from '../treasure/treasure-create';
 
 describe('Create box', () => {
   const boxes = range(10).map(() => Box.forge());
@@ -16,6 +23,8 @@ describe('Create box', () => {
   const mapNavigatorPO = new MapNavigatorPageObjectCypress();
   const boxViewPO = new BoxViewPageObjectCypress();
   const myBoxesPO = new ImageThumbnailListPageObjectCypress();
+  const dialogPO = new YggDialogPageObjectCypress();
+  const treasureViewPO = new TreasureViewPageObjectCypress();
 
   const me = testUsers[0];
 
@@ -92,14 +101,43 @@ describe('Create box', () => {
     mapNavigatorPO.expectItem(boxPublic);
   });
 
-  // it('Put treasure in public box', () => {
-  //   // Navigate to box create page
-  //   // Set box values and submit
-  //   // Navigate to treasure create page
-  //   // Set treasure values and submit
-  //   // Select the public box to put treasure
-  //   // Redirect to map page
-  //   // Click on map marker of the public box
-  //   // Should show treasure in pop-up treasure list
-  // });
+  it('Put treasure in public box', () => {
+    const boxPublic01 = boxes[2];
+    boxPublic01.public = true;
+    const treasure01 = Treasure.forge();
+    // Navigate to box create page
+    gotoBoxCreatePage();
+
+    // Set box values and submit
+    createBox(boxPublic01);
+    boxViewPO.expectVisible();
+    boxViewPO.expectValue(boxPublic01);
+
+    // Create trasure
+    createTreasure(treasure01);
+
+    // Select the box to put treasure
+    addToBox(treasure01, boxPublic01);
+    boxViewPO.expectVisible();
+
+    // Redirect to map page
+    gotoMapNavigatorPage();
+
+    // Click on map marker of the public box
+    mapNavigatorPO.panTo(boxPublic01.location);
+    mapNavigatorPO.clickItem(boxPublic01);
+
+    // Should show treasure in pop-up treasure list
+    dialogPO.expectTitle(`${boxPublic01.name} 裡的寶物`);
+    const treasureListPO = new ImageThumbnailListPageObjectCypress(
+      dialogPO.getSelector()
+    );
+    treasureListPO.expectItem(treasure01);
+
+    // Click on teh treasure redirect to its page
+    treasureListPO.clickItem(treasure01);
+    dialogPO.expectClosed();
+    treasureViewPO.expectVisible();
+    treasureViewPO.expectValue(treasure01);
+  });
 });

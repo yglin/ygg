@@ -10,7 +10,6 @@ import {
 import { ImageThumbnailItem } from '../image-thumbnail';
 import { Observable, Subscription, Subject } from 'rxjs';
 import { YggDialogContentComponent } from '../../dialog';
-import { ImageThumbnailListPageObject } from './image-thumbnail-list.component.po';
 import { ImageThumbnailItemSize } from '../image-thumbnail-item/image-thumbnail.component.po';
 
 @Component({
@@ -43,7 +42,7 @@ export class ImageThumbnailListComponent
   subscriptions: Subscription[] = [];
 
   dialogData: any;
-  dialogSubmit$: Subject<
+  dialogOutput$: Subject<
     ImageThumbnailItem | ImageThumbnailItem[]
   > = new Subject();
 
@@ -65,12 +64,13 @@ export class ImageThumbnailListComponent
       );
     }
     this.isItemDeletable = this.deleteItems.observers.length > 0;
-    this.isSelectable =
-      this.selectionChange.observers.length > 0 ||
-      this.dialogSubmit$.observers.length > 0 ||
-      this.selectItem.observers.length > 0 ||
-      this.deselectItem.observers.length > 0 ||
-      this.isItemDeletable;
+    // 2021/04/11 yglin To remove selection logic from this component
+    // this.isSelectable =
+    //   this.selectionChange.observers.length > 0 ||
+    //   this.dialogOutput$.observers.length > 0 ||
+    //   this.selectItem.observers.length > 0 ||
+    //   this.deselectItem.observers.length > 0 ||
+    //   this.isItemDeletable;
     this.hideAddButton =
       this.readonly ||
       (this.hideAddButton !== undefined && this.hideAddButton !== false);
@@ -95,6 +95,10 @@ export class ImageThumbnailListComponent
       this.selectItem.emit(item);
     }
     this.selectionChange.emit(this.selection);
+    this.dialogOutput$.next({
+      name: 'clickItem',
+      data: item
+    });
   }
 
   selectAll() {
@@ -130,9 +134,9 @@ export class ImageThumbnailListComponent
   onSubmit() {
     if (this.singleSelect) {
       const selected = isEmpty(this.selection) ? null : this.selection[0];
-      this.dialogSubmit$.next(selected);
+      this.dialogOutput$.next(selected);
     } else {
-      this.dialogSubmit$.next(this.selection);
+      this.dialogOutput$.next(this.selection);
     }
   }
 }

@@ -70,6 +70,10 @@ export class MapNavigatorPageObjectCypress extends PageObjectCypress {
     cy.get(this.getSelectorOfMarker(item)).should('not.exist');
   }
 
+  clickItem(item: Located) {
+    cy.get(this.getSelectorOfMarker(item)).click({ force: true });
+  }
+
   panTo(location: Location) {
     this.setCenter(location);
   }

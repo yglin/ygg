@@ -16,6 +16,7 @@ import { loginTestUser, testUsers } from '@ygg/shared/user/test';
 import { range } from 'lodash';
 import { createBox } from '../box/box-create';
 import {
+  addToBox,
   createTreasure,
   expectMyTreasure,
   gotoCreatePage,
@@ -74,18 +75,19 @@ describe('Create a treasure from the ground up', () => {
     theMockDatabase.clearFromOwner(Box.collection, me.id);
     const treasure03 = treasures[2];
     createTreasure(treasure03);
-    emceePO.confirm(message('confirmAddToBox', treasure03.name));
-    const boxSelectorPO = new ImageThumbnailSelectorPageObjectCypress(
-      dialogPO.getSelector()
-    );
-    dialogPO.expectTitle(message('selectBoxToStoreTreasure', treasure03));
-    boxSelectorPO.expectVisible();
-    boxSelectorPO.expectItem(boxMyDefault);
-    boxSelectorPO.selectItem(boxMyDefault);
-    dialogPO.confirm();
-    emceePO.info(
-      message('putTreasureIntoBox', { treasure: treasure03, box: boxMyDefault })
-    );
+    addToBox(treasure03, boxMyDefault);
+    // emceePO.confirm(message('confirmAddToBox', treasure03.name));
+    // const boxSelectorPO = new ImageThumbnailSelectorPageObjectCypress(
+    //   dialogPO.getSelector()
+    // );
+    // dialogPO.expectTitle(message('selectBoxToStoreTreasure', treasure03));
+    // boxSelectorPO.expectVisible();
+    // boxSelectorPO.expectItem(boxMyDefault);
+    // boxSelectorPO.selectItem(boxMyDefault);
+    // dialogPO.confirm();
+    // emceePO.info(
+    //   message('putTreasureIntoBox', { treasure: treasure03, box: boxMyDefault })
+    // );
 
     // Redircet to my default box page
     // Prompt user to set box location

@@ -8,6 +8,7 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
 import {
   YggDialogComponentData,
   YggDialogContentComponent
@@ -37,6 +38,7 @@ export class YggDialogComponent implements OnInit {
   hasOutputValue = false;
   output: any;
   isActive = false;
+  output$: Observable<any>;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private dialogData: YggDialogComponentData,
@@ -60,6 +62,7 @@ export class YggDialogComponent implements OnInit {
         this.contentComponent = contentComponentRef.instance as YggDialogContentComponent;
         this.contentComponent.dialogData = this.dialogData.data;
         if (this.contentComponent.dialogOutput$) {
+          this.output$ = this.contentComponent.dialogOutput$;
           this.hasOutput = true;
           this.contentComponent.dialogOutput$.subscribe(output => {
             this.hasOutputValue = true;

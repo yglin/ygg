@@ -9,8 +9,11 @@ import { Box } from './box';
 import { BoxFactory } from './box-factory';
 import { BoxFinder } from './box-finder';
 import { GeographyAgent, GeoPoint, Location } from '@ygg/shared/geography/core';
+import { Subscription } from 'rxjs';
 
 export class BoxAgent {
+  subscription = new Subscription();
+
   constructor(
     protected emcee: Emcee,
     protected authenticator: Authenticator,
@@ -193,13 +196,19 @@ export class BoxAgent {
       if (!location || !GeoPoint.isGeoPoint(location.geoPoint)) {
         throw new Error(`${box.name} 寶箱沒有座標資料`);
       }
-      this.router.navigate(['/', 'map'], { queryParams: {
-        center: location.geoPoint.toCoordsString()
-      } });
+      this.router.navigate(['/', 'map'], {
+        queryParams: {
+          center: location.geoPoint.toCoordsString()
+        }
+      });
     } catch (error) {
       const wrpErr = wrapError(error, `無法在地圖上顯示寶箱，錯誤原因：`);
       this.emcee.warning(wrpErr.message);
       return Promise.reject();
     }
+  }
+
+  popupTreasuresInBox(box: Box) {
+    throw new Error('Method not implemented.');
   }
 }

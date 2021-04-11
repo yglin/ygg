@@ -4,5 +4,6 @@
   <ygg-map-navigator
     [items]="boxes"
     (boundChanged)="onMapBoundChange($event)"
+    (clickItem)="clickOnBoxMarker($event)"
   ></ygg-map-navigator>
 </div>

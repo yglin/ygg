@@ -26,6 +26,7 @@ import { Marker } from '../marker/marker';
 export class MapNavigatorComponent implements OnInit, OnChanges {
   @Input() items: Located[] = [];
   @Output() boundChanged: EventEmitter<GeoBound> = new EventEmitter();
+  @Output() clickItem: EventEmitter<Located> = new EventEmitter();
   markersLayer = leaflet.layerGroup();
   subscription: Subscription = new Subscription();
   isTesting = !!getEnv('test') ? true : false;
@@ -156,6 +157,7 @@ export class MapNavigatorComponent implements OnInit, OnChanges {
         `
       );
       lfMarker.on('mouseover', () => popup.openPopup());
+      lfMarker.on('click', () => this.clickItem.emit(marker.item));
       lfMarker.addTo(this.markersLayer);
     }
   }

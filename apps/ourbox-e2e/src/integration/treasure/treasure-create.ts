@@ -1,13 +1,16 @@
-import { Treasure } from '@ygg/ourbox/core';
+import { Box, Treasure } from '@ygg/ourbox/core';
 import {
+  BoxViewPageObjectCypress,
   HeaderPageObjectCypress,
   TreasureEditPageObjectCypress
 } from '@ygg/ourbox/test';
 import {
   EmceePageObjectCypress,
   ImageThumbnailListPageObjectCypress,
+  ImageThumbnailSelectorPageObjectCypress,
   PageTitlePageObjectCypress,
-  SideDrawerPageObjectCypress
+  SideDrawerPageObjectCypress,
+  YggDialogPageObjectCypress
 } from '@ygg/shared/ui/test';
 
 const headerPO = new HeaderPageObjectCypress();
@@ -16,6 +19,8 @@ const treasureEditPO = new TreasureEditPageObjectCypress();
 const treasuresPO = new ImageThumbnailListPageObjectCypress();
 const pageTitlePO = new PageTitlePageObjectCypress();
 const emceePO = new EmceePageObjectCypress();
+const dialogPO = new YggDialogPageObjectCypress();
+const boxViewPO = new BoxViewPageObjectCypress();
 
 export function gotoCreatePage() {
   headerPO.openSideDrawer();
@@ -81,6 +86,19 @@ export function expectMyTreasure(treasure: Treasure) {
   gotoMyTreasures();
   treasuresPO.expectVisible();
   treasuresPO.expectItem(treasure);
+}
+
+export function addToBox(treasure: Treasure, box: Box) {
+  emceePO.confirm(message('confirmAddToBox', treasure.name));
+  const boxSelectorPO = new ImageThumbnailSelectorPageObjectCypress(
+    dialogPO.getSelector()
+  );
+  dialogPO.expectTitle(message('selectBoxToStoreTreasure', treasure));
+  boxSelectorPO.expectVisible();
+  boxSelectorPO.expectItem(box);
+  boxSelectorPO.selectItem(box);
+  dialogPO.confirm();
+  emceePO.info(message('putTreasureIntoBox', { treasure, box }));
 }
 
 export function gotoMap() {
