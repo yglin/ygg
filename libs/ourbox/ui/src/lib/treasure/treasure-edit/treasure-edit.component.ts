@@ -28,6 +28,7 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
   };
   formGroupAlbum: FormGroup;
   formGroupName: FormGroup;
+  formGroupTags: FormGroup;
   // formGroupStep3: FormGroup;
   initStep = 0;
   eventBusNameControl: Subject<any> = new Subject();
@@ -40,6 +41,7 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
     this.formGroupName = this.formBuilder.group({
       name: ['', Validators.required]
     });
+    this.formGroupTags = this.formBuilder.group({ tags: null });
     // this.formGroupStep3 = this.formBuilder.group({
     //   location: [null, Validators.required]
     // });
@@ -93,6 +95,7 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
     const payload = extend(
       this.formGroupAlbum.value,
       this.formGroupName.value,
+      this.formGroupTags.value
       // this.formGroupStep3.value
     );
     this.value.update(payload);

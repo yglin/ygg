@@ -1,20 +1,23 @@
 import { Treasure } from '@ygg/ourbox/core';
-import { OmniTypeID, OmniTypes } from '@ygg/shared/omni-types/core';
-import { AlbumControlPageObjectCypress } from '@ygg/shared/omni-types/test';
+import {
+  AlbumControlPageObjectCypress,
+  TextControlPageObjectCypress
+} from '@ygg/shared/omni-types/test';
+import { TagsControlPageObjectCypress } from '@ygg/shared/tags/test';
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
-import { ControlPageObject } from '@ygg/shared/test/page-object';
-import { TextControlPageObjectCypress } from 'libs/shared/omni-types/test/src/lib/text';
 
 export class TreasureEditPageObjectCypress extends PageObjectCypress {
   selectors = {
     main: '.treasure-edit',
     'album-control': '.album.control',
     'name-control': '.name.control',
-    'location-control': '.location.control'
+    'location-control': '.location.control',
+    'tags-control': '.tags-control'
   };
 
   nameControlPO: TextControlPageObjectCypress;
   albumControlPO: AlbumControlPageObjectCypress;
+  tagsControlPO: TagsControlPageObjectCypress;
 
   constructor(parentSelector?: string) {
     super(parentSelector);
@@ -23,6 +26,9 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
     );
     this.albumControlPO = new AlbumControlPageObjectCypress(
       this.getSelector('album-control')
+    );
+    this.tagsControlPO = new TagsControlPageObjectCypress(
+      this.getSelector('tags-control')
     );
   }
 
@@ -36,11 +42,14 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
   // }
 
   setValue(treasure: Treasure) {
-    this.expectStep('寶物的名稱');
+    this.expectStep('寶物名稱');
     this.nameControlPO.setValue(treasure.name);
     this.nextStep();
-    this.expectStep('寶物的照片');
+    this.expectStep('寶物照片');
     this.albumControlPO.setValue(treasure.album);
+    this.nextStep();
+    this.expectStep('寶物標籤');
+    this.tagsControlPO.setValue(treasure.tags);
   }
 
   nextStep() {

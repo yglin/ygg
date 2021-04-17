@@ -94,7 +94,10 @@
       ],
       "@ygg/shared/custom-page/ui": ["libs/shared/custom-page/ui/src/index.ts"],
       "@ygg/shared/geography/test": ["libs/shared/geography/test/src/index.ts"],
-      "@ygg/shared/geography/ui": ["libs/shared/geography/ui/src/index.ts"]
+      "@ygg/shared/geography/ui": ["libs/shared/geography/ui/src/index.ts"],
+      "@ygg/shared/tags/core": ["libs/shared/tags/core/src/index.ts"],
+      "@ygg/shared/tags/test": ["libs/shared/tags/test/src/index.ts"],
+      "@ygg/shared/tags/ui": ["libs/shared/tags/ui/src/index.ts"]
     },
     "rootDir": "."
   },

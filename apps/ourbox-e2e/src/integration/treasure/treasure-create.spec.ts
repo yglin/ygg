@@ -1,5 +1,5 @@
 import { Box, Treasure } from '@ygg/ourbox/core';
-import { TreasureEditPageObjectCypress } from '@ygg/ourbox/test';
+import { TreasureEditPageObjectCypress, TreasureViewPageObjectCypress } from '@ygg/ourbox/test';
 import { Location } from '@ygg/shared/geography/core';
 import { LocationControlPageObjectCypress } from '@ygg/shared/geography/test';
 import { Album } from '@ygg/shared/omni-types/core';
@@ -20,6 +20,8 @@ import {
   createTreasure,
   expectMyTreasure,
   gotoCreatePage,
+  gotoMyTreasure,
+  gotoMyTreasures,
   message
 } from './treasure-create';
 
@@ -39,6 +41,7 @@ describe('Create a treasure from the ground up', () => {
 
   // const box01 = Box.forge();
   const treasureEditPO = new TreasureEditPageObjectCypress();
+  const treasureViewPO = new TreasureViewPageObjectCypress();
   const treasuresPO = new ImageThumbnailListPageObjectCypress();
   const pageTitlePO = new PageTitlePageObjectCypress();
   const dialogPO = new YggDialogPageObjectCypress();
@@ -68,6 +71,9 @@ describe('Create a treasure from the ground up', () => {
     createTreasure(treasure02);
     emceePO.cancel(message('confirmAddToBox', treasure02.name));
     expectMyTreasure(treasure02);
+    gotoMyTreasure(treasure02);
+    treasureViewPO.expectVisible();
+    treasureViewPO.expectValue(treasure02);
   });
 
   it('Create and put into my default box', () => {
@@ -75,18 +81,6 @@ describe('Create a treasure from the ground up', () => {
     const treasure03 = treasures[2];
     createTreasure(treasure03);
     addToBox(treasure03, boxMyDefault);
-    // emceePO.confirm(message('confirmAddToBox', treasure03.name));
-    // const boxSelectorPO = new ImageThumbnailSelectorPageObjectCypress(
-    //   dialogPO.getSelector()
-    // );
-    // dialogPO.expectTitle(message('selectBoxToStoreTreasure', treasure03));
-    // boxSelectorPO.expectVisible();
-    // boxSelectorPO.expectItem(boxMyDefault);
-    // boxSelectorPO.selectItem(boxMyDefault);
-    // dialogPO.confirm();
-    // emceePO.info(
-    //   message('putTreasureIntoBox', { treasure: treasure03, box: boxMyDefault })
-    // );
 
     // Redircet to my default box page
     // Prompt user to set box location
@@ -103,6 +97,7 @@ describe('Create a treasure from the ground up', () => {
     treasuresPO.scrollIntoView();
     treasuresPO.expectVisible();
     treasuresPO.expectItem(treasure03);
+    treasuresPO.clickItem(treasure03);
   });
 
   it('Create and put into some new box', () => {

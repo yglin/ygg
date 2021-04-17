@@ -34,6 +34,7 @@ import { DatetimeComponent } from './datetime/datetime.component';
 import { ErrorMessagesComponent } from './error-messages/error-messages.component';
 import { ProgressDialogComponent } from './dialog/progress-dialog/progress-dialog.component';
 import { ExtraInfoButtonComponent } from './extra-info-button/extra-info-button/extra-info-button.component';
+import { ChipsViewComponent } from './chips-view/chips-view.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { ExtraInfoButtonComponent } from './extra-info-button/extra-info-button/
     ErrorMessagesComponent,
     ProgressDialogComponent,
     ExtraInfoButtonComponent,
-    ImageThumbnailSelectorComponent
+    ImageThumbnailSelectorComponent,
+    ChipsViewComponent
   ],
   imports: [
     CommonModule,
@@ -86,6 +88,7 @@ import { ExtraInfoButtonComponent } from './extra-info-button/extra-info-button/
     ItemsGroupSwitcherComponent,
     TimeInputComponent,
     ChipsControlComponent,
+    ChipsViewComponent,
     ImageIconComponent,
     ActionBarLayoutComponent,
     PriceComponent,
@@ -97,7 +100,7 @@ import { ExtraInfoButtonComponent } from './extra-info-button/extra-info-button/
     ErrorMessagesComponent,
     ExtraInfoButtonComponent,
     ImageThumbnailSelectorComponent
-  ],
+  ]
   // entryComponents: [
   //   ProgressSpinnerComponent,
   //   YggDialogComponent,

@@ -6,3 +6,4 @@ export * from './error-messages.po';
 export * from './side-drawer.po';
 export * from './extra-info-button.po';
 export * from './page-title.po';
+export * from './chips';

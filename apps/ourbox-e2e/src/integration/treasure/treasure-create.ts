@@ -22,21 +22,6 @@ const emceePO = new EmceePageObjectCypress();
 const dialogPO = new YggDialogPageObjectCypress();
 const boxViewPO = new BoxViewPageObjectCypress();
 
-export function gotoCreatePage() {
-  headerPO.openSideDrawer();
-  sideDrawerPO.expectVisible();
-  sideDrawerPO.clickLink('分享寶物');
-  treasureEditPO.expectVisible();
-  pageTitlePO.expectText(`分享我的寶物`);
-}
-
-export function gotoMyTreasures() {
-  headerPO.openSideDrawer();
-  sideDrawerPO.expectVisible();
-  sideDrawerPO.clickLink('我的寶物');
-  treasuresPO.expectVisible();
-  pageTitlePO.expectText(`我的寶物`);
-}
 export function message(id: string, data: any) {
   switch (id) {
     case 'confirmAddToBox':
@@ -60,6 +45,28 @@ export function message(id: string, data: any) {
     default:
       return '';
   }
+}
+
+export function gotoCreatePage() {
+  headerPO.openSideDrawer();
+  sideDrawerPO.expectVisible();
+  sideDrawerPO.clickLink('分享寶物');
+  treasureEditPO.expectVisible();
+  pageTitlePO.expectText(`分享我的寶物`);
+}
+
+export function gotoMyTreasures() {
+  headerPO.openSideDrawer();
+  sideDrawerPO.expectVisible();
+  sideDrawerPO.clickLink('我的寶物');
+  treasuresPO.expectVisible();
+  pageTitlePO.expectText(`我的寶物`);
+}
+
+export function gotoMyTreasure(treasure: Treasure) {
+  gotoMyTreasures();
+  treasuresPO.expectVisible();
+  treasuresPO.clickItem(treasure);
 }
 
 export function createTreasure(treasure: Treasure) {

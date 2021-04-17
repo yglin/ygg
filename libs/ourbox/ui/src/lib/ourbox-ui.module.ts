@@ -1,24 +1,16 @@
-import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { MapSearchComponent } from './map/map-search/map-search.component';
 import { RouterModule } from '@angular/router';
-import { routes } from './route';
-// import { HomeComponent } from './home/home.component';
-import { BoxCreateComponent } from './box/box-create/box-create.component';
-import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
-import { HeaderComponent } from './layout/header/header.component';
-import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import {
-  SharedUserUiModule,
-  UserMenuService,
-  UserMenuItem
-} from '@ygg/shared/user/ui';
-import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
-import { BoxFactoryService } from './box/box-factory.service';
-import { noop, pick, values } from 'lodash';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BoxViewComponent } from './box/box-view/box-view.component';
+import { pages, pagesInSideDrawer } from '@ygg/ourbox/core';
+// import { SiteHowtoComponent } from './misc/site-howto/site-howto.component';
+import { SharedCustomPageUiModule } from '@ygg/shared/custom-page/ui';
+import { SharedGeographyUiModule } from '@ygg/shared/geography/ui';
+// import { ItemTransferCompleteComponent } from './item-transfer/item-transfer-complete/item-transfer-complete.component';
+import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
+import { SharedTagsUiModule } from '@ygg/shared/tags/ui';
 // import { ItemWarehouseComponent } from './item/item-warehouse/item-warehouse.component';
 // import { TheThingUiModule } from '@ygg/the-thing/ui';
 // import { ItemComponent } from './item/item/item.component';
@@ -26,30 +18,30 @@ import { BoxViewComponent } from './box/box-view/box-view.component';
 // import { ItemTransferComponent } from './item-transfer/item-transfer/item-transfer.component';
 // import { MyItemTransfersComponent } from './item-transfer/my-item-transfers/my-item-transfers.component';
 import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
-// import { ItemTransferCompleteComponent } from './item-transfer/item-transfer-complete/item-transfer-complete.component';
-import { SharedOmniTypesUiModule } from '@ygg/shared/omni-types/ui';
+import { SideDrawerService } from '@ygg/shared/ui/navigation';
+import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
+import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import {
-  OurboxHeadQuarter,
-  pages,
-  pagesInSideDrawer,
-  uiActions
-  // connectUiActions
-} from '@ygg/ourbox/core';
-import {
-  ActionBeaconService,
-  SideDrawerService
-} from '@ygg/shared/ui/navigation';
-// import { SiteHowtoComponent } from './misc/site-howto/site-howto.component';
-import { SharedCustomPageUiModule } from '@ygg/shared/custom-page/ui';
+  SharedUserUiModule,
+  UserMenuItem,
+  UserMenuService
+} from '@ygg/shared/user/ui';
+import { noop, pick, values } from 'lodash';
+import { BoxAgentService } from './box/box-agent.service';
+// import { HomeComponent } from './home/home.component';
+import { BoxCreateComponent } from './box/box-create/box-create.component';
+import { BoxFactoryService } from './box/box-factory.service';
+import { BoxViewComponent } from './box/box-view/box-view.component';
+import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
+import { HeadQuarterService } from './head-quarter.service';
+import { HeaderComponent } from './layout/header/header.component';
+import { routes } from './route';
+import { TreasureMapComponent } from './treasure-map/treasure-map.component';
+import { MyTreasuresComponent } from './treasure/my-treasures/my-treasures.component';
+import { TreasureCreateComponent } from './treasure/treasure-create/treasure-create.component';
 // import { OurboxTourGuideService } from './ourbox-tour-guide.service';
 import { TreasureEditComponent } from './treasure/treasure-edit/treasure-edit.component';
-import { TreasureCreateComponent } from './treasure/treasure-create/treasure-create.component';
-import { BoxAgentService } from './box/box-agent.service';
 import { TreasureViewComponent } from './treasure/treasure-view/treasure-view.component';
-import { MyTreasuresComponent } from './treasure/my-treasures/my-treasures.component';
-import { SharedGeographyUiModule } from '@ygg/shared/geography/ui';
-import { HeadQuarterService } from './head-quarter.service';
-import { TreasureMapComponent } from './treasure-map/treasure-map.component';
 
 export function initSideMenu(
   sideDrawer: SideDrawerService,
@@ -125,6 +117,7 @@ export function initAgents(boxAgent: BoxAgentService) {
     // TheThingUiModule,
     SharedCustomPageUiModule,
     SharedGeographyUiModule,
+    SharedTagsUiModule,
     RouterModule.forChild(routes)
   ],
   exports: [HeaderComponent],

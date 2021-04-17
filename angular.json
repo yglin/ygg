@@ -2763,6 +2763,86 @@
         }
       },
       "schematics": {}
+    },
+    "shared-tags-core": {
+      "root": "libs/shared/tags/core",
+      "sourceRoot": "libs/shared/tags/core/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/tags/core/tsconfig.lib.json",
+              "libs/shared/tags/core/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/tags/core/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/tags/core/jest.config.js",
+            "tsConfig": "libs/shared/tags/core/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "shared-tags-test": {
+      "root": "libs/shared/tags/test",
+      "sourceRoot": "libs/shared/tags/test/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/tags/test/tsconfig.lib.json",
+              "libs/shared/tags/test/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/tags/test/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/tags/test/jest.config.js",
+            "tsConfig": "libs/shared/tags/test/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "shared-tags-ui": {
+      "projectType": "library",
+      "root": "libs/shared/tags/ui",
+      "sourceRoot": "libs/shared/tags/ui/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/tags/ui/tsconfig.lib.json",
+              "libs/shared/tags/ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/tags/ui/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/tags/ui/jest.config.js",
+            "tsConfig": "libs/shared/tags/ui/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/shared/tags/ui/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

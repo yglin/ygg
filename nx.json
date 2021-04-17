@@ -273,6 +273,15 @@
     },
     "shared-geography-ui": {
       "tags": []
+    },
+    "shared-tags-core": {
+      "tags": []
+    },
+    "shared-tags-test": {
+      "tags": []
+    },
+    "shared-tags-ui": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {

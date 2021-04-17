@@ -8,7 +8,7 @@ import {
 } from '@ygg/shared/infra/core';
 import { wrapError } from '@ygg/shared/infra/error';
 import { Album } from '@ygg/shared/omni-types/core';
-import { Location } from "@ygg/shared/geography/core";
+import { Tags } from '@ygg/shared/tags/core';
 import { Authenticator, User } from '@ygg/shared/user/core';
 import { extend, get } from 'lodash';
 import { OurboxHeadQuarter } from '../head-quarter';
@@ -22,6 +22,7 @@ export class Treasure {
   name: string;
   description: string;
   album: Album;
+  tags: Tags;
   // location: Location;
   ownerId: string;
   createAt: Date;
@@ -45,6 +46,10 @@ export class Treasure {
     if (options.album) {
       this.album = new Album().fromJSON(options.album);
     }
+    if (options.tags) {
+      // console.log(options.tags);
+      this.tags = new Tags(options.tags);
+    }
     if (options.createAt) {
       this.createAt = new Date(options.createAt);
     }
@@ -61,6 +66,7 @@ export class Treasure {
     const treasure = new Treasure(null, null, null, null, null);
     treasure.album = Album.forge();
     treasure.name = `MyPrecious_${Date.now()}`;
+    treasure.tags = Tags.forge();
     // treasure.location = Location.forge();
     return treasure;
   }
@@ -99,7 +105,10 @@ export class Treasure {
       } else if (this.ownerId !== currentUser.id) {
         throw new Error(`抱歉，你不是 ${this.name} 的所有者`);
       }
-      await this.dataAccessor.save(Treasure.collection, this.id, this.toJSON());
+      const payload = this.toJSON();
+      // console.log(`Save treasure ${this.name}`);
+      // console.dir(payload);
+      await this.dataAccessor.save(Treasure.collection, this.id, payload);
       await this.emcee.info(`成功${actionName}寶物 ${this.name} ！`);
       this.headquarter.emit('treasure.save.post', this);
     } catch (error) {
