@@ -18,7 +18,11 @@ import { gotoMapNavigatorPage } from '../map/map';
 import { addToBox, createTreasure } from '../treasure/treasure-create';
 
 describe('Create box', () => {
-  const boxes = range(10).map(() => Box.forge());
+  const boxes = range(10).map((value, index) => {
+    const box = Box.forge();
+    box.name += `_${index}`;
+    return box;
+  });
 
   const mapNavigatorPO = new MapNavigatorPageObjectCypress();
   const boxViewPO = new BoxViewPageObjectCypress();

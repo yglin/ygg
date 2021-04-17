@@ -1,8 +1,11 @@
 import { Box } from '@ygg/ourbox/core';
 import { Location } from '@ygg/shared/geography/core';
 import { LocationViewCompactPageObjectCypress } from '@ygg/shared/geography/test';
-import { Album } from '@ygg/shared/omni-types/core';
-import { AlbumViewPageObjectCypress } from '@ygg/shared/omni-types/test';
+import { Album, Contact } from '@ygg/shared/omni-types/core';
+import {
+  AlbumViewPageObjectCypress,
+  ContactViewPageObjectCypress
+} from '@ygg/shared/omni-types/test';
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
 import { PageTitlePageObjectCypress } from '@ygg/shared/ui/test';
 
@@ -10,6 +13,7 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
   pageTitlePO: PageTitlePageObjectCypress;
   albumViewPO: AlbumViewPageObjectCypress;
   locationPO: LocationViewCompactPageObjectCypress;
+  contactPO: ContactViewPageObjectCypress;
 
   selectors = {
     main: '.box-view',
@@ -23,6 +27,7 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
     this.locationPO = new LocationViewCompactPageObjectCypress(
       this.getSelector()
     );
+    this.contactPO = new ContactViewPageObjectCypress(this.getSelector());
   }
 
   // getSelectorForMember(user: User): string {
@@ -62,10 +67,15 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
     cy.get(this.getSelector('public')).should('include.text', text);
   }
 
+  expectContact(contact: Contact) {
+    this.contactPO.expectValue(contact);
+  }
+
   expectValue(box: Box) {
     this.expectName(box.name);
     this.expectAlbum(box.album);
     this.expectLocation(box.location);
+    this.expectContact(box.contact);
     this.expectPublicity(box.public);
   }
 

@@ -26,7 +26,14 @@
     </div>
     <br />
     <div>
-      <ygg-location-view-compact [value]="box.location" (showMap)="showOnMap()"></ygg-location-view-compact>
+      <ygg-location-view-compact
+        [value]="box.location"
+        (showMap)="showOnMap()"
+      ></ygg-location-view-compact>
+    </div>
+    <br />
+    <div>
+      <ygg-contact-view [value]="box.contact"></ygg-contact-view>
     </div>
     <br />
     <div>

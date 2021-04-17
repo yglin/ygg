@@ -10,7 +10,7 @@ import {
   toJSONDeep
 } from '@ygg/shared/infra/core';
 import { wrapError } from '@ygg/shared/infra/error';
-import { Album, Image } from '@ygg/shared/omni-types/core';
+import { Album, Contact, Image } from '@ygg/shared/omni-types/core';
 import { Authenticator, User } from '@ygg/shared/user/core';
 import { extend, get, sample } from 'lodash';
 import { OurboxHeadQuarter } from '../head-quarter';
@@ -36,6 +36,7 @@ export class Box {
   album: Album;
   location: Location;
   public: boolean;
+  contact: Contact;
 
   constructor(
     protected dataAccessor: DataAccessor,
@@ -59,6 +60,10 @@ export class Box {
     if (Location.isLocation(options.location)) {
       this.location = new Location().fromJSON(options.location);
     }
+
+    if (Contact.isContact(options.contact)) {
+      this.contact = new Contact().fromJSON(options.contact);
+    }
   }
 
   static isBox(value: any): value is Box {
@@ -73,6 +78,7 @@ export class Box {
       photos: []
     });
     forged.location = Location.forge();
+    forged.contact = Contact.forge();
     return forged;
   }
 

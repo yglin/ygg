@@ -8,12 +8,14 @@ import {
 import { Contact } from '@ygg/shared/omni-types/core';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ygg-contact-view',
   templateUrl: './contact-view.component.html',
   styleUrls: ['./contact-view.component.css']
 })
 export class ContactViewComponent implements OnInit {
   @Input() contact: Contact;
+  @Input() value: Contact;
 
   constructor() {}
 
@@ -22,5 +24,9 @@ export class ContactViewComponent implements OnInit {
   //   console.dir(this.contact);
   // }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (!this.contact) {
+      this.contact = this.value;
+    }
+  }
 }

@@ -121,6 +121,28 @@
             </button>
           </div>
         </mat-step>
+        <mat-step [stepControl]="formGroupContact">
+          <ng-template matStepLabel>聯絡資料</ng-template>
+          <div class="tab-content contact">
+            <form [formGroup]="formGroupContact">
+              <ygg-contact-control
+                formControlName="contact"
+              ></ygg-contact-control>
+            </form>
+          </div>
+          <div
+            fxLayout="row"
+            fxLayoutAlign="space-between center"
+            fxLayoutGap="20px"
+          >
+            <button mat-fab matStepperPrevious>
+              <mat-icon>keyboard_arrow_left</mat-icon>
+            </button>
+            <button mat-fab matStepperNext class="next-step">
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </button>
+          </div>
+        </mat-step>
         <mat-step>
           <ng-template matStepLabel>公開寶箱</ng-template>
           <div

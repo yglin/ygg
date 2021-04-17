@@ -2,8 +2,11 @@ import {
   PageObjectCypress,
   MatCheckboxPageObjectCypress
 } from '@ygg/shared/test/cypress';
-import { ImageUploaderPageObjectCypress } from '@ygg/shared/omni-types/test';
-import { Image } from '@ygg/shared/omni-types/core';
+import {
+  ContactControlPageObjectCypress,
+  ImageUploaderPageObjectCypress
+} from '@ygg/shared/omni-types/test';
+import { Contact, Image } from '@ygg/shared/omni-types/core';
 import { UsersByEmailSelectorPageObjectCypress } from '@ygg/shared/user/test';
 import { ExtraInfoButtonPageObjectCypress } from '@ygg/shared/ui/test';
 import { Box } from '@ygg/ourbox/core';
@@ -25,8 +28,22 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
     publicityDescription: '.publicity-description',
     stepHint: 'h2.step-hint:visible',
     stepImage: '.step-image:visible img',
-    location: '.location'
+    location: '.location',
+    contact: '.contact'
   };
+
+  locationControlPO: LocationControlPageObjectCypress;
+  contactControlPO: ContactControlPageObjectCypress;
+
+  constructor(parentSelector: string = '') {
+    super(parentSelector);
+    this.locationControlPO = new LocationControlPageObjectCypress(
+      this.getSelector('location')
+    );
+    this.contactControlPO = new ContactControlPageObjectCypress(
+      this.getSelector('contact')
+    );
+  }
 
   setValue(box: Box) {
     this.setName(box.name);
@@ -35,14 +52,13 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
     this.nextStep();
     this.setLocation(box.location);
     this.nextStep();
+    this.setContact(box.contact);
+    this.nextStep();
     this.setPublic(box.public);
   }
 
   setLocation(location: Location) {
-    const locationControlPO = new LocationControlPageObjectCypress(
-      this.getSelector('location')
-    );
-    locationControlPO.setValue(location);
+    this.locationControlPO.setValue(location);
   }
 
   expectStepHint(hint: string) {
@@ -99,6 +115,10 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
 
   nextStep() {
     cy.get(this.getSelector('buttonNextStep')).click();
+  }
+
+  setContact(contact: Contact) {
+    this.contactControlPO.setValue(contact);
   }
 
   setPublic(isPublic: boolean) {

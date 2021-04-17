@@ -23,6 +23,7 @@ import { BoxFactoryService } from '../box-factory.service';
 export class BoxCreateComponent implements OnInit, OnDestroy {
   firstFormGroup: FormGroup;
   formGroupLocation: FormGroup;
+  formGroupContact: FormGroup;
   // secondFormGroup: FormGroup;
   // formControlMemberEmail: FormControl = new FormControl('', [Validators.email]);
   formControlMemberEmails: FormControl = new FormControl([]);
@@ -53,6 +54,9 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
     this.formGroupLocation = this.formBuilder.group({
       location: [null, Validators.required]
     });
+    this.formGroupContact = this.formBuilder.group({
+      contact: [null, Validators.required]
+    });
   }
 
   ngOnInit(): void {}
@@ -72,6 +76,7 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
       photos: [boxThumb]
     });
     box.location = this.formGroupLocation.get('location').value;
+    box.contact = this.formGroupContact.get('contact').value;
     box.public = this.formControlPublic.value;
     await box.save();
   }
