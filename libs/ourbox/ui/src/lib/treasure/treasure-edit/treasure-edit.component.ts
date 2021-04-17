@@ -26,23 +26,23 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
     album: {},
     name: {}
   };
-  formGroupStep1: FormGroup;
-  formGroupStep2: FormGroup;
-  formGroupStep3: FormGroup;
+  formGroupAlbum: FormGroup;
+  formGroupName: FormGroup;
+  // formGroupStep3: FormGroup;
   initStep = 0;
   eventBusNameControl: Subject<any> = new Subject();
   subscription = new Subscription();
 
   constructor(private formBuilder: FormBuilder) {
-    this.formGroupStep1 = this.formBuilder.group({
+    this.formGroupAlbum = this.formBuilder.group({
       album: [null, Validators.required]
     });
-    this.formGroupStep2 = this.formBuilder.group({
+    this.formGroupName = this.formBuilder.group({
       name: ['', Validators.required]
     });
-    this.formGroupStep3 = this.formBuilder.group({
-      location: [null, Validators.required]
-    });
+    // this.formGroupStep3 = this.formBuilder.group({
+    //   location: [null, Validators.required]
+    // });
   }
 
   ngOnDestroy(): void {
@@ -56,7 +56,7 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
         (change: StepperSelectionEvent) => {
           switch (change.selectedIndex) {
             case 1:
-              if (this.formGroupStep2.get('name').invalid) {
+              if (this.formGroupName.get('name').invalid) {
                 this.eventBusNameControl.next({
                   name: 'hint',
                   data: { type: 'init', message: '寶物的名稱是...？' }
@@ -77,7 +77,7 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!album || isEmpty(album.photos)) {
       this.hints.album.init = '請至少新增一張寶物的照片';
     } else {
-      this.formGroupStep1.get('album').setValue(album);
+      this.formGroupAlbum.get('album').setValue(album);
       this.initStep = 1;
     }
 
@@ -91,9 +91,9 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async submit() {
     const payload = extend(
-      this.formGroupStep1.value,
-      this.formGroupStep2.value,
-      this.formGroupStep3.value
+      this.formGroupAlbum.value,
+      this.formGroupName.value,
+      // this.formGroupStep3.value
     );
     this.value.update(payload);
     await this.value.save();

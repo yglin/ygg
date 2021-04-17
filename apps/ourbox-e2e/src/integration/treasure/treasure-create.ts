@@ -62,22 +62,9 @@ export function message(id: string, data: any) {
   }
 }
 
-export function setTreasureData(treasure: Treasure) {
-  // treasureEditPO.expectHint('album', '請至少新增一張寶物的照片');
-  // console.dir(treasure01.album);
-  treasureEditPO.expectStep('寶物的照片');
-  treasureEditPO.setValue('album', treasure.album);
-  // cy.pause();
-  treasureEditPO.nextStep();
-  treasureEditPO.expectStep('寶物的名稱');
-  treasureEditPO.setValue('name', treasure.name);
-  // treasureEditPO.nextStep();
-  // treasureEditPO.setValue('location', treasure.location);
-}
-
 export function createTreasure(treasure: Treasure) {
   gotoCreatePage();
-  setTreasureData(treasure);
+  treasureEditPO.setValue(treasure);
   treasureEditPO.submit();
   emceePO.info(message('createSuccess', treasure.name));
 }

@@ -1,26 +1,24 @@
 <div class="treasure-edit">
   <mat-vertical-stepper linear #stepper>
-    <mat-step [stepControl]="formGroupStep1">
-      <ng-template matStepLabel>寶物的照片</ng-template>
-      <form [formGroup]="formGroupStep1">
-        <div class="album control">
-          <ygg-album-control
-            formControlName="album"
-          ></ygg-album-control>
+    <mat-step [stepControl]="formGroupName">
+      <ng-template matStepLabel>寶物的名稱</ng-template>
+      <form [formGroup]="formGroupName">
+        <div class="name control">
+          <ygg-text-control
+            formControlName="name"
+            placeholder="請輸入寶物的名稱"
+          ></ygg-text-control>
         </div>
       </form>
       <div>
         <button mat-button matStepperNext class="next-step">下一步</button>
       </div>
     </mat-step>
-    <mat-step [stepControl]="formGroupStep2">
-      <ng-template matStepLabel>寶物的名稱</ng-template>
-      <form [formGroup]="formGroupStep2">
-        <div class="name control">
-          <ygg-text-control
-            formControlName="name"
-            placeholder="請輸入寶物的名稱"
-          ></ygg-text-control>
+    <mat-step [stepControl]="formGroupAlbum">
+      <ng-template matStepLabel>寶物的照片</ng-template>
+      <form [formGroup]="formGroupAlbum">
+        <div class="album control">
+          <ygg-album-control formControlName="album"></ygg-album-control>
         </div>
       </form>
       <div>

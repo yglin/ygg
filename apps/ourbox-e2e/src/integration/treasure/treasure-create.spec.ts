@@ -20,8 +20,7 @@ import {
   createTreasure,
   expectMyTreasure,
   gotoCreatePage,
-  message,
-  setTreasureData
+  message
 } from './treasure-create';
 
 describe('Create a treasure from the ground up', () => {
@@ -140,7 +139,7 @@ describe('Create a treasure from the ground up', () => {
   it('Should request login if not yet', () => {
     logout();
     const treasure01 = treasures[0];
-    setTreasureData(treasure01);
+    treasureEditPO.setValue(treasure01);
     treasureEditPO.submit();
     emceePO.info(`新增寶物前請先登入帳號`);
     loginTestUser(me, { openLoginDialog: false });

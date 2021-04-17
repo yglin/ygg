@@ -1,3 +1,4 @@
+import { Treasure } from '@ygg/ourbox/core';
 import { OmniTypeID, OmniTypes } from '@ygg/shared/omni-types/core';
 import { AlbumControlPageObjectCypress } from '@ygg/shared/omni-types/test';
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
@@ -12,35 +13,17 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
     'location-control': '.location.control'
   };
 
-  controlPOs: {
-    [controlName: string]: {
-      type: OmniTypeID;
-      pageObject: ControlPageObject;
-    };
-  } = {};
+  nameControlPO: TextControlPageObjectCypress;
+  albumControlPO: AlbumControlPageObjectCypress;
 
   constructor(parentSelector?: string) {
     super(parentSelector);
-    this.controlPOs = {
-      album: {
-        type: OmniTypes.album.id,
-        pageObject: new AlbumControlPageObjectCypress(
-          this.getSelector('album-control')
-        )
-      },
-      name: {
-        type: OmniTypes.text.id,
-        pageObject: new TextControlPageObjectCypress(
-          this.getSelector('name-control')
-        )
-      }
-      // location: {
-      //   type: OmniTypes.location.id,
-      //   pageObject: new LocationControlPageObjectCypress(
-      //     this.getSelector('location-control')
-      //   )
-      // }
-    };
+    this.nameControlPO = new TextControlPageObjectCypress(
+      this.getSelector('name-control')
+    );
+    this.albumControlPO = new AlbumControlPageObjectCypress(
+      this.getSelector('album-control')
+    );
   }
 
   expectStep(stepName: string) {
@@ -52,13 +35,17 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
   //   controlPO.expectHint(hintMessage);
   // }
 
-  setValue(controlName: string, value: any) {
-    const controlPO = this.controlPOs[controlName].pageObject;
-    controlPO.setValue(value);
+  setValue(treasure: Treasure) {
+    this.expectStep('寶物的名稱');
+    this.nameControlPO.setValue(treasure.name);
+    this.nextStep();
+    this.expectStep('寶物的照片');
+    this.albumControlPO.setValue(treasure.album);
   }
 
   nextStep() {
-    cy.get(`${this.getSelector()} .next-step`).filter(':visible')
+    cy.get(`${this.getSelector()} .next-step`)
+      .filter(':visible')
       .scrollIntoView()
       .click();
   }
