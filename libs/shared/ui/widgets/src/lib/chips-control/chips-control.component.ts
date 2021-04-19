@@ -34,6 +34,7 @@ import {
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ygg-chips-control',
   templateUrl: './chips-control.component.html',
   styleUrls: ['./chips-control.component.css'],
@@ -50,14 +51,14 @@ export class ChipsControlComponent
   @Input() label: string;
   @Input() autocompleteOptions: string[] = [];
   @Input() chipMinLength = 2;
-  autocompleteOptionsFiltered: string[] = [];
-  emitChange: (chips: string[]) => any = noop;
-  chips: string[] = [];
-  subscriptions: Subscription[] = [];
   @ViewChild('chipInput', { static: false }) chipInput: ElementRef;
   @ViewChild('chipInput', { read: MatAutocompleteTrigger, static: false })
   matAutocompleteTrigger: MatAutocompleteTrigger;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
+  autocompleteOptionsFiltered: string[] = [];
+  emitChange: (chips: string[]) => any = noop;
+  chips: string[] = [];
+  subscriptions: Subscription[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
   showButtonAdd = false;
   showButtonClearAll = false;

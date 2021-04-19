@@ -10,6 +10,7 @@ import { Subscription, noop, Observable, throwError } from 'rxjs';
 // import { TagsService } from '@ygg/tags/data-access';
 import { map, switchMap } from 'rxjs/operators';
 import { Tags } from '@ygg/shared/tags/core';
+import { TagsFinderService } from '../tags-finder.service';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -27,16 +28,21 @@ import { Tags } from '@ygg/shared/tags/core';
 export class TagsControlComponent
   implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() label: string;
-  @Input() taggableType: string;
+  topTags: string[] = [];
+  // @Input() taggableType: string;
   // optionTags$: Observable<Tag[]>;
   // optionTags: string[] = [];
   chipsControl: FormControl;
 
   emitChange: (value: Tags) => any = noop;
 
-  subscriptions: Subscription[] = [];
+  subscription: Subscription = new Subscription();
 
-  constructor(/* private tagsService: TagsService */) {}
+  constructor(private tagsFinder: TagsFinderService) {
+    this.subscription.add(
+      this.tagsFinder.findTopTags$(20).subscribe(tags => (this.topTags = tags))
+    );
+  }
 
   ngOnInit() {
     // if (this.taggableType && !this.optionTags$) {
@@ -66,7 +72,7 @@ export class TagsControlComponent
     // }
 
     this.chipsControl = new FormControl([]);
-    this.subscriptions.push(
+    this.subscription.add(
       this.chipsControl.valueChanges.subscribe(chips => {
         const tags = new Tags(chips);
         this.chipsControl.setValue(tags.getTags(), { emitEvent: false });
@@ -76,9 +82,7 @@ export class TagsControlComponent
   }
 
   ngOnDestroy() {
-    for (const subscription of this.subscriptions) {
-      subscription.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 
   writeValue(value: Tags) {

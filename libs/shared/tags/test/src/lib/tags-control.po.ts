@@ -17,4 +17,8 @@ export class TagsControlPageObjectCypress extends PageObjectCypress {
   setValue(tags: Tags) {
     this.chipsControlPO.setValue(tags.getTags());
   }
+
+  expectTopTags(topTags: string[]) {
+    this.chipsControlPO.expectAutocompleteOptions(topTags);
+  }
 }

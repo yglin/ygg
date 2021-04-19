@@ -1,6 +1,10 @@
 <div class="treasure-map">
   <ygg-page-title icon="map">藏寶地圖</ygg-page-title>
   <br />
+  <div class="tags-search" [formGroup]="formGroupSearch">
+    <h3>用標籤搜尋寶物</h3>
+    <ygg-tags-control formGroupName="tags"></ygg-tags-control>
+  </div>
   <ygg-map-navigator
     [items]="boxes"
     (boundChanged)="onMapBoundChange($event)"

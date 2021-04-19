@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Box } from '@ygg/ourbox/core';
 import { GeoBound } from '@ygg/shared/geography/core';
 import {
@@ -16,11 +17,17 @@ import { BoxFinderService } from '../box/box-finder.service';
 })
 export class TreasureMapComponent implements OnInit {
   boxes: Box[] = [];
+  formGroupSearch: FormGroup;
 
   constructor(
     private boxFinder: BoxFinderService,
-    private boxAgent: BoxAgentService
-  ) {}
+    private boxAgent: BoxAgentService,
+    private formBuilder: FormBuilder
+  ) {
+    this.formGroupSearch = this.formBuilder.group({
+      tags: null
+    });
+  }
 
   ngOnInit(): void {}
 

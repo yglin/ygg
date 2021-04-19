@@ -1,4 +1,4 @@
-import { PageObjectCypress } from "@ygg/shared/test/cypress";
+import { PageObjectCypress } from '@ygg/shared/test/cypress';
 
 export class ChipsControlPageObjectCypress extends PageObjectCypress {
   selectors = {
@@ -44,5 +44,18 @@ export class ChipsControlPageObjectCypress extends PageObjectCypress {
       .clear({ force: true })
       .type(chip);
     cy.get(this.getSelector('buttonAdd')).click();
+  }
+
+  expectAutocompleteOptions(options: string[]) {
+    cy.get(this.getSelector('inputChip')).click();
+    cy.get(`.autocomplete-panel .option`)
+      .its('length')
+      .should('equal', options.length);
+    cy.wrap(options).each((option: string) => {
+      cy.get(`.autocomplete-panel .option`)
+        .contains(option)
+        .scrollIntoView()
+        .should('be.visible');
+    });
   }
 }

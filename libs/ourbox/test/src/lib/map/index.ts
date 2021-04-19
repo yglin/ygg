@@ -1,1 +1,1 @@
-export * from './map-search.po';
+export * from './treasure-map.po';
