@@ -1,6 +1,10 @@
-import { DataAccessor, Emcee, Router } from '@ygg/shared/infra/core';
+import {
+  DataAccessor,
+  Emcee,
+  HeadQuarter,
+  Router
+} from '@ygg/shared/infra/core';
 import { Authenticator } from '@ygg/shared/user/core';
-import { OurboxHeadQuarter } from '../head-quarter';
 import { Treasure } from './treasure';
 
 export class TreasureFactory {
@@ -9,7 +13,7 @@ export class TreasureFactory {
     protected router: Router,
     protected authenticator: Authenticator,
     protected dataAccessor: DataAccessor,
-    protected headquarter: OurboxHeadQuarter
+    protected headquarter: HeadQuarter
   ) {}
 
   create(data: any = {}): Treasure {

@@ -1,9 +1,8 @@
-import { Emcee, Router } from '@ygg/shared/infra/core';
+import { Emcee, Router, HeadQuarter } from '@ygg/shared/infra/core';
 import { wrapError } from '@ygg/shared/infra/error';
 import { Album } from '@ygg/shared/omni-types/core';
 import { Authenticator } from '@ygg/shared/user/core';
 import { isEmpty } from 'lodash';
-import { OurboxHeadQuarter } from '../head-quarter';
 import { Treasure } from '../treasure';
 import { Box } from './box';
 import { BoxFactory } from './box-factory';
@@ -19,7 +18,7 @@ export class BoxAgent {
     protected authenticator: Authenticator,
     protected boxFactory: BoxFactory,
     protected boxFinder: BoxFinder,
-    protected headquarter: OurboxHeadQuarter,
+    protected headquarter: HeadQuarter,
     protected router: Router,
     protected geographyAgent: GeographyAgent
   ) {

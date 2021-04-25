@@ -62,7 +62,12 @@ export class MapNavigatorPageObjectCypress extends PageObjectCypress {
     }"]`;
   }
 
+  scrollMapIntoView() {
+    cy.get(`${this.getSelector()} .map-container`).scrollIntoView();
+  }
+
   expectItem(item: Located) {
+    this.scrollMapIntoView();
     cy.get(this.getSelectorOfMarker(item)).should('be.visible');
   }
 

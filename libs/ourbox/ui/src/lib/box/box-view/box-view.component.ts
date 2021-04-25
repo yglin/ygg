@@ -1,18 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-// import { ImitationItem, ImitationBox } from '@ygg/ourbox/core';
-import { YggDialogService } from '@ygg/shared/ui/widgets';
-import { NotificationFactoryService } from '@ygg/shared/user/ui';
-import { TheThing, TheThingDisplay } from '@ygg/the-thing/core';
-import { get, isEmpty, range } from 'lodash';
-import { Observable, Subscription, merge } from 'rxjs';
-import { BoxFactoryService } from '../box-factory.service';
-import { tap } from 'rxjs/operators';
-import { User } from '@ygg/shared/user/core';
-import { BoxFinderService } from '../box-finder.service';
-import { Box, OurboxHeadQuarter, Treasure } from '@ygg/ourbox/core';
-import { BoxAgentService } from '../box-agent.service';
+import { Box, Treasure } from '@ygg/ourbox/core';
+import { TheThing } from '@ygg/the-thing/core';
+import { get, range } from 'lodash';
+import { Subscription } from 'rxjs';
 import { HeadQuarterService } from '../../head-quarter.service';
+import { BoxFinderService } from '../box-finder.service';
 
 function forgeItems(): TheThing[] {
   return range(10).map(() => {

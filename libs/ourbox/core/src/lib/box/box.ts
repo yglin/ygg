@@ -7,13 +7,13 @@ import {
   DataAccessor,
   Emcee,
   generateID,
+  HeadQuarter,
   toJSONDeep
 } from '@ygg/shared/infra/core';
 import { wrapError } from '@ygg/shared/infra/error';
 import { Album, Contact, Image } from '@ygg/shared/omni-types/core';
 import { Authenticator, User } from '@ygg/shared/user/core';
 import { extend, get, sample } from 'lodash';
-import { OurboxHeadQuarter } from '../head-quarter';
 
 export class Box {
   static collection = 'boxes';
@@ -41,7 +41,7 @@ export class Box {
   constructor(
     protected dataAccessor: DataAccessor,
     protected auth: Authenticator,
-    protected headquarter: OurboxHeadQuarter,
+    protected headquarter: HeadQuarter,
     protected emcee: Emcee,
     protected locationRecordAccessor: LocationRecordAccessor,
     options: any = {}

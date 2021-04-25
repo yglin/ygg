@@ -2,6 +2,7 @@ import {
   DataAccessor,
   Emcee,
   generateID,
+  HeadQuarter,
   Query,
   Router,
   toJSONDeep
@@ -11,7 +12,6 @@ import { Album } from '@ygg/shared/omni-types/core';
 import { Tags } from '@ygg/shared/tags/core';
 import { Authenticator, User } from '@ygg/shared/user/core';
 import { extend, get } from 'lodash';
-import { OurboxHeadQuarter } from '../head-quarter';
 
 export class Treasure {
   static collection = 'treasures';
@@ -34,7 +34,7 @@ export class Treasure {
     protected authenticator: Authenticator,
     protected dataAccessor: DataAccessor,
     // protected boxAgent: BoxAgent,
-    protected headquarter: OurboxHeadQuarter,
+    protected headquarter: HeadQuarter,
     options: any = {}
   ) {
     this.id = generateID();

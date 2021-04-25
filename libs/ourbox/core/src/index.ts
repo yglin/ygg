@@ -6,4 +6,3 @@ export * from './lib/ui';
 export * from './lib/initialize';
 export * from './lib/treasure';
 export * from './lib/box';
-export * from './lib/head-quarter';

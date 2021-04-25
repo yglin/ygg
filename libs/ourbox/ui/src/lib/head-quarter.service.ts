@@ -1,10 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { OurboxHeadQuarter } from '@ygg/ourbox/core';
+import { HeadQuarter } from '@ygg/shared/infra/core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class HeadQuarterService extends OurboxHeadQuarter implements OnDestroy {
+export class HeadQuarterService extends HeadQuarter implements OnDestroy {
   constructor() {
     super();
   }

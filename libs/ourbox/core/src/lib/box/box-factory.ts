@@ -1,8 +1,7 @@
 import { LocationRecordAccessor } from '@ygg/shared/geography/core';
-import { DataAccessor, Emcee } from '@ygg/shared/infra/core';
+import { DataAccessor, Emcee, HeadQuarter } from '@ygg/shared/infra/core';
 import { wrapError } from '@ygg/shared/infra/error';
 import { Authenticator } from '@ygg/shared/user/core';
-import { OurboxHeadQuarter } from '../head-quarter';
 import { Treasure } from '../treasure';
 import { Box } from './box';
 import { RelationBoxTreasure } from './box-treasure';
@@ -11,7 +10,7 @@ export class BoxFactory {
   constructor(
     protected dataAccessor: DataAccessor,
     protected authenticator: Authenticator,
-    protected headquarter: OurboxHeadQuarter,
+    protected headquarter: HeadQuarter,
     protected emcee: Emcee,
     protected locationRecordAccessor: LocationRecordAccessor
   ) {}
