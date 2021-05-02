@@ -12,6 +12,13 @@ export class Address implements SerializableJSON {
   private postal?: string;
   private unformatted: string;
 
+  constructor(options: any = {}) {
+    this.unformatted = 'Taiwan';
+    if (Address.isAddress(options)) {
+      extend(this, options);
+    }
+  }
+
   static isAddress(value: any): value is Address {
     return !!(
       value &&
@@ -83,17 +90,6 @@ export class Address implements SerializableJSON {
   static fromRaw(value: string) {
     return new Address().fromJSON({
       unformatted: value
-    });
-  }
-
-  constructor() {
-    this.fromJSON({
-      country: '台灣',
-      county: '南投縣',
-      district: '南投市',
-      road: '光明二路',
-      number: '84號',
-      unformatted: ''
     });
   }
 

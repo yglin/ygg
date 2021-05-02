@@ -1,4 +1,4 @@
-import { Entity, toJSONDeep, isEntity } from '@ygg/shared/infra/core';
+import { Entity, isEntity } from '@ygg/shared/infra/core';
 import { User } from '@ygg/shared/user/core';
 // import {
 //   TheThing,
@@ -58,7 +58,7 @@ export class MockDatabase {
     cy.log(`Insert test data at ${path} in firebase firestore DB`);
     const alias = `${data.id}_${Date.now()}`;
     // @ts-ignore
-    cy.callFirestore('set', path, toJSONDeep(data)).then(() => {
+    cy.callFirestore('set', path, data).then(() => {
       if (isEntity(data)) {
         this.entities[path] = data;
         // data = data.toJSON();

@@ -1,7 +1,10 @@
+import { toJSONDeep } from '@ygg/shared/infra/core';
 import { extend } from 'lodash';
 import { Address } from '../location';
 
 export class LocationRecord {
+  static collection = 'location-records';
+
   latitude: number;
   longitude: number;
   address?: Address;
@@ -26,6 +29,10 @@ export class LocationRecord {
     //   this.objectCollection,
     //   this.objectId
     // );
+  }
+
+  toJSON(): any {
+    return toJSONDeep(this);
   }
 
   // static constructId(

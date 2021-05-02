@@ -14,9 +14,14 @@ export class Location implements SerializableJSON {
     return this._geoPoint;
   }
 
-  constructor() {
-    this._address = new Address();
-    this._geoPoint = new GeoPoint();
+  constructor(options: any = {}) {
+    if (Location.isLocation(options)) {
+      this._address = new Address(options.address);
+      this._geoPoint = new GeoPoint(options.geoPoint);
+    } else {
+      this._address = new Address();
+      this._geoPoint = new GeoPoint();
+    }
   }
 
   static isLocation(value: any): value is Location {

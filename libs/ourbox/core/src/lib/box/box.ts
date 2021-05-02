@@ -16,6 +16,8 @@ import { Authenticator, User } from '@ygg/shared/user/core';
 import { extend, get, sample } from 'lodash';
 
 export class Box {
+  [key: string]: any;
+
   static collection = 'boxes';
   static thumbnailSrc = '/assets/images/box/box.png';
   static icon = 'inventory';
@@ -70,7 +72,7 @@ export class Box {
     return value && value.name && value.album && value.location;
   }
 
-  static forge(): Box {
+  static forge(options: any = {}): Box {
     const forged = new Box(null, null, null, null, null);
     forged.name = `Troll Box ${Date.now()}`;
     forged.album = Album.forge({
@@ -79,6 +81,7 @@ export class Box {
     });
     forged.location = Location.forge();
     forged.contact = Contact.forge();
+    extend(forged, options);
     return forged;
   }
 

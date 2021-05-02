@@ -6,6 +6,7 @@
     <ygg-tags-control formGroupName="tags"></ygg-tags-control>
   </div>
   <ygg-map-navigator
+    class="map-navigator"
     [items]="boxes"
     (boundChanged)="onMapBoundChange($event)"
     (clickItem)="clickOnBoxMarker($event)"

@@ -71,6 +71,10 @@ export class MapNavigatorPageObjectCypress extends PageObjectCypress {
     cy.get(this.getSelectorOfMarker(item)).should('be.visible');
   }
 
+  expectItems(items: Located[]) {
+    cy.wrap(items).each((item: Located) => this.expectItem(item));
+  }
+
   expectNoItem(item: Located) {
     cy.get(this.getSelectorOfMarker(item)).should('not.exist');
   }

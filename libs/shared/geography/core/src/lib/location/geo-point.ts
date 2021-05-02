@@ -87,4 +87,9 @@ export class GeoPoint implements SerializableJSON {
   toCoordsString() {
     return `${this.latitude},${this.longitude}`;
   }
+
+  randomMove(distance: number) {
+    this._latitude += (distance * (Math.random() - 0.5)) / 100000;
+    this._longitude += (distance * (Math.random() - 0.5)) / 100000;
+  }
 }
