@@ -8,7 +8,8 @@ import {
   ViewChild,
   ElementRef,
   OnDestroy,
-  OnChanges
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatChipEvent, MatChipInputEvent } from '@angular/material/chips';
@@ -23,7 +24,8 @@ import {
   fromEvent,
   Subscription,
   BehaviorSubject,
-  combineLatest
+  combineLatest,
+  Subject
 } from 'rxjs';
 import {
   map,
@@ -47,7 +49,7 @@ import { ENTER, COMMA } from '@angular/cdk/keycodes';
   ]
 })
 export class ChipsControlComponent
-  implements OnInit, OnDestroy, AfterViewInit, ControlValueAccessor {
+  implements OnInit, OnChanges, OnDestroy, AfterViewInit, ControlValueAccessor {
   @Input() label: string;
   @Input() autocompleteOptions: string[] = [];
   @Input() chipMinLength = 2;
@@ -55,6 +57,7 @@ export class ChipsControlComponent
   @ViewChild('chipInput', { read: MatAutocompleteTrigger, static: false })
   matAutocompleteTrigger: MatAutocompleteTrigger;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
+  autocompleteOptions$: Subject<string[]> = new Subject();
   autocompleteOptionsFiltered: string[] = [];
   emitChange: (chips: string[]) => any = noop;
   chips: string[] = [];
@@ -80,7 +83,13 @@ export class ChipsControlComponent
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.autocompleteOptions$.next(this.autocompleteOptions);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.autocompleteOptions$.next(this.autocompleteOptions);
+  }
 
   ngAfterViewInit() {
     const inputKeyword$: Observable<string> = merge(
@@ -93,29 +102,40 @@ export class ChipsControlComponent
       distinctUntilChanged()
     );
 
-    const subscription = inputKeyword$.subscribe(inputKeyword => {
-      // Things changed, close autocomplete panel in advance
-      // console.log(inputKeyword);
-      this.isDisplayAutocompleteSelector = false;
-      if (inputKeyword && inputKeyword.length >= this.chipMinLength) {
-        this.showButtonAdd = true;
-        // console.log('Show button-add');
-        // console.dir(autocompleteTagsSource.getNames());
-        // console.log(this.autocompleteOptions);
-        this.autocompleteOptionsFiltered = this.autocompleteOptions.filter(
-          chip => chip.includes(inputKeyword)
-        );
-        if (this.autocompleteOptionsFiltered.length > 0) {
-          // Open autocomplete panel, only when input over 2 letters and matched
-          // console.log(this.autocompleteOptionsFiltered);
-          this.isDisplayAutocompleteSelector = true;
+    this.subscriptions.push(
+      inputKeyword$.subscribe(inputKeyword => {
+        if (inputKeyword) {
+          this.showButtonAdd = true;
+        } else {
+          this.showButtonAdd = false;
         }
-      } else {
-        this.autocompleteOptionsFiltered = this.autocompleteOptions;
-        this.showButtonAdd = false;
-      }
-    });
-    this.subscriptions.push(subscription);
+      })
+    );
+
+    this.subscriptions.push(
+      combineLatest([inputKeyword$, this.autocompleteOptions$]).subscribe(
+        ([inputKeyword, autocompleteOptions]) => {
+          // Things changed, close autocomplete panel in advance
+          // console.log(inputKeyword);
+          this.isDisplayAutocompleteSelector = false;
+          if (inputKeyword && inputKeyword.length >= this.chipMinLength) {
+            // console.log('Show button-add');
+            // console.dir(autocompleteTagsSource.getNames());
+            // console.log(this.autocompleteOptions);
+            this.autocompleteOptionsFiltered = this.autocompleteOptions.filter(
+              chip => chip.includes(inputKeyword)
+            );
+            if (this.autocompleteOptionsFiltered.length > 0) {
+              // Open autocomplete panel, only when input over 2 letters and matched
+              // console.log(this.autocompleteOptionsFiltered);
+              this.isDisplayAutocompleteSelector = true;
+            }
+          } else {
+            this.autocompleteOptionsFiltered = autocompleteOptions;
+          }
+        }
+      )
+    );
   }
 
   ngOnDestroy() {

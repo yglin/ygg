@@ -11,7 +11,7 @@ import {
 export class Tags {
   private tags: Set<string>;
 
-  constructor(tags: string[]) {
+  constructor(tags?: string[]) {
     this.tags = new Set();
     if (isArray(tags)) {
       this.add(tags);
@@ -92,5 +92,9 @@ export class Tags {
 
   toJSON(): any {
     return Array.from(this.tags);
+  }
+
+  toString(): string {
+    return this.tags.toString();
   }
 }

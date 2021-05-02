@@ -47,7 +47,9 @@ export class ChipsControlPageObjectCypress extends PageObjectCypress {
   }
 
   expectAutocompleteOptions(options: string[]) {
-    cy.get(this.getSelector('inputChip')).click();
+    cy.get(this.getSelector('inputChip'))
+      .scrollIntoView()
+      .click();
     cy.get(`.autocomplete-panel .option`)
       .its('length')
       .should('equal', options.length);

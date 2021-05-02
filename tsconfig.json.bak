@@ -8,7 +8,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es5",
+    "target": "es6",
     "module": "esNext",
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2017", "dom"],
@@ -16,28 +16,20 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@ygg/shared/user/ui": ["libs/shared/user/src/index.ts"],
-      "@ygg/shopping/payment": ["libs/shopping/payment/src/index.ts"],
-      "@ygg/shopping/order": ["libs/shopping/order/src/index.ts"],
-      "@ygg/shopping/cart": ["libs/shopping/cart/src/index.ts"],
+      "@ygg/shared/user/ui": ["libs/shared/user/ui/src/index.ts"],
       "@ygg/shared/infra/error": ["libs/shared/infra/error/src/index.ts"],
       "@ygg/shared/infra/log": ["libs/shared/infra/log/src/index.ts"],
       "@ygg/shared/ui/ng-material": ["libs/shared/ui/ng-material/src/index.ts"],
       "@ygg/shared/ui/widgets": ["libs/shared/ui/widgets/src/index.ts"],
       "@ygg/shared/ui/themes": ["libs/shared/ui/themes/src/index.ts"],
-      "@ygg/playwhat/resource": ["libs/playwhat/resource/src/index.ts"],
       "@ygg/shared/infra/data-access": [
         "libs/shared/infra/data-access/src/index.ts"
       ],
-      "@ygg/shared/omni-types/core": ["libs/shared/types/src/index.ts"],
       "@ygg/playwhat/admin": ["libs/playwhat/admin/src/index.ts"],
       "@ygg/shared/ui/navigation": ["libs/shared/ui/navigation/src/index.ts"],
-      "@ygg/playwhat/play": ["libs/playwhat/play/src/index.ts"],
       "@ygg/shared/infra/device-adapter": [
         "libs/shared/infra/device-adapter/src/index.ts"
       ],
-      "@ygg/playwhat/tag": ["libs/playwhat/tag/src/index.ts"],
-      "@ygg/firebase/*": [".firebase/*"],
       "@ygg/tags/core": ["libs/tags/core/src/index.ts"],
       "@ygg/tags/ui": ["libs/tags/ui/src/index.ts"],
       "@ygg/tags/admin": ["libs/tags/admin/src/index.ts"],
@@ -51,24 +43,10 @@
       "@ygg/shared/test/angular-jest": [
         "libs/shared/test/angular-jest/src/index.ts"
       ],
-      "@ygg/schedule/core": ["libs/schedule/core/src/index.ts"],
-      "@ygg/schedule/data-access": ["libs/schedule/data-access/src/index.ts"],
-      "@ygg/schedule/ui": ["libs/schedule/ui/src/index.ts"],
-      "@ygg/schedule/admin": ["libs/schedule/admin/src/index.ts"],
-      "@ygg/playwhat/scheduler": ["libs/playwhat/scheduler/src/index.ts"],
-      "@ygg/schedule/frontend": ["libs/schedule/frontend/src/index.ts"],
-      "@ygg/schedule/factory": ["libs/schedule/factory/src/index.ts"],
       "@ygg/shopping/core": ["libs/shopping/core/src/index.ts"],
       "@ygg/shopping/ui": ["libs/shopping/ui/src/index.ts"],
       "@ygg/shopping/data-access": ["libs/shopping/data-access/src/index.ts"],
       "@ygg/shopping/factory": ["libs/shopping/factory/src/index.ts"],
-      "@ygg/resource/core": ["libs/resource/core/src/index.ts"],
-      "@ygg/resource/data-access": ["libs/resource/data-access/src/index.ts"],
-      "@ygg/resource/ui": ["libs/resource/ui/src/index.ts"],
-      "@ygg/shared/ui/dynamic-form": [
-        "libs/shared/ui/dynamic-form/src/index.ts"
-      ],
-      "@ygg/resource/factory": ["libs/resource/factory/src/index.ts"],
       "@ygg/shared/test/cypress": ["libs/shared/test/cypress/src/index.ts"],
       "@ygg/the-thing/core": ["libs/the-thing/core/src/index.ts"],
       "@ygg/the-thing/admin": ["libs/the-thing/admin/src/index.ts"],
@@ -82,10 +60,45 @@
       "@ygg/shared/omni-types/test": [
         "libs/shared/omni-types/test/src/index.ts"
       ],
-      "@ygg/playwhat/ui": ["libs/playwhat/tour/src/index.ts"],
+      "@ygg/playwhat/ui": ["libs/playwhat/ui/src/index.ts"],
       "@ygg/shared/ui/test": ["libs/shared/ui/test/src/index.ts"],
       "@ygg/playwhat/core": ["libs/playwhat/core/src/index.ts"],
-      "@ygg/shopping/test": ["libs/shopping/test/src/index.ts"]
+      "@ygg/shopping/test": ["libs/shopping/test/src/index.ts"],
+      "@ygg/playwhat/test": ["libs/playwhat/test/src/index.ts"],
+      "@ygg/shared/user/core": ["libs/shared/user/core/src/index.ts"],
+      "@ygg/shared/user/test": ["libs/shared/user/test/src/index.ts"],
+      "@ygg/shared/infra/core": ["libs/shared/infra/core/src/index.ts"],
+      "@ygg/ourbox/core": ["libs/ourbox/core/src/index.ts"],
+      "@ygg/shared/user/functions": ["libs/shared/user/functions/src/index.ts"],
+      "@ygg/schedule/core": ["libs/schedule/core/src/index.ts"],
+      "@ygg/schedule/ui": ["libs/schedule/ui/src/index.ts"],
+      "@ygg/schedule/test": ["libs/schedule/test/src/index.ts"],
+      "@ygg/env/*": [".env/*"],
+      "@ygg/playwhat/functions": ["libs/playwhat/functions/src/index.ts"],
+      "@ygg/the-thing/functions": ["libs/the-thing/functions/src/index.ts"],
+      "@ygg/shared/functions": ["libs/shared/functions/src/index.ts"],
+      "@ygg/shared/thread/core": ["libs/shared/thread/core/src/index.ts"],
+      "@ygg/shared/thread/ui": ["libs/shared/thread/ui/src/index.ts"],
+      "@ygg/shared/google/apis": ["libs/shared/google/apis/src/index.ts"],
+      "@ygg/shared/thread/test": ["libs/shared/thread/test/src/index.ts"],
+      "@ygg/ourbox/ui": ["libs/ourbox/ui/src/index.ts"],
+      "@ygg/ourbox/test": ["libs/ourbox/test/src/index.ts"],
+      "@ygg/shared/ui/core": ["libs/shared/ui/core/src/index.ts"],
+      "@ygg/ourbox/functions": ["libs/ourbox/functions/src/index.ts"],
+      "@ygg/shared/geography/core": ["libs/shared/geography/core/src/index.ts"],
+      "@ygg/shared/custom-page/core": [
+        "libs/shared/custom-page/core/src/index.ts"
+      ],
+      "@ygg/shared/custom-page/test": [
+        "libs/shared/custom-page/test/src/index.ts"
+      ],
+      "@ygg/shared/custom-page/ui": ["libs/shared/custom-page/ui/src/index.ts"],
+      "@ygg/shared/geography/test": ["libs/shared/geography/test/src/index.ts"],
+      "@ygg/shared/geography/ui": ["libs/shared/geography/ui/src/index.ts"],
+      "@ygg/shared/tags/core": ["libs/shared/tags/core/src/index.ts"],
+      "@ygg/shared/tags/test": ["libs/shared/tags/test/src/index.ts"],
+      "@ygg/shared/tags/ui": ["libs/shared/tags/ui/src/index.ts"],
+      "@ygg/shared/tags/functions": ["libs/shared/tags/functions/src/index.ts"]
     },
     "rootDir": "."
   },

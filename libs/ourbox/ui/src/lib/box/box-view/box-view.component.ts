@@ -1,19 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Box, Treasure } from '@ygg/ourbox/core';
-import { TheThing } from '@ygg/the-thing/core';
-import { get, range } from 'lodash';
+import { get } from 'lodash';
 import { Subscription } from 'rxjs';
 import { HeadQuarterService } from '../../head-quarter.service';
 import { BoxFinderService } from '../box-finder.service';
 
-function forgeItems(): TheThing[] {
-  return range(10).map(() => {
-    const treasure = TheThing.forge();
-    treasure.link = `treasures/${treasure.id}`;
-    return treasure;
-  });
-}
+// function forgeItems(): TheThing[] {
+//   return range(10).map(() => {
+//     const treasure = TheThing.forge();
+//     treasure.link = `treasures/${treasure.id}`;
+//     return treasure;
+//   });
+// }
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector

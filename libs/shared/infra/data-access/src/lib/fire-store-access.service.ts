@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { DataAccessor, Query } from '@ygg/shared/infra/core';
+import { AngularFireDatabase } from '@angular/fire/database';
 import {
   AngularFirestore,
   AngularFirestoreCollection
 } from '@angular/fire/firestore';
-import { AngularFireDatabase } from '@angular/fire/database';
+import { DataAccessor, Query } from '@ygg/shared/infra/core';
 import { LogService } from '@ygg/shared/infra/log';
-import { Observable, race, NEVER, of, combineLatest } from 'rxjs';
-import { map, filter, timeout, take, shareReplay } from 'rxjs/operators';
 import { isEmpty } from 'lodash';
+import { combineLatest, Observable, of } from 'rxjs';
+import { filter, map, shareReplay, take } from 'rxjs/operators';
 
 type FireQueryRef =
   | firebase.firestore.CollectionReference
@@ -88,6 +88,12 @@ export class FireStoreAccessService extends DataAccessor {
       .doc(id)
       .snapshotChanges()
       .pipe(map(action => action.payload.exists));
+  }
+
+  async has(collection: string, id: string): Promise<boolean> {
+    return this.has$(collection, id)
+      .pipe(take(1))
+      .toPromise();
   }
 
   load$(collection: string, id: string): Observable<any> {

@@ -282,6 +282,9 @@
     },
     "shared-tags-ui": {
       "tags": []
+    },
+    "shared-tags-functions": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {

@@ -1,16 +1,9 @@
 import { DataAccessor, Query } from '@ygg/shared/infra/core';
-import * as admin from 'firebase-admin';
 import * as firebase from 'firebase';
-import {
-  Observable,
-  ReplaySubject,
-  of,
-  combineLatest,
-  race,
-  NEVER
-} from 'rxjs';
-import { map, take, timeout } from 'rxjs/operators';
+import * as admin from 'firebase-admin';
 import { isEmpty } from 'lodash';
+import { combineLatest, Observable, of, ReplaySubject } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 
 type FireQueryRef =
   | FirebaseFirestore.CollectionReference
@@ -18,7 +11,7 @@ type FireQueryRef =
 
 export class DataAccessorFunctions extends DataAccessor {
   firestore: FirebaseFirestore.Firestore;
-  ObservablesCache: { [path: string]: ReplaySubject<any> } = {};
+  observablesCache: { [path: string]: ReplaySubject<any> } = {};
 
   constructor() {
     super();
@@ -57,27 +50,42 @@ export class DataAccessorFunctions extends DataAccessor {
 
   load$(collection: string, id: string): Observable<any> {
     const path = `${collection}/${id}`;
-    if (!(path in this.ObservablesCache)) {
+    if (!(path in this.observablesCache)) {
       const docRef = this.firestore.doc(path);
-      this.ObservablesCache[path] = new ReplaySubject(1);
+      this.observablesCache[path] = new ReplaySubject(1);
       docRef.onSnapshot(
         snapshot => {
           if (snapshot.exists) {
-            this.ObservablesCache[path].next(snapshot.data());
+            this.observablesCache[path].next(snapshot.data());
           } else {
-            this.ObservablesCache[path].next(null);
+            this.observablesCache[path].next(null);
           }
         },
         error => {
-          this.ObservablesCache[path].error(error);
+          this.observablesCache[path].error(error);
         }
       );
     }
-    return this.ObservablesCache[path];
+    return this.observablesCache[path];
   }
 
   has$(collection: string, id: string): Observable<boolean> {
     return this.load$(collection, id).pipe(map(data => !!data));
+  }
+
+  async has(collection: string, id: string): Promise<boolean> {
+    try {
+      const snapshot = await this.firestore
+        .collection(collection)
+        .doc(id)
+        .get();
+      return snapshot.exists;
+    } catch (error) {
+      const wrapError = new Error(
+        `Fail to check doc "${id}" in collection "${collection}".\n${error.message}`
+      );
+      return Promise.reject(wrapError);
+    }
   }
 
   async load(collection: string, id: string): Promise<any> {
@@ -102,8 +110,8 @@ export class DataAccessorFunctions extends DataAccessor {
   async delete(collection: string, id: string) {
     const path = `${collection}/${id}`;
     await this.firestore.doc(path).delete();
-    if (path in this.ObservablesCache) {
-      delete this.ObservablesCache[path];
+    if (path in this.observablesCache) {
+      delete this.observablesCache[path];
     }
   }
 
@@ -129,7 +137,7 @@ export class DataAccessorFunctions extends DataAccessor {
     const cachedId = `${collection}?${queries
       .map(q => q.toString())
       .join('&')}`;
-    if (!(cachedId in this.ObservablesCache)) {
+    if (!(cachedId in this.observablesCache)) {
       // console.log(
       //   `Find collection ${collection} with queries ${queries
       //     .map(q => q.toString())
@@ -139,37 +147,37 @@ export class DataAccessorFunctions extends DataAccessor {
         this.firestore.collection(collection),
         queries
       );
-      this.ObservablesCache[cachedId] = new ReplaySubject(1);
+      this.observablesCache[cachedId] = new ReplaySubject(1);
       ref.onSnapshot(
         snapshot => {
-          this.ObservablesCache[cachedId].next(
+          this.observablesCache[cachedId].next(
             snapshot.docs.map(docSnapshot => docSnapshot.data())
           );
         },
         error => {
-          this.ObservablesCache[cachedId].error(error);
+          this.observablesCache[cachedId].error(error);
         }
       );
     }
-    return this.ObservablesCache[cachedId];
+    return this.observablesCache[cachedId];
   }
 
   list$(collection: string): Observable<any[]> {
     const cachedId = collection;
-    if (!(cachedId in this.ObservablesCache)) {
-      this.ObservablesCache[cachedId] = new ReplaySubject(1);
+    if (!(cachedId in this.observablesCache)) {
+      this.observablesCache[cachedId] = new ReplaySubject(1);
       this.firestore.collection(collection).onSnapshot(
         snapshot => {
-          this.ObservablesCache[cachedId].next(
+          this.observablesCache[cachedId].next(
             snapshot.docs.map(docSnapshot => docSnapshot.data())
           );
         },
         error => {
-          this.ObservablesCache[cachedId].error(error);
+          this.observablesCache[cachedId].error(error);
         }
       );
     }
-    return this.ObservablesCache[cachedId];
+    return this.observablesCache[cachedId];
   }
 
   listByIds$(collection: string, ids: string[]): Observable<any[]> {

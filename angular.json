@@ -2843,6 +2843,32 @@
         }
       },
       "schematics": {}
+    },
+    "shared-tags-functions": {
+      "root": "libs/shared/tags/functions",
+      "sourceRoot": "libs/shared/tags/functions/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/tags/functions/tsconfig.lib.json",
+              "libs/shared/tags/functions/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/tags/functions/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/tags/functions/jest.config.js",
+            "tsConfig": "libs/shared/tags/functions/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

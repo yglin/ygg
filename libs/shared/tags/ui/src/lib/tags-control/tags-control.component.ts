@@ -1,15 +1,11 @@
-import { find, isArray } from 'lodash';
-import { Component, OnDestroy, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   ControlValueAccessor,
-  NG_VALUE_ACCESSOR,
-  FormControl
+  FormControl,
+  NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import { Subscription, noop, Observable, throwError } from 'rxjs';
-// import { Tags, Tag } from '@ygg/tags/core';
-// import { TagsService } from '@ygg/tags/data-access';
-import { map, switchMap } from 'rxjs/operators';
 import { Tags } from '@ygg/shared/tags/core';
+import { noop, Subscription } from 'rxjs';
 import { TagsFinderService } from '../tags-finder.service';
 
 @Component({
@@ -39,9 +35,7 @@ export class TagsControlComponent
   subscription: Subscription = new Subscription();
 
   constructor(private tagsFinder: TagsFinderService) {
-    this.subscription.add(
-      this.tagsFinder.findTopTags$(20).subscribe(tags => (this.topTags = tags))
-    );
+    this.tagsFinder.findTopTags(20).then(tags => (this.topTags = tags));
   }
 
   ngOnInit() {

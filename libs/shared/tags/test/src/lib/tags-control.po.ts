@@ -19,6 +19,9 @@ export class TagsControlPageObjectCypress extends PageObjectCypress {
   }
 
   expectTopTags(topTags: string[]) {
-    this.chipsControlPO.expectAutocompleteOptions(topTags);
+    cy.wait(1000);
+    this.chipsControlPO.expectAutocompleteOptions(
+      topTags.map(tag => tag.toLowerCase())
+    );
   }
 }

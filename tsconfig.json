@@ -30,13 +30,6 @@
       "@ygg/shared/infra/device-adapter": [
         "libs/shared/infra/device-adapter/src/index.ts"
       ],
-      "@ygg/tags/core": ["libs/tags/core/src/index.ts"],
-      "@ygg/tags/ui": ["libs/tags/ui/src/index.ts"],
-      "@ygg/tags/admin": ["libs/tags/admin/src/index.ts"],
-      "@ygg/tags/firebase-functions": [
-        "libs/tags/firebase-functions/src/index.ts"
-      ],
-      "@ygg/tags/data-access": ["libs/tags/data-access/src/index.ts"],
       "@ygg/shared/test/page-object": [
         "libs/shared/test/page-object/src/index.ts"
       ],
@@ -48,11 +41,6 @@
       "@ygg/shopping/data-access": ["libs/shopping/data-access/src/index.ts"],
       "@ygg/shopping/factory": ["libs/shopping/factory/src/index.ts"],
       "@ygg/shared/test/cypress": ["libs/shared/test/cypress/src/index.ts"],
-      "@ygg/the-thing/core": ["libs/the-thing/core/src/index.ts"],
-      "@ygg/the-thing/admin": ["libs/the-thing/admin/src/index.ts"],
-      "@ygg/the-thing/data-access": ["libs/the-thing/data-access/src/index.ts"],
-      "@ygg/the-thing/ui": ["libs/the-thing/ui/src/index.ts"],
-      "@ygg/the-thing/test": ["libs/the-thing/test/src/index.ts"],
       "@ygg/shared/omni-types/ui": ["libs/shared/omni-types/ui/src/index.ts"],
       "@ygg/shared/omni-types/core": [
         "libs/shared/omni-types/core/src/index.ts"
@@ -97,7 +85,8 @@
       "@ygg/shared/geography/ui": ["libs/shared/geography/ui/src/index.ts"],
       "@ygg/shared/tags/core": ["libs/shared/tags/core/src/index.ts"],
       "@ygg/shared/tags/test": ["libs/shared/tags/test/src/index.ts"],
-      "@ygg/shared/tags/ui": ["libs/shared/tags/ui/src/index.ts"]
+      "@ygg/shared/tags/ui": ["libs/shared/tags/ui/src/index.ts"],
+      "@ygg/shared/tags/functions": ["libs/shared/tags/functions/src/index.ts"]
     },
     "rootDir": "."
   },

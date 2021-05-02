@@ -10,7 +10,6 @@ import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { SharedUserUiModule } from '@ygg/shared/user/ui';
-import { TheThingUiModule } from '@ygg/the-thing/ui';
 import { AppComponent } from './app.component';
 import { routes } from './route';
 import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
@@ -39,7 +38,6 @@ import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
     SharedUserUiModule,
     SharedOmniTypesUiModule,
     SharedThreadUiModule,
-    TheThingUiModule,
     BrowserAnimationsModule,
     OurboxUiModule,
     RouterModule.forRoot(routes)

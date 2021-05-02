@@ -1,10 +1,10 @@
 import { Entity, toJSONDeep, isEntity } from '@ygg/shared/infra/core';
 import { User } from '@ygg/shared/user/core';
-import {
-  TheThing,
-  TheThingImitation,
-  TheThingState
-} from '@ygg/the-thing/core';
+// import {
+//   TheThing,
+//   TheThingImitation,
+//   TheThingState
+// } from '@ygg/the-thing/core';
 import { entries } from 'lodash';
 
 export interface Document {
@@ -32,16 +32,16 @@ export class MockDatabase {
     return this.insertRTDB(path, ids);
   }
 
-  setState(
-    thing: TheThing,
-    imitation: TheThingImitation,
-    state: TheThingState
-  ): Cypress.Chainable<any> {
-    const path = `${thing.collection}/${thing.id}`;
-    const data = { states: {} };
-    data.states[imitation.stateName] = state.value;
-    return this.update(path, data);
-  }
+  // setState(
+  //   thing: TheThing,
+  //   imitation: TheThingImitation,
+  //   state: TheThingState
+  // ): Cypress.Chainable<any> {
+  //   const path = `${thing.collection}/${thing.id}`;
+  //   const data = { states: {} };
+  //   data.states[imitation.stateName] = state.value;
+  //   return this.update(path, data);
+  // }
 
   insert(path: string, data: any): Cypress.Chainable<any> {
     // Backup first
@@ -200,6 +200,10 @@ export class MockDatabase {
       throw new Error(`MockDatabase: Can not find entity of path "${path}"`);
     }
     return this.entities[path];
+  }
+
+  clearCollection(collection: string) {
+    cy.callFirestore('delete', collection, { recursive: true });
   }
 
   clear() {
