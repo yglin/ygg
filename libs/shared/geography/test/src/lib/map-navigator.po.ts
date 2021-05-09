@@ -71,8 +71,13 @@ export class MapNavigatorPageObjectCypress extends PageObjectCypress {
     cy.get(this.getSelectorOfMarker(item)).should('be.visible');
   }
 
-  expectItems(items: Located[]) {
+  expectItems(items: Located[], options: any = {}) {
     cy.wrap(items).each((item: Located) => this.expectItem(item));
+    if (options.exact) {
+      cy.get(`${this.getSelector()} .map-container img.leaflet-marker-icon`)
+        .its('length')
+        .should('equal', items.length);
+    }
   }
 
   expectNoItem(item: Located) {

@@ -7,7 +7,7 @@ import { theMockDatabase } from '@ygg/shared/test/cypress';
 import { User } from '@ygg/shared/user/core';
 import { testUsers } from '@ygg/shared/user/test';
 import { RelationBoxTreasure } from 'libs/ourbox/core/src/lib/box/box-treasure';
-import { range, sample, sampleSize } from 'lodash';
+import { range, sample, sampleSize, values } from 'lodash';
 import { gotoMapNavigatorPage } from './map';
 
 describe('Search and navigate in treasure map', () => {
@@ -151,13 +151,15 @@ describe('Search and navigate in treasure map', () => {
     treasureMapPO.tagsControlPO.expectTopTags(topTags);
   });
 
-  // it('Search by one tag', () => {
-  //   treasureMapPO.tagsControlPO.setValue(new Tags([tagOne]));
-  //   treasureMapPO.mapNavigatorPO.expectItems(values(boxesHaveTagOneTreasures));
-  //   treasureMapPO.treasureListPO.expectItems(treasuresWithTagOne, {
-  //     exact: true
-  //   });
-  // });
+  it('Search by one tag', () => {
+    treasureMapPO.tagsControlPO.setValue(new Tags([tagOne]));
+    treasureMapPO.mapNavigatorPO.expectItems(values(boxesHaveTagOneTreasures), {
+      exact: true
+    });
+    treasureMapPO.treasureListPO.expectItems(treasuresWithTagOne, {
+      exact: true
+    });
+  });
 
   // it('Search my neighbor area', () => {
 
