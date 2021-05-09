@@ -14,6 +14,7 @@ import { wrapError } from '@ygg/shared/infra/error';
 import { Album, Contact, Image } from '@ygg/shared/omni-types/core';
 import { Authenticator, User } from '@ygg/shared/user/core';
 import { extend, get, sample } from 'lodash';
+import { Treasure } from '../treasure';
 
 export class Box {
   [key: string]: any;
@@ -39,7 +40,8 @@ export class Box {
   location: Location;
   public: boolean;
   contact: Contact;
-
+  treasures: Treasure[] = [];
+  
   constructor(
     protected dataAccessor: DataAccessor,
     protected auth: Authenticator,

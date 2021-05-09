@@ -123,7 +123,7 @@ export class BoxAgent {
       const currentUser = await this.authenticator.requestLogin();
       const boxCount = await this.boxFinder.countUserBoxes(currentUser);
       if (boxCount === 0) {
-        const defaultBox = this.boxFactory.create({
+        const defaultBox = await this.boxFactory.create({
           name: `${currentUser.name}的寶箱`,
           album: new Album({
             cover: { src: Box.thumbnailSrc },

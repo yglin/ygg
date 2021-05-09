@@ -52,7 +52,9 @@ export class BoxFinder {
   async findByIds(ids: string[]): Promise<Box[]> {
     try {
       const dataItems = await this.dataAccessor.listByIds(Box.collection, ids);
-      return dataItems.map(dataItem => this.boxFactory.create(dataItem));
+      return Promise.all(
+        dataItems.map(dataItem => this.boxFactory.create(dataItem))
+      );
     } catch (error) {
       const wrpErr = wrapError(error, `Failed to load box by ids ${ids}`);
       console.error(wrpErr.message);
@@ -65,7 +67,9 @@ export class BoxFinder {
       const queries = [new Query('ownerId', '==', user.id)];
       const userBoxes: Box[] = await this.dataAccessor
         .find(Box.collection, queries)
-        .then(items => items.map(item => this.boxFactory.create(item)));
+        .then(items =>
+          Promise.all(items.map(item => this.boxFactory.create(item)))
+        );
       return userBoxes;
     } catch (error) {
       const wrpErr = wrapError(
@@ -85,7 +89,9 @@ export class BoxFinder {
     const boxIds: string[] = relations.map(r => r.boxId);
     return this.dataAccessor
       .listByIds(Box.collection, boxIds)
-      .then(items => items.map(item => this.boxFactory.create(item)));
+      .then(items =>
+        Promise.all(items.map(item => this.boxFactory.create(item)))
+      );
   }
 
   async findTreasuresInBox(box: Box): Promise<Treasure[]> {

@@ -70,6 +70,7 @@ export class TagsControlComponent
       this.chipsControl.valueChanges.subscribe(chips => {
         const tags = new Tags(chips);
         this.chipsControl.setValue(tags.getTags(), { emitEvent: false });
+        // console.log(`Emit change tags ${tags.getTags()}`);
         this.emitChange(tags);
       })
     );

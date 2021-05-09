@@ -68,7 +68,7 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
   }
 
   async submit() {
-    const box = this.boxFactory.create();
+    const box = await this.boxFactory.create();
     box.name = this.firstFormGroup.get('name').value;
     const boxThumb = new Image(this.thumbSelected);
     box.album = new Album({

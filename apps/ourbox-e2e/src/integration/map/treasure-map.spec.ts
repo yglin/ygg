@@ -42,9 +42,35 @@ describe('Search and navigate in treasure map', () => {
   // boxes.forEach(b => console.log(b.location.geoPoint));
 
   const treasures = range(total).map(() => Treasure.forge());
+  const boxTreasureRelations = [];
+  const treasuresWithTagOne = [];
+  const treasuresWithTagOneAndTwo = [];
+  const tagOne = generateID();
+  const tagTwo = generateID();
+  const boxesHaveTagOneTreasures = {};
+  const boxesHaveTagOneAndTwoTreasures = {};
+
   for (const treasure of treasures) {
     treasure.name += `_${Date.now()}`;
     treasure.tags = new Tags();
+    const box = sample(boxes);
+    const r = new RelationBoxTreasure(null, {
+      boxId: box.id,
+      treasureId: treasure.id
+    });
+    boxTreasureRelations.push(r);
+
+    if (Math.random() > 0.7) {
+      treasure.tags.add(tagOne);
+      treasuresWithTagOne.push(treasure);
+      boxesHaveTagOneTreasures[box.id] = box;
+
+      if (Math.random() > 0.5) {
+        treasure.tags.add(tagTwo);
+        treasuresWithTagOneAndTwo.push(treasure);
+        boxesHaveTagOneAndTwoTreasures[box.id] = box;
+      }
+    }
   }
 
   const topTags = sampleSize(tagsPool, topCount);
@@ -58,29 +84,6 @@ describe('Search and navigate in treasure map', () => {
       }
     }
   }
-
-  const tagOne = generateID();
-  const treasuresWithTagOne = sampleSize(treasures, Math.floor(total / 3));
-  const boxesHaveTagOneTreasures = {};
-  const boxTreasureRelations = [];
-
-  treasuresWithTagOne.forEach(t => {
-    t.tags.add(tagOne);
-    const box = sample(boxes);
-    const r = new RelationBoxTreasure(null, {
-      boxId: box.id,
-      treasureId: t.id
-    });
-    boxTreasureRelations.push(r);
-    boxesHaveTagOneTreasures[box.id] = box;
-  });
-
-  const tagTwo = generateID();
-  const treasuresWithTagOneAndTwo = sampleSize(
-    treasuresWithTagOne,
-    Math.floor(treasuresWithTagOne.length / 2)
-  );
-  treasuresWithTagOneAndTwo.forEach(t => t.tags.add(tagTwo));
 
   before(() => {
     cy.wrap(testUsers).each((user: User) => {
@@ -131,6 +134,7 @@ describe('Search and navigate in treasure map', () => {
     cy.visit('/');
     gotoMapNavigatorPage();
     treasureMapPO.mapNavigatorPO.setCenter(mapCenter);
+    cy.wait(1000);
   });
 
   after(() => {
@@ -145,6 +149,10 @@ describe('Search and navigate in treasure map', () => {
     treasureMapPO.mapNavigatorPO.expectItems(boxes);
   });
 
+  it('Show all treasures in the treasure list', () => {
+    treasureMapPO.treasureListPO.expectItems(treasures, { exact: true });
+  });
+
   it('Show top 20 tags in tags search input', () => {
     // Go to map-navigator page
     // There should be options of top tags
@@ -157,6 +165,19 @@ describe('Search and navigate in treasure map', () => {
       exact: true
     });
     treasureMapPO.treasureListPO.expectItems(treasuresWithTagOne, {
+      exact: true
+    });
+  });
+
+  it('Search by two tags', () => {
+    treasureMapPO.tagsControlPO.setValue(new Tags([tagOne, tagTwo]));
+    treasureMapPO.mapNavigatorPO.expectItems(
+      values(boxesHaveTagOneAndTwoTreasures),
+      {
+        exact: true
+      }
+    );
+    treasureMapPO.treasureListPO.expectItems(treasuresWithTagOneAndTwo, {
       exact: true
     });
   });

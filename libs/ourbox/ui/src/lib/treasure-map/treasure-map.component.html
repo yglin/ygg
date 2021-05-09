@@ -3,12 +3,18 @@
   <br />
   <div class="tags-search" [formGroup]="formGroupSearch">
     <h3>用標籤搜尋寶物</h3>
-    <ygg-tags-control formGroupName="tags"></ygg-tags-control>
+    <ygg-tags-control formControlName="tags"></ygg-tags-control>
   </div>
   <ygg-map-navigator
     class="map-navigator"
-    [items]="boxes"
+    [items]="filteredBoxes"
     (boundChanged)="onMapBoundChange($event)"
     (clickItem)="clickOnBoxMarker($event)"
   ></ygg-map-navigator>
+  <br />
+  <div class="treasure-list">
+    <ygg-image-thumbnail-list
+      [items]="filteredTreasures"
+    ></ygg-image-thumbnail-list>
+  </div>
 </div>
