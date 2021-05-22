@@ -134,7 +134,6 @@ describe('Search and navigate in treasure map', () => {
     cy.visit('/');
     gotoMapNavigatorPage();
     treasureMapPO.mapNavigatorPO.setCenter(mapCenter);
-    cy.wait(1000);
   });
 
   after(() => {
@@ -146,6 +145,7 @@ describe('Search and navigate in treasure map', () => {
   });
 
   it('Show all boxes in the map view', () => {
+    cy.wait(1000);
     treasureMapPO.mapNavigatorPO.expectItems(boxes);
   });
 
@@ -182,7 +182,4 @@ describe('Search and navigate in treasure map', () => {
     });
   });
 
-  // it('Search my neighbor area', () => {
-
-  // });
 });

@@ -11,7 +11,7 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { SharedUserUiModule } from '@ygg/shared/user/ui';
 import { AppComponent } from './app.component';
-import { routes } from './route';
+// import { routes } from './route';
 import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
 
 @NgModule({
@@ -40,7 +40,7 @@ import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
     SharedThreadUiModule,
     BrowserAnimationsModule,
     OurboxUiModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot([])
   ],
   // providers: [
   //   {

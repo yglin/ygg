@@ -94,78 +94,8 @@ export const routes: Routes = [
     component: TreasureMapComponent
   },
   {
-    path: 'ourbox',
-    children: [
-      {
-        path: '',
-        pathMatch: 'full',
-        // component: TreasureCreateComponent
-        redirectTo: 'treasure-map'
-      }
-      // {
-      //   path: 'map',
-      //   component: MapSearchComponent
-      // },
-      // {
-      //   path: 'create-box',
-      //   component: BoxCreateComponent
-      // },
-      // {
-      //   path: 'my-boxes',
-      //   component: MyBoxesComponent
-      // },
-      // {
-      //   path: 'item-warehouse',
-      //   component: ItemWarehouseComponent
-      // },
-      // {
-      //   path: 'my-held-items',
-      //   component: MyHeldItemsComponent
-      // },
-      // {
-      //   path: 'my-item-transfers',
-      //   component: MyItemTransfersComponent
-      // },
-      // {
-      //   path: 'site-howto',
-      //   component: SiteHowtoComponent
-      // }
-    ]
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'treasure-map'
   }
-  // {
-  //   path: ImitationBox.routePath,
-  //   children: [
-  //     {
-  //       path: ':id',
-  //       component: BoxViewComponent,
-  //       resolve: {
-  //         box: BoxFactoryService
-  //       }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: ImitationItem.routePath,
-  //   children: [
-  //     {
-  //       path: ':id',
-  //       component: ItemComponent,
-  //       resolve: {
-  //         item$: ItemFactoryService
-  //       }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: ImitationItemTransfer.routePath,
-  //   children: [
-  //     {
-  //       path: ':id',
-  //       component: ItemTransferComponent,
-  //       resolve: {
-  //         itemTransfer$: ItemTransferFactoryService
-  //       }
-  //     }
-  //   ]
-  // }
 ];
