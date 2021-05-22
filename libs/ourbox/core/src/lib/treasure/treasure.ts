@@ -27,6 +27,7 @@ export class Treasure {
   ownerId: string;
   createAt: Date;
   modifyAt: Date;
+  boxId: string;
 
   constructor(
     protected emcee: Emcee,
@@ -89,30 +90,12 @@ export class Treasure {
 
   async save() {
     try {
-      let actionName;
-      if (!this.createAt) {
-        this.createAt = new Date();
-        actionName = `新增`;
-      } else {
-        this.modifyAt = new Date();
-        actionName = `更新`;
-      }
-      const currentUser = await this.authenticator.requestLogin({
-        message: `${actionName}寶物前請先登入帳號`
-      });
-      if (!this.ownerId) {
-        this.ownerId = currentUser.id;
-      } else if (this.ownerId !== currentUser.id) {
-        throw new Error(`抱歉，你不是 ${this.name} 的所有者`);
-      }
       const payload = this.toJSON();
       // console.log(`Save treasure ${this.name}`);
       // console.dir(payload);
       await this.dataAccessor.save(Treasure.collection, this.id, payload);
-      await this.emcee.info(`成功${actionName}寶物 ${this.name} ！`);
-      this.headquarter.emit('treasure.save.post', this);
     } catch (error) {
-      const wrpErr = wrapError(error, `儲存寶物失敗，錯誤原因：`);
+      const wrpErr = wrapError(error, `Failed to save treasure ${this.name}`);
       this.emcee.error(wrpErr.message);
       return Promise.reject(wrpErr);
     }

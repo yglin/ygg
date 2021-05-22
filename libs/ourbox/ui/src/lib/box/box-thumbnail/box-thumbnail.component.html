@@ -1,0 +1,15 @@
+<div class="ourbox-box-thumbnail">
+  <div
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    fxLayoutGap="10px"
+    *ngIf="box"
+  >
+    <div *ngIf="box.image" class="icon">
+      <img [src]="box.image" alt="" />
+    </div>
+    <div>
+      <h3>{{ box.name }}</h3>
+    </div>
+  </div>
+</div>

@@ -14,7 +14,8 @@ export class TreasureViewPageObjectCypress extends PageObjectCypress {
   selectors = {
     main: '.ourbox-treasure-view',
     album: '.album',
-    tags: '.tags'
+    tags: '.tags',
+    boxLink: '.box-link'
   };
 
   pageTitlePO: PageTitlePageObjectCypress;
@@ -34,5 +35,9 @@ export class TreasureViewPageObjectCypress extends PageObjectCypress {
     this.pageTitlePO.expectText(treasure.name);
     this.albumViewPO.expectValue(treasure.album);
     this.tagsViewPO.expectValue(treasure.tags);
+  }
+
+  clickBoxLink() {
+    cy.get(this.getSelector('boxLink')).scrollIntoView().click();
   }
 }

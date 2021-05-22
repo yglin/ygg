@@ -17,7 +17,8 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
 
   selectors = {
     main: '.box-view',
-    public: '.publicity'
+    public: '.publicity',
+    image: '.image'
   };
 
   constructor(parentSelector?: string) {
@@ -54,8 +55,16 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
     this.pageTitlePO.expectText(name);
   }
 
-  expectAlbum(album: Album) {
-    this.albumViewPO.expectValue(album);
+  // expectAlbum(album: Album) {
+  //   this.albumViewPO.expectValue(album);
+  // }
+
+  expectImage(image: string) {
+    if (image) {
+      cy.get(this.getSelector('image'))
+        .find('img')
+        .should('have.attr', 'src', image);
+    }
   }
 
   expectLocation(location: Location) {
@@ -73,7 +82,7 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
 
   expectValue(box: Box) {
     this.expectName(box.name);
-    this.expectAlbum(box.album);
+    this.expectImage(box.image);
     this.expectLocation(box.location);
     this.expectContact(box.contact);
     this.expectPublicity(box.public);

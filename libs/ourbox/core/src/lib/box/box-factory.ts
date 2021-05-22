@@ -54,6 +54,8 @@ export class BoxFactory {
         treasureId: treasure.id
       });
       await relaitonBoxTreasure.save();
+      treasure.update({ boxId: box.id });
+      await treasure.save();
       if (
         isEmpty(box.treasures) ||
         !find(box.treasures, t => t.id === treasure.id)

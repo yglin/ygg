@@ -1,6 +1,10 @@
 <div class="ourbox-treasure-view" *ngIf="treasure">
   <ygg-page-title [icon]="treasure.icon">{{ treasure.name }}</ygg-page-title>
   <br />
+  <div class="box-link" (click)="gotoBox()" *ngIf="treasure.boxId">
+    <ourbox-box-thumbnail [id]="treasure.boxId"></ourbox-box-thumbnail>
+  </div>
+  <br />
   <div class="tags">
     <ygg-tags-view [value]="treasure.tags"></ygg-tags-view>
   </div>

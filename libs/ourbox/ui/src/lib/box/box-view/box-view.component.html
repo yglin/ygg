@@ -6,7 +6,10 @@
   </h3>
   <div>
     <div>
-      <ygg-album-view [value]="box.album"></ygg-album-view>
+      <div class="image" *ngIf="box.image">
+        <img [src]="box.image" alt="" />
+      </div>
+      <!-- <ygg-album-view [value]="box.album"></ygg-album-view> -->
       <!-- <div
         fxLayout="row wrap"
         fxLayoutAlign="start end"

@@ -1,0 +1,11 @@
+.ourbox-box-thumbnail .icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.ourbox-box-thumbnail .icon img {
+  width: 100%;
+  height: 100%;
+}

@@ -138,10 +138,15 @@ describe('Create box', () => {
     );
     treasureListPO.expectItem(treasure01);
 
-    // Click on teh treasure redirect to its page
+    // Click on the treasure redirect to its page
     treasureListPO.clickItem(treasure01);
     dialogPO.expectClosed();
     treasureViewPO.expectVisible();
     treasureViewPO.expectValue(treasure01);
+
+    // Click on the box link redirect back to the box
+    treasureViewPO.clickBoxLink();
+    boxViewPO.expectVisible();
+    boxViewPO.expectValue(boxPublic01);
   });
 });

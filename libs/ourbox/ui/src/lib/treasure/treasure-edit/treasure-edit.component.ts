@@ -12,6 +12,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { Treasure } from '@ygg/ourbox/core';
 import { extend, get, isEmpty } from 'lodash';
 import { Subject, Subscription } from 'rxjs';
+import { TreasureFactoryService } from '../treasure-factory.service';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -34,7 +35,10 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
   eventBusNameControl: Subject<any> = new Subject();
   subscription = new Subscription();
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private treasureFactory: TreasureFactoryService
+  ) {
     this.formGroupAlbum = this.formBuilder.group({
       album: [null, Validators.required]
     });
@@ -99,6 +103,6 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
       // this.formGroupStep3.value
     );
     this.value.update(payload);
-    await this.value.save();
+    await this.treasureFactory.save(this.value);
   }
 }

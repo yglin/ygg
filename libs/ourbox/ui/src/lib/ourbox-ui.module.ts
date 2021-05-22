@@ -42,6 +42,7 @@ import { TreasureCreateComponent } from './treasure/treasure-create/treasure-cre
 // import { OurboxTourGuideService } from './ourbox-tour-guide.service';
 import { TreasureEditComponent } from './treasure/treasure-edit/treasure-edit.component';
 import { TreasureViewComponent } from './treasure/treasure-view/treasure-view.component';
+import { BoxThumbnailComponent } from './box/box-thumbnail/box-thumbnail.component';
 
 export function initSideMenu(
   sideDrawer: SideDrawerService,
@@ -102,7 +103,8 @@ export function initAgents(boxAgent: BoxAgentService) {
     TreasureCreateComponent,
     TreasureViewComponent,
     MyTreasuresComponent,
-    TreasureMapComponent
+    TreasureMapComponent,
+    BoxThumbnailComponent
   ],
   imports: [
     CommonModule,
