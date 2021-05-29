@@ -8,6 +8,7 @@ import { User } from '@ygg/shared/user/core';
 import { testUsers } from '@ygg/shared/user/test';
 import { RelationBoxTreasure } from 'libs/ourbox/core/src/lib/box/box-treasure';
 import { range, sample, sampleSize, values } from 'lodash';
+import { myBeforeAll } from '../before-all';
 import { gotoMapNavigatorPage } from './map';
 
 describe('Search and navigate in treasure map', () => {
@@ -131,6 +132,7 @@ describe('Search and navigate in treasure map', () => {
   });
 
   before(() => {
+    myBeforeAll();
     cy.visit('/');
     gotoMapNavigatorPage();
     treasureMapPO.mapNavigatorPO.setCenter(mapCenter);
@@ -181,5 +183,4 @@ describe('Search and navigate in treasure map', () => {
       exact: true
     });
   });
-
 });

@@ -16,6 +16,7 @@ import { BoxViewComponent } from './box/box-view/box-view.component';
 // } from '@ygg/ourbox/core';
 // import { BoxCreateComponent } from './box/box-create/box-create.component';
 import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
+import { GreetingGuard } from './home/greeting-guard.service';
 import { TreasureMapComponent } from './treasure-map/treasure-map.component';
 import { MyTreasuresComponent } from './treasure/my-treasures/my-treasures.component';
 // import { HomeComponent } from './home/home.component';
@@ -41,61 +42,67 @@ import { TreasureViewComponent } from './treasure/treasure-view/treasure-view.co
 
 export const routes: Routes = [
   {
-    path: 'treasure',
-    children: [
-      {
-        path: 'create',
-        component: TreasureCreateComponent,
-        resolve: {
-          treasure: TreasureCreateResolver
-        }
-      },
-      {
-        path: ':id',
-        component: TreasureViewComponent,
-        resolve: {
-          treasure: TreasureResolverService
-        }
-      }
-    ]
-  },
-  {
-    path: 'my',
-    canActivateChild: [LoggedInGuard],
-    children: [
-      {
-        path: 'boxes',
-        component: MyBoxesComponent
-      },
-      {
-        path: 'treasures',
-        component: MyTreasuresComponent
-      }
-    ]
-  },
-  {
-    path: 'box',
-    children: [
-      {
-        path: 'create',
-        component: BoxCreateComponent
-      },
-      {
-        path: ':id',
-        component: BoxViewComponent,
-        resolve: {
-          box: BoxResolverService
-        }
-      }
-    ]
-  },
-  {
-    path: 'treasure-map',
-    component: TreasureMapComponent
-  },
-  {
     path: '',
-    pathMatch: 'full',
-    redirectTo: 'treasure-map'
+    resolve: { firstTimeGreeting: GreetingGuard },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'treasure-map'
+      },
+      {
+        path: 'treasure',
+        children: [
+          {
+            path: 'create',
+            component: TreasureCreateComponent,
+            resolve: {
+              treasure: TreasureCreateResolver
+            }
+          },
+          {
+            path: ':id',
+            component: TreasureViewComponent,
+            resolve: {
+              treasure: TreasureResolverService
+            }
+          }
+        ]
+      },
+      {
+        path: 'my',
+        canActivateChild: [LoggedInGuard],
+        children: [
+          {
+            path: 'boxes',
+            component: MyBoxesComponent
+          },
+          {
+            path: 'treasures',
+            component: MyTreasuresComponent
+          }
+        ]
+      },
+      {
+        path: 'box',
+        children: [
+          {
+            path: 'create',
+            component: BoxCreateComponent
+          },
+          {
+            path: ':id',
+            component: BoxViewComponent,
+            resolve: {
+              box: BoxResolverService
+            }
+          }
+        ]
+      },
+      {
+        path: 'treasure-map',
+        component: TreasureMapComponent
+      }
+    ]
   }
 ];

@@ -1,5 +1,8 @@
 import { Box, Treasure } from '@ygg/ourbox/core';
-import { TreasureEditPageObjectCypress, TreasureViewPageObjectCypress } from '@ygg/ourbox/test';
+import {
+  TreasureEditPageObjectCypress,
+  TreasureViewPageObjectCypress
+} from '@ygg/ourbox/test';
 import { Location } from '@ygg/shared/geography/core';
 import { LocationControlPageObjectCypress } from '@ygg/shared/geography/test';
 import { Album } from '@ygg/shared/omni-types/core';
@@ -14,6 +17,7 @@ import {
 import { User } from '@ygg/shared/user/core';
 import { loginTestUser, testUsers } from '@ygg/shared/user/test';
 import { range } from 'lodash';
+import { myBeforeAll } from '../before-all';
 import { createBox } from '../box/box-create';
 import {
   addToBox,
@@ -21,7 +25,6 @@ import {
   expectMyTreasure,
   gotoCreatePage,
   gotoMyTreasure,
-  gotoMyTreasures,
   message
 } from './treasure-create';
 
@@ -50,6 +53,7 @@ describe('Create a treasure from the ground up', () => {
   const emceePO = new EmceePageObjectCypress();
 
   before(() => {
+    myBeforeAll();
     cy.wrap(testUsers).each((user: User) => {
       theMockDatabase.insert(`${User.collection}/${user.id}`, user);
     });

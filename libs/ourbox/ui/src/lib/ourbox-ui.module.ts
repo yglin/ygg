@@ -43,6 +43,7 @@ import { TreasureCreateComponent } from './treasure/treasure-create/treasure-cre
 import { TreasureEditComponent } from './treasure/treasure-edit/treasure-edit.component';
 import { TreasureViewComponent } from './treasure/treasure-view/treasure-view.component';
 import { BoxThumbnailComponent } from './box/box-thumbnail/box-thumbnail.component';
+import { GreetingComponent } from './home/greeting/greeting.component';
 
 export function initSideMenu(
   sideDrawer: SideDrawerService,
@@ -104,7 +105,8 @@ export function initAgents(boxAgent: BoxAgentService) {
     TreasureViewComponent,
     MyTreasuresComponent,
     TreasureMapComponent,
-    BoxThumbnailComponent
+    BoxThumbnailComponent,
+    GreetingComponent
   ],
   imports: [
     CommonModule,

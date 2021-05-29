@@ -1,4 +1,9 @@
-import { TreasureMapPageObjectCypress } from '@ygg/ourbox/test';
+import {
+  TreasureMapPageObjectCypress,
+  GreetingPageObjectCypress
+} from '@ygg/ourbox/test';
+import { YggDialogPageObjectCypress } from '@ygg/shared/ui/test';
+import { myBeforeAll } from '../before-all';
 
 describe('Ourbox home page', () => {
   // function getPageLink(page: Page): string {
@@ -40,6 +45,7 @@ describe('Ourbox home page', () => {
     // cy.wrap(SampleDocuments).each((doc: Document) => {
     //   theMockDatabase.insert(doc.path, doc.data);
     // });
+    myBeforeAll();
     cy.visit('/');
   });
 
@@ -53,6 +59,15 @@ describe('Ourbox home page', () => {
 
   it('Should redirect to treasure map page at home route', () => {
     treasureMapPO.expectVisible({ timeout: 10000 });
+  });
+
+  it('Should show greeting message if user first time visit', () => {
+    window.localStorage.removeItem('visited');
+    cy.visit('/');
+    const dialogPO = new YggDialogPageObjectCypress();
+    const greetingPO = new GreetingPageObjectCypress(dialogPO.getSelector());
+    dialogPO.expectTitle('歡迎光臨我們的寶箱');
+    greetingPO.expectFirstTimeGreeting();
   });
 
   // it('Should show link of site-howto if first visit', () => {

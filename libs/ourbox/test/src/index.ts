@@ -6,3 +6,4 @@ export * from './lib/layout';
 // export * from './lib/site-howto.po';
 export * from './lib/treasure';
 export * from './lib/map';
+export * from './lib/home';

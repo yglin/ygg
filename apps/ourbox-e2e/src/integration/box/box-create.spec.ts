@@ -16,6 +16,7 @@ import { User } from '@ygg/shared/user/core';
 import { logout, theMockDatabase } from '@ygg/shared/test/cypress';
 import { gotoMapNavigatorPage } from '../map/map';
 import { addToBox, createTreasure } from '../treasure/treasure-create';
+import { myBeforeAll } from '../before-all';
 
 describe('Create box', () => {
   const boxes = range(10).map((value, index) => {
@@ -33,6 +34,7 @@ describe('Create box', () => {
   const me = testUsers[0];
 
   before(() => {
+    myBeforeAll();
     cy.wrap(testUsers).each((user: User) => {
       theMockDatabase.insert(`${User.collection}/${user.id}`, user);
     });
