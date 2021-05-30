@@ -285,6 +285,12 @@
     },
     "shared-tags-functions": {
       "tags": []
+    },
+    "shared-post-core": {
+      "tags": []
+    },
+    "shared-post-test": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {

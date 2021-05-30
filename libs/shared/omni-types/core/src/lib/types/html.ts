@@ -4,6 +4,10 @@ import { extend, sample } from 'lodash';
 export class Html implements SerializableJSON {
   content: string;
 
+  constructor(content?: string) {
+    this.content = content;
+  }
+
   static isHtml(value: any): value is Html {
     return value && value.content !== undefined;
   }
@@ -31,8 +35,11 @@ export class Html implements SerializableJSON {
         他走了出來，早已整裝完畢，晃個三兩下就出現在大鐵門外。<br>
         我驚訝他如何辦到的，再度吃力狼狽地穿過門廊，掙扎著回到外頭。<br>
         「很難走對吧，我是你就不會走那條路。」他有點戲謔的對我微笑著說。<br>
-        我心裡想：『哪條路？有別條路嗎？怎麼等我身上都是葉子，腳上都是泥濘你才告訴我？』<br>
-        「奕均啊，恁欲出去喔」我的身後忽然傳來熟悉的台語，我轉頭一看，是已經過世一年多的阿嬤。<br>
+        我心裡想：『哪條路？有別條路嗎？怎麼等我身上都是葉子，腳上都是泥濘你才告訴我？』
+        <br><br>
+        「奕均啊，恁欲出去喔」
+        <br><br>
+        我的身後忽然傳來熟悉的台語，我轉頭一看，是已經過世一年多的阿嬤。<br>
         <br>
         阿嬤只是站在門口，微笑的看著我，就好像要把我成人至今心中所有的不安全部吹走。<br>
         他的樣子大約五十來歲，是我記憶中最年輕的樣子<br>
@@ -53,8 +60,10 @@ export class Html implements SerializableJSON {
     return new Html().fromJSON(`<div><${tag}>${textContent}</${tag}></div>`);
   }
 
-  constructor(content?: string) {
-    this.content = content;
+  toText(): string {
+    const tmp = document.createElement('DIV');
+    tmp.innerHTML = this.content;
+    return tmp.textContent || tmp.innerText || '';
   }
 
   fromJSON(data: any): this {
