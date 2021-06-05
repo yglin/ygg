@@ -5,7 +5,8 @@ export class YggDialogPageObjectCypress extends PageObjectCypress {
     main: '.ygg-dialog.active',
     title: '.title',
     buttonConfirm: 'button.confirm',
-    buttonCancel: 'button.cancel'
+    buttonCancel: 'button.cancel',
+    buttonCreateFeedback: 'button.create-feedback'
   };
 
   confirm(): void {
@@ -26,5 +27,9 @@ export class YggDialogPageObjectCypress extends PageObjectCypress {
 
   expectTitle(title: string) {
     cy.get(this.getSelector('title')).contains(title);
+  }
+
+  gotoFeedbackCreate() {
+    cy.get(this.getSelector('buttonCreateFeedback')).click();
   }
 }

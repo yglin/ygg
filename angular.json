@@ -2925,6 +2925,34 @@
           }
         }
       }
+    },
+    "shared-post-ui": {
+      "projectType": "library",
+      "root": "libs/shared/post/ui",
+      "sourceRoot": "libs/shared/post/ui/src",
+      "prefix": "ygg",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/post/ui/tsconfig.lib.json",
+              "libs/shared/post/ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/post/ui/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/post/ui/jest.config.js",
+            "tsConfig": "libs/shared/post/ui/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/shared/post/ui/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

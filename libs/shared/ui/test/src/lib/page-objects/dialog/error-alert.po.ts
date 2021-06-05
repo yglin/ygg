@@ -1,19 +1,14 @@
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
-import { YggDialogPageObjectCypress } from '@ygg/shared/ui/test';
+import { YggDialogPageObjectCypress } from './dialog.po';
 
 export class ErrorAlertPageObjectCypress extends PageObjectCypress {
   selectors = {
-    main: '.ourbox-error-alert',
-    buttonCreateFeedback: 'button.create-feedback'
+    main: '.error-alert',
   };
 
   constructor() {
     super();
     const parentDialogPO = new YggDialogPageObjectCypress();
     this.parentSelector = parentDialogPO.getSelector();
-  }
-
-  gotoFeedbackCreate() {
-    cy.get(this.getSelector('buttonCreateFeedback')).click();
   }
 }

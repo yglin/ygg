@@ -6,6 +6,7 @@ import { Observable, of } from 'rxjs';
 import { AlertType } from '@ygg/shared/infra/core';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ygg-alert-dialog',
   templateUrl: './alert-dialog.component.html',
   styleUrls: ['./alert-dialog.component.css']
@@ -15,13 +16,15 @@ export class AlertDialogComponent implements OnInit, YggDialogContentComponent {
   typeIcon = 'info';
   dialogData: any;
   dialogOutput$: Observable<any> = of(true);
+  alertType: AlertType;
+  alertTypes = AlertType;
 
   constructor() {}
 
   ngOnInit(): void {
-    const alertType: AlertType = this.dialogData.type || AlertType.Info;
+    this.alertType = this.dialogData.type || AlertType.Info;
 
-    switch (alertType) {
+    switch (this.alertType) {
       case AlertType.Error:
         this.typeIcon = 'error';
         this.iconClass = 'error';

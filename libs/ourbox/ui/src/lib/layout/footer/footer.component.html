@@ -1,0 +1,17 @@
+<div class="ourbox-footer">
+  <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="10px">
+    <div>
+      <h6>© yglin.mlanser@gmail.com</h6>
+    </div>
+    <div
+      class="buttons"
+      fxLayout="row"
+      fxLayoutAlign="end start"
+      fxLayoutGap="5px"
+    >
+      <button mat-icon-button *ngIf="isTesting" class="goto-debugging-page" (click)="gotoDebugPage()">
+        <mat-icon>developer_mode</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

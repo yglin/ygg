@@ -88,7 +88,8 @@
       "@ygg/shared/tags/ui": ["libs/shared/tags/ui/src/index.ts"],
       "@ygg/shared/tags/functions": ["libs/shared/tags/functions/src/index.ts"],
       "@ygg/shared/post/core": ["libs/shared/post/core/src/index.ts"],
-      "@ygg/shared/post/test": ["libs/shared/post/test/src/index.ts"]
+      "@ygg/shared/post/test": ["libs/shared/post/test/src/index.ts"],
+      "@ygg/shared/post/ui": ["libs/shared/post/ui/src/index.ts"]
     },
     "rootDir": "."
   },

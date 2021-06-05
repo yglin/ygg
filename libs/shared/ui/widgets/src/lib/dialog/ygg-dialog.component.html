@@ -1,5 +1,5 @@
 <div class="ygg-dialog" [ngClass]="{ active: isActive }">
-  <div class="title" mat-dialog-title [hidden]='!title'>
+  <div class="title" mat-dialog-title [hidden]="!title">
     {{ title }}
   </div>
   <div class="content">
@@ -19,7 +19,21 @@
       </div>
     </div>
   </div>
+  <div class="footer">
+    <div fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="5px">
+      <button
+        mat-icon-button
+        class="create-feedback"
+        *ngIf="feedbackCreateUrl"
+        (click)="gotoFeedbackCreate()"
+      >
+        <mat-icon>feedback</mat-icon>
+      </button>
+    </div>
+  </div>
   <div class="close-button">
-    <button mat-mini-fab class="cancel" (click)="cancel()"><mat-icon>close</mat-icon></button>
+    <button mat-mini-fab class="cancel" (click)="cancel()">
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
 </div>

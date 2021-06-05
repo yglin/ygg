@@ -1,6 +1,6 @@
 export interface SelectorsConfig {
+  [key: string]: string;
   main: string;
-  [elementName: string]: string;
 }
 
 export abstract class PageObject {

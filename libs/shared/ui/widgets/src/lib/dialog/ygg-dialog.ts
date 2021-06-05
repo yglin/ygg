@@ -10,4 +10,5 @@ export interface YggDialogComponentData {
   contentComponent: Type<any>;
   title?: string;
   data?: any;
+  options?: any;
 }

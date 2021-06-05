@@ -8,6 +8,8 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { get } from 'lodash';
 import { Observable } from 'rxjs';
 import {
   YggDialogComponentData,
@@ -39,11 +41,13 @@ export class YggDialogComponent implements OnInit {
   output: any;
   isActive = false;
   output$: Observable<any>;
+  feedbackCreateUrl: string = null;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private dialogData: YggDialogComponentData,
     private dialogRef: MatDialogRef<YggDialogComponent>,
-    private componentFactoryResolver: ComponentFactoryResolver
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private router: Router
   ) {
     // this.title = 'Play What';
   }
@@ -77,6 +81,8 @@ export class YggDialogComponent implements OnInit {
       if (this.dialogData.title) {
         this.title = this.dialogData.title;
       }
+      const options = this.dialogData.options || {};
+      this.feedbackCreateUrl = get(options, 'feedback.createUrl', null);
     }
   }
 
@@ -88,5 +94,12 @@ export class YggDialogComponent implements OnInit {
   cancel() {
     this.dialogRef.close();
     this.isActive = false;
+  }
+
+  gotoFeedbackCreate() {
+    if (this.feedbackCreateUrl && confirm(`回報問題或者回饋意見？`)) {
+      this.dialogRef.close();
+      this.router.navigateByUrl(this.feedbackCreateUrl);
+    }
   }
 }

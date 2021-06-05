@@ -20,7 +20,7 @@ import { SharedTagsUiModule } from '@ygg/shared/tags/ui';
 import { SharedThreadUiModule } from '@ygg/shared/thread/ui';
 import { SideDrawerService } from '@ygg/shared/ui/navigation';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
-import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
+import { EmceeService, SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import {
   SharedUserUiModule,
   UserMenuItem,
@@ -44,6 +44,8 @@ import { TreasureEditComponent } from './treasure/treasure-edit/treasure-edit.co
 import { TreasureViewComponent } from './treasure/treasure-view/treasure-view.component';
 import { BoxThumbnailComponent } from './box/box-thumbnail/box-thumbnail.component';
 import { GreetingComponent } from './home/greeting/greeting.component';
+import { FooterComponent } from './layout/footer/footer.component';
+import { DebuggingComponent } from './misc/debugging/debugging.component';
 
 export function initSideMenu(
   sideDrawer: SideDrawerService,
@@ -85,6 +87,16 @@ export function initAgents(boxAgent: BoxAgentService) {
   };
 }
 
+export function configEmceeService(emceeService: EmceeService) {
+  return () => {
+    emceeService.config({
+      feedback: {
+        createUrl: '/posts/create?tags=feedback'
+      }
+    });
+  };
+}
+
 @NgModule({
   declarations: [
     // MapSearchComponent,
@@ -106,7 +118,9 @@ export function initAgents(boxAgent: BoxAgentService) {
     MyTreasuresComponent,
     TreasureMapComponent,
     BoxThumbnailComponent,
-    GreetingComponent
+    GreetingComponent,
+    FooterComponent,
+    DebuggingComponent
   ],
   imports: [
     CommonModule,
@@ -124,7 +138,7 @@ export function initAgents(boxAgent: BoxAgentService) {
     SharedTagsUiModule,
     RouterModule.forChild(routes)
   ],
-  exports: [HeaderComponent],
+  exports: [HeaderComponent, FooterComponent],
   providers: [
     {
       provide: APP_INITIALIZER,
@@ -142,6 +156,12 @@ export function initAgents(boxAgent: BoxAgentService) {
       provide: APP_INITIALIZER,
       useFactory: initAgents,
       deps: [BoxAgentService],
+      multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: configEmceeService,
+      deps: [EmceeService],
       multi: true
     }
     // {

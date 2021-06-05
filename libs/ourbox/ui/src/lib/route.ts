@@ -17,6 +17,7 @@ import { BoxViewComponent } from './box/box-view/box-view.component';
 // import { BoxCreateComponent } from './box/box-create/box-create.component';
 import { MyBoxesComponent } from './box/my-boxes/my-boxes.component';
 import { GreetingGuard } from './home/greeting-guard.service';
+import { DebuggingComponent } from './misc/debugging/debugging.component';
 import { TreasureMapComponent } from './treasure-map/treasure-map.component';
 import { MyTreasuresComponent } from './treasure/my-treasures/my-treasures.component';
 // import { HomeComponent } from './home/home.component';
@@ -102,6 +103,17 @@ export const routes: Routes = [
       {
         path: 'treasure-map',
         component: TreasureMapComponent
+      },
+      {
+        path: 'debugging',
+        component: DebuggingComponent
+      },
+      {
+        path: 'posts',
+        loadChildren: () =>
+          import('./shared-post-ui-wrapper.module').then(
+            m => m.SharedPostUiWrapperModule
+          )
       }
     ]
   }

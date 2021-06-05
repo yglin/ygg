@@ -10,7 +10,7 @@
       <div
         class="main-content"
         fxLayout="column"
-        fxLayoutAlign="stretch stretch"
+        fxLayoutAlign="space-between stretch"
         fxLayoutGap="0px"
       >
         <div fxFlex="60px" class="header">
@@ -19,7 +19,7 @@
         <div fxFlex class="page" #page>
           <ng-content select="[ygg-layout-page-content]"></ng-content>
         </div>
-        <div fxFlex="10px" class="footer">
+        <div fxFlex="30px" class="footer">
           <ng-content select="[ygg-layout-page-footer]"></ng-content>
         </div>
       </div>

@@ -8,4 +8,4 @@ export * from './lib/treasure';
 export * from './lib/map';
 export * from './lib/home';
 export * from './lib/debugging.po';
-export * from './lib/error-alert.po';
+// export * from './lib/error-alert.po';

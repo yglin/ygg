@@ -12,6 +12,7 @@ import { AlertType, Dialog } from '@ygg/shared/infra/core';
 export interface IYggDialogOpenConfig {
   title?: string;
   data?: any;
+  options?: any;
   panelClass?: string[];
 }
 
@@ -37,10 +38,13 @@ export class YggDialogService extends Dialog {
     const wrappingData: YggDialogComponentData = {
       contentComponent: component,
       title: config.title,
-      data: config.data
+      data: config.data,
+      options: config.options
     };
     config.data = wrappingData;
-    config.panelClass = isArray(config.panelClass) ? ['ygg-dialog', ...config.panelClass] : ['ygg-dialog'];
+    config.panelClass = isArray(config.panelClass)
+      ? ['ygg-dialog', ...config.panelClass]
+      : ['ygg-dialog'];
     const newDialogRef = this.dialog.open(YggDialogComponent, config);
     // Activate new dialog
     newDialogRef.componentInstance.isActive = true;
@@ -73,14 +77,19 @@ export class YggDialogService extends Dialog {
     });
   }
 
-  async alert(content: string, type: AlertType): Promise<boolean> {
+  async alert(
+    content: string,
+    type: AlertType,
+    options: any = {}
+  ): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const alertDialogRef = this.open(AlertDialogComponent, {
         title: '訊息',
         data: {
           content,
           type
-        }
+        },
+        options
       });
       alertDialogRef.afterClosed().subscribe(
         () => {

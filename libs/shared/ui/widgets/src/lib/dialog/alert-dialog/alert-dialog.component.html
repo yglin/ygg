@@ -3,6 +3,7 @@
   fxLayout="row"
   fxLayoutAlign="start center"
   fxLayoutGap="20px"
+  [ngClass]="{'error-alert': alertType === alertTypes.Error }"
 >
   <div class="type-icon" [attr.icon-name]="typeIcon">
     <mat-icon [ngClass]="iconClass">{{

@@ -7,11 +7,6 @@ export enum AlertType {
 }
 
 export abstract class Emcee {
-  abstract async alert(message: string, type: AlertType);
-  abstract async confirm(message: string): Promise<boolean>;
-  abstract showProgress(options?:{message: string, percentage$?: Observable<number>}): void;
-  abstract hideProgress(): void;
-
   async info(message: string) {
     return this.alert(message, AlertType.Info);
   }
@@ -23,6 +18,12 @@ export abstract class Emcee {
   async warning(message: string) {
     return this.alert(message, AlertType.Warning);
   }
+
+  abstract alert(message: string, type: AlertType);
+  abstract confirm(message: string): Promise<boolean>;
+  abstract showProgress(options?:{message: string, percentage$?: Observable<number>}): void;
+  abstract hideProgress(): void;
+
 }
 
 // export class EmceeSilly extends Emcee {
