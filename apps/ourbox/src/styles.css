@@ -1,5 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~leaflet/dist/leaflet.css';
+@import '~quill/dist/quill.core.css';
+@import '~quill/dist/quill.bubble.css';
+@import '~quill/dist/quill.snow.css';
 
 html,
 body {
@@ -121,4 +124,19 @@ input,
 
 .mat-table {
   background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Overwrite Quill styles */
+.ql-snow .ql-stroke,
+.ql-snow .ql-fill,
+.ql-snow .ql-stroke.ql-fill {
+  stroke: silver;
+}
+
+.ql-editor.ql-blank::before {
+  color: bisque;
+}
+
+.ql-snow .ql-picker-options .ql-picker-item {
+  color: darkblue;
 }

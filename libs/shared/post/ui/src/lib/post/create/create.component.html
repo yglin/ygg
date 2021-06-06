@@ -1,3 +1,22 @@
 <div class="post-create">
-  <h1>This is post create component</h1>
+  <ygg-action-barred>
+    <div yggActionBarredActions>
+      <button
+        mat-fab
+        [disabled]="formGroup.invalid"
+        (click)="save()"
+        class="submit"
+      >
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+    <div yggActionBarredContent>
+      <div [formGroup]="formGroup">
+        <ygg-html-control
+          formControlName="content"
+          class="content-control"
+        ></ygg-html-control>
+      </div>
+    </div>
+  </ygg-action-barred>
 </div>

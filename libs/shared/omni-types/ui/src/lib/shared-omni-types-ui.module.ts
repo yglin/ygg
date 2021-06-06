@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+// import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageUploadModule } from 'angular2-image-upload';
+import { QuillModule } from 'ngx-quill';
 
 import {
   DateRangeControlComponent,
@@ -51,10 +52,11 @@ import { TimeLengthViewComponent } from './types/datetime/time-length/time-lengt
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    CKEditorModule,
+    // CKEditorModule,
     HttpClientModule,
     ImageUploadModule.forRoot(),
-    SharedUiNgMaterialModule,
+    QuillModule.forRoot(),
+    SharedUiNgMaterialModule
   ],
   declarations: [
     HtmlControlComponent,

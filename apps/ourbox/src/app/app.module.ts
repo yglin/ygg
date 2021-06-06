@@ -13,6 +13,7 @@ import { SharedUserUiModule } from '@ygg/shared/user/ui';
 import { AppComponent } from './app.component';
 // import { routes } from './route';
 import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
+import { QuillModule } from 'ngx-quill';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { SharedUiNavigationModule } from '@ygg/shared/ui/navigation';
     SharedThreadUiModule,
     BrowserAnimationsModule,
     OurboxUiModule,
+    QuillModule.forRoot(),
     RouterModule.forRoot([])
   ],
   // providers: [

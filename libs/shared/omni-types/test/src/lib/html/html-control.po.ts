@@ -10,7 +10,7 @@ export class HtmlControlPageObjectCypress extends HtmlControlPageObject {
     // XXX 2020/02/23 yglin
     // This is no guaranteed way to test html in CKEditor
     cy.get(this.getSelector())
-      .find('[contenteditable=true]')
+      .find('.ql-editor p')
       .contains(value.content);
   }
 
@@ -19,7 +19,7 @@ export class HtmlControlPageObjectCypress extends HtmlControlPageObject {
     // Right now I can't find any way to make cypress insert raw html into ckeditor(ver. 5)
     // So this implementation below pass the test but is eventualy wrong
     cy.get(this.getSelector())
-      .find('[contenteditable=true]')
+      .find('.ql-editor p')
       .scrollIntoView()
       .should('be.visible')
       .click()

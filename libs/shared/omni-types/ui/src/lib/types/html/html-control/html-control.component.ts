@@ -1,22 +1,25 @@
-import { noop } from 'lodash';
 import {
   Component,
+  forwardRef,
   Input,
-  OnInit,
   OnDestroy,
-  SecurityContext,
-  forwardRef
+  OnInit,
+  SecurityContext
 } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-// import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import * as BalloonEditor from '@ckeditor/ckeditor5-build-balloon';
-import { Html } from '@ygg/shared/omni-types/core';
-import { FormControl } from '@angular/forms';
-import { Subscription, of } from 'rxjs';
-import { FireStorageService } from '@ygg/shared/infra/data-access';
-import { auditTime, catchError, debounceTime, finalize, tap } from 'rxjs/operators';
 import { AngularFireUploadTask } from '@angular/fire/storage';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NG_VALUE_ACCESSOR
+} from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
+// import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// import * as BalloonEditor from '@ckeditor/ckeditor5-build-balloon';
+import { FireStorageService } from '@ygg/shared/infra/data-access';
+import { Html } from '@ygg/shared/omni-types/core';
+import { noop } from 'lodash';
+import { of, Subscription } from 'rxjs';
+import { auditTime, catchError, finalize, tap } from 'rxjs/operators';
 
 interface CKEditorImageResponse {
   [size: string]: string;
@@ -75,6 +78,7 @@ class YggUploadAdapter {
 }
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ygg-html-control',
   templateUrl: './html-control.component.html',
   styleUrls: ['./html-control.component.css'],
@@ -89,7 +93,7 @@ class YggUploadAdapter {
 export class HtmlControlComponent
   implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() label: string;
-  editor: any = BalloonEditor;
+  // editor: any = BalloonEditor;
   config: any = {};
   formControlContent: FormControl;
   emitChange: (value: Html) => any = noop;
@@ -113,10 +117,10 @@ export class HtmlControlComponent
           this.emitChange(html);
         })
     );
-    this.config = {
-      placeholder: '從這裡開始編輯',
-      extraPlugins: [editor => this.UploadAdapterPlugin(editor)]
-    };
+    // this.config = {
+    //   placeholder: '從這裡開始編輯',
+    //   extraPlugins: [editor => this.UploadAdapterPlugin(editor)]
+    // };
   }
 
   // onReady(editor) {
@@ -156,10 +160,12 @@ export class HtmlControlComponent
     this.emitTouched = fn;
   }
 
-  UploadAdapterPlugin(editor: any) {
-    editor.plugins.get('FileRepository').createUploadAdapter = loader => {
-      // Configure the URL to the upload script in your back-end here!
-      return new YggUploadAdapter(loader, this.fireStorgeService);
-    };
-  }
+  // // eslint-disable-next-line @typescript-eslint/naming-convention
+  // UploadAdapterPlugin(editor: any) {
+  //   editor.plugins.get('FileRepository').createUploadAdapter = loader =>
+  //     /* Configure the URL to the upload script in your back-end here!*/ new YggUploadAdapter(
+  //       loader,
+  //       this.fireStorgeService
+  //     );
+  // }
 }
