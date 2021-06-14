@@ -9,9 +9,16 @@ import {
   PostViewPageObjectCypress
 } from '@ygg/shared/post/test';
 import { logout, theMockDatabase } from '@ygg/shared/test/cypress';
-import { YggDialogPageObjectCypress } from '@ygg/shared/ui/test';
+import {
+  EmceePageObjectCypress,
+  YggDialogPageObjectCypress
+} from '@ygg/shared/ui/test';
 import { User } from '@ygg/shared/user/core';
-import { loginTestUser, testUsers } from '@ygg/shared/user/test';
+import {
+  LoginDialogPageObjectCypress,
+  loginTestUser,
+  testUsers
+} from '@ygg/shared/user/test';
 import { myBeforeAll } from '../before-all';
 
 describe('User can create feedbacks at some point', () => {
@@ -21,8 +28,11 @@ describe('User can create feedbacks at some point', () => {
   const feedbackViewPO = new PostViewPageObjectCypress();
   const feedbackListPO = new PostListPageObjectCypress();
   const dialogPO = new YggDialogPageObjectCypress();
+  const emceePO = new EmceePageObjectCypress();
+  const loginDialogPO = new LoginDialogPageObjectCypress();
 
-  const feedback = Feedback.forge();
+  const feedback01 = Feedback.forge();
+  const feedback02 = Feedback.forge();
 
   const me = testUsers[0];
 
@@ -37,11 +47,6 @@ describe('User can create feedbacks at some point', () => {
     theMockDatabase.clear();
   });
 
-  // it('Require login to create feedback', () => {
-  // logout();
-  // footerPO.gotoFeedbackListPage();
-  // });
-
   it('Can create feedback over error alert dialog', () => {
     footerPO.gotoDebuggingPage();
     debuggingPO.showErrorAlert();
@@ -49,12 +54,38 @@ describe('User can create feedbacks at some point', () => {
     dialogPO.gotoFeedbackCreate();
     feedbackCreatePO.expectVisible();
     feedbackCreatePO.expectTags(['feedback']);
-    feedbackCreatePO.setValue(feedback);
+    feedbackCreatePO.setValue(feedback01);
     feedbackCreatePO.submit();
     feedbackViewPO.expectVisible();
-    feedbackViewPO.expectValue(feedback);
+    feedbackViewPO.expectValue(feedback01);
     feedbackViewPO.expectAuthor(me);
     footerPO.gotoFeedbackListPage();
-    feedbackListPO.expectTopPost(feedback);
+    feedbackListPO.expectTopPost(feedback01);
+  });
+
+  it('Require login to save feedback', () => {
+    logout();
+    cy.wait(1000);
+    footerPO.gotoFeedbackListPage();
+    feedbackListPO.expectVisible();
+    feedbackListPO.gotoCreatePost();
+    feedbackCreatePO.expectVisible();
+    feedbackCreatePO.expectTags(['feedback']);
+    feedbackCreatePO.setValue(feedback02);
+    feedbackCreatePO.submit();
+    emceePO.info(`請先登入才能發表文章`);
+    loginDialogPO.expectVisible();
+    const account = {
+      email: me.email,
+      password: me.password
+    };
+    loginDialogPO.loginTest(account);
+    feedbackViewPO.expectVisible();
+    feedbackViewPO.expectValue(feedback02);
+    feedbackViewPO.expectAuthor(me);
+    // Wait for the tags onCreate function do its job
+    cy.wait(3000);
+    footerPO.gotoFeedbackListPage();
+    feedbackListPO.expectTopPost(feedback02);
   });
 });

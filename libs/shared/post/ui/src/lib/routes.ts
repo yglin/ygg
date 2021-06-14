@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
+import { LoggedInGuard } from '@ygg/shared/user/ui';
 import { PostFindResolver } from './post-find-resolver.service';
 import { PostResolver } from './post-resolver.service';
 import { CreateComponent } from './post/create/create.component';

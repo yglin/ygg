@@ -21,7 +21,12 @@ export class PostFindResolver implements Resolve<Post[]> {
   ): Promise<Post[]> {
     const queryParams = route.queryParams;
     try {
-      return this.postFinder.find(queryParams);
+      const queries: any = {};
+      if ('tags' in queryParams && typeof queryParams['tags'] === 'string') {
+        queries.tags = JSON.parse(queryParams['tags']);
+      }
+      // console.dir(queries);
+      return this.postFinder.find(queries);
     } catch (error) {
       const wrpErr = wrapError(error, `找不到符合搜尋條件的文章`);
       alert(wrpErr.message);

@@ -1,4 +1,10 @@
 <div class="post-list">
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+    <button mat-fab (click)="gotoCreate()" class="create">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  <br><br>
   <div *ngIf="posts" class="posts">
     <div *ngFor="let post of posts; let idx = index">
       <div class="post panel" [attr.index]="idx" (click)="gotoPost(post.id)">

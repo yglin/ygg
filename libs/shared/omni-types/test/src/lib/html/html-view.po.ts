@@ -19,7 +19,7 @@ export class HtmlViewPageObjectCypress extends HtmlViewPageObject {
   expectValue(html: Html) {
     cy.get(this.getSelector('content'), { timeout: 10000 }).should(
       'include.text',
-      html.toText()
+      html.toText().replace(/(\r\n|\n|\r)/gm, '')
     );
   }
 }

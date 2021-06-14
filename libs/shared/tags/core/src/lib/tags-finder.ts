@@ -5,9 +5,6 @@ import { TagRecord } from './tag-record';
 
 export class TagsFinder {
   cacheTopTags: { [subjectCollection: string]: string[] } = {};
-  cacheTagRecords: {
-    [subjectCollection: string]: { [id: string]: TagRecord };
-  } = {};
 
   constructor(private dataAccessor: DataAccessor) {}
 
@@ -51,17 +48,9 @@ export class TagsFinder {
 
   async getById(subjectCollection: string, id: string): Promise<TagRecord> {
     try {
-      let tagRecord = get(
-        this.cacheTagRecords,
-        `${subjectCollection}.${id}`,
-        null
-      );
-      if (!tagRecord) {
-        const tagsCollection = TagRecord.tagsCollectionName(subjectCollection);
-        const data = await this.dataAccessor.load(tagsCollection, id);
-        tagRecord = TagRecord.deserialize(data);
-        set(this.cacheTagRecords, `${subjectCollection}.${id}`, tagRecord);
-      }
+      const tagsCollection = TagRecord.tagsCollectionName(subjectCollection);
+      const data = await this.dataAccessor.load(tagsCollection, id);
+      const tagRecord = TagRecord.deserialize(data);
       return tagRecord;
     } catch (error) {
       const wrpErr = wrapError(error, `Failed to get tag-record by id ${id}`);

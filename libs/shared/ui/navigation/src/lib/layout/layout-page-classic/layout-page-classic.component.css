@@ -70,7 +70,7 @@
 }
 
 .footer {
-  z-index: 2222;
+  z-index: 3333;
   border-radius: 10px 10px 0px 0px;
   overflow: hidden;
   box-shadow: 0px -2px 5px 2px #555555;
@@ -78,7 +78,7 @@
 
 .button-to-top {
   position: absolute;
-  z-index: 7777;
-  bottom: 20px;
+  z-index: 2222;
+  bottom: 30px;
   right: 20px;
 }

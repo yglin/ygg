@@ -21,7 +21,7 @@ export class FooterComponent implements OnInit {
 
   gotoFeedbackList() {
     this.router.navigate(['/', 'posts', 'list'], {
-      queryParams: { tags: ['feedback'] }
+      queryParams: { tags: JSON.stringify(['feedback']) }
     });
   }
 }

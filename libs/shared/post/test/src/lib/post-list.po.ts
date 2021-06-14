@@ -4,7 +4,8 @@ import { PageObjectCypress } from '@ygg/shared/test/cypress';
 export class PostListPageObjectCypress extends PageObjectCypress {
   selectors = {
     main: '.post-list',
-    posts: '.posts'
+    posts: '.posts',
+    buttonCreate: 'button.create'
   };
 
   expectTopPost(post: Post): void {
@@ -12,9 +13,18 @@ export class PostListPageObjectCypress extends PageObjectCypress {
   }
 
   expectPost(post: Post, index: number): void {
-    const contentPreviewText = post.content.toText().slice(0, 100);
+    const contentPreviewText = post.content
+      .toText()
+      .replace(/(\r\n|\n|\r|\s)/gm, '')
+      .slice(0, 100);
     cy.get(`${this.getSelector('posts')} .post[index=${index}]`).contains(
       contentPreviewText
     );
+  }
+
+  gotoCreatePost(): void {
+    cy.get(this.getSelector('buttonCreate'))
+      .scrollIntoView()
+      .click();
   }
 }

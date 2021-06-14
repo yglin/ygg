@@ -35,6 +35,7 @@ export class PostFinder {
 
   async findWithTags(tags: string[]): Promise<Post[]> {
     try {
+      // console.log(`find posts with tags: ${tags}`);
       const postsIds = await this.tagsFinder.findIdsByTags(
         Post.collection,
         tags

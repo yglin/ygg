@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { wrapError } from '@ygg/shared/infra/error';
 import { Post } from '@ygg/shared/post/core';
 import { Tags } from '@ygg/shared/tags/core';
+import { AuthenticateUiService } from '@ygg/shared/user/ui';
 import { isEmpty } from 'lodash';
 import { PostFactoryService } from '../../post-factory.service';
 
@@ -21,7 +22,8 @@ export class CreateComponent implements OnInit {
     private formBuilder: FormBuilder,
     private postFactory: PostFactoryService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authenticator: AuthenticateUiService
   ) {
     this.formGroup = this.formBuilder.group({
       title: [null, Validators.required],
@@ -51,6 +53,12 @@ export class CreateComponent implements OnInit {
   async save() {
     try {
       this.post.update(this.formGroup.value);
+      const user = await this.authenticator.requestLogin({
+        message: '請先登入才能發表文章'
+      });
+      if (!this.post.authorId) {
+        this.post.authorId = user.id;
+      }
       await this.post.save();
       this.router.navigate([`../${this.post.id}`], { relativeTo: this.route });
     } catch (error) {
