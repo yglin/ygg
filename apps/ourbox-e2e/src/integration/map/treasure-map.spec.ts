@@ -2,7 +2,7 @@ import { Box, Treasure } from '@ygg/ourbox/core';
 import { TreasureMapPageObjectCypress } from '@ygg/ourbox/test';
 import { Location, LocationRecord } from '@ygg/shared/geography/core';
 import { generateID } from '@ygg/shared/infra/core';
-import { TagRecords, Tags } from '@ygg/shared/tags/core';
+import { TagRecord, Tags } from '@ygg/shared/tags/core';
 import { theMockDatabase } from '@ygg/shared/test/cypress';
 import { User } from '@ygg/shared/user/core';
 import { testUsers } from '@ygg/shared/user/test';
@@ -139,7 +139,9 @@ describe('Search and navigate in treasure map', () => {
   });
 
   after(() => {
-    theMockDatabase.clearCollection(TagRecords.collection);
+    theMockDatabase.clearCollection(
+      TagRecord.tagsCollectionName(Treasure.collection)
+    );
     theMockDatabase.clearCollection(Treasure.collection);
     theMockDatabase.clearCollection(Box.collection);
     theMockDatabase.clearCollection(LocationRecord.collection);

@@ -35,9 +35,6 @@ describe('Create box', () => {
 
   before(() => {
     myBeforeAll();
-    cy.wrap(testUsers).each((user: User) => {
-      theMockDatabase.insert(`${User.collection}/${user.id}`, user);
-    });
     cy.visit('/');
     loginTestUser(me);
   });

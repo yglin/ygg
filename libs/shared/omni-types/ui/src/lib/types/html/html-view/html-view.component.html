@@ -1,8 +1,7 @@
-<div class="html-view" *ngIf="html && html.content; else NoContent">
-  <div class="content" [innerHtml]="html.content"></div>
+<div class="html-view" *ngIf="value && value.content; else NoContent">
+  <div class="content" [innerHtml]="value.content"></div>
 </div>
 
 <ng-template #NoContent>
   <h2>這裡還沒有任何內容...</h2>
 </ng-template>
-

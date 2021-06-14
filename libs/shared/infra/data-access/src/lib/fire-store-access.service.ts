@@ -133,6 +133,12 @@ export class FireStoreAccessService extends DataAccessor {
     return this.getCollection(collection).valueChanges();
   }
 
+  async list(collection: string): Promise<any[]> {
+    return this.list$(collection)
+      .pipe(take(1))
+      .toPromise();
+  }
+
   listByIds$(collection: string, ids: string[]): Observable<any[]> {
     if (isEmpty(ids)) {
       return of([]);

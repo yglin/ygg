@@ -24,6 +24,7 @@ export class TreasureMapComponent implements OnInit, OnDestroy {
   formGroupSearch: FormGroup;
   mapBoundChange$ = new Subject<GeoBound>();
   subscription: Subscription = new Subscription();
+  tagsSubject = { collection: Treasure.collection };
 
   constructor(
     private boxFinder: BoxFinderService,

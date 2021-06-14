@@ -7,11 +7,9 @@ export class HtmlControlPageObjectCypress extends HtmlControlPageObject {
   }
 
   expectValue(value: Html) {
-    // XXX 2020/02/23 yglin
-    // This is no guaranteed way to test html in CKEditor
     cy.get(this.getSelector())
       .find('.ql-editor p')
-      .contains(value.content);
+      .contains(value.toText());
   }
 
   setValue(html: Html) {
@@ -25,7 +23,7 @@ export class HtmlControlPageObjectCypress extends HtmlControlPageObject {
       .click()
       .clear({ force: true })
       .should('have.value', '')
-      .type(html.content);
+      .type(html.toText());
     cy.wait(1000);
   }
 }

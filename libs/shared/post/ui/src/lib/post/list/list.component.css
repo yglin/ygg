@@ -1,0 +1,7 @@
+.post-list {
+  padding: 1vw 2vh;
+}
+
+.post-list .post {
+  cursor: pointer;
+}

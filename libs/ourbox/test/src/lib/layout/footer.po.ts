@@ -12,6 +12,6 @@ export class FooterPageObjectCypress extends PageObjectCypress {
   }
 
   gotoFeedbackListPage() {
-    cy.get(this.getSelector('buttonGotoFeedbackList')).click();
+    cy.get(this.getSelector('buttonGotoFeedbackList')).click({ force: true });
   }
 }

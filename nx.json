@@ -294,6 +294,9 @@
     },
     "shared-post-ui": {
       "tags": []
+    },
+    "shared-post-functions": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {

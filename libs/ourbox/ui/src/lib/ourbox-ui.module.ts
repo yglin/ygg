@@ -91,7 +91,7 @@ export function configEmceeService(emceeService: EmceeService) {
   return () => {
     emceeService.config({
       feedback: {
-        createUrl: '/posts/create?tags=feedback'
+        createUrl: '/posts/create?tags=["feedback"]'
       }
     });
   };

@@ -180,6 +180,12 @@ export class DataAccessorFunctions extends DataAccessor {
     return this.observablesCache[cachedId];
   }
 
+  async list(collection: string): Promise<any[]> {
+    return this.list$(collection)
+      .pipe(take(1))
+      .toPromise();
+  }
+
   listByIds$(collection: string, ids: string[]): Observable<any[]> {
     if (isEmpty(ids)) {
       return of([]);

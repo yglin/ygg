@@ -24,6 +24,7 @@ import { TagsFinderService } from '../tags-finder.service';
 export class TagsControlComponent
   implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() label: string;
+  @Input() subject: { collection };
   topTags: string[] = [];
   // @Input() taggableType: string;
   // optionTags$: Observable<Tag[]>;
@@ -34,9 +35,7 @@ export class TagsControlComponent
 
   subscription: Subscription = new Subscription();
 
-  constructor(private tagsFinder: TagsFinderService) {
-    this.tagsFinder.findTopTags(20).then(tags => (this.topTags = tags));
-  }
+  constructor(private tagsFinder: TagsFinderService) {}
 
   ngOnInit() {
     // if (this.taggableType && !this.optionTags$) {
@@ -64,6 +63,13 @@ export class TagsControlComponent
     //     })
     //   );
     // }
+
+    if (this.subject) {
+      console.log(this.subject);
+      this.tagsFinder
+        .findTopTags(this.subject.collection, 20)
+        .then(tags => (this.topTags = tags));
+    }
 
     this.chipsControl = new FormControl([]);
     this.subscription.add(

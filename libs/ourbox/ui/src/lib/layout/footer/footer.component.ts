@@ -18,4 +18,10 @@ export class FooterComponent implements OnInit {
   gotoDebugPage() {
     this.router.navigate(['/', 'debugging']);
   }
+
+  gotoFeedbackList() {
+    this.router.navigate(['/', 'posts', 'list'], {
+      queryParams: { tags: ['feedback'] }
+    });
+  }
 }

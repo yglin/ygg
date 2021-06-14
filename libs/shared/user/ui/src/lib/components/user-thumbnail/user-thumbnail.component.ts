@@ -5,6 +5,7 @@ import { Subscription, Observable, isObservable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ygg-user-thumbnail',
   templateUrl: './user-thumbnail.component.html',
   styleUrls: ['./user-thumbnail.component.css']
@@ -12,7 +13,7 @@ import { switchMap } from 'rxjs/operators';
 export class UserThumbnailComponent implements OnInit, OnDestroy {
   @Input() id$: Observable<string>;
   @Input() id: string;
-  @Input() showName = true;
+  @Input() showName;
   user: User;
   subscriptions: Subscription[] = [];
 
@@ -28,9 +29,19 @@ export class UserThumbnailComponent implements OnInit, OnDestroy {
       );
     } else if (this.id) {
       this.subscriptions.push(
-        this.userService.get$(this.id).subscribe(user => (this.user = user))
+        this.userService.get$(this.id).subscribe(user => {
+          // console.log(user);
+          this.user = user;
+        })
       );
     }
+
+    // console.log(`showName = ${this.showName}`);
+    this.showName =
+      this.showName !== 'false' &&
+      this.showName !== false &&
+      this.showName !== undefined;
+    // console.log(`showName = ${this.showName}`);
   }
 
   ngOnDestroy() {

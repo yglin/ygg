@@ -17,6 +17,7 @@ export abstract class DataAccessor {
   abstract has(collection: string, id: string): Promise<boolean>;
   abstract load(collection: string, id: string): Promise<any>;
   abstract load$(collection: string, id: string): Observable<any>;
+  abstract list(collection: string): Promise<any[]>;
   abstract list$(collection: string): Observable<any[]>;
   abstract listByIds$(collection: string, ids: string[]): Observable<any[]>;
   abstract delete(collection: string, id: string);

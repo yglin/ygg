@@ -12,10 +12,21 @@
     </div>
     <div yggActionBarredContent>
       <div [formGroup]="formGroup">
+        <h3>文章標題</h3>
+        <ygg-text-control
+          formControlName="title"
+          class="title-control"
+        ></ygg-text-control>
+        <br /><br />
         <ygg-html-control
           formControlName="content"
           class="content-control"
         ></ygg-html-control>
+        <br /><br />
+        <h3>文章標籤</h3>
+        <div class="tags-control">
+          <ygg-tags-control formControlName="tags"></ygg-tags-control>
+        </div>
       </div>
     </div>
   </ygg-action-barred>

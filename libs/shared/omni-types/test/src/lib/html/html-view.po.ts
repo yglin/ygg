@@ -19,7 +19,7 @@ export class HtmlViewPageObjectCypress extends HtmlViewPageObject {
   expectValue(html: Html) {
     cy.get(this.getSelector('content'), { timeout: 10000 }).should(
       'include.text',
-      html.content
+      html.toText()
     );
   }
 }

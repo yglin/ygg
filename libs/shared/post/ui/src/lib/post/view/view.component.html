@@ -1,0 +1,31 @@
+<div class="post-view">
+  <div *ngIf="post">
+    <div class="title">
+      <ygg-page-title>{{ post.title }}</ygg-page-title>
+    </div>
+    <div
+      fxLayout="row wrap"
+      fxLayoutAlign="space-between stretch"
+      fxLayoutGap="30px"
+    >
+      <div class="tags-view">
+        <ygg-tags-view [value]="post.tags"></ygg-tags-view>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
+        <div class="create-date">
+          <h4>{{ post.createAt | date: 'yyyy MM/dd hh:mm' }}</h4>
+        </div>
+        <div class="author">
+          <ygg-user-thumbnail
+            [id]="post.authorId"
+            showName
+          ></ygg-user-thumbnail>
+        </div>
+      </div>
+    </div>
+    <br /><br />
+    <div class="content-view">
+      <ygg-html-view [value]="post.content"></ygg-html-view>
+    </div>
+  </div>
+</div>

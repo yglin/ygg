@@ -90,6 +90,7 @@ export class MapNavigatorPageObjectCypress extends PageObjectCypress {
 
   panTo(location: Location) {
     this.setCenter(location);
+    cy.wait(1000);
   }
 
   setCenter(location: Location) {

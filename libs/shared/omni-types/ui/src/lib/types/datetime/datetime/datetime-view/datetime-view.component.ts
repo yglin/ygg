@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import { DATE_FORMATS } from '@ygg/shared/omni-types/core';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'ygg-datetime-view',
   templateUrl: './datetime-view.component.html',
   styleUrls: ['./datetime-view.component.css']

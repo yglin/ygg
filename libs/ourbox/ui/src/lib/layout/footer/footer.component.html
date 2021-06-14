@@ -9,7 +9,13 @@
       fxLayoutAlign="end start"
       fxLayoutGap="5px"
     >
-      <button mat-icon-button *ngIf="isTesting" class="goto-debugging-page" (click)="gotoDebugPage()">
+      <button mat-icon-button class='goto-feedback-list' (click)="gotoFeedbackList()"><mat-icon>feedback</mat-icon></button>
+      <button
+        mat-icon-button
+        *ngIf="isTesting"
+        class="goto-debugging-page"
+        (click)="gotoDebugPage()"
+      >
         <mat-icon>developer_mode</mat-icon>
       </button>
     </div>

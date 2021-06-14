@@ -1,0 +1,30 @@
+<div class="post-list">
+  <div *ngIf="posts" class="posts">
+    <div *ngFor="let post of posts; let idx = index">
+      <div class="post panel" [attr.index]="idx" (click)="gotoPost(post.id)">
+        <div
+          fxLayout="row wrap"
+          fxLayoutAlign="space-between stretch"
+          fxLayoutGap="30px"
+        >
+          <h2>{{ post.title }}</h2>
+          <div fxLayout="row" fxLayoutAlign="end end" fxLayoutGap="10px">
+            <div class="create-date">
+              <h4>{{ post.createAt | date: 'yyyy MM/dd hh:mm' }}</h4>
+            </div>
+            <div class="author">
+              <ygg-user-thumbnail
+                [id]="post.authorId"
+                showName
+              ></ygg-user-thumbnail>
+            </div>
+          </div>
+        </div>
+        <mat-divider> </mat-divider>
+        <br />
+        <p>{{ post.content.toText() | slice: 0:100 }}</p>
+      </div>
+      <br /><br /><br />
+    </div>
+  </div>
+</div>
