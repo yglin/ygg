@@ -20,7 +20,7 @@ export class GreetingGuard implements Resolve<any> {
   ): Observable<any> | Promise<any> | any {
     if (this.isFirstTimeVisit()) {
       this.dialog.open(GreetingComponent, {
-        title: '歡迎光臨我們的寶箱'
+        title: '歡迎光臨我們的藏寶圖'
       });
     }
     return true;

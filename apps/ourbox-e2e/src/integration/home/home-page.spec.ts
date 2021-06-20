@@ -66,7 +66,7 @@ describe('Ourbox home page', () => {
     cy.visit('/');
     const dialogPO = new YggDialogPageObjectCypress();
     const greetingPO = new GreetingPageObjectCypress(dialogPO.getSelector());
-    dialogPO.expectTitle('歡迎光臨我們的寶箱');
+    dialogPO.expectTitle('歡迎光臨我們的藏寶圖');
     greetingPO.expectFirstTimeGreeting();
   });
 

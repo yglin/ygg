@@ -6,7 +6,7 @@ export class GreetingPageObjectCypress extends PageObjectCypress {
   };
 
   expectFirstTimeGreeting() {
-    cy.get(this.getSelector()).contains(`嗨～第一次造訪我們的寶箱嗎？`);
+    cy.get(this.getSelector()).contains(`嗨～第一次造訪我們的藏寶圖嗎？`);
     cy.get(this.getSelector()).contains(
       `這是一個跟社區鄰居分享二手物品的網站。`
     );
