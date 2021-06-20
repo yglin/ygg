@@ -32,9 +32,9 @@
     </div>
   </div>
   <ng-container *ngIf="showMap">
-    <ygg-google-map
-      [geoPoint]="geoPoint"
-      (changeGeoPoint)="onChangeMapMarker($event)"
-    ></ygg-google-map>
+    <div class="map-container">
+      <div class="map" id="ygg-geopoint-control-leaflet-map"></div>
+    </div>
+    <br><br>
   </ng-container>
 </div>

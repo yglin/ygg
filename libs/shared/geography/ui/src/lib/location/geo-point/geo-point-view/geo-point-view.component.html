@@ -1,4 +1,7 @@
 <div class="geo-point-view" *ngIf="geoPoint">
   <h5 class="coordinates">{{ geoPoint.latitude }}, {{ geoPoint.longitude }}</h5>
-  <ygg-google-map [geoPoint]="geoPoint" readonly></ygg-google-map>
+  <div class="map-container">
+    <div class="map" id="ygg-geopoint-view-leaflet-map"></div>
+  </div>
+  <br /><br />
 </div>

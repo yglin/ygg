@@ -25,5 +25,6 @@ export class GeoPointControlPageObjectCypress extends ControlPageObject {
     cy.get(this.getSelector('inputLongitude'))
       .clear()
       .type(round(geoPoint.longitude, 5).toString());
+    cy.wait(500);
   }
 }

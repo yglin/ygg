@@ -46,6 +46,8 @@ export class LocationControlComponent
   set location(value: Location) {
     if (value) {
       this._location = value;
+      // console.log(`Location value changed`);
+      // console.log(value);
       this.emitChange(this._location);
       this.dialogOutput$.next(this._location);
     }
@@ -64,6 +66,7 @@ export class LocationControlComponent
     });
     this.subscriptions.push(
       this.formGroup.valueChanges.subscribe(value => {
+        // console.log(value);
         if (Location.isLocation(value)) {
           this.location = new Location().fromJSON(value);
         }

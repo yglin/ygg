@@ -8,7 +8,12 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { GeoBound, GeoPoint, Located } from '@ygg/shared/geography/core';
+import {
+  GeoBound,
+  GeoPoint,
+  getUserLocation,
+  Located
+} from '@ygg/shared/geography/core';
 import { getEnv } from '@ygg/shared/infra/core';
 import * as leaflet from 'leaflet';
 import 'leaflet/dist/images/marker-icon-2x.png';
@@ -25,6 +30,7 @@ import { Marker } from '../marker/marker';
 })
 export class MapNavigatorComponent implements OnInit, OnChanges {
   @Input() items: Located[] = [];
+  @Input() center: GeoPoint;
   @Output() boundChanged: EventEmitter<GeoBound> = new EventEmitter();
   @Output() clickItem: EventEmitter<Located> = new EventEmitter();
   markersLayer = leaflet.layerGroup();
@@ -38,47 +44,6 @@ export class MapNavigatorComponent implements OnInit, OnChanges {
     this.form = this.formBuilder.group({
       center: null
     });
-    // const boxesInMapBound$: Observable<Box[]> = this.boundChange$.pipe(
-    //   debounceTime(500),
-    //   switchMap(bound => this.boxFinder.findBoxesInMapBound(bound))
-    // );
-
-    // const keyword$: Observable<string> = this.formControlKeyword.valueChanges.pipe(
-    //   debounceTime(500),
-    //   startWith('')
-    // );
-
-    // const filteredBoxes$: Observable<Box[]> = combineLatest([
-    //   boxesInMapBound$,
-    //   keyword$
-    // ]).pipe(
-    //   map(([boxes, keyword]) => {
-    //     if (!!keyword) {
-    //       return boxes.filter(item => item.name.includes(keyword));
-    //     } else {
-    //       return boxes;
-    //     }
-    //   })
-    // );
-
-    // this.subscription.add(
-    //   filteredBoxes$
-    //     .pipe(
-    //       tap((boxes: Box[]) => {
-    //         this.boxes = boxes;
-    //         this.clearMarkers();
-    //         this.addMarkers(boxes.map(item => Marker.fromItem(item)));
-    //       })
-    //     )
-    //     .subscribe()
-    // );
-
-    // this.formGroupMapBound = this.formBuilder.group({
-    //   east: null,
-    //   west: null,
-    //   north: null,
-    //   south: null
-    // });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -90,22 +55,6 @@ export class MapNavigatorComponent implements OnInit, OnChanges {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-  }
-
-  async getUserLocation(): Promise<GeoPoint> {
-    if (navigator && navigator.geolocation) {
-      return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(
-          position => resolve(new GeoPoint(position.coords)),
-          error => {
-            console.warn(error.message);
-            resolve(new GeoPoint());
-          }
-        );
-      });
-    } else {
-      return new GeoPoint();
-    }
   }
 
   ngOnInit() {}
@@ -145,18 +94,20 @@ export class MapNavigatorComponent implements OnInit, OnChanges {
           alt: marker.name
         }
       );
-      const link = `/box/${marker.id}`;
-      const target = `ourbox_item_${marker.id}`;
-      const popup = lfMarker.bindPopup(
-        `<a href="${link}" target="${target}">
-          <div class="map-popup">
-            <img src='${marker.imgUrl}' />
-            <h2>${marker.name}</h2>
-          </div>
-        </a>
-        `
-      );
-      lfMarker.on('mouseover', () => popup.openPopup());
+      if (marker.name && marker.imgUrl) {
+        const link = `/box/${marker.id}`;
+        const target = `ourbox_item_${marker.id}`;
+        const popup = lfMarker.bindPopup(
+          `<a href="${link}" target="${target}">
+            <div class="map-popup">
+              <img src='${marker.imgUrl}' />
+              <h2>${marker.name}</h2>
+            </div>
+          </a>
+          `
+        );
+        lfMarker.on('mouseover', () => popup.openPopup());
+      }
       lfMarker.on('click', () => this.clickItem.emit(marker.item));
       lfMarker.addTo(this.markersLayer);
     }
@@ -185,7 +136,10 @@ export class MapNavigatorComponent implements OnInit, OnChanges {
   // }
 
   async initMap() {
-    const center = await this.getUserLocation();
+    let center = this.center;
+    if (!GeoPoint.isGeoPoint(center)) {
+      center = await getUserLocation();
+    }
     this.map = leaflet.map('ygg-leaflet-map', {
       center: [center.latitude, center.longitude],
       zoom: 15

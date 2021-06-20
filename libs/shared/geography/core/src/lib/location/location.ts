@@ -67,8 +67,9 @@ export class Location implements SerializableJSON {
 }
 
 export interface Located {
+  location: Location;
   id?: string;
   name?: string;
   image?: string;
-  location: Location;
+  link?: string;
 }

@@ -1,0 +1,8 @@
+.map-container .map {
+  width: 50vw;
+  min-width: 400px;
+  height: 40vh;
+  min-height: 300px;
+  border-radius: 10px;
+  overflow: hidden;
+}

@@ -7,6 +7,7 @@ export class Marker {
   imgUrl: string;
   id: string;
   item: Located;
+  link?: string;
 
   constructor(options: any = {}) {
     extend(this, options);
@@ -18,7 +19,8 @@ export class Marker {
       id: item.id,
       name: item.name,
       imgUrl: item.image,
-      geoPoint: item.location.geoPoint
+      geoPoint: item.location.geoPoint,
+      link: item.link
     });
   }
 }

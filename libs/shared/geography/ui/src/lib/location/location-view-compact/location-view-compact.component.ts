@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { YggDialogService } from '@ygg/shared/ui/widgets';
 import { LocationViewComponent } from '../location-view/location-view.component';
 
 @Component({
@@ -10,7 +11,14 @@ import { LocationViewComponent } from '../location-view/location-view.component'
 export class LocationViewCompactComponent extends LocationViewComponent {
   @Output() showMap: EventEmitter<any> = new EventEmitter();
 
+  constructor(private dialog: YggDialogService) {
+    super();
+  }
+
   gotoMap() {
-    this.showMap.emit('true');
+    this.dialog.open(LocationViewComponent, {
+      title: this.location.address.getFullAddress(),
+      data: { location: this.location }
+    });
   }
 }
