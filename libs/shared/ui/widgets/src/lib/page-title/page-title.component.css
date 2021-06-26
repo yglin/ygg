@@ -1,9 +1,10 @@
 .ygg-page-title {
-  max-width: 85vw;
-  margin: 20px auto 40px auto;
+  min-width: 180px;
+  max-width: 80vw;
+  margin: 2vh 2vw;
 }
 
-.ygg-page-title .material-icons{
+.ygg-page-title .material-icons {
   font-size: 28px;
 }
 
