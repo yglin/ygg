@@ -5,6 +5,8 @@
 }
 
 .map-container .map {
+  width: 70vw;
+  min-width: 250px;
   height: 40vh;
   min-height: 300px;
   border-radius: 10px;

@@ -11,7 +11,10 @@ import { UsersByEmailSelectorPageObjectCypress } from '@ygg/shared/user/test';
 import { ExtraInfoButtonPageObjectCypress } from '@ygg/shared/ui/test';
 import { Box } from '@ygg/ourbox/core';
 import { Location } from '@ygg/shared/geography/core';
-import { LocationControlPageObjectCypress } from '@ygg/shared/geography/test';
+import {
+  LocationControlCompactPageObjectCypress,
+  LocationControlPageObjectCypress
+} from '@ygg/shared/geography/test';
 
 export class BoxCreatePageObjectCypress extends PageObjectCypress {
   selectors = {
@@ -32,12 +35,12 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
     contact: '.contact'
   };
 
-  locationControlPO: LocationControlPageObjectCypress;
+  locationControlPO: LocationControlCompactPageObjectCypress;
   contactControlPO: ContactControlPageObjectCypress;
 
   constructor(parentSelector: string = '') {
     super(parentSelector);
-    this.locationControlPO = new LocationControlPageObjectCypress(
+    this.locationControlPO = new LocationControlCompactPageObjectCypress(
       this.getSelector('location')
     );
     this.contactControlPO = new ContactControlPageObjectCypress(

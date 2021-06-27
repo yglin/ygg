@@ -1,5 +1,6 @@
 .address-control {
-  width: 90vw;
+  width: 100%;
+  min-width: 100px;
   max-width: 640px;
 }
 

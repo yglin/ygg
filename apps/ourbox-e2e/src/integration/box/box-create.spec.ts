@@ -1,22 +1,21 @@
 import { Box, Treasure } from '@ygg/ourbox/core';
-import { range } from 'lodash';
-import { createBox, gotoCreatePage as gotoBoxCreatePage } from './box-create';
-import { MapNavigatorPageObjectCypress } from '@ygg/shared/geography/test';
 import {
   BoxViewPageObjectCypress,
   TreasureViewPageObjectCypress
 } from '@ygg/ourbox/test';
-import { gotoMyBoxes } from './box';
+import { MapNavigatorPageObjectCypress } from '@ygg/shared/geography/test';
+import { logout, theMockDatabase } from '@ygg/shared/test/cypress';
 import {
   ImageThumbnailListPageObjectCypress,
   YggDialogPageObjectCypress
 } from '@ygg/shared/ui/test';
 import { loginTestUser, testUsers } from '@ygg/shared/user/test';
-import { User } from '@ygg/shared/user/core';
-import { logout, theMockDatabase } from '@ygg/shared/test/cypress';
+import { range } from 'lodash';
+import { myBeforeAll } from '../before-all';
 import { gotoMapNavigatorPage } from '../map/map';
 import { addToBox, createTreasure } from '../treasure/treasure-create';
-import { myBeforeAll } from '../before-all';
+import { gotoMyBoxes } from './box';
+import { createBox, gotoCreatePage as gotoBoxCreatePage } from './box-create';
 
 describe('Create box', () => {
   const boxes = range(10).map((value, index) => {

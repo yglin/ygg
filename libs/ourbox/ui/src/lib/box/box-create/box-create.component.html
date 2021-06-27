@@ -2,20 +2,18 @@
   <div class="box-create">
     <ygg-page-title icon="library_add">開一個新寶箱</ygg-page-title>
     <br />
-    <div class="panel">
-      <mat-horizontal-stepper linear="true" #stepper>
-        <mat-step [stepControl]="firstFormGroup">
-          <form [formGroup]="firstFormGroup">
+    <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="10px">
+      <div class="panel">
+        <mat-vertical-stepper linear="true" #stepper>
+          <mat-step [stepControl]="firstFormGroup">
             <ng-template matStepLabel>寶箱名稱</ng-template>
             <div
               class="tab-content"
               fxLayout="row"
               fxLayoutAlign="center center"
               fxLayoutGap="30px"
+              [formGroup]="firstFormGroup"
             >
-              <div class="icon" fxHide.xs="true">
-                <img src="/assets/images/box/box.png" />
-              </div>
               <div>
                 <mat-form-field>
                   <input
@@ -36,132 +34,114 @@
             >
               <div></div>
               <button mat-fab matStepperNext class="next-step">
-                <mat-icon>keyboard_arrow_right</mat-icon>
+                <mat-icon>keyboard_arrow_down</mat-icon>
               </button>
               <!-- <button mat-button matStepperNext>下一步</button> -->
             </div>
-          </form>
-        </mat-step>
-        <mat-step>
-          <ng-template matStepLabel>選擇寶箱圖示</ng-template>
-          <div
-            class="tab-content"
-            fxLayout="row"
-            fxLayoutAlign="center center"
-            fxLayoutGap="30px"
-          >
-            <div class="icon step-image" fxHide.xs="true">
-              <img [src]="thumbSelected" alt="請點選圖示" />
-            </div>
-            <div
-              fxLayout="row wrap"
-              fxLayoutAlign="space-around start"
-              fxLayoutGap="20px"
-              class="thumbnail-images"
-            >
-              <div
-                *ngFor="let thumbImage of thumbnailImages"
-                class="thumbnail-image"
-                [ngClass]="{
-                  selected: thumbImage === thumbSelected
-                }"
-                (click)="thumbSelected = thumbImage"
-              >
-                <img [src]="thumbImage" />
+          </mat-step>
+          <mat-step>
+            <ng-template matStepLabel>選擇寶箱圖示</ng-template>
+            <div class="tab-content">
+              <div class="selected-image step-image">
+                <img [src]="thumbSelected" alt="請點選圖示" />
               </div>
+              <br />
               <div
                 fxLayout="row"
-                fxLayoutAlign="center center"
-                fxLayoutGap="0px"
+                fxLayoutAlign="start center"
+                fxLayoutGap="20px"
+                class="thumbnail-images"
+                #thumbnailImageListDiv
               >
-                <button
-                  mat-fab
-                  class="add-images"
-                  matTooltip="上傳圖片"
-                  (click)="addImages()"
+                <div
+                  *ngFor="let thumbImage of thumbnailImages"
+                  class="thumbnail-image"
+                  [ngClass]="{
+                    selected: thumbImage === thumbSelected
+                  }"
+                  (click)="thumbSelected = thumbImage"
                 >
-                  <mat-icon>add_photo_alternate </mat-icon>
-                </button>
+                  <img [src]="thumbImage" />
+                </div>
               </div>
             </div>
-          </div>
-          <div
-            fxLayout="row"
-            fxLayoutAlign="space-between center"
-            fxLayoutGap="20px"
-          >
-            <button mat-fab matStepperPrevious>
-              <mat-icon>keyboard_arrow_left</mat-icon>
-            </button>
-            <button mat-fab matStepperNext class="next-step">
-              <mat-icon>keyboard_arrow_right</mat-icon>
-            </button>
-            <!-- <button mat-button matStepperNext>下一步</button> -->
-          </div>
-        </mat-step>
-        <mat-step [stepControl]="formGroupLocation">
-          <ng-template matStepLabel>寶箱所在地</ng-template>
-          <div class="tab-content location">
-            <form [formGroup]="formGroupLocation">
-              <ygg-location-control
-                formControlName="location"
-              ></ygg-location-control>
-            </form>
-          </div>
-          <div
-            fxLayout="row"
-            fxLayoutAlign="space-between center"
-            fxLayoutGap="20px"
-          >
-            <button mat-fab matStepperPrevious>
-              <mat-icon>keyboard_arrow_left</mat-icon>
-            </button>
-            <button mat-fab matStepperNext class="next-step">
-              <mat-icon>keyboard_arrow_right</mat-icon>
-            </button>
-          </div>
-        </mat-step>
-        <mat-step [stepControl]="formGroupContact">
-          <ng-template matStepLabel>聯絡資料</ng-template>
-          <div class="tab-content contact">
-            <form [formGroup]="formGroupContact">
-              <ygg-contact-control
-                formControlName="contact"
-              ></ygg-contact-control>
-            </form>
-          </div>
-          <div
-            fxLayout="row"
-            fxLayoutAlign="space-between center"
-            fxLayoutGap="20px"
-          >
-            <button mat-fab matStepperPrevious>
-              <mat-icon>keyboard_arrow_left</mat-icon>
-            </button>
-            <button mat-fab matStepperNext class="next-step">
-              <mat-icon>keyboard_arrow_right</mat-icon>
-            </button>
-          </div>
-        </mat-step>
-        <mat-step>
-          <ng-template matStepLabel>公開寶箱</ng-template>
-          <div
-            class="tab-content"
-            fxLayout="row"
-            fxLayoutAlign="center center"
-            fxLayoutGap="30px"
-          >
-            <div class="icon" fxHide.xs="true">
-              <img src="/assets/images/box/publish.png" />
+            <div
+              fxLayout="row"
+              fxLayoutAlign="space-between center"
+              fxLayoutGap="20px"
+            >
+              <button mat-fab matStepperPrevious>
+                <mat-icon>keyboard_arrow_up</mat-icon>
+              </button>
+              <button
+                mat-fab
+                class="add-images"
+                matTooltip="上傳圖片"
+                (click)="addImages()"
+              >
+                <mat-icon>add_photo_alternate </mat-icon>
+              </button>
+              <button mat-fab matStepperNext class="next-step">
+                <mat-icon>keyboard_arrow_down</mat-icon>
+              </button>
+              <!-- <button mat-button matStepperNext>下一步</button> -->
             </div>
-            <div fxFlex="300px" class="check-public">
+          </mat-step>
+          <mat-step [stepControl]="formGroupLocation">
+            <ng-template matStepLabel>寶箱所在地</ng-template>
+            <div class="tab-content location">
+              <form [formGroup]="formGroupLocation">
+                <ygg-location-control-compact
+                  formControlName="location"
+                ></ygg-location-control-compact>
+              </form>
+            </div>
+            <div
+              fxLayout="row"
+              fxLayoutAlign="space-between center"
+              fxLayoutGap="20px"
+            >
+              <button mat-fab matStepperPrevious>
+                <mat-icon>keyboard_arrow_up</mat-icon>
+              </button>
+              <button mat-fab matStepperNext class="next-step">
+                <mat-icon>keyboard_arrow_down</mat-icon>
+              </button>
+            </div>
+          </mat-step>
+          <mat-step [stepControl]="formGroupContact">
+            <ng-template matStepLabel>聯絡資料</ng-template>
+            <div class="tab-content contact">
+              <form [formGroup]="formGroupContact">
+                <ygg-contact-control
+                  formControlName="contact"
+                ></ygg-contact-control>
+              </form>
+            </div>
+            <div
+              fxLayout="row"
+              fxLayoutAlign="space-between center"
+              fxLayoutGap="20px"
+            >
+              <button mat-fab matStepperPrevious>
+                <mat-icon>keyboard_arrow_up</mat-icon>
+              </button>
+              <button mat-fab matStepperNext class="next-step">
+                <mat-icon>keyboard_arrow_down</mat-icon>
+              </button>
+            </div>
+          </mat-step>
+          <mat-step>
+            <ng-template matStepLabel>公開寶箱</ng-template>
+            <div class="tab-content">
               <div
                 fxLayout="row"
                 fxLayoutAlign="start center"
                 fxLayoutGap="5px"
+                class="check-public"
               >
                 <mat-checkbox [formControl]="formControlPublic"
-                  >公開這個寶箱的內容？</mat-checkbox
+                  >公開寶箱？</mat-checkbox
                 >
                 <div class="publicity-description">
                   <ygg-extra-info-button [extraInfo]="flagIsPublic.description">
@@ -169,21 +149,21 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            fxLayout="row"
-            fxLayoutAlign="space-between center"
-            fxLayoutGap="10px"
-          >
-            <button mat-fab matStepperPrevious>
-              <mat-icon>keyboard_arrow_left</mat-icon>
-            </button>
-            <button mat-fab (click)="submit()" class="submit">
-              <mat-icon>done_outline</mat-icon>
-            </button>
-          </div>
-        </mat-step>
-      </mat-horizontal-stepper>
+            <div
+              fxLayout="row"
+              fxLayoutAlign="space-between center"
+              fxLayoutGap="10px"
+            >
+              <button mat-fab matStepperPrevious>
+                <mat-icon>keyboard_arrow_up</mat-icon>
+              </button>
+              <button mat-fab (click)="submit()" class="submit">
+                <mat-icon>done_outline</mat-icon>
+              </button>
+            </div>
+          </mat-step>
+        </mat-vertical-stepper>
+      </div>
     </div>
   </div>
 </div>

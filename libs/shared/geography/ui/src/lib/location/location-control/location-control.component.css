@@ -1,5 +1,6 @@
 .location-control {
-  width: 90vw;
+  width: 100%;
+  min-width: 250px;
   max-width: 800px;
   overflow: auto;
 }

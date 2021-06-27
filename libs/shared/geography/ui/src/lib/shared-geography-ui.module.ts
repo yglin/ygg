@@ -14,6 +14,7 @@ import { SharedUiNgMaterialModule } from '@ygg/shared/ui/ng-material';
 import { SharedUiWidgetsModule } from '@ygg/shared/ui/widgets';
 import { LocationViewCompactComponent } from './location/location-view-compact/location-view-compact.component';
 import { MapNavigatorComponent } from './map/map-navigator/map-navigator.component';
+import { LocationControlCompactComponent } from './location/location-control-compact/location-control-compact.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { MapNavigatorComponent } from './map/map-navigator/map-navigator.compone
     LocationControlComponent,
     LocationViewComponent,
     LocationViewCompactComponent,
-    MapNavigatorComponent
+    MapNavigatorComponent,
+    LocationControlCompactComponent
   ],
   imports: [
     CommonModule,
@@ -36,6 +38,7 @@ import { MapNavigatorComponent } from './map/map-navigator/map-navigator.compone
   ],
   exports: [
     LocationControlComponent,
+    LocationControlCompactComponent,
     LocationViewComponent,
     LocationViewCompactComponent,
     MapNavigatorComponent

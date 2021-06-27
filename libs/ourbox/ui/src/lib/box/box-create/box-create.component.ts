@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -10,7 +16,7 @@ import { wrapError } from '@ygg/shared/infra/error';
 import { Album, Image } from '@ygg/shared/omni-types/core';
 import { ImageUploaderService } from '@ygg/shared/omni-types/ui';
 import { EmceeService } from '@ygg/shared/ui/widgets';
-import { isEmpty } from 'lodash';
+import { isEmpty, last } from 'lodash';
 import { Subscription } from 'rxjs';
 import { BoxFactoryService } from '../box-factory.service';
 
@@ -21,6 +27,8 @@ import { BoxFactoryService } from '../box-factory.service';
   styleUrls: ['./box-create.component.css']
 })
 export class BoxCreateComponent implements OnInit, OnDestroy {
+  @ViewChild('thumbnailImageListDiv') private thumbnailImageListDiv: ElementRef;
+
   firstFormGroup: FormGroup;
   formGroupLocation: FormGroup;
   formGroupContact: FormGroup;
@@ -45,8 +53,7 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private boxFactory: BoxFactoryService,
-    private imageUploader: ImageUploaderService,
-    private emcee: EmceeService
+    private imageUploader: ImageUploaderService
   ) {
     this.firstFormGroup = this.formBuilder.group({
       name: [null, Validators.required]
@@ -88,6 +95,11 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
         this.thumbnailImages,
         images.map(img => img.src)
       );
+      this.thumbSelected = last(images).src;
+      // Scroll thimbnailImageList to the last after next dom updated
+      setTimeout(() => {
+        this.thumbnailImageListDiv.nativeElement.scrollLeft = this.thumbnailImageListDiv.nativeElement.scrollWidth;
+      }, 0);
     }
   }
 }
