@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
-import { Treasure } from '@ygg/ourbox/core';
-import { extend, get, isEmpty } from 'lodash';
+import { Treasure, ProvisionType } from '@ygg/ourbox/core';
+import { extend, get, isEmpty, values } from 'lodash';
 import { Subject, Subscription } from 'rxjs';
 import { TreasureFactoryService } from '../treasure-factory.service';
 
@@ -34,6 +34,8 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
   initStep = 0;
   eventBusNameControl: Subject<any> = new Subject();
   subscription = new Subscription();
+  provisions = Treasure.provisionTypes;
+  selectedProvision = new ProvisionType();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -49,6 +51,7 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
     // this.formGroupStep3 = this.formBuilder.group({
     //   location: [null, Validators.required]
     // });
+    console.log(this.provisions);
   }
 
   ngOnDestroy(): void {
@@ -97,11 +100,13 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async submit() {
     const payload = extend(
+      { provision: this.selectedProvision },
       this.formGroupAlbum.value,
       this.formGroupName.value,
       this.formGroupTags.value
       // this.formGroupStep3.value
     );
+    console.log(payload);
     this.value.update(payload);
     await this.treasureFactory.save(this.value);
   }

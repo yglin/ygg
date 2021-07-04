@@ -4,7 +4,10 @@ import {
   TextControlPageObjectCypress
 } from '@ygg/shared/omni-types/test';
 import { TagsControlPageObjectCypress } from '@ygg/shared/tags/test';
-import { PageObjectCypress } from '@ygg/shared/test/cypress';
+import {
+  MaterialSelectPageObjectCypress,
+  PageObjectCypress
+} from '@ygg/shared/test/cypress';
 
 export class TreasureEditPageObjectCypress extends PageObjectCypress {
   selectors = {
@@ -12,12 +15,14 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
     'album-control': '.album.control',
     'name-control': '.name.control',
     'location-control': '.location.control',
-    'tags-control': '.tags-control'
+    'tags-control': '.tags-control',
+    'provision-selector': '.provision-selector'
   };
 
   nameControlPO: TextControlPageObjectCypress;
   albumControlPO: AlbumControlPageObjectCypress;
   tagsControlPO: TagsControlPageObjectCypress;
+  provisionSelector: MaterialSelectPageObjectCypress;
 
   constructor(parentSelector?: string) {
     super(parentSelector);
@@ -27,8 +32,13 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
     this.albumControlPO = new AlbumControlPageObjectCypress(
       this.getSelector('album-control')
     );
+
     this.tagsControlPO = new TagsControlPageObjectCypress(
       this.getSelector('tags-control')
+    );
+
+    this.provisionSelector = new MaterialSelectPageObjectCypress(
+      this.getSelector('provision-selector')
     );
   }
 
@@ -47,6 +57,9 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
     this.nextStep();
     this.expectStep('寶物照片');
     this.albumControlPO.setValue(treasure.album);
+    this.nextStep();
+    this.expectStep('供給方式');
+    this.provisionSelector.selectByValue(treasure.provision.value);
     this.nextStep();
     this.expectStep('寶物標籤');
     this.tagsControlPO.setValue(treasure.tags);

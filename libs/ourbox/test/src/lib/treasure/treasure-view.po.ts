@@ -15,7 +15,8 @@ export class TreasureViewPageObjectCypress extends PageObjectCypress {
     main: '.ourbox-treasure-view',
     album: '.album',
     tags: '.tags',
-    boxLink: '.box-link'
+    boxLink: '.box-link',
+    provisionLabel: '.provision-label'
   };
 
   pageTitlePO: PageTitlePageObjectCypress;
@@ -35,9 +36,15 @@ export class TreasureViewPageObjectCypress extends PageObjectCypress {
     this.pageTitlePO.expectText(treasure.name);
     this.albumViewPO.expectValue(treasure.album);
     this.tagsViewPO.expectValue(treasure.tags);
+    cy.get(this.getSelector('provisionLabel')).should(
+      'include.text',
+      treasure.provision.label
+    );
   }
 
   clickBoxLink() {
-    cy.get(this.getSelector('boxLink')).scrollIntoView().click();
+    cy.get(this.getSelector('boxLink'))
+      .scrollIntoView()
+      .click();
   }
 }

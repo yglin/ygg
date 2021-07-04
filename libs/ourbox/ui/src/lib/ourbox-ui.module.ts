@@ -46,6 +46,7 @@ import { BoxThumbnailComponent } from './box/box-thumbnail/box-thumbnail.compone
 import { GreetingComponent } from './home/greeting/greeting.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { DebuggingComponent } from './misc/debugging/debugging.component';
+import { ProvisionLabelComponent } from './treasure/provision-label/provision-label.component';
 
 export function initSideMenu(
   sideDrawer: SideDrawerService,
@@ -120,7 +121,8 @@ export function configEmceeService(emceeService: EmceeService) {
     BoxThumbnailComponent,
     GreetingComponent,
     FooterComponent,
-    DebuggingComponent
+    DebuggingComponent,
+    ProvisionLabelComponent
   ],
   imports: [
     CommonModule,

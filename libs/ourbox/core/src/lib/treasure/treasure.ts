@@ -12,16 +12,19 @@ import { Album } from '@ygg/shared/omni-types/core';
 import { Tags } from '@ygg/shared/tags/core';
 import { Authenticator, User } from '@ygg/shared/user/core';
 import { extend, get } from 'lodash';
+import { ProvisionType, provisionTypes } from './provision-type';
 
 export class Treasure {
   static collection = 'treasures';
   static icon = 'category';
+  static provisionTypes = provisionTypes;
 
   id: string;
   icon: string;
   name: string;
   description: string;
   album: Album;
+  provision: ProvisionType;
   tags: Tags;
   // location: Location;
   ownerId: string;
@@ -57,6 +60,9 @@ export class Treasure {
     if (options.modifyAt) {
       this.modifyAt = new Date(options.modifyAt);
     }
+    if (options.provision) {
+      this.provision = new ProvisionType(options.provision);
+    }
   }
 
   static queryOwner(owner: User): Query {
@@ -68,6 +74,7 @@ export class Treasure {
     treasure.album = Album.forge();
     treasure.name = `MyPrecious_${Date.now()}`;
     treasure.tags = Tags.forge();
+    treasure.provision = ProvisionType.forge();
     // treasure.location = Location.forge();
     return treasure;
   }

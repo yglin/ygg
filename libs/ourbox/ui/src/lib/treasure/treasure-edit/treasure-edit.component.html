@@ -29,6 +29,33 @@
         <!-- <button mat-button matStepperNext class="next-step">下一步</button> -->
       </div>
     </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>供給方式</ng-template>
+      <div class="provision-selector">
+        <br /><br />
+        <mat-select
+          placeholder="請選擇供給方式"
+          [(ngModel)]="selectedProvision.value"
+        >
+          <mat-option
+            *ngFor="let provision of provisions"
+            [value]="provision.value"
+          >
+            <ourbox-provision-label
+              [value]="provision"
+            ></ourbox-provision-label>
+          </mat-option>
+        </mat-select>
+        <br /><br />
+      </div>
+      <div>
+        <button mat-button matStepperPrevious class="previous-step">
+          上一步
+        </button>
+        <button mat-button matStepperNext class="next-step">下一步</button>
+        <!-- <button mat-button matStepperNext class="next-step">下一步</button> -->
+      </div>
+    </mat-step>
     <mat-step [stepControl]="formGroupTags">
       <ng-template matStepLabel>寶物標籤</ng-template>
       <form [formGroup]="formGroupTags">

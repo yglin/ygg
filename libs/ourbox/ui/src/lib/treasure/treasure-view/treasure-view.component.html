@@ -5,6 +5,17 @@
     <ourbox-box-thumbnail [id]="treasure.boxId"></ourbox-box-thumbnail>
   </div>
   <br />
+  <div
+    class="provision-label"
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    fxLayoutGap="20px"
+  >
+    <h3>供給方式：</h3>
+    <ourbox-provision-label
+      [value]="treasure.provision"
+    ></ourbox-provision-label>
+  </div>
   <div class="tags">
     <ygg-tags-view [value]="treasure.tags"></ygg-tags-view>
   </div>

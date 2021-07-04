@@ -115,6 +115,7 @@
     "@nestjs/testing": "^6.8.3",
     "@ngrx/store-devtools": "9.1.0",
     "@nrwl/cypress": "9.2.2",
+    "@nrwl/eslint-plugin-nx": "9.2.2",
     "@nrwl/express": "9.2.2",
     "@nrwl/jest": "9.2.2",
     "@nrwl/nest": "9.2.2",
@@ -126,9 +127,9 @@
     "@types/jest": "25.1.4",
     "@types/jquery": "3.3.30",
     "@types/node": "~12.6.8",
-    "@typescript-eslint/eslint-plugin": "^4.11.0",
-    "@typescript-eslint/eslint-plugin-tslint": "^4.11.0",
-    "@typescript-eslint/parser": "^4.11.0",
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "@typescript-eslint/eslint-plugin-tslint": "^4.28.1",
+    "@typescript-eslint/parser": "^4.28.1",
     "async": "^3.1.0",
     "child-process-promise": "^2.2.1",
     "codelyzer": "~5.1.0",
@@ -154,8 +155,7 @@
     "tslib": "^1.14.1",
     "tslint": "6.0.0",
     "typescript": "~3.8.3",
-    "webpack-bundle-analyzer": "^3.9.0",
-    "@nrwl/eslint-plugin-nx": "9.2.2"
+    "webpack-bundle-analyzer": "^3.9.0"
   },
   "firebase": {
     "dependencies": [
