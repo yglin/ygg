@@ -51,8 +51,8 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
   setValue(box: Box) {
     this.setName(box.name);
     this.nextStep();
-    this.selectImage(box.image);
-    this.nextStep();
+    // this.selectImage(box.image);
+    // this.nextStep();
     this.setLocation(box.location);
     this.nextStep();
     this.setContact(box.contact);
@@ -98,23 +98,23 @@ export class BoxCreatePageObjectCypress extends PageObjectCypress {
     // cy.get(this.getSelectorForMemberEmail(email)).should('be.visible');
   }
 
-  selectImage(imageSrc: string) {
-    cy.get(this.getSelector('thumbnailImages'))
-      .find(`.thumbnail-image img[src="${imageSrc}"]`)
-      .click()
-      .parent()
-      .should('have.class', 'selected');
-    cy.get(this.getSelector('stepImage')).should('have.attr', 'src', imageSrc);
-  }
+  // selectImage(imageSrc: string) {
+  //   cy.get(this.getSelector('thumbnailImages'))
+  //     .find(`.thumbnail-image img[src="${imageSrc}"]`)
+  //     .click()
+  //     .parent()
+  //     .should('have.class', 'selected');
+  //   cy.get(this.getSelector('stepImage')).should('have.attr', 'src', imageSrc);
+  // }
 
-  selectCustomImage(imageSrc: string) {
-    cy.get(this.getSelector('buttonAddImage')).click();
-    const imageUploadPO = new ImageUploaderPageObjectCypress();
-    imageUploadPO.expectOpen();
-    imageUploadPO.addImagesByUrl([new Image(imageSrc)]);
-    imageUploadPO.submit();
-    this.selectImage(imageSrc);
-  }
+  // selectCustomImage(imageSrc: string) {
+  //   cy.get(this.getSelector('buttonAddImage')).click();
+  //   const imageUploadPO = new ImageUploaderPageObjectCypress();
+  //   imageUploadPO.expectOpen();
+  //   imageUploadPO.addImagesByUrl([new Image(imageSrc)]);
+  //   imageUploadPO.submit();
+  //   this.selectImage(imageSrc);
+  // }
 
   nextStep() {
     cy.get(this.getSelector('buttonNextStep')).click();

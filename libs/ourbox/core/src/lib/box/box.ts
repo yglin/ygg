@@ -20,18 +20,8 @@ export class Box {
   [key: string]: any;
 
   static collection = 'boxes';
-  static thumbnailSrc = '/assets/images/box/box.png';
+  static thumbnailSrc = '/assets/images/box/box-icon.png';
   static icon = 'inventory';
-  static sampleImages = [
-    '/assets/images/box/thumbnails/01.png',
-    '/assets/images/box/thumbnails/02.png',
-    '/assets/images/box/thumbnails/03.png',
-    '/assets/images/box/thumbnails/04.png',
-    '/assets/images/box/thumbnails/05.png',
-    '/assets/images/box/thumbnails/06.png',
-    '/assets/images/box/thumbnails/07.png',
-    '/assets/images/box/thumbnails/08.png'
-  ];
 
   id: string;
   name: string;
@@ -41,7 +31,7 @@ export class Box {
   public: boolean;
   contact: Contact;
   treasures: Treasure[] = [];
-  
+
   constructor(
     protected dataAccessor: DataAccessor,
     protected auth: Authenticator,
@@ -78,7 +68,7 @@ export class Box {
     const forged = new Box(null, null, null, null, null);
     forged.name = `Troll Box ${Date.now()}`;
     forged.album = Album.forge({
-      cover: new Image(sample(Box.sampleImages)),
+      cover: new Image(Box.thumbnailSrc),
       photos: []
     });
     forged.location = Location.forge();

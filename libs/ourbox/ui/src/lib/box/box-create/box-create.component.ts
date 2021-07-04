@@ -41,8 +41,8 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
   // isEmail = isEmail;
   isPublicDescription = '';
   subscription: Subscription = new Subscription();
-  thumbnailImages = Box.sampleImages;
-  thumbSelected = '/assets/images/box/box.png';
+  // thumbnailImages = Box.sampleImages;
+  thumbSelected = '/assets/images/box/box-icon.png';
   flagIsPublic = {
     id: 'isPublic',
     label: '公開',
@@ -88,18 +88,18 @@ export class BoxCreateComponent implements OnInit, OnDestroy {
     await box.save();
   }
 
-  async addImages() {
-    const images: Image[] = await this.imageUploader.uploadImages();
-    if (!isEmpty(images)) {
-      this.thumbnailImages.push.apply(
-        this.thumbnailImages,
-        images.map(img => img.src)
-      );
-      this.thumbSelected = last(images).src;
-      // Scroll thimbnailImageList to the last after next dom updated
-      setTimeout(() => {
-        this.thumbnailImageListDiv.nativeElement.scrollLeft = this.thumbnailImageListDiv.nativeElement.scrollWidth;
-      }, 0);
-    }
-  }
+  // async addImages() {
+  //   const images: Image[] = await this.imageUploader.uploadImages();
+  //   if (!isEmpty(images)) {
+  //     this.thumbnailImages.push.apply(
+  //       this.thumbnailImages,
+  //       images.map(img => img.src)
+  //     );
+  //     this.thumbSelected = last(images).src;
+  //     // Scroll thimbnailImageList to the last after next dom updated
+  //     setTimeout(() => {
+  //       this.thumbnailImageListDiv.nativeElement.scrollLeft = this.thumbnailImageListDiv.nativeElement.scrollWidth;
+  //     }, 0);
+  //   }
+  // }
 }

@@ -59,13 +59,13 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
   //   this.albumViewPO.expectValue(album);
   // }
 
-  expectImage(image: string) {
-    if (image) {
-      cy.get(this.getSelector('image'))
-        .find('img')
-        .should('have.attr', 'src', image);
-    }
-  }
+  // expectImage(image: string) {
+  //   if (image) {
+  //     cy.get(this.getSelector('image'))
+  //       .find('img')
+  //       .should('have.attr', 'src', image);
+  //   }
+  // }
 
   expectLocation(location: Location) {
     this.locationPO.expectValue(location);
@@ -82,7 +82,7 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
 
   expectValue(box: Box) {
     this.expectName(box.name);
-    this.expectImage(box.image);
+    // this.expectImage(box.image);
     this.expectLocation(box.location);
     this.expectContact(box.contact);
     this.expectPublicity(box.public);
