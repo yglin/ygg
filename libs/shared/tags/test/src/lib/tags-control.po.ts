@@ -18,6 +18,10 @@ export class TagsControlPageObjectCypress extends PageObjectCypress {
     this.chipsControlPO.setValue(tags.getTags());
   }
 
+  clearValue() {
+    this.chipsControlPO.clear();
+  }
+
   expectTags(tags: string[]) {
     this.chipsControlPO.expectValue(tags);
   }

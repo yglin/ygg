@@ -31,22 +31,29 @@
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>供給方式</ng-template>
-      <div class="provision-selector">
+      <div class="provision-selector" [formGroup]='formGroupProvision'>
         <br /><br />
-        <mat-select
-          placeholder="請選擇供給方式"
-          [(ngModel)]="selectedProvision.value"
-        >
-          <mat-option
-            *ngFor="let provision of provisions"
-            [value]="provision.value"
-          >
-            <ourbox-provision-label
-              [value]="provision"
-            ></ourbox-provision-label>
-          </mat-option>
-        </mat-select>
-        <br /><br />
+        <mat-form-field>
+          <mat-label>供給方式</mat-label>
+          <mat-select formControlName="provision">
+            <mat-select-trigger>
+              <ng-container
+                *ngIf="selectedProvision; else noSelectedProvisionTemplate"
+              >
+                <ourbox-provision-label
+                  [value]="selectedProvision"
+                ></ourbox-provision-label>
+              </ng-container>
+              <ng-template #noSelectedProvisionTemplate>
+                請選擇供給方式
+              </ng-template>
+            </mat-select-trigger>
+            <mat-option *ngFor="let p of provisions" [value]="p.value">
+              <ourbox-provision-label [value]="p"></ourbox-provision-label>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+          <br /><br />
       </div>
       <div>
         <button mat-button matStepperPrevious class="previous-step">

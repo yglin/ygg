@@ -1,14 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Box, Treasure } from '@ygg/ourbox/core';
+import { Box, ProvisionType, Treasure, TreasureFilter } from '@ygg/ourbox/core';
 import { GeoBound } from '@ygg/shared/geography/core';
-import { Tags } from '@ygg/shared/tags/core';
 import { flatten, isEmpty, uniqBy, values } from 'lodash';
 import { combineLatest, Subject, Subscription } from 'rxjs';
-import { startWith, switchMap, tap } from 'rxjs/operators';
+import { startWith, switchMap } from 'rxjs/operators';
 import { BoxAgentService } from '../box/box-agent.service';
 import { BoxFinderService } from '../box/box-finder.service';
-import { TreasureFinderService } from '../treasure/treasure-finder.service';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -25,6 +23,8 @@ export class TreasureMapComponent implements OnInit, OnDestroy {
   mapBoundChange$ = new Subject<GeoBound>();
   subscription: Subscription = new Subscription();
   tagsSubject = { collection: Treasure.collection };
+  provisions = Treasure.provisionTypes;
+  selectedProvision: ProvisionType = null;
 
   constructor(
     private boxFinder: BoxFinderService,
@@ -32,8 +32,19 @@ export class TreasureMapComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder
   ) {
     this.formGroupSearch = this.formBuilder.group({
-      tags: null
+      tags: null,
+      provision: 0
     });
+
+    this.subscription.add(
+      this.formGroupSearch.get('provision').valueChanges.subscribe(value => {
+        if (value > 0) {
+          this.selectedProvision = new ProvisionType(value);
+        } else {
+          this.selectedProvision = null;
+        }
+      })
+    );
 
     const boxesInBound$ = this.mapBoundChange$.pipe(
       switchMap(bound => this.boxFinder.findPublicBoxesInMapBound(bound))
@@ -46,13 +57,14 @@ export class TreasureMapComponent implements OnInit, OnDestroy {
       ]).subscribe(([boxes, filters]) => {
         // console.dir(boxes);
         // console.dir(filters);
-        if (filters && Tags.isTags(filters.tags)) {
-          // console.log(filters.tags.getTags());
+        if (!isEmpty(filters)) {
+          const treasureFilter = new TreasureFilter(filters);
           const filteredBoxes = {};
           const filteredTreasures = {};
+          // console.log(filters.tags.getTags());
           for (const box of boxes) {
             for (const treasure of box.treasures) {
-              if (treasure.tags.include(filters.tags.getTags())) {
+              if (treasureFilter.match(treasure)) {
                 filteredTreasures[treasure.id] = treasure;
                 filteredBoxes[box.id] = box;
               }

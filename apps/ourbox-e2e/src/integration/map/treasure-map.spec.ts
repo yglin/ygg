@@ -1,4 +1,4 @@
-import { Box, Treasure } from '@ygg/ourbox/core';
+import { Box, ProvisionType, Treasure } from '@ygg/ourbox/core';
 import { TreasureMapPageObjectCypress } from '@ygg/ourbox/test';
 import { Location, LocationRecord } from '@ygg/shared/geography/core';
 import { generateID } from '@ygg/shared/infra/core';
@@ -7,7 +7,15 @@ import { theMockDatabase } from '@ygg/shared/test/cypress';
 import { User } from '@ygg/shared/user/core';
 import { testUsers } from '@ygg/shared/user/test';
 import { RelationBoxTreasure } from 'libs/ourbox/core/src/lib/box/box-treasure';
-import { range, sample, sampleSize, values } from 'lodash';
+import {
+  flatten,
+  keyBy,
+  range,
+  sample,
+  sampleSize,
+  mapValues,
+  values
+} from 'lodash';
 import { myBeforeAll } from '../before-all';
 import { gotoMapNavigatorPage } from './map';
 
@@ -51,9 +59,18 @@ describe('Search and navigate in treasure map', () => {
   const boxesHaveTagOneTreasures = {};
   const boxesHaveTagOneAndTwoTreasures = {};
 
+  const treasuresPerProvision = mapValues(
+    keyBy(Treasure.provisionTypes, 'value'),
+    () => []
+  );
+
+  console.log(treasuresPerProvision);
+
   for (const treasure of treasures) {
     treasure.name += `_${Date.now()}`;
     treasure.tags = new Tags();
+    treasure.provision = sample(Treasure.provisionTypes);
+    treasuresPerProvision[treasure.provision.value].push(treasure);
     const box = sample(boxes);
     const r = new RelationBoxTreasure(null, {
       boxId: box.id,
@@ -149,7 +166,7 @@ describe('Search and navigate in treasure map', () => {
   });
 
   it('Show all boxes in the map view', () => {
-    cy.wait(1000);
+    cy.wait(3000);
     treasureMapPO.mapNavigatorPO.expectItems(boxes);
   });
 
@@ -184,5 +201,19 @@ describe('Search and navigate in treasure map', () => {
     treasureMapPO.treasureListPO.expectItems(treasuresWithTagOneAndTwo, {
       exact: true
     });
+  });
+
+  it('Search by provision type', () => {
+    treasureMapPO.tagsControlPO.clearValue();
+    for (const provision of Treasure.provisionTypes) {
+      const treasuresOfProvision = treasuresPerProvision[provision.value];
+      // console.log(provision);
+      // cy.pause();
+      treasureMapPO.provisionSelectorPO.selectByValue(provision.value);
+      cy.wait(3000);
+      treasureMapPO.treasureListPO.expectItems(treasuresOfProvision, {
+        exact: true
+      });
+    }
   });
 });

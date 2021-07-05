@@ -3,7 +3,35 @@
   <br />
   <div class="tags-search" [formGroup]="formGroupSearch">
     <h3>用標籤搜尋寶物</h3>
-    <ygg-tags-control formControlName="tags" [subject]="tagsSubject"></ygg-tags-control>
+    <ygg-tags-control
+      formControlName="tags"
+      [subject]="tagsSubject"
+    ></ygg-tags-control>
+    <br />
+    <div class="provision-selector">
+      <mat-form-field>
+        <mat-label>供給方式</mat-label>
+        <mat-select formControlName="provision">
+          <mat-select-trigger>
+            <ng-container
+              *ngIf="selectedProvision; else noSelectedProvisionTemplate"
+            >
+              <ourbox-provision-label
+                [value]="selectedProvision"
+              ></ourbox-provision-label>
+            </ng-container>
+            <ng-template #noSelectedProvisionTemplate>
+              不限
+            </ng-template>
+          </mat-select-trigger>
+          <mat-option value="0">不限</mat-option>
+          <mat-option *ngFor="let p of provisions" [value]="p.value">
+            <ourbox-provision-label [value]="p"></ourbox-provision-label>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <br />
   </div>
   <ygg-map-navigator
     class="map-navigator"

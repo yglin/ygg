@@ -30,12 +30,13 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
   formGroupAlbum: FormGroup;
   formGroupName: FormGroup;
   formGroupTags: FormGroup;
+  formGroupProvision: FormGroup;
   // formGroupStep3: FormGroup;
   initStep = 0;
   eventBusNameControl: Subject<any> = new Subject();
   subscription = new Subscription();
   provisions = Treasure.provisionTypes;
-  selectedProvision = new ProvisionType();
+  selectedProvision = this.provisions[0];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -48,10 +49,22 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
       name: ['', Validators.required]
     });
     this.formGroupTags = this.formBuilder.group({ tags: null });
+    this.formGroupProvision = this.formBuilder.group({
+      provision: this.selectedProvision.value
+    });
+    this.subscription.add(
+      this.formGroupProvision.get('provision').valueChanges.subscribe(value => {
+        if (value) {
+          this.selectedProvision = new ProvisionType(value);
+        } else {
+          this.selectedProvision = null;
+        }
+      })
+    );
     // this.formGroupStep3 = this.formBuilder.group({
     //   location: [null, Validators.required]
     // });
-    console.log(this.provisions);
+    // console.log(this.provisions);
   }
 
   ngOnDestroy(): void {
