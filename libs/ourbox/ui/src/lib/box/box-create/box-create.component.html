@@ -89,6 +89,10 @@
           <mat-step [stepControl]="formGroupLocation">
             <ng-template matStepLabel>寶箱所在地</ng-template>
             <div class="tab-content location">
+              <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
+                <mat-icon>warning</mat-icon>
+                <h3>定位寶箱所在地時，以安全考量，<br>可定位在鄰近路口或公開場所，避免公開精確的私人住宅地址</h3>
+              </div>
               <form [formGroup]="formGroupLocation">
                 <ygg-location-control-compact
                   formControlName="location"
