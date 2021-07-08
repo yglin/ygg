@@ -1,6 +1,7 @@
 import { Treasure } from '@ygg/ourbox/core';
 import {
   AlbumControlPageObjectCypress,
+  NumberControlPageObjectCypress,
   TextControlPageObjectCypress
 } from '@ygg/shared/omni-types/test';
 import { TagsControlPageObjectCypress } from '@ygg/shared/tags/test';
@@ -16,13 +17,15 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
     'name-control': '.name.control',
     'location-control': '.location.control',
     'tags-control': '.tags-control',
-    'provision-selector': '.provision-selector'
+    'provision-selector': '.provision-selector',
+    priceInput: '.price-input'
   };
 
   nameControlPO: TextControlPageObjectCypress;
   albumControlPO: AlbumControlPageObjectCypress;
   tagsControlPO: TagsControlPageObjectCypress;
   provisionSelector: MaterialSelectPageObjectCypress;
+  priceInputPO: NumberControlPageObjectCypress;
 
   constructor(parentSelector?: string) {
     super(parentSelector);
@@ -39,6 +42,10 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
 
     this.provisionSelector = new MaterialSelectPageObjectCypress(
       this.getSelector('provision-selector')
+    );
+
+    this.priceInputPO = new NumberControlPageObjectCypress(
+      this.getSelector('priceInput')
     );
   }
 
@@ -60,6 +67,10 @@ export class TreasureEditPageObjectCypress extends PageObjectCypress {
     this.nextStep();
     this.expectStep('供給方式');
     this.provisionSelector.selectByValue(treasure.provision.value);
+    if (treasure.provision.isEqual(Treasure.provisionTypes[2])) {
+      this.priceInputPO.expectVisible();
+      this.priceInputPO.setValue(treasure.price);
+    }
     this.nextStep();
     this.expectStep('寶物標籤');
     this.tagsControlPO.setValue(treasure.tags);

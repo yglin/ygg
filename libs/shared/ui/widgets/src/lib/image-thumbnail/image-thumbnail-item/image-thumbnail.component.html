@@ -2,9 +2,12 @@
   <div class="image" [ngClass]="size">
     <ygg-image-icon [src]="item.image"></ygg-image-icon>
   </div>
-  <h3 class="name" *ngIf="item.name" [matTooltip]="item.name">
+  <div class="name app-text" *ngIf="item.name" [matTooltip]="item.name">
     {{ item.name }}
-  </h3>
+  </div>
+  <div class="subtitle app-text" *ngIf="item.subtitle" [matTooltip]="item.subtitle">
+    {{ item.subtitle }}
+  </div>
   <div class="open-link" [hidden]="!item.link">
     <button
       type="button"

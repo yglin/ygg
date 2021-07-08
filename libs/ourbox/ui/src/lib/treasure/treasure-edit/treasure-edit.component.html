@@ -31,29 +31,35 @@
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>供給方式</ng-template>
-      <div class="provision-selector" [formGroup]='formGroupProvision'>
+      <div class="provision-selector" [formGroup]="formGroupProvision">
         <br /><br />
-        <mat-form-field>
-          <mat-label>供給方式</mat-label>
-          <mat-select formControlName="provision">
-            <mat-select-trigger>
-              <ng-container
-                *ngIf="selectedProvision; else noSelectedProvisionTemplate"
-              >
-                <ourbox-provision-label
-                  [value]="selectedProvision"
-                ></ourbox-provision-label>
-              </ng-container>
-              <ng-template #noSelectedProvisionTemplate>
-                請選擇供給方式
-              </ng-template>
-            </mat-select-trigger>
-            <mat-option *ngFor="let p of provisions" [value]="p.value">
-              <ourbox-provision-label [value]="p"></ourbox-provision-label>
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-          <br /><br />
+        <div fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="20px">
+          <div style="margin-bottom: 30px;">
+            <mat-form-field>
+              <mat-label>供給方式</mat-label>
+              <mat-select formControlName="provision">
+                <mat-select-trigger>
+                  <ng-container
+                    *ngIf="selectedProvision; else noSelectedProvisionTemplate"
+                  >
+                    <ourbox-provision-label
+                      [value]="selectedProvision"
+                    ></ourbox-provision-label>
+                  </ng-container>
+                  <ng-template #noSelectedProvisionTemplate>
+                    請選擇供給方式
+                  </ng-template>
+                </mat-select-trigger>
+                <mat-option *ngFor="let p of provisions" [value]="p.value">
+                  <ourbox-provision-label [value]="p"></ourbox-provision-label>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div [hidden]="!isProvisionSale" class="price-input">
+            <ygg-number-control formControlName="price" label='售價'></ygg-number-control>
+          </div>
+        </div>
       </div>
       <div>
         <button mat-button matStepperPrevious class="previous-step">

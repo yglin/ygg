@@ -87,7 +87,8 @@ span,
 p,
 pre,
 input,
-.mat-icon {
+.mat-icon,
+.app-text {
   color: bisque;
   text-shadow: 2px 2px 4px #222222;
 }

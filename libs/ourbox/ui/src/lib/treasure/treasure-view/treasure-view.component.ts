@@ -14,6 +14,11 @@ export class TreasureViewComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
+  get isProvisionSale() {
+    const provision = get(this.treasure, 'provision', null);
+    return provision && provision.isEqual(Treasure.provisionTypes[2]);
+  }
+
   ngOnInit(): void {
     if (!this.treasure) {
       this.treasure = get(this.route.snapshot.data, 'treasure', null);

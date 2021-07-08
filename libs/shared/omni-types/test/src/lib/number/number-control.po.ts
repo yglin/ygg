@@ -1,6 +1,11 @@
-import { NumberControlPageObject } from '@ygg/shared/omni-types/ui';
+import { PageObjectCypress } from '@ygg/shared/test/cypress';
 
-export class NumberControlPageObjectCypress extends NumberControlPageObject {
+export class NumberControlPageObjectCypress extends PageObjectCypress {
+  selectors = {
+    main: '.ygg-number-control',
+    numberInput: '.number-input input'
+  };
+
   setValue(value: number) {
     cy.get(this.getSelector('numberInput'))
       .should('be.visible')

@@ -16,7 +16,8 @@ export class TreasureViewPageObjectCypress extends PageObjectCypress {
     album: '.album',
     tags: '.tags',
     boxLink: '.box-link',
-    provisionLabel: '.provision-label'
+    provisionLabel: '.provision-label',
+    price: '.price'
   };
 
   pageTitlePO: PageTitlePageObjectCypress;
@@ -40,6 +41,11 @@ export class TreasureViewPageObjectCypress extends PageObjectCypress {
       'include.text',
       treasure.provision.label
     );
+    if (treasure.provision.isEqual(Treasure.provisionTypes[2])) {
+      cy.get(this.getSelector('price')).should('include.text', treasure.price);
+    } else {
+      cy.get(this.getSelector('price')).should('not.be.visible');
+    }
   }
 
   clickBoxLink() {

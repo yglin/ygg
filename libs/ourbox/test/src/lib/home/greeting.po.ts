@@ -13,6 +13,6 @@ export class GreetingPageObjectCypress extends PageObjectCypress {
     cy.get(this.getSelector()).contains(
       `家中長期用不到的二手物品，也許在別人的眼中可是寶物喔～`
     );
-    cy.get(this.getSelector()).contains(`何不試著從分享寶物開始呢？`);
+    cy.get(this.getSelector()).contains(`何不試著從上傳分享寶物開始呢？`);
   }
 }

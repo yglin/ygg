@@ -99,6 +99,8 @@ describe('Create a treasure from the ground up', () => {
     treasuresPO.expectVisible();
     treasuresPO.expectItem(treasure03);
     treasuresPO.clickItem(treasure03);
+    treasureViewPO.expectVisible();
+    treasureViewPO.expectValue(treasure03);
   });
 
   it('Create and put into some new box', () => {
@@ -143,5 +145,16 @@ describe('Create a treasure from the ground up', () => {
     // Skip putting into box
     emceePO.cancel();
     expectMyTreasure(treasure01);
+  });
+
+  it('Create a treasure with provision as sale, should input price', () => {
+    const treasureSale = Treasure.forge();
+    treasureSale.provision = Treasure.provisionTypes[2];
+    createTreasure(treasureSale);
+    emceePO.cancel(message('confirmAddToBox', treasureSale.name));
+    expectMyTreasure(treasureSale);
+    gotoMyTreasure(treasureSale);
+    treasureViewPO.expectVisible();
+    treasureViewPO.expectValue(treasureSale);
   });
 });

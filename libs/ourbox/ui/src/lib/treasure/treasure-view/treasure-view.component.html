@@ -8,13 +8,16 @@
   <div
     class="provision-label"
     fxLayout="row"
-    fxLayoutAlign="start center"
+    fxLayoutAlign="start baseline"
     fxLayoutGap="20px"
   >
     <h3>供給方式：</h3>
     <ourbox-provision-label
       [value]="treasure.provision"
     ></ourbox-provision-label>
+    <h3 class="price" [hidden]="!isProvisionSale">
+      <ygg-price [value]="treasure.price"></ygg-price>
+    </h3>
   </div>
   <div class="tags">
     <ygg-tags-view [value]="treasure.tags"></ygg-tags-view>

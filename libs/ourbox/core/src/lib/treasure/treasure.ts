@@ -11,7 +11,7 @@ import { wrapError } from '@ygg/shared/infra/error';
 import { Album } from '@ygg/shared/omni-types/core';
 import { Tags } from '@ygg/shared/tags/core';
 import { Authenticator, User } from '@ygg/shared/user/core';
-import { extend, get } from 'lodash';
+import { extend, get, random } from 'lodash';
 import { ProvisionType, provisionTypes } from './provision-type';
 
 export class Treasure {
@@ -31,6 +31,7 @@ export class Treasure {
   createAt: Date;
   modifyAt: Date;
   boxId: string;
+  price = 0;
 
   constructor(
     protected emcee: Emcee,
@@ -75,12 +76,20 @@ export class Treasure {
     treasure.name = `MyPrecious_${Date.now()}`;
     treasure.tags = Tags.forge();
     treasure.provision = ProvisionType.forge();
+    treasure.price = random(1, 100) * 50;
     // treasure.location = Location.forge();
     return treasure;
   }
 
   get image(): string {
     return get(this.album, 'cover.src', '/assets/treasure/treasure.png');
+  }
+
+  get subtitle(): string {
+    const price = this.provision.isEqual(Treasure.provisionTypes[2])
+      ? `NTD ${this.price}`
+      : '';
+    return `${this.provision.label} ${price}`;
   }
 
   async inquireData() {

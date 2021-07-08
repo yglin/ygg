@@ -31,6 +31,10 @@ export class ProvisionType {
   toJSON() {
     return this.value;
   }
+
+  isEqual(other: ProvisionType): boolean {
+    return this.value === other.value;
+  }
 }
 
 provisionTypes.push(...range(1, 4).map(v => new ProvisionType(v)));

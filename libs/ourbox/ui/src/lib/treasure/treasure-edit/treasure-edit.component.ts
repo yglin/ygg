@@ -37,6 +37,7 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
   subscription = new Subscription();
   provisions = Treasure.provisionTypes;
   selectedProvision = this.provisions[0];
+  isProvisionSale = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -50,12 +51,17 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     this.formGroupTags = this.formBuilder.group({ tags: null });
     this.formGroupProvision = this.formBuilder.group({
-      provision: this.selectedProvision.value
+      provision: 0,
+      price: 0
     });
     this.subscription.add(
       this.formGroupProvision.get('provision').valueChanges.subscribe(value => {
         if (value) {
+          this.isProvisionSale = false;
           this.selectedProvision = new ProvisionType(value);
+          if (this.selectedProvision.isEqual(Treasure.provisionTypes[2])) {
+            this.isProvisionSale = true;
+          }
         } else {
           this.selectedProvision = null;
         }
@@ -109,11 +115,25 @@ export class TreasureEditComponent implements OnInit, OnDestroy, AfterViewInit {
     if (name && description) {
       this.initStep = 2;
     }
+
+    const provisionType: ProvisionType = get(this.value, 'provision', null);
+    this.isProvisionSale =
+      provisionType && provisionType.isEqual(Treasure.provisionTypes[2]);
+    this.formGroupProvision.setValue(
+      {
+        provision: (provisionType && provisionType.value) || 0,
+        price: (this.value && this.value.price) || 0
+      },
+      { emitEvent: false }
+    );
   }
 
   async submit() {
     const payload = extend(
-      { provision: this.selectedProvision },
+      {
+        provision: this.selectedProvision,
+        price: this.formGroupProvision.get('price').value
+      },
       this.formGroupAlbum.value,
       this.formGroupName.value,
       this.formGroupTags.value
