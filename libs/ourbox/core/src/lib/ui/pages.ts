@@ -7,7 +7,7 @@ export const pages: { [id: string]: Page } = {
   'create-treasure': {
     id: 'create-treasure',
     icon: 'local_pizza',
-    label: '分享寶物',
+    label: '上傳寶物',
     path: ['/', 'treasure', 'create']
   },
   'box-create': {

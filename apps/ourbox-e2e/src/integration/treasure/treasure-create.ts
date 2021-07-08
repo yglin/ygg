@@ -50,9 +50,9 @@ export function message(id: string, data: any) {
 export function gotoCreatePage() {
   headerPO.openSideDrawer();
   sideDrawerPO.expectVisible();
-  sideDrawerPO.clickLink('分享寶物');
+  sideDrawerPO.clickLink('上傳寶物');
   treasureEditPO.expectVisible();
-  pageTitlePO.expectText(`分享我的寶物`);
+  pageTitlePO.expectText(`上傳我的寶物`);
 }
 
 export function gotoMyTreasures() {
