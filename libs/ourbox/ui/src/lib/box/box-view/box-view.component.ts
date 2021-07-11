@@ -62,8 +62,10 @@ export class BoxViewComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  createItem() {
-    // this.boxFactory.createItem(this.box.id, { backUrl: this.router.url });
+  createTreasure() {
+    this.router.navigate(['/', 'treasure', 'create'], {
+      queryParams: { boxId: this.box.id }
+    });
   }
 
   async inviteMember() {

@@ -24,7 +24,12 @@ export class TreasureCreateResolver implements Resolve<Treasure> {
     state: RouterStateSnapshot
   ): Promise<Treasure> {
     try {
-      return this.treasureFactory.create();
+      const options: any = {};
+      const boxId = route.queryParamMap.get('boxId');
+      if (boxId) {
+        options.boxId = boxId;
+      }
+      return this.treasureFactory.create(options);
     } catch (error) {
       const wrappedError = wrapError(error, `噗～～ 無法新增寶物，錯誤訊息：`);
       this.emcee.error(wrappedError.message);

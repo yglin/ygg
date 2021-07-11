@@ -40,11 +40,11 @@
     </div>
     <br />
     <div>
-      <div *ngIf="treasures?.length <= 0" class="create-treasure-hint">
+      <div [hidden]="treasures?.length > 0" class="no-treasure-hint">
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
           <h2>寶箱中還沒有任何寶物，新增寶物？</h2>
           <div>
-            <button mat-fab (click)="createItem()" class="create-treasure">
+            <button mat-fab (click)="createTreasure()" class="create-treasure">
               <mat-icon>addchart</mat-icon>
             </button>
           </div>

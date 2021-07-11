@@ -37,8 +37,8 @@ export class BoxAgent {
     // console.log('On treasure save~!!!');
     // console.dir(treasure);
     try {
-      const boxes = await this.boxFinder.findByTreasure(treasure);
-      if (isEmpty(boxes)) {
+      // const boxes = await this.boxFinder.findByTreasure(treasure);
+      if (!treasure.boxId) {
         const confirmSelectBox = await this.emcee.confirm(
           `請選擇一個寶箱來存放 ${treasure.name}。<br>沒放進寶箱裡的寶物，別人就找不到它了喔～`
         );
@@ -60,6 +60,10 @@ export class BoxAgent {
           // } else {
           await this.addTreasureToBox(treasure, selectedBox);
         }
+      } else {
+        const box = await this.boxFinder.findById(treasure.boxId);
+        await this.boxFactory.addTreasureToBox(treasure, box);
+        this.router.navigate(['/', 'box', treasure.boxId]);
       }
     } catch (error) {
       const wrpErr = wrapError(error, `Failed to put treasure into box`);

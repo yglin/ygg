@@ -10,6 +10,29 @@ import { PageObjectCypress } from '@ygg/shared/test/cypress';
 import { PageTitlePageObjectCypress } from '@ygg/shared/ui/test';
 
 export class BoxViewPageObjectCypress extends PageObjectCypress {
+  // }
+  // expectItemInEditing(item: TheThing) {
+  //   const theThingThumbnailPO = new TheThingThumbnailPageObjectCypress(
+  //     this.getSelectorForItemInEditing(item),
+  //     ImitationItem
+  //   );
+  //   theThingThumbnailPO.expectValue(item);
+  // }
+  // gotoCreateItem() {
+  //   cy.get(this.getSelector('buttonAddItem')).click();
+  // }
+  // expectCreateItemHint() {
+  //   cy.get(this.getSelector('createItemHint')).should(
+  //     'include.text',
+  //     `寶箱中還沒有任何寶物，新增寶物？`
+  //   );
+  //   cy.get(this.getSelector('createItemHint'))
+  //     .find('button.create-item')
+  //     .should('be.visible');
+  // }
+  // expectNoCreateItemHint() {
+  //   cy.get(this.getSelector('createItemHint')).should('not.exist');
+  // }
   pageTitlePO: PageTitlePageObjectCypress;
   albumViewPO: AlbumViewPageObjectCypress;
   locationPO: LocationViewCompactPageObjectCypress;
@@ -90,6 +113,22 @@ export class BoxViewPageObjectCypress extends PageObjectCypress {
 
   showOnMap() {
     this.locationPO.clickShowOnMap();
+  }
+
+  expectHintNoTreasure() {
+    cy.get('.no-treasure-hint').should(
+      'include.text',
+      '寶箱中還沒有任何寶物，新增寶物？'
+    );
+    cy.get('.no-treasure-hint button.create-treasure').should('be.visible');
+  }
+
+  expectHintNoTreasureHidden() {
+    cy.get('.no-treasure-hint').should('not.be.visible');
+  }
+
+  clickHintNoTreasureCreate() {
+    cy.get('.no-treasure-hint button.create-treasure').click();
   }
 
   // expectMember(user: User) {
