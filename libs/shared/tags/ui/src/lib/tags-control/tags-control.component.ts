@@ -23,7 +23,7 @@ import { TagsFinderService } from '../tags-finder.service';
 })
 export class TagsControlComponent
   implements OnInit, OnDestroy, ControlValueAccessor {
-  @Input() label: string;
+  @Input() label = '請輸入標籤';
   @Input() subject: { collection };
   topTags: string[] = [];
   // @Input() taggableType: string;

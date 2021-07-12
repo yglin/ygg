@@ -43,6 +43,9 @@
         </mat-option>
       </mat-autocomplete>
       <mat-icon
+        *ngIf="
+          autocompleteOptionsFiltered && autocompleteOptionsFiltered.length > 0
+        "
         class="toggle-button"
         matSuffix
         (click)="toggleAutoComplete(); $event.stopPropagation()"
