@@ -11,8 +11,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   GeoBound,
   GeoPoint,
-  getUserLocation,
-  Located
+  Located,
+  MapView
 } from '@ygg/shared/geography/core';
 import { getEnv } from '@ygg/shared/infra/core';
 import * as leaflet from 'leaflet';
@@ -30,8 +30,9 @@ import { Marker } from '../marker/marker';
 })
 export class MapNavigatorComponent implements OnInit, OnChanges {
   @Input() items: Located[] = [];
-  @Input() center: GeoPoint;
+  @Input() view: MapView;
   @Output() boundChanged: EventEmitter<GeoBound> = new EventEmitter();
+  @Output() viewChanged: EventEmitter<MapView> = new EventEmitter();
   @Output() clickItem: EventEmitter<Located> = new EventEmitter();
   markersLayer = leaflet.layerGroup();
   subscription: Subscription = new Subscription();
@@ -60,6 +61,12 @@ export class MapNavigatorComponent implements OnInit, OnChanges {
   ngOnInit() {}
 
   async ngAfterViewInit() {
+    if (!this.view) {
+      this.view = {
+        center: new GeoPoint({ latitude: 23.6978, longitude: 120.9605 }),
+        zoom: 9
+      };
+    }
     await this.initMap();
     this.onMapBoundChange();
     this.subscription.add(
@@ -122,6 +129,14 @@ export class MapNavigatorComponent implements OnInit, OnChanges {
       south: leafletBound.getSouth()
     });
     this.boundChanged.emit(geoBound);
+    let center = this.map.getCenter();
+    center = new GeoPoint({ latitude: center.lat, longitude: center.lng });
+    const zoom = this.map.getZoom();
+    this.viewChanged.emit({
+      center,
+      zoom
+    });
+    this.form.get('center').setValue(center, { emitEvent: false });
   }
 
   // setMapBound() {
@@ -136,13 +151,13 @@ export class MapNavigatorComponent implements OnInit, OnChanges {
   // }
 
   async initMap() {
-    let center = this.center;
+    let center = this.view.center;
     if (!GeoPoint.isGeoPoint(center)) {
-      center = await getUserLocation();
+      center = new GeoPoint({ latitude: 23.6978, longitude: 120.9605 });
     }
     this.map = leaflet.map('ygg-leaflet-map', {
       center: [center.latitude, center.longitude],
-      zoom: 15
+      zoom: this.view.zoom || 9
     });
     const tiles = leaflet.tileLayer(
       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',

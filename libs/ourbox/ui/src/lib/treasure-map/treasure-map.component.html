@@ -34,9 +34,12 @@
     <br />
   </div>
   <ygg-map-navigator
+    *ngIf="mapView"
     class="map-navigator"
     [items]="filteredBoxes"
+    [view]="mapView"
     (boundChanged)="onMapBoundChange($event)"
+    (viewChanged)="onMapViewChange($event)"
     (clickItem)="clickOnBoxMarker($event)"
   ></ygg-map-navigator>
   <br />

@@ -1,4 +1,4 @@
-import { Box, ProvisionType, Treasure } from '@ygg/ourbox/core';
+import { Box, Treasure } from '@ygg/ourbox/core';
 import { TreasureMapPageObjectCypress } from '@ygg/ourbox/test';
 import { Location, LocationRecord } from '@ygg/shared/geography/core';
 import { generateID } from '@ygg/shared/infra/core';
@@ -7,15 +7,7 @@ import { theMockDatabase } from '@ygg/shared/test/cypress';
 import { User } from '@ygg/shared/user/core';
 import { testUsers } from '@ygg/shared/user/test';
 import { RelationBoxTreasure } from 'libs/ourbox/core/src/lib/box/box-treasure';
-import {
-  flatten,
-  keyBy,
-  range,
-  sample,
-  sampleSize,
-  mapValues,
-  values
-} from 'lodash';
+import { keyBy, mapValues, range, sample, sampleSize, values } from 'lodash';
 import { myBeforeAll } from '../before-all';
 import { gotoMapNavigatorPage } from './map';
 
@@ -28,6 +20,7 @@ describe('Search and navigate in treasure map', () => {
   const tagsPool = range(total).map(() => generateID());
   const boxLocationRecords: LocationRecord[] = [];
 
+  const fakeUserLocation = Location.forge();
   const mapCenter = Location.forge();
   const boxesTotal = 10;
   const boxes = range(boxesTotal).map(() => {
@@ -64,7 +57,7 @@ describe('Search and navigate in treasure map', () => {
     () => []
   );
 
-  console.log(treasuresPerProvision);
+  // console.log(treasuresPerProvision);
 
   for (const treasure of treasures) {
     treasure.name += `_${Date.now()}`;
@@ -150,7 +143,19 @@ describe('Search and navigate in treasure map', () => {
 
   before(() => {
     myBeforeAll();
-    cy.visit('/');
+    cy.visit('/', {
+      onBeforeLoad(win) {
+        // e.g., force Barcelona geolocation
+        cy.stub(win.navigator.geolocation, 'getCurrentPosition').callsFake(cb =>
+          cb({
+            coords: {
+              latitude: fakeUserLocation.geoPoint.latitude,
+              longitude: fakeUserLocation.geoPoint.longitude
+            }
+          })
+        );
+      }
+    });
     gotoMapNavigatorPage();
     treasureMapPO.mapNavigatorPO.setCenter(mapCenter);
   });

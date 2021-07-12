@@ -77,13 +77,15 @@ export class GeoPointControlComponent
   ngOnInit() {}
 
   async ngAfterViewInit() {
-    await this.initMap();
-    if (GeoPoint.isGeoPoint(this.geoPoint)) {
-      const latlng = {
-        lat: this.geoPoint.latitude,
-        lng: this.geoPoint.longitude
-      };
-      this.setMarker(latlng);
+    if (this.showMap) {
+      await this.initMap();
+      if (GeoPoint.isGeoPoint(this.geoPoint)) {
+        const latlng = {
+          lat: this.geoPoint.latitude,
+          lng: this.geoPoint.longitude
+        };
+        this.setMarker(latlng);
+      }
     }
   }
 

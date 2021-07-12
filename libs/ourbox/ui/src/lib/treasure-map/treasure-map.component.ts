@@ -1,12 +1,23 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Box, ProvisionType, Treasure, TreasureFilter } from '@ygg/ourbox/core';
-import { GeoBound } from '@ygg/shared/geography/core';
-import { flatten, isEmpty, uniqBy, values } from 'lodash';
+import {
+  GeoBound,
+  GeoPoint,
+  getUserLocation,
+  MapView
+} from '@ygg/shared/geography/core';
+import { EmceeService } from '@ygg/shared/ui/widgets';
+import { flatten, get, isEmpty, uniqBy, values } from 'lodash';
 import { combineLatest, Subject, Subscription } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 import { BoxAgentService } from '../box/box-agent.service';
 import { BoxFinderService } from '../box/box-finder.service';
+
+const defaultMapView = {
+  center: new GeoPoint({ latitude: 23.6978, longitude: 120.9605 }),
+  zoom: 8
+};
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -25,11 +36,13 @@ export class TreasureMapComponent implements OnInit, OnDestroy {
   tagsSubject = { collection: Treasure.collection };
   provisions = Treasure.provisionTypes;
   selectedProvision: ProvisionType = null;
+  mapView: MapView = null;
 
   constructor(
     private boxFinder: BoxFinderService,
     private boxAgent: BoxAgentService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private emcee: EmceeService
   ) {
     this.formGroupSearch = this.formBuilder.group({
       tags: null,
@@ -85,7 +98,16 @@ export class TreasureMapComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const lastTimeView = this.getLastTimeView();
+    console.log('Last time view');
+    console.log(lastTimeView);
+    if (lastTimeView && !isEmpty(lastTimeView)) {
+      this.mapView = lastTimeView;
+    } else {
+      this.deriveMapView();
+    }
+  }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -100,7 +122,56 @@ export class TreasureMapComponent implements OnInit, OnDestroy {
     // );
   }
 
+  onMapViewChange(view: MapView) {
+    // Save view
+    try {
+      const treasureMapConfigs = JSON.parse(
+        localStorage.getItem('treasureMap')
+      );
+      if (!isEmpty(treasureMapConfigs)) {
+        treasureMapConfigs.lastView = view;
+        localStorage.setItem('treasureMap', JSON.stringify(treasureMapConfigs));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async clickOnBoxMarker(box: Box) {
     this.boxAgent.popupTreasuresInBox(box);
+  }
+
+  getLastTimeView() {
+    try {
+      const treasureMapConfigs = JSON.parse(
+        localStorage.getItem('treasureMap')
+      );
+      const lastView = get(treasureMapConfigs, 'lastView', null);
+      if (lastView && !isEmpty(lastView)) {
+        lastView.center = new GeoPoint({
+          latitude: lastView.center.latitude,
+          longitude: lastView.center.longitude
+        });
+      }
+      return lastView;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  async deriveMapView() {
+    const confirm = await this.emcee.confirm(
+      `第一次造訪藏寶地圖嗎？是否要檢視您所在地附近的地圖？`
+    );
+    if (confirm) {
+      const userLocation = await getUserLocation();
+      this.mapView = {
+        center: userLocation,
+        zoom: 12
+      };
+    } else {
+      this.mapView = defaultMapView;
+    }
   }
 }

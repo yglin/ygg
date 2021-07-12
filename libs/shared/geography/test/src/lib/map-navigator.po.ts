@@ -1,5 +1,5 @@
 import { PageObjectCypress } from '@ygg/shared/test/cypress';
-import { GeoBound, Location } from '@ygg/shared/geography/core';
+import { GeoBound, GeoPoint, Location } from '@ygg/shared/geography/core';
 import { Located } from '@ygg/shared/geography/core';
 import { ImageThumbnailListPageObjectCypress } from '@ygg/shared/ui/test';
 import { ImageThumbnailItem } from '@ygg/shared/ui/widgets';
@@ -95,6 +95,14 @@ export class MapNavigatorPageObjectCypress extends PageObjectCypress {
 
   setCenter(location: Location) {
     this.centerControlPO.setValue(location.geoPoint);
+  }
+
+  expectCenter(location: Location | GeoPoint) {
+    if (Location.isLocation(location)) {
+      this.centerControlPO.expectValue(location.geoPoint);
+    } else if (GeoPoint.isGeoPoint(location)) {
+      this.centerControlPO.expectValue(location);
+    }
   }
 
   // expectItems(items: TheThing[]) {
